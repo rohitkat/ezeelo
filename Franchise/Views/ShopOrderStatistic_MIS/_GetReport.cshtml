@@ -1,0 +1,324 @@
+﻿@model IEnumerable<ModelLayer.Models.ViewModel.ShopOrderStatistics>
+<link href="~/Content/css/Site.css" rel="stylesheet" />
+<script src="~/Content/js/bootstrap.js"></script>
+<script src="~/Content/js/jquery-1.9.1.min.js"></script>
+<script src="~/Content/js/jquery.dataTables.min.js"></script>
+<script src="~/Content/js/bootstrap.min.js"></script>
+<script type="text/javascript">
+    $(document).ready(function () {
+        $("#myTable").DataTable({
+            "bDestroy": true,
+            //"sPaginationType": "full_numbers",
+            "bJQueryUI": true,
+            "bInfo": false,
+            "scrollY": 700,
+            "scrollCollapse": true,
+            "bPaginate": false,
+            "iDisplayLength": 20,
+            "bAutoWidth": false,
+        });
+    });
+</script>
+<style>
+    .btn_Print {
+        margin-bottom: 7px;
+        margin-top: 7px;
+        margin-left: 5px;
+    }
+
+    .section {
+        position: relative;
+        padding-top: 0px!important;
+        margin-left: 5px;     
+        background: #A4A5A7;
+        margin-top: 39px;
+    }
+
+    #myTable_wrapper {
+        min-height: 61px;
+        margin-top: 2px;
+        max-height: 516px;
+    }
+
+    .fg-toolbar {
+        margin-top: 0px;
+        position: relative !important;
+        width: 100% !important;
+    }
+
+    #myTable_filter {
+        position: relative !important;
+        margin-top: 10px !important;
+        float: left;
+    }
+
+    .section.positioned {
+        position: absolute;
+        top: 100px;
+        left: 100px;
+        width: 800px;
+        box-shadow: 0 0 15px #333;
+    }
+
+    .container_tbl {
+        height: 496px;
+    }
+
+    table {
+        border-spacing: 0;
+        width: 100%;
+    }
+
+    td + td {
+        border-left: 1px solid #eee;
+    }
+
+    td, th {
+        border-bottom: 1px solid #eee;
+        color: #000;
+        padding: 10px 25px;
+    }
+
+    #myTable thead tr th {
+        height: 0;
+        line-height: 0 !important;
+        padding-top: 0 !important;
+        padding-bottom: 0 !important;
+        color: transparent;
+        border: none;
+        white-space: nowrap;
+    }
+
+    th div {
+        position: relative;
+        background: transparent;
+        color: #333;
+        padding: 9px 10px;
+        top: 0;
+        margin-left: -8px;
+        line-height: normal;
+        /*border-left: 1px solid #800;*/ border-left: 1px solid #999;
+    }
+    .table th, .table td {
+        border-top: 1px solid #999;
+    }
+    th:first-child div {
+        border: none;
+    }
+    th div {
+        padding: 9px 2px;
+        margin-left: -8px;
+    }
+    .wrap {
+        margin-top: 105px;
+    }
+
+    td:nth-child(1) {
+        max-width: 5px;
+        word-wrap: break-word;
+    }
+
+    td:nth-child(2) {
+        max-width: 0px;
+        word-wrap: break-word;
+    }
+
+    td:nth-child(3) {
+        max-width: 0px;
+        word-wrap: break-word;
+    }
+
+    td:nth-child(4) {
+        max-width: 5px;
+        word-wrap: break-word;
+    }
+
+    td:nth-child(5) {
+        max-width: 5px;
+        word-wrap: break-word;
+    }
+
+    td:nth-child(6) {
+        max-width: 5px;
+        word-wrap: break-word;
+    }
+
+    td:nth-child(7) {
+        max-width: 10px;
+        word-wrap: break-word;
+    }
+
+    td:nth-child(8) {
+        max-width: 16px;
+        word-wrap: break-word;
+    }
+
+    td:nth-child(9) {
+        max-width: 25px;
+        word-wrap: break-word;
+    }
+
+    td:nth-child(10) {
+        max-width: 5px;
+        word-wrap: break-word;
+    }
+    table.dataTable thead th, table.dataTable thead td {
+        padding: 0px 7px!important;
+    }
+    #myTable_wrapper {
+        margin-top: 0px!important;
+    }
+</style>
+<div id="PrintData" class="section" style="position: relative; border: 1px solid #000;padding-top: 33px;margin-left: 5px;background: #A4A5A7;margin-top: 39px;">
+    <div class="table container_tbl" style="height: 496px; border-spacing: 0; width: 100%;">
+        <table class="table scroll" id="myTable" style="border-spacing:0; width:100%;" border="1">
+            <thead>
+                <tr>
+                    <th >
+                        Shop ID
+                    </th>
+                    <th >
+                        Shop Name
+                    </th>
+                    <th>
+                        Order Count
+                    </th>
+                    <th>
+                        Total Amount
+                    </th>
+                    <th>
+                        From Date
+                    </th>
+                    <th>
+                        To Date
+                    </th>
+                    <th>
+                        Delivered Order
+                    </th>
+                    <th>
+                        Delivered Amount
+                    </th>
+                    <th>
+                        Cancelled Orde Count
+                    </th>
+                    <th>
+                        Cancelled Amount
+                    </th>
+                </tr>
+            </thead>
+
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td style="padding: 5px; width: 50px; word-wrap: break-word;">
+                        @Html.DisplayFor(modelItem => item.ShopID)
+                    </td>
+                    <td style="padding: 5px; width: 50px; word-wrap: break-word; ">
+                        @Html.DisplayFor(modelItem => item.ShopName)
+                    </td>
+                    <td style="padding: 5px; width: 50px; word-wrap: break-word; ">
+                        @Html.DisplayFor(modelItem => item.OrderCount)
+                    </td>
+                    <td style="padding: 5px; width: 50px; word-wrap: break-word; ">
+                        @Html.DisplayFor(modelItem => item.TotalAmount)
+                    </td>
+                    <td style="padding: 5px; width: 50px; word-wrap: break-word; ">
+                        @Html.DisplayFor(modelItem => item.FromDate)
+                    </td>
+
+                    <td style="padding: 5px; width: 50px; word-wrap: break-word; ">
+                        @Html.DisplayFor(modelItem => item.ToDate)
+                    </td>
+                    <td style="padding: 5px; width: 50px; word-wrap: break-word; ">
+                        @Html.DisplayFor(modelItem => item.DeliveredOrder)
+                    </td>
+                    <td style="padding: 5px; width: 50px; word-wrap: break-word; ">
+                        @Html.DisplayFor(modelItem => item.DeliveredAmount)
+                    </td>
+
+                    <td style="padding: 5px; width: 50px; word-wrap: break-word; ">
+                        @Html.DisplayFor(modelItem => item.CancelledOrdeCount)
+                    </td>
+                    <td style="padding: 5px; width: 50px; word-wrap: break-word; ">
+                        @Html.DisplayFor(modelItem => item.CancelledAmount)
+                    </td>
+
+
+
+                </tr>
+            }
+
+        </table>
+    </div>
+</div>
+@*<div id="Pager" style="margin-top:-65px;">
+    <div class="wrap">
+        <div id="slider1" class="slider">
+            <ul>
+                @for (int c = 1; c <= @ViewBag.TotalPages; c++)
+                {
+                    <li><a class="page-number" href="javascript:void();">@c</a></li>
+
+                }
+
+            </ul>
+
+        </div>
+
+        <div class="controls" style="margin-top:-27px;">
+            <a href="#noname" class="prev-slide"><<</a>
+            <a href="#noname" class="next-slide" style="float: right; margin-right: 299px;">>></a>
+        </div>
+    </div>
+    <span class="totalcount"><b>Showing @ViewBag.PageSize of @ViewBag.TotalCount enteries</b></span>
+</div>*@
+
+<div class="loader">
+    <img id="loader_img" src="~/Content/img/loader.gif" style="display: none" />
+</div>
+<script>
+    $(document).ready(function () {
+        $("#Pager .page-number").click(function (e) {
+            //alert($(this).html());
+            $('#loader_img').show();
+            //alert($(this).html());
+            var pagecount = 0;
+            var page = parseInt($(this).html());
+            if (page > 1) {
+                pagecount = 1;
+            }
+            var fromDate = "@ViewBag.fromDate";
+            var toDate = "@ViewBag.toDate";
+            var merchantID = "@ViewBag.merchantID";
+            $.ajax({
+                url: '@Url.Action("GetReport", "OrderTransactionReport")',
+                data: { 'page': page, 'pagecount': pagecount, 'fromDate': fromDate, 'toDate': toDate, 'merchantID': merchantID },
+                type: "POST",
+                cache: false,
+                success: function (data) {
+                    //alert(data);
+                    $('#loader_img').hide();
+                    $('#divReport').empty();
+                    $('#divReport').append(data);
+
+                },
+                error: function (data) {
+
+                }
+            });
+        });
+    });
+
+</script>
+<script src="~/Content/js/lemmon-slider.js"></script>
+<script type="text/javascript">
+    $(document).ready(function () {
+        //alert('OK');
+        // slider 1
+        $('#slider1').lemmonSlider({
+            infinite: false
+        });
+
+    });
+
+</script>

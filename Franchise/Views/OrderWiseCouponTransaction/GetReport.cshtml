@@ -1,0 +1,323 @@
+﻿@model IEnumerable<ModelLayer.Models.ViewModel.OrderWiseCouponTransactionViewModel>
+
+@{
+    Layout = null;
+}
+@{
+    ViewBag.Title = "GetReport";
+    Layout = null;
+}
+<style>
+    .totalcount {
+        margin-right: 26px !important;
+    }
+
+    #myTable_wrapper {
+        /*margin-top: 53px !important;*/
+    }
+
+    .table {
+        width: 100%;
+        margin-bottom: 0px;
+    }
+
+    .fg-toolbar {
+        margin-left: -352px;
+    }
+
+    .scrollable #myTable {
+        overflow: auto;
+        margin-top: 52px;
+    }
+
+    .ui-widget-header {
+        border: none !important;
+    }
+    .btn_Print {
+        margin-bottom: 7px;
+        margin-top: 7px;
+        margin-left: 5px;
+    }
+
+    .section {
+        position: relative;
+        border: 1px solid #000;
+        /*padding-top: 76px;*/
+        margin-left: 5px;
+        /*background: #A4A5A7;*/ background: rgb(179, 159, 128);
+        margin-top: 0px;
+        /*overflow-x: scroll;*/
+    }
+
+    #myTable_wrapper {
+        min-height: 61px;
+        margin-top: 2px;
+        max-height: 516px;
+    }
+
+    .fg-toolbar {
+        margin-top: 0px;
+    }
+
+    #myTable_filter {
+        position: absolute;
+        margin-top: 13px !important;
+    }
+
+    .section.positioned {
+        position: absolute;
+        top: 100px;
+        left: 100px;
+        width: 800px;
+        box-shadow: 0 0 15px #333;
+    }
+
+    .container_tbl {
+        /*overflow-y: auto;*/
+        /*height: 200px;*/ height: 502px;
+    }
+
+    table {
+        border-spacing: 0;
+        width: 100%;
+    }
+
+    td + td {
+        border-left: 1px solid #eee;
+    }
+
+    td, th {
+        border-bottom: 1px solid #eee;
+        /*background: #ddd;*/
+        color: #000;
+        padding: 10px 25px;
+    }
+
+    /*#myTable thead tr th {
+        height: 0;
+        line-height: 0 !important;
+        padding-top: 0 !important;
+        padding-bottom: 0 !important;
+        color: transparent;
+        border: none;
+        white-space: nowrap;
+    }*/
+
+    .wrap {
+        margin-top: 10px;
+    }
+
+
+    #myTable_filter {
+        position: absolute;
+        margin-top: 13px !important;
+    }
+
+    #myTable_wrapper {
+        min-height: 61px;
+        margin-top: 2px;
+        max-height: 516px;
+        overflow: hidden;
+    }
+
+    th div {
+        position: relative;
+        background: transparent;
+        color: #fff;
+        padding: 0px 10px;
+        top: 20px;
+        margin-left: -8px;
+        line-height: 20px;
+    }
+</style>
+
+<script src="~/Content/js/bootstrap.js"></script>
+<script src="~/Content/js/jquery-1.9.1.min.js"></script>
+<script src="~/Content/js/jquery.dataTables.min.js"></script>
+<script src="~/Content/js/bootstrap.min.js"></script>
+<script type="text/javascript">
+    $(document).ready(function () {
+        $("#myTable").DataTable({
+            "bDestroy": true,
+            //"sPaginationType": "full_numbers",
+            "bJQueryUI": true,
+            "bInfo": false,
+            "scrollY": 700,
+            "scrollCollapse": true,
+            "bPaginate": false,
+            "iDisplayLength": 20,
+            "bAutoWidth": false,
+
+        });
+
+    });
+</script>
+@*<div>
+        <a href="@Url.Action("GetReport", "ProductApprovedNonApprovedReport", new
+           {
+               page = 0,
+               pagecount = 0,
+               fromDate = ViewBag.fromDate,
+               toDate = ViewBag.toDate,
+               shopID = ViewBag.shopID,
+               franchiseID = ViewBag.franchiseID,
+               cityID = ViewBag.cityID,
+               approvedStatus = ViewBag.approvedStatus,
+               print = 1
+           })" target="_blank"><input type="button" value="Print" id="btnPrint" class="btn btn-primary" /></a>
+        @*<input type="button" value="Print" id="btnPrint" class="btn btn-primary" onclick="return Print()" />
+    </div>*@
+<style>
+    #myTable_wrapper {
+        width: 100% !important;
+    }
+    /*#myTable thead tr th {
+        width: 90px !important;
+        word-wrap: break-word !important;
+        word-break: keep-all !important;
+    }
+    #myTable thead tr th div{
+        width: 90px !important;
+        word-wrap: break-word !important;
+        word-break: keep-all !important;
+    }*/
+</style>
+    <div class="table scrollable" style="width:100%;">
+        @{int i = 0;}
+        @if (Model.Count() > 0 || Model != null)
+        {
+            <table class="table scroll container_tbl" id="myTable">
+                <thead>
+                    <tr class="header">
+                        <th style="width: 75px; word-wrap: break-word; word-break: keep-all; border-top: 1px solid #dddddd; ">
+                            SrNo.
+                        </th>
+                        <th style="width: 90px; word-wrap: break-word; word-break: keep-all; border-top: 1px solid #dddddd;">
+                            Coupen Code
+                        </th>
+                        <th style="width: 45px; word-wrap: break-word; word-break: keep-all; border-top: 1px solid #dddddd; ">
+                            Coupon Scheme
+                        </th>
+                        <th style="width: 80px; word-wrap: break-word; word-break: keep-all; border-top: 1px solid #dddddd; ">
+                            Coupen Amount
+                        </th>
+                        <th style="width: 95px; word-wrap: break-word; word-break: keep-all; border-top: 1px solid #dddddd; ">
+                            Order Code
+                        </th>
+                        <th style="width: 75px; word-wrap: break-word; word-break: keep-all; border-top: 1px solid #dddddd; ">
+                            Customer
+                        </th>
+                        <th style="width: 95px; word-wrap: break-word; word-break: keep-all; border-top: 1px solid #dddddd;">
+                            Mobile
+                        </th>
+                        <th style="width: 95px; word-wrap: break-word; word-break: keep-all; border-top: 1px solid #dddddd;">
+                            Order Date
+                        </th>
+                        <th style="width: 95px; word-wrap: break-word; word-break: keep-all; border-top: 1px solid #dddddd;">
+                            Order Amount
+                        </th>
+                        <th style="width: 95px; word-wrap: break-word; word-break: keep-all; border-top: 1px solid #dddddd;">
+                            Payable Amount
+                        </th>
+                    </tr>
+                </thead>
+                @foreach (var item in Model)
+                {
+
+                    i = i + 1;
+                    <tr>
+                        <td>@i</td>
+
+                        <td>
+                            @Html.DisplayFor(modelItem => item.CouponCode)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.CouponScheme)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.CouponAmount)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.OrderCode)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.CustomerName)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.PrimaryMobile)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.OrderDate)
+                        <td>
+                            @Html.DisplayFor(modelItem => item.OrderAmount)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.PayableAmount)
+                        </td>
+
+                    </tr>
+                }
+
+            </table>
+        }
+    </div>
+<div id="Pager">
+    <div class="wrap">
+        <div id="slider1" class="slider">
+            <ul>
+                @for (int c = 1; c <= @ViewBag.TotalPages; c++)
+                {
+                    <li><a class="page-number" href="javascript:void();">@c</a></li>
+
+                }
+            </ul>
+        </div>
+        <div class="controls" style="margin-top:-27px; background:#F9F9F9">
+            <a href="#noname" class="prev-slide"><<</a>
+            <a href="#noname" class="next-slide" style="float: right; margin-right: 299px;">>></a>
+        </div>
+    </div>
+    <span class="totalcount"><b>Showing @ViewBag.PageSize of @ViewBag.TotalCount enteries</b></span>
+</div>
+
+<div class="loader">
+    <img id="loader_img" src="~/Content/img/loader.gif" style="display: none" />
+</div>
+<script>
+    $(document).ready(function () {
+        $("#Pager .page-number").click(function (e) {
+            //alert($(this).html());
+            $('#loader_img').show();
+            //alert($(this).html());
+            var pagecount = 0;
+            var page = parseInt($(this).html());
+            if (page > 1) {
+                pagecount = 1;
+            }
+            var fromDate = "@ViewBag.fromDate";
+            var toDate = "@ViewBag.toDate";
+            var couponCode = "@ViewBag.CouponCode";
+            var couponScheme = "@ViewBag.CouponScheme";            
+            var franchiseID = "@ViewBag.franchiseID";
+           
+            var print = 0;
+            $.ajax({
+                url: '@Url.Action("GetReport", "OrderWiseCouponTransaction")',
+                data: { 'page': page, 'pagecount': pagecount, 'fromDate': fromDate, 'toDate': toDate, 'couponScheme': couponScheme, 'couponCode': couponCode, 'print': print },
+                type: "POST",
+                cache: false,
+                success: function (data) {
+                    //alert(data);
+                    $('#loader_img').hide();
+                    $('#divReport').empty();
+                    $('#divReport').append(data);
+
+                },
+                error: function (data) {
+
+                }
+            });
+        });
+    });
+</script>
+

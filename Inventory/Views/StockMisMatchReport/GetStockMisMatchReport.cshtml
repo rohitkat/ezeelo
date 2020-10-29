@@ -1,0 +1,284 @@
+﻿
+@model ModelLayer.Models.ViewModel.StockMisMatchReportViewModel
+
+@{
+    ViewBag.Title = "Stock Mismatch Report";
+
+    if (Session["Category"] != null)
+    {
+        if (Session["Category"].ToString() == "IsCategory")
+        {
+            Layout = "~/Views/Shared/_CategoryLayout.cshtml";
+        }
+    }
+
+}
+<link href="~/Content/css/bootstrap-datetimepicker.min.css" rel="stylesheet" />
+<link href="~/Content/css/bootstrap-datetimepicker.css" rel="stylesheet" />
+<link href="~/Content/assets/css/font-awesome.min.css" rel="stylesheet" />
+<link href="~/Content/assets/css/form-design.css" rel="stylesheet" />
+
+
+<script src="~/Content/js/jquery-2.1.3.min.js"></script>
+<link href="~/Content/css/jquery.dataTables.css" rel="stylesheet" />
+<script src="~/Content/js/jquery.dataTables.js" language="jascript"></script>
+@*created by Rumana on 01-06-2019*@
+<script type="text/javascript" class="init">
+    $(document).ready(function () {
+        $('#tblData').DataTable({
+            dom: 'T<"clear">lfrtip',
+            "processing": true,
+            "serverSide": true,
+            "iDisplayLength": 20,
+        });
+
+        $("#btnExport").click(function () {
+            window.location = "/StockMisMatchReport/ExportToExcel";
+        })
+    });
+</script>
+
+<section class="right_side_main_part">
+    <div class="row-fluid">
+        @using (Html.BeginForm("GetStockMisMatchReport", "StockMisMatchReport", new { enctype = "multipart/form-data" }, FormMethod.Post, new { id = "Form_" }))
+        {
+            @Html.ValidationSummary(true)
+
+            <div class="box span12 right_side_up_part">
+                <div class="box-header creatProduct clearfix">
+                    <h2>
+                        <i class="icon-list-alt"></i>
+                        <span class="break"></span>
+                        Stockt Mismatch Report
+                    </h2>
+                </div>
+                <div class="box-content nameDscrp">
+                    <div class="form-horizontal">
+                        <div class="NameDescription">
+                            <div class="control-group mrg-left">
+                                <div class="col-sm-3">
+                                    FV List
+                                </div>
+                                <div class="col-sm-6">
+
+                                    @Html.DropDownListFor(model => model.WarehouseID, Model.WarehouseList)
+                                    @Html.HiddenFor(model => model.WarehouseID)
+                                </div>
+                            </div>
+                            <div class="control-group mrg-left">
+                                <div class="col-sm-3">
+                                    From Date
+                                </div>
+                                <div class="col-sm-6">
+
+                                    @Html.TextBoxFor(model => model.FromDate, "{0:dd/MM/yyyy}", new { @readonly = "readonly" })
+                                    @Html.HiddenFor(model => model.FromDate)
+                                </div>
+                            </div>
+                            <div class="control-group mrg-left">
+                                <div class="col-sm-3">
+                                    To Date
+                                </div>
+                                <div class="col-sm-6">
+
+                                    @Html.TextBoxFor(model => model.ToDate, "{0:MM/dd/yyyy}", new { @readonly = "readonly" })
+                                    @Html.HiddenFor(model => model.ToDate)
+                                </div>
+                            </div>
+                            <div class="control-group mrg-left">
+                                <div class="col-sm-3">
+                                    Mismatch Qty
+                                </div>
+                                <div class="col-sm-6">
+                                    @*<div class="all_check_btn">
+                                        <label>*@
+
+                                    @Html.CheckBox("IsChecked", Model.IsChecked.Value)
+                                    @Html.HiddenFor(model => model.IsChecked)
+                                    @*, new { @checked = "checked" }*@
+                                    @*</label>
+                                        </div>*@
+                                </div>
+                            </div>
+                            <div class="control-group mrg-left">
+                                <div class="col-sm-3">
+                                    DropDown
+                                </div>
+                                @{var selected = ViewBag.DropdownSelected;
+                                }
+                                @if (selected == 0)
+                                {
+                                    <select id="Status" name="Status">
+                                        <option value="">Select Option</option>
+                                        <option value="0" selected>Shop</option>
+                                        <option value="1">Warehouse</option>
+
+                                    </select>
+                                }
+                                else
+                                {
+                                    <select id="Status" name="Status">
+                                        <option value="">Select Option</option>
+                                        <option value="0">Shop</option>
+                                        <option value="1" selected>Warehouse</option>
+
+                                    </select>
+                                }
+
+                            </div>
+
+                            <div class="clr"></div>
+                            <button value="Search" type="submit" id="search" class="btnRemove btn btn-warning">Search</button>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        }
+        <iframe id="txtArea1" style="display:none"></iframe>
+        <button id="btnExport" class="btnPrint btn btn-success btn-small">EXPORT TO EXCEL</button>
+
+        <div class="box right_side_down_part">
+            <div class="box-content">
+                <div class="NameDescription">
+                    <div id="divToPrint">
+                        <table id="tblData" class=" table table-bordered table-striped table-condensed" border="1" cellpadding="2" cellspacing="0">
+                            <thead>
+                                <tr><td class="TD_Heading" style="text-align:center" colspan="12"><h2>Stock Mismatch Report </h2></td></tr>
+                                <tr>
+                                    <th>Sr.No.</th>
+                                    <th>SKU ID</th>
+                                    <th>SKU Name</th>
+                                    <th>SKU Unit</th>
+                                    <th>Brand Name</th>
+                                    <th>Batch Code</th>
+                                    <th>Invoice Code</th>
+                                    <th style="text-align:right">MRP</th>
+                                    <th>Actual Shop Qty</th>
+                                    <th>Invoice Confirmation Date</th>
+                                    @if (Session["Entity"].ToString() == "EVW")
+                                    {
+                                        <th style="text-align:right">Ezeelo PurchaseRate</th>
+                                    }
+                                    <th>PurchaseRate</th>
+                                    <th style="text-align:right">Sale Rate</th>
+                                    <th>RetailPoints</th>
+                                    <th>ActiveBatch</th>
+                                    <th>InitialQty</th>
+                                    <th>WarehouseQty</th>
+                                    <th>ShopQty</th>
+                                    <th>ReservedQty</th>
+                                    <th>DeliveredQty</th>
+                                    <th>ReturnToDvQty</th>
+                                    <th>ReturnFromCustomerQty</th>
+                                    <th>CanceledQty</th>
+                                    <th>AbandonedQty</th>
+                                    <th>PortalMRP</th>
+                                    <th>PortalSaleRate</th>
+                                    <th>PortalRetailPoint</th>
+                                    <th>PendingQty</th>
+                                    <th>PlacedQty</th>
+                                    <th>ConfirmQty</th>
+                                    <th>PackedQty</th>
+                                    <th>Dispatched_from_shopQty</th>
+                                    <th>In_godownQty</th>
+                                    <th>Dispatched_from_godownQty</th>
+                                    <th>WarehouseStockId</th>
+                                    <th>ShopStockId</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @{
+                                    var i = 1;
+                                }
+                                @*@foreach (var item in Model)*@
+
+                                @foreach (var item in Model.lStockMisMatchReportViewModelList)
+                                {
+                                    <tr>
+                                        <td>
+                                            @i
+                                            @{
+                                                i = i + 1;
+                                            }
+                                        </td>
+
+                                        <td>@item.SKUID</td>
+                                        <td>@item.SKUName</td>
+                                        <td>@item.SKUUnit</td>
+                                        <td>@item.BrandName</td>
+                                        <td>@item.BatchCode</td>
+                                        <td>@item.InvoiceCode</td>
+                                        <td style="text-align:right">@item.MRP</td>
+                                        <td>@item.ActualShopQty</td>
+                                        <td>@item.InvoiceConfirmationDate</td>
+                                        @if (Session["Entity"].ToString() == "EVW")
+                                        {
+                                            <td>@item.EzeeloPurchasePrice</td>
+                                        }
+                                        <td>@item.PurchaseRate</td>
+                                        <td style="text-align:right">@item.SaleRate</td>
+                                        <td>@item.RetailPoints</td>
+                                        <td>@item.ActiveBatch</td>
+                                        <td>@item.InitialQty</td>
+                                        <td>@item.WarehouseQty</td>
+                                        <td>@item.ShopQty</td>
+                                        <td>@item.ReservedQty</td>
+                                        <td>@item.DeliveredQty</td>
+                                        <td>@item.ReturnToDvQty</td>
+                                        <td>@item.ReturnFromCustomerQty</td>
+                                        <td>@item.CanceledQty</td>
+                                        <td>@item.AbandonedQty</td>
+
+                                        <td>@item.PortalMRP</td>
+                                        <td>@item.PortalSaleRate</td>
+                                        <td>@item.PortalRetailPoint</td>
+                                        <td>@item.PendingQty</td>
+                                        <td>@item.PlacedQty</td>
+                                        <td>@item.ConfirmQty</td>
+                                        <td>@item.PackedQty</td>
+                                        <td>@item.Dispatched_from_shopQty</td>
+                                        <td>@item.In_godownQty</td>
+                                        <td>@item.Dispatched_from_godownQty</td>
+                                        <td>@item.WarehouseStockId</td>
+                                        <td>@item.ShopStockId</td>
+
+
+
+                                    </tr>
+
+
+
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+    </div>
+
+
+
+</section>
+
+
+<script type="text/javascript">
+
+    $(document).ready(function () {
+        debugger;
+
+        $('#ToDate').datepicker({ dateFormat: 'mm/dd/yy', maxDate: 'now' });
+        $('#FromDate').datepicker({ dateFormat: 'mm/dd/yy' });
+
+
+        //$('#search').click(function () {
+        //    alert($("input[type='checkbox']").val())
+        //});
+
+    });
+</script>
+

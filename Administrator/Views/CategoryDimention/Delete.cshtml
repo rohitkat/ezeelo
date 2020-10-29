@@ -1,0 +1,83 @@
+﻿@model ModelLayer.Models.CategoryDimension
+
+@{
+    ViewBag.Title = "Delete";
+}
+
+<div id="content" class="span10">
+    <ul class="breadcrumb">
+        <li>
+            <a href="index.html">Category Dimension</a>
+        </li>
+   </ul>
+    <div class="row-fluid">
+        <div class="box span12">
+            <div class="box-header">
+                <h2><i class="halflings-icon edit"></i><span class="break"></span>Category Dimension/Delete</h2>
+
+            </div>
+            <div class="box-content">
+                <div class="form-horizontal">
+                    <fieldset>
+                        <div class="control-group">
+                            @Html.LabelFor(model => model.CategoryID, "CategoryID", new { @class = "control-label" })
+                            <div class="controls">
+                                @Html.DisplayFor(model => model.Category.Name)
+                            </div>
+                        </div>
+
+                        <div class="control-group">
+                            @Html.LabelFor(model => model.DimensionID, "DimensionID", new { @class = "control-label" })
+                            <div class="controls">
+                                @Html.DisplayFor(model => model.Dimension.Name)
+                            </div>
+                        </div>
+
+                        @*<div class="control-group">
+                                @Html.LabelFor(model => model.IsActive, new { @class = "control-label col-md-2" })
+                                <div class="controls">
+                                    @Html.EditorFor(model => model.IsActive)
+                                    @Html.ValidationMessageFor(model => model.IsActive)
+                                </div>
+                            </div>*@
+                        <div class="control-group">
+
+                            <div class="controls">
+                                <label class="checkbox">
+                                    <div id="uniform-optionsCheckbox2" class="checker">
+                                        <span>
+                                            @Html.DisplayFor(model => model.IsActive)
+                                        </span>
+                                    </div>
+                                    @Html.DisplayNameFor(model => model.IsActive)
+                                </label>
+                            </div>
+                        </div>
+
+
+                        @using (Html.BeginForm())
+                        {
+                            @Html.AntiForgeryToken()
+
+                            <div class="form-actions no-color">
+                                <input type="submit" value="Delete" class="btn btn-primary" />
+                                @Html.ActionLink("Back to List", "Index", null, new { @class="btn"})
+                                @if (ViewBag.Messaage != null)
+                                {
+                                    @Html.Label("Messaage", (string)ViewBag.Messaage, new { @class = "deleteMsg" })
+                                }
+                                else
+                                {
+                                    @Html.Label("Messaage", "", new { @class = "deleteMsg" })
+                                }
+                            </div>
+                        }
+                    </fieldset>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+</div>

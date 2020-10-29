@@ -1,0 +1,671 @@
+﻿@model ModelLayer.Models.ViewModel.MerchantRegisterViewModel
+
+@{
+    ViewBag.Title = "Login";
+    Layout = "~/Views/Shared/Login_header.cshtml";
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title></title>
+    <link href="~/Content/assets/css/media-login.css" rel="stylesheet" />
+    <link href="~/Content/css/style.css" rel="stylesheet" />
+    <link href="~/Content/assets/css/bootstrap.css" rel="stylesheet" />
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+      <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+    <![endif]-->
+    <style type="text/css">
+        option {
+            color: #000 !important;
+        }
+
+        .text-box {
+        }
+
+        h2 {
+            color: #fff;
+        }
+
+        .wdth-small {
+            width: 74px;
+        }
+
+        .wdth-mid {
+            width: 125px;
+        }
+
+        .wdth-large {
+            width: 163px;
+        }
+
+        .mrg-leftSm {
+            margin-left: 2px;
+        }
+
+        .mrg-top {
+            margin-top: 10px;
+        }
+
+
+        .login-div {
+            float: right;
+            margin-top: 5px;
+        }
+
+            .login-div input {
+                width: 222px;
+            }
+
+            .login-div .form-control {
+                height: 30px;
+                padding: 4px 12px;
+                font-size: 14px;
+                line-height: 1.42857;
+                color: #ECE3E3;
+                background-color: #414242;
+            }
+
+        #testimonials {
+            min-height: 318px;
+        }
+
+        .testinomial {
+            font-size: 29px;
+            color: #6F4D4D;
+        }
+
+        .color-dark {
+            color: #808080 !important;
+        }
+
+        .breadcrumbs1 {
+            margin-top: 85px;
+            font-size: 23px;
+            color: #3D8010 !important;
+            text-shadow: 1px 1px 1px #4FD50D;
+        }
+
+        .sky-blue {
+            color: #99dcf9 !important;
+        }
+    </style>
+</head>
+<body>
+
+    @using (Html.BeginForm())
+    {
+        @Html.AntiForgeryToken()
+    <!--./ NAV BAR END -->
+        <div id="home">
+            <div class="overlay">
+                <div class="container-fluid">
+                
+                    <div class="row">
+                        <div class="col-lg-8 col-md-7 col-sm-4 col-xs-12">
+                            <div class=" clearfix" style="display:none;"></div>
+                            @if (TempData["Message1"] != null)
+                            {
+                                <div class="breadcrumbs1 dark  pull-left">
+                                    @TempData["Message1"]
+                                </div>
+                            }
+
+                        </div>
+
+                        <section class="slider_main_login_page">
+                            @*add by paras*@
+                                            <div class="col-lg-12 col-md-12  col-sm-12 wow bounceInDown animated" data-wow-delay="0.4s">
+                                                <div id="carousel-slider" class="carousel slide" data-ride="carousel">
+
+                                <div class="carousel-inner">
+                                    <div class="item">
+                                        <img src="~/Content/assets/img/portfolio/w3.jpg" class="img-thumbnail" alt="">
+                                    </div>
+                                    <div class="item">
+                                        <img src="~/Content/assets/img/portfolio/w1.jpg" class="img-thumbnail" alt="">
+                                    </div>
+                                    <div class="item active">
+                                        <img src="~/Content/assets/img/portfolio/w2.jpg" class="img-thumbnail" alt="">
+                                    </div>
+                                </div>
+
+                                                    <ol class="carousel-indicators" style="bottom:0;">
+                                    <li data-target="#carousel-slider" data-slide-to="0" class=""></li>
+                                    <li data-target="#carousel-slider" data-slide-to="1" class=""></li>
+                                    <li data-target="#carousel-slider" data-slide-to="2" class="active"></li>
+                                </ol>
+
+                            </div>
+                        </div>
+                         </section>
+
+                        <div class="col-lg-4 col-md-5 col-sm-8 col-xs-12">
+                            @*<div class="div-trans">
+
+                                    <h3 class="mrg-top">Start Selling Product</h3>
+                                    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                        <div class="form-group">
+                                            @Html.DropDownList("Salutation", null, new { @class = "form-control pull-left wdth-small mrg-leftSm" })
+                                            @Html.ValidationMessageFor(model => model.salutation.ID)
+
+                                            @Html.TextBoxFor(model => model.personalDetail.FirstName, new { @placeholder = "First Name", @class = "form-control  pull-left wdth-mid mrg-leftSm", required = "required" })
+                                            @Html.ValidationMessageFor(model => model.personalDetail.FirstName)
+
+                                            @Html.TextBoxFor(model => model.personalDetail.LastName, new { @placeholder = "Last Name", @class = "form-control  pull-left wdth-mid mrg-leftSm", required = "required" })
+                                            @Html.ValidationMessageFor(model => model.personalDetail.LastName)
+
+                                            <div class="clearfix"></div>
+                                        </div>
+
+                                        <div class="form-group">
+                                            @Html.TextBox("Mobile", null, new { @id = "Mobile", @class = "form-control-Widout-block form-control", @placeholder = "Enter Mobile", @onkeydown = "return ValidateNumber(event);", @onchange = "return ValidateMobile(this);", @onkeypress = "return isValidPincode(event)", required = "required", maxlength = 10 })
+                                            <div id="divMobileError" style="width: 229px;display: none;" class="alert-danger focused">  </div>
+                                        </div>
+                                        <div class="form-group">
+                                            @Html.TextBoxFor(model => model.shop.TIN, new { @placeholder = "TIN Number", @class = "form-control-Widout-block form-control  pull-left wdth-large mrg-leftSm", required = "required", maxlength = 12 })
+                                            @Html.ValidationMessageFor(model => model.shop.TIN)
+                                            @Html.TextBox("Pincode", null, new { @id = "Pincode", @class = "form-control-Widout-block form-control  pull-left wdth-large mrg-leftSm", @placeholder = "Enter Pincode", @onkeypress = "return isValidPincode(event)", required = "required" })
+                                            <img id="Pincode_loading" src="~/Content/img/ajax_loader.gif" style="width:20px; height:20px; display: none;margin-left:-21px; " />
+                                            <div id="divPincodeError" style=" display: none; font-size:12px;" class="alert-danger focused">  </div>
+                                            <div class="clearfix"></div>
+                                        </div>
+
+                                        <div class="form-group">
+                                            @Html.TextBoxFor(model => model.userLogin.Email, new { @placeholder = "Email", @class = "form-control", @onchange = "return ValidateEmail(this);", required = "required" })
+                                            @Html.ValidationMessageFor(model => model.userLogin.Email)
+                                            <div id="divEmailError" style="width: 278px; display: none;" class="alert-danger focused">  </div>
+                                        </div>
+                                        <div class="form-group">
+                                            @Html.TextBoxFor(model => model.userLogin.Password, new { @placeholder = "Password", @class = "form-control", required = "required", type = "password", minlength = 6, @onchange = "setFocus();" })
+                                            @Html.ValidationMessageFor(model => model.userLogin.Password)
+                                        </div>
+                                        <div class="form-group">
+                                            @Html.TextBoxFor(model => model.ConfirmPassword, new { @placeholder = "Confirm Password", @class = "form-control", required = "required", type = "password", @onchange = "return ValidateConfirmPassword(this);" })
+                                            @Html.ValidationMessageFor(model => model.ConfirmPassword)
+                                            <div id="divPwdError" style="width:229px; display: none; " class="alert-danger focused">  </div>
+                                        </div>
+                                        <div class="form-group">
+                                            @Html.DropDownList("SecurityQuestion", null, "Select Security Question", new { @class = "form-control", required = "required" })
+                                            @Html.ValidationMessageFor(model => model.securityQuestion.ID)
+
+                                        </div>
+                                        <div class="form-group">
+                                            @Html.TextBoxFor(model => model.loginSecurityAnswer.Answer, new { @placeholder = "Security Answer", @class = "form-control", required = "required", type = "password" })
+                                            @Html.ValidationMessageFor(model => model.loginSecurityAnswer.Answer)
+                                        </div>
+                                        <div class="form-group">
+                                            <button type="submit" id="Save" value="Save" class="btn btn-success btn-block btn-lg" name=" action">Register Me</button>
+                                        </div>
+
+                                    </div>
+
+                                </div>*@
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+
+
+        </div>
+    }
+
+    @*<div id="about">
+            <div class="container center">
+                <div class="row">
+                    <div class="col-lg-6  col-md-6 col-sm-12 ">
+                        <div class="col-lg-12 col-md-12 ">
+                            <iframe width="100%" height="280" src="https://www.youtube.com/embed/csLghLlsfgQ" frameborder="0" allowfullscreen></iframe>
+
+                        </div>
+                    </div>
+                    <div class="col-lg-6  col-md-6 col-sm-12 sub-head">
+                        <h2 data-wow-delay="0.3s" class="wow rollIn animated color-dark"><strong>Why eZeelo? </strong></h2>
+                        <p class="sub-head">
+                            eZeelo is the next generation destination for shoppers and merchants, and is 'the' bridge between the two.
+                            eZeelo offers widest and diverse range of products and services, connecting the Local merchants with the buyers. In the coming days, majority of the purchases shall be happening through online transactions whether getting services or sourcing products.  As the future belongs to e-tailing, do not get missed out to make your presence in the digital world.
+
+                            Being present in the digital world through eZeelo ensures more exposure leading to increased footfalls and a larger sales!!
+
+                            Why wait?  Join now!
+                        </p>
+
+                    </div>
+
+                </div>
+                <div class="row">
+                    <div class="col-lg-4 col-md-4 col-sm-12">
+                        <div class="media wow rotateIn animated" data-wow-delay="0.2s">
+                            <div class="pull-left">
+                                <i class="fa fa-recycle fa-4x  "></i>
+                            </div>
+                            <div class="media-body">
+                                <h3 class="media-heading">Local e-Marketplace</h3>
+                                <p>
+                                    eZeelo is the next generation destination marketplace for buyers offering wide range of products and services.
+
+                                </p>
+
+                            </div>
+                        </div>
+                        <div class="media wow rotateIn animated" data-wow-delay="0.3s">
+                            <div class="pull-left">
+                                <i class="fa fa-history fa-4x  "></i>
+                            </div>
+                            <div class="media-body">
+                                <h3 class="media-heading">Promoted By</h3>
+                                <p>
+                                    It is promoted by an  established IT company  with a decade old experience.
+                                    A unique platform to showcase their  unique products.
+                                </p>
+
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="col-lg-4 col-md-4  col-sm-12 wow bounceInDown animated" style="padding: 10px;" data-wow-delay="0.6s">
+                        <div id="carousel-slider" class="carousel slide" data-ride="carousel">
+
+                            <div class="carousel-inner">
+                                <div class="item">
+                                    <img src="~/Content/assets/img/forshopping1.jpg" class="img-thumbnail" alt="">
+                                </div>
+                                <div class="item">
+                                    <img src="~/Content/assets/img/forshopping2.jpg" class="img-thumbnail" alt="">
+                                </div>
+                                <div class="item active">
+                                    <img src="~/Content/assets/img/forshopping3.jpg" class="img-thumbnail" alt="">
+                                </div>
+                            </div>
+
+                            <ol class="carousel-indicators">
+                                <li data-target="#carousel-slider" data-slide-to="0" class=""></li>
+                                <li data-target="#carousel-slider" data-slide-to="1" class=""></li>
+                                <li data-target="#carousel-slider" data-slide-to="2" class="active"></li>
+                            </ol>
+
+                        </div>
+                    </div>
+
+                    <div class="col-lg-4 col-md-4 col-sm-12">
+
+                        <div class="media wow rotateIn animated" data-wow-delay="0.4s">
+                            <div class="pull-left">
+                                <i class="fa fa-star-o fa-4x  "></i>
+                            </div>
+                            <div class="media-body">
+                                <h3 class="media-heading">Flexibility</h3>
+                                <p>
+                                    Merchants have a flexible plans to join eZeelo.  Merchants are given handholding in the process to showcase their products in the best manner enabling them to sell better.
+                                </p>
+                            </div>
+                        </div>
+                        <div class="media wow rotateIn animated" data-wow-delay="0.5s">
+                            <div class="pull-left">
+                                <i class="fa fa-life-ring fa-4x  "></i>
+                            </div>
+                            <div class="media-body">
+                                <h3 class="media-heading">Transparency </h3>
+                                <p>
+                                    eZeelo follows a Transparent process in the entire value chain, and keeps the Merchant updated their status every moment.
+                                </p>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>*@
+
+
+    <!--./ ABOUT SECTION END -->
+    @*<div class="donars-section">
+            <div class="">
+                <div class="container">
+                    <div class="row ">
+                        <div class="col-lg-12 col-md-12 ">
+                            <div id="testimonials" class="carousel slide" data-ride="carousel">
+
+                                <ol class="carousel-indicators">
+                                    <li data-target="#testimonials" data-slide-to="0" class=""></li>
+                                    <li data-target="#testimonials" data-slide-to="1" class=""></li>
+                                    <li data-target="#testimonials" data-slide-to="2" class="active"></li>
+                                </ol>
+
+                                <div class="carousel-inner">
+                                    <div class="item">
+                                        <div class="container center">
+                                            <div class="col-lg-8 col-md-8 slide-custom">
+                                                <h2 class="testinomial">Thinking of opening a branch,Get one that operates 24/7 Join eZeelo</h2>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="item">
+                                        <div class="container center">
+                                            <div class="col-lg-8 col-md-8 slide-custom">
+                                                <h2 class="testinomial">Slump in sales, Sell online Join eZeelo</h2>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="item active">
+                                        <div class="container center">
+                                            <div class="col-lg-8  col-md-8 slide-custom">
+                                                <h2 class="testinomial">Sell even when shop is closed Join eZeelo</h2>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>*@
+    <!--/ DONARS TESTIMONIALS END -->
+    @*<div id="port-folio" class="pad-top-botm">
+            <div class="container">
+                <div class="row text-center ">
+                    <div class="col-lg-12 col-md-12  col-sm-12 ">
+                        <div class="delivery-div">
+                            <img src="~/Content/assets/img/delivery-12.png" />
+                        </div>
+
+                    </div>
+                </div>
+
+
+
+
+            </div>
+        </div>*@
+
+
+    @*<div id="help">
+            <div class="overlay">
+                <div class="container">
+                    <div class="row text-center">
+                        <div class="col-lg-8 col-lg-offset-2 col-md-8 col-md-offset-2 col-sm-8 col-sm-offset-2">
+                            <h2 data-wow-delay="0.3s" class="wow rollIn animated"><strong>How will eZeelo benefit you?</strong></h2>
+                            <p class="sub-head">
+                                Present age Shoppers and Buyers who are net savvy and make their buying choice at ease without any constraint of time, round the clock can be reached by joining eZeelo.
+                                There is no No additional infrastructure or heavy investment in real estate, you can efficiently and effectively showcase your products range and prices at eZeelo
+                            </p>
+                            <p class="sub-head">
+                                A must if you want to be the next generation seller with visibility and presence in the digital market.
+                            </p>
+                        </div>
+                    </div>
+
+
+
+                </div>
+            </div>
+
+        </div>*@
+
+    @*<div id="contact">
+            <div class="container">
+                <div class="row text-center">
+                    <div class="col-lg-8 col-lg-offset-2 col-md-8 col-md-offset-2 col-sm-8 col-sm-offset-2">
+                        <h2 data-wow-delay="0.3s" class="wow rollIn animated sky-blue"><strong>GET IN TOUCH </strong></h2>
+                        <p class="sub-head">Feel Free To Contact Us</p>
+                        <p class="sub-head  wow rotateIn animated" data-wow-delay="0.4s">
+                            NSP Futuretech Pvt. Ltd. 9-9A, 4th Floor, NMC Complex,
+                            J.B. Wing, Mangalwari Bazar, Sadar, Nagpur- 440001
+                        </p>
+                    </div>
+                </div>
+                <div class="row  text-center wow rotateIn animated" data-wow-delay="0.4s" style="margin-bottom:20px;">
+                    <div class="col-lg-8  col-md-8 col-sm-12 col-lg-offset-2   col-md-offset-2">
+                        <a href="https://www.facebook.com/ezeelo" target="_blank">  <img src="~/Content/assets/img/Social/facebook.png" alt="facebook.png" /> </a>
+                        <a href="https://plus.google.com/+ezeelo/posts" target="_blank"> <img src="~/Content/assets/img/Social/google-plus.png" alt="google-plus.png" /></a>
+                        <a href="https://twitter.com/ezeelo" target="_blank"> <img src="~/Content/assets/img/Social/twitter.png" alt="twitter.png" /></a>
+                        <a href="https://www.youtube.com/channel/UCzfy7xDV9nEbAGH4II9MW6w/videos" target="_blank"><img src="~/Content/assets/img/Social/youtube-128.png" width="78px" alt="youtube-128.png" /></a>
+                        <a href="https://www.pinterest.com/ezeelo/" target="_blank"><img src="~/Content/assets/img/Social/pinterest.png" width="78px" alt="pinterest.png" /></a>
+                    </div>
+
+
+                </div>
+            </div>
+        </div>*@
+
+    <!--./ CONTACT SECTION END -->
+    <div id="footser-end">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12 col-md-12">
+                    <a href="#" style="color:#fff;" target="_blank">© 2015-eZeelo</a>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+
+    <!--./ FOOTER SECTION END -->
+    <!--  Jquery Core Script -->
+    @*<script src="~/Content/assets/js/wow.min.js"></script>
+        <script src="~/Content/assets/js/bootstrap.js"></script>
+        <script src="~/Content/assets/js/custom.js" defer="defer"></script>
+        <script src="~/Content/assets/js/jquery-1.10.2.js"></script>
+        <script src="~/Content/assets/js/jquery.easing.min.js"></script>
+        <script src="~/Content/assets/js/jquery.prettyPhoto.js"></script>*@
+    <script src="~/Content/js/jquery-2.1.3.min.js"></script>
+
+    <script type="text/javascript">
+        //alert("1");
+        var lPincode = $('#Pincode').val()
+        //alert("2");
+        $('#Pincode').bind('input propertychange', function () {
+            var lPincode = $('#Pincode').val()
+            $('#divPincodeError').hide();
+
+            if (lPincode.length == 6) {
+                $('#Pincode_loading').show();
+                $.ajax({
+                    url: '@Url.Action("GetAddress", "MerchantRegister")?Pincode=' + lPincode,
+                    type: "GET",
+                    success: function (result) {
+                        //$('#divAddress').html(result);
+                        $('#Pincode_loading').hide();
+                        $('#divPincodeError').hide();
+                        if (result == "1") {
+                            $('#divPincodeError').show();
+                            $('#divPincodeError').html('[' + lPincode + '] dose not exist,Contact to ADMIN');
+                            $('#Pincode').val('');
+                        }
+                    },
+                    error: function (data) {
+                        //alert('Pincode : ' + lPincode + ' Dose Not Exist, please Contact to ADMIN');
+                        //$('#divAddress').empty();
+                        //$('#Pincode_loading').hide();
+                        $('#divPincodeError').hide();
+                        //$('#divPincodeError').html('Pincode [' + lPincode + '] dose not exist, please Contact to ADMIN');
+                        //$('#Pincode').val('');
+                    }
+                });
+            }
+        });
+
+    </script>
+
+    <script type="text/javascript">
+        $('#userLogin_Email').bind('input propertychange', function () {
+            var lEmail = $('#userLogin_Email').val();
+            $('#divEmailError').hide();
+            $.ajax({
+                url: '@Url.Action("IsEmailAvailable", "MerchantRegister")?Email=' + lEmail,
+                type: "GET",
+                success: function (result) {
+                    $('#divEmailError').hide();
+                    if (result == "1") {
+                        $('#divEmailError').show();
+                        $('#divEmailError').html('Email [' + lEmail + '] already exist');
+                        $('#userLogin_Email').val('');
+                    }
+                },
+                error: function (data) {
+                    $('#divEmailError').hide();
+                }
+            });
+        });
+    </script>
+
+
+    <script type="text/javascript">
+
+        function ValidateNumber(e) {
+            var evt = (e) ? e : window.event;
+            var charCode = (evt.keyCode) ? evt.keyCode : evt.which;
+            if ((charCode > 45 && charCode < 58) || (charCode > 95 && charCode < 106) || charCode == 8 || charCode == 127 || charCode == 37 || charCode == 39) { // (charCode > 31 && (charCode < 48 || charCode > 57)) {
+                return true;
+            }
+            else if (charCode == 9) {
+                SendKeys("{tab}");
+                return true;
+            }
+            return false;
+        };
+
+        function ValidateEmail(obj) {
+            var email = $(obj).val();
+            var filter = /^([\w-\.]+@@([\w-]+\.)+[\w-]{2,4})?$/;
+            $('#divEmailError').hide();
+            if (filter.test(email)) {
+                return true;
+            }
+            else {
+                $('#divEmailError').show();
+                $('#divEmailError').html('Invalid Email [' + email + ']');
+                $('#userLogin_Email').val('');
+                $('#userLogin_Email').focus();
+                return false;
+            }
+        }
+
+        function ValidateMobile(obj) {
+            var mobile = $(obj).val();
+            var filter = /^[7-9]{1}[0-9]{9}$/;
+            $('#divMobileError').hide();
+            if (filter.test(mobile)) {
+                return true;
+            }
+            else {
+                $('#divMobileError').show();
+                $('#divMobileError').html('Invalid Mobile [' + mobile + ']');
+                $('#Mobile').val('');
+                $('#Mobile').focus();
+                return false;
+            }
+        }
+
+        function ValidatePincode() {
+            var pin = $('#Pincode').val();
+            var filter = /\d{6}/;
+            $('#divPincodeError').hide();
+            if (filter.test(pin)) {
+                return true;
+            }
+            else {
+                $('#divPincodeError').show();
+                $('#divPincodeError').html('Invalid Pincode [' + pin + ']');
+                $('#Pincode').val('');
+                $('#Pincode').focus();
+                return false;
+            }
+        }
+
+        function ValidateConfirmPassword(obj) {
+            var pwd = $('#userLogin_Password').val();
+            var cpwd = $('#ConfirmPassword').val();
+            $('#divPwdError').hide();
+            if (pwd == cpwd)
+            { return true; }
+            else
+            {
+                $('#divPwdError').show();
+                $('#divPwdError').html('Invalid Confirm Password');
+                $(obj).val('');
+                //$(obj).select();
+                $(obj).focus();
+                return false;
+            }
+        };
+
+        function setFocus() {
+            var pwd = $('#userLogin_Password').val();
+            $('#divPwdError').hide();
+            if (pwd == '') {
+                $('#ConfirmPassword').val('');
+                $('#userLogin_Password').focus();
+            }
+            else {
+                $('#ConfirmPassword').val('');
+                $('#ConfirmPassword').focus();
+            }
+        };
+
+    </script>
+    <script type="text/javascript">
+        $('#Mobile').bind('input propertychange', function () {
+            var lMobile = $('#Mobile').val();
+            $('#divMobileError').hide();
+            if (lMobile.length == 10) {
+                $.ajax({
+                    url: '@Url.Action("IsMobileAvailable", "MerchantRegister")?Mobile=' + lMobile,
+                    type: "GET",
+                    success: function (result) {
+                        $('#divlMobileError').hide();
+                        if (result == "1") {
+                            $('#divMobileError').show();
+                            $('#divMobileError').html('Mobile [' + lMobile + '] already exist');
+                            $('#Mobile').val('');
+                        }
+                    },
+                    error: function (data) {
+                        $('#divlMobileError').hide();
+                    }
+                });
+            }
+        });
+    </script>
+    @*<script type="text/javascript">
+            var lMobile = $('#Mobile').val()
+            $('#Mobile').bind('input propertychange', function () {
+                var lMobile = $('#Mobile').val();
+                $('#divMobileError').hide();
+                if (lMobile.length == 10) {
+                    //$('#Pincode_loading').show();
+                    $.ajax({
+                        url: '@Url.Action("IsMobileAvailable", "MerchantRegister")?Mobile=' + lMobile,
+                        type: "GET",
+                        success: function (result) {
+                            //alert(result);
+                            //$('#Pincode_loading').hide();
+                            $('#divlMobileError').hide();
+                            if (result == "1") {
+                                $('#divMobileError').show();
+                                $('#divMobileError').html('Mobile [' + lMobile + '] already exist');
+                                $('#Mobile').val('');
+                            }
+                            if (result == "0")
+
+                        },
+                        error: function (data) {
+                            $('#divlMobileError').hide();
+                        }
+                    });
+                }
+            });
+
+        </script>*@
+
+
+</body>
+</html>

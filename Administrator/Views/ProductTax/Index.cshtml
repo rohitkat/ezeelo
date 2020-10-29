@@ -1,0 +1,165 @@
+﻿@model ModelLayer.Models.ViewModel.ProductTaxViewModel
+@{
+    ViewBag.Title = "Index";
+}
+
+
+<div id="content" class="span10">
+    <ul class="breadcrumb">
+        <li>
+            <a href="#">Index</a>
+        </li>
+    </ul>
+
+    <div class="row-fluid">
+        <div class="box span12">
+            <div class="box-header">
+                <h2><i class="icon-edit"></i><span class="break"></span>@Html.ActionLink("Create New", "Create")</h2>
+            </div>
+            <div class="span12" style="margin-top:10px;margin-left:10px;">
+                <div class="control-group span3" style="margin-left:10px;">
+                    <label> Select Franchise</label>
+                    <div class="controls"> @Html.DropDownList("Franchise", "Select Franchsie")</div>
+                </div>
+                <div class="control-group span3" style="margin-left:10px;">
+                    <label>   Select Shop</label>
+                    <div class="controls"> @Html.DropDownList("Shop")</div>
+                </div>
+                <div class="control-group span3" style="margin-left:10px;">
+                    <label> Select Category</label>
+                    <div class="controls">  @Html.DropDownList("ShopCategory")</div>
+                </div>
+                <div class="control-group span3" style="margin-left:10px;">
+                    <label> Select Tax</label>
+                    <div class="controls">  @Html.DropDownList("TaxMaster")</div>
+                </div>
+            </div>
+            <div id="divSpecification"></div>
+        </div><!--/span-->
+
+    </div>
+
+</div>
+
+<script src="~/Scripts/jquery-1.10.2.min.js"></script>
+<script>
+    $(document).ready(function () {
+
+        $("#Franchise").change(function () {
+            var fId = $("#Franchise  option:selected").val();
+
+            $("#loaddiv").css('display', 'block');
+            $("#loaddiv").fadeOut(1000);
+
+
+            $.ajax({
+                type: "POST",
+                url: "/ProductTax/FranchiseShop",
+                data: "{ franchiseID: " + fId + "}",
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                async: true,
+                cache: false,
+                success: function (msg) {
+
+                    $('#Shop').empty();
+                    $('#Shop').append('<option value=0>Select shop</option>');
+
+                    $.each(msg, function (index, item) {
+                        $('#Shop').append('<option value=' + item.ID + '>' + item.Name + '</option>');
+                    });
+                },
+                error: function (x, e) {
+                    alert("unable to Retrive Data No ");
+                }
+            });
+
+        });
+
+        $("#Shop").change(function () {
+            var fId = $("#Shop  option:selected").val();
+
+            $("#loaddiv").css('display', 'block');
+            $("#loaddiv").fadeOut(1000);
+
+
+            $.ajax({
+                type: "POST",
+                url: "/ProductTax/ShopCategoryList",
+                data: "{ ShopID: " + fId + "}",
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                async: true,
+                cache: false,
+                success: function (msg) {
+
+                    $('#ShopCategory').empty();
+                    $('#ShopCategory').append('<option value=0>Select Category</option>');
+
+                    $.each(msg, function (index, item) {
+                        $('#ShopCategory').append('<option value=' + item.ID + '>' + item.Name + '</option>');
+                    });
+                },
+                error: function (x, e) {
+                    alert("unable to Retrive Data No ");
+                }
+            });
+
+        });
+
+        $('#ShopCategory').change(function (e) {
+
+            var fId = $("#Shop  option:selected").val();
+            var sCatId = $("#ShopCategory  option:selected").val();
+            var sTaxMasterID = $("#TaxMaster  option:selected").val();
+            if (sTaxMasterID > -1) {
+                $("#pageloaddiv").css('display', 'block');
+                $("#pageloaddiv").fadeOut(1000);
+                /* Request the partial view with .get request. */
+                $.get('/ProductTax/TaxIndex?Shop=' + fId + '&ShopCategory=' + sCatId + '&TaxMasterID=' + sTaxMasterID, function (data) {
+                    /* data is the pure html returned from action method, load it to your page */
+                    $('#divSpecification').html(data);
+                    /* little fade in effect */
+                    $('#divSpecification').fadeIn('fast');
+                });
+
+                $("#pageloaddiv").css('display', 'none');
+                $("#pageloaddiv").fadeOut(1000);
+            }
+            else {
+                $('#divSpecification').html('');
+                $('#divSpecification').fadeIn('fast');
+            }
+
+        });
+
+        $('#TaxMaster').change(function (e) {
+
+            var fId = $("#Shop  option:selected").val();
+            var sCatId = $("#ShopCategory  option:selected").val();
+            var sTaxMasterID = $("#TaxMaster  option:selected").val();
+            if (sCatId > 0) {
+                $("#pageloaddiv").css('display', 'block');
+                $("#pageloaddiv").fadeOut(1000);
+                /* Request the partial view with .get request. */
+                $.get('/ProductTax/TaxIndex?Shop=' + fId + '&ShopCategory=' + sCatId + '&TaxMasterID=' + sTaxMasterID, function (data) {
+                    /* data is the pure html returned from action method, load it to your page */
+                    $('#divSpecification').html(data);
+                    /* little fade in effect */
+                    $('#divSpecification').fadeIn('fast');
+                });
+
+                $("#pageloaddiv").css('display', 'none');
+                $("#pageloaddiv").fadeOut(1000);
+            }
+            else {
+                $('#divSpecification').html('');
+                $('#divSpecification').fadeIn('fast');
+            }
+
+        });
+
+
+
+    });
+</script>

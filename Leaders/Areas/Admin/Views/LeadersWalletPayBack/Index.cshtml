@@ -1,0 +1,98 @@
+﻿@model ModelLayer.Models.WalletPayBackViewModel
+
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_LeadersLayout.cshtml";
+}
+<style>
+    #divsearch {
+        border-collapse: separate;
+        border-spacing: 15px;
+    }
+</style>
+<script>
+    $(document).ready(function () {
+        if ($("#callType").val() == "0") {
+            $("#btnAcceptTop").show();
+            $("#btnApproveTop").hide();
+        } else if ($("#callType").val() == "1") {
+            $("#btnAcceptTop").hide();
+            $("#btnApproveTop").show();
+        }
+
+        $("html, body").delay(1000).animate({ scrollTop: $('.card-header').offset().top }, 2000);
+        $("#FromDate").datepicker({
+            dateFormat: 'mm/dd/yy',
+        });
+        $("#ToDate").datepicker({
+            dateFormat: 'mm/dd/yy',
+        });
+        $("#btnAcceptTop").click(function () {
+            $("#btnAccept").click();
+        });
+        $("#btnApproveTop").click(function () {
+            $("#btnAccept").click();
+        });
+
+        $("#btnPen").click(function () {
+            //alert("0");
+            $("#callType").val("0");
+            $("#btnSubmit").click();
+        });
+        $("#btnAcp").click(function () {
+            //("1");
+            $("#callType").val("1");
+            $("#btnSubmit").click();
+        });
+        $("#btnApr").click(function () {
+            //alert("2");
+            $("#callType").val("2");
+            $("#btnSubmit").click();
+        });
+        $("#export").click(function () {
+            window.location = "/admin/LeadersWalletPayBack/ExportToExcel?fromdt=" + $("#FromDate").val() + "&todt=" + $("#ToDate").val() + "&Type=" + $("#callType").val();
+        })
+    });
+</script>
+<div class="container">
+    <div class="card" id="maindiv">
+        <div class="card-header"><strong>Leaders Wallet Pay Back <span id="spStatus"></span> Order Report</strong></div>
+        <div class="card-body card-block">
+            @using (Ajax.BeginForm("GetData", "LeadersWalletPayBack", new AjaxOptions { LoadingElementId = "progress", UpdateTargetId = "ReportDiv" }))
+            {
+                <div id="progress" class="modal">
+                    <div class="center">
+                        <img src="~/img/ajax-loading-gif-transparent-background-8.gif" />
+                    </div>
+                </div>
+                <table id="divsearch">
+                    <tr>
+                        <td>
+                            @Html.TextBoxFor(model => model.callType, new { style="display:none"})
+                            @Html.TextBoxFor(model => model.FromDate, Model.FromDate.ToString("MM/dd/yyyy"), new { @class = "control-label", style = "width:90px" })
+                        </td>
+                        <td>
+                            @Html.TextBoxFor(model => model.ToDate, Model.ToDate.ToString("MM/dd/yyyy"), new { @class = "control-label", style = "width:90px" })
+                        </td>
+                        <td>
+                            <input id="btnPen" type="button" value="Pending Ord" class="btn btn-warning">
+                            <input id="btnAcp" type="button" value="Accepted Ord" class="btn btn-warning">
+                            <input id="btnApr" type="button" value="Approved Ord" class="btn btn-warning">
+                            <input id="btnSubmit" type="submit" value="show" class="btn btn-warning" style="display:none">
+                        </td>
+                        <td>
+                            <input id="btnAcceptTop" type="button" value="Accept" class="btn btn-success btn-small" />
+                            <input id="btnApproveTop" type="button" value="Approve" class="btn btn-success btn-small" />
+                            <input id="export" type="button" value="Export" class="btn btn-success btn-small" />
+                        </td>
+                    </tr>
+                </table>
+            }
+            <div class="NumberOne Referralsleft third-box ">
+                <div class="Referralsright SpanOne_" id="ReportDiv">
+                    @{ Html.RenderPartial("~/Areas/Admin/Views/LeadersWalletPayBack/_LeadersWalletPayBack.cshtml", Model); }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

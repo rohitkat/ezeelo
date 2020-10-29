@@ -1,0 +1,50 @@
+﻿@{
+    ModelLayer.Models.CustomerOrder lCustomerOrder = (ModelLayer.Models.CustomerOrder)ViewBag.CustomerOrder;
+    ModelLayer.Models.TransactionInputProcessAccount lTransactionInputProcessAccount = (ModelLayer.Models.TransactionInputProcessAccount)ViewBag.TransactionInputProcessAccount;
+}
+<style>
+    .already_paid {
+        background: #ff6a00 !important;
+        color: #ffffff !important;
+    }
+</style>
+<div>
+    <div class="control-group">
+        <label class="control-label" for="focusedInput">Order Amount</label>
+        <div class="controls">
+            @Html.TextBox("OrderAmount", lCustomerOrder.OrderAmount, new { disabled = "disabled" })
+        </div>
+    </div>
+
+    <div class="control-group">
+        <label class="control-label" for="focusedInput">Payment Mode</label>
+        <div class="controls">
+            @Html.TextBox("PaymentMode", lCustomerOrder.PaymentMode, new { disabled = "disabled" })
+        </div>
+    </div>
+
+    <div class="control-group">
+        <label class="control-label" for="focusedInput">Payable Amount</label>
+        <div class="controls">
+            @Html.TextBox("PayableAmount", lCustomerOrder.PayableAmount, new { disabled = "disabled" })
+        </div>
+    </div>
+
+    <div class="control-group">
+        <label class="control-label" for="focusedInput">Order Date</label>
+        <div class="controls">
+            @Html.TextBox("CreateDate", lCustomerOrder.CreateDate, new { disabled = "disabled" })
+        </div>
+    </div>
+
+    @if (lTransactionInputProcessAccount != null)
+    {
+        <div class="control-group">
+            <label class="control-label" for="focusedInput">Already Paid on</label>
+            <div class="controls">
+                @Html.TextBox("CreateDate", lTransactionInputProcessAccount.CreateDate, new { disabled = "disabled", @class = "already_paid" })
+            </div>
+        </div>
+    }
+
+</div>

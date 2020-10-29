@@ -1,0 +1,241 @@
+﻿@model ModelLayer.Models.ViewModel.LoginViewModel
+@{
+    
+        Layout = "~/Views/Shared/LoginLayout.cshtml";
+    
+}
+
+<link href="~/Content/css/bootstrap1.min.css" rel="stylesheet" />
+<link href="~/Content/css/bootstrap-responsive.min.css" rel="stylesheet" />
+<link href="~/Content/css/Site.css" rel="stylesheet" />
+<link id="base-style" href="~/Content/css/style.css" rel="stylesheet" />
+<link id="base-style" href="~/Content/css/style-responsive.css" rel="stylesheet" />
+<link rel='shortcut icon' type='image/x-icon' href='~/Content/Images/gb_logo.png' />
+@*<link href="~/Content/css/style-forms.css" rel="stylesheet" />*@
+<link href="~/Content/css/style.css" rel="stylesheet" />
+<style type="text/css">
+    .forgotCover {
+        display:none;
+        width:100%;
+        height:100%;
+        background:rgba(0, 0, 0, 0.4);
+        z-index:9;
+        position:fixed;
+        top:0;
+        left:0;
+    }
+    #ForgetPasswordDiv {
+        position: fixed;
+        width: 600px;
+        top: 20%;
+        left: 25%;
+        z-index: 99;
+        height:320px;
+        padding:20px;
+        border:5px solid #ccc;
+        border-radius:15px;
+        background:#fff;
+        display:none;
+    }
+        #ForgetPasswordDiv ul {
+            float: left;
+            clear: both;
+            margin: auto;
+            width: 100%;
+            margin-left: 53px;
+            margin-top:39px;
+        }
+
+            #ForgetPasswordDiv li {
+                line-height: 12px;
+                display: block;
+                float: none;
+                width:100%;
+            }
+                #ForgetPasswordDiv li span {
+                    font-size: 20px;
+                    color: #000;
+                    display: block;
+                    text-align: center;
+                    margin-right: 132px;
+                }
+                #ForgetPasswordDiv li label {
+                    color: #000;
+                    text-shadow:none;
+                }
+        #ForgetPasswordDiv li input {
+            width:80%;
+            border-radius:10px;
+        }
+            #ForgetPasswordDiv li input:focus {
+                box-shadow:0 0 6px #0094ff;
+            }
+             #ForgetPasswordDiv div .btn {
+            }
+        #ForgetPasswordDiv div {
+            text-align:center;
+            clear:both;
+        }
+    .closeA {
+        float:right;
+        position:absolute;
+        right:5px;
+        top:2px;
+        z-index:100;
+        font-size:20px;
+    }
+    .msgSuccess {
+        color:#ff6a00;
+        text-shadow:none;
+    }
+    #ForgetPasswordDiv h2 {
+        background: rgba(204, 204, 204, 0.4);
+        color: #000;
+        position: absolute;
+        top: 0;
+        left: 0;
+        padding: 2px;
+        line-height: 30px;
+        width: 100%;
+        text-align: center;
+        margin-top:0;
+        text-shadow:none;
+    }
+    .navbar-inner .ForgetAnchor {
+        color: #fff;
+        text-shadow: none;
+    }
+    .login-box-admin ul li input.input-large {
+        height: 30px;
+    }
+</style>
+<script src="~/Scripts/jquery-1.10.2.min.js"></script>
+<script src="~/Scripts/jquery.unobtrusive-ajax.js"></script>
+<script type="text/javascript">
+    $(document).ready(function () {
+        $(".forgotLink a").click(function () {
+            if ($(".forgotCover").css('display') == 'none') {
+                $(".forgotCover").css('display', 'block');
+                $("#ForgetPasswordDiv").css('display', 'block');
+            } else {
+                $(".forgotCover").css('display', 'none');
+                $("#ForgetPasswordDiv").css('display', 'none');
+            }
+        });
+        $(".closeA").click(function () {
+            $(".forgotCover").css('display', 'none');
+            $("#ForgetPasswordDiv").css('display', 'none');
+        });
+    });
+</script>
+
+
+@using (Html.BeginForm("Login", "Login"))
+{
+    @Html.AntiForgeryToken()
+    <link href="~/Content/css/Site.css" rel="stylesheet" />
+    <div class="navbar">
+        <div class="navbar-inner">
+            <div class="container-fluid">
+
+                <div class="row">
+
+                    <div class="col-lg-4 col-xs-12 col-md-4 col-sm-3">
+                        <a class="gandhibaghLogo-login" href="Login">
+
+                            <img src="~/Content/Images/logo.png" alt="Admin eZeelo" class="img-responsive" style="height:80px;" />
+                        </a>
+                    </div>
+                    <div class="col-lg-8 col-xs-12 col-md-8 col-sm-12 paddingnew">
+                        <div class="login-box-admin">
+                            <form class="form-horizontal" action="index.html" method="post">
+                                <ul>
+                                    
+                                    <li><div class="icon-login"> <span class="glyphicons-icon lock white glyfIcon"></span></div></li>
+                                    <li>
+                                        <div class="input-prepend" title="User Name">
+                                            @*<label>UserName</label>*@
+
+                                            <span class="add-on"><i class="halflings-icon user"></i></span>
+
+                                            @Html.TextBoxFor(model => model.UserName, new { @Class = "input-large", @placeholder = "Please enter Mobile No / Email" })
+                                            @Html.ValidationMessageFor(model => model.UserName)
+
+                                        </div>
+                                    </li>
+                                    <li>
+                                        <div class="input-prepend" title="Password">
+                                            @*<label>Password</label>*@
+
+                                            <span class="add-on"><i class="halflings-icon lock"></i></span>
+                                            @Html.PasswordFor(model => model.Password, new { @Class = "input-large", @placeholder = "Please enter Password" })
+                                            @Html.ValidationMessageFor(model => model.Password)
+
+                                        </div>
+                                    </li>
+                                    <li>
+                                        <div class="button-login">
+                                            <div class="btn-both"><button type="submit" value="Login" class="button btn btn-success">Login</button>@*<button class="link">forgot password</button>*@ @*@Html.ActionLink("Signup", "Create", "Customer", new { @class = "link btn btn-default" })*@</div>
+                                        </div>
+                                        
+                                    </li>
+
+                                </ul>
+                                <div class="clr"></div>
+                               
+                               
+
+                                <div class="validation-error">
+                                    @if (TempData["Message"] != null)
+                                    {
+                                        <div class="errorMsgLogin">
+                                            @TempData["Message"]
+                                        </div>
+                                    }
+                                    @Html.ValidationSummary(true)
+                                </div>
+                               
+                            </form>
+
+                            <div class="forgotLink" style="float: right; margin-right: 72px; margin-top: -19px; color: #fff;">
+                                @Ajax.ActionLink("Forget Password", "ForgetPassword", null, new AjaxOptions
+                                       {
+                                           HttpMethod = "GET",
+                                           UpdateTargetId = "ForgetPasswordDiv",
+                                           InsertionMode = InsertionMode.Replace
+
+                                       }, new { @class = "ForgetAnchor" })
+
+                            </div>
+                            <div class="clr"></div>
+
+                            <div class="forgotCover"></div>
+                            <div id="ForgetPasswordDiv">
+
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="container-fluid-full" >
+                <div class="row-fluid">
+                    <div class="row-fluid">
+                        <div class="span12 adminBanner" id="DetailDiv">
+                            <img src="~/Content/Images/admin.png" alt="Admin" class="img-responsive" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+}
+
+
+
+
+
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}

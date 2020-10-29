@@ -1,0 +1,57 @@
+﻿@model ModelLayer.Models.Specification
+
+@{
+    ViewBag.Title = "Create";
+}
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+
+    <div class="span10" id="content">
+        <div class="row-fluid">
+            <div class="box">
+                <div class="box-header">
+                    <h2><i class="icon-edit"></i><span class="break"></span>Specification</h2>
+
+                </div>
+                <form class="form-horizontal">
+
+                    <hr />
+                    @Html.ValidationSummary(true)
+
+                    <div class="control-group">
+                        @*@Html.LabelFor(model => model.Name, new { @class = "control-label col-md-2" })*@
+                        <label class="control-label span2" style="margin-left: 10px;">Specification</label>
+                        <div class="controls">
+                            @Html.TextBoxFor(model => model.Name, new { required = "required" })
+                            @Html.ValidationMessageFor(model => model.Name)
+                        </div>
+                    </div>
+
+                    <div class="control-group">
+                        @*@Html.LabelFor(model => model.ParentSpecificationID, "ParentSpecificationID", new { @class = "control-label col-md-2" })*@
+                        <label class="control-label span2" style="margin-left: 10px;">
+                            Parent Specification
+                        </label>
+                        <div class="controls">
+                            @Html.DropDownList("ParentSpecificationID", String.Empty)
+                            @Html.ValidationMessageFor(model => model.ParentSpecificationID)
+                        </div>
+                    </div>
+                    <div class="form-actions" style="padding-left: 165px;">
+                        <div class="col-md-offset-2 col-md-10">
+                            <input type="submit" value="Create" class="btn btn-primary" />
+                            @Html.ActionLink("Back to List", "Index", string.Empty, new { @class = "btn btn-brown" })
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+}
+
+
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}

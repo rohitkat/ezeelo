@@ -1,0 +1,322 @@
+﻿@model ModelLayer.Models.ViewModel.BBPDashboardViewModel
+
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_LeadersLayout.cshtml";
+}
+
+<link href="//cdn.datatables.net/1.10.19/css/jquery.dataTables.min.css" rel="stylesheet" />
+<script src="//cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
+<script src="~/Scripts/BBPMenuOpenup.js"></script>
+<style>
+    table {
+        border-collapse: separate;
+        border-spacing: 15px;
+    }
+
+    .nav-link {
+        color: #007bff !important;
+    }
+
+    a.nav-link.active.show {
+        color: black !important;
+    }
+
+    popup {
+        margin-left: -220px;
+        position: fixed;
+        width: 200px;
+        word-break: break-all;
+        box-shadow: 4px -5px 6px black;
+        border-radius: 10px;
+        padding: 5px;
+    }
+
+    active {
+        background-color: #90fa90
+    }
+
+    inactive {
+        background-color: #f86c6c
+    }
+</style>
+@if (TempData["BBPResult"] != null)
+{
+    <script>
+    alert("@TempData["BBPResult"]");
+    </script>
+}   `
+<script>
+    $(document).ready(function () {
+        $("#btnExport").click(function () {
+            window.location = "/admin/BBPReports/ExportToExcel_Subscriber";
+        })
+        $(".userStatsRpt").click(function () {
+            var str = $(this).attr("val").split('+');
+            if (str[1] == 'False') {
+                str[1] = 'Inactive';
+                $("#lblinfo").html(str[2] + " is <span style='color: red'>" + str[1] + "</span> for Payout " + $("#FromDate").val() + " to " + $("#ToDate").val());
+             } else {
+                str[1] = 'Active';
+                $("#lblinfo").html(str[2] + " is <span style='color: #90fa90'>" + str[1] + "</span> for Payout " + $("#FromDate").val() + " to " + $("#ToDate").val());
+             }
+            $.ajax({
+                type: "POST",
+                url: "@Url.Action("GetStatusReport", "BBPReports")",
+                data: "{'UserLoginID':" + str[0] + "}",
+                contentType: "application/json; charset = utf-8",
+                dataType: "json",
+                cache: false,
+                success: function (msg) {
+
+                    $('#tblStatusReport').html("");
+                    $("#statusReport").show();
+                    var table = $('#tblStatus').DataTable();
+                    var rows = table
+                        .rows()
+                        .remove()
+                        .draw();
+                    var status = '';
+                    var result = '';
+                    $.each(msg.result, function (index, item) {
+                        if (index == 0) {
+                            status = item.UserStatus;
+                            result = item.Reason;
+                        }
+                    });
+                    var OrdCode = '';
+                    $.each(msg.order, function (index, item) {
+                        OrdCode = OrdCode + ',' + item.OrderCode;
+                    });
+                    var color = '';
+                    var classN = '';
+                    if (status == 0) {
+                        color = '#f86c6c';
+                        classN = 'background-color:#f86c6c;margin-left: -220px;position: fixed;width: 200px;word -break: break-all;box-shadow: 4px -5px 6px black;border-radius: 10px;padding: 5px;';
+                    } else {
+                        color = '#90fa90';
+                        classN = 'background-color: #90fa90;margin-left: -220px;position: fixed;width: 200px;word -break: break-all;box-shadow: 4px -5px 6px black;border-radius: 10px;padding: 5px;';
+                    }
+                    var IsCssAdd = '';
+                    $.each(msg.report, function (index, item) {
+                        if (OrdCode.indexOf(item.OrderCode) != -1) {
+                            if (IsCssAdd == '') {
+                                IsCssAdd = '1';
+                                table.row.add($(
+                                    '<tr style="background-color:' + color + '"><td>' + item.SrNo + '</td><td><div style="' + classN + '">' + result + '</div>' + item.OrderCode + '</td><td>' + item.OrderType + '</td><td>' + item.RetailPoints + '</td><td>' + item.OrderStatus + '</td><td>' + item.OrderPlacedDate + '</td><td>' + item.OrderDeliveredDate + '</td><td>' + item.ActiveUpto + '</td></tr>'
+                                )).draw(false);
+                                //$('#tblStatusReport').append('<tr style="background-color:' + color + '"><td><div style="' + classN + '">' + result + '</div>' + item.OrderCode + '</td><td>' + item.OrderType + '</td><td>' + item.RetailPoints + '</td><td>' + item.OrderStatus + '</td><td>' + item.OrderPlacedDate + '</td><td>' + item.OrderDeliveredDate + '</td><td>' + item.ActiveUpto + '</td></tr>');
+                            }
+                            else {
+                                table.row.add($(
+                                    '<tr style="background-color:' + color + '"><td>' + item.SrNo + '</td><td>' + item.OrderCode + '</td><td>' + item.OrderType + '</td><td>' + item.RetailPoints + '</td><td>' + item.OrderStatus + '</td><td>' + item.OrderPlacedDate + '</td><td>' + item.OrderDeliveredDate + '</td><td>' + item.ActiveUpto + '</td></tr>'
+                                )).draw(false);
+                                //$('#tblStatusReport').append('<tr style="background-color:' + color + '"><td>' + item.OrderCode + '</td><td>' + item.OrderType + '</td><td>' + item.RetailPoints + '</td><td>' + item.OrderStatus + '</td><td>' + item.OrderPlacedDate + '</td><td>' + item.OrderDeliveredDate + '</td><td>' + item.ActiveUpto + '</td></tr>');
+                            }
+                        } else {
+                            if (IsCssAdd == '') {
+                                IsCssAdd = '1';
+                                table.row.add($(
+                                    '<tr"><td>' + item.SrNo + '</td><td><div style="' + classN + '">' + result + '</div>' + item.OrderCode + '</td><td>' + item.OrderType + '</td><td>' + item.RetailPoints + '</td><td>' + item.OrderStatus + '</td><td>' + item.OrderPlacedDate + '</td><td>' + item.OrderDeliveredDate + '</td><td>' + item.ActiveUpto + '</td></tr>'
+                                )).draw(false);
+                                //$('#tblStatusReport').append('<tr"><td><div style="' + classN + '">' + result + '</div>' + item.OrderCode + '</td><td>' + item.OrderType + '</td><td>' + item.RetailPoints + '</td><td>' + item.OrderStatus + '</td><td>' + item.OrderPlacedDate + '</td><td>' + item.OrderDeliveredDate + '</td><td>' + item.ActiveUpto + '</td></tr>');
+                            }
+                            else {
+                                table.row.add($(
+                                    '<tr"><td>' + item.SrNo + '</td><td>' + item.OrderCode + '</td><td>' + item.OrderType + '</td><td>' + item.RetailPoints + '</td><td>' + item.OrderStatus + '</td><td>' + item.OrderPlacedDate + '</td><td>' + item.OrderDeliveredDate + '</td><td>' + item.ActiveUpto + '</td></tr>'
+                                )).draw(false);
+                                //$('#tblStatusReport').append('<tr"><td>' + item.OrderCode + '</td><td>' + item.OrderType + '</td><td>' + item.RetailPoints + '</td><td>' + item.OrderStatus + '</td><td>' + item.OrderPlacedDate + '</td><td>' + item.OrderDeliveredDate + '</td><td>' + item.ActiveUpto + '</td></tr>');
+                            }
+                        }
+                    });
+                },
+                error: function (x, e) {
+                    alert('Failure');
+
+                }
+            });
+        })
+    });
+</script>
+<div class="container">
+    <div id="progress" class="modal">
+        <div class="center">
+            <img src="~/img/ajax-loading-gif-transparent-background-8.gif" />
+        </div>
+
+    </div>
+    <div id="statusReport" class="modal" style="background-color:#f5f3f3;">
+        <div class="center modal-body">
+            <a style="cursor:pointer; font-weight:900;width:30px;height:30px;background-color:red;color:white;float:right" onclick="$('#statusReport').hide();"><center>X</center></a>
+            <center>
+                <label id="lblinfo" style="font-weight:bold;text-transform:uppercase !important"></label>
+            </center>
+            <div class="row">
+                <div class="col-md-2"></div>
+                <div class="col-md-9">
+                    <div class="modal-content">
+                        <table class="table" id="tblStatus">
+                            <thead>
+                                <tr>
+                                    <th>
+                                        SrNo
+                                    </th>
+                                    <th>
+                                        OrderCode
+                                    </th>
+                                    <th>
+                                        Order Type
+                                    </th>
+                                    <th>
+                                        Retail Points
+                                    </th>
+                                    <th>
+                                        Order Status
+                                    </th>
+                                    <th>
+                                        Order Placed Date
+                                    </th>
+                                    <th>
+                                        Order Delivered Date
+                                    </th>
+                                    <th>
+                                        Active UpTo
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody id="tblStatusReport"></tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="col-md-1"></div>
+            </div>
+
+
+        </div>
+    </div>
+    <div class="card" id="maindiv">
+        <div class="card-header"><strong>Business Booster Plan Subscriber Report </strong></div>
+        <div class="card-body card-block">
+            @using (Html.BeginForm("BBPSubscribers", "BBPReports"))
+            {
+                @Html.AntiForgeryToken()
+                <table>
+                    <tr>
+                        <td>
+                            <div class="form-group">
+                                @Html.DropDownListFor(m => m.PayoutDateFilterID, Model.PayoutDateFilter, "Select Payout Week", new { @class = "form-control" })
+                            </div>
+                        </td>
+                        <td>
+                            <input id="btnGo" type="submit" value="Go" class="btn btn-info" />
+                        </td>
+                        <td>
+                            <input id="btnExport" type="button" value="Export To Excel" class="btn btn-warning" />
+                        </td>
+                    </tr>
+                </table>
+            }
+            @if (Model != null)
+            {
+                @Html.HiddenFor(m => m.FromDate)
+                @Html.HiddenFor(m => m.ToDate)
+                <div style="max-width:1000px;overflow:auto">
+                    <table id="tblData" class="table table-bordered table-striped table-condensed display" width="100%">
+                        <thead>
+                            <tr>
+                                <th>Sr.No.</th>
+                                <th>UserLoginId</th>
+                                <th>Name</th>
+                                <th>Email</th>
+                                <th>Phone No</th>
+                                @if (Model.PayoutDateFilterID <= 0)
+                                {
+                                    <th>Plan</th>
+                                }
+                                <th>Status</th>
+                                <th>Sub Date</th>
+                                <th>Trans Date</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @{ var i = 0; }
+                            @if (Model.Subscribers.Count != 0)
+                            {
+                                foreach (var item in @Model.Subscribers)
+                                {
+                                    <tr>
+                                        <td>
+                                            @{
+                                                i = i + 1;
+                                            }
+                                            @i
+                                            <br />
+                                            <a style="color:blue;cursor:pointer" class="userStatsRpt" val="@item.UserloginId+@item.Status.ToString()+@item.Name.Trim()"> <span><i class="fa fa-user"></i></span></a>
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.UserloginId)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.Name)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.Email)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.Mobile)
+                                        </td>
+                                        @if (Model.PayoutDateFilterID <= 0)
+                                        {
+                                            <td>
+                                                @Html.DisplayFor(modelItem => item.PlanName)
+                                            </td>
+                                        }
+                                        <td>
+                                            @{
+                                                string str = "";
+                                                if (item.Status == true)
+                                                {
+                                                    str = "Active";
+                                                }
+                                                else
+                                                {
+                                                    str = "Inactive";
+                                                }
+                                            }
+                                            @str
+                                        </td>
+                                        <td>
+                                            @item.SubscriptionDate.ToString("dd-MM-yyyy HH:mm")
+                                        </td>
+                                        <td>
+                                            @item.LastTransDate.ToString("dd-MM-yyyy HH:mm")
+                                        </td>
+                                    </tr>
+                                }
+                            }
+                            else
+                            {
+                                <tr>
+                                    <td colspan="9" style="min-width:960px;max-width:960px">
+                                        <label style=" color: #138afc; ">No Record Found.... </label>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('#tblData').DataTable();
+        if ('@TempData["Search"]' != '') {
+            oTable = $('#tblData').DataTable();
+            //oTable.search('@TempData["Search"]').draw();
+            oTable.column(6).search('^' + '@TempData["Search"]' + '$', true, false).draw(); //for exact searrch
+        }
+        $("#tblStatus").DataTable();
+    });
+</script>

@@ -1,0 +1,68 @@
+﻿USE [Ezeelo]
+GO
+/****** Object:  StoredProcedure [dbo].[Sp_MLMUsers_Leaders]    Script Date: 15-07-2020 15:16:14 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+/******************************                                                                                
+** File: Sp_MLMUsers_Leaders                                                                                
+** Name: lokesh Panwar                                                                              
+** Desc: Get Leaders details          
+** Auth:                                                                                 
+** Date:               
+**************************                                                                                
+** Change History                                                    
+** lokesh panwar                                                                          
+**************************                                                                                
+** PR   Date       Author    Description                                                                              
+** --   --------   -------   ------------------------------------                  
+**       drop proc [Sp_MLMUsers_Leaders]        
+*******************************/                  
+ALTER proc [dbo].[Sp_MLMUsers_Leaders]          
+          
+as          
+begin          
+          
+DECLARE @CurrentQRP decimal(18,2);          
+          
+select @CurrentQRP = Current_QRP from QRP_Master          
+          
+          
+create table #temp (UserID bigint,FullName nvarchar(100),Email nvarchar(100),Mobile varchar(20),CreateDate datetime,Id_Ref int,Ref_Id varchar(100),[Level] int,          
+Join_date_ref datetime,Activate_date_ref datetime,Refered_Id_ref varchar(50),ParentName varchar(100),RP decimal(16,2),LeftQRP decimal(16,2),ERP decimal(16,2),Designation varchar(50)          
+)          
+          
+insert into #temp(UserID,FullName,Designation,Email,Mobile,CreateDate,Ref_Id,[Level],Join_date_ref,Activate_date_ref,Refered_Id_ref,ParentName,RP,ERP)          
+      
+select usr_login.id, (ISNULL(pd.FirstName,'') + ' ' +ISNULL(pd.LastName,'')) as Name          
+ --,isnull((select Designation from Designation_Master where Id = mu.CURRENTMONTHDESIGNTAIONID),'Prospect') as Designation      
+ ,IsNUll(dm.Designation,'Prospect') Designation      
+ ,usr_login.Email,usr_login.Mobile,usr_login.CreateDate          
+ ,isnull(mmuser.Ref_Id,0)Ref_Id,0 as [Level],mmuser.Join_date_ref,mmuser.Activate_date_ref          
+ ,mmuser.Refered_Id_ref as Referedby       
+ --,pd.FirstName+' '+pd.LastName as ParentName       
+ --,(select ISNULL(FirstName,'') + ' ' +ISNULL(LastName,'')  from PersonalDetail      
+ -- where UserLoginID = (select top 1 userid from mlm_user where  Ref_Id = mmuser.Refered_Id_ref)) as ParentName     
+ --,(select ISNULL(FirstName,'') + ' ' +ISNULL(LastName,'')  from PersonalDetail  where UserLoginID = (select top 1 UserID from mlm_user     
+ --where  Ref_Id = mmuser.Refered_Id_ref))  as ParentName     
+ ,(ISNULL(self_pd.FirstName,'') + ' ' +ISNULL(self_pd.LastName,'')) as ParentName         
+ ,'0.00' as RP,'0.00' as ERP      
+ -- (SELECT DBO.[SELFRPFINDER] (tm.id)) as RP,(SELECT DBO.[SELFERPFINDER] (tm.id)) as ERP          
+--,(  (SELECT DBO.[SELFRPFINDER] (tm.id)) - @CurrentQRP ) as LeftRP       
+       
+from mlm_user mmuser        
+inner Join PersonalDetail pd on mmuser.userid = pd.UserLoginID      
+inner join UserLogin usr_login on pd.UserLoginId=usr_login.Id  
+left join mlm_user self_mlmusr on self_mlmusr.Ref_Id=mmuser.Refered_Id_ref     
+left Join PersonalDetail self_pd on self_mlmusr.userid = self_pd.UserLoginID            
+Left join Designation_Master dm on mmuser.CURRENTMONTHDESIGNTAIONID=dm.Id           
+          
+update #temp set LeftQRP= (case when RP > @CurrentQRP then RP-@CurrentQRP else 0 end)        
+          
+          
+select UserID,FullName,Designation,Email,Mobile,CreateDate,Ref_Id,[Level],Join_date_ref,Activate_date_ref,Refered_Id_ref,ParentName,RP,ERP,LeftQRP          
+from #temp order by CreateDate desc     
+END          
+          
+          

@@ -1,0 +1,81 @@
+﻿@model ModelLayer.Models.Role
+
+@{
+    ViewBag.Title = "Edit";
+}
+
+
+<div class="row-fluid" style="margin-left:15px;margin-top:28px;">
+    <div class="box span12">
+        <div class="box-header">
+            <h2><i class="icon-edit"></i><span class="break"></span>Edit</h2>
+        </div>
+        <div class="box-content">
+            <div class="form-horizontal">
+                @if (ViewBag.Messaage != null)
+                {
+                    @Html.Label("Messaage", (string)ViewBag.Messaage, new { @class = "deleteMsg" })
+                }
+                else
+                {
+                    @Html.Label("Messaage", "", new { @class = "deleteMsg" })
+                }
+
+                @using (Html.BeginForm())
+                {
+                    @Html.AntiForgeryToken()
+
+                    @Html.ValidationSummary(false)
+                    @Html.HiddenFor(model => model.ID)
+
+                    <div class="control-group">
+                        @Html.LabelFor(model => model.Name, new { @class = "control-label col-md-2" })
+                        <div class="col-md-10 controls">
+                            @Html.EditorFor(model => model.Name)
+                            @Html.ValidationMessageFor(model => model.Name)
+                        </div>
+                    </div>
+
+                    <div class="control-group">
+                        @Html.LabelFor(model => model.ParentID, new { @class = "control-label col-md-2" })
+                        <div class="col-md-10 controls">
+                            @Html.DropDownList("RoleList", "Select Parent Role")
+                            @*@Html.EditorFor(model => model.ParentID)*@
+                            @Html.ValidationMessageFor(model => model.ParentID)
+                        </div>
+                    </div>
+
+                    <div class="control-group">
+                        @Html.LabelFor(model => model.Level, new { @class = "control-label col-md-2" })
+                        <div class="col-md-10 controls">
+                            @Html.EditorFor(model => model.Level)
+                            @Html.ValidationMessageFor(model => model.Level)
+                        </div>
+                    </div>
+
+                    <div class="control-group">
+                        @Html.LabelFor(model => model.IsActive, new { @class = "control-label col-md-2" })
+                        <div class="col-md-10 controls">
+                            @Html.EditorFor(model => model.IsActive)
+                            @Html.ValidationMessageFor(model => model.IsActive)
+                        </div>
+                    </div>
+
+
+
+                    <div class="form-actions">
+
+                        <input type="submit" value="Save" class="btn btn-success" />
+                        @Html.ActionLink("Back to List", "Index", null, new { @class = "btn" })
+                    </div>
+
+                }
+
+
+            </div>
+        </div>
+    </div>
+</div>
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}

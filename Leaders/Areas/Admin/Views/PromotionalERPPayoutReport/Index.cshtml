@@ -1,0 +1,113 @@
+﻿@model ModelLayer.Models.ViewModel.PromotionalERPPayoutReportViewModel
+
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_LeadersLayout.cshtml";
+}
+<script src="~/Scripts/jquery-1.12.4.js"></script>
+
+
+<link href="//cdn.datatables.net/1.10.19/css/jquery.dataTables.min.css" rel="stylesheet" />
+<script src="//cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
+<h2>Promotional ERP Payout Report</h2>
+<script type="text/javascript" class="init">
+    $(document).ready(function () {
+        $('#tblData').DataTable({
+            dom: 'T<"clear">lfrtip',
+            "processing": true,
+            "serverSide": true,
+            "iDisplayLength": 20,
+        });
+
+        $("#btnExport").click(function () {
+            debugger;
+            var flag = 0;
+            if ($("#chkAll").prop("checked") == true) {
+
+                flag = 1;
+            }
+            window.location = "/PromotionalERPPayoutReport/ExportToExcel?flag=" + flag
+        })
+    });
+</script>
+<style>
+    #pageloaddiv {
+        position: fixed;
+        left: 0px;
+        top: 0px;
+        width: 100%;
+        height: 100%;
+        z-index: 1000;
+        background: url('../../Content/Images/lg.palette-rotating-ring-loader.gif') no-repeat center center;
+        background-size: 100px;
+        display: none;
+    }
+</style>
+<div class="container">
+    <div class="row">
+        <div class="col-3">
+            All
+
+        </div>
+        <div class="col-3">
+            Payout Month
+
+        </div>
+
+    </div>
+    <div class="row">
+        <div class="col-3">
+            @Html.CheckBox("All", false, new { id = "chkAll" })
+        </div>
+        <div class="col-3">
+
+            @Html.DropDownListFor(m => m.PayoutDateFilter, Model.PayoutDateFilter, "Select Paid Date", new { @id = "PayoutDateFilterid" })
+
+        </div>
+        <div class="col-3">
+            <button id="btnExport" onclick="fnExcelReport();" class="btnPrint btn btn-success btn-small">EXPORT TO EXCEL</button>
+        </div>
+    </div>
+
+
+    <br />
+    <div id="pageloaddiv"></div>
+    <div id="PromotionalERPPayoutId">
+
+    </div>
+    <div id="PromotionalERPPayoutDetailDiv">
+
+    </div>
+    <div class="filterTable">
+
+    </div>
+    <br />
+    <br />
+
+</div>
+<script>
+    $("#chkAll").change(function () {
+        debugger
+        //alert("hii");
+        var status = "";
+        if ($(this).prop("checked") == true) {
+            $("#pageloaddiv").css('display', 'block');
+            $("#PayoutDateFilterid").val('');
+            $("#PromotionalERPPayoutDetailDiv").load("/Admin/PromotionalERPPayoutReport/GetAllGroupData");
+        }
+        else {
+            $("#PromotionalERPPayoutDetailDiv").empty();
+        }
+    })
+    $("#PayoutDateFilterid").change(function () {
+        $("#pageloaddiv").css('display', 'block');
+        $("#chkAll").prop("checked", false);
+        var date = $("#PayoutDateFilterid").val();
+        $("#PromotionalERPPayoutDetailDiv").load("/Admin/PromotionalERPPayoutReport/GetAllDataByPaidDate?date=" + date);
+
+    });
+    $(document).ready(function () {
+        $('#tblData').DataTable();
+    });
+</script>
+

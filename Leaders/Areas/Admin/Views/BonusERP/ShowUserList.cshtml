@@ -1,0 +1,102 @@
+﻿@model ModelLayer.Models.ViewModel.UserExtraPay
+
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_LeadersLayout.cshtml";
+}
+
+<script>
+    $(document).ready(function () {
+        if ('@TempData["Result"]' != '' && '@TempData["Result"]' != null) {
+            alert('@TempData["Result"]')
+        }
+        $("#btnSubmit").click(function (e) {
+            if ($("#ReferenceText").val().trim() == "") {
+                alert("Please Add Reference Text");
+                $("#ReferenceText").focus();
+                e.preventDefault();
+                return false;
+            }
+            else {
+                r = confirm("Continue to Payout process..");
+                if (r == false) {
+                    e.preventDefault();
+                    return false;
+                }
+            }
+        });
+        $("#btnBack").click(function () {
+            window.location.href ="/Admin/BonusERP/UserList"
+        })
+    });
+</script>
+<style>
+    /*table {
+        border-collapse: separate;
+        border-spacing: 15px;
+    }*/
+</style>
+<div class="container">
+    <div id="progress" class="modal">
+        <div class="center">
+            <img src="~/img/ajax-loading-gif-transparent-background-8.gif" />
+        </div>
+    </div>
+    <div class="card" id="maindiv">
+        <div class="card-header"><strong>User wise Ezee Money Payout Process </strong></div>
+
+
+        @using (Html.BeginForm())
+        {
+            <br />
+            <label> ReferenceText</label>
+            @Html.TextBoxFor(Model => Model.ReferenceText, new { style = "width:800px;" })
+            <br />
+            @Html.AntiForgeryToken()
+            <div class="form-horizontal">
+                @Html.ValidationSummary(true)
+                <table id="tblData" class="table table-bordered table-striped table-condensed display">
+                    <thead>
+                        <tr>
+                            <th>
+                                UserLoginId
+                            </th>
+                            <th>
+                                Name
+                            </th>
+                            <th>
+                                Ezee Money
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @for (int i = 0; i < Model.list.Count(); i++)
+                        {
+                            <tr>
+                                <td>
+                                    @Model.list[i].UserLoginId
+                                </td>
+                                <td>
+                                    @Model.list[i].Name
+                                </td>
+                                <td>
+                                    @Model.list[i].EzzeMoney
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+
+                <div class="form-group">
+                    <div class="col-md-offset-2 col-md-10">
+                        <input type="submit" value="Pay" id="btnSubmit" class="btn btn-success" />
+                        <input type="button" value="Back" id="btnBack" class="btn btn-info" />
+                    </div>
+                </div>
+
+            </div>
+        }
+
+    </div>
+</div>
+

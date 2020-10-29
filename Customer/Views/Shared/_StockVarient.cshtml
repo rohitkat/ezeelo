@@ -1,0 +1,2071 @@
+﻿@model ModelLayer.Models.ViewModel.PreviewItemViewModel
+@using System.Text.RegularExpressions;
+@using ModelLayer.Models.ViewModel;
+
+@Html.Hidden("ColorID")
+@Html.Hidden("SizeID")
+@Html.Hidden("DimensionID")
+@Html.Hidden("MaterialID")
+
+@*//-- Added for Dynamic Message --//*@
+<input type="hidden" id="hdnMinOrderBuyNow" name="hdnMinOrderBuyNow" value=@ViewBag.MinOrderBuyNow />
+@*//-- Added for Redirect for Login page from WishList --//*@
+<input type="hidden" id="hdncity" name="hdnMinOrderBuyNow" value=@Request.Cookies["CityCookie"].Value.Split('$')[1].ToLower() />
+<input type="hidden" id="hdnfranchise" name="hdnMinOrderBuyNow" value=@Request.Cookies["CityCookie"].Value.Split('$')[2] />
+
+<script src="~/Scripts/ShortList.js"></script>
+<link href="~/Content/css/smoothproducts.css" rel="stylesheet" />
+<style>
+    .more_Seller tbody > tr > td {
+        text-align: center !important;
+        text-align: center !important;
+        font-size: 14px !important;
+        vertical-align: super;
+    }
+
+    .CheckSelected {
+        background-color: #4B77BE !important;
+        color: white;
+    }
+
+    .panel-group {
+        margin-bottom: 0px;
+        cursor: pointer;
+    }
+
+    .fb_iframe_widget {
+        margin-top: 5px;
+    }
+
+    .qntnew {
+        float: left;
+        padding-top: 0px;
+    }
+
+    .productQuantity {
+        width: 41px !important;
+        height: 32px;
+        float: left !important;
+        text-align: center !important;
+        margin: 0px 2px 2px 2px !important;
+    }
+
+    .pro-description ul {
+        width: 100%;
+        margin-bottom: 0px;
+        padding-left: 20px;
+    }
+
+        .pro-description ul li {
+            color: #595959;
+            list-style-type: disc;
+            /*font-size: 12px;
+            list-style-type: disc;
+            float: left;*/
+            width: 100%;
+            margin-right: 27px;
+        }
+
+    #___plusone_0 {
+        float: left !IMPORTANT;
+    }
+
+    .success {
+        color: white !important;
+    }
+
+    .text-white {
+        color: white !important;
+    }
+
+    .imagedivmain {
+        height: auto;
+        min-height: 385px;
+        max-height: 385px;
+    }
+
+    .imagecenter {
+        text-align: center;
+        height: 300px;
+    }
+
+    .newimage {
+        width: 270px;
+    }
+
+    .atagelink {
+        position: fixed !important;
+        top: 90px;
+        z-index: 10;
+        background-color: #EFEFEF;
+        color: white !important;
+    }
+
+    .productQuantity1 {
+        width: 41px;
+        height: 28px;
+        float: left;
+        text-align: center;
+        margin: 2px;
+    }
+
+    .more_Seller tbody > tr > td {
+        text-align: center !important;
+        text-align: center !important;
+        font-size: 11px;
+        vertical-align: super;
+    }
+
+    .more_Seller thead tr th {
+        text-align: center !important;
+    }
+
+    .star {
+        display: block;
+        float: left;
+        color: #555;
+        font-size: 20px;
+        z-index: 1;
+        position: relative;
+        width: 20px;
+        height: 24px;
+        vertical-align: middle;
+        line-height: 22px;
+    }
+
+        .star.on {
+            color: gold;
+        }
+
+    .deliverhr {
+        color: rgba(96, 169, 23, 1);
+    }
+
+    #navbar1 li a:hover {
+        text-decoration: underline;
+        color: #006cff;
+    }
+
+    .loader {
+        background: #333;
+        width: 100%;
+        height: 100%;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        opacity: 0.3;
+        position: fixed;
+        z-index: 1000;
+    }
+</style>
+
+<div align="center" id="ajax_loading_message" class="loader" style="display:none">
+    <img src="~/Content/Images/ajax_loader.gif" style="width:130px;margin-top:10%" />
+</div>
+@{
+    string cityName = "";
+    int ShopStockID1 = 0;
+    int itemID1 = 0;
+    int productQuantity1 = 0;
+    int couponCode1 = 0;
+    int couponAmount1 = 0;
+    int couponPercent1 = 0;
+    string cityID = string.Empty;
+    int reviewCount = 0;
+    int ratingPoint = 0;
+    string helpLineNo = string.Empty;
+    int franchiseID = 0;////added
+    if (TempData["helpLineNo"] != null)//-- Getting from PreviewItemController
+    {
+
+        helpLineNo = TempData["helpLineNo"].ToString();
+    }
+    //string contactNo = helpLineNo.;
+    // string str = Request.Cookies["UrlCookie"].Value;
+    if (Request.Cookies["CityCookie"] != null && Request.Cookies["CityCookie"].Value != "")
+    {
+        cityName = Request.Cookies["CityCookie"].Value.Split('$')[1].ToLower();
+        cityID = Request.Cookies["CityCookie"].Value.Split('$')[0].Trim();
+        franchiseID = Convert.ToInt32(Request.Cookies["CityCookie"].Value.Split('$')[2]);////added
+
+    }
+    // string SiteUrl = "http://www.eZeelo/"+cityName;////hide
+    string SiteUrl = System.Configuration.ConfigurationManager.AppSettings["EZEELO_CUSTOMER_URL"] + cityName + "/" + franchiseID;////added
+
+    if (Model.StockVarient != null && Model.StockVarient.Count() > 0)
+    {
+        long selectedID = 0;
+
+        if (ViewBag.selectedID != null)
+        {
+            selectedID = Convert.ToInt64(ViewBag.selectedID);
+        }
+
+        long selectedColorID = 0, selectedSizeID = 0, selectedDimensionID = 0, selectedMaterialID = 0;
+
+        long.TryParse(Convert.ToString(ViewBag.ColorID), out selectedColorID);
+        long.TryParse(Convert.ToString(ViewBag.SizeID), out selectedSizeID);
+        long.TryParse(Convert.ToString(ViewBag.DimensionID), out selectedDimensionID);
+        long.TryParse(Convert.ToString(ViewBag.MaterialID), out selectedMaterialID);
+
+        var sizeWiseItem = (IEnumerable<ShopProductVarientViewModel>)null;
+        var colosWiseItem = (IEnumerable<ShopProductVarientViewModel>)null;
+        var dimensionWiseItem = (IEnumerable<ShopProductVarientViewModel>)null;
+
+        var selectedType = ViewBag.selectedType;
+        //---------Comment on 08-12-15 By Mohit and Tejaswee-------------//
+        var stockVarient = Model.StockVarient;
+        //---------Comment on 08-12-15 By Mohit and Tejaswee For Not to show out of stock product for varient-------------//
+
+        var checkDisableLevel = 0;
+
+        //----------Added by Snehal on 25/02/2016 for Not to show out of stock product for more than one Stock of product--------//
+        if (Model.StockVarient.Count() > 1)
+        {
+            //stockVarient = Model.StockVarient.Where(x => x.StockQty > 0 && x.StockStatus == true);
+
+            if (stockVarient.Count() == 0)
+            {
+                stockVarient = Model.StockVarient;
+            }
+        }
+        //---------ends here---------//
+        var IteminStock = stockVarient.Where(x => x.StockQty > 0).ToList(); //Added by Rumana 20/03/2019 for selecting small variant from Instock list only
+        var ItemOutofStock = stockVarient.Where(x => x.StockQty == 0).ToList();
+        decimal? itemMinSaleRate;
+        //  decimal? itemsMin ;
+
+        if (IteminStock != null && IteminStock.Count != 0)
+        {
+            itemMinSaleRate = IteminStock.Min(y => y.SaleRate);
+        }
+        else
+        {
+            itemMinSaleRate = ItemOutofStock.Min(y => y.SaleRate);
+        }
+        var itemsMin = stockVarient.Where(x => x.SaleRate == itemMinSaleRate).First();
+        // if have shop stock id
+        if (ViewBag.ShopStockID > 0)
+        {
+            itemsMin = stockVarient.Where(x => x.ShopStockID == ViewBag.ShopStockID).First();
+        }
+
+        if (selectedID != null)
+        {
+            if (selectedType == "c")
+            {
+                colosWiseItem = stockVarient.Where(x => x.ColorID == selectedColorID);
+                itemMinSaleRate = colosWiseItem.Min(y => y.SaleRate);
+                itemsMin = colosWiseItem.Where(x => x.SaleRate == itemMinSaleRate).First();
+
+            }
+            else if (selectedType == "s")
+            {
+                sizeWiseItem = stockVarient.Where(x => x.ColorID == selectedColorID && x.SizeID == selectedSizeID);
+                itemMinSaleRate = sizeWiseItem.Min(y => y.SaleRate);
+                itemsMin = sizeWiseItem.Where(x => x.SaleRate == itemMinSaleRate).First();
+            }
+            else if (selectedType == "d")
+            {
+                dimensionWiseItem = stockVarient.Where(x => x.ColorID == selectedColorID && x.SizeID == selectedSizeID && x.DimensionID == selectedDimensionID);
+                itemMinSaleRate = dimensionWiseItem.Min(y => y.SaleRate);
+                itemsMin = dimensionWiseItem.Where(x => x.SaleRate == itemMinSaleRate).First();
+            }
+            else if (selectedType == "m")
+            {
+                var materialWiseItem = stockVarient.Where(x => x.ColorID == selectedColorID && x.SizeID == selectedSizeID && x.DimensionID == selectedDimensionID && x.MaterialID == selectedID);
+                itemMinSaleRate = materialWiseItem.Min(y => y.SaleRate);
+                itemsMin = materialWiseItem.Where(x => x.SaleRate == itemMinSaleRate).First();
+            }
+        }
+
+        ViewBag.SellerID = itemsMin.ShopID;
+        //Condition commented by Tejaswee on 31-12-2015
+
+        selectedColorID = itemsMin.ColorID;
+        selectedSizeID = itemsMin.SizeID;
+        selectedDimensionID = itemsMin.DimensionID;
+        selectedMaterialID = itemsMin.MaterialID;
+        //}
+
+        var listDistinctColor = stockVarient.OrderBy(s => s.ColorID).Select(x => new { x.ColorID, x.ColorName, x.ColorCode, x.StockThumbPath }).Distinct().ToList();
+
+        var listDistinctSize = stockVarient.Where(y => y.ColorID == selectedColorID).Select(x => new { x.SizeID, x.SizeName, x.IsPriority, x.SaleRate, x.StockQty }).OrderBy(y => y.IsPriority).OrderBy(x => x.SaleRate).GroupBy(x => x.SizeID).Select(x => x.First()).ToList(); //Added by Rumana 20/03/2019 for arranging variant in ascending order of SaleRate
+        var listDistinctSizeInStock = listDistinctSize.Where(x => x.StockQty > 0).ToList();
+        var listDistinctSizeOutofStock = listDistinctSize.Where(x => x.StockQty == 0).ToList();
+
+        var listDistinctDimension = stockVarient.Where(y => y.ColorID == selectedColorID && y.SizeID == selectedSizeID).Select(x => new { x.DimensionID, x.DimensionName, x.IsPriority }).OrderBy(y => y.IsPriority).GroupBy(x => x.DimensionID).Select(x => x.First()).ToList();
+
+        var listDistinctMaterial = stockVarient.Where(y => y.ColorID == selectedColorID && y.SizeID == selectedSizeID && y.DimensionID == selectedDimensionID).Select(x => new { x.MaterialID, x.MaterialName, x.IsPriority }).OrderBy(y => y.IsPriority).GroupBy(x => x.MaterialID).Select(x => x.First()).ToList();
+        <div class="">
+            <div class="">
+                @{
+                    string bedcrumbValue = ViewBag.Bedcrumb;
+                    if (bedcrumbValue != string.Empty && bedcrumbValue != null)
+                    {
+                        string[] bedcrumbDetail = bedcrumbValue.Split('$');
+
+                        string name = "";// no use as per Tejasvi
+                        if (cityName == "Nagpur" && franchiseID == 2)////added && franchiseID==2
+                        {
+                            name = bedcrumbDetail[6].Replace("&", "And");
+                        }
+                        else
+                        {
+                            name = bedcrumbDetail[6].Replace("&", "And") + cityName;
+                        }
+                        string a = name.Replace(" ", "") + "/" + bedcrumbDetail[5];// no use as per Tejasvi
+                        <ul class="breadcrumb page-breadcrumb">
+                            <li><a href="@System.Configuration.ConfigurationManager.AppSettings["EZEELO_CUSTOMER_URL"]"> Home </a></li>
+                            <li>
+                                <a href="@Url.RouteUrl("CategoryPages", new { city = cityName,franchiseId=franchiseID, catName = Regex.Replace(bedcrumbDetail[6].Substring(0, Math.Min(bedcrumbDetail[6].Length, 30)), @"[\/\\#,+()$~%.':*?<>{} ]", "-").Replace("&", "and").Trim(new[] { '-' }).ToLower(), catID = bedcrumbDetail[5] })">@bedcrumbDetail[6]</a>@*////added franchiseId=franchiseID*@
+                            </li>
+                            @*<li class="active"> <a id="thirdLevelBedCrubmbs" href="@Url.RouteUrl("CategoryPages", new { city = cityName, franchiseId = franchiseID, catName = Regex.Replace(bedcrumbDetail[4].Substring(0, Math.Min(bedcrumbDetail[4].Length, 30)), @"[\/\\#,+()$~%.':*?<>{} ]", "-").Replace("&", "and").Trim(new[] { '-' }).ToLower(), catID = bedcrumbDetail[5], secLvlCatID = bedcrumbDetail[3] })">@bedcrumbDetail[4]</a> </li>*@@*////added franchiseId=franchiseID*@
+                            <li class="active"> <a id="thirdLevelBedCrubmbs" href="@Url.RouteUrl("SecondLevelCategoryPages", new { city = cityName, franchiseId = franchiseID, FirstLvtName = Regex.Replace(bedcrumbDetail[6].Substring(0, Math.Min(bedcrumbDetail[6].Length, 30)), @"[\/\\#,+()$~%.':*?<>{} ]", "-").Replace("&", "and").ToLower(), catName = Regex.Replace(bedcrumbDetail[4].Substring(0, Math.Min(bedcrumbDetail[4].Length, 30)), @"[\/\\#,+()$~%.':*?<>{} ]", "-").Replace("&", "and").ToLower(), catID = bedcrumbDetail[5], secLvlCatID = bedcrumbDetail[3] })">@bedcrumbDetail[4]</a> </li>
+                            @*@if (ViewBag.IsManaged == 1)
+                                {
+                                    <li>  <a id="fourthLevelBedCrubmbs" href="@Url.RouteUrl("Managed", new { CatName = Regex.Replace(bedcrumbDetail[2].Substring(0, Math.Min(bedcrumbDetail[2].Length, 30)), @"[\/\\#,+()$~%.':*?<>{} ]", "-").Replace("&", "and").ToLower(), ParentCatID = @bedcrumbDetail[1], Level = 3, cityId = cityID, city = cityName })">@bedcrumbDetail[2]</a> >> </li>
+                                }
+                                else
+                                {*@
+                            <li>  <a id="fourthLevelBedCrubmbs" href="@Url.RouteUrl("ProductsByCategory", new { item = Regex.Replace(bedcrumbDetail[2].Substring(0, Math.Min(bedcrumbDetail[2].Length, 30)), @"[\/\\#,+()$~%.':*?<>{} ]", "-").Replace("&", "and").Trim(new[] { '-' }).ToLower(), parentCategoryId = @bedcrumbDetail[1], city = cityName, franchiseId = franchiseID })">@bedcrumbDetail[2]</a></li>@*////added franchiseId=franchiseID*@
+                            @*}*@
+                            @if (bedcrumbDetail[0].Length > 30)
+                            {
+                                <li> <a href="">@(bedcrumbDetail[0].Replace("+", " ").Substring(0, 27) + "...")</a></li>
+                            }
+                            else
+                            {
+                                <li> <a href="">@bedcrumbDetail[0].Replace("+", " ")</a></li>
+                            }
+                        </ul>
+                    }
+                }
+            </div>
+
+        </div>
+
+
+        <div>
+            <div class="col-md-3">
+                <aside class="category-filters">
+                    <div id="relateddiv" class="collapse in">
+                        @if (Model.lCatList != null)
+                        {
+                            <h1 id="landingcat" class="category-filters-section panel-group" style="color: #673AB7; text-transform: capitalize;">@Model.lCatList.FirstOrDefault().SecondLevelCatName <i class="fa fa-chevron-circle-down" style="float:right"></i></h1>
+                            <div id="content_landingcat" class="searchItemList content panel-collapse collapse in" style=" padding-bottom: 20px; min-height: 5px; max-height: 318px; overflow: auto; width: 99%; text-transform: capitalize;">
+                                @foreach (var item in Model.lCatList)
+                                {
+                                    //--  SEO URL Structure RULE by Ashish 18/11/2016 --//
+                                    string str = item.Name;
+                                    str = System.Text.RegularExpressions.Regex.Replace(str, @"[\\\#$~%.':*?<>{} ]", " ").Replace("&", "and");
+                                    str = System.Text.RegularExpressions.Regex.Replace(str, @"\s+/g", " ");
+                                    // string[] parts2 = Regex.Split(str, @"\+\/\-\,\(\)");
+                                    string concat = "";
+                                    str = System.Text.RegularExpressions.Regex.Replace(str, @"[\/\+\-\,()]", "|");
+                                    string[] strSplit = str.Split('|');
+                                    for (int i = 0; i < strSplit.Length; i++)
+                                    {
+                                        if (concat.Length <= 30)
+                                        {
+                                            concat = concat.Length == 0 ? strSplit[i].Trim() : concat + ' ' + strSplit[i].Trim();
+                                        }
+                                    }
+
+                                    concat = System.Text.RegularExpressions.Regex.Replace(concat, @"\s+", " ");
+                                    concat = System.Text.RegularExpressions.Regex.Replace(concat, @"[\/\\#,+()$~%.':*?<>{} ]", "-").Replace("&", "and");
+                                    concat = concat.Trim(new[] { '-' });
+                                    <table>
+                                        <tr>
+                                            <td>
+                                                <a href="@Url.RouteUrl("ProductsByCategory", new { item = concat, parentCategoryId = item.ID, city = cityName })" style="padding: 5px 25px; font-size: 13px !important; "> @item.Name </a>
+                                            </td>
+                                        </tr>
+                                    </table>
+
+                                    @*<a href="@Url.RouteUrl("CategoryPages", new { city = cityName, catName = item.Name, catID = item.ID })" >@item.Name</a>*@
+
+                                }
+                            </div>
+                        }
+                    </div>
+                </aside>
+            </div>
+            <script>
+                $(document).ready(function () {
+                    $("#landingcat").click(function () {
+                        $("#content_landingcat").toggle(1000);
+                    });
+                });
+            </script>
+            <script>
+                $(document).ready(function () {
+                    if ($(window).width() <= 960) {
+                        //alert('Less than 960');
+                        $(".content").removeClass("in");
+                    }
+                    else {
+                        //alert('More than 960');
+                        $(".content").addClass("in");
+                    }
+                });
+            </script>
+            <div class="col-md-9 box">
+                <div class="col-md-6" style="background:white;">
+                    <div class="product-page-product-wrap jqzoom-stage">
+
+                        @if (Model.ProductOffers.ComponentOffer != null)
+                        {
+                            if (Model.PayablePrice.SavedRs > 0)
+                            {
+                                <ul id="spanPayableMain" class="product-labels">
+                                    <li>
+                                        You Pay
+                                        <span class="fa fa-inr"> @((Model.PayablePrice.FinalAmount).ToString("0.00"))</span>
+                                    </li>
+                                </ul>
+                                <ul class="product-labels">
+                                    <li>
+                                        You Save
+                                        <span class="fa fa-inr"> @(Math.Floor(Model.PayablePrice.SavedRs)) (@Math.Floor(Model.PayablePrice.SavedPercent)%)</span>
+                                    </li>
+
+                                </ul>
+                            }
+                        }
+                        else if (Model.ProductOffers.FlatOffer != null)
+                        {
+                            if (Model.ProductOffers.FlatOffer.FlatDiscount > 0)
+                            {
+                                <ul class="product-labels">
+                                    <li id="spanPayable" style="font-weight:700;">
+                                        You Save
+                                        <span> @Math.Floor(Model.ProductOffers.FlatOffer.FlatDiscount)% </span>
+                                    </li>
+                                </ul>
+
+                            }
+                        }
+                                <div class="sp-wrap" id="zoom">
+                                    @*Start RP Yashaswi 9-7-2018*@
+                                    <ul class="product-labelsRP">
+                                        <li id="spanPayable" style="font-weight:700;">
+                                            RP
+                                            <span> @Convert.ToInt64(@itemsMin.BusinessPointPerUnit) </span>
+                                        </li>
+                                    </ul>
+                                    <ul class="product-labelsCB">
+                                        <li id="spanPayable" style="font-weight:700;">
+                                            CP
+                                            <span> @Convert.ToInt64(@itemsMin.CashbackPointPerUnit) </span>
+                                        </li>
+                                    </ul>
+                                    @*End RP Yashaswi 9-7-2018*@
+                                    @if (itemsMin.StockImageList.Count() > 0)
+                                    {
+
+                                        foreach (var item in itemsMin.StockImageList)
+                                        {
+                                            {
+                                                <a href="@Url.Content(string.IsNullOrEmpty(item.ImgPath) ? "/Content/Images/no_image.png" : item.ImgPath.Replace(" ", "%20"))">
+                                                    <img src=@Url.Content(string.IsNullOrEmpty(item.ImgPath) ? "/Content/Images/no_image.png" : item.ImgPath.Replace(" ", "%20")) alt='@Model.BasicDetails.ProductName' />
+                                                </a>
+                                            }
+                                        }
+                                    }
+
+                                </div>
+                    </div>
+                    @{
+                        Model.BuyProduct.StockThumbPath = string.IsNullOrEmpty(itemsMin.StockThumbPath) ? "/Content/Images/no_image.png" : itemsMin.StockThumbPath;
+                        Model.BuyProduct.ProductName = Model.BasicDetails.ProductName;
+                        Model.BuyProduct.SaleRate = itemsMin.SaleRate;
+                        Model.BuyProduct.MRP = itemsMin.MRP;
+                        Model.BuyProduct.ShopID = itemsMin.ShopID;
+                        Model.BuyProduct.ShopName = itemsMin.ShopName;
+                        Model.BuyProduct.ShopStockID = itemsMin.ShopStockID;
+                        Model.BuyProduct.ProductID = itemsMin.ProductID;
+                        Model.BuyProduct.StockQty = itemsMin.StockQty;
+                        Model.BuyProduct.StockStatus = itemsMin.StockStatus;
+                    }
+                </div>
+                <div class="col-md-6">
+                    <div data-gutter="10">
+                        <div class="box">
+                            @Html.Partial("_BasicDetails", Model)
+                            <div class="">
+                                @{
+                                    @*if (@Model.ProductReviews.AvgPoints != null && @Model.ProductReviews.AvgPoints.AvgRatingPonts != null)
+                                        {
+                                            ratingPoint = Convert.ToInt32(Math.Ceiling(Convert.ToDouble(@Model.ProductReviews.AvgPoints.AvgRatingPonts)));
+                                            for (int j = 1; j <= ratingPoint; j++)
+                                            {
+                                                <span class="star on fa fa-star"></span>
+                                            }
+                                            for (int j = 1; j <= 5 - ratingPoint; j++)
+                                            {
+                                                <span class="star fa fa-star"></span>
+                                            }
+                                            <a href="#divProductRating">@Model.ProductReviews.AvgPoints.Count Rating(s)</a> <span>|</span> <a href="#divProductRating">@Model.ProductReviews.AvgPoints.Count Review(s)</a>
+                                        }*@
+                                    @*else if (Model.ProductReviews.IsDisplay == true)
+                                        {
+                                            ratingPoint = 3;
+                                            for (int j = 1; j <= ratingPoint; j++)
+                                            {
+                                                <span class="star on fa fa-star"></span>
+                                            }
+                                            for (int j = 1; j <= 5 - ratingPoint; j++)
+                                            {
+                                                <span class="star fa fa-star"></span>
+                                            }*@
+
+                                    @*<a href="@Url.RouteUrl("Product_rating", new { ID = Model.ProductReviews.AvgPoints.OwnerID, city = cityName })">Be the first to review</a>*@
+                                    @*<a href="@Url.RouteUrl("Product_rating", new { ID = @itemsMin.ProductID, city = cityName, franchiseId = franchiseID })">Be the first to review</a>*@
+                                    @*////added franchiseId=franchiseID*@
+                                    @*}*@
+                                }
+                                @Html.Hidden("hdnOfferCount")
+                                <img src="~/Content/Images/tags/freeD1.png" style=" width: 30%;" class="pull-right" />
+                                @if (@itemsMin.MRP > @itemsMin.SaleRate)
+                                {
+                                    <div class="retailPriceDiv" style=" margin-top: 7px;">
+                                        <p class="product-page-price-list">
+                                            @*<span> @Html.Label("MRP")</span>*@
+                                            <span class="retailSpan fa fa-inr" style="text-decoration:line-through;"> @((itemsMin.MRP).ToString("0.00"))</span>
+                                        </p>
+                                    </div>
+                                }
+                                <div id="divSaleRate" class="priceDiv priceSell" style=" margin-top: 7px;">
+                                    <p class="product-page-price">
+                                        @*@Html.Label("Sale Rate:")
+                                            <span></span>*@
+                                        <span class="priceSpan fa fa-inr"> @((itemsMin.SaleRate).ToString("0.00"))</span>
+                                        <input type="hidden" value="@itemsMin.SaleRate" id="hiddenSaleRate" />
+                                    </p>
+                                </div>
+
+                                <div class="buttonDiv">
+                                    <label id="QtyValidationMsg" style="display:none;color:red;font-weight:bold"></label>
+                                    <input type="hidden" value="@itemsMin.ShopStockID" class="hiddenShopStockId" />
+                                    <input type="hidden" value="@itemsMin.ProductID" class="hiddenProductId" />
+                                    <span id="qtyMsg" style="color:red"></span>
+                                    <div>
+                                        @if (itemsMin.StockStatus == true && itemsMin.StockQty > 0)
+                                        {
+                                            if (Model.BasicDetails != null && Model.BasicDetails.CategoryID == 1368)
+                                            {
+                                                <a id="@itemsMin.ProductID" class="button warning primary text-white" href="@Url.Action("CorporateBuy", "Product", new { itemId = itemsMin.ProductID, shopstockId = itemsMin.ShopStockID })">
+                                                    Gift Now
+                                                </a>
+                                            }
+                                            else
+                                            {
+                                                <label class="qntnew" style="margin-top:5px;">Qty</label>
+                                                <input type="number" name="productQuantity" min="1" max="@itemsMin.StockQty" step="1" value="1" id="productQuantity" class="productQuantity" maxlength="3" autocomplete="off"
+                                                       oninvalid="this.setCustomValidity('Value Must be less than or equal to '+ @itemsMin.StockQty +' if more Qty required call to customer care ')"
+                                                       oninput="this.setCustomValidity('')" />@*onchange="myFunction()"*@
+                                                    @*<input type="button" id="btnExpressBuy" class="btn btn-success " value="Buy Now" onclick="return checkpin1(); " />*@
+                                                    @*<button id="@itemsMin.ProductID" class="btn btn-warning" type="button" onclick="AddProduct(@itemsMin.ShopStockID,@itemsMin.ProductID)">
+                                                            Add<i class="fa fa-shopping-basket"></i>
+                                                        </button>*@
+                                                    //Start Yashaswi
+                                                    <button id="@itemsMin.ProductID" class="btn btn-warning" type="button" onclick="Show_PopUpForLocationAlert(@itemsMin.ShopStockID,@itemsMin.ProductID)">
+                                                        Add<i class="fa fa-shopping-basket"></i>
+                                                    </button>
+                                                    //End Yashaswi
+                                                    @* Show quantity textbox *@
+
+
+
+                                                }
+
+                                            }
+                                            else
+                                            {
+                                                <div id="soldOutDiv" class="">
+                                                    <span class="soldOut soldout-divnew soldout-divnewone"> Sold<br /> Out </span>
+
+                                                </div>
+                                            }
+
+                                    </div>
+
+
+
+
+
+                                </div>
+                                <div class="AddList">
+                                    <div class="AddToWishlist">
+                                        @*Start change style of wishlist yashaswi 21-7-2018*@
+                                        @if (!itemsMin.IsAddedInWishlist)
+                                        {
+                                            <a id="anchorWishList" href="#" title="Add To Wishlist" onclick="AddProductToWishList();" class="btn btn-warning ClassWishListBefore" style="background-color: #E9B800 !important ; padding:4px !important;">
+                                                <span class="fa fa-heart"></span>
+                                                <span id="spanWishListTitle">Add To Wishlist</span>
+                                            </a>
+                                            <a id="anchorWishList" class="activeList ClassWishListAfter" href="#" title="Added In Wishlist" onclick="" style="color: #920101 !important;font-size:medium;font-weight:bold;display:none">
+                                                <span class="fa fa-heart"></span>
+                                                <span id="spanWishListTitle">Added In Wishlist</span>
+                                            </a>
+                                        }
+                                        else
+                                        {
+                                            <a id="anchorWishList" class="activeList ClassWishListAfter" href="#" title="Added In Wishlist" onclick="" style="color: #920101 !important;font-size:medium;font-weight:bold">
+                                                <span class="fa fa-heart"></span>
+                                                <span id="spanWishListTitle">Added In Wishlist</span>
+                                            </a>
+                                        }
+
+                                        <button id="@itemsMin.ProductID" class="btn btn-warning" type="button" onclick="Show_PopUpForLocationAlert(@itemsMin.ShopStockID,@itemsMin.ProductID)">
+                                            Add<i class="fa fa-shopping-basket"></i>
+                                        </button>
+                                        @*End change style of wishlist yashaswi 21-7-2018*@
+
+
+                                        <!--============= Help Dialog ========================-->
+                                        @*Hide for new ShortList landing page*@
+                                        @*<div id="tableDiv" class="info padding20 wishlistDilog">
+            <h1>Help</h1>
+            <p>
+                This dialog with default overlay
+            </p>
+            <a href="#noname" class="closeBtn">X</a>
+        </div>
+
+        @if (Request.Cookies["ShortListCookie"] != null && Request.Cookies["ShortListCookie"].ToString() != string.Empty)
+        {
+            string cookRecView = Request.Cookies["ShortListCookie"].Value;
+            if (cookRecView.Contains(itemsMin.ProductID + "$" + itemsMin.ShopStockID + "$"))
+            {
+                <a href="#" id="anchorShortList" title="Added To Shortlist" class="link activeList">
+                    <span class="fa fa-star"> </span><span id="spanShortListTitle">Added To Shortlist</span>
+                </a>
+            }
+            else
+            {
+                <a href="#" id="anchorShortList" title="Add To Shortlist" class="link" onclick="AddProductToShortList()">
+                    <span class="fa fa-star"></span> <span id="spanShortListTitle">Add To Shortlist</span>
+                </a>
+            }
+        }
+        else
+        {
+            <a href="#" id="anchorShortList" title="Add To Shortlist" class="link" onclick="AddProductToShortList()">
+                <span class="fa fa-star"></span> <span id="spanShortListTitle">Add To Shortlist</span>
+            </a>
+        }*@
+                                        <!--============= Help Dialog ========================-->
+                                        <div id="tableDiv2" class="info padding20 wishlistDilog">
+                                            <h1>Help2</h1>
+                                            <p>
+                                                This dialog with default overlay
+                                            </p>
+                                            <a href="#noname" class="closeBtn">X</a>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="cell InnerDiv-left" style="padding-top: 5px; ">
+
+
+                                    <!--Show Taxation -->
+                                    @if (itemsMin.lCalulatedTaxesRecord != null)
+                                    {
+                                        foreach (var item in itemsMin.lCalulatedTaxesRecord)
+                                        {
+                                            if (@item.IsGSTInclusive == false) //Condition added by Zubair for GST on 05-07-2017
+                                            {
+                                                <span style=" font-size: 10px;">@item.TaxName : @item.TaxPercentage % ,</span>
+                                            }
+                                        }
+                                    }
+
+                                    @*Condition added by Zubair for MLM on 04-01-2018*@
+                                    @*Yashaswi 5/2/2018 RoundUp BP*@
+                                    <span style=" font-size: 15px;color:green">Retail Point: @Convert.ToInt64(@itemsMin.BusinessPointPerUnit) </span>
+
+                                    <!--Show Taxation -->
+                                    <!--Pin Code Div-->
+                                    @*@if (Model.ProductOffers.ComponentOffer != null)
+                                        {
+                                            if (Model.PayablePrice.SavedRs > 0)
+                                            {
+                                                <div id="spanPayableMain" class="priceSell">
+                                                    <p>
+                                                        <label>You Pay</label>
+                                                        <span class="fa fa-inr"> @((Model.PayablePrice.FinalAmount).ToString("0.00"))</span>
+                                                    </p>
+                                                </div>
+                                                <div class="priceSell">
+                                                    <label class="lblYousave">You Save</label>
+                                                    <span class="fa fa-inr"> @(Math.Floor(Model.PayablePrice.SavedRs)) (@Math.Floor(Model.PayablePrice.SavedPercent)%)</span>
+                                                </div>
+                                            }
+                                        }
+                                        else if (Model.ProductOffers.FlatOffer != null)
+                                        {
+                                            if (Model.ProductOffers.FlatOffer.FlatDiscount > 0)
+                                            {
+                                                <div id="spanPayable" class="priceSell" style="color:red;font-weight:700;"><label class="lblYousave">You Save</label> <span> @Math.Floor(Model.ProductOffers.FlatOffer.FlatDiscount)% </span></div>
+                                            }
+                                        }*@
+                                    <div id="divCouponApplied" style="display:none;">
+                                        @Html.Label("You Pay:")
+                                        <span class="spnTotalPay"></span>
+                                        <span class="spnTotalSave"></span>
+                                    </div>
+
+
+                                    @* ============= Tejaswee (14-6-2015) ================= *@
+                                    @Html.Hidden("ShopStockID", itemsMin.ShopStockID)
+                                    @Html.Hidden("ProductName", itemsMin.ProductName)
+                                    @Html.Hidden("hdnProductID", itemsMin.ProductID)
+                                    @* ============= Tejaswee (14-6-2015) ================= *@
+
+                                    <!--Select Color Div-->
+                                    @if (listDistinctColor.Count() > 0)
+                                    {
+                                        if (selectedColorID <= 0)
+                                        {
+                                            selectedColorID = itemsMin.ColorID;
+                                        }
+                                        @Html.Hidden("SelectedColor", selectedColorID)
+                                        //if there is only one Color with name N/A, no need to show
+                                        if (listDistinctColor.Count() == 1 && listDistinctColor[0].ColorName.Trim() == "N/A")
+                                        {
+                                            //Do no show
+                                        }
+                                        else
+                                        {
+                                            <div class="SelectColor">
+                                                <h2>Select</h2>
+                                                @for (int i = 0; i < listDistinctColor.Count(); i++)
+                                                {
+                                                    checkDisableLevel++;
+
+                                                    @Html.HiddenFor(x => listDistinctColor[i].ColorID)
+                                                    if (listDistinctColor[i].ColorID == selectedColorID)
+                                                    {
+
+                                                        <input type="button" id="c+@listDistinctColor[i].ColorID" title="@listDistinctColor[i].ColorName" style="background:url('@listDistinctColor[i].StockThumbPath') no-repeat 0px 0px;	background-size: 100% 100%;" class="SelectedColor color" onclick="opr(this);" />
+                                                    }
+                                                    else
+                                                    {
+                                                        <input type="button" id="c+@listDistinctColor[i].ColorID" title="@listDistinctColor[i].ColorName" style="background: url('@listDistinctColor[i].StockThumbPath') no-repeat 0px 0px;	background-size: 100% 100%;" onclick="opr(this);" class="color" />
+                                                    }
+                                                }
+                                            </div>
+                                        }
+                                    }
+
+                                    @if (listDistinctSize.Count() > 0)
+                                    {
+                                        if (selectedSizeID <= 0)
+                                        {
+                                            selectedSizeID = itemsMin.SizeID;
+                                        }
+
+                                        @Html.Hidden("SelectedSize", selectedSizeID)
+                                        ViewBag.SizeID = selectedSizeID;
+
+                                        //if there is only one size with name N/A, no need to show
+                                        if (listDistinctSize.Count() == 1 && listDistinctSize[0].SizeName.Trim() == "N/A")
+                                        {
+                                            //Do not show
+                                        }
+                                        else
+                                        {
+                                            <div class="selectSize">
+                                                <h2>Select</h2>
+
+                                                @foreach (var item in listDistinctSizeInStock)
+                                                {
+                                                    if (item.SizeID == selectedSizeID)
+                                                    {
+                                                        <input type="button" id="s+@item.SizeID" class="CheckSelected size" value="@item.SizeName" onclick="opr(this);" />
+                                                    }
+                                                    else
+                                                    {
+                                                        <input type="button" id="s+@item.SizeID" value="@item.SizeName" onclick="opr(this);" class="size" />
+                                                    }
+                                                }
+                                                @foreach (var item in listDistinctSizeOutofStock)
+                                                {
+                                                    if (listDistinctSizeInStock.Count == 0 && listDistinctSizeOutofStock.Count > 0)
+                                                    {
+                                                        var sizeid = listDistinctSizeOutofStock.FirstOrDefault().SizeID;
+                                                        var sizeName = listDistinctSizeOutofStock.FirstOrDefault().SizeName;
+                                                        <input type="button" id="s+@sizeid" class="CheckSelected size" value="@sizeName" onclick="opr(this);" />
+                                                    }
+                                                    else
+                                                    {
+                                                        <input type="button" id="s+@item.SizeID" value="@item.SizeName" onclick="opr(this);" class="size" />
+                                                    }
+                                                }
+                                                @*@for (int i = 0; i < listDistinctSize.Count(); i++)
+                                                    {
+                                                        if (listDistinctSize[i].SizeID == selectedSizeID)
+                                                        {
+                                                            <input type="button" id="s+@listDistinctSize[i].SizeID" class="CheckSelected size" value="@listDistinctSize[i].SizeName" onclick="opr(this);" />
+                                                        }
+                                                        else
+                                                        {
+                                                            <input type="button" id="s+@listDistinctSize[i].SizeID" value="@listDistinctSize[i].SizeName" onclick="opr(this);" class="size" />
+                                                        }
+                                                    }*@
+                                                <div>
+                                                </div>
+                                            </div>
+                                        }
+                                    }
+
+                                    <!--End Div-->
+                                    <!--Select Size Div-->
+                                    @if (listDistinctDimension.Count() > 0)
+                                    {
+                                        if (selectedDimensionID <= 0)
+                                        {
+                                            selectedDimensionID = itemsMin.DimensionID;
+                                        }
+                                        @Html.Hidden("SelectedDimension", selectedDimensionID)
+                                        //if there is only one Dimension with name N/A, no need to show
+                                        if (listDistinctDimension.Count() == 1 && listDistinctDimension[0].DimensionName.Trim() == "N/A") /*Added by Rumana->Trim()*/
+                                        {
+                                            //Do no show
+                                        }
+                                        else
+                                        {
+                                            <div class="selectSize">
+                                                <h2>Select</h2>
+                                                @for (int i = 0; i < listDistinctDimension.Count(); i++)
+                                                {
+                                                    if (listDistinctDimension[i].DimensionID == selectedDimensionID)
+                                                    {
+                                                        <input type="button" id="d+@listDistinctDimension[i].DimensionID" class="CheckSelected size" value="@listDistinctDimension[i].DimensionName" onclick="opr(this);" />
+                                                    }
+                                                    else
+                                                    {
+                                                        <input type="button" id="d+@listDistinctDimension[i].DimensionID" value="@listDistinctDimension[i].DimensionName" onclick="opr(this);" class="size" />
+                                                    }
+                                                }
+                                                <div>
+
+                                                </div>
+                                            </div>
+                                        }
+                                    }
+                                    <!--End Div-->
+                                    <!--Material Div-->
+                                    @if (listDistinctMaterial.Count() > 0)
+                                    {
+                                        if (selectedMaterialID <= 0)
+                                        {
+                                            selectedMaterialID = itemsMin.MaterialID;
+                                        }
+                                        @Html.Hidden("SelectedMaterial", selectedMaterialID)
+                                        //if there is only one Material with name N/A, no need to show
+                                        if (listDistinctMaterial.Count() == 1 && listDistinctMaterial[0].MaterialName.Trim() == "N/A")
+                                        {
+                                            //Do no show
+                                        }
+                                        else
+                                        {
+                                            <div class="selectSize">
+                                                <h2>Select</h2>
+                                                @for (int i = 0; i < listDistinctMaterial.Count(); i++)
+                                                {
+                                                    if (listDistinctMaterial[i].MaterialID == selectedMaterialID)
+                                                    {
+                                                        <input type="button" id="m+@listDistinctMaterial[i].MaterialID" class="CheckSelected size" value="@listDistinctMaterial[i].MaterialName" style="background-color:red;" onclick="opr(this);" />
+                                                    }
+                                                    else
+                                                    {
+                                                        <input type="button" id="m+@listDistinctMaterial[i].MaterialID" value="@listDistinctMaterial[i].MaterialName" onclick="opr(this);" class="size" />
+                                                    }
+                                                }
+                                                <div>
+                                                </div>
+                                            </div>
+                                        }
+                                    }
+
+                                    <!--End DIV-->
+
+                                </div>
+                                <div class="pro-description">
+                                    @if (Model.BasicDetails != null && Model.BasicDetails.Description != string.Empty)
+                                    {
+                                        @Html.Raw(Model.BasicDetails.Description)
+                                    }
+                                </div>
+
+                                <div>
+                                    <div class="pniCodeDiv">
+                                        <h5 class="product-page-side-title" style="font-weight:900;">Check for Delivery in your area</h5>
+                                        <div class="input-control text inputDiv">
+                                            <div id="deliveryPincode">
+                                                @Html.Partial("_CheckDeliveryPincode")
+                                            </div>
+                                        </div>
+                                    </div>
+                                    @*<div class="product-page-side-section" style="padding-top:5px;">
+                                            <div id="social-share-container">
+                                                <div id="custom-tweet-button" style="float: left; width: 25%;">
+                                                    <a class="fa fa-twitter" id="tweetShare" href="https://twitter.com/share?url=" + encodeuricomponent(document.url); target="_blank">
+                                                        Tweet
+                                                    </a>
+                                                </div>
+                                            </div>
+                                            <link rel="canonical" href="http://www.ezeelo.com/" />
+                                            <script src="https://apis.google.com/js/platform.js" async defer>
+                                            </script>
+                                            <g:plusone size="medium (bubble)" style="float:left"></g:plusone>
+                                            <div id="fb-root"></div>
+                                            <script>
+                                                (function (d, s, id) {
+                                                    var js, fjs = d.getElementsByTagName(s)[0];
+                                                    if (d.getElementById(id)) return;
+                                                    js = d.createElement(s); js.id = id;
+                                                    js.src = "//connect.facebook.net/en_GB/sdk.js#xfbml=1&version=v2.5";
+                                                    fjs.parentNode.insertBefore(js, fjs);
+                                                }(document, 'script', 'facebook-jssdk'));</script>
+                                            <div class="fb-share-button" data-href="http://www.ezeelo.com/" data-layout="button_count"></div>
+
+
+                                        </div>
+                                        <div class="product-page-side-section" style="padding-top:5px;">
+                                        </div>*@
+                                </div>
+                            </div>
+
+                            <div class="cell InnerDiv-right">
+
+
+                                <!--Button Div-->
+                                <!--End Div    -->
+                                @if (Model.DeliveryTime != 0)
+                                {
+                                    if (Model.DeliveryTime >= 24)
+                                    {
+
+                                        long day = (long)Model.DeliveryTime / 24;
+                                        long hours = (long)Model.DeliveryTime % 24;
+                                        if (hours > 0)
+                                        {
+                                            <h5 class="deliverhr">Delivered in <span>@(day + 1) Days</span></h5>
+                                        }
+                                        else
+                                        {
+                                            <h5 class="deliverhr">Delivered in <span>@day Days</span></h5>
+                                        }
+                                    }
+                                    else
+                                    {
+                                        <h5 class="deliverhr">Delivered in <span>@Model.DeliveryTime</span> hrs</h5>
+                                    }
+                                }
+                                <!--Gold Price Div-->
+
+                                <div class="goldPriceDiv">
+                                    @*Displaying List of components*@
+                                    <div id="divTodayRate">
+                                        <div class="goldTitle">
+
+                                            @if (Model.StockComponents.TodaysRate != null && Model.StockComponents.TodaysRate.Count() > 0)
+                                            {
+                                                <h2>Todays Rate</h2>
+                                                <ul>
+                                                    @for (int i = 0; i < Model.StockComponents.TodaysRate.Count(); i++)
+                                                    {
+                                                        <li><span class="mif-checkmark"></span> @Model.StockComponents.TodaysRate[i].DisplayName</li>
+                                                    }
+                                                </ul>
+                                            }
+                                        </div>
+                                        <div class="goldPrice-content">
+                                            @{
+                                                string[] arr;
+                                                string[] arr1 = new string[2];
+
+                                                if (Model.StockComponents.ComponentValue.DisplayText != string.Empty)
+                                                {
+                                                    arr = Model.StockComponents.ComponentValue.DisplayText.Split('+');
+                                                    if (arr.Count() > 0)
+                                                    {
+                                                        for (int i = 0; i < arr.Length; i++)
+                                                        {
+                                                            arr1 = arr[i].Split('$');
+                                                            <div class="item-type">
+                                                                <ul>
+                                                                    <li class="item-title"><span>@Convert.ToString(arr1[0])</span></li>
+                                                                    <li class="item-type-price"><span>@Convert.ToString(arr1[1])</span></li>
+                                                                </ul>
+                                                            </div>
+                                                            if (i < arr.Length - 1)
+                                                            {
+                                                                <div class="Add"><span class="mif-plus"></span></div>
+                                                            }
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        </div>
+                                    </div>
+                                </div>
+                                <!--End Gold Price Div-->
+                                <!--Sold By-->
+                                @*Hide for new soldBy landing page*@
+                                @*<div class="soldBy">
+
+                                        @Html.Hidden("SID", @itemsMin.ShopID)
+                                        @if (@Model.ShopReviews.AvgPoints != null && @Model.Sh
+                                    eviews.AvgPoints.AvgRatingPonts != null && @Model.ShopReviews.AvgPoints.AvgRatingPonts > 0)
+                                        {
+
+                                        @Html.Label("Sold By:") @Html.RouteLink(@itemsMin.ShopName, "ShopSearch2", new { shopID = @itemsMin.ShopID, shopName = Regex.Replace(@itemsMin.ShopName, @"[\/\\#,+()$~%.':*?<>{} ]", "-").Replace("&", "and").ToLower(), city = cityName, franchiseId = franchiseID }, null) ////added franchiseId=franchiseID
+                                            int shopRatingPoint = Convert.ToInt32(Math.Ceiling(Convert.ToDouble(@Model.ShopReviews.AvgPoints.AvgRatingPonts)));
+                                        <a href="#divShopRating">
+                                            <div class="rating" style="width:35%;float:right;padding-left:0px;">
+                                                @for (int j = 1; j <= shopRatingPoint; j++)
+                                                    {
+                                                    <span class="star on"></span>
+                                                    }
+                                                @for (int j = 1; j <= 5 - shopRatingPoint; j++)
+                                                    {
+                                                    <span class="star"></span>
+                                                    }
+                                            </div>
+                                        </a>
+                                        }
+                                        else if (Model.ShopReviews.IsDisplay == true)
+                                        {
+                                        @Html.Label("Sold By:") @Html.RouteLink(@itemsMin.ShopName, "ShopSearch2", new { shopID = @itemsMin.ShopID, shopName = Regex.Replace(@itemsMin.ShopName, @"[\/\\#,+()$~%.':*?<>{} ]", "-").Replace("&", "and").ToLower(), city = cityName, franchiseId = franchiseID }, null) ////added franchiseId=franchiseID
+
+                                        @Html.RouteLink("Be the first to review", "shop_rating", new { ID = @itemsMin.ShopID, prodId = @itemsMin.ProductID, city = cityName, franchiseId = franchiseID }, new { @class = "ShopRewiewLink" })////added franchiseId=franchiseID
+                                        }
+                                    </div>*@
+
+
+                                @if (Model.StockVarient != null)
+                                {
+                                    if (Model.StockVarient.FirstOrDefault().PayMode != null && Model.StockVarient.FirstOrDefault().PayMode.Count() > 0)
+                                    {
+                                        <div class="divPaymentMode" style="display:none;">
+                                            <ul>
+                                                @{
+                                                    List<int> paymentModeList = new List<int> { 1, 2, 3 };
+                                                    List<int> shopPaymentMode = new List<int>();
+
+                                                    foreach (var item in Model.StockVarient.FirstOrDefault().PayMode)
+                                                    {
+                                                        shopPaymentMode.Add(item.ID);
+                                                    }
+
+                                                    foreach (var mode in paymentModeList)
+                                                    {
+
+                                                        int modeID = Convert.ToInt32(mode);
+                                                        if (modeID == 1)
+                                                        {
+                                                            <li class="liNetBanking"></li>
+                                                        }
+                                                        if (modeID == 2)
+                                                        {
+                                                            if (shopPaymentMode.Contains(mode))
+                                                            {
+                                                                <li class="liCashOnDelivery"></li>
+                                                            }
+                                                            else
+                                                            {
+                                                                <li class="liCashOnDeliveryLineThrough"></li>
+                                                            }
+                                                        }
+                                                        if (modeID == 3)
+                                                        {
+                                                            if (shopPaymentMode.Contains(mode))
+                                                            {
+                                                                <li class="liCashNCarry"></li>
+                                                            }
+                                                            else
+                                                            {
+                                                                <li class="liCashNCarryLineThrough"></li>
+                                                            }
+                                                        }
+
+                                                    }
+                                                }
+
+                                            </ul>
+                                        </div>
+                                    }
+                                }
+
+                                <!--End Div-->
+
+                            </div>
+
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <input type="hidden" value="@ViewBag.WishListStatus" id="hdnWishListStatus" />
+        checkDisableLevel = 0;
+        //---Code by mohit---//
+        ViewBag.SellerID = itemsMin.ShopID;
+        if (itemsMin.ShopID == 335 || itemsMin.ShopID == 339)
+        {
+            <div class="">
+                <div id="divFesitival" class="cell colspan12 mainCell">
+                    <img src="~/Content/Home-content/Banner/strip.png" style="width: 100%;" />
+                </div>
+            </div>
+        }
+        //---End Code by mohit---//
+
+
+    }
+}
+
+
+
+@*List of sellers*@
+@*<div id="divSellers">
+        @{
+            if (Model.ProductSellers != null)
+            {
+                long shopID = 0;
+                long.TryParse(Convert.ToString(ViewBag.SellerID), out shopID);
+
+                var remainingSellers = Model.ProductSellers.Where(x => x.ShopID != shopID).ToList();
+
+                if (remainingSellers.Count() > 0)
+                {
+                    <div class="accordion ProSpec" data-role="accordion" data-close-any="true">
+                        <div class="frame active">
+                            <h3>More Seller</h3>
+                            <div class="content sellerContent">
+                                <table class="table-shopping-cart" style="width:100%;font-weight:700;">
+                                    @for (int i = 0; i < remainingSellers.Count(); i++)
+                                    {
+                                        <tbody>
+                                            <tr style=" background: #ffffff; border-bottom: 1px solid #ccc;">
+                                                <td style="text-align:center;"><img src="@remainingSellers[i].LogoPath" height="40" width="40" alt="@remainingSellers[i].ShopName" onerror="this.src = '/Content/Images/no_image.png'" style="width:35px;height:35px;" /> </td>
+
+                                                <td>MRP : <del class="fa fa-inr"> <b>@remainingSellers[i].MRP</b></del></td>
+                                                <td>Sale Rate : <label class="fa fa-inr" style="color:brown"> <b>@remainingSellers[i].SaleRate</b></label></td>
+                                                @if (remainingSellers[i].Color == "N/A" || remainingSellers[i].Color == "NA")
+                                                {
+                                                    <td style="display:none;">@remainingSellers[i].Color</td>
+                                                }
+                                                else
+                                                {
+                                                    <td>@remainingSellers[i].Color</td>
+                                                }
+                                                @if (remainingSellers[i].Size == "N/A" || remainingSellers[i].Size == "NA")
+                                                {
+                                                    <td style="display:none;">@remainingSellers[i].Size</td>
+                                                }
+                                                else
+                                                {
+                                                    <td>@remainingSellers[i].Size</td>}
+                                                @if (remainingSellers[i].Dimension == "N/A" || remainingSellers[i].Dimension == "NA")
+                                                {
+                                                    <td style="display:none;">@remainingSellers[i].Dimension</td>
+                                                }
+                                                else
+                                                {
+                                                    <td>@remainingSellers[i].Dimension</td> }
+                                                <td>
+                                                    <button id="@remainingSellers[i].ShopStockID" class="btn btn-warning" type="button" onclick="AddProductWithoutQuantity(@remainingSellers[i].ShopStockID, @remainingSellers[i].ProductID)">
+                                                        Add<i class="fa fa-shopping-basket"></i>
+                                                    </button>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    }
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                }
+            }
+
+
+        }
+    </div>*@
+
+
+@*<script src="~/Content/js/jquery-1.11.2.min.js"></script>*@
+<script type="text/javascript" language="javascript">
+
+    /* wait for images to load */
+    $(document).ready(function () {
+
+        // Set offer count
+        if ($("#hdnOfferCount").val() > 0) {
+
+            $("#spnOfferCount").text($("#hdnOfferCount").val() + " Offer");
+            $("#divOfferCount").css("display", "block");
+            $("#divOfferDiv").css("display", "block");
+        }
+        else {
+            $("#divOfferCount").css("display", "none");
+            $("#divOfferDiv").css("display", "none");
+        }
+
+        // Set size of payable amount
+        if ($("#spanPayableMain").html() != "" && $("#spanPayableMain").html().length > 0) {
+            $("#divSaleRate").removeClass("priceDiv");
+            $("#spanPayableMain").addClass("priceDiv");
+        }
+    });
+</script>
+
+<script type="text/javascript">
+    //Start Yashaswi 1/6/2018 Show Selected City And PinCode and Area
+    var _shopStockId_;
+    var _itemId_;
+
+    function Show_PopUpForLocationAlert(shopStockId, itemId) {
+
+        if (localStorage.getItem("IsLocConfirmed") != null) {
+            AddProduct(shopStockId, itemId);
+        }
+        else {
+            _shopStockId_ = shopStockId;
+            _itemId_ = itemId;
+            modalPinArea_.style.display = "block";
+
+        }
+    }
+
+    function LocPopupContinue() {
+        CheckDeliveryPincodeLoc();
+    }
+
+    function LocPopupChange() {
+        modalPinArea_.style.display = "none";
+        ShowMyModal();
+    }
+
+    function ShowMyModal() {
+        //var modal_ = document.getElementById('myModal');
+        //var span = document.getElementsByClassName("close")[0];
+        modal.style.display = "block";
+        if ($("#ddlSelectCityI").val() !== null) {
+            $("#lblareaI").text('');
+        }
+        $("#ddlSelectCityI").val(0);
+        $("#txtSelectPincodeI").hide();
+
+        $("#ddlSelectAreaI").hide();
+        $("#txtSelectPincodeI").val('');
+        $("#ddlSelectAreaI").val('');
+        if (localStorage.getItem("CityID") != null) {
+            $("#ddlSelectCityI").val(localStorage.getItem("CityID"));
+            $("#ddlSelectCityI").change();
+        }
+        span.onclick = function () {
+            modal.style.display = "none";
+        }
+
+    }
+
+    function CheckDeliveryPincodeLoc() {
+        var pincode = localStorage.getItem("SelectedPincode");
+
+        if (pincode != '') {
+            $.ajax({
+                type: "POST",
+                url: '@Url.Action("CheckDeliveryPincode", "PreviewItem", new { city = cityName, franchiseId = franchiseID })',////added franchiseId=franchiseID
+                data: "{'pincode':" + pincode + "}",
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (response) {
+                    if (response == true) {
+                        localStorage.setItem("IsLocConfirmed", "Y");
+                        modalPinArea_.style.display = "none";
+                        AddProduct(_shopStockId_, _itemId_);
+                    }
+                    else {
+                        modaldivCheckLoc.style.display = "block";
+                    }
+                },
+                failure: function (response) {
+
+                },
+                error: function (response) {
+
+                }
+            });
+        }
+    }
+
+
+    //End Yashaswi
+
+    function AddProduct(shopStockId, itemId) {
+
+        var maxQty = $("[id*=productQuantity]").attr('max');
+        var currentQty = $('#' + itemId).parent().find('.productQuantity').val();
+        if (parseInt(currentQty) > parseInt(maxQty)) {
+            $("[id*=qtyMsg]").text("We're sorry! We are able to accommodate only " + maxQty + " units of this product.");
+            return false;
+        }
+        else {
+            $("[id*=qtyMsg]").text("");
+            var _url = '@Url.Action("AddProductInShoppingCart", "Product")                ';
+            AddProductToShppingCart(shopStockId, itemId, _url)
+        }
+
+        ////Facebook Pixel Code added by harshada on 12/01/2017
+        //var salerate = $("[id*=hiddenSaleRate]").val();
+        //!function (f, b, e, v, n, t, s) {
+        //    if (f.fbq) return; n = f.fbq = function () {
+        //        n.callMethod ?
+        //        n.callMethod.apply(n, arguments) : n.queue.push(arguments)
+        //    }; if (!f._fbq) f._fbq = n;
+        //    n.push = n; n.loaded = !0; n.version = '2.0'; n.queue = []; t = b.createElement(e); t.async = !0;
+        //    t.src = v; s = b.getElementsByTagName(e)[0]; s.parentNode.insertBefore(t, s)
+        //}(window,
+        //document, 'script', 'https://connect.facebook.net/en_US/fbevents.js');
+        //fbq('init', '836970266428365'); // Insert your pixel ID here.
+        //fbq('track', 'AddToCart', {
+        //    content_ids: itemId,
+        //    content_type: 'product',
+        //    value: salerate,
+        //    currency: 'INR'
+        //});
+        ////End Facebook Pixel Code added by harshada on 12/01/2017
+
+        ////Google Code for Remarketing Tag Added by harshada on 13/01/2017
+        //var google_tag_params = {
+        //    dynx_itemid: itemId,
+        //    dynx_pagetype: 'conversionintent',
+        //    dynx_totalvalue: salerate,
+        //};
+
+
+        //var google_conversion_id = 950176197;
+        //var google_custom_params = window.google_tag_params;
+        //var google_remarketing_only = true;
+        ////End Google Code for Remarketing Tag Added by harshada on 13/01/2017
+    }
+</script>
+
+@*<noscript>
+        <img height="1" width="1" style="display:none"
+             src="https://www.facebook.com/tr?id=836970266428365&ev=PageView&noscript=1" />
+    </noscript>
+     <!-- Google Code for Remarketing Tag Added by harshada on 13/01/2017-->
+    <noscript>
+        <div style="display:inline;">
+            <img height="1" width="1" style="border-style:none;" alt="" src="//googleads.g.doubleclick.net/pagead/viewthroughconversion/950176197/?guid=ON&amp;script=0" />
+        </div>
+    </noscript>
+     <!-- End Google Code for Remarketing Tag Added by harshada on 13/01/2017-->*@
+<script>
+
+    function AddProductWithoutQuantity(shopStockId, itemId) {
+        var _url = '@Url.Action("AddProductInShoppingCart", "Product")';
+        AddProductToShppingCartWithoutQuantity(shopStockId, itemId, _url)
+    }
+
+    function AddProductToWishList() {
+        // alert($(".hiddenShopStockId").val());
+        var custSessionId = $("#hdnWishListStatus").val();
+
+        if (custSessionId == null || custSessionId == "") {
+            var city = $('#hdncity').val();
+            var franchise = $('#hdnfranchise').val();
+            //  window.location.href = '/Login/login?callfrom=normal';////hide olde code
+            // alert($.cookie("UrlCookie"));
+            //////////////
+            /* var name = "UrlCookie" + "=";
+             var ca = document.cookie.split(';');
+             for (var i = 0; i < ca.length; i++) {
+                 var c = ca[i];
+                 while (c.charAt(0) == ' ') {
+                     c = c.substring(1);
+                 }
+                 if (c.indexOf(name) == 0) {
+                     //return c.substring(name.length, c.length);
+                     alert(c.substring(name.length, c.length));
+                 }
+             }
+             return "";*/
+
+            /////////////////////
+            window.location.href = '/' + city + '/' + franchise + '/login?callfrom=normal';////added new
+        }
+        else {
+            //var shopStockID = $("#ShopStockID").val(); //old code
+            var shopStockID = $(".hiddenShopStockId").val();//new code
+            $.ajax({
+                type: "POST",
+                url: '@Url.Action("AddToWishList", "PreviewItem")',
+                data: "{'shopStockID':" + shopStockID + "}",
+                contentType: "application/json; charset = utf-8",
+                dataType: "json",
+                //success: OnSuccess,
+                success: function (response) {
+                    //Yashaswi start for wishlist 21-7-2018
+                    $(".ClassWishListBefore").hide();
+                    $(".ClassWishListAfter").show();
+                    //Yashaswi End for wishlist 21-7-2018
+                    //$("#anchorWishList").addClass('activeList');
+                    //$("#spanWishListTitle").text("Added To Wishlist");
+                   // $("#anchorWishList").attr("title", "Added To Wishlist");
+                },
+                failure: function (response) {
+                    $("#anchorWishList").addClass('activeList');
+                },
+                error: function (response) {
+                    $("#anchorWishList").addClass('activeList');
+                }
+            });
+        }
+    }
+
+    var mydata = {
+        "shopStockID": $("#ShopStockID").val(),
+        "productName": $("#ProductName").val(),
+        "productID": $("#hdnProductID").val()
+    };
+
+    function AddProductToShortList() {
+        var shopStockID = $("#ShopStockID").val();
+        $.ajax({
+            type: "POST",
+            url: '@Url.Action("AddProductToShortList", "PreviewItem")',//Change by Tejaswee dated on 09-01-2015
+            data: "{'myParam':" + JSON.stringify(mydata) + "}",
+            contentType: "application/json; charset = utf-8",
+            dataType: "json",
+            success: function (response) {
+                $("#anchorShortList").addClass('activeList');
+                $("#spanShortListTitle").text("Added To Shortlist");
+                $("#anchorShortList").attr("title", "Added To Shortlist");
+                var a = getCookie("ShortListCookie");
+                $("[id*=spanShortlistCount]").text(a.split(',').length);
+            },
+            failure: function (response) {
+                $("#anchorShortList").addClass('activeList');
+            },
+            error: function (response) {
+                $("#anchorShortList").addClass('activeList');
+            }
+        });
+    }
+    function getCookie(name) {
+        var dc = document.cookie;
+        var prefix = name + "=";
+        var begin = dc.indexOf("; " + prefix);
+        if (begin == -1) {
+            begin = dc.indexOf(prefix);
+            if (begin != 0) return null;
+        } else {
+            begin += 2;
+        }
+        var end = document.cookie.indexOf(";", begin);
+        if (end == -1) {
+            end = dc.length;
+        }
+        return unescape(dc.substring(begin + prefix.length, end));
+    }
+
+</script>
+
+
+<script>
+
+    function myFunction() {
+        var maxQty = $("[id*=productQuantity]").attr('max');
+        var currentQty = $("[id*=productQuantity]").val();
+        if (parseInt(currentQty) >= parseInt(maxQty)) {
+            $("[id*=qtyMsg]").text("We're sorry! We are able to accommodate only " + maxQty + " units of this product.");
+            return false;
+        }
+        else {
+            $("[id*=qtyMsg]").text("");
+            return false;
+        }
+    }
+
+    $("[id*=productQuantity]").bind('keyup mouseup', function () {
+
+        var maxQty = $("[id*=productQuantity]").attr('max');
+        var currentQty = $("[id*=productQuantity]").val();
+        if (parseInt(currentQty) > parseInt(maxQty)) {
+            $("[id*=qtyMsg]").text("We're sorry! We are able to accommodate only " + maxQty + " units of this product.");
+            $("[id*=productQuantity]").val() = $("[id*=productQuantity]").attr('max');
+            return false;
+        }
+        else {
+            $("[id*=qtyMsg]").text("");
+            return false;
+        }
+    });
+
+
+    $(document).ready(function () {
+        function addTextBoxData(e) {
+            alert(e.href + "?productQuantity=" + document.getElementById('productQuantity').value);
+            e.href = e.href + "?productQuantity=" + document.getElementById('productQuantity').value;
+        }
+    });
+
+
+    function checkpin1() {
+        var pincodeCookie = getCookie("DeliverablePincode");
+        if (pincodeCookie == null) {
+            $(".inputbox").css("border-color", "red");
+            $(".spnMessage").css("display", "block");
+            $(".spnMessage").text("Please check pincode!!");
+            $(".spnMessage").css("color", "red");
+            return false;
+        }
+        else {
+            var minOrderRs = '@ViewBag.MinOrderBuyNow';//// added for dynamic value for min order in rupees by ashish
+            var OrderAmtTemp = $('[id*=hiddenSaleRate]').val();
+            var Qty = $("[id*=productQuantity]").val();
+            var maxQty = $("[id*=productQuantity]").attr('max');
+            if (parseInt(Qty) > parseInt(maxQty)) {
+                $("[id*=qtyMsg]").text("We're sorry! We are able to accommodate only " + maxQty + " units of this product.");
+                return false;
+            }
+            var OrderAmt = OrderAmtTemp * Qty;
+            //var RemnAmt = 100 - OrderAmt;
+            if (!isNaN(minOrderRs)) {
+                RemnAmt = minOrderRs - OrderAmt;////added
+            } else { RemnAmt = OrderAmt }
+            //alert(RemnAmt);
+            var str = getCookie("CityCookie");
+            var cucity = "";
+            var cufranchiseId = 0;////added
+            if (str != null && str != "" && str != undefined) {
+                var str1 = [];
+                str1 = str.split('$');
+                cucity = str1[1].toLowerCase();
+                cufranchiseId = str1[2];////added
+            }
+            // alert( cucity + "==" + cufranchiseId + "==" + OrderAmt + "==" + minOrderRs);
+            //// if (cucity == 'varanasi' && parseInt(cufranchiseId) == 4) {  ////added && parseInt(cufranchiseId)==4
+            ////    if (OrderAmt >= 100) {
+            if (minOrderRs == "" || minOrderRs == null)///added
+            {
+                $(".inputbox").removeAttr("border-color");
+                var url = "";
+                ShopStockID1 = $(".hiddenShopStockId").val();
+                itemID1 = $(".hiddenProductId").val();
+                productQuantity1 = $("[id*=productQuantity]").val();
+                if (parseInt($("[id*=productQuantity]").val()) > parseInt($("[id*=productQuantity]").attr("max"))) {
+                    productQuantity1 = $("[id*=productQuantity]").attr("max");
+                }
+                var url = '@(Html.Raw(Url.RouteUrl("express-buy", new { ShopStockID = "_ShopStockID_", itemID = "_itemID_", couponCode = 0, couponAmount = 0, couponPercent = 0, productQuantity = "_productQuantity_", city = cityName, franchiseId = franchiseID })))';  ////added franchiseId=franchiseID
+                var _url = url.replace('_ShopStockID_', ShopStockID1).replace('_itemID_', itemID1).replace('_productQuantity_', productQuantity1);
+                window.location.href = _url;
+                return true;
+            }///added
+            else if (minOrderRs == "/") {
+                $(".inputbox").removeAttr("border-color");
+                var url = "";
+                ShopStockID1 = $(".hiddenShopStockId").val();
+                itemID1 = $(".hiddenProductId").val();
+                productQuantity1 = $("[id*=productQuantity]").val();
+                if (parseInt($("[id*=productQuantity]").val()) > parseInt($("[id*=productQuantity]").attr("max"))) {
+                    productQuantity1 = $("[id*=productQuantity]").attr("max");
+                }
+                var url = '@(Html.Raw(Url.RouteUrl("express-buy", new { ShopStockID = "_ShopStockID_", itemID = "_itemID_", couponCode = 0, couponAmount = 0, couponPercent = 0, productQuantity = "_productQuantity_", city = cityName, franchiseId = franchiseID })))';  ////added franchiseId=franchiseID
+                var _url = url.replace('_ShopStockID_', ShopStockID1).replace('_itemID_', itemID1).replace('_productQuantity_', productQuantity1);
+                window.location.href = _url;
+                return true;
+            }
+            if (parseInt(OrderAmt) >= parseInt(minOrderRs)) {///added
+                $(".inputbox").removeAttr("border-color");
+                var url = "";
+                ShopStockID1 = $(".hiddenShopStockId").val();
+                itemID1 = $(".hiddenProductId").val();
+                productQuantity1 = $("[id*=productQuantity]").val();
+                if (parseInt($("[id*=productQuantity]").val()) > parseInt($("[id*=productQuantity]").attr("max"))) {
+                    productQuantity1 = $("[id*=productQuantity]").attr("max");
+                }
+                var url = '@(Html.Raw(Url.RouteUrl("express-buy", new { ShopStockID = "_ShopStockID_", itemID = "_itemID_", couponCode = 0, couponAmount = 0, couponPercent = 0, productQuantity = "_productQuantity_", city = cityName, franchiseId = franchiseID })))';  ////added franchiseId=franchiseID
+                var _url = url.replace('_ShopStockID_', ShopStockID1).replace('_itemID_', itemID1).replace('_productQuantity_', productQuantity1);
+                window.location.href = _url;
+                return true;
+            }///added
+                ////   }
+            else {///added
+                //// alert("Min. Order : Rs.100. You still have Rs " + RemnAmt + " to go to reach the minimum order amount."); //hide now for dynamic
+                alert("Min. Order : " + OrderAmt + ". You still have Rs " + RemnAmt + " to go to reach the minimum order amount.");
+                return false;
+            }///added
+            ////  }
+
+
+            $(".inputbox").removeAttr("border-color");
+            var url = "";
+            ShopStockID1 = $(".hiddenShopStockId").val();
+            //alert(ShopStockID1);
+            itemID1 = $(".hiddenProductId").val();
+            productQuantity1 = $("[id*=productQuantity]").val();
+
+            if (parseInt($("[id*=productQuantity]").val()) > parseInt($("[id*=productQuantity]").attr("max"))) {
+                productQuantity1 = $("[id*=productQuantity]").attr("max");
+            }
+
+            var url = '@(Html.Raw(Url.RouteUrl("express-buy", new { ShopStockID = "_ShopStockID_", itemID = "_itemID_", couponCode = 0, couponAmount = 0, couponPercent = 0, productQuantity = "_productQuantity_", city = cityName, franchiseId = franchiseID })))'; ////added franchiseId=franchiseID
+            var _url = url.replace('_ShopStockID_', ShopStockID1).replace('_itemID_', itemID1).replace('_productQuantity_', productQuantity1);
+            window.location.href = _url;
+            return true;
+        }
+    }
+
+
+</script>
+
+
+<script type="text/javascript">
+    jQuery.noConflict();
+    $(document).ready(function () {
+        $("#box-vertical-megamenus .vertical-menu-content").addClass('gbMarket');
+        $("#box-vertical-megamenus h4.title").click(function () {
+            $("#box-vertical-megamenus .vertical-menu-content").toggleClass('gbMarket');
+            if ($(this).hasClass('active')) {
+                $("#box-vertical-megamenus .vertical-menu-content").css('opacity', '1');
+                $("#box-vertical-megamenus .vertical-menu-content").css('display', 'block');
+            } else {
+                $("#box-vertical-megamenus .vertical-menu-content").css('display', 'none');
+            }
+        });
+
+    });
+</script>
+@* For loading product images *@
+<script src="~/Scripts/jquery-2.1.3.min.js"></script>
+<script src="~/Scripts/smoothproducts.js" defer="defer"></script>
+<script type="text/javascript">
+    /* wait for images to load */
+    $(document).ready(function () {
+        $('.sp-wrap').smoothproducts();
+    });
+</script>
+<script>
+    $(document).ready(function () {
+        $('.fly-button').on('click', function () {
+            var cart = $('.shopping-cart');
+            var imgtodrag = $(this).closest('.cells12').find(".ZoomTile img").eq(0);
+            if (imgtodrag) {
+                var imgclone = imgtodrag.clone()
+                    .offset({
+                        top: imgtodrag.offset().top,
+                        left: imgtodrag.offset().left
+                    })
+                    .css({
+                        'opacity': '0.5',
+                        'position': 'absolute',
+                        'height': '150px',
+                        'width': '150px',
+                        'z-index': '100'
+                    })
+                    .appendTo($('body'))
+                    .animate({
+                        'top': cart.offset().top + 10,
+                        'left': cart.offset().left + 10,
+                        'width': 75,
+                        'height': 75
+                    }, 1000, 'easeInOutExpo');
+
+                setTimeout(function () {
+                    cart.effect("shake", {
+                        times: 2
+                    }, 200);
+                }, 1500);
+
+                imgclone.animate({
+                    'width': 0,
+                    'height': 0
+                }, function () {
+                    $(this).detach()
+                });
+            }
+        });
+    });
+</script>
+<!--Safari Browser Jquery by Gopal-->
+<script>
+    $(document).ready(function () {
+
+        if (navigator.userAgent.indexOf('Safari') != -1 && navigator.userAgent.indexOf('Chrome') == -1) {
+            $(".vertical-menu-content").removeAttr('style');
+            $('#nav-top-menu').find('.vertical-menu-content').hide();
+            $("#productGeneralSpecification iframe").css('height', '294px');
+            $("#productGeneralSpecification").css('background-color', '#fff');
+            $('h4.title').click(function () {
+                if ($(".vertical-menu-content").is(':visible')) {
+                    $(".vertical-menu-content").hide();
+                    $(".vertical-menu-content").slideUp();
+                    $(".vertical-menu-content").css('display', 'none');
+                } else {
+                    $(".vertical-menu-content").show();
+                    $(".vertical-menu-content").slideDown();
+                    $(".vertical-menu-content").css('display', 'block');
+                }
+            });
+            (function ($) {
+                "use strict"; // Start of use strict
+                /* ---------------------------------------------
+                 Scripts initialization
+                 --------------------------------------------- */
+                $(window).load(function () {
+                    // auto width megamenu
+                    auto_width_megamenu();
+                    resizeTopmenu();
+                });
+                /* ---------------------------------------------
+                 Scripts ready
+                 --------------------------------------------- */
+                $(document).ready(function () {
+                    $('[data-toggle="tooltip"]').tooltip();
+                    /* Resize top menu*/
+                    resizeTopmenu();
+
+
+                    /* Open menu on mobile */
+                    $(document).on('click', '.btn-open-mobile', function () {
+                        var width = $(window).width();
+                        if (width > 1024) {
+                        }
+                        $(this).closest('.box-vertical-megamenus').find('.vertical-menu-content').slideToggle();
+                        $(this).closest('.title').toggleClass('active');
+                        return false;
+                    })
+                    $(document).on('click', 'h4.title', function () {
+                        var width = $(window).width();
+                        if (width > 1024) {
+                        }
+                        $(this).closest('.box-vertical-megamenus').find('.vertical-menu-content').slideToggle();
+                        $(this).closest('.title').toggleClass('active');
+                        return false;
+                    })
+                    /* Product qty */
+                    $(document).on('click', '.btn-plus-down', function () {
+                        var value = parseInt($('#option-product-qty').val());
+                        value = value - 1;
+                        if (value <= 0) return false;
+                        $('#option-product-qty').val(value);
+                        return false;
+                    })
+                    $(document).on('click', '.btn-plus-up', function () {
+                        var value = parseInt($('#option-product-qty').val());
+                        value = value + 1;
+                        if (value <= 0) return false;
+                        $('#option-product-qty').val(value);
+                        return false;
+                    })
+                    /* Close vertical */
+                    $(document).on('click', '*', function (e) {
+                        var container = $("#box-vertical-megamenus");
+                        if (!container.is(e.target) && container.has(e.target).length === 0) {
+                            if ($('body').hasClass('home')) {
+                                if ($('#nav-top-menu').hasClass('nav-ontop')) {
+                                } else {
+                                    return;
+                                }
+                            }
+                            container.find('.vertical-menu-content').hide();
+                            container.find('.title').removeClass('active');
+                        }
+                    })
+                    /* Send conttact*/
+                    $(document).on('click', '#btn-send-contact', function () {
+                        var subject = $('#subject').val(),
+                            email = $('#email').val(),
+                            order_reference = $('#order_reference').val(),
+                            message = $('#message').val();
+                        var data = {
+                            subject: subject,
+                            email: email,
+                            order_reference: order_reference,
+                            message: message
+                        }
+                        $.post('ajax_contact.php', data, function (result) {
+                            if (result.trim() == "done") {
+                                $('#email').val('');
+                                $('#order_reference').val('');
+                                $('#message').val('');
+                                $('#message-box-conact').html('<div class="alert alert-info">Your message was sent successfully. Thanks</div>');
+                            } else {
+                                $('#message-box-conact').html(result);
+                            }
+                        })
+                    })
+                });
+                /* ---------------------------------------------
+                 Scripts resize
+                 --------------------------------------------- */
+                $(window).resize(function () {
+                    // auto width megamenu
+                    auto_width_megamenu();
+                    // Remove menu ontop
+                    remove_menu_ontop();
+                    // resize top menu
+                    resizeTopmenu();
+                });
+                /* ---------------------------------------------
+                 Scripts scroll
+                 --------------------------------------------- */
+                $(window).scroll(function () {
+                    resizeTopmenu();
+                    /* Show hide scrolltop button */
+                    if ($(window).scrollTop() == 0) {
+                        $('.scroll_top').stop(false, true).fadeOut(600);
+                    } else {
+                        $('.scroll_top').stop(false, true).fadeIn(600);
+                    }
+                    /* Main menu on top */
+                    var h = $(window).scrollTop();
+                    var max_h = $('#header').height() + $('#top-banner').height();
+                    var width = $(window).width();
+                    if (width > 767) {
+                        if (h > 20) {
+                            $('#nav-top-menu').addClass('nav-ontop');
+                            $('#cart-block .cart-block').appendTo('#shopping-cart-box-ontop .shopping-cart-box-ontop-content');
+                            $('#shopping-cart-box-ontop').fadeIn();
+                            $('#user-info-top').appendTo('#user-info-opntop');
+                            $('#header .header-search-box form').appendTo('#form-search-opntop');
+                        } else {
+                            $('#nav-top-menu').removeClass('nav-ontop');
+                            if ($('body').hasClass('home')) {
+                                $('#nav-top-menu').find('.vertical-menu-content').removeAttr('style');
+                                if (width > 1024)
+                                    $('#nav-top-menu').find('.vertical-menu-content').hide();
+                                else {
+                                    $('#nav-top-menu').find('.vertical-menu-content').hide();
+                                }
+                                $('#nav-top-menu').find('.vertical-menu-content').removeAttr('style');
+                            }
+                            ///
+                            $('#shopping-cart-box-ontop .cart-block').appendTo('#cart-block');
+                            $('#shopping-cart-box-ontop').fadeOut();
+                            $('#user-info-opntop #user-info-top').appendTo('.top-header .container');
+                            $('#form-search-opntop form').appendTo('#header .header-search-box');
+                        }
+                    }
+                });
+                var vertical_menu_height = $('#box-vertical-megamenus .box-vertical-megamenus').innerHeight();
+                /**==============================
+                ***  Auto width megamenu
+                ===============================**/
+                function auto_width_megamenu() {
+                    var full_width = parseInt($('.container').innerWidth());
+                    var menu_width = parseInt($('.vertical-menu-content').actual('width'));
+                    $('.vertical-menu-content').find('.vertical-dropdown-menu').each(function () {
+                        $(this).width((full_width - menu_width) - 2);
+                    });
+                }
+                /**==============================
+                ***  Remove menu on top
+                ===============================**/
+                function remove_menu_ontop() {
+                    var width = parseInt($(window).width());
+                    if (width < 768) {
+                        $('#nav-top-menu').removeClass('nav-ontop');
+                        if ($('body').hasClass('home')) {
+                            if (width > 1024)
+                                $('#nav-top-menu').find('.vertical-menu-content').hide();
+                            else {
+                                $('#nav-top-menu').find('.vertical-menu-content').hide();
+                            }
+                        }
+                        ///
+                        $('#shopping-cart-box-ontop .cart-block').appendTo('#cart-block');
+                        $('#shopping-cart-box-ontop').fadeOut();
+                        $('#user-info-opntop #user-info-top').appendTo('.top-header .container');
+                        $('#form-search-opntop form').appendTo('#header .header-search-box');
+                    }
+                }
+                /* Top menu*/
+                function scrollCompensate() {
+                    var inner = document.createElement('p');
+                    inner.style.width = "100%";
+                    inner.style.height = "200px";
+                    var outer = document.createElement('div');
+                    outer.style.position = "absolute";
+                    outer.style.top = "0px";
+                    outer.style.left = "0px";
+                    outer.style.visibility = "hidden";
+                    outer.style.width = "200px";
+                    outer.style.height = "150px";
+                    outer.style.overflow = "hidden";
+                    outer.appendChild(inner);
+                    document.body.appendChild(outer);
+                    var w1 = parseInt(inner.offsetWidth);
+                    outer.style.overflow = 'scroll';
+                    var w2 = parseInt(inner.offsetWidth);
+                    if (w1 == w2) w2 = outer.clientWidth;
+                    document.body.removeChild(outer);
+                    return (w1 - w2);
+                }
+
+                function resizeTopmenu() {
+                    if ($(window).width() + scrollCompensate() >= 768) {
+                        var main_menu_w = $('#main-menu .navbar').innerWidth();
+
+                        $("#main-menu ul.mega_dropdown").each(function () {
+                            var menu_width = $(this).innerWidth();
+                            var offset_left = $(this).position().left;
+                            if (menu_width > main_menu_w) {
+                                $(this).css('width', main_menu_w + 'px');
+                                $(this).css('left', '0');
+                            } else {
+                                if ((menu_width + offset_left) > main_menu_w) {
+                                    var t = main_menu_w - menu_width;
+                                    var left = parseInt((t / 2));
+                                    $(this).css('left', left);
+                                }
+                            }
+                        });
+                    }
+
+                    if ($(window).width() + scrollCompensate() < 1025) {
+                        $("#main-menu li.dropdown:not(.active) >a").attr('data-toggle', 'dropdown');
+                    } else {
+                        $("#main-menu li.dropdown >a").removeAttr('data-toggle');
+                    }
+                }
+            })(jQuery); // End of use strict
+
+        }
+    });
+</script>
+<script src="~/Content/js/theme-script.js"></script>
+<!--Category Jquery-->
+<style type="text/css">
+    #divOfferCount:before {
+        content: "\002b";
+        display: block;
+        position: absolute;
+        top: 59% !important;
+        margin-top: -1.3rem;
+        right: .625rem;
+        color: inherit;
+        vertical-align: middle;
+        font-size: 27px;
+    }
+
+    #divOfferCount:hover:before {
+        content: "\2212";
+    }
+
+    #divOfferCount {
+        cursor: pointer;
+        transition: all 0.1s ease-in-out;
+        -webkit-transition: all 0.1s ease-in-out;
+        -moz-transition: all 0.1s ease-in-out;
+        -o-transition: all 0.1s ease-in-out;
+    }
+
+    #divFlatOffer {
+        height: 0px;
+        -webkit-transition: all 0.3s ease;
+        -moz-transition: all 0.3s ease;
+        -ms-transition: all 0.3s ease;
+        -o-transition: all 0.3s ease;
+        transition: all 0.3s ease;
+    }
+
+    #divOfferCount:hover + .content {
+        display: block;
+        height: 120px;
+    }
+
+    #divOfferCount span:hover + .content {
+        display: block;
+        height: 120px;
+    }
+
+    .option2 .box-vertical-megamenus .vertical-menu-list li:hover .vertical-dropdown-menu {
+        opacity: 1;
+        height: auto;
+    }
+</style>
+
+
+@if (@Model.ProductReviews.CustomerReviewList != null)
+{
+    reviewCount = Model.ProductReviews.CustomerReviewList.Count();
+}
+
+<script type="application/ld+json">
+    @*----////added Ashish @@ ---*@
+    {
+    "context": "http://schema.org",
+    "@@type": "Product",
+    "aggregateRating": {
+    "@@type": "AggregateRating",
+    @*"ratingValue": "3.5",*@
+    "ratingValue": "@ratingPoint",
+    "reviewCount": "@reviewCount"
+    },
+    "description": "@Model.BasicDetails.Description",
+    "name": "@Model.BasicDetails.ProductName",
+    "offers": {
+    "@@type": "Offer",
+    "availability": "http://schema.org/InStock",
+    @*"price": "55.00",*@
+    "price": "@Model.BuyProduct.SaleRate",
+    "priceCurrency": "USD"
+    }
+    @*"review": [
+        {
+        "@@type": "Review",
+        "author": "Ellie",
+        "datePublished": "2011-04-01",
+        "description": "The lamp burned out and now I have to replace it.",
+        "name": "Not a happy camper",
+        "reviewRating": {
+        "@@type": "Rating",
+        "bestRating": "5",
+        "ratingValue": "1",
+        "worstRating": "1"
+        }
+        },
+        {
+        "@@type": "Review",
+        "author": "Lucas",
+        "datePublished": "2011-03-25",
+        "description": "Great microwave for the price. It is small and fits in my apartment.",
+        "name": "Value purchase",
+        "reviewRating": {
+        "@@type": "Rating",
+        "bestRating": "5",
+        "ratingValue": "4",
+        "worstRating": "1"
+        }
+        }
+        ]*@
+    }
+</script>
+
+@*@if(cityID=="4968")
+    {
+        SiteUrl=SiteUrl+
+    }*@
+
+
+<script type="application/ld+json">
+    { "context" : "http://schema.org",
+    "@@type" : "Organization",
+    "url" : "@SiteUrl",
+    "contactPoint" : [
+    { "@@type" : "ContactPoint",
+    @*"telephone" : "+1-401-555-1212",*@
+    "telephone" : "@helpLineNo",
+    "contactType" : "customer service"
+    } ] }
+</script>

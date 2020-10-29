@@ -1,0 +1,259 @@
+﻿@using PagedList;
+
+@using PagedList.Mvc;
+
+@model IPagedList<ModelLayer.Models.ViewModel.WalletSummaryViewModel>
+
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_LeaderUsersLayout.cshtml";
+}
+
+<link rel="stylesheet" href="~/Templates/UsersTemplate/css/material-design.minfd53.css">
+<link rel="stylesheet" href="~/Templates/UsersTemplate/css/style3.css">
+<link rel="stylesheet" href="~/Templates/UsersTemplate/css/dropify.minfd53.css">
+<link rel="stylesheet" href="~/Templates/UsersTemplate/css/custom.css">
+<link rel="stylesheet" href="~/Templates/UsersTemplate/css/tablesaw.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<title>Order Details</title>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<main>
+    <header></header>
+    <section class="sideNavbar">
+        <div class="wrapper">
+            <!-- Sidebar  -->
+            <!-- Page Content  -->
+            
+            <!-- Page Content  -->
+            <!-- main body content -->
+            <section class="PurchaseReportBodyContentMain">
+                <div class="container-fluid">
+                    <div class="page" style="touch-action: pan-y; user-select: none; -webkit-user-drag: none; -webkit-tap-highlight-color: rgba(0, 0, 0, 0);">
+                        <div class="page-header">
+                            <h1 class="page-title">Wallet Summary</h1>
+                        </div>
+                        <div class="page-content container-fluid">
+                            <div class="row">
+                                <div class="col-sm-12">
+                                    <!-- Panel Kitchen Sink -->
+                                    <div class="panel">
+                                        <!-- <header class="panel-heading">
+                                          <h3 class="panel-title">
+                                            Delivery
+                                            <span class="panel-desc">
+                                              Swipe Mode, ModeSwitch, Minimap, Sortable, SortableSwitch
+                                            </span>
+                                          </h3>
+                                        </header> -->
+                                        <div class="panel-body ">
+                                            <div class="tablesaw-bar tablesaw-mode-columntoggle">
+                                                @*<div class="tablesaw-sortable-switch tablesaw-bar-section">
+                                                        <label>
+                                                            Sort:
+                                                            <span class="btn tablesaw-btn btn-select tablesaw-btn-select waves-effect waves-classic">
+                                                                <span aria-hidden="true">Description (A-Z)</span>
+                                                                <select>
+                                                                    <option selected="" value="0_asc">Description (A-Z)</option>
+                                                                    <option value="0_desc">Description (Z-A)</option>
+                                                                    <option value="1_asc">Credit/ Withdrawal (A-Z)</option>
+                                                                    <option value="1_desc">Credit/ Withdrawal (Z-A)</option>
+                                                                    <option value="2_asc">Wallet Amt (A-Z)</option>
+                                                                    <option value="2_desc">Wallet Amt (Z-A)</option>
+                                                                    <option value="3_asc">Status (A-Z)</option>
+                                                                    <option value="3_desc">Status (Z-A)</option>
+                                                                    <option value="4_asc">
+                                                                        Comments
+                                                                        (A-Z)
+                                                                    </option>
+                                                                    <option value="4_desc">
+                                                                        Comments
+                                                                        (Z-A)
+                                                                    </option>
+                                                                </select>
+                                                            </span>
+                                                        </label>
+                                                    </div>*@
+                                                <div class="tablesaw-columntoggle-btnwrap tablesaw-advance popup" onclick="myFunction()">
+                                                    <a href="#tablesaw-2523-popup" class="btn tablesaw-btn btn-micro tablesaw-columntoggle-btn tablesaw-nav-btn down waves-effect waves-classic"
+                                                       data-popup-link="">
+                                                        <span>Columns</span>
+                                                    </a>
+                                                    <div class="tablesaw-columntoggle-popup popuptext" id="myPopup">
+                                                        <div class="btn-group">
+                                                            <label><input type="checkbox" id="withdral" checked="">Credit/ Withdrawal</label>
+                                                            <label><input type="checkbox" id="WalletAmount" checked="">Wallet Amt</label>
+                                                            <label><input type="checkbox" id="Status" checked="">Status</label>
+                                                            <label>
+                                                                <input type="checkbox" id="Date" checked="">Date
+                                                            </label>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="tablesaw-advance minimap" style="display: block;">
+                                                    <ul class="tablesaw-advance-dots">
+                                                        <li>
+                                                            <i></i>
+                                                        </li>
+                                                        <li>
+                                                            <i></i>
+                                                        </li>
+                                                        <li>
+                                                            <i></i>
+                                                        </li>
+                                                        <li>
+                                                            <i></i>
+                                                        </li>
+                                                        <li>
+                                                            <i></i>
+                                                        </li>
+                                                        <li>
+                                                            <i></i>
+                                                        </li>
+                                                    </ul>
+                                                </div>
+                                            </div>
+                                            <div class="tablesaw-overflow">
+                                                <table class="tablesaw table-striped table-bordered table-hover tablesaw-columntoggle tablesaw-fix-persist report-table tablesaw-sortable"
+                                                       data-tablesaw-mode="columntoggle" data-tablesaw-sortable="" data-tablesaw-sortable-switch=""
+                                                       data-tablesaw-minimap="" id="tablesaw-2523">
+
+                                                    <thead>
+                                                        <tr>
+                                                            <th data-tablesaw-sortable-col="" data-tablesaw-priority="persist" class="width-ms tablesaw-sortable-head tablesaw-sortable-ascending" data-tablesaw-sortable-numeric="false" data-tablesaw-sortable-default-col="true">
+                                                                <button class="tablesaw-sortable-btn">
+
+                                                                    @Html.ActionLink("Discription", "Index", new
+                                               {
+                                                   sort = ViewBag.SortByName,
+                                                   
+                                               })
+                                                                    <i class="fa fa-fw fa-sort"></i>
+                                                                </button>
+                                                            </th>
+                                                            <th data-tablesaw-sortable-col="" data-tablesaw-priority="1" class="tablesaw-priority-1 tablesaw-sortable-head" data-tablesaw-sortable-numeric="false">
+                                                                <button class="tablesaw-sortable-btn">
+                                                                    @Html.ActionLink("Withdrawn/Credit", "Index", new
+                                               {
+                                                   sort = ViewBag.SortByGender,
+                                                   
+                                               })
+                                                                <i class="fa fa-fw fa-sort"></i>
+                                                            </button>
+                                                        </th>
+                                                        <th data-tablesaw-sortable-col="" data-tablesaw-priority="2" class="tablesaw-priority-2 tablesaw-sortable-head" data-tablesaw-sortable-numeric="false"><button class="tablesaw-sortable-btn">@Html.ActionLink("Wallet Amount", "Index", new
+                                               {
+                                                   sort = ViewBag.SortByPointsCollecte,
+                                                   
+                                               })
+<i class="fa fa-fw fa-sort"></i><span class="tablesaw-sortable-arrow"></span></button></th>
+                                                        <th data-tablesaw-sortable-col="" data-tablesaw-priority="3" class="tablesaw-priority-3 tablesaw-sortable-head" data-tablesaw-sortable-numeric="false"><button class="tablesaw-sortable-btn">Status<span class="tablesaw-sortable-arrow"></span></button></th>
+                                                        <th data-tablesaw-sortable-col="" data-tablesaw-priority="4" class="tablesaw-priority-4 tablesaw-sortable-head" data-tablesaw-sortable-numeric="false">
+                                                            <button class="tablesaw-sortable-btn">
+                                                                Date
+                                                                <span class="tablesaw-sortable-arrow"></span>
+                                                            </button>
+                                                        </th>
+                                                    </tr>
+                                                </thead>
+
+                                                @foreach (var item in Model)
+                                                {
+                                                    <tbody>
+                                                        <tr>
+                                                            <td>@Html.DisplayFor(m => item.Description)<p><a href="@Url.Action("OrderDetails", "PurchaseReport", new { orderCode=item.OrderCode})">@Html.DisplayFor(modelItem => item.OrderCode)</a></p></td>
+                                                            <td>@Html.DisplayFor(m => item.WidrawlCreadit)</td>
+                                                            <td>@Html.DisplayFor(m => item.Amount)</td>
+                                                            <td>@Html.DisplayFor(m => item.Status)</td>
+                                                            <td>@Html.DisplayFor(m => item.TransactionDate)</td>
+
+                                                        </tr>
+
+                                                    </tbody>
+                                                }
+                                            </table>
+                                                @Html.PagedListPager(Model, pageNumber => Url.Action("Index", new
+                           {
+                               pageNumber,
+                               //option = Request.QueryString["option"],
+                               // search = Request.QueryString["search"]
+                           }))
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- <p></p> -->
+                                <!-- End Panel Kitchen Sink -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </div>
+
+</section>
+</main>
+
+<script type="text/javascript">
+
+
+    // When the user clicks on div, open the popup (div#tablesaw-2523-popup)
+    function myFunction() {
+        var popup = document.getElementById("myPopup");
+        popup.classList.toggle("show");
+    }
+
+</script>
+<script type="text/javascript">
+    $(document).ready(function () {
+
+
+        $('#withdral').bind('change', function () {
+
+
+            if ($(this).is(':checked'))
+                $('td:nth-child(2),th:nth-child(2)').show();
+            else
+                $('td:nth-child(2),th:nth-child(2)').hide();
+
+        });
+
+        $('#WalletAmount').bind('change', function () {
+
+
+            if ($(this).is(':checked'))
+                $('td:nth-child(3),th:nth-child(3)').show();
+            else
+                $('td:nth-child(3),th:nth-child(3)').hide();
+
+        });
+
+
+        $('#Status').bind('change', function () {
+
+
+            if ($(this).is(':checked'))
+                $('td:nth-child(4),th:nth-child(4)').show();
+            else
+                $('td:nth-child(4),th:nth-child(4)').hide();
+
+        });
+
+
+        $('#Date').bind('change', function () {
+
+
+            if ($(this).is(':checked'))
+                $('td:nth-child(5),th:nth-child(5)').show();
+            else
+                $('td:nth-child(5),th:nth-child(5)').hide();
+
+        });
+
+
+
+    });
+</script>
+
+
+

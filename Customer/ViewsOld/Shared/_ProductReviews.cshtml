@@ -1,0 +1,94 @@
+﻿@model ModelLayer.Models.ViewModel.DisplayReviewsViewModel
+@{
+    string cityName = "";
+    int franchiseID = 0;////added
+    if (Request.Cookies["CityCookie"] != null && Request.Cookies["CityCookie"].Value != "")
+    {
+        cityName = Request.Cookies["CityCookie"].Value.Split('$')[1].ToLower();
+        franchiseID = Convert.ToInt32(Request.Cookies["CityCookie"].Value.Split('$')[2]);////added
+    }
+}
+<div class="row">
+    <div class="col-md-12 product-review">
+        <h3 class="product-tab-rating-title">Product Reviews:</h3>
+        @if (Model.AvgPoints != null && Model.AvgPoints.AvgRatingPonts != null)
+        {
+            for (int j = 1; j <= Math.Ceiling(Convert.ToDouble(@Model.AvgPoints.AvgRatingPonts)); j++)
+            {
+                <span class="star on fa fa-star"></span>
+            }
+            for (int j = 1; j <= 5 - Math.Ceiling(Convert.ToDouble(@Model.AvgPoints.AvgRatingPonts)); j++)
+            {
+                <span class="star fa fa-star"></span>
+            }
+
+        }
+        @*<span>@Math.Ceiling(Convert.ToDouble(@Model.AvgPoints.AvgRatingPonts))</span><span> (based on @Model.AvgPoints.Count ratings)</span>*@
+        @if (Model.CustomerReviewList != null)
+        {
+            <span>@Math.Ceiling(Convert.ToDouble(@Model.AvgPoints.AvgRatingPonts))</span><span> (based on @Model.CustomerReviewList.Count ratings)</span>
+        }
+        @Html.RouteLink("Write A Review", "Product_rating", new { ID = Model.AvgPoints.OwnerID, city = cityName, franchiseId = franchiseID }, new { @style = "color:white", @class = "btn btn-primary" })
+    </div>
+</div>
+<article class="product-review">
+    @{
+
+        for (int i = 0; i < Model.CustomerReviewList.Count; i++)
+        {
+            <div class="product-review-content product-review" style="border-right:0px;width:100%;">
+                <h5 class="product-review-title">@Model.CustomerReviewList[i].Comment</h5>
+                <p class="product-review-meta">@Model.CustomerReviewList[i].CustomerName @Model.CustomerReviewList[i].ReviewDate.ToLocalTime().ToString("MMM dd, yyyy")</p>
+                @*<div class="userimg">
+
+                        <small class="v-align-top">@Model.CustomerReviewList[i].ReviewCount Review(s)</small>
+                    </div>*@
+                <div class="text">
+
+                    <div class="user-review">
+                        <div class="rating">
+                            @for (int j = 1; j <= Math.Ceiling(Convert.ToDouble(Model.CustomerReviewList[i].AvgPointsPerCustomer)); j++)
+                            {
+                                <span class="star on fa fa-star"></span>
+                            }
+                            @for (int j = 1; j <= 5 - Math.Ceiling(Convert.ToDouble(Model.CustomerReviewList[i].AvgPointsPerCustomer)); j++)
+                            {
+                                <span class="star fa fa-star"></span>
+                            }
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        }
+    }
+</article>
+<script>
+    function DisplayMeaning(ctrl) {
+        if (ctrl.id == 1) {
+            $(".StarPointMeaning").text("Disappointing");
+        }
+        else if (ctrl.id == 2) {
+            $(".StarPointMeaning").text("Bad");
+        }
+        else if (ctrl.id == 3) {
+            $(".StarPointMeaning").text("Average");
+        }
+        else if (ctrl.id == 4) {
+            $(".StarPointMeaning").text("Good");
+        }
+        else if (ctrl.id == 5) {
+            $(".StarPointMeaning").text("Perfect");
+        }
+        else {
+            $(".StarPointMeaning").text("Rate it!");
+        }
+    }
+    function ResetText() {
+
+        $(".StarPointMeaning").text("Rate it!");
+    }
+
+
+
+</script>

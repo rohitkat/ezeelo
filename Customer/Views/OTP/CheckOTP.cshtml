@@ -1,0 +1,63 @@
+﻿@model ModelLayer.Models.ViewModel.OTPViewModel
+@{
+    ViewBag.Title = "CheckOTP";
+}
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+
+    <div class="example" data-text="OTP">
+        <div class="grid">
+            <h4>OTP</h4>
+            @Html.ValidationSummary(true)
+
+            @if (ViewBag.Message != null)
+            {
+                <div class="breadcrumbs dark">
+                    @ViewBag.Message
+                </div>
+            }
+
+            <div class="row cells2">
+                <div class="cell">
+                    <div class="input-control text full-size">
+                        @Html.TextBoxFor(model => model.OTP, new { placeholder = "OTP" })
+                        @Html.ValidationMessageFor(model => model.OTP)
+                    </div>
+                </div>
+                <div class="cell">
+                    <div class="input-control text full-size">
+                        <input type="submit" value="Submit" class="button success" />
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+}
+<script type="text/javascript">
+    $(function () {
+        $("#divhtml").load('/test.html');
+    });
+</script>
+
+<div id="divhtml">
+
+</div>
+@using (Html.BeginForm("RegenerateOTP", "OTP", FormMethod.Post))
+{
+    <div>
+        <div class="grid">
+            <div class="row cell">
+                <div class="input-control text full-size">
+                    <input type="submit" value="Regenerate OTP" class="button success" />
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+
+
+
+

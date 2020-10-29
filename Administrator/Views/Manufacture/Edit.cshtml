@@ -1,0 +1,384 @@
+﻿@model ModelLayer.Models.Manufacture
+
+@{
+    ViewBag.Title = "Edit";
+}
+
+
+<title>Create Elements Dynamically using jQuery</title>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.9.1/jquery-ui.min.js"></script>
+
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+    <div class="span10" id="content">
+        <ul class="breadcrumb">
+            <li>
+                <a href="#">Manufacture/Edit</a>
+            </li>
+        </ul>
+        <div class="row-fluid ">
+            <div class="box span6">
+                <div class="box-header">
+                    <h2><i class="icon-edit"></i><span class="break"></span>Edit</h2>
+
+                </div>
+                <div class="box-content">
+                    <div class="form-horizontal">
+                        @if (ViewBag.Messaage != null)
+                        {
+                            @Html.Label("Messaage", (string)ViewBag.Messaage, new { @class = "deleteMsg" })
+                        }
+                        else
+                        {
+                            @Html.Label("Messaage", "", new { @class = "deleteMsg" })
+                        }
+                        @Html.ValidationSummary(true)
+                        @Html.HiddenFor(model => model.ID)
+
+                        <div class="control-group">
+                            @Html.LabelFor(model => model.Name, new { @class = "control-label col-md-2" })
+                            <div class="col-md-10 controls">
+                                @Html.EditorFor(model => model.Name)
+                                @Html.ValidationMessageFor(model => model.Name)
+                            </div>
+                        </div>
+                        <div class="control-group">
+                            @Html.LabelFor(model => model.BrandName, "Brand", new { requird = "requird" })
+                            <div class="">
+                                @*@Html.DropDownList("BrandID", String.Empty)*@
+                                @Html.DropDownList("BrandID", null, "Select Brand", new { @class = "form-control", required = "required" })
+                                @Html.ValidationMessageFor(model => model.BrandID)
+                            </div>
+                        </div>
+                        <div class="control-group">
+                            @Html.LabelFor(model => model.Description, new { @class = "control-label col-md-2" })
+                            <div class="col-md-10 controls">
+                                @Html.EditorFor(model => model.Description)
+                                @Html.ValidationMessageFor(model => model.Description)
+                            </div>
+                        </div>
+
+                        <div class="control-group">
+                            @Html.LabelFor(model => model.IsActive, new { @class = "control-label col-md-2" })
+                            <div class="col-md-10 controls">
+                                @Html.EditorFor(model => model.IsActive)
+                                @Html.ValidationMessageFor(model => model.IsActive)
+                            </div>
+                        </div>
+
+                        <div class="form-actions">
+                            <div class="col-md-offset-2 col-md-10">
+
+
+                                <div id="main">
+                                    <input type="button" id="btAdd" value="Add Element" class="bt" />
+                                    <input type="button" id="btRemove" value="Remove Element" class="bt" />
+                                    @Html.DropDownList("BrandID", null, "Select Brand", new { @class = "form-control", required = "required", style = "display:none" })
+
+                                </div>
+
+
+                       
+
+                                @*<input type="button" id="btnAdd" onclick="AddDropDownList()" value="Add DropDownList" />
+        <hr />
+        <div id="dvContainer"></div>*@
+                                <input type="submit" value="Save" class="btn btn-primary" />
+                               
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <div>
+                        @*@Html.ActionLink("Back to List", "Index")*@
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}
+<script>
+        $(document).ready(function () {
+
+            var iCnt = 0;
+            // CREATE A "DIV" ELEMENT AND DESIGN IT USING jQuery ".css()" CLASS.
+            var container = $(document.createElement('div')).css({
+                padding: '5px', margin: '20px', width: '170px', border: '1px dashed',
+                borderTopColor: '#999', borderBottomColor: '#999',
+                borderLeftColor: '#999', borderRightColor: '#999'
+            });
+
+            $('#btAdd').click(function () {
+                if (iCnt <= 4) {
+                    //$("#BrandID").show()
+
+                    iCnt = iCnt + 1;
+
+                    //is se dropdawoun ki selected value bind hoti hai
+                    //$('#btAdd').val($("#BrandID option:selected").text());
+
+
+                    //$(container).append(val($("#BrandID option:selected").text()))
+
+                    //var elm = document.getElementById('#BrandID'), // get the select
+                    //    df = document.createDocumentFragment(); // create a document fragment to hold the options while we create them
+                    //for (var i = 1; i <= 4; i++) { // loop, i like 42.
+                    //    var option = document.createElement('option'); // create the option element
+                    //    option.value = i; // set the value property
+                    //    option.appendChild(document.createTextNode("option #" + i)); // set the textContent in a safe way.
+                    //    df.appendChild(option); // append the option to the document fragment
+                    //}
+                    //elm.appendChild(df);
+
+
+
+
+
+
+
+                    // ADD TEXTBOX.
+                    //$(container).append('<input type=text class="input" id=tb' + iCnt + ' ' +
+                    //    'value="Text Element ' + iCnt + '" />');
+
+
+                    // ADD TEXTBOX.
+
+
+                    debugger;
+                    $("#BrandID").change(function () {
+                        alert($(this).find("option:selected").text());
+                     
+                    });
+                    $("#BrandIDNew").change(function () {
+                        alert($(this).find("option:selected").text());
+
+                    });
+
+                    alert($("#BrandID option:selected").text());
+
+                    $("#BrandID option:selected").text();
+
+
+                    //$("select#BrandID1").empty();
+                    //$.each(data, function (i, c) {
+
+                    //    alert('new brandid')
+                    //    $('select#BrandID1').append('<option value="' + c.Value + '">' + c.Text + '</option>');
+
+                    //}
+                    //    });
+
+
+                    $("#BrandID option:selected").text();
+
+                    $("#BrandIDNew option:selected").text();
+
+                    $(container).append('<select  id= "BrandIDNew" name=newBRAND></select > ' + iCnt + ' ' +
+                        'value="1 ' + iCnt + '" />');
+
+
+                    @*var brandid1 = (@ViewBag.BrandID);*@
+
+                    $("#BrandID option").each(function (index,text) {
+
+
+                        //alert(this.index + ' ' + this.text);
+                        ////$(this).val();
+                     
+                        $('#BrandIDNew').append('<option value="' + this.index + '">' + this.text + '</option>');
+
+
+                        //$('#BrandIDNew').append('<option value="' + 1 + '">' + 'name' + '</option>');
+
+                        // Add $(this).val() to your list
+                    });
+                    //$.each(items, function (index, item) {
+                    //    list.append(new Option(item.text, item.value));
+                    //});
+                    //var id = $('#BrandID');
+                    //var name=
+               
+
+
+                    //$(container).append('<select><option value=12>dsdf</option><option value = 12> hhf</option></select > ' + iCnt + ' ' +
+                    //    'value="1 ' + iCnt + '" />');
+
+
+     $("#BrandID").change(function () {
+                    var selectedText = $(this).find("option:selected").text();
+                    var selectedValue = $(this).val();
+                    //alert("Selected Text: " + selectedText + " Value: " + selectedValue);
+
+                   $.ajax({
+                       url: '@Url.Action("Create", "Manufacture")',
+
+                type: "post",
+
+                       data: {
+                           result:selectedValue
+                       },
+
+                contenttype: "application/json",
+                success: function (selectedvalue) {
+                    alert(selectedvalue);
+                },
+
+                        error: function () {
+                            //alert("false");
+
+                        },
+                        complete: function () {
+                            //alert("Complete");
+                        },
+                    });
+                });
+                    // SHOW SUBMIT BUTTON IF ATLEAST "1" ELEMENT HAS BEEN CREATED.
+                    if (iCnt == 1) {
+                        var divSubmit = $(document.createElement('div'));
+
+                        $(divSubmit).append('<input type=button class="bt"' +
+                            'onclick="GetTextValue()"' +
+                            'id=btSubmit value=Submit />');
+                    }
+
+                    // ADD BOTH THE DIV ELEMENTS TO THE "main" CONTAINER.
+                    $('#main').after(container, divSubmit);
+                }
+                // AFTER REACHING THE SPECIFIED LIMIT, DISABLE THE "ADD" BUTTON.
+                // (4 IS THE LIMIT WE  SET after that it remove )
+                else {
+                    $(container).append('<label>Reached the limit</label>');
+                    $('#btAdd').attr('class', 'bt-disable');
+                    $('#btAdd').attr('disabled', 'disabled');
+                }
+            });
+
+            // REMOVE ONE ELEMENT PER CLICK.
+            $('#btRemove').click(function () {
+                if (iCnt != 0) { $('#tb' + iCnt).remove(); iCnt = iCnt - 1; }
+
+                if (iCnt == 0) {
+                    $(container)
+                        .empty()
+                        .remove();
+
+                    $('#btSubmit').remove();
+                    $('#btAdd')
+                        .removeAttr('disabled')
+                        .attr('class', 'bt');
+                }
+            });
+
+
+        });
+
+        // PICK THE VALUES FROM EACH TEXTBOX WHEN "SUBMIT" BUTTON IS CLICKED.
+        var divValue, values = '';
+
+        function GetTextValue() {
+            $(divValue)
+                .empty()
+                .remove();
+
+            values = '';
+
+            $('.input').each(function () {
+                divValue = $(document.createElement('div')).css({
+                    padding: '5px', width: '200px'
+                });
+                values += this.value + '<br />'
+            });
+
+            $(divValue).append('<p><b>Your selected values</b></p>' + values);
+            $('body').append(divValue);
+        }
+    </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+@*<script type="text/javascript">
+    function AddDropDownList() {
+        //Build an array containing Customer records.
+        var customers = [
+            { CustomerId: 1, Name: "John Hammond", Country: "United States" },
+            { CustomerId: 2, Name: "Mudassar Khan", Country: "India" },
+            { CustomerId: 3, Name: "Suzanne Mathews", Country: "France" },
+            { CustomerId: 4, Name: "Robert Schidner", Country: "Russia" }
+        ];
+        //Create a DropDownList element.
+        var ddlCustomers = $("<select />");
+
+        //Add the Options to the DropDownList.
+        $(customers).each(function () {
+            var option = $("<option />");
+
+            //Set Customer Name in Text part.
+            option.html(this.Name);
+
+            //Set CustomerId in Value part.
+            option.val(this.CustomerId);
+
+            //Add the Option element to DropDownList.
+            ddlCustomers.append(option);
+        });
+
+        //Reference the container DIV.
+        var dvContainer = $("#dvContainer")
+
+        //Add the DropDownList to DIV.
+        var div = $("<div />");
+        div.append(ddlCustomers);
+
+        //Create a Remove Button.
+        var btnRemove = $("<input type = 'button' value = 'Remove' />");
+        btnRemove.click(function () {
+            $(this).parent().remove();
+        });
+
+        //Add the Remove Buttton to DIV.
+        div.append(btnRemove);
+
+        //Add the DIV to the container DIV.
+        dvContainer.append(div);
+    };
+</script>*@
+

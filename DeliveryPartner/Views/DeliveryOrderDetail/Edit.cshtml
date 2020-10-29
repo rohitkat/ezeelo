@@ -1,0 +1,68 @@
+﻿@model DeliveryPartner.Models.ViewModel.DeliveryIndexViewModel
+@{
+    Layout = "~/Views/Shared/_LayoutPartial.cshtml";
+}
+<script src="~/Scripts/jquery-1.10.2.min.js"></script>
+@*Hide EPOD from Ashish for Live*@
+@*<script src="~/Content/js/DPViewEvent.min.js"></script>*@
+
+
+<div class="widget-content">
+
+    @using (Html.BeginForm())
+    {
+        @Html.AntiForgeryToken()
+
+        <div class="form-horizontal">
+            <h4>DeliveryOrderDetail</h4>
+            <hr />
+            @Html.ValidationSummary(true)
+            @Html.HiddenFor(model => model.ID)
+            @Html.HiddenFor(model => model.ShopOrderCode, new { @id = "hidShopOrderCode" })
+            @Html.HiddenFor(model => model.GandhibaghOrderCode, new { @id = "hidOrderCode" })
+            <div class="control-group">
+                <span class="control-label">Order Status</span>
+                <div class="controls">
+                    @Html.DropDownList("DeliveryStatus")
+                    @Html.ValidationMessageFor(model => model.OrderStatus)
+                </div>
+            </div>
+            <div id="pnlSendSMS" style="display:block">
+                <div class="form-group">
+                    <div class="col-md-10">
+                        @Html.CheckBox("IsSendEmailSMS", false, new { @style = "margin-left:60px" }) Send Email & SMS
+                    </div><br />
+                    @*<div>
+                    @Html.Label("lblMerchantCount", (string)ViewBag.MerchantDeliveryDispatchCount, new { @id = "lblMerchantCount", @style = "margin-left:60px" })
+                </div>*@
+                </div>
+            </div>
+            @*Hide EPOD from Ashish for Live*@
+            @*<div id="pnlSendSMSPrtial" style="display:block">
+                <div class="form-group">
+                    <div class="col-md-10">
+                        @Html.CheckBox("IsSendEmailSMSPartial", false, new { @style = "margin-left:60px" }) Send Email & SMS Partial
+                    </div><br />
+                </div>
+            </div>
+            <div id="pnlMerchantCount" style="display:block">
+                <div class="form-group">
+                    <div class="col-md-10">
+                        @Html.Label("lblMerchantCount", (string)ViewBag.MerchantDeliveryDispatchCount, new { @id = "lblMerchantCount", @style = "margin-left:60px" })
+                        @Html.Label("lblSendSMSValidation", new { @id = "lblSendSMSValidation", @style = "color:red;display:block;margin-left:60px" })
+                    </div>
+                </div>
+            </div>*@
+
+            <div id="insertHere" style=" margin-left:60px"></div>
+            <div class="control-group">
+                <div >
+                    <input type="submit" id="btnUpdateStatus" value="Update Status" class="btn btn-small btn-danger" />
+                </div>
+            </div>
+        </div>
+    }
+  
+</div>
+
+

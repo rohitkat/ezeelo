@@ -1,0 +1,1237 @@
+﻿@*@model ModelLayer.Models.ViewModel.ShoppingCartCollection*@
+@model ModelLayer.Models.ViewModel.ShopProductVarientViewModelCollection
+@{
+    ViewBag.Title = "eZeelo: Buy Online Electronics, Jewellaries, cloths, collectibles  ";
+    string cityName = string.Empty;
+    string cityID = string.Empty;
+    int franchiseID = 0;////added
+    if (Request.Cookies["CityCookie"] != null)
+    {
+        cityName = Request.Cookies["CityCookie"].Value.Split('$')[1];
+        cityID = Request.Cookies["CityCookie"].Value.Split('$')[0];
+        franchiseID = Convert.ToInt32(Request.Cookies["CityCookie"].Value.Split('$')[2]);////added
+    }
+
+    // Layout = "~/Views/Shared/_Layout_Internal.cshtml";////added
+    //Layout = null;
+    cityName = cityName.ToLower();
+}
+@*<script src="bower_components/sweetalert/dist/sweetalert.min.js"></script>
+    <link rel="stylesheet" href="bower_components/sweetalert/dist/sweetalert.css">*@
+<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script> @*Added by Rumana on 9/03/2019*@
+<script src="alert/dist/sweetalert-dev.js"></script>
+<link rel="stylesheet" href="alert/dist/sweetalert.css">
+<style>
+    /*.swal-overlay {
+        background-color: rgba(43, 165, 137, 0.45);
+    }*/
+    .table-shopping-cart > tbody > tr > td, .table-shopping-cart > tfoot > tr > td {
+        font-size: 13px;
+    }
+
+    .selectdeltime {
+        font-size: 13px;
+    }
+
+    #deliveryPincode1 {
+        display: none;
+    }
+
+    /*Added by Zubair for MLM on 10-01-2018*/
+    #WalletAmountToUse {
+        display: none;
+    }
+</style>
+
+@if (TempData["DisplayMsg"] != null && Model.CartMessage != "")
+{
+    <script>
+        alert("@Model.CartMessage");
+    </script>
+}
+@*<link href="~/Content/css/Site.css" rel="stylesheet" />*@
+<link href="~/Content/css/Site.css" rel="stylesheet" />
+<br />
+<br />
+<h3 style="margin-top:5px;">My Cart <span style="color:red;font-size:small">@Model.CartMessage</span></h3>
+<div class="row">
+    <div class="col-lg-9 col-md-9 col-sm-9 col-xs-12" style="min-height: 320px;max-height: 400px;overflow: auto;height: auto;">
+        <table class="table table table-shopping-cart">
+            <thead>
+                <tr>
+                    <th style="text-align:center;">Product</th>
+                    <th style="width:50%">Title</th>
+                    @*<th>Price</th>*@
+                    <th>Quantity</th>
+                    <th>Retail Point</th> @*Added by Zubair for MLM on 10-01-2018*@
+                    <th style=" width: 80px;">Total</th>
+                    @*<th>Remove</th>*@
+                </tr>
+            </thead>
+
+            <tbody>
+                @{
+                    decimal subTotal = 0;
+                    decimal deliveryCharge = 0;
+                    decimal orderPayableAmount = 0;
+                    decimal earnAmount = 0;
+                    decimal remaiEarnAmt = 0;
+                    decimal totalCouponAmount = 0;
+                    decimal taxAmount = 0;
+                    decimal businessPointsTotal = 0;
+                    decimal eWalletAmountUsed = 0;
+                    if (Model != null)
+                    {
+                        if (Model.lShopProductVarientViewModel != null)
+                        {
+                            subTotal = Model.lShoppingCartOrderDetails.TotalOrderAmount;
+                            deliveryCharge = Model.lShoppingCartOrderDetails.DeliveryCharges;
+                            orderPayableAmount = Model.lShoppingCartOrderDetails.PayableAmount;
+                            earnAmount = Model.lShoppingCartOrderDetails.EarnAmount;
+                            remaiEarnAmt = Model.lShoppingCartOrderDetails.RemainEarnAmt;
+                            totalCouponAmount = Model.lShoppingCartOrderDetails.CoupenAmount;
+                            taxAmount = Model.lShoppingCartOrderDetails.TaxAmount;
+                            businessPointsTotal = Model.lShoppingCartOrderDetails.BusinessPointsTotal;
+                            eWalletAmountUsed = Model.lShoppingCartOrderDetails.WalletAmountUsed;
+                        }
+                    }
+                    if (Model != null)
+                    {
+                        if (Model.lShopProductVarientViewModel != null && Model.lShopProductVarientViewModel.Distinct().Count() > 0)
+                        {
+
+                            List<long> merId = Model.lShopProductVarientViewModel.Select(p => p.ShopID).Distinct().ToList();
+
+
+                            for (int i = 0; i < merId.Count; i++)
+                            {
+                                long orgId = merId[i];
+                                var orgProducts = Model.lShopProductVarientViewModel.Select(x => new
+                                {
+                                    x.CategoryID,
+                                    x.CategoryName,
+                                    x.ColorCode,
+                                    x.ColorID,
+                                    x.ColorName,
+                                    x.DimensionID,
+                                    x.DimensionName,
+                                    x.MaterialID,
+                                    x.MaterialName,
+                                    x.MRP,
+                                    x.PackSize,
+                                    x.PackUnitName,
+                                    x.ProductID,
+                                    x.ProductName,
+                                    x.ProductVarientID,
+                                    x.SaleRate,
+                                    x.ShopID,
+                                    x.ShopName,
+                                    x.ShopStockID,
+                                    x.SizeID,
+                                    x.SizeName,
+                                    x.StockQty,
+                                    x.StockThumbPath,
+                                    x.DeliveryCharge,
+                                    x.PurchaseQuantity,
+                                    x.Message,
+                                    x.CouponCode,
+                                    x.CouponValueRs,
+                                    x.CouponValuePercent,
+                                    x.lCalulatedTaxesRecord,
+                                    x.BusinessPointPerUnit, //Added by Zubair for MLM on 10-01-2018
+                                    x.CartVerificationMsg //Yashaswi for Cart Verification 02-02-2019
+                                })
+                                .Where(x => x.ShopID == orgId).ToList();
+                                @*<tr>
+                                        <td colspan="5" class="successnew"><b>@orgProducts[0].ShopName</b></td>
+                                    </tr>*@
+                                //double MerchantWiseSubTotal = 0.0;
+                                //double merchantWiseDeliveryCharge = 0.0;
+                                //double saleRate = 0.0;
+                                //decimal businessPoints = 0; //Added by Zubair for MLM on 10-01-2018
+
+                                for (int j = 0; j < orgProducts.Count(); j++)
+                                {
+                                    decimal prodTaxAmt = 0;
+                                    <tr>
+                                        <span style="display:none">
+
+                                            @orgProducts[j].ProductID
+
+                                        </span>
+                                        <td class="table-shopping-cart-img" style="text-align: center;">
+                                            <img id=" imgproductimage" src="@orgProducts[j].StockThumbPath" onerror="this.src = '/Content/Images/no_image.png'" style="width: 70px; height:70px;" alt=" eZeelo " />
+                                        </td>
+                                        <td>
+                                            @*Product Name: @orgProducts[j].ProductName<br />*@
+                                            @*//***** SEO URL Structure RULE by Ashish 18/11/2016 ******//*@
+                                            Product Name: @orgProducts[j].ProductName.Replace("+", " ")<br />
+                                            Pack Size: @orgProducts[j].PackSize ,
+                                            @if (!(orgProducts[j].ColorName == "N/A" || orgProducts[j].ColorName == "NA"))
+                                            {
+                                                <span>Color: @orgProducts[j].ColorName ,</span>
+                                            }
+
+                                            @if (!(orgProducts[j].SizeName == "N/A" || orgProducts[j].SizeName == "NA"))
+                                            {
+                                                <span>Size: @orgProducts[j].SizeName ,</span>
+                                            }
+                                            @if (!(orgProducts[j].DimensionName == "N/A" || orgProducts[j].DimensionName == "NA"))
+                                            {
+                                                <span>Dimension: @orgProducts[j].DimensionName </span>
+                                            }
+                                            @if (!(orgProducts[j].MaterialName == "N/A" || orgProducts[j].MaterialName == "NA"))
+                                            {
+                                                <span>Material: @orgProducts[j].MaterialName </span>
+                                            }
+
+                                            @* ============ Taxation ================= *@
+
+                                            @if (orgProducts[j].lCalulatedTaxesRecord != null)
+                                            {
+                                                foreach (var item in orgProducts[j].lCalulatedTaxesRecord)
+                                                {
+                                                    if (@item.IsGSTInclusive == false) // Condition added by Zubair for GST on 06-07-2017
+                                                    {
+                                                        <span>@item.TaxName : @item.TaxPercentage %</span>
+                                                        prodTaxAmt = prodTaxAmt + item.TaxableAmount;
+                                                    }
+                                                }
+                                            }
+                                            @* ============ Taxation ================= *@
+
+
+                                            @if (orgProducts[j].Message != null && orgProducts[j].Message != string.Empty)
+                                            {
+                                                <label id="lblUpdateQuantity" style="color:red;font-size:10px;">@orgProducts[j].Message</label>
+                                            }
+                                            @if (orgProducts[j].CouponCode != null && orgProducts[j].CouponCode != string.Empty)
+                                            {
+                                                <span>Coupon Code: </span>@orgProducts[j].CouponCode
+                                            }
+                                            @using (Html.BeginRouteForm("DELETE-CART-ITEM", new { shopStockID = orgProducts[j].ShopStockID, city = cityName, franchiseId = franchiseID }, FormMethod.Post, new { @class = "brncan" }))
+                                            {
+
+                                                string HolidayMessage = Convert.ToString(@ViewBag.HolidayMessage);
+                                                if (HolidayMessage != null)
+                                                { HolidayMessage = HolidayMessage.Replace(" ", "|"); }
+                                                <input type="hidden" id="hdnMessage" name="hdnMessage" value=@HolidayMessage />
+                                                <input type="hidden" id="hdnWeekHoliday" name="hdnWeekHoliday" value=@ViewBag.WeekHoliday />
+                                                <input type="hidden" id="hdnMinOrder" name="hdnMinOrder" value=@ViewBag.MinOrder />
+                                                //added by yashaswi
+                                                <input type="hidden" id="hdnDelCharge" name="hdnDelCharge" value=@deliveryCharge />
+                                                <input type="hidden" id="hdnOrdAmt" name="hdnOrdAmt" value=@subTotal />
+                                                <input class="btn" id="btnCancel" type="submit" value="Remove" title="Remove" />
+                                                if (orgProducts[j].CartVerificationMsg != "" && orgProducts[j].CartVerificationMsg != null)
+                                                {
+                                                    <label style="color:red;font-weight:bold">@orgProducts[j].CartVerificationMsg</label>
+                                                }
+
+                                            }
+                                        </td>
+                                        <td>
+
+                                            @using (Html.BeginRouteForm("CHN-QTY-CART", new { shopStockID = orgProducts[j].ShopStockID, txtQuantity = @orgProducts[j].PurchaseQuantity, city = cityName, franchiseId = franchiseID }, FormMethod.Post, new { @class = "qtyForm" }))////added franchiseId=franchiseID
+                                            {
+                                                //if (orgProducts[j].StockQty>0)
+                                                //{
+                                                string HolidayMessage = Convert.ToString(@ViewBag.HolidayMessage);
+                                                if (HolidayMessage != null)
+                                                { HolidayMessage = HolidayMessage.Replace(" ", "|"); }
+                                                <input type="hidden" id="hdnMessage" name="hdnMessage" value=@HolidayMessage />
+                                                <input type="hidden" id="hdnWeekHoliday" name="hdnWeekHoliday" value=@ViewBag.WeekHoliday />
+                                                <input type="hidden" id="hdnMinOrder" name="hdnMinOrder" value=@ViewBag.MinOrder />
+                                                <input type="hidden" id="hdnOrdAmt" name="hdnMinOrder" value=@subTotal />
+
+                                                <input type="number" min="1" max="@orgProducts[j].StockQty" name="txtQuantity" class="shoppingCartQuantity" maxlength="3" autocomplete="off" value="@orgProducts[j].PurchaseQuantity" id="txtQuantity" onchange="checkMaxQty(this);" style="width:40px;height:32px;text-align:center;"
+                                                       oninvalid="this.setCustomValidity('Value Must be less than or equal to '+ @orgProducts[j].StockQty +' if more Qty required call to customer care '+@TempData["CustCareNo"])"
+                                                       oninput="this.setCustomValidity('')" />
+                                                <button class="btn btn-success" id="btnUpdateQuantity" type="submit" value="save" title="save"><span>save</span></button>
+                                            }
+                                            <br />
+                                            <span class="UpdateQtyMsg" style="color:red;font-size:10px;"></span>
+
+                                        </td>
+
+                                        <td>
+                                            @*Condition added by Zubair for MLM on 04-01-2017*@
+                                            @*Yashaswi 2-5-2018 RoundUp BP*@
+                                            <span>@(Convert.ToInt64(orgProducts[j].BusinessPointPerUnit * orgProducts[j].PurchaseQuantity))</span>
+
+                                        </td>
+
+                                        <td>
+                                            <div style="float:left;display:inline">
+                                                <span class="fa fa-inr"> @(orgProducts[j].SaleRate * orgProducts[j].PurchaseQuantity)</span><br />
+                                                @if (prodTaxAmt > 0)
+                                                {
+                                                    <span>Tax <span class="fa fa-inr">@(prodTaxAmt * orgProducts[j].PurchaseQuantity)</span></span>
+                                                }
+                                            </div>
+                                            @{
+                                                //double amount = 0, percent = 0;
+
+                                                //double.TryParse(Convert.ToString(orgProducts[j].CouponValueRs), out amount);
+                                                //double.TryParse(Convert.ToString(orgProducts[j].CouponValuePercent), out percent);
+
+                                                //MerchantWiseSubTotal = MerchantWiseSubTotal + Convert.ToDouble(@orgProducts[j].SaleRate * @orgProducts[j].PurchaseQuantity);
+                                                //if (Model.lShopWiseDeliveryCharges != null && Model.lShopWiseDeliveryCharges.Count() > 0)
+                                                //{
+                                                //    merchantWiseDeliveryCharge = Convert.ToDouble(Model.lShopWiseDeliveryCharges[i].DeliveryCharge);
+                                                //}
+
+                                                //Condition added by Zubair for MLM on 04-01-2017*
+                                                //businessPoints = @Convert.ToDecimal((orgProducts[j].BusinessPointPerUnit * orgProducts[j].PurchaseQuantity));
+                                                ////Condition added by Zubair for MLM on 04-01-2017
+                                                //businessPointsTotal = Convert.ToDecimal(businessPointsTotal + businessPoints);
+                                            }
+
+                                        </td>
+
+                                    </tr>
+                                }
+                                @*<tr>
+                                        <td colspan="6" style="text-align: right; background-color: rgba(217, 217, 217, 0.5);">
+                                            <strong>Total </strong>
+                                            <strong class="fa fa-inr"> <b> @Convert.ToDecimal(MerchantWiseSubTotal).ToString("0.00")</b></strong>
+                                        </td>
+                                    </tr>*@
+                                //subTotal = subTotal + MerchantWiseSubTotal;
+
+                                //deliveryCharge = deliveryCharge + merchantWiseDeliveryCharge;
+                            }
+
+                        }
+                        else
+                        {
+                            <tr><td colspan="6" class="breadcrumbs dark newbackground" style="color: black !important; text-align: center;font-size:20px;">Your Cart Is Empty !!!</td></tr>
+                            <tr>
+                                @using (Html.BeginForm("ContinueShopping", "ShoppingCart", new { }, FormMethod.Post))
+                                {
+                                    <td colspan="6" style="text-align:center"><button type="submit" value="Create" class="btn btn-success" style=" word-wrap: normal; word-break: normal;"> Continue Shopping</button></td>
+                                }
+                            </tr>
+                        }
+                        <tr>
+                            <td colspan="5">
+                                @* Vegetables market Friday off message  *@
+                                @*@if (cityID == "4968" && franchiseID == 2)////added && franchiseID==2 //hide now*@
+                                @if (franchiseID != 0)////added && franchiseID==2
+                                {
+                                    DayOfWeek day = DateTime.Now.DayOfWeek;
+                                    //-- Add by Ashish (Dynamic Message) --//
+                                    string strWeekHoliday = @ViewBag.WeekHoliday;
+                                    //string strWeekHoliday= $("#WeekHoliday").val();
+                                    <a></a>
+                                    if (strWeekHoliday != ",,,,,," && strWeekHoliday != null)
+                                    {
+                                        string[] str1 = strWeekHoliday.Split(',');
+                                        foreach (string d in str1)
+                                        {
+                                            if (d == day.ToString())
+                                            {
+                                                <span style="color: red; font-size: small; font-weight: 700; padding-top: 15px; line-height: 25px;">@ViewBag.HolidayMessage</span>
+                                            }
+                                        }
+
+                                    }
+                                    //-- End --//
+                                    @*if (day == DayOfWeek.Friday || day == DayOfWeek.Sunday)
+                                        {
+                                            <span style="color: red; font-size: small; font-weight: 700; padding-top: 15px; line-height: 25px;">Some of the items like Vegetables & Fruits cannot be delivered on Friday’s & Groceries cannot be delivered on Sunday’s as the shops are closed.</span>
+                                        }*@
+                                }
+
+
+                            </td>
+                        </tr>
+                    }
+                    else
+                    {
+                        <tr><td colspan="4" class="breadcrumbs dark newbackground" style="color: black !important; text-align: center; font-size: 20px; ">Your Cart Is Empty !!!</td></tr>
+                        <tr>
+                            @using (Html.BeginForm("ContinueShopping", "ShoppingCart", new { }, FormMethod.Post))
+                            {
+                                <td colspan="4"><button type="submit" value="Create" class="btn btn-success" style="word-wrap: normal; word-break: normal;"> Continue Shopping</button></td>
+                            }
+                        </tr>
+
+                    }
+                }
+            </tbody>
+
+        </table>
+        <div class="gap gap-small"></div>
+    </div>
+    @if (Model.lShopProductVarientViewModel != null)
+    {
+        <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
+            <table class="table-shopping-cart" style="width:100%">
+                <tr>
+                    <td>
+                        @using (Html.BeginForm("ContinuePaymentProcess", "ShoppingCart", new { itemId = Model }, FormMethod.Post))
+                        {
+                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12" style="padding:0px">
+                                <table style="width:100%;font-weight:700">
+                                    <tr>
+                                        <td>Casback Points  </td>
+                                        <td style="text-align: right"><b style=" font-size: 18px; color:green;">: @Convert.ToInt64(Model.lShoppingCartOrderDetails.CashbackPointsTotal)</b></td>
+                                    </tr>
+                                    <tr>
+                                        @*Condition added by Zubair for MLM on 04-01-2017*@
+                                        <td>Retail Point Earned </td>
+                                        <td style="text-align: right"><b style=" font-size: 18px; color:green;">: @Convert.ToInt64(Model.lShoppingCartOrderDetails.BusinessPointsTotal)</b></td>
+                                    </tr>
+
+                                    <tr>
+                                        <td><strong> Grand Total  </strong></td>
+                                        <td style="text-align: right"><b style=" font-size: 20px; color: brown;">: <i class="fa fa-inr" aria-hidden="true"></i> @Convert.ToDecimal(Model.lShoppingCartOrderDetails.TotalOrderAmount).ToString("0.00")</b></td>
+                                    </tr>
+                                    @Html.Hidden("hdnOrderAmount", @subTotal)
+
+                                    @*@if (Session["OrderCouponAmount"] != null && Convert.ToDouble(Session["OrderCouponAmount"]) > 0)
+                                        {
+                                            totalCouponAmount = Convert.ToDouble(Session["OrderCouponAmount"]);
+                                        }*@
+                                    @* Tax calculation *@
+                                    @if (Model.lCalculatedTaxList != null && Model.lCalculatedTaxList.Count() > 0)
+                                    {
+                                        foreach (var item in Model.lCalculatedTaxList)
+                                        {
+                                            if (@item.IsGSTInclusive == false) //Condition added by Zubair for GST on 06-07-2017
+                                            {
+                                                <tr>
+                                                    <td>@item.TaxName</td>
+                                                    <td style="text-align: right"><b>: <i class="fa fa-inr" aria-hidden="true"></i> @item.Amount</b></td>
+                                                </tr>
+
+                                                taxAmount = taxAmount + item.Amount;
+                                            }
+                                        }
+                                    }
+
+                                    @if (Model.lShoppingCartOrderDetails != null && Model.lShoppingCartOrderDetails.EarnAmount > 0)
+                                    {
+                                        <div style="box-shadow: 0px 0px 0px #777; width: 190px; background: rgba(168, 207, 69, 0.75); ">
+                                            <b>
+                                                @Html.CheckBox("rbtnEarnAmt", @Model.lShoppingCartOrderDetails.IsUse, new { onclick = "EarnAmountUse()", @class = "newcheck" })<span> Use eZeelo Wallet :</span>
+                                                @*@Html.RadioButton("rbtnEarnAmt", "EarnAmount", true, new { onclick = "EarnAmountUse()" })  <span> Use eZeelo Wallet</span>*@
+                                                <label>
+                                                    <span class="fa fa-inr">
+                                                        <b>
+                                                            @Model.lShoppingCartOrderDetails.EarnAmount
+                                                        </b>
+                                                    </span>
+                                                </label><br />
+
+                                            </b>
+                                        </div>
+                                        earnAmount = @Model.lShoppingCartOrderDetails.EarnAmount;
+
+                                    }
+
+
+                                    @*Condition added by Zubair for MLM on 04-01-2017*@
+                                    @if (Model.lShoppingCartOrderDetails.WalletAmountUsed > 0)
+                                    {
+                                        eWalletAmountUsed = @Model.lShoppingCartOrderDetails.WalletAmountUsed;
+                                    }
+                                    @*End*@
+
+                                    @* Tax calculation *@
+                                    @if (deliveryCharge > 0)
+                                    {
+                                        decimal finalTotal = orderPayableAmount;
+                                        if (@Model.lShoppingCartOrderDetails.IsUse == true)
+                                        {
+                                            if (finalTotal >= earnAmount)
+                                            {
+                                                finalTotal = finalTotal - earnAmount;
+                                                remaiEarnAmt = 0;
+                                            }
+                                            else
+                                            {
+                                                remaiEarnAmt = earnAmount - finalTotal;
+                                                finalTotal = 0;
+                                                <tr>
+                                                    <td>Your Remaining Amt is </td>
+                                                    <td style="text-align: right"><b>: <i class="fa fa-inr" aria-hidden="true"></i> @(Convert.ToDecimal(Model.lShoppingCartOrderDetails.RemainEarnAmt).ToString("0.00")) </b></td>
+                                                </tr>
+                                            }
+                                        }
+                                        <tr>
+                                            <td>Delivery Charges </td>
+                                            <td style="text-align: right">
+                                                <input type="hidden" value=@deliveryCharge id="deliveryChargeHidden" />
+                                                <b style=" font-size: 18px; color: brown;">: <i class="fa fa-inr" aria-hidden="true"></i> @(Convert.ToDecimal(Model.lShoppingCartOrderDetails.DeliveryCharges).ToString("0.00"))</b>
+                                            </td>
+
+                                        </tr>
+                                        if (Model.lShoppingCartOrderDetails.WalletAmountUsed > 0)
+                                        {
+                                            <tr>
+
+                                                <td>E-Wallet amount Used</td>
+                                                <td style="text-align: right"><b style=" font-size: 18px; color: brown;">:<i class="fa fa-inr" aria-hidden="true"></i> @Model.lShoppingCartOrderDetails.WalletAmountUsed.ToString("0.00")</b></td>
+                                            </tr>
+                                        }
+
+                                        if (totalCouponAmount > 0)
+                                        {
+                                            <tr>
+                                                <td>coupon amount </td>
+                                                <td style="text-align: right"><b>: <i class="fa fa-inr" aria-hidden="true"></i> @totalCouponAmount</b></td>
+                                            </tr>
+                                        }
+                                        <tr>
+                                            <td>You Pay </td>
+                                            <td style="text-align: right"><b style=" font-size: 20px; color: brown;">: <i class="fa fa-inr" aria-hidden="true"></i> @(Convert.ToDecimal(Model.lShoppingCartOrderDetails.PayableAmount).ToString("0.00"))</b></td>
+                                        </tr>
+                                        //orderPayableAmount = finalTotal;
+                                    }
+                                    else
+                                    {
+                                        if (Model.lShoppingCartOrderDetails.WalletAmountUsed > 0)
+                                        {
+                                            <tr>
+
+                                                <td>E-Wallet amount Used</td>
+                                                <td style="text-align: right"><b style=" font-size: 18px; color: brown;">:<i class="fa fa-inr" aria-hidden="true"></i> @Model.lShoppingCartOrderDetails.WalletAmountUsed.ToString("0.00")</b></td>
+                                            </tr>
+                                        }
+                                        if (totalCouponAmount > 0)
+                                        {
+                                            decimal finalTotal = Model.lShoppingCartOrderDetails.PayableAmount;
+
+                                            if (@Model.lShoppingCartOrderDetails.IsUse == true)
+                                            {
+                                                if (finalTotal >= earnAmount)
+                                                {
+                                                    finalTotal = finalTotal - earnAmount;
+                                                    remaiEarnAmt = 0;
+                                                }
+                                                else
+                                                {
+
+                                                    remaiEarnAmt = earnAmount - Convert.ToDecimal(finalTotal);
+                                                    finalTotal = 0;
+                                                    <tr>
+                                                        <td>Your Remaining Amt is</td>
+                                                        <td style="text-align: right"><b>: <i class="fa fa-inr" aria-hidden="true"></i> @remaiEarnAmt</b></td>
+                                                    </tr>
+                                                }
+                                            }
+                                            <tr>
+                                                <td>Delivery Charge Free </td>
+                                                <td style="text-align: right">(within city)</td>
+                                            </tr>
+                                            <tr>
+                                                <td>Coupon amount </td>
+                                                <td style="text-align: right"><b>: <i class="fa fa-inr" aria-hidden="true"></i> @Convert.ToDecimal(totalCouponAmount).ToString("0.00")</b></td>
+                                            </tr>
+                                            <tr>
+                                                <td>You Pay </td>
+                                                <td style="text-align: right"><b style=" font-size: 20px; color: brown;">: <i class="fa fa-inr" aria-hidden="true"></i> @(Convert.ToDecimal(Model.lShoppingCartOrderDetails.PayableAmount).ToString("0.00"))</b></td>
+                                            </tr>
+                                            //orderPayableAmount = finalTotal;
+                                        }
+                                        else
+                                        {
+
+                                            //orderPayableAmount = subTotal + Convert.ToDouble(taxAmount) - Convert.ToDouble(eWalletAmountUsed); //- Convert.ToDouble(eWalletAmountUsed) By Zubair for MLM on 31-01-2018;
+
+                                            if (@Model.lShoppingCartOrderDetails != null && @Model.lShoppingCartOrderDetails.IsUse == true)
+                                            {
+                                                if (orderPayableAmount >= earnAmount)
+                                                {
+                                                    //orderPayableAmount = orderPayableAmount - earnAmount;
+                                                    remaiEarnAmt = 0;
+                                                }
+                                                else
+                                                {
+
+                                                    //remaiEarnAmt = earnAmount - Convert.ToDecimal(orderPayableAmount);
+                                                    //orderPayableAmount = 0;
+                                                    <tr>
+                                                        <td>Your Remaining Amt is </td>
+                                                        <td><b>: <i class="fa fa-inr" aria-hidden="true"></i> @remaiEarnAmt</b></td>
+                                                    </tr>
+
+                                                }
+                                            }
+                                            if (Convert.ToDouble(eWalletAmountUsed) > 0 || taxAmount > 0 || (earnAmount > 0 && @Model.lShoppingCartOrderDetails.IsUse == true))  //Convert.ToDouble(eWalletAmountUsed) > 0 condition added by yashaswi
+                                            {
+                                                <tr>
+                                                    <td>You Pay</td>
+                                                    <td style="text-align: right"><b style=" font-size: 18px; color: brown;">: <i class="fa fa-inr" aria-hidden="true"></i> @(Convert.ToDecimal(Model.lShoppingCartOrderDetails.PayableAmount).ToString("0.00"))</b></td>
+                                                </tr>
+                                            }
+                                        }
+                                    }
+
+
+                                </table>
+                            </div>
+
+                            @*if (Model.lShoppingCartOrderDetails != null && Model.lShoppingCartOrderDetails.EarnAmount > 0)
+                                {
+                                    @Html.RadioButton("rbtnEarnAmt", "EarnAmount", true)  <span> Use eZeelo Wallet</span>
+                                    <span>Your Earn Amount is: @Model.lShoppingCartOrderDetails.EarnAmount</span>
+                                    <span>Your Remaining Amt is : @remaiEarnAmt</span>
+                                }*@
+
+
+                            @Html.Hidden("hdnOrderPayableAmount", @orderPayableAmount)
+                            @Html.Hidden("hdnRemaiEarnAmt", @remaiEarnAmt)
+                            @Html.Hidden("hdnBusinessPointsTotal", @businessPointsTotal) //Added by Zubair for MLM on 04-01-2017*
+                            @Html.Hidden("hdndeliveryCharge", @deliveryCharge)//Added by Zubair for Inventory on 09-04-2018
+                        }
+                    </td>
+                </tr>
+
+                @*Added by Zubair for MLM on 04-01-2018*@
+                @if (Model.lMLMWallets.Amount > 0 || Model.lShoppingCartOrderDetails.WalletAmountUsed > 0)
+                {
+                    <tr>
+                        <td colspan="2">
+                            <div id="divEWalletAmount">
+                                @using (Html.BeginForm("EWalletAmountUsed", "ShoppingCart", new { }, FormMethod.Post))
+                                {
+                                    //Yashaswi 6-9-2018
+                                    <label id="divEWallet" style="cursor: pointer; font-weight: bold"> @Model.lMLMWallets.UsableWalletAmount </label>
+                                    @Html.HiddenFor(model => model.lMLMWallets.Amount, @Model.lMLMWallets.Amount) //Added by Zubair for MLM on 04-01-2018
+                                    @Html.Hidden("hdnOrderAmount", @subTotal) //Added by Zubair for MLM on 09-04-2018
+                                    @Html.Hidden("hdndeliveryCharge1", @deliveryCharge) //Added by Zubair for Inventory on 09-04-2018
+                                    <div class="input-control text inputDiv">
+                                        <div id="WalletAmountToUse" style="display: none;">
+                                            @Html.TextBox("txtEWalletAmountUsed", null, new { @Value = (Model.lShoppingCartOrderDetails.WalletAmountUsed > 0 ? Model.lShoppingCartOrderDetails.WalletAmountUsed.ToString() : string.Empty), @placeholder = "Enter Amount", onkeypress = "return isNumberKey(event)" })
+                                            <input value="Confirm" id="btnWalletAmountToUse" type="submit" class="button checkBtn success">
+                                        </div>
+                                    </div>
+                                    if (TempData["MLMEWalletAmountUsedMessage"] != null)
+                                    {
+                                        @Html.Hidden("MLMEWalletAmountUsedMessageMsg", @TempData["MLMEWalletAmountUsedMessage"]);
+                                        <span id="spnEWalletMsg" style="color: red; font-size: medium; font-weight: 400; padding-left: 0px; padding-right: 0px;">@TempData["MLMEWalletAmountUsedMessage"]</span>
+                                    }
+                                }
+
+                            </div>
+                            <div style="display:block;">
+                                @*@if (TempData["CouponMessage"] != null)
+                                    {
+                                        @Html.Hidden("CoupanMsg", @TempData["CouponMessage"]);
+                                        <span id="spnEWalletMsg" style="color: red; font-size: medium; font-weight: 700; padding-left: 0px; padding-right: 0px;">@TempData["CouponMessage"]</span>
+                                    }*@
+                            </div>
+                        </td>
+                    </tr>
+                }
+                @*End*@
+
+                <tr>
+                    <td>
+                        <div id="divPincodeLink" style="display: none;">
+                            @if (Request.Cookies["DeliverablePincode"] != null)
+                            {
+                                @*Yashaswi 1/6/2018 Show Selected City And PinCode and Area*@
+                                @*<span>Delivery Pincode: </span> <span>@Request.Cookies["DeliverablePincode"].Value</span><a onclick="DisplayPincodeDiv()">Change Pincode</a>*@
+                                <span style="font-size: 18px; font-weight: bold; color: #663399 "> <span>Delivery Location: </span> <span id="sp-Pincode">@Request.Cookies["DeliverablePincode"].Value</span><a onclick="ShowmyModal()">Change Pincode</a></span>
+                            }
+                            else
+                            {
+                                <span>Delivery Pincode: </span> <span></span><a onclick="DisplayPincodeDiv()">Change pincode</a>
+                            }
+                        </div>
+                        <div id="divPincodeVerification" style="display: none;padding-left: 0px; padding-right: 0px;">
+                            @*style="display: none;*@
+                            @using (Html.BeginForm("VerifyPincode", "ShoppingCart", new { city = cityName, franchiseId = franchiseID }))////added franchiseId=franchiseID
+                            {
+                                @Html.Hidden("hdnWalletAmountUsed", @Model.lShoppingCartOrderDetails.WalletAmountUsed)//Added by Zubair for MLM on 04-01-2017*
+                                string HolidayMessage = Convert.ToString(@ViewBag.HolidayMessage);
+                                if (HolidayMessage != null)
+                                { HolidayMessage = HolidayMessage.Replace(" ", "|"); }
+                                <input type="hidden" id="hdnMessage" name="hdnMessage" value=@HolidayMessage />
+                                <input type="hidden" id="hdnWeekHoliday" name="hdnWeekHoliday" value=@ViewBag.WeekHoliday />
+                                <input type="hidden" id="hdnMinOrder" name="hdnMinOrder" value=@ViewBag.MinOrder />
+
+                                string str = Convert.ToString(TempData["IsCheckPinCode"]);
+
+                                @Html.Hidden("IsCheckPinCode", str)
+                                <label><b>Check for Delivery in your area</b></label>
+                                <div class="input-control text inputDiv">
+                                    <div id="deliveryPincode">
+                                        <input type="tel" id="txtPinCode" name="txtPinCode" placeholder="Enter Pincode" maxlength="6" autocomplete="off" style="padding-left:5px;" />
+                                        <input value="Check" id="btnVerifyPincode" type="submit" class="button checkBtn success">
+                                        <span class="spnMessage errorMsg"></span>
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                        <div>
+                            <label class="blink_me " id="lblMessage" style="color: red; font-size:14px; font-weight: 700; padding-left: 0px; padding-right: 0px;"></label>
+                            @if (TempData["WarningMessage"] != null)
+                            {
+
+                                string[] val = TempData["WarningMessage"].ToString().Split('$');
+                                if (val.Length > 1)
+                                {
+                                    <label class="messageDiv" style="color: @TempData["WarningMessage"].ToString().Split('$')[1]; font-size: small;font-weight:700;padding-left:0px;">@TempData["WarningMessage"].ToString().Split('$')[0]</label>
+                                }
+                                else
+                                {
+                                    <label class="messageDiv" style="color: red; font-size: medium; font-weight: 700; padding-left: 0px;">@TempData["WarningMessage"].ToString().Split('$')[0]</label>
+                                }
+
+                            }
+                        </div>
+                    </td>
+                </tr>
+
+
+                <tr style="display:none">
+                    <td>
+                        <div id="divCouponcodeVerification">
+
+                            @using (Html.BeginForm("VerifyCouponcode", "ShoppingCart", new { }, FormMethod.Post))
+                            {
+                                @Html.Hidden("hdnWalletAmountUsed", @Model.lShoppingCartOrderDetails.WalletAmountUsed)//Added by Zubair for MLM on 04-01-2017*
+                                string HolidayMessage = Convert.ToString(@ViewBag.HolidayMessage);
+                                if (HolidayMessage != null)
+                                { HolidayMessage = HolidayMessage.Replace(" ", "|"); }
+                                <input type="hidden" id="hdnMessage" name="hdnMessage" value=@HolidayMessage />
+                                <input type="hidden" id="hdnWeekHoliday" name="hdnWeekHoliday" value=@ViewBag.WeekHoliday />
+                                <input type="hidden" id="hdnMinOrder" name="hdnMinOrder" value=@ViewBag.MinOrder />
+
+                                <label id="coupondiv" style="cursor:pointer;"><b>For redemption of coupon! Click here</b></label>
+                                <div class="input-control text inputDiv">
+                                    <div id="deliveryPincode1" style="display: none;">
+                                        @Html.TextBox("txtCouponCode", null, new { placeholder = "Enter Couponcode" })
+                                        <input value="Submit" id="btnVerifyCouponcode" type="submit" class="button checkBtn success">
+                                    </div>
+                                </div>
+                                <span class="spnCouponMessage errorMsg " style="color: red; font-size: medium;font-weight:700;font-size:14px;"></span>
+                            }
+
+                        </div>
+                        <div style="display:block;">
+                            @if (TempData["CouponMessage"] != null)
+                            {
+                                @*<input type="hidden" id="CoupanMsg" name="htnCoupanMsg" value=@TempData["CouponMessage"] />*@
+                                @Html.Hidden("CoupanMsg", @TempData["CouponMessage"]);
+                                <span id="spnCouponValMsg" style="color: red; font-size: medium; font-weight: 700; padding-left: 0px; padding-right: 0px;">@TempData["CouponMessage"]</span>
+
+                            }
+                        </div>
+                    </td>
+
+                </tr>
+
+                <tr>
+                    <td>
+                        <label class="blink_me " id="lblDelMsg" style="color: red; font-size: medium; font-weight: 700; padding-left: 0px; padding-right: 0px;"></label>
+                        @using (Html.BeginForm("ContinuePaymentProcess", "ShoppingCart", new { itemId = Model }, FormMethod.Post))
+                        {
+
+
+                            <span id="DeliverySpan"><b>Preferred Delivery Time</b></span><br />
+                            @Html.DropDownList("DeliveryScheduleID", null, "Select Delivery Time", new { @class = "selectdeltime blink", name = "DeliveryScheduleID", id = "DeliveryScheduleID", style = "width:100%;margin-bottom:10px;" })
+
+                            <button type="submit" value="ContinuePaymentProcess" id="btnPlaceOrder" class="btn btn-block btn-warning" onclick="return CheckCartValue();" style="margin-bottom:10px;"> Place Order</button>
+                            @Html.Hidden("hdnOrderAmount", @subTotal)
+
+                            @Html.Hidden("hdnOrderPayableAmount", @orderPayableAmount)
+                            @Html.Hidden("hdnRemaiEarnAmt", @remaiEarnAmt)
+                            @Html.Hidden("hdnBusinessPointsTotal", @businessPointsTotal) //Added by Zubair for MLM on 04-01-2017*
+                            @Html.Hidden("hdnWalletAmountUsed", @Model.lShoppingCartOrderDetails.WalletAmountUsed)//Added by Zubair for MLM on 04-01-2017*
+                            @Html.Hidden("hdnWalletAmountRemaining", @Model.lMLMWallets.Amount)//Added by Zubair for MLM on 04-01-2017*
+                        }
+                    </td>
+
+                </tr>
+                <tr>
+                    <td>
+                        @using (Html.BeginForm("ContinueShopping", "ShoppingCart", new { }, FormMethod.Post))
+                        {
+                            <button type="submit" value="Create" class="btn btn-block btn-success" style=" word-wrap: normal; word-break: normal;"> Continue Shopping</button>
+                        }
+
+                    </td>
+                </tr>
+            </table>
+        </div>
+    }
+
+</div>
+
+<div class="bs-example">
+    <table class="table" style="width: 96%; padding-right: 0px; padding-left: 0px;">
+        <thead>
+            @*<tr>
+                    <th style="width: 10%; text-align: center; vertical-align: middle; padding-top: 3px; padding-bottom: 3px;"></th>
+                    <th style="width: 30%; text-align: center; vertical-align: middle; padding-top: 3px; padding-bottom: 3px;">Items</th>
+                    <th style="width: 30%; text-align: center; vertical-align: middle; padding-top: 3px; padding-bottom: 3px;">Quantity</th>
+                    <th style="width: 30%; text-align: center; vertical-align: middle; padding-top: 3px; padding-bottom: 3px;">Total</th>
+                </tr>*@
+        </thead>
+
+    </table>
+</div>
+<div id="divPopupfor_DelvCharg" class="modal" style="background: rgba(130, 129, 129, 0.77); ">
+    <div class="modal-dialog modal-sm" style="width:500px !important;">
+        <div class="modal-content" style="padding:20px;text-align:center">
+            <div class="row" style="padding: 10px;">
+                <div class="col-lg-12" style="text-align:left">
+                    <p>
+                        @*<span style="font-size: 18px; color: #09a9f8"> <i class="fa fa-info-circle"></i> Alert </span>*@
+                        <span id="DelivryMsg_Id" style="font-size:16px"> </span>
+                    </p>
+                    <div style="text-align:center">
+
+                        <input type="button" class="btn btn-warning" style="font-size:15px;width:90px;height:35px !important" value="Ok" onclick="CloseModel();" />
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<br /><br />
+<SCRIPT>
+    function isNumberKey(evt) {
+        var charCode = (evt.which) ? evt.which : evt.keyCode;
+        if (charCode != 46 && charCode > 31
+            && (charCode < 48 || charCode > 57))
+            return false;
+
+        return true;
+    }
+</SCRIPT>
+@*  Added by Rumana on 9 / 03 / 2019 *@
+<script>
+        var modalDelvCharge_ = document.getElementById('divPopupfor_DelvCharg');
+        function CloseModel() {
+            modalDelvCharge_.style.display = "none";
+        }
+        window.onclick = function (event) {
+
+            if (event.target == modalDelvCharge_) {
+                modalDelvCharge_.style.display = "none";
+            }
+
+        }
+        function DeliveryChargeNotification() {
+            var cname = "@System.Configuration.ConfigurationManager.AppSettings["EZEELO_CUSTOMER_URL"]";
+            var ActiveUrl = window.location.href;
+            if (ActiveUrl.toLowerCase().indexOf('www.') > 0) {
+                var indexval = cname.indexOf('ezeelo');
+                cname = cname.slice(0, indexval) + "www." + cname.slice(indexval);
+            }
+            //var cname = ActiveUrl.replace("@System.Configuration.ConfigurationManager.AppSettings["EZEELO_CUSTOMER_URL"]", '');
+            var str = getCookie("CityCookie");
+            var cucity = "";// getCookie("CityCookie");
+            var cufranchiseId = 0;
+            if (str != null && str != "" && str != undefined) {
+                var str1 = [];
+                str1 = str.split('$');
+                cucity = str1[1].toLowerCase();
+                cufranchiseId = str1[2];
+            }
+            debugger;
+            $.ajax({
+                type: "GET",
+                url: cname + "/" + cucity + "/" + cufranchiseId + "/ShoppingCart/GetDeliveryChargeNotification?GrandTotal=" + $("#hdnOrderAmount").val(),
+                dataType: "json",
+                success: function (msg) {
+
+                    //alert(msg);
+                    if (msg != null && msg != "") {
+                        $("#DelivryMsg_Id").html(msg);
+                        modalDelvCharge_.style.display = "block";
+
+                    }
+                    else {
+
+                    }
+                },
+                //error: function (x, e) {
+                //    alert("The call to the server side failed. " + x.responseText);
+                //}
+                error: function (response) {
+
+                }
+            });
+
+        }
+
+</script>
+@*End Added by Rumana on 9 / 03 / 2019 *@
+<script type="text/javascript">
+
+    //Yashaswi 1/6/2018 Show Selected City And PinCode and Area
+    $(document).ready(function () {
+        if (localStorage.getItem("PinArea") != null) {
+            var txtPinArea = localStorage.getItem("PinArea");
+            var ary = txtPinArea.split(',');
+            if (ary.length != 0) {
+                //$("#txtPinCode").val(ary[0]);
+                //$("#btnVerifyPincode").click();
+                $("#sp-Pincode").text(ary[1] + ", " + ary[0]);
+            }
+        }
+        DeliveryChargeNotification();
+    });
+
+    DeliveryChargeNotification();
+
+    //Show popup for change city and area
+    function ShowmyModal() {
+        if (localStorage.getItem("CityID") != null) {
+            $("#ddlSelectCityI").val(localStorage.getItem("CityID"));
+            $("#ddlSelectCityI").change();
+        }
+        modal.style.display = "block";
+    }
+    //Yashaswi End
+
+    $(function () {
+        //-- To Avoid Default Delivery Schedule date with 6 days latter. we are hidding Delivery Dropdown and showing Dropdown after entering pincode (Requirement by Ashish shahu)--//By Ashish
+        var check = '@Request.Cookies["DeliverablePincode"]';
+       // alert(check);
+        if (check!="") {
+
+            $("#DeliveryScheduleID").show();
+            $("#DeliverySpan").show();
+        }
+        else {
+            $("#DeliveryScheduleID").hide();
+            $("#DeliverySpan").hide();
+        }
+        //-- End --//
+
+        $("#btnPlaceOrder").click(function () {
+
+            var flag = false;
+            if ($("#IsCheckPinCode").val() == "" || $("#IsCheckPinCode").val() == "false") {
+                $("[id*=lblMessage]").text("Please! Check Pincode ");
+                flag = false;
+            }
+            else {
+                flag = true;
+
+
+                if ($("#DeliveryScheduleID").val() == "" || $("#DeliveryScheduleID").val() == null) {
+                    $("[id*=lblDelMsg]").text("Please! Select Delivery Time ");
+                    flag = false;
+                }
+                else {
+                    flag = true;
+                }
+            }
+            return flag;
+        });
+
+
+        $("#DeliveryScheduleID").change(function () {
+            // alert("Handler for .change() called.");
+            if ($("#DeliveryScheduleID").val() == "" || $("#DeliveryScheduleID").val() == null) {
+                $("[id*=lblMessage]").text("Please! Select Delivery Time ");
+                flag = false;
+            }
+            else {
+                $("[id*=lblMessage]").text("");
+                flag = true;
+            }
+        });
+
+        $("#btnVerifyPincode").click(function () {
+            // alert($("#hdnWeekHoliday").val() + "==" + $("#hdnMessage").val());
+            if ($("#txtPinCode").val() == "") {
+                $("[id*=lblMessage]").text("Please! Enter Pincode");
+                $(".spnCouponMessage").text("");
+                $("#spnCouponValMsg").text("");
+                $(".messageDiv").text("");
+                return false;
+            }
+        });
+
+        $("#btnVerifyCouponcode").click(function () {
+            if ($("#txtCouponCode").val() == "") {
+                // alert("hello");
+                $(".spnCouponMessage").text("Please! Enter Coupon code");
+                $("[id*=lblMessage]").text("");
+                $(".messageDiv").text("");
+                $("#spnCouponValMsg").text("");
+                return false;
+            }
+            else if ($("#IsCheckPinCode").val() == "" || $("#IsCheckPinCode").val() == "false") {
+                $("[id*=lblMessage]").text("Please! Enter Pincode");
+                $(".spnCouponMessage").text("");
+                $(".messageDiv").text("");
+                $("#spnCouponValMsg").text("");
+                return false;
+            }
+
+        });
+    });
+
+
+    function checkMaxQty(obj) {
+        return true;
+        @*if (parseInt(obj.value) >= parseInt(obj.max)) {
+            $(obj).parent().closest('tr').find('.UpdateQtyMsg').html("We're sorry! We are able to accommodate only " + obj.max + " units of this product.if more Qty required call to customer care + @TempData["CustCareNo"])");
+            //obj.value = obj.max;
+            return false;
+        }
+        else {
+            $(obj).parent().closest('tr').find('.UpdateQtyMsg').html("");
+            return true;
+        }*@
+    }
+
+
+    $(document).ready(function () {
+        $(".shoppingCartQuantity").keydown(function (e) {
+            if ($.inArray(e.keyCode, [46, 8, 9]) !== -1 ||
+                (e.keyCode == 65 && (e.ctrlKey === true || e.metaKey === true)) ||
+                (e.keyCode >= 35 && e.keyCode <= 40)) {
+                return;
+            }
+            if ((e.shiftKey || (e.keyCode < 48 || e.keyCode > 57)) && (e.keyCode < 96 || e.keyCode > 105)) {
+                e.preventDefault();
+            }
+        });
+    });
+
+    $(document).ready(function () {
+        var pincodeCookie = getCookie("DeliverablePincode");
+        if (pincodeCookie != null && pincodeCookie != "") {
+            $("[id=divPincodeLink]").show();
+            $("[id=divPincodeVerification]").hide();
+            $("#IsCheckPinCode").val("true");
+        }
+        else {
+            $("[id=divPincodeLink]").hide();
+            $("[id=divPincodeVerification]").show();
+            $("#IsCheckPinCode").val("");
+        }
+    });
+    function getCookie(name) {
+        var dc = document.cookie;
+        var prefix = name + "=";
+        var begin = dc.indexOf("; " + prefix);
+        if (begin == -1) {
+            begin = dc.indexOf(prefix);
+            if (begin != 0) return null;
+        } else {
+            begin += 2;
+        }
+        var end = document.cookie.indexOf(";", begin);
+        if (end == -1) {
+            end = dc.length;
+        }
+        return unescape(dc.substring(begin + prefix.length, end));
+    }
+    function DisplayPincodeDiv() {
+        $("[id=divPincodeLink]").hide();
+        $("[id=divPincodeVerification]").show();
+        $("#IsCheckPinCode").val("");
+    }
+
+    $(document).ready(function () {
+        $("#txtPinCode").keydown(function (e) {
+            if ($.inArray(e.keyCode, [46, 8, 9]) !== -1 ||
+                (e.keyCode == 65 && (e.ctrlKey === true || e.metaKey === true)) ||
+                (e.keyCode >= 35 && e.keyCode <= 40)) {
+                return;
+            }
+            if ((e.shiftKey || (e.keyCode < 48 || e.keyCode > 57)) && (e.keyCode < 96 || e.keyCode > 105)) {
+                e.preventDefault();
+            }
+        });
+    });
+</script>
+<script>
+    $(document).ready(function () {
+        @* Yashaswi29 - 01 - 2019 *@
+        var OrderAmt = $('[id*=hdnOrderAmount]').val();
+        var hdndeliveryCharge = $('[id*=deliveryChargeHidden]').val();
+        var payableAmt = Number(OrderAmt) + Number(hdndeliveryCharge);
+        $('[id*=hdnDelCharge]').val(hdndeliveryCharge);
+        $('[id*=hdnOrdAmt]').val(OrderAmt);
+    });
+    function CheckCartValue() {
+        //alert("shahanpana");
+        var minOrderRs = '@ViewBag.MinOrder';//// added for dynamic value for min order in rupees by ashish
+       // alert(minOrderRs);
+        //alert($('[id*=hdnOrderPayableAmount]').val());
+        var OrderAmt = $('[id*=hdnOrderAmount]').val();
+        //var RemnAmt = 100 - OrderAmt;////hide
+
+
+        if(OrderAmt <= 0)
+        {
+            alert("Order Amount should not be zero");
+            return false;
+        }
+        if (!isNaN(minOrderRs)) {
+            RemnAmt = minOrderRs - OrderAmt;////added
+        } else { RemnAmt = OrderAmt }
+
+        var str = getCookie("CityCookie");
+        var cucity = "";// getCookie("CityCookie");
+        var cufranchiseId = 0;
+        if (str != null && str != "" && str != undefined) {
+            var str1 = [];
+            str1 = str.split('$');
+            cucity = str1[1].toLowerCase();
+            cufranchiseId = str1[2];
+        }
+
+        //Start Yashaswi 11-3-2019 Solve issue of Reloading cart page on place order click
+        //var cname = window.location.href.replace("@System.Configuration.ConfigurationManager.AppSettings["EZEELO_CUSTOMER_URL"]", '');
+        var ActiveUrl = window.location.href;
+        if (ActiveUrl.toLowerCase().indexOf('www.')) {
+            ActiveUrl = ActiveUrl.replace('www.', '');
+        }
+        //End Yashaswi 11-3-2019 Solve issue of Reloading cart page on place order click
+
+        var cname = ActiveUrl.replace("@System.Configuration.ConfigurationManager.AppSettings["EZEELO_CUSTOMER_URL"]", '');
+        cname = cname.substring(0, cname.indexOf('/'));
+        //alert(cname + "==" + cucity + "==" + cufranchiseId);
+        if (cname == cucity) {
+            //// if (cucity == 'varanasi' && cufranchiseId == 4) {////added && cufranchiseId==4 //hide now for dynamic
+            ////     if (OrderAmt >= 100) { //hide now for dynamic
+             //alert(parseInt(OrderAmt) + "==" + parseInt(minOrderRs))
+            if (minOrderRs == "" || minOrderRs == null)
+            {  return true; }
+            else if (minOrderRs == "/") {  return true; }
+            if (parseInt(OrderAmt) >= parseInt(minOrderRs)) {
+                return true;
+            }
+            else {
+                //// alert("Min. Order : Rs.100. You still have Rs " + RemnAmt + " to go to reach the minimum order amount."); //hide now for dynamic
+                alert("Min. Order : " + OrderAmt + ". You still have Rs " + RemnAmt + " to go to reach the minimum order amount.");
+                return false;
+            }
+            ////  }
+             return true;//open
+        }
+        else {
+            // window.location.reload(true);
+            window.location = "@Url.Action("Index","ShoppingCart")";
+            return false;
+        }
+
+
+
+    }
+</script>
+@*<script>
+        $(document).ready(function () {
+            $("#coupondiv").click(function () {
+                $("#deliveryPincode1").toggle(1000);
+                // $("#deliveryPincode1").show();
+                //}
+            });
+        });
+    </script>*@
+
+@*<script>
+        function CheckCartValue() {
+            // alert("shahanpana");
+            //alert($('[id*=hdnOrderPayableAmount]').val());
+            var OrderAmt = $('[id*=hdnOrderAmount]').val();
+            var RemnAmt = 100 - OrderAmt;
+            var cucity = getCookie("CityCookie");
+            if (cucity != null && cucity != "" && cucity != undefined) {
+                cucity = cucity.split('$')[1].toLowerCase();
+            }
+            if (cucity == 'varanasi') {
+                if (OrderAmt >= 100) {
+                    return true;
+                }
+
+                alert("Min. Order : Rs.100. You still have Rs " + RemnAmt + " to go to reach the minimum order amount.");
+                return false;
+            }
+            return true;
+        }
+    </script>*@
+
+<script>
+    @*comment by Ajit Jain*@
+    function EarnAmountUse() {
+        var isSelected = $('#rbtnEarnAmt').prop('checked');
+        //var isSelected = $('#rbtnEarnAmt').val();
+        //var model = '@Html.Raw(Json.Encode(Model))';
+        var theUrl = '@Url.Action("EarnAmountUse", "ShoppingCart", new { checkValue = "_IsEarnUse_" }, null)';
+        //alert(theUrl.replace("_IsEarnUse_",isSelected));
+        window.location = theUrl.replace("_IsEarnUse_", isSelected);
+    }
+
+    $("#DeliveryScheduleID").change(function () {
+
+        var value = $("#DeliveryScheduleID").prop('selectedIndex');
+        //alert(str);
+
+        if (value != 0) {
+
+            $("#DeliveryScheduleID").removeClass("blink");
+            $("[id*=lblMessage]").text("");
+            $("#lblDelMsg").text("");
+
+        }
+        else {
+            $("#DeliveryScheduleID").addClass("blink");
+        }
+        //alert($("#DeliveryScheduleID").prop('selectedIndex'));
+
+    });
+
+    //DeliveryScheduleID
+
+    //$.ajax({
+    //    type: 'POST',
+    //    url: controllerName + '/ActionName',
+    //    data: { 'checkValue': $('#seleccionado').val() },
+    //    dataType: 'json',
+    //    success: function (jsonData) {
+    //        //This function gets called after posting to the server
+    //    },
+    //    error: function () {
+    //        alert('Error!');
+    //    }
+    //});
+
+</script>
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('#coupondiv').click(function () {
+            //alert("hello");
+            $('#deliveryPincode1').slideToggle();
+        });
+
+
+        //Added by Zubair for MLM on 18-01-2018
+        $('#divEWallet').click(function () {
+            $('#WalletAmountToUse').slideToggle();
+        });
+
+        if ($("#spnCouponValMsg").is(':visible')) {
+            $("#WalletAmountToUse").slideDown();
+        } else {
+            ("#WalletAmountToUse").slideUp();
+        }
+        //End MLM
+
+        if ($("#spnCouponValMsg").is(':visible')) {
+            $("#deliveryPincode1").slideDown();
+        } else {
+            ("#deliveryPincode1").slideUp();
+        }
+
+
+    });
+
+
+</script>
+

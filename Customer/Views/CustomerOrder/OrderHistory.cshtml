@@ -1,0 +1,644 @@
+﻿@using System.Text.RegularExpressions;
+@model ModelLayer.Models.ViewModel.ViewCustomerOrderViewModel
+
+@{
+    ViewBag.Title = "eZeelo: Electronics, Fashion, Coupons, Home Appliances | Lowest Price "; //Yashaswi 01/12/2018 Default City Change
+    string cityName = "";
+    int franchiseID = 0;////added
+    if (Request.Cookies["CityCookie"] != null && Request.Cookies["CityCookie"].Value != "")
+    {
+        cityName = Request.Cookies["CityCookie"].Value.Split('$')[1].ToLower();
+        franchiseID = Convert.ToInt32(Request.Cookies["CityCookie"].Value.Split('$')[2]);////added
+    }
+    Layout = "~/Views/Shared/_Layout_Internal.cshtml";
+}
+@*<script src="~/Scripts/CustomerOrder.js"></script>*@
+
+<style>
+    .divrightalign {
+        float: right;
+        padding-right: 10px;
+        cursor: pointer;
+        font-weight: 700;
+        font-size: 12px;
+    }
+
+    img {
+        /* max-width: 100%; */
+        height: auto;
+    }
+</style>
+<div id="navbar">
+    <ol class="breadcrumb page-breadcrumb">
+        <li>
+            @Html.RouteLink("Home", "Home", new { city = cityName, franchiseId = franchiseID })
+        </li>
+        <li>
+            @Html.RouteLink("My Account", "CustomerOrder/myorders", new { city = cityName, franchiseId = franchiseID })
+        </li>
+        <li class="active">Orders Details</li>
+    </ol>
+</div>
+@Html.Partial("_CustomerDashboardMenu")
+<div class="gap" style="display:none;"></div>
+<div class="row box Orders_Details " data-gutter="15">
+    <h3>Orders Details @Html.RouteLink("Back to orders", "CustomerOrder/myorders", new { city = cityName, franchiseId = franchiseID }, new { @class = "btn btn-primary ", @style = "float: right;" })</h3>
+    @if (Session["UID"] == null)
+    {
+        <div style=" text-align: center;">
+            <div style="width: 50%; margin: auto; background-color: rgba(48, 144, 253, 0.68);color:white ">
+                @Html.RouteLink("Login", "Login", new { returnUrl = Request.Url.ToString(), city = cityName }, new { @class = "link mif-warning", style = "color:white;" })<span style=" font-size: 15px;"> to see shipping & customer details</span>
+            </div>
+        </div>
+    }
+    @Html.Hidden("hdnOrderID", @Model.Orders.FirstOrDefault().CustomerOrderID)
+
+
+    <div class="row">
+        <div class="col-md-12">
+            <table class="table-shopping-cart" style="width:100%;font-weight:700;">
+                <tr>
+                    <td colspan="2"><img src="http://img.ezeelo.com/hpi/4968/1060/1/15.png" style="height:60px;" /></td>
+                </tr>
+                <tr>
+                    <td>
+                        @*GST No: 27AAECE6662K1Z9          <br />*@
+                        GST No : @Model.Orders.FirstOrDefault().GSTNo<br />@*Added by Rumana for showing dynamic GST No Against franchise id 09/04/2019*@
+                        Order No : @Model.Orders.FirstOrDefault().OrderCode
+                        @if (Model.OrderProducts.Count() <= 1)
+                        {
+                            <span>(@Model.OrderProducts.Count() Item)</span><br />
+                            <span>Invoice No : @Model.Orders.FirstOrDefault().OrderCode</span>
+
+                        }
+                        else
+                        {
+                            <span>(@Model.OrderProducts.Count() Items)</span><br />
+                            <span>Invoice No : @Model.Orders.FirstOrDefault().OrderCode</span>
+                        }
+
+                    </td>
+                    <td style=" text-align: right;">Placed On : @Model.Orders.FirstOrDefault().OrderDate.ToString("dd MMM yyyy hh:mm:ss")</td>
+                </tr>
+            </table>
+            <div class="gap"></div>
+            <div class="col-md-12">
+                <div class="content" style="min-width:99%;max-width:100%;overflow-x:auto">
+                    <table class="table table-shopping-cart" style="width:100%;">
+                        @*<tr>
+                                <th></th>
+                                <th>Product details</th>
+                                <th>Amount</th>
+                            </tr>*@
+                        <thead>
+                            <tr>
+                                @*<th style="text-align:center">Sr.No.</th>*@
+                                <th></th>
+                                <th>Item Description</th>
+                                <th style="text-align: center">HSN Code/<br />Accounting code of<br /> Services</th>
+                                <th style="text-align: center">Quantity</th>
+                                <th>Size/Unit</th>
+                                <th style="text-align: center">Total Value<br /> for supply of<br /> goods</th>
+                                <th style="text-align:center">Discount,<br />if any</th>
+                                <th style="text-align:center">Taxable<br />Value</th>
+                                <th>
+                                    <u>CGST/SGST/IGST</u><br />Rate(%) Amount
+                                </th>
+                                @*<th style="float:right">Amount</th>*@
+                                @*<th style="text-align: center">Order Status</th>*@
+                            </tr>
+                        </thead>
+                        @{
+                            var distinctShop = Model.OrderProducts.Select(x => new { x.ShopOrderCode }).Distinct().ToList();
+                            //var SrNo=0;
+                            for (int j = 0; j < distinctShop.Count(); j++)
+                            {
+                                var shopProducts = Model.OrderProducts.Where(x => x.ShopOrderCode == distinctShop[j].ShopOrderCode).ToList();
+
+                                @Html.Hidden("hdnOrderID", @Model.Orders.FirstOrDefault().CustomerOrderID)
+                                @*<b>@distinctShop[j].ShopOrderCode</b>*@
+                                @*<a accesskey="1" class="trackorder link divrightalign" id="track-@Model.OrderProducts[j].ShopStockID-@Model.Orders.FirstOrDefault().CustomerOrderID">View Shipment</a><a class="anchorViewItem link divrightalign" accesskey="1">View Items</a>*@
+
+
+
+
+                                for (int k = 0; k < shopProducts.Count(); k++)
+                                {
+                                    var ProductImage = shopProducts[k].StockThumbPath;
+
+                                    <tr>
+                                        @*<td style="text-align:center"> @Convert.ToInt32(SrNo + 1)</td>*@
+                                        <td style="width:60px;text-align:center"><img src="@Url.Content(string.IsNullOrEmpty(ProductImage) ? "/Content/Images/no_image.png" : ProductImage)" style="width: 35px; height: 35px; max-width: 40px;" /></td>
+                                        <td>
+                                            @*<td style="width:70%">: @Html.RouteLink(@shopProducts[k].ProductName, "pre-prod-name", new { itemID = @shopProducts[k].ProductID, itemName = Regex.Replace(@shopProducts[k].ProductName.Substring(0, Math.Min(@shopProducts[k].ProductName.Length, 30)), @"[\/\\#,+()$~%.':*?<>{} ]", "-").Replace("&", "and").ToLower(), city = cityName, franchiseId = franchiseID }, new { @class = "link" })</td>*@
+                                            @*//***** SEO URL Structure RULE by Ashish 18/11/2016 ******//*@
+                                            <span style="font-size: 14px;">@Html.RouteLink(@shopProducts[k].ProductName.Replace("+", " "), "pre-prod-name", new { itemID = @shopProducts[k].ProductID, itemName = Regex.Replace(@shopProducts[k].ProductName.Substring(0, Math.Min(@shopProducts[k].ProductName.Length, 30)), @"[\/\\#,+()$~%.':*?<>{} ]", "-").Replace("&", "and").ToLower(), city = cityName, franchiseId = franchiseID }, new { @class = "link" })</span>
+
+                                        </td>
+                                        <td style="text-align:center">
+                                            @shopProducts[k].HSNCode
+                                        </td>
+                                        <td style="width:100px;text-align:center">
+                                            <span>@shopProducts[k].Qty </span>
+                                        </td>
+                                        <td style="text-align: center">
+                                            <span>@shopProducts[k].SizeName</span>
+                                        </td>
+                                        <td style="text-align: center">
+                                            <i class="fa fa-inr" aria-hidden="true"></i> @shopProducts[k].TotalAmount
+                                        </td>
+                                        <td style="text-align:center">
+                                            <span><i class="fa fa-inr" aria-hidden="true"></i> @Convert.ToDecimal((shopProducts[k].MRP * @shopProducts[k].Qty) - shopProducts[k].TotalAmount)</span>
+                                        </td>
+                                        <td style="text-align:center">
+
+                                            @if (@shopProducts[k].TaxesOnProduct != null && @shopProducts[k].TaxesOnProduct.Count() > 0)
+                                            {
+                                                decimal totGST = 0;
+                                                foreach (var tax in @shopProducts[k].TaxesOnProduct)
+                                                {
+                                                    if (@tax.IsGSTInclusive == true)
+                                                    {
+                                                        totGST += @tax.TaxableAmount;
+                                                    }
+                                                }
+                                                <span><i class="fa fa-inr" aria-hidden="true"></i>  @Convert.ToDecimal(shopProducts[k].TotalAmount - totGST)</span>
+                                            }
+                                        </td>
+
+
+
+                                        <td>
+                                            @if (@shopProducts[k].TaxesOnProduct != null && @shopProducts[k].TaxesOnProduct.Count() > 0)
+                                            {
+                                                foreach (var tax in @shopProducts[k].TaxesOnProduct)
+                                                {
+                                                    @tax.TaxPrefix <span>&nbsp;</span>
+                                                    <i class="fa fa-inr" aria-hidden="true"></i>
+                                                    @tax.TaxableAmount <span>&nbsp;&nbsp;</span>
+                                                }
+                                            }
+                                        </td>
+
+                                        @*<td style="text-align:right;width:100px;">
+                                                <i class="fa fa-inr" aria-hidden="true"></i> @shopProducts[k].TotalAmount
+                                            </td>*@
+
+                                        @*<td style="text-align:center">
+                                                @if (shopProducts[k].OrderStatus == 9)
+                                                {
+                                                    <span>@shopProducts[k].OrderStatusName</span>
+                                                }
+                                                else
+                                                {
+                                                    <span>@shopProducts[k].OrderStatusName</span>
+                                                }
+                                            </td>*@
+                                    </tr>
+                                }
+
+
+                                <div id="trackRecords" class="trackDiv table-shopping-cart" style="font-weight:700;">
+
+                                </div>
+                            }
+                        }
+
+                    </table>
+
+
+
+                </div>
+            </div>
+            <div class="gap"></div>
+            <div class="col-md-4">
+                @if (Session["UID"] != null)
+                {
+                    <table class="table-shopping-cart" style="width:100%;font-weight:700;">
+                        <tr>
+                            <td colspan="2">
+                                <h5 style="padding: 5px; background: #e5e5e5;">My Information :</h5>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="width:40%">Customer Name</td>
+                            <td style="width:60%">: @Model.Orders.FirstOrDefault().FullName</td>
+                        </tr>
+                        <tr>
+                            <td>Email ID</td>
+                            <td style="word-break: break-all;">: @Model.Orders.FirstOrDefault().EmailID</td>
+                        </tr>
+                        <tr>
+                            <td>Mobile No</td>
+                            <td>: @Model.Orders.FirstOrDefault().PrimaryMobile</td>
+                        </tr>
+                    </table>
+                }
+            </div>
+            <div class="col-md-4">
+
+                <table class="table-shopping-cart" style="width:100%;font-weight:900;">
+                    <tr>
+                        <td colspan="2">
+                            <h5 style="padding: 5px; background: #e5e5e5;">Paid Amount : </h5>
+                        </td>
+                    </tr>
+                    <tr>
+                        @if (Model.Orders.FirstOrDefault().TotallDeliveryCharge > 0)
+                        {
+                            <td>Delivery Charges</td>
+                            decimal Taxable = 0;
+                            Taxable = Math.Round(Convert.ToDecimal(Model.Orders.FirstOrDefault().TotallDeliveryCharge) / Convert.ToDecimal(1.18), 2);
+                            <td>
+                                <b>: <i class="fa fa-inr" aria-hidden="true"></i> @Convert.ToDecimal(Model.Orders.FirstOrDefault().TotallDeliveryCharge)</b>
+                                (Taxable:@Taxable, GST:@Convert.ToDecimal(Model.Orders.FirstOrDefault().TotallDeliveryCharge - Taxable))
+                            </td>
+                        }
+                        else
+                        {
+                            <td>Delivery Charges</td>
+                            <td><b>: Free</b></td>
+                        }
+
+                    </tr>
+                    <tr>
+                        <td style="width:40%">Total Amount</td>
+                        <td style="width:60%">:<b style="color:brown"> <i class="fa fa-inr" aria-hidden="true"></i> @Model.Orders.FirstOrDefault().OrderAmount </b></td>
+                    </tr>
+                    <tr>
+                        @if (Model.Orders.FirstOrDefault().CoupenAmount > 0)
+                        {
+                            <td>Coupon Amount</td>
+                            <td>:<b><i class="fa fa-inr" aria-hidden="true"></i> @Convert.ToDecimal(Model.Orders.FirstOrDefault().CoupenAmount)</b></td>
+                        }
+                    </tr>
+                    <tr>
+                        @if (Model.Orders.FirstOrDefault().UsedWalletAnount > 0)
+                        {
+                            <td>Used Wallet Amount</td>
+                            <td>: <i class="fa fa-inr" aria-hidden="true"></i> @Convert.ToDecimal(Model.Orders.FirstOrDefault().UsedWalletAnount)</td>
+                        }
+                    </tr>
+
+                    @*Added by Zubair for MLM on 7-7-2017*@
+                    @if (Model.Orders.FirstOrDefault().MLMAmountUsed > 0)
+                    {
+                        <tr>
+                            <td>EWallet Amount Used</td>
+                            <td>:<b style="color:brown">  @Model.Orders.FirstOrDefault().MLMAmountUsed</b></td>
+                        </tr>
+                    }
+                    @*End*@
+
+                    @*@* Taxation *@
+                    @if (Model.lCalculatedTaxList != null && Model.lCalculatedTaxList.Count() > 0)
+                    {
+                        foreach (var item in Model.lCalculatedTaxList)
+                        {
+                            if (@item.IsGSTInclusive == false) // Added by Zubair for GST on 7-7-2017
+                            {
+                                <tr>
+                                    <td>@item.TaxPrefix</td>
+                                    <td><b>: <i class="fa fa-inr" aria-hidden="true"></i> @item.Amount </b></td>
+                                </tr>
+                            }
+                        }
+                    }
+
+                    <tr>
+                        <td>Payable Amount</td>
+                        <td>:<b style="color:brown"> <i class="fa fa-inr" aria-hidden="true"></i> @Model.Orders.FirstOrDefault().PayableAmount</b></td>
+                    </tr>
+                    @*Added by Zubair for MLM on 06-01-2018*@
+                    @if (Model.Orders.FirstOrDefault().BusinessPointsTotal > 0)
+                    {
+                        <tr>
+                            <td>Retail Point Total</td>
+                            <td>:<b style="color:green">  @Model.Orders.FirstOrDefault().BusinessPointsTotal</b></td>
+                        </tr>
+                    }
+                    @*End*@
+                    @if (Model.Orders.FirstOrDefault().CashbackPoints > 0)
+                    {
+                        <tr>
+                            <td>Cashback Points</td>
+                            <td>:<b>  @Model.Orders.FirstOrDefault().CashbackPoints</b></td>
+                        </tr>
+                    }
+                </table>
+            </div>
+            <div class="col-md-4">
+                @if (Session["UID"] != null)
+                {
+
+                    <table class="table-shopping-cart" style="width:100%;font-weight:700;">
+                        <tr>
+                            <td colspan="2">
+                                <h5 style="padding: 5px; background: #e5e5e5;">Shipping Address :</h5>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="width:40%">Address</td>
+                            <td style="width:60%">: @Model.Orders.FirstOrDefault().ShippingAddress</td>
+                        </tr>
+                        <tr>
+                            <td>Area Name</td>
+                            <td>: @Model.Orders.FirstOrDefault().AreaName</td>
+                        </tr>
+                        <tr>
+                            <td>Pincode No</td>
+                            <td>: @Model.Orders.FirstOrDefault().Pincode</td>
+                        </tr>
+                        <tr>
+                            <td>Mobile No</td>
+                            <td>: @Model.Orders.FirstOrDefault().PrimaryMobile @Model.Orders.FirstOrDefault().SecondoryMobile</td>
+                        </tr>
+                    </table>
+
+                }
+            </div>
+        </div>
+    </div>
+</div>
+<div class="gap"></div>
+
+@Html.Hidden("ShipmentID")
+<script>
+    $(document).ready(function () {
+
+        $("#btnshow").click(function () {
+            $("#feedbackDiv").show(1000);
+            $("#btnshow").hide(1000);
+        });
+    });
+</script>
+
+<script type="text/javascript">
+    $(function () {
+        $(".trackorder").click(function () {
+
+            $(this).parent().find("#divShopProduct").css("display", "none");
+            $(this).parent().find(".anchorViewItem").text("View Items");
+            $(this).parent().find(".anchorViewItem").attr("accessKey", "1");
+
+            var accessKey = $(this).attr("accesskey");
+
+            $("#ShipmentID").val("");
+
+            var trackId = this.id;
+            var arr = trackId.split("-");
+
+            $("#ShipmentID").val(trackId);
+
+            if (accessKey == "1") {
+
+                $(this).attr("accessKey", "2");
+                $(this).text("Hide Shipment");
+
+                $.ajax({
+                    type: "POST",
+                    url: "@Url.Action("TrackOrder", "CustomerOrder", new { city = cityName.ToLower(), franchiseId = franchiseID })",////added franchiseId=franchiseID
+                    data: "{'orderId':" + $(this).parent().find("#hdnOrderID").val() + ", 'shopStockID':" + arr[1] + "}",
+                    contentType: "application/json; charset = utf-8",
+                    dataType: "json",
+                    success: OnSuccess,
+                    failure: function (response) {
+                    },
+                    error: function (response) {
+                    }
+                });
+            }
+            else {
+                $(this).parent().find(".trackDiv").html("");
+                $(this).attr("accessKey", "1");
+                $(this).text("View Shipment");
+            }
+        });
+    });
+
+    function OnSuccess(response) {
+        var id = $("#ShipmentID").val();
+        $(".disable").mouseover(MouseEnterFunction);
+        $(".disable").mouseout(MouseOutFunction);
+
+        BindOrderProcessStages();
+        var currentStatus = 0;
+        var lastStatus = 0;
+
+        var weekdays = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+        var months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "July", "Aug", "Sep", "Oct", "Nov", "Dec"];
+        var suffix = '';
+
+        $.each(response, function (j, dataVal) {
+
+            message = '';
+            currentStatus = dataVal.Status;
+
+            var value = new Date
+            (
+                 parseInt(dataVal.CreateDate.replace(/(^.*\()|([+-].*$)/g, ''))
+            );
+
+            message = GetStatus(currentStatus);
+
+            statusDate = new Date(value);
+
+            //alert(statusDate);
+
+            switch (statusDate.getDate()) {
+
+                case 1, 21, 31:
+                    suffix = "st";
+                    break;
+                case 2, 22:
+                    suffix = "nd";
+                    break;
+                case 3, 23:
+                    suffix = "rd";
+                    break;
+                default:
+                    suffix = "th";
+
+            }
+
+            statusDisplayDate = weekdays[statusDate.getDay()] + ", " + statusDate.getDate() + suffix + " " + months[statusDate.getMonth()] + " " + statusDate.getHours() + ":" + statusDate.getMinutes();
+
+            switch (currentStatus) {
+                case 1:
+                    window.parent.$("#" + id).parent().find(".trackDiv").find('.disable:first').css('opacity', '1');
+                    window.parent.$("#" + id).parent().find(".trackDiv").find('.disable:first').removeClass("disable").addClass("placed01");
+                    window.parent.$("#" + id).parent().find(".trackDiv").append("<div id=" + currentStatus + "divDetails style='display:none;'><span class='spnMessage'>" + message + "</span><br/><span class='divDate'>" + statusDisplayDate + "</span></div>");
+                    window.parent.$("#" + id).parent().find(".trackDiv").find(".placed01").mouseover(MouseEnterFunction);
+                    window.parent.$("#" + id).parent().find(".trackDiv").find(".placed01").mouseout(MouseOutFunction);
+                    break;
+                case 2:
+                    window.parent.$("#" + id).parent().find(".trackDiv").find('.disable:first').css('opacity', '1');
+                    window.parent.$("#" + id).parent().find(".trackDiv").find('.disable:first').removeClass("disable").addClass("received02");
+                    window.parent.$("#" + id).parent().find(".trackDiv").append("<div id=" + currentStatus + "divDetails style='display:none;'><span class='spnMessage'>" + message + "</span><br/><span class='divDate'>" + statusDisplayDate + "</span></div>");
+                    $(".received02").mouseover(MouseEnterFunction);
+                    $(".received02").mouseout(MouseOutFunction);
+                    break;
+                case 3:
+                    window.parent.$("#" + id).parent().find(".trackDiv").find('.disable:first').css('opacity', '1');
+                    window.parent.$("#" + id).parent().find(".trackDiv").find('.disable:first').removeClass("disable").addClass("packed03");
+                    window.parent.$("#" + id).parent().find(".trackDiv").append("<div id=" + currentStatus + "divDetails style='display:none;'><span class='spnMessage'>" + message + "</span><br/><span class='divDate'>" + statusDisplayDate + "</span></div>");
+                    $(".packed03").mouseover(MouseEnterFunction);
+                    $(".packed03").mouseout(MouseOutFunction);
+                    break;
+                case 4:
+                    window.parent.$("#" + id).parent().find(".trackDiv").find('.disable:first').css('opacity', '1');
+                    window.parent.$("#" + id).parent().find(".trackDiv").find('.disable:first').removeClass("disable").addClass("dispatched04");
+                    window.parent.$("#" + id).parent().find(".trackDiv").append("<div id=" + currentStatus + "divDetails style='display:none;'><span class='spnMessage'>" + message + "</span><br/><span class='divDate'>" + statusDisplayDate + "</span></div>");
+                    $(".dispatched04").mouseover(MouseEnterFunction);
+                    $(".dispatched04").mouseout(MouseOutFunction);
+                    break;
+                case 7:
+                    window.parent.$("#" + id).parent().find(".trackDiv").find('.disable:first').css('opacity', '1');
+                    window.parent.$("#" + id).parent().find(".trackDiv").find('.disable:first').removeClass("disable").addClass("deliver07");
+                    window.parent.$("#" + id).parent().find(".trackDiv").append("<div id=" + currentStatus + "divDetails style='display:none;'><span class='spnMessage'>" + message + "</span><br/><span class='divDate'>" + statusDisplayDate + "</span></div>");
+                    $(".deliver07").mouseover(MouseEnterFunction);
+                    $(".deliver07").mouseout(MouseOutFunction);
+                    break;
+                case 8:
+                    window.parent.$("#" + id).parent().find(".trackDiv").find($("[id*=step0" + lastStatus + "]")).after("<img class='disable' id='step09' src='@Url.Content("/Content/track order images/6return_Product_delivered.png")' width='70' height='70' />");
+                    window.parent.$("#" + id).parent().find(".trackDiv").find($("[id*=step0" + lastStatus + "]")).after("---------------");
+                    window.parent.$("#" + id).parent().find(".trackDiv").find('.disable:first').removeClass("disable").addClass("return08");
+                    window.parent.$("#" + id).parent().find(".trackDiv").append("<div id=" + currentStatus + "divDetails style='display:none;'><span class='spnMessage'>" + message + "</span><br/><span class='divDate'>" + statusDisplayDate + "</span></div>");
+                    $(".return08").mouseover(MouseEnterFunction);
+                    $(".return08").mouseout(MouseOutFunction);
+                    break;
+                case 9:
+                    window.parent.$("#" + id).parent().find(".trackDiv").find($("[id*=step0" + lastStatus + "]")).after("<img class='disable' id='step09' src='@Url.Content("/Content/track order images/7product_cancel.png")' width='70' height='70' />");
+                    window.parent.$("#" + id).parent().find(".trackDiv").find($("[id*=step0" + lastStatus + "]")).after("---------------");
+                    window.parent.$("#" + id).parent().find(".trackDiv").find('.disable:first').removeClass("disable").addClass("cancel09");
+                    $(".cancel09").mouseover(MouseEnterFunction);
+                    $(".cancel09").mouseout(MouseOutFunction);
+                    window.parent.$("#" + id).parent().find(".trackDiv").append("<div id=" + currentStatus + "divDetails style='display:none;'><span class='spnMessage'>" + message + "</span><br/><span class='divDate'>" + statusDisplayDate + "</span></div>");
+
+                    break;
+            }
+            lastStatus = currentStatus;
+        });
+    }
+
+    function GetStatus(status) {
+
+        var statusMessage = '';
+
+        switch (status) {
+
+            case 1:
+                statusMessage = "Your order has been placed.";
+                break;
+            case 2:
+                statusMessage = "Your order has been confirmed by organization.";
+                break;
+            case 3:
+                statusMessage = "Your order has been packed for delivery.";
+                break;
+            case 4:
+                statusMessage = "Your order has been dispatched.";
+                break;
+            case 7:
+                statusMessage = "Your order has been delivered.";
+                break;
+            case 8:
+                statusMessage = "Your order has been returned.";
+                break;
+            case 9:
+                statusMessage = "Your order has been cancelled.";
+                break;
+
+        }
+        return statusMessage;
+    }
+
+    function MouseEnterFunction() {
+        var id = $(this).parent().parent().find(".trackorder").attr("id");
+
+        var statusId = $(this).attr("class");
+        var arr = statusId.split("0");
+        window.parent.$("#" + id).parent().find(".trackDiv").find("#" + arr[1] + "divDetails").css("display", "block");
+    }
+
+    function MouseOutFunction() {
+
+        var id = $(this).parent().parent().find(".trackorder").attr("id");
+        var statusId = $(this).attr("class");
+
+        var arr = statusId.split("0");
+        window.parent.$("#" + id).parent().find(".trackDiv").find("#" + arr[1] + "divDetails").css("display", "none");
+    }
+
+    function BindOrderProcessStages() {
+        var id = $("#ShipmentID").val();
+        window.parent.$("#" + id).parent().find(".trackDiv").append("<img class='disable' id='step01' src='@Url.Content("/Content/track order images/1order_placed.png")' style='opacity:0.3;' width='70' height='70' />");
+        window.parent.$("#" + id).parent().find(".trackDiv").append("---------------");
+        window.parent.$("#" + id).parent().find(".trackDiv").append("<img class='disable' id='step02' src='@Url.Content("/Content/track order images/2product_confirm.png")' style='opacity:0.3;' width='70' height='70' />");
+        window.parent.$("#" + id).parent().find(".trackDiv").append("---------------");
+        window.parent.$("#" + id).parent().find(".trackDiv").append("<img class='disable' id='step03'  src='@Url.Content("/Content/track order images/3product_packed.png")' style='opacity:0.3;' width='70' height='70' />");
+        window.parent.$("#" + id).parent().find(".trackDiv").append("---------------");
+        window.parent.$("#" + id).parent().find(".trackDiv").append("<img class='disable' id='step04'  src='@Url.Content("/Content/track order images/4Product_dispatched.png")' style='opacity:0.3;' width='70' height='70' />");
+        window.parent.$("#" + id).parent().find(".trackDiv").append("---------------");
+        window.parent.$("#" + id).parent().find(".trackDiv").append("<img class='disable' id='step07' src='@Url.Content("/Content/track order images/5Product_delivered.png")' style='opacity:0.3;' width='70' height='70' />");
+    }
+
+</script>
+
+<script type="text/javascript">
+    $(function () {
+        $(".anchorViewItem").click(function () {
+            var trackAccessKey = $(this).parent().find(".trackorder").attr("accessKey");
+            if (trackAccessKey == "2") {
+                $(this).parent().find("#trackRecords").html("");
+                $(this).parent().find(".trackorder").attr("accessKey", "1");
+                $(this).parent().find(".trackorder").text("View Shipment");
+            }
+
+            var accessKey = $(this).attr("accesskey");
+
+            if (accessKey == "1") {
+                $(this).attr("accesskey", "2");
+                $(this).parent().find("#divShopProduct").css("display", "block");
+                $(this).text("Hide Items");
+            }
+            else {
+                $(this).attr("accesskey", "1");
+                $(this).parent().find("#divShopProduct").css("display", "none");
+                $(this).text("View Items");
+            }
+        });
+
+
+        $("#btnSubmitFeedback").click(function () {
+            // var url="@Url.Action("GetFeedback", "CustomerOrder", new { city = cityName.ToLower() })";
+            var mydata = {
+                "feedbackMsg": $("#description").val(),
+                "OrderCode": $("#custOrderCode").text(),
+                "emailAddress": $("#custEmail").text(),
+                "mobile": $("#custMobile").text()
+            };
+            $.ajax({
+                type: "POST",
+                url: "@Url.Action("GetFeedback", "CustomerOrder", new { city = cityName.ToLower() })",
+                data: "{'myParam':" + JSON.stringify(mydata) + "}",
+                contentType: "application/json; charset = utf-8",
+                dataType: "json",
+                success: function (response) {
+                    $("#description").hide();
+                    $("#btnSubmitFeedback").hide();
+                    $("#btnshow").show();
+                    $("#feedbackMsg").text("Thank you for your feedback!");
+
+                },
+                failure: function (response) {
+                },
+                error: function (response) {
+                }
+            });
+
+        });
+
+    });
+
+</script>

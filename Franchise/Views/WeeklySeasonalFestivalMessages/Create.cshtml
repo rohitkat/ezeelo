@@ -1,0 +1,464 @@
+﻿@model ModelLayer.Models.Weekly_Seasona_Festival_Message
+
+@{
+    ViewBag.Title = "Create";
+}
+<style>
+    .form-actions {
+        padding: 20px 20px 20px;
+        margin: 215px -10px -9px -10px;
+        background-color: #FFEFD8;
+        border-top: 1px solid #eee;
+    }
+
+    div.checker {
+        margin-top: -10px !important;
+    }
+
+    select {
+        width: 220px;
+        background-color: #ffffff;
+        border: 1px solid #cccccc;
+        text-transform: lowercase;
+    }
+
+    .field-validation-error {
+        float: left;
+    }
+</style>
+
+@Scripts.Render("~/bundles/jquery")
+@Scripts.Render("~/bundles/jqueryval")
+
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+
+    <div id="content" class="span10" style="min-height: 400px;">
+        <div class="row-fluid">
+            <div class="box span12">
+                <div class="box-header">
+                    <h2><i class="icon-group"></i><span class="break"></span>Weekly Seasonal Festival Message</h2>
+                </div>
+                <div class="box-content">
+                    <form class="form-horizontal">
+                        @*@Html.ValidationSummary(false)*@
+                        <div class="box-content">
+                            <div>
+                                <label id="lblMsges" style="color: #b94a48"></label>
+                            </div>
+                            @{
+    var ErrorMessage = TempData["Error"];
+    if (ErrorMessage != null)
+    {
+        <label for="lblMsgTemp" class="control-label" style="color: #b94a48">@ErrorMessage.ToString()</label>
+    }
+                            }
+                            <div>
+                                <div class=" span3">
+                                    <div class="controls">
+                                        @Html.DropDownList("MessagesType", null, "Select Message Type", new { @style = "width: 220px;margin-left: 0px;" })
+                                        <span id="MsgTypeID" class="alert-danger focused"></span>
+                                        @Html.ValidationMessageFor(model => model.MessageTypeID)
+                                    </div>
+                                </div>
+                                <div class=" span3" id="MessagePanel">
+                                    <div class="controls">
+                                        @Html.TextBoxFor(model => model.Message, new { id = "txtMessagesID", @placeholder = "Messages", @class = "form-control  pull-left wdth-mid mrg-leftSm", style = "width:205px" })
+                                        <span id="messagesID" class="alert-danger focused"></span>
+                                        @Html.ValidationMessageFor(model => model.Message)
+                                    </div>
+                                </div>
+                                <div class=" span3" style="margin-left: 0px; display: none;" id="MinOrder">
+                                    <div class="controls">
+                                        @Html.TextBox("txtMinOrderInRupee", null, new { @type = "number", @placeholder = "Min Order in Rupees", @class = "form-control  pull-left wdth-mid mrg-leftSm", style = "width:205px" })
+                                        @*<span id="minOrderID" class="alert-danger focused"></span>
+                                            @Html.ValidationMessageFor(model => model.MinimumOrderInRupee)*@
+                                    </div>
+                                </div>
+
+                                <div class=" span3">
+                                    <div class="controls">
+                                        <div class=" span6">
+                                            @Html.LabelFor(model => model.IsActive)
+                                        </div>
+                                        <div class=" span6">
+                                            @Html.EditorFor(model => model.IsActive)
+                                            @Html.ValidationMessageFor(model => model.IsActive)
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="span12" style="margin-left: 0px; display: none;" id="WeeklyPanel">
+                                <div class="span3 checkbox_days">
+                                    <div class="ui-checkbox">
+                                        <label class="checkbox">
+                                            <input type="checkbox" class="day" id="Monday" name="day[]" value="Monday"> Monday
+                                        </label>
+                                    </div>
+                                    <div class="ui-checkbox">
+                                        <label class="checkbox">
+                                            <input type="checkbox" class="day" id="Tuesday" name="day[]" value="Tuesday"> Tuesday
+                                        </label>
+                                    </div>
+                                    <div class="ui-checkbox">
+                                        <label class="checkbox">
+                                            <input type="checkbox" class="day" id="Wednesday" name="day[]" value="Wednesday"> Wednesday
+                                        </label>
+                                    </div>
+                                    <div class="ui-checkbox">
+                                        <label class="checkbox">
+                                            <input type="checkbox" class="day" id="Thursday" name="day[]" value="Thursday"> Thursday
+                                        </label>
+                                    </div>
+                                    <div class="ui-checkbox">
+                                        <label class="checkbox">
+                                            <input type="checkbox" class="day" id="Friday" name="day[]" value="Friday"> Friday
+                                        </label>
+                                    </div>
+                                    <div class="ui-checkbox">
+                                        <label class="checkbox">
+                                            <input type="checkbox" class="day" id="Saturday" name="day[]" value="Saturday"> Saturday
+                                        </label>
+                                    </div>
+                                    <div class="ui-checkbox">
+                                        <label class="checkbox">
+                                            <input type="checkbox" class="day" id="Sunday" name="day[]" value="Sunday"> Sunday
+                                        </label>
+                                    </div>
+                                </div>
+
+                                <div class="span3">
+                                    @Html.TextBoxFor(model => model.WeeklyHoliday, new { @placeholder = "Weekly Holiday", @class = "form-control pull-left wdth-large mrg-leftSm", style = "width:205px;" })
+                                    <span id="WeeklyHolidayId" class="alert-danger focused"></span>
+                                    @Html.ValidationMessageFor(model => model.WeeklyHoliday)
+                                </div>
+                                <div class="span3 control-group">
+                                    <label id="lblMsgWeekly" style="color: #b94a48"></label>
+                                </div>
+                            </div>
+                            <div class="span12" style="margin-left: 0px; display: none;" id="SeasonalPanel">
+                                <div class="span3">
+                                    @{
+    //var itemsStartMonths = new SelectList(ViewBag.SeasonalStartMonth, "Key", "Value", "S");
+    var itemsStartMonths = new SelectList(ViewBag.SeasonalStartMonth, "Value", "Value", "S");
+                                    }
+                                    @Html.DropDownListFor(m => m.SeasonalMsgFrmMonth, @itemsStartMonths, "Seasonal Start Month", new { id = "txtSeasonalStartMonth" })
+                                    <span id="SeasonalMsgFrmMonthId" class="alert-danger focused"></span>
+                                    @Html.ValidationMessageFor(model => model.SeasonalMsgFrmMonth)
+                                </div>
+
+
+                                <div class="span3">
+                                    @*@Html.TextBoxFor(model => model.SeasonalMsgToMonth, new { id = "txtSeasonalToMonth", @class = "datepicker glyphicons-iconcalendar", @placeholder = "Seasonal End Month", @style = "margin-top:-2px;" })*@
+                                    @{
+    //var itemsEndMonths = new SelectList(ViewBag.SeasonalStartMonth, "Key", "Value", "S");
+    var itemsEndMonths = new SelectList(ViewBag.SeasonalStartMonth, "Value", "Value", "S");
+                                    }
+                                    @Html.DropDownListFor(m => m.SeasonalMsgToMonth, @itemsEndMonths, "Seasonal End Month", new { id = "txtSeasonalEndMonth" })
+                                    <span id="SeasonalMsgToMonthId" class="alert-danger focused"></span>
+                                    @Html.ValidationMessageFor(model => model.SeasonalMsgToMonth)
+                                </div>
+                                <div class="span3 control-group">
+                                    <label id="lblMsgSeason" style="color: #b94a48"></label>
+                                </div>
+                            </div>
+                            <div style="margin-left: 0px; display: none;" id="FestivalPanel">
+                                <div class="span3">
+                                    @Html.TextBox("FestivalMsgFDate", null, new { @class = "datepicker glyphicons-iconcalendar", @placeholder = "Festival Start Date", @style = "margin-top:0px;" })
+                                </div>
+                                <div>
+                                    @Html.TextBox("FestivalMsgTDate", null, new { @class = "datepicker glyphicons-iconcalendar", @placeholder = "Festival End Date", @style = "margin-top:0px;" })
+                                </div>
+
+                                <div class="span3 control-group">
+                                    <label id="lblMsg" style="color: #b94a48"></label>
+                                </div>
+                            </div>
+
+                        </div>
+                        <div class="form-actions">
+                            <div class="col-md-offset-2 col-md-10">
+                                <input type="submit" value="Create" class="btn btn-primary btn-small" id="btnSubmit" />
+                                @Html.ActionLink("Back to List", "Index", string.Empty, new { @class = "btn btn-small" })
+                            </div>
+                        </div>
+                    </form>
+
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+<div class="loader">
+    <img id="loader_img" src="~/Content/img/loader.gif" style="display: none" />
+</div>
+@*<script src="~/Content/js/jquery-1.9.1.min.js"></script>*@
+@*<script src="~/Scripts/jquery-1.10.2.min.js"></script>*@
+
+<script>
+
+    $(function () {
+
+        //$("#WeeklyHoliday").prop("disabled", true);
+        var Monday = "", Tuesday = "", Wednesday = "", Thursday = "", Friday = "", Saturday = "", Sunday = "";
+        var str = "";
+        $('.day').on('change', function () {
+            $('[id*=lblMsgWeekly]').text('');
+            $("#WeeklyHoliday").val("");
+            Monday = "", Tuesday = "", Wednesday = "", Thursday = "", Friday = "", Saturday = "", Sunday = "";
+            str = "";
+            if ($('#Monday').attr('checked')) {
+                Monday = 'Monday'
+            }
+            if ($('#Tuesday').attr('checked')) {
+                Tuesday = 'Tuesday'
+            }
+            if ($('#Wednesday').attr('checked')) {
+                Wednesday = 'Wednesday'
+            }
+            if ($('#Thursday').attr('checked')) {
+                Thursday = 'Thursday'
+            }
+            if ($('#Friday').attr('checked')) {
+                Friday = 'Friday'
+            }
+            if ($('#Saturday').attr('checked')) {
+                Saturday = 'Saturday'
+            }
+            if ($('#Sunday').attr('checked')) {
+                Sunday = 'Sunday'
+            }
+            str = Monday + "," + Tuesday + "," + Wednesday + "," + Thursday + "," + Friday + "," + Saturday + "," + Sunday
+            $("#WeeklyHoliday").val(str);
+            if ($("#WeeklyHoliday").val() == ',,,,,,') {
+                $("#WeeklyHoliday").val("");
+            }
+        });
+
+        $("#MessagesType").change(function () {
+            // alert($("#MessagesType").val());
+            // alert($("#MessagesType option:selected").text());
+            var str = $("#MessagesType option:selected").text();
+            if (str == "Select Message Type") {
+                $("#WeeklyPanel").hide();
+                $("#SeasonalPanel").hide();
+                $("#FestivalPanel").hide();
+                $("#MinOrder").hide();
+                $("#WeeklyHoliday").val('');
+                $('#txtSeasonalStartMonth').val('');
+                $('#txtSeasonalEndMonth').val('');
+                $('#FestivalMsgTDate').val('');
+                $('#FestivalMsgFDate').val('');
+                $('#txtMinOrderInRupee').val();
+
+            }
+            else if (str == "MinimumOrder") {
+                $("#WeeklyPanel").hide();
+                $("#SeasonalPanel").hide();
+                $("#FestivalPanel").hide();
+                $("#MessagePanel").hide();
+                $("#MinOrder").show();
+
+                $("#WeeklyHoliday").val('');
+                $('#txtSeasonalStartMonth').val('');
+                $('#txtSeasonalEndMonth').val('');
+                $('#FestivalMsgTDate').val('');
+                $('#FestivalMsgFDate').val('');
+            }
+            else if (str == "Weekly") {
+                $("#MessagePanel").show();
+                $("#WeeklyPanel").show();
+                $("#SeasonalPanel").hide();
+                $("#FestivalPanel").hide();
+                $("#MinOrder").hide();
+                $('#txtSeasonalStartMonth').val('');
+                $('#txtSeasonalEndMonth').val('');
+                $('#FestivalMsgTDate').val('');
+                $('#FestivalMsgFDate').val('');
+                $('#txtMinOrderInRupee').val();
+            }
+            else if (str == "WeeklyHoliday") {
+                $("#MessagePanel").show();
+                $("#WeeklyPanel").show();
+                $("#SeasonalPanel").hide();
+                $("#FestivalPanel").hide();
+                $("#MinOrder").hide();
+                $('#txtSeasonalStartMonth').val('');
+                $('#txtSeasonalEndMonth').val('');
+                $('#FestivalMsgTDate').val('');
+                $('#FestivalMsgFDate').val('');
+                $('#txtMinOrderInRupee').val();
+            }
+            else if (str == "Seasonal") {
+                $("#MessagePanel").show();
+                $("#WeeklyPanel").hide();
+                $("#SeasonalPanel").show();
+                $("#FestivalPanel").hide();
+                $("#MinOrder").hide();
+                $("#WeeklyHoliday").val('');
+                $('#FestivalMsgTDate').val('');
+                $('#FestivalMsgFDate').val('');
+                $('#txtMinOrderInRupee').val();
+            }
+            else if (str == "Festival") {
+                $("#MessagePanel").show();
+                $("#WeeklyPanel").hide();
+                $("#SeasonalPanel").hide();
+                $("#FestivalPanel").show();
+                $("#MinOrder").hide();
+                $("#WeeklyHoliday").val('');
+                $('#txtSeasonalStartMonth').val('');
+                $('#txtSeasonalEndMonth').val('');
+                $('#txtMinOrderInRupee').val();
+            }
+        })
+        $('#WeeklyHoliday').attr('readonly', true);
+        $("#txtMessagesID").on("keypress", function (e) {
+            if (e.which === 32 && !this.value.length)
+                e.preventDefault();
+        });
+
+        $("#btnSubmit").click(function () {
+            //alert($('#txtMinOrderInRupee').val());
+            // $('#loader_img').show();
+            var str = $("#MessagesType option:selected").text();
+
+            if (str == "Select Message Type") {
+                $('[id*=lblMsges]').text('Please Select Message Type.');
+                return false;
+            }
+            else if (str == "Weekly") {
+                //alert($("#WeeklyHoliday").val());
+                var txtstr = $("#WeeklyHoliday").val();
+                var txtMsg = $("#txtMessagesID").val();
+
+                if (txtMsg == "") {
+                    $('[id*=lblMsges]').text('Please write message.');
+                    return false;
+                }
+                else {
+                    $('[id*=lblMsges]').text('');
+                }
+                if (txtstr == "") {
+                    $('[id*=lblMsgWeekly]').text('Please Select a day.');
+                    return false;
+                }
+                else {
+                    $('[id*=lblMsgWeekly]').text('');
+                }
+            }
+            else if (str == "MinimumOrder") {
+                var txtMsg = $("#txtMinOrderInRupee").val();
+                if (txtMsg == "") {
+                    $('[id*=lblMsges]').text('Please write valid number.');
+                    return false;
+                }
+                else if (!(parseInt(txtMsg) >= 50 && parseInt(txtMsg) <= 500)) {
+                    $('[id*=lblMsges]').text('Please Enter Min Order between 50 and 500 Rs.');
+                    return false;
+                }
+                else {
+                    $('[id*=lblMsges]').text('');
+                }
+            }
+            else if (str == "WeeklyHoliday") {
+                var txtMsg = $("#txtMessagesID").val();
+                if (txtMsg == "") {
+                    $('[id*=lblMsges]').text('Please write message.');
+                    return false;
+                }
+                else {
+                    $('[id*=lblMsges]').text('');
+                }
+            }
+            else if (str == "Seasonal") {
+                var StartMonth = $('#txtSeasonalStartMonth option:selected').text();
+                var EndMonth = $('#txtSeasonalEndMonth option:selected').text();
+                //alert(StartMonth + "-" + EndMonth);
+                var Smonth = StartMonth;
+                var Emonth = EndMonth;
+                var months = ["january", "february", "march", "april", "may", "june", "july", "august", "september", "october", "november", "december"];
+                Smonth = Smonth.toLowerCase();
+                Smonth = months.indexOf(Smonth);
+                Emonth = Emonth.toLowerCase();
+                Emonth = months.indexOf(Emonth);
+                //alert(Smonth + "-" + Emonth);
+                var txtMsg = $("#txtMessagesID").val();
+
+                if (txtMsg == "") {
+                    $('[id*=lblMsges]').text('Please write message.');
+                    return false;
+                }
+                else {
+                    $('[id*=lblMsges]').text('');
+                }
+                if (StartMonth == "Seasonal Start Month" || EndMonth == "Seasonal End Month") {
+                    $('[id*=lblMsgSeason]').text('Please Select Start Month and End Month.');
+                    return false;
+                }
+                else if (parseInt(Emonth) < parseInt(Smonth)) {
+                    $('[id*=lblMsgSeason]').text('End Month must be greater than Star Month.');
+                    return false;
+                }
+                else {
+                    $('[id*=lblMsgSeason]').text('');
+                }
+            }
+            else if (str == "Festival") {
+                var toDate = $('#FestivalMsgTDate').val();
+                var fromDate = $('#FestivalMsgFDate').val();
+                //alert(toDate + "-" + fromDate);
+                var txtMsg = $("#txtMessagesID").val();
+                if (txtMsg == "") {
+                    $('[id*=lblMsges]').text('Please write message.');
+                    return false;
+                }
+                else {
+                    $('[id*=lblMsges]').text('');
+                }
+                var isValid = ValidateDate(fromDate, toDate);
+                if (isValid == false) {
+                    // $('#loader_img').hide();
+                    // return;
+                    return false;
+                }
+            }
+
+
+
+        });
+
+        function ValidateDate(fromDate, toDate) {
+            if (fromDate == '' && toDate == '') {
+                $('[id*=lblMsg]').text('Please Select From Date and To Date.');
+                return false;
+            }
+            else if (fromDate == '') {
+                $('[id*=lblMsg]').text('Please Select From Date.');
+                return false;
+            }
+            else if (toDate == '') {
+                $('[id*=lblMsg]').text('Please Select To Date.');
+                return false;
+            }
+
+            if (fromDate != '' && toDate != '') {
+                dateFirst = fromDate.split('/');
+                dateSecond = toDate.split('/');
+                var from = new Date(dateFirst[2], dateFirst[1], dateFirst[0]); //Year, Month, Date
+                var to = new Date(dateSecond[2], dateSecond[1], dateSecond[0]);
+                if (from > to) {
+                    $('[id*=lblMsg]').text('To Date must be greater than From Date.');
+                    return false;
+                }
+                else {
+                    $('[id*=lblMsg]').text('');
+                }
+            }
+        }
+
+    });
+</script>

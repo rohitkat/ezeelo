@@ -1,0 +1,96 @@
+﻿@model ModelLayer.Models.ViewModel.EVWViewModel
+
+@{
+    ViewBag.Title = "Add Or View Dv";
+}
+
+<link href="~/Content/css/BeatPicker.min.css" rel="stylesheet" />
+<script src="~/Content/js/jquery-1.11.0.min.js"></script>
+<script src="~/Content/js/BeatPicker.js"></script>
+<link href="~/Content/assets/css/style.css" rel="stylesheet" />
+<script src="~/Content/js/jquery-1.9.1.min.js"></script>
+<link href="http://www.jqueryscript.net/css/jquerysctipttop.css" rel="stylesheet" type="text/css">
+<link href="~/Content/assets/css/form-design.css" rel="stylesheet" />
+
+<div class="row-fluid">
+    <div class="box span12" style="width:80%;">
+        <div class="box-header creatProduct clearfix" data-original-title="">
+            <h2>
+                <i class="icon-exclamation-sign"></i>
+                <span class="break"></span>
+                Add Or View DV
+            </h2>
+        </div>
+        <div id="content" class="span10" style="background-color:white;height:auto">
+
+            @using (Html.BeginForm("AddOrViewDV", "Warehouses", null, FormMethod.Post, new { id = "Form_" }))
+            {
+                @Html.AntiForgeryToken()
+                @Html.HiddenFor(model => model.ID)
+                <div class="form-horizontal">
+                    @Html.ValidationSummary(true)
+                    <div class="form-group">
+                        <div class="col-md-10">
+                            <b> Name</b> : @Html.DisplayFor(model => model.Name)
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <div class="col-md-10">
+                            <b> GST No</b> : @Html.DisplayFor(model => model.GSTNo)
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <div class="col-md-10">
+                            <b> Pincode </b> :  @Html.DisplayFor(model => model.Pincode)
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <div class="col-md-10">
+                            <b> State </b>: @Html.DisplayFor(model => model.StateName)
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <div class="col-md-10">
+                            <b> Outside Supplier List </b> (Use Ctrl + F to search through DV list) <div style="height:300px; overflow:scroll">
+                                <table>
+                                    @if (Model.ListForEVW.Count() == 0)
+                                    {
+                                        <tr> <td colspan="2">No Record Available...</td></tr>
+                                    }
+                                    else
+                                    {
+                                        for (var i = 0; i < Model.ListForEVW.Count(); i++)
+                                        {
+                                            <tr>
+                                                <td>
+                                                    @Html.CheckBoxFor(it => it.ListForEVW[i].IsSelected, new { Style = "vertical-align:3px}", @class = "brandCheckBox" })
+                                                </td>
+                                                <td>
+                                                    @Html.HiddenFor(it => it.ListForEVW[i].ID)
+                                                    @Html.HiddenFor(it => it.ListForEVW[i].Name)
+                                                    @Html.DisplayFor(it => it.ListForEVW[i].Name)
+                                                </td>
+                                            </tr>
+                                        }
+                                    }
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <div class="col-md-offset-2 col-md-10">
+                            <input type="submit" value="Save" class="btn btn-success" />
+                            @Html.ActionLink("Back to List", "EVWList", new { @class = "btn btn-default mrg-left mrg-top" })
+                        </div>
+                    </div>
+                </div>
+            }
+
+        </div>
+    </div>
+</div>

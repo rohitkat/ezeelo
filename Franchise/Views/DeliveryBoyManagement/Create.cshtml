@@ -1,0 +1,303 @@
+﻿@model ModelLayer.Models.ViewModel.EmployeeManagement
+
+@{
+    ViewBag.Title = "Create";
+}
+
+
+<style>
+    #Salutation {
+        width: 220px;
+    }
+
+    #personalDetail_FirstName {
+        width: 145px;
+    }
+
+    #personalDetail_LastName {
+        width: 145px;
+    }
+
+    #SecurityQuestion {
+        width: 207px;
+    }
+
+    #loginSecurityAnswer_Answer {
+        width: 187px;
+    }
+
+    .btn-gray {
+        background-color: #898484;
+        border: 1px solid#898484;
+    }
+
+    .mrg-leftSm {
+        margin-left: 0px;
+    }
+
+    .single-line {
+        margin-left: 7px;
+    }
+
+    #BusinessOwner {
+        margin-top: 0;
+        margin-left: 110px;
+    }
+
+    #IsActive {
+        margin-left: -155px;
+        margin-top: 15px;
+    }
+    .form-actions {
+        padding: 20px 20px 20px;
+        margin: 160px -10px -9px -10px;
+        background-color: #FFEFD8;
+        border-top: 1px solid #eee;
+    }
+</style>
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+
+    <div id="content" class="span10" style="min-height: 400px;">
+        <div class="row-fluid">
+            <div class="box span12">
+                <div class="box-header">
+                    <h2><i class="icon-group"></i><span class="break"></span>Employee Management Create</h2>
+                </div>
+                <div class="box-content">
+                    <form class="form-horizontal">
+                        @Html.ValidationSummary(false)
+
+                        @*@if (ViewBag.ErrorMessage != null)
+                            {
+                            @Html.Label("ErrorMessage", (string)ViewBag.ErrorMessage)
+                            }*@
+
+                        @*<div class="control-group clearfix">
+                                @Html.LabelFor(model => model.EmployeeCode, new { @class = "control-label span2" })
+                                <div class="controls">
+                                    @Html.DisplayFor(model => model.EmployeeCode)
+                                    @Html.ValidationMessageFor(model => model.EmployeeCode)
+                                </div>
+                            </div>*@
+                        <div class="control-group">
+                            @*<label class="control-label span2" for="focusedInput">Owner </label>*@
+                            <div class="controls">
+                                @Html.DropDownList("OwnerType", null, "Select Owner Type", new { @style = "width: 220px;margin-left: 0px;" })
+                                <span id="OwnerTypeMsg" class="alert-danger focused"></span>
+                                @Html.ValidationMessageFor(model => model.OwnerID)
+
+                                @Html.DropDownList("BusinessOwner", null, "Select Owner", new { @style = "width: 219px;margin-left: 20px;" })
+                                <span id="BusinessOwnerMsg" class="alert-danger focused"></span>
+                                @Html.ValidationMessageFor(model => model.OwnerID)
+                            </div>
+                            <div class="span12" style="margin-left: 0px;">
+                                <div class="span3">
+                                    @Html.DropDownList("Salutation", null, new { @class = "form-control pull-left wdth-small mrg-leftSm" })
+                                    <span id="salutationMsg" class="alert-danger focused"></span>
+                                    @Html.ValidationMessageFor(model => model.SalutationID)
+                                </div>
+                                <div class="span3">
+                                    @Html.TextBoxFor(model => model.FirstName, new { @placeholder = "First Name", @class = "form-control  pull-left wdth-mid mrg-leftSm", required = "required", style = "width:205px;" })
+                                    @Html.ValidationMessageFor(model => model.FirstName)
+                                </div>
+                                <div class="span3">
+                                    @Html.TextBoxFor(model => model.MiddleName, new { @placeholder = "Middle Name", @class = "form-control  pull-left wdth-mid mrg-leftSm", required = "required", style = "width:205px;" })
+                                    @Html.ValidationMessageFor(model => model.MiddleName)
+                                </div>
+                                <div class="span3">
+                                    @Html.TextBoxFor(model => model.LastName, new { @placeholder = "Last Name", @class = "form-control wdth-mid mrg-leftSm", required = "required", style = "width:205px;" })
+                                    @Html.ValidationMessageFor(model => model.LastName)
+                                </div>
+                            </div>
+                            <div class="span12" style="margin-left: 0px;">
+                                <div class="span3">
+                                    @Html.DropDownList("Gender", null, "Select Gender", new { @class = "form-control  pull-left wdth-mid mrg-leftSm", style = "width:220px;" })
+                                    <span id="GenderMsg" class="alert-danger focused"></span>
+                                    @Html.ValidationMessageFor(model => model.Gender)
+                                </div>
+                                <div class="span3">
+                                    @Html.TextBoxFor(model => model.Address, new { @placeholder = "Address", @class = "form-control pull-left wdth-large mrg-leftSm" })
+                                    @Html.ValidationMessageFor(model => model.Address)
+                                </div>
+                                <div class="span3">
+                                    @Html.TextBoxFor(model => model.Mobile, new { @placeholder = "Mobile", @class = "form-control pull-left wdth-mid mrg-leftSm", required = "required", maxlength = 10, @onkeydown = "return ValidateNumber(event);", })
+                                    <span id="MobileError" class="alert-danger focused"></span>
+                                    @Html.ValidationMessageFor(model => model.Mobile)
+                                </div>
+                                <div class="span3">
+                                    @Html.TextBoxFor(model => model.AlternateMobile, new { @placeholder = "Alternate Mobile", @class = "form-control  pull-left wdth-mid mrg-leftSm", maxlength = 10, @onkeydown = "return ValidateNumber(event);", })
+                                    @Html.ValidationMessageFor(model => model.AlternateMobile)
+                                </div>
+                            </div>
+                            <div class="span12" style="margin-left: 0px;">
+                                <div class="span3">
+                                    @Html.TextBoxFor(model => model.Email, new { @placeholder = "Email", @class = "form-control  pull-left wdth-mid mrg-leftSm", required = "required" })
+                                    <span id="EmailError" class="alert-danger focused"></span>
+                                    @Html.ValidationMessageFor(model => model.Email)
+                                </div>
+                                <div class="span3">
+                                    @Html.TextBoxFor(model => model.AlternateEmail, new { @placeholder = "Alternate Email", @class = "form-control  pull-left wdth-mid mrg-leftSm" })
+                                    @Html.ValidationMessageFor(model => model.AlternateEmail)
+                                </div>
+                                <div class="span3">
+                                    @Html.TextBoxFor(model => model.Password, new { @placeholder = "Password", @class = "form-control pull-left wdth-mid mrg-leftSm", required = "required", type = "password" })
+                                    @Html.ValidationMessageFor(model => model.Password)
+                                </div>
+                                <div class="span3">
+                                    @Html.TextBox("ConfirmPassword", null, new { @placeholder = "Confirm Password", @class = "form-control pull-left wdth-mid mrg-leftSm", required = "required", type = "password", @onchange = "return ValidateConfirmPassword1(this);" })
+                                    <div id="divPwdError" style="width:229px; display: none; " class="alert-danger focused">  </div>
+                                </div>
+                            </div>
+                            <div class="span12" style="margin-left: 9px;">
+                                <div class="span12">
+                                    @Html.LabelFor(model => model.IsActive, new { @class = "control-label span2" })
+                                    <div class="controls">
+                                        @Html.EditorFor(model => model.IsActive)
+                                        @Html.ValidationMessageFor(model => model.IsActive)
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                            <div class="form-actions">
+                                <div class="col-md-offset-2 col-md-10">
+                                    <input type="submit" value="Create" class="btn btn-primary btn-small" id="btnSubmit" />
+                                    @Html.ActionLink("Back to List", "Index", string.Empty, new { @class = "btn btn-small" })
+                                </div>
+                            </div>
+</form>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+<script src="~/Scripts/jquery-1.10.2.min.js"></script>
+<script>
+
+    $(function () {
+        $("#btnSubmit").click(function (e) {
+            //alert('1');
+            var selectedOwner = $("#BusinessOwner option:selected ").val();
+            var selectOwnerType = $("#OwnerType option:selected").val();
+            var Salutation = $("#Salutation option:selected").val();
+            var selectGender = $("#Gender option:selected").val();
+
+            $('#OwnerTypeMsg').text('');
+            $('#BusinessOwnerMsg').text('');
+            $('#salutationMsg').text('');
+            $('#GenderMsg').text('');
+
+
+            if (selectOwnerType == "Select Business" || selectOwnerType == '') {
+                $('#OwnerTypeMsg').text("Select Business type");
+                // alert('Please select the Business type');
+                return false;
+            }
+            else if (selectedOwner == "Select Owner" || selectedOwner == 0) {
+                $('#BusinessOwnerMsg').text("Select Owner");
+
+                //alert('Select Owner');
+                return false;
+
+            }
+            else if (Salutation == 'Select' || Salutation == '') {
+                $('#salutationMsg').text("Select Salutation");
+                // alert('Select Salutation');
+                return false;
+            }
+            else if (Gender == 'Select' || selectGender == '') {
+                $('#GenderMsg').text("Select Gender");
+                //alert('Plese Select the Gender');
+                return false;
+            }
+        });
+    });
+
+    $(function () {
+        $('#OwnerType').change(function (e) {
+            var selectedVal = $("#OwnerType option:selected").val();
+            if (selectedVal > 0) {
+
+                $.ajax({
+                    type: "POST",
+                    url: "getOwnerID",
+                    data: "{ businessTypeID: '" + selectedVal + "'}",
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    async: true,
+                    cache: false,
+                    success: function (msg) {
+                        $('#BusinessOwner').empty();
+                        $('#BusinessOwner').append('<option value=0>Select Owner</option>');
+                        $.each(msg, function (index, item) {
+                            $('#BusinessOwner').append('<option value=' + item.ID + '>' + item.Name + '</option>');
+                        });
+                    },
+                    error: function (x, e) {
+                        alert("Sorry No Such Type of Owner Is available. ");
+                    }
+                });
+            }
+        });
+    });
+
+    $(function () {
+        //MobileError
+        $('#Mobile').blur(function (e) {
+            var strMobile = $("#Mobile").val();
+            $.ajax({
+                type: "POST",
+                url: "checkMobile",
+                data: "{ strMobile: '" + strMobile + "'}",
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                async: true,
+                cache: false,
+                success: function (msg) {
+                    if (msg > 0) {
+                        $("#MobileError").text("Mobile No is Already Exist");
+                    }
+                    else
+                        $("#MobileError").text('');
+                },
+                error: function (x, e) {
+                    alert("unable to Retrive Mobile No ");
+                }
+
+            });
+        });
+    });
+
+    $(function () {
+        //MobileError
+        $('#Email').blur(function (e) {
+            var strEmail = $("#Email").val();
+            $.ajax({
+                type: "POST",
+                url: "checkEmail",
+                data: "{ strEmail: '" + strEmail + "'}",
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                async: true,
+                cache: false,
+                success: function (msg) {
+                    if (msg > 0)
+                        $("#EmailError").text("Email Address is Already Exist");
+                    else
+                        $("#EmailError").text('');
+                },
+                error: function (x, e) {
+                    alert("unable to Retrive Email No ");
+                }
+
+            });
+        });
+    });
+
+
+</script>
+
+<script src="~/Content/js/Validation.js"></script>

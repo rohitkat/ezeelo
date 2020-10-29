@@ -1,0 +1,125 @@
+﻿@using PagedList;
+@using PagedList.Mvc;
+
+@model IPagedList<ModelLayer.Models.DeliveryCashHandlingCharge>
+
+@{
+    ViewBag.Title = "List [ Delivery Cash Handling Charge Slab ]";
+}
+<div class="row">
+    <div class="span12" id="divtable">
+        <div class="widget">
+            <div class="widget-header">
+                <i class="icon-list-alt"></i>
+                <h3> List [ Delivery Cash Handling Charge Slab ]</h3>
+            </div>
+            <!-- /widget-header -->
+            <div class="widget-content">
+                <div class="widget big-stats-container">
+                    <div class="widget-content matchdivheight">
+                        <p>
+                            @Html.ActionLink("Create New", "Create", null, new { @class = "btn btn-sm btn-primary" })
+                        </p>
+                        <table class="table table-bordered table-hover table-responsive table-striped">
+                            <tr>
+                                <th style="width:20px;">Sr.No</th>
+                                <th>
+                                    Godown Address
+                                </th>
+                                <th>
+                                    Contact Person
+                                </th>
+                                <th>
+                                    Max Amount
+                                </th>
+                                <th>
+                                    Per Hour Charge
+                                </th>
+                                <th>
+                                    Is Approved
+                                </th>
+                                <th style="width:20px;">Actions</th>
+                            </tr>
+
+                            @if (Model.Count() == 0)
+                            {
+                                <tr>
+                                    <td colspan="6" class="text-center"><h3>No Record Found...</h3></td>
+                                </tr>
+                            }
+                            else
+                            {
+                                int i = 1;
+                                foreach (var item in Model)
+                                {
+                                    <tr>
+                                        <td>@{int SrNo = ((ViewBag.PageNumber - 1) * ViewBag.PageSize) + i; i = i + 1; } @SrNo</td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.DeliveryPartner.GodownAddress)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.DeliveryPartner.ContactPerson)
+                                        </td>
+                                        <td>
+                                            <span class="indian_currency"></span> @Html.DisplayFor(modelItem => item.MaxAmount)
+                                        </td>
+                                        <td>
+                                            <span class="indian_currency"></span> @Html.DisplayFor(modelItem => item.PerHourCharge)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.IsApproved)
+                                        </td>
+                                        <td>
+                                            @*@Html.ActionLink(" Edit", "Edit", new { id = item.ID }, new { @class = "btn btn-small btn-danger" })*@
+                                            @*@Html.ActionLink(" Details", "Details", new { id = item.ID }, new { @class = "btn btn-small btn-success" })*@
+                                            <button class="btn btn-small btn-success" onclick="Details(@item.ID)">Details</button>
+                                    </tr>
+                                }
+                            }
+                        </table>
+
+                        <div class="pager">
+                            @Html.PagedListPager(Model, Page => Url.Action("Index", new { page = Page, SearchString = ViewBag.SearchString }),
+                                                                new PagedListRenderOptions()
+                                                                {
+                                                                    Display = PagedListDisplayMode.IfNeeded
+                                                                })
+                        </div>
+                    </div>
+                    <!-- /widget-content -->
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- /span12 -->
+    <div class="span4">
+        <div class="loader">
+            <img id="loader_img" src="~/Content/Images/loader.gif" style="display: none" />
+        </div>
+        <div id="Details"></div>
+    </div>
+
+</div>
+
+
+
+<script>
+    function Details(id) {
+        $('#divtable').removeClass('span12');
+        $('#divtable').addClass('span8');
+        window.parent.$("[id$=Details]").show();
+        $('#loader_img').show();
+        $.ajax({
+            url: '@Url.Action("Details", "DeliveryCashHandlingCharge")?ID=' + id,
+            type: "GET",
+            success: function (result) {
+                $('#loader_img').hide();
+                $('#Details').html(result);
+            },
+            error: function (data) {
+                $('#Details').empty();
+                $('#loader_img').hide();
+            }
+        });
+    }
+</script>

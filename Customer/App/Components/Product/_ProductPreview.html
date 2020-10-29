@@ -1,0 +1,126 @@
+﻿<div class="row container-fluid" ng-controller="ProductListController">
+    <h3>
+        <a href="" style="color:#A8CF45;"><span class="glyphicon glyphicon glyphicon-picture" style="margin-left:5px;"></span>&nbsp;&nbsp;{{ PreviewItem.ProductName }}</a>
+    </h3>
+    <table class="table">
+        <tr>
+            <td style="width:20%">
+                <ul>
+                    <li class="{{ layout }}" style="height:228px;">
+                        <div class="styleMain">
+                            <div class="avid" ng-click="AddToPreview(PreviewItem)" data-toggle="modal" data-target="#myModalPreview">
+                                <div style="top:8px;" class="{{ PreviewItem.OfferClass }} Offer_set">{{ PreviewItem.Offer | num }}%</div>
+                                <img style="margin-top:30px;" ng-src="{{ PreviewItem.ImgUrl }}" id="img1" class="{{ imgView }}" onerror="this.src = 'Assets/img/products/default.png'">
+                                <div class="{{ PreviewItem.OfferClass }} offer_mrp" style=" top: 2px; left:26px; background-image: none; color: #777;"><span style="padding-left: 20px;line-height: 25px;">MRP : </span><del style="color:red;">{{ PreviewItem.MRP }}</del> <b>{{ PreviewItem.RetailerRate }}</b></div>
+                                <p>{{ PreviewItem.ProductName }}</p>
+                            </div>
+                        </div>
+                    </li>
+                </ul>
+            </td>
+
+            <td>
+                <table class="table table-bordered table-condensed table-hover table-responsive table-striped">
+                    <tr>
+                        <td>Product</td>
+                        <td style="width:80%;">{{ PreviewItem.ProductName }}</td>
+                    </tr>
+                    <tr>
+                        <td>Brand</td>
+                        <td style="width:40px;">{{ PreviewItem.ProductBrandName }}</td>
+                    </tr>
+
+                    <tr>
+                        <td>Length</td>
+                        <td>{{ PreviewItem.ProductLengthInCm }} cm</td>
+                    </tr>
+                    <tr>
+                        <td>Breadth</td>
+                        <td>{{ PreviewItem.ProductBreadthInCm }} cm</td>
+                    </tr>
+                    <tr>
+                        <td>Height</td>
+                        <td>{{ PreviewItem.ProductHeightInCm }} cm</td>
+                    </tr>
+                </table>
+                <table class="table">
+                    <tr>
+                        <td style=" border: 0px;">&nbsp;</td>
+                        <td class="{{ tileHeader }} {{ PreviewItem.AddedInCart }}" style="width:414px; border:0px;">
+                            <button class="{{ tileHeaderRs }} preview-btn"><span class="gb-indian_currency"></span>{{ PreviewItem.BuyAmount }}</button>
+                            <select id="previewItem" style="width: 130px;" class="{{ tileHeaderSelectVarient }} preview-btn" ng-init="item=PreviewItem.ShopStockByVarients[0]" ng-options="ShopStockByVarient as ShopStockByVarient.RetailerRate  + '/' + ShopStockByVarient.ProductVarientSize
+                                                                            for ShopStockByVarient in PreviewItem.ShopStockByVarients"
+                                    ng-model="item" ng-change="changeVarient(PreviewItem, item)"></select>
+
+                            <button id="Minus{{ PreviewItem.ProductID }}" class="preview-btn" ng-click="ChangeQty('Minus', PreviewItem)">-</button>
+                            <input type="text" readonly="readonly" class="preview-btn" value="{{ PreviewItem.BuyQty }}" />
+                            <button id="Plus{{ PreviewItem.ProductID }}" class="preview-btn" ng-click="ChangeQty('Plus', PreviewItem)">+</button>
+
+                            <button id="{{ PreviewItem.ProductID }}" style="width:auto; margin-left:2px;" class="preview-btn" ng-click="AddToCart(PreviewItem)">Add to Cart<i class="glyphicon glyphicon-shopping-cart"></i></button>
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+    </table>
+
+    <div class="row">
+        <a href="#/preview?ID={{PreviewItem.ID}}&Name={{PreviewItem.ProductName}}"><span style="color:#A8CF45">{{PreviewItem.ProductName}}</span></a>
+    </div>
+
+    <table class="table">
+        <tr>
+            <td>
+                <h4>Genereal Specification <span style="color:#A8CF45;">[ {{ PreviewItem.ProductName }} ]</span></h4>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <iframe id="iframeSpecification" ng-src="{{ PreviewItem.ProductDescription | trustAsResourceUrl }}" style="height:200px; width:100%; border:none; overflow-y:scroll;"></iframe>
+            </td>
+        </tr>
+    </table>
+
+    <div class="row container-fluid" style="width: 100%; border-bottom: 1px solid #A8CF45; margin-bottom:10px;">
+        <table class="table">
+            <tr>
+                <td style="border-bottom: 1px solid rgb(221, 221, 221);">
+                    <h4>You may also interested in</h4>
+                </td>
+            </tr>
+        </table>
+        <div style="width:91%;overflow-x:scroll;margin:auto">
+            <div style="width:2000px; overflow-x:auto;">
+                <ul>
+                    <li ng-repeat="product in Products | limitTo: 10" class="{{ layout }}">
+                        <div class="styleMain">
+                            <div class="{{ tileHeader }} {{ product.AddedInCart }}">
+                                <button class="{{ tileHeaderRs }}"><span class="gb-indian_currency"></span>{{ product.BuyAmount }}</button>
+                                <select class="{{ tileHeaderSelectVarient }}" ng-init="item=product.ShopStockByVarients[0]" ng-options="ShopStockByVarient as ShopStockByVarient.RetailerRate  + '/' + ShopStockByVarient.ProductVarientSize
+                                                                               for ShopStockByVarient in product.ShopStockByVarients"
+                                        ng-model="item" ng-change="changeVarient(product, item)"></select>
+                            </div>
+
+                            <div class="{{ tileBottom }} {{ product.AddedInCart }}">
+                                <button id="Minus{{ product.ProductID }}" ng-click="ChangeQty('Minus', product)">-</button>
+                                <input type="text" readonly="readonly" value="{{ product.BuyQty }}" />
+                                <button id="Plus{{ product.ProductID }}" ng-click="ChangeQty('Plus', product)">+</button>
+
+                                <button class="gb-addProduct" id="{{ product.ProductID }}" ng-click="AddToCart(product)">Add <i class="glyphicon glyphicon-shopping-cart"></i></button>
+                            </div>
+
+                            <!--<div ng-click="showDescription(product)" class="avid">-->
+                            <div class="avid" ng-click="AddToPreview(product)" data-toggle="modal" data-target="#myModalPreview">
+                                <!--<div class="offer">{{ ((product.MRP - product.RetailerRate) / product.MRP * 100) | num }}%</div>-->
+                                <div class="{{ product.OfferClass }} Offer_set">{{ product.Offer | num }}%</div>
+                                <img ng-src="{{ product.ImgUrl }}" id="img1" class="{{ imgView }}" onerror="this.src = 'Assets/img/products/default.png'">
+                                <div class="{{ product.OfferClass }} offer_mrp" style=" top: 190px; left:-10px; background-image: none; color: #777;"><span style="padding-left: 20px;line-height: 25px;">MRP : </span><del style="color:red;">{{ product.MRP }}</del> <b>{{ product.RetailerRate }}</b></div>
+                                <p>{{ product.ProductName }}</p>
+                            </div>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>

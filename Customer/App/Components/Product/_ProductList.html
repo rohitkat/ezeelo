@@ -1,0 +1,213 @@
+﻿<style>
+    /*.gb_totalcount {
+        position: fixed;
+        margin-top: 0px;
+    }
+    .gb_totalsearch {
+        position: fixed;
+        margin-top: 30px;
+    }
+    .gb_totaldropdown {
+        position: fixed;
+        margin-top: 60px;
+    }
+    .gb_descreaption {
+        position: fixed;
+        margin-top: 90px;
+    }*/
+    .styleMain {
+        position: relative;
+        /*cursor:default;*/
+    }
+    
+    .offer {
+        position: absolute;
+        top: 0px;
+        left: 0px;
+        /* width: 70px; */
+        background-size: 55px !important;
+        height: 30px;
+        background: url('../../../Assets/img/offer.png') no-repeat -2px 5px;
+        color: #fff;
+        padding: 4px 20px;
+        font-size: 11px;
+        font-weight: 700;
+    }
+
+    .no-offer {
+        display: none;
+    }
+
+    .thumbnail .Offer_set {
+        position: absolute;
+        left: 0%;
+        top: 8px;
+        padding-top: 9px;
+    }
+
+    .thumbnail .offer_mrp {
+        top: 16px !important;
+        left: 20px !important;
+        background-image: none;
+        color: #777;
+    }
+    .ng-product-name {
+        padding-left:61px;
+    }
+    .lablehead {
+        font-size:12px;
+        color:#000;
+    }
+    .rupe {
+        display:inline-block;
+    }
+    .rupe button {
+        border:none;
+        background:none;
+        font-size:15px;
+        color:brown;
+        font-weight:600;
+        }
+    .pay-amount {
+        padding-top: 0;
+        vertical-align: top;
+        line-height: 25px;
+        margin-left: 5px;
+        font-size: 16px;
+    }
+</style>
+<div class="row container-fluid" ng-controller="ProductListController">
+    <!--<div class="text-center" ng-show="waiting"> <img class="bigbell wow tada infinite animated gb-waiting-img" data-wow-duration="30s" src="assets/img/tomato.png" width="256px" height="269px" alt="" style="visibility: visible; animation-duration: 30s; -webkit-animation-duration: 30s; animation-name: tada; -webkit-animation-name: tada;"> </div>-->
+    <div class="text-center" ng-show="waiting">
+        <!--<div class="row">
+            <img class="bigbell wow tada infinite animated gb-waiting-img" data-wow-duration="30s" src="assets/img/logo.png" alt="" style="visibility: visible; animation-duration: 30s; -webkit-animation-duration: 30s; animation-name: tada; -webkit-animation-name: tada;">
+        </div>-->
+        <div class="row">
+            <img src="assets/img/loading-bar.gif" />
+        </div>
+    </div>
+
+    <div ng-show="show">
+        <div class="row">
+            <!-------------------------------------------- Start Left Panel -->
+            <div class="col-xs-2 col-sm-2 col-md-2 col-lg-2 gb-filter">
+                <div class="row">
+                    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 gb_totalcount">
+                        <input type="text" value="{{ productCategory | lowercase }} : {{ Products.length }}" readonly="readonly" disabled="disabled" />
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 gb_totalsearch">
+                        <input type="text" ng-model="query" placeholder="Search" />
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 gb_totaldropdown">
+                        <select ng-model="orderProp">
+                            <option value="ProductName"> Sort</option>
+                            <option value="ProductName"> Alphabetically</option>
+                            <option value="CreateDate"> Newest</option>
+                            <option value="BasePrice"> Low to High</option>
+                            <option value="-BasePrice"> High to Low</option>
+                            <option value="-Offer"> Best Offer</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <!--<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12  description gb_descreaption">
+                        {{ description }}
+                    </div>-->
+                    <!--<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                        <select name="shopList" ng-model="shopList">
+                            <option ng-repeat="shop in Products | unique : 'ShopID'" value="{{ shop.ShopID }}">{{ shop.ShopName }}</option>
+                        </select>
+
+                    </div>
+                    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12" style=" border: 1px solid gray; padding: 1px; margin-left: 16px; width: 200px;margin-top:8px;">
+                        <ul ng-model="productColor" style=" width: 232px; margin: 2px -36px;">
+                            <li ng-repeat="prd in ProductVarients | unique : 'ProductVarientColor'" value="{{ prd.ProductVarientColorID }}" style="list-style: none; float: left; border: 1px solid gray; margin:1px;">
+                                <div style=" width: 23px; height: 23px;  background-color:{{ prd.ProductVarientColor }};"></div>
+                            </li>
+                            <div class="clearfix"></div>
+                        </ul>
+                    </div>-->
+                    <!--<img src="../../../Assets/img/Festival/Cirstmas/gift.png" />-->
+                </div>
+            </div>
+            <!---------------------------------------------- End Left Panel -->
+
+
+            <div class="col-xs-10 col-sm-10 col-md-10 col-lg-10 newresponsive">
+                <div class="row gb-sub-menu-bar">
+                    <div class="col-xs-10 col-sm-10 col-md-10 col-lg-10 gb-sub-menu-bar gb-pagination">
+                        <!--<select name="shopList" ng-model="shopList">
+                            <option ng-repeat="shop in Products | unique : 'ShopID'" value="{{ shop.ShopID }}">{{ shop.ShopName }}</option>
+                        </select>-->
+                        <!--<input type="text" value="{{ productCategory | lowercase }} : {{ Products.length }}" readonly="readonly" disabled="disabled" />-->
+                        <pagination page="currentPage" max-size="maxSize" total-items="totalItems" items-per-page="entryLimit" class="pagination-sm" boundary-links="true" rotate="false" num-pages="numPages"></pagination>
+                        <!--<pagination total-items="totalItems" page="currentPage" max-size="noOfPages" class="pagination-sm" boundary-links="true" rotate="false" num-pages="numPages"></pagination>-->
+                    </div>
+                    <!--<div class="col-xs-3 col-sm-3 col-md-3 col-lg-3 responsivetab">
+                        <input type="text" value="Page: {{currentPage}} / {{numPages}}" class="gb-sub-menu-bar gb-pagination-current-page" readonly="readonly" disabled="disabled" />
+                    </div>-->
+                    <div class="col-xs-2 col-sm-2 col-md-2 col-lg-2 tabsetting" style="margin-left: -28px;">
+                        <button style="float:left" ng-click="toggle('thumbnail')"><i class="glyphicon glyphicon-th-list gb-th"></i></button>
+                        <button style="float:left" ng-click="toggle('gb-tile')"><i class="glyphicon glyphicon-th-large gb-th"></i></button>
+                    </div>
+                </div>
+
+
+
+                <div class="grid">
+                    <ul class="row cells12">
+                        <!--<li ng-repeat="product in Products | filter:query | filter:shopList | orderBy:orderProp" class="{{ layout }}">-->
+                        <li ng-repeat="product in Products | filter:query | orderBy:orderProp | startFrom:(currentPage-1)*entryLimit | limitTo:entryLimit " class="{{ layout }} cell colspan3 newcolspan3">
+                            <div class="styleMain product-main">
+                               
+
+                                <!--<div ng-click="showDescription(product)" class="avid">-->
+                                <div class="avid" ng-click="AddToPreview(product)">
+                                    <!--<a href="#/preview?ID={{PreviewItem.ID}}&Name={{PreviewItem.ProductName}}">-->
+                                    <a href="/{{ city }}/preview/{{ product.URLPName }}/{{product.ProductID}}">
+                                        <!-- @Url.RouteUrl("pre-prod-name", new { itemId = Model.productList[i].ProductID,
+        itemName = Regex.Replace(Model.productList[i].Name.Substring(0, Math.Min(Model.productList[i].Name.Length, 30)),
+        @"[\/\\#,+()$~%.':*?<>{} ]", "-").Replace("&", "and").ToLower(), city = cityName }) -->
+                                        <!--<div class="offer">{{ ((product.MRP - product.RetailerRate) / product.MRP * 100) | num }}%</div>-->
+                                        <div class="{{ product.OfferClass }} Offer_set">{{ product.Offer | num }}%</div>
+                                        <img ng-src="{{ product.ImgUrl }}" id="img1" class="{{ imgView }}" onerror="this.src = 'Assets/img/products/default.png'">
+                                        <p class="ng-product-name lablehead">{{ product.ProductName }}</p>
+                                    </a>
+                                    <div class="{{ product.OfferClass }} offer_mrp lblSaleRate" style="position:inherit; background-image: none; color: #000; font-size:14px; border:none;background-color:none; text-align:left; padding-left:10px; display:inline-block;"><span style="padding-left: 0px;line-height: 25px;">MRP : </span><del style="color:red;">{{ product.MRP }}</del> <!--<b style="color:brown;font-size:16px;">{{ product.RetailerRate }}</b>--></div>
+                                    <div class="rupe"><button class="{{ tileHeaderRs }}"><span class="gb-indian_currency"></span><span class="pay-amount">{{ product.BuyAmount }}</span></button></div>
+                                </div>
+                                <div class="{{ tileHeader }} {{ product.AddedInCart }}">
+                                    <select class="{{ tileHeaderSelectVarient }}" ng-init="item=product.ShopStockByVarients[0]" ng-options="ShopStockByVarient as ShopStockByVarient.RetailerRate  + '/' + ShopStockByVarient.ProductVarientSize
+                                                                               for ShopStockByVarient in product.ShopStockByVarients"
+                                            ng-model="item" ng-change="changeVarient(product, item)"></select>
+                                    <button id="Minus{{ product.ProductID }}" ng-click="ChangeQty('Minus', product)">-</button>
+                                    <input type="text" readonly="readonly" value="{{ product.BuyQty }}" />
+                                    <button id="Plus{{ product.ProductID }}" ng-click="ChangeQty('Plus', product)">+</button>
+                                </div>
+
+                                <div class="{{ tileBottom }} {{ product.AddedInCart }}">
+                                    <button class="gb-addProduct" id="{{ product.ProductID }}" ng-click="AddToCart(product)">Add <i class="glyphicon glyphicon-shopping-cart"></i></button>
+                                </div>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+
+                <div>
+                    <div class="col-xs-10 col-sm-10 col-md-10 col-lg-10  gb-sub-menu-bar gb-pagination">
+                        <pagination page="currentPage" max-size="maxSize" total-items="totalItems" items-per-page="entryLimit" class="pagination-sm" boundary-links="true" rotate="false" num-pages="numPages"></pagination>
+                    </div>
+                    <!--<div class="col-xs-3 col-sm-3 col-md-3 col-lg-3 responsivetab">
+                        <input type="text" value="Page: {{currentPage}} / {{numPages}}" class="gb-sub-menu-bar gb-pagination-current-page" readonly="readonly" disabled="disabled" />
+                    </div>-->
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>

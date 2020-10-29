@@ -1,0 +1,155 @@
+﻿@model IEnumerable<Franchise.Models.ViewModel.ProductListViewModel>
+
+<style>
+    input[type=number] {
+        width: 60px;
+    }
+
+    .not-active {
+        background-color: rgba(255, 0, 0, 0.24);
+    }
+    .selected {
+        background-color: #c4eccc;
+    }
+</style>
+
+@using (Html.BeginForm("AddNewProduct", "CustomerOrderDetail", FormMethod.Post))
+{
+    @Html.AntiForgeryToken()
+    <div class="row">
+        <div class="col-md-12">
+            <!-- TABLE: LATEST ORDERS -->
+            <div class="box box-info">
+                <div class="box-header with-border">
+                    <h3 class="box-title">Product List With Stock</h3>
+                    <div class="box-tools pull-right">
+                        <button class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
+                        <!--<button class="btn btn-box-tool" data-widget="remove"><i class="fa fa-times"></i></button>-->
+                    </div>
+                </div><!-- /.box-header -->
+                
+                <div class="box-body">
+                    <div class="table-responsive">
+                        <table class="table no-margin" id="tbl">
+                            <thead>
+                                <tr>
+                                    <table class="table">
+                                        <tr>
+                                            <th>
+                                                Select
+                                            </th>
+                                            <th>
+                                                Shop Name
+                                            </th>
+                                            <th>
+                                                Product Name
+                                            </th>
+                                            <th>
+                                                Qty
+                                            </th>
+                                            <th>
+                                                MRP
+                                            </th>
+                                            <th>
+                                                SaleRate
+                                            </th>
+                                            <th>
+                                                OfferRs
+                                            </th>
+                                            <th>
+                                                TotalAmount
+                                            </th>
+
+                                        </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var item in Model)
+                                {
+                                    <tr>
+                                        <td>                                            
+                                            <input type="checkbox" class="chkBox" name="chkBox" checked="@item.IsSelected" value=@item.ShopStockID>
+                                            @*@Html.CheckBoxFor(modelItem => item.Select, new { @class = "remove" })*@
+                                        </td>
+                                        <td>
+                                            @Html.HiddenFor(modelItem => item.ShopID)
+                                            <span>@Html.DisplayFor(modelItem => item.ShopName)</span>
+                                        </td>
+                                        <td>
+                                            <span>@Html.DisplayFor(modelItem => item.ProductName)</span>
+                                        </td>
+                                        <td>
+                                            @{
+                                   // string Qty = "Qty$" + item.ShopStockID;
+                                    //   string QtyName = "customerOrderDetails[" + i + "].Qty";
+                                            }
+                                            @*<input type="number" min="1" value="1" max="@item.Qty" class="Qty" name="@Qty" />*@
+                                            <span>1</span>
+                                        </td>
+                                        <td>
+                                            <span>@Html.DisplayFor(modelItem => item.MRP)</span>
+                                        </td>
+                                        <td>
+                                            <span>@Html.DisplayFor(modelItem => item.SaleRate)</span>
+                                        </td>
+                                        <td>
+                                            <span>@Html.DisplayFor(modelItem => item.OfferRs)</span>
+                                        </td>
+                                        <td>
+                                            <span>@Html.DisplayFor(modelItem => item.TotalAmount)</span>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+
+                    </div><!-- /.table-responsive -->
+
+                </div><!-- /.box-body -->
+                <div class="box-footer">
+                    @*<button onclick="window.history.back();" class="btn btn-sm btn-primary">Cancel</button>*@
+                    <button type="button" id="btnAddProduct" class="btn btn-sm btn-danger pull-right">Add</button>
+                </div><!-- /.box-footer -->
+            </div><!-- /.box -->
+        </div><!-- /.col -->        
+    </div>
+}
+
+    <script>
+        var ProductList = [];
+
+        $(document).ready(function () {                        
+            $('.chkBox').click(function () {
+                var IsSelected = $(this).prop("checked");
+                
+                if (IsSelected == true) {
+                    //ShopStockID$ShopID$Qty                
+                    var newStr = $(this).val() + "$" + $(this).closest('tr').find('[id*=ShopID]').val() + "$" + $(this).closest('tr').find('.Qty').val();
+                    ProductList.push(newStr);
+                    $('[id*=ProductDetail]').val(ProductList);
+                    $(this).closest('tr').addClass("selected");
+                }
+                else {
+                    //ShopStockID$ShopID$Qty                
+                    var newStr = $(this).val() + "$" + $(this).closest('tr').find('[id*=ShopID]').val();// + "$" + $(this).closest('tr').find('.Qty').val();
+                    ProductList.splice(ProductList.indexOf($(this).val()), 1);
+                    $('[id*=ProductDetail]').val(ProductList);
+                    $(this).closest('tr').removeClass('selected');
+                }
+            });
+
+            //$.each($('tbody tr:gt(0)'), function () {
+            //    //alert($(this).find('.remove').prop("checked"));
+            //    if ($(this).find('.chkBox').prop("checked") == true) {
+            //        $(this).addClass("selected");
+            //    }
+            //});
+
+
+        });
+
+        $('#btnAddProduct').click(function () {
+
+        });
+
+    </script>
+

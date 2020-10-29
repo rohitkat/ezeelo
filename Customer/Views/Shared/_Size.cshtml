@@ -1,0 +1,38 @@
+﻿@model ModelLayer.Models.ViewModel.ProductViewModel
+<script type="text/javascript">
+    $(document).ready(function () {
+        $(".contentsize").show(200);
+        $(".titlesize").click(function () {
+            $(".contentsize").toggle();
+        });
+    });
+</script>
+
+@if (Model != null)
+{
+    if (Model.sizeList != null)
+    {
+        if (Model.sizeList.Count() > 0)
+        {
+            if (!(Model.sizeList.Count() == 1 && Model.sizeList[0].ID == 1))
+            {
+                <table id="tblSize">
+                    @for (var i = 0; i < Model.sizeList.Distinct().Count(); i++)
+                    {
+                        <tr>
+                            <td>
+                                @Html.CheckBoxFor(it => it.sizeList[i].IsSelected, new { onchange = "this.form.submit();", Style = "vertical-align:3px}", @class = "sizeCheckBox" })
+                            </td>
+                            <td>
+                                @Html.HiddenFor(it => it.sizeList[i].ID)
+                                @Html.HiddenFor(it => it.sizeList[i].Name)
+                                @Html.DisplayFor(it => it.sizeList[i].Name)
+                            </td>
+
+                        </tr>
+                    }
+                </table>
+            }
+        }
+    }
+}

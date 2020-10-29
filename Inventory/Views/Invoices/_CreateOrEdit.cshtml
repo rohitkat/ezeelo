@@ -1,0 +1,686 @@
+@model ModelLayer.Models.ViewModel.InvoiceViewModel
+
+@using ModelLayer.Models.ViewModel
+
+@* This partial view defines form fields that will appear when creating and editing entities *@
+<style type="text/css">
+    #msform1 fieldset:not(:first-of-type) {
+        display: none;
+    }
+
+    .field-validation-error {
+        color: #000000 !important;
+    }
+
+    .succes-msg {
+        color: #31A012;
+        font-size: 20px;
+    }
+
+    .beatpicker-clearButton button {
+        display: none;
+    }
+
+    .input-parent button {
+        display: none;
+    }
+
+    .textarea-adjust {
+        width: 85%;
+    }
+    /*Beatpicker Css*/
+    .beatpicker-clearButton button {
+        display: none;
+    }
+
+    .input-parent button {
+        display: none;
+    }
+
+    .header-navbar-button {
+        position: absolute !important;
+    }
+
+    .beatpicker .main-nav .current-indicator {
+        text-align: center !important;
+    }
+
+    .beatpicker .main-nav .prev1 {
+        left: 0 !important;
+        width: 14%;
+        padding: 0px 10px;
+        color: #fff;
+        font-size: 16px;
+    }
+
+    .beatpicker .main-nav .next1 {
+        right: 0 !important;
+        width: 9%;
+        color: #fff;
+        font-size: 16px;
+    }
+
+    .beatpicker .main-nav .prev1:hover {
+        left: 0 !important;
+        width: 14%;
+        padding: 0px 10px;
+        color: #fff;
+        font-size: 20px;
+        cursor: pointer !important;
+    }
+
+    .beatpicker .main-nav .next1:hover {
+        right: 0 !important;
+        width: 9%;
+        color: #fff;
+        font-size: 20px;
+        cursor: pointer !important;
+    }
+
+    #divImages .remove {
+        background: url(/Content/img/remove-icon.png) no-repeat 0px 0px #fff;
+        float: left;
+        font-size: 0 !important;
+        width: 23px !important;
+        padding: 2px 4px;
+    }
+    /*Beatpicker Css End*/
+
+    #Remark {
+        width: 99%;
+    }
+</style>
+
+
+
+<link href="~/Content/css/BeatPicker.min.css" rel="stylesheet" />
+<script src="~/Content/js/jquery-1.11.0.min.js"></script>
+<script src="~/Content/js/BeatPicker.js"></script>
+<link href="~/Content/assets/css/style.css" rel="stylesheet" />
+<script src="~/Content/js/jquery-1.9.1.min.js"></script>
+<link href="http://www.jqueryscript.net/css/jquerysctipttop.css" rel="stylesheet" type="text/css">
+<link href="~/Content/assets/css/form-design.css" rel="stylesheet" />
+
+<div class="row-fluid">
+    <div class="box span12">
+        <div class="box-header creatProduct clearfix" data-original-title="">
+            <h2>
+                <i class="icon-exclamation-sign"></i>
+                <span class="break"></span>
+                DELIVERY NOTE ENTRY
+            </h2>
+        </div>
+        <div class="box-content nameDscrp">
+            <div class="form-horizontal">
+                <b>@ViewBag.SelectedDvName</b>
+                <div class="NameDescription">
+                    <div class="control-group mrg-left">
+                        <div class="col-sm-3">
+                            Invoice Code <span style="color:red">*</span>
+                        </div>
+                        <div class="col-sm-6">
+                            @Html.TextBoxFor(model => model.InvoiceCode)
+                            @Html.ValidationMessageFor(model => model.InvoiceCode)
+                          
+                            <img id="Pincode_loading" src="~/Content/img/ajax_loader.gif" style="height: 20px; float: right; display: none" />
+                            <div id="divPincodeError" class="alert-danger focused divPincodeError-Class1" style="display:none;"> </div>
+
+                        </div>
+                    </div>
+
+                    <div class="control-group mrg-left">
+                        <div class="col-sm-3">
+                            Good Receipt Date
+                        </div>
+                        <div class="col-sm-6">
+                            @Html.TextBoxFor(model => model.InvoiceDate, "{0:MM/dd/yyyy}", new { @readonly = "readonly", placeholder = "Invoice Date", @required = "required" })
+                            @Html.ValidationMessageFor(model => model.InvoiceDate)
+                            @Html.HiddenFor(model => model.PurchaseOrderID)
+                        </div>
+                    </div>
+
+                    <div class="control-group mrg-left">
+                        <div class="col-sm-3">
+                           Total Discount Amount
+                        </div>
+                        <div class="col-sm-6">
+                           @Html.TextBoxFor(model => model.TotalDiscountAmount)
+                           @Html.ValidationMessageFor(model => model.TotalDiscountAmount)
+                        </div>
+                    </div>
+
+                    @*<div class="control-group mrg-left">
+                        <div class="col-sm-3">
+                            Order Amount
+                        </div>
+                        <div class="col-sm-6">
+                           @Html.TextBoxFor(model => model.OrderAmount)
+                           @Html.ValidationMessageFor(model => model.OrderAmount)                            
+                        </div>
+                    </div>*@
+
+                    <div class="control-group mrg-left">
+                        <div class="col-sm-3">
+                            Shipping Charge
+                        </div>
+                        <div class="col-sm-6">
+                            @Html.TextBoxFor(model => model.ShippingCharge)
+                            @Html.ValidationMessageFor(model => model.ShippingCharge)   
+                        </div>
+                    </div>
+
+                    <div class="control-group mrg-left">
+                        <div class="col-sm-3">
+                            Custom Duty Charge
+                        </div>
+                        <div class="col-sm-6">
+                            @Html.TextBoxFor(model => model.CustomDutyCharge)
+                            @Html.ValidationMessageFor(model => model.CustomDutyCharge)                            
+                        </div>
+                    </div>
+
+                    <div class="clr"></div>
+                </div>
+
+                <div class="NameDescription">
+
+                    <div class="control-group mrg-left">
+                        <div class="col-sm-3">
+                           Operating Cost
+                        </div>
+                        <div class="col-sm-6">
+                            @Html.TextBoxFor(model => model.OperatingCost)
+                            @Html.ValidationMessageFor(model => model.OperatingCost)
+                        </div>
+                    </div>
+
+                    <div class="control-group mrg-left">
+                        <div class="col-sm-3">
+                           Additional Cost
+                        </div>
+                        <div class="col-sm-6">
+                           @Html.TextBoxFor(model => model.AdditionalCost)
+                           @Html.ValidationMessageFor(model => model.AdditionalCost)
+                        </div>
+                    </div>
+
+                    @*<div class="control-group mrg-left">
+                        <div class="col-sm-3">
+                            Total Amount
+                        </div>
+                        <div class="col-sm-6">
+                            @Html.TextBoxFor(model => model.TotalAmount, new { @disabled = "disabled" })
+                            @Html.ValidationMessageFor(model => model.TotalAmount)
+                        </div>
+                    </div>*@
+
+                    <div class="control-group mrg-left">
+                        <div class="col-sm-3">
+                            Remark (For Internal Use)
+                            @Html.TextBoxFor(model => model.Remark, new { placeholder = "Remark" })
+                            @Html.ValidationMessageFor(model => model.Remark)
+                        </div>
+                        <div class="col-sm-6">
+                            
+                        </div>
+                    </div>         
+
+                    <div class="clr"></div>
+                </div>                
+
+                <br />
+                <br />
+            </div>
+        </div>
+    </div>
+
+    <div class="box">
+        <div class="box-header creatProduct clearfix" data-original-title="">
+            <h2>
+                <i class="icon-file-alt"></i>
+                <span class="break"></span>
+                INVOICE ITEM(S)
+            </h2>
+        </div>
+
+        <div class="box-content nameDscrp">
+            <div class="NameDescription">
+                <div class="box-content box-content1" style="padding-left:0px;width:99%;overflow-x:scroll;z-index:1;">
+                    <div id="ItemDetails">
+                        @if (Session["lInvoiceDetailViewModel"] != null)
+                        {
+                            //InvoiceViewModel objList = new InvoiceViewModel();
+                            //(List<InvoiceDetailViewModel>)Session["lInvoiceDetailViewModel"];
+                            @Html.Partial("ItemDetails", Model);
+                        }
+                        else
+                        {
+                            @Html.Partial("ItemDetails", Model);
+                        }
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div> 
+    
+    <div class="box-header creatProduct clearfix" data-original-title="">
+        <h2>
+            <i class="icon-exclamation-sign"></i>
+            <span class="break"></span>
+            INVOICE ATTACHMENT
+        </h2>
+    </div>
+    <div class="box-content nameDscrp">
+        <div class="form-horizontal">
+
+            <div class="NameDescription">
+                <div class="control-group mrg-left">
+                    <div class="col-sm-3">
+                        <input type="file" title="search image" id="file" name="file" />
+                        <span style="color:red;">Please select only PDF, Image, Word, Excel File.</span>
+                        <label id="Attachment_Error" style="color:red !important;display:none;"></label>
+                        <br />
+                    </div>
+                    <div class="col-sm-6">
+                        <br />
+                        @if (Model.Invoice_Attachment == null)
+                        {
+                            <img id="invoice_Attach" src="~/Content/Images/no_image.png" style="border:groove;width:150px;height:150px" alt="eZeelo" />
+                        }
+                        else
+                        {
+                            <img id="invoice_Attach" src="@Model.Invoice_Attachment" style="border:groove;width:150px;height:150px" alt=" eZeelo " />
+
+                            <a class="submenu" style="color:blue;cursor:pointer" href=@Url.Action("Download", new { fileName = Model.Invoice_AttachmentFileName }) id="btnRate">&nbsp;&nbsp;<span class="hidden-tablet">DownLoad Attachment -> @Model.Invoice_AttachmentFileName</span></a>
+                        }
+                        @* <img id="invoice_Attach" src="~/Content/Images/no_image.png" style="border:groove;width:150px;height:150px" />*@
+                    </div>
+                </div>
+
+                <br />
+                <br />
+            </div>
+        </div>
+    </div>  
+</div>
+
+
+
+<script type="text/javascript">
+
+    $("select#WarehouseID").bind('change', function () {
+        $('#ddlParentCatetory').empty();
+        $('#ddlCategorySecondID').empty();
+        $('#ddlCategoryThirdID').empty();
+        $('#ddlProductID').empty();
+        $('#ddlProductVarientID').empty();
+        var WarehouseID = $("select#WarehouseID option:selected").val();
+
+        // alert(categoryid);
+        $.ajax({
+            type: "POST",
+            url: '@Url.Action("BindParentCategory", "PurchaseOrders")',
+            data: { 'WarehouseID': WarehouseID },
+            //dataType: "json",
+            cache: false,
+            success: function (data) {
+                var ID = 0;
+                $("#ddlParentCatetory").prepend("<option value='' selected='selected'>--Select--</option>");
+                $.each(data, function (index, item) {
+                    ID = item.ID;
+                    $('#ddlParentCatetory').append('<option value=' + item.ID + '>' + item.Name + '</option>');
+                });
+
+            },
+            error: function (x, e) {
+                //alert('Failure');
+                //alert("The call to the server side failed. " + x.responseText);
+            }
+        });
+    });
+
+    $("select#ddlParentCatetory").bind('change', function () {
+        $('#ddlCategorySecondID').empty();
+        $('#ddlCategoryThirdID').empty();
+        $('#ddlProductID').empty();
+        $('#ddlProductVarientID').empty();
+        var categoryid = $("select#ddlParentCatetory option:selected").val();
+        // alert(categoryid);
+        $.ajax({
+            type: "POST",
+            url: '@Url.Action("GetNextLevelCategory", "PurchaseOrders")',
+            data: { 'categoryID': categoryid },
+            //dataType: "json",
+            cache: false,
+            success: function (data) {
+                SecondLevelCategory(data);
+
+            },
+            error: function (x, e) {
+                //alert('Failure');
+                //alert("The call to the server side failed. " + x.responseText);
+            }
+        });
+    });
+
+    function SecondLevelCategory(data) {
+        var ID = 0;
+
+        $("#ddlCategorySecondID").prepend("<option value='' selected='selected'>--Select--</option>");
+        $.each(data, function (index, item) {
+            ID = item.ID;
+            $('#ddlCategorySecondID').append('<option value=' + item.ID + '>' + item.Name + '</option>');
+        });
+    }
+
+
+    $("select#ddlCategorySecondID").bind('change', function () {
+        $('#ddlCategoryThirdID').empty();
+        $('#ddlProductID').empty();
+        $('#ddlProductVarientID').empty();
+        var categoryid = $("select#ddlCategorySecondID option:selected").val();
+        // alert(categoryid);
+        $.ajax({
+            type: "POST",
+            url: '@Url.Action("GetNextLevelCategory", "PurchaseOrders")',
+            data: { 'categoryID': categoryid },
+            //dataType: "json",
+            cache: false,
+            success: function (data) {
+                GetThirdLevelCategory(data);
+
+            },
+            error: function (x, e) {
+                //alert('Failure');
+                //alert("The call to the server side failed. " + x.responseText);
+            }
+        });
+    });
+
+    function GetThirdLevelCategory(data) {
+        var ID = 0;
+        $("#ddlCategoryThirdID").prepend("<option value='' selected='selected'>--Select--</option>");
+
+        $.each(data, function (index, item) {
+            ID = item.ID;
+            $('#ddlCategoryThirdID').append('<option value=' + item.ID + '>' + item.Name + '</option>');
+        });
+    }
+
+
+
+    $("select#ddlCategoryThirdID").bind('change', function () {
+        $('#ddlProductID').empty();
+        var categoryid = $("select#ddlCategoryThirdID option:selected").val();
+        var WarehouseID = $("select#WarehouseID option:selected").val();
+        $('#ddlProductVarientID').empty();
+        // alert(categoryid);
+        $.ajax({
+            type: "POST",
+            url: '@Url.Action("GetProductList", "PurchaseOrders")',
+            data: { 'categoryID': categoryid, 'WarehouseID': WarehouseID },
+            //dataType: "json",
+            cache: false,
+            success: function (data) {
+                GetProductList(data);
+            },
+            error: function (x, e) {
+                //alert('Failure');
+                //alert("The call to the server side failed. " + x.responseText);
+            }
+        });
+    });
+
+    function GetProductList(data) {
+        var ID = 0;
+        $("#ddlProductID").prepend("<option value='' selected='selected'>--Select--</option>");
+        $.each(data, function (index, item) {
+            ID = item.ID;
+            $('#ddlProductID').append('<option value=' + item.ID + '>' + item.Name + '</option>');
+        });
+    }
+
+
+
+
+    $("select#ddlProductID").bind('change', function () {
+        $('#ddlProductVarientID').empty();
+        var ProductID = $("select#ddlProductID option:selected").val();
+        // alert(categoryid);
+        $.ajax({
+            type: "POST",
+            url: '@Url.Action("GetProductVarientList", "PurchaseOrders")',
+            data: { 'ProductID': ProductID },
+            //dataType: "json",
+            cache: false,
+            success: function (data) {
+                GetProductVarientList(data);
+            },
+            error: function (x, e) {
+                //alert('Failure');
+                //alert("The call to the server side failed. " + x.responseText);
+            }
+        });
+    });
+
+    function GetProductVarientList(data) {
+        var ID = 0;
+        $("#ddlProductVarientID").prepend("<option value='' selected='selected'>--Select--</option>");
+        $.each(data, function (index, item) {
+            ID = item.ID;
+            $('#ddlProductVarientID').append('<option value=' + item.ID + '>' + item.Name + '</option>');
+        });
+    }
+
+
+    $("select#ddlProductVarientID").bind('change', function () {
+        var ProductVarientID = $("select#ddlProductVarientID option:selected").val();
+
+        $.ajax({
+            type: "POST",
+            url: '@Url.Action("GetProductVarientDetail", "PurchaseOrders")',
+            data: { 'ProductVarientID': ProductVarientID },
+            //dataType: "json",
+            cache: false,
+            success: function (data) {
+                var xmlDoc = $.parseXML(data);
+                var xml = $(xmlDoc);
+                var $person = xml.find("NewDataSet");
+                $person.each(function () {
+                    var SizeID = $(this).find('SizeID').text(),
+                        StockIn = $(this).find('StockIn').text();
+
+                    if(SizeID==1)
+                    {
+                        alert('Size not alloted to this Item! Please contact with Admin.');
+                        return false;
+                    }
+
+                    $("#StockIn").val(StockIn);
+
+                });
+
+            },
+            error: function (x, e) {
+                alert('Failure');
+                alert("The call to the server side failed. ");
+            }
+        });
+    });
+</script>
+
+
+
+<script type="text/javascript">
+    @*$(document).ready(function () {
+
+        $('#btnAdd').click(function ()
+        {
+            document.location = '@Url.Action("Add", "PurchaseOrders")';
+        });
+
+    });*@
+
+
+    $(document).ready(function () {
+
+        $(".itemList").click(function (evt) {
+
+            var ProductID = $("select#ddlProductID option:selected").val();
+            var ProductVarientID = $("select#ddlProductVarientID option:selected").val();
+            var Quantity = $("#Quantity").val();
+            var UnitPrice = $("#UnitPrice").val();
+            var Nickname = $("#Nickname").val();
+
+            if (ProductID===undefined || ProductID <= 0) {
+                alert('Please Select Product')
+                return;
+            }
+
+            if (ProductVarientID === undefined || ProductVarientID <= 0) {
+                alert('Please Select Varient/Item')
+                return;
+            }
+
+            if (Quantity <= 0)
+            {
+                alert('Please Enter Item Quantity')
+                return;
+            }
+
+            if (UnitPrice <= 0) {
+                alert('Please Enter Unit Price')
+                return;
+            }
+
+            $("#ItemDetails").load("/PurchaseOrders/Add", { 'ProductID': ProductID, 'ProductVarientID': ProductVarientID, 'Quantity': Quantity, 'Nickname': Nickname, 'UnitPrice': UnitPrice });
+
+            document.getElementById('Quantity').value = '';
+            document.getElementById('Nickname').value = '';
+            document.getElementById('UnitPrice').value = '';
+
+
+
+            $("#WarehouseID").attr("readonly", true);
+            $("#SupplierID").attr("readonly", true);
+
+        });
+
+        //$(".orderDetails").click(function (evt) {
+        //    var cell = $(evt.target).closest("tr").children().first();
+        //    var custID = cell.text();
+        //    $("#viewPlaceHolder").load("/home/getview",
+        //       { customerID: custID, viewName: "OrderDetails" });
+        //});
+    });
+</script>
+
+
+
+<script language="javascript">
+    $(document).ready(function () {
+        $('#InvoiceDate').datepicker({ dateFormat: 'mm/dd/yy', maxDate: 'now' });
+
+        $(window).load(function () {
+            $('#uniform-file').find('span').remove();
+        });
+
+        $("#DownloadAttachment").click(function () {
+            var loc = prompt("Download Location", "D:\\");
+            var FileNameToDownload = $("#DownloadAttachment").text();
+            $.ajax({
+                type: "POST",
+                url: '@Url.Action("DownloadInvoice", "Invoices")',
+                data: { 'FileName': FileNameToDownload, 'loc': loc },
+                //dataType: "json",
+                cache: false,
+                success: function (data) {
+                    alert("Invoice Attachment download sucessfully.");
+                },
+                //error: function (x, e) {
+                //    alert("Invoice Attachment Download Failed. ");
+                //}
+            });
+        });
+
+
+        $("#file").change(function () {
+            var extension = $('#file').val().split('.').pop().toLowerCase();
+
+            if ($.inArray(extension, ["exe", "dll", "webm", "mkv", "flv", "vob",
+                                                                         "ogv", "ogg", "drc", "gif", "gifv", "mng",
+                                                                         "avi", "mov", "qt", "wmv", "yuv", "rm",
+                                                                         "rmvb", "asf", "amv", "mp4", "m4p", "m4v",
+                                                                         "mpg", "mp2", "mpeg", "mpe", "mpv", "m4v",
+                                                                         "nsv", "mpeg", "m2v", "flv", "f4v", "f4p","zip",
+                                                                         "f4b", "svi", "3gp", "3g2", "mxf", "roq", "f4b","db"]) != -1) {
+                $("#Attachment_Error").text("Sorry, invalid extension. Allowed file are Image, pdf, word, Excel");
+                $("#Attachment_Error").show();
+                $("#file").val(null);
+                return false;
+            }
+
+            var files = this.files;
+            var file = files[0]
+            var img = new Image();
+            var sizeKB = file.size / 1024;
+            if (sizeKB >= 512) {
+                $("#file").val(null);
+                $("#Attachment_Error").text("Sorry, size should not be greater than 512KB.");
+                $("#Attachment_Error").show();
+                return false;
+            }
+
+            if (this.files && this.files[0]) {
+                $("#Attach_file").hide();
+                $("#Attachment_Error").hide();
+                var filerdr = new FileReader();
+                filerdr.onload = function (e) {
+                    $('#invoice_Attach').attr('src', e.target.result);
+                }
+                filerdr.readAsDataURL(this.files[0]);
+            }
+        });
+    });
+</script>
+
+
+
+<script type="text/javascript">
+    var lInvoiceCode = $('#InvoiceCode').val()
+    //alert("2");
+    $('#InvoiceCode').bind('input propertychange', function () {
+        var lInvoiceCode = $('#InvoiceCode').val()
+        var PurchaseOrderID = $('#PurchaseOrderID').val()
+        $('#divPincodeError').hide();
+       
+        //if (lPincode.length == 6) {
+            $('#Pincode_loading').show();
+            $.ajax({
+                url: '@Url.Action("CheckInvoiceCode", "Invoices")?InvoiceCode=' + lInvoiceCode + '&PurchaseOrderID=' + PurchaseOrderID,
+                type: "GET",
+                success: function (result) {
+                    if (result > 0) {
+                        $('#Pincode_loading').hide();
+                        $('#divPincodeError').hide();
+                    }
+                    else {
+                        $('#Pincode_loading').hide();
+                        $('#divPincodeError').show();
+                        $('#divPincodeError').html('[' + lInvoiceCode + '] is invalid! Please enter valid Code');
+                        //$('#InvoiceCode').val('');
+                    }
+                },
+                error: function (result) {
+                    //alert(result)
+                    //alert('Pincode : ' + lPincode + ' Dose Not Exist, please Contact to ADMIN');
+                    $('#Pincode_loading').hide();
+                    $('#divPincodeError').show();
+                    $('#divPincodeError').html('[' + lInvoiceCode + '] is invalid!');
+                    $('#InvoiceCode').val('');
+                }
+            });
+        //}
+    });
+</script>

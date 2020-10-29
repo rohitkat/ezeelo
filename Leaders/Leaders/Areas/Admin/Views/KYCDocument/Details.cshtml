@@ -1,0 +1,451 @@
+﻿@model ModelLayer.Models.ViewModel.LeadersProfileViewModel
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_LeadersLayout.cshtml";
+}
+
+<title>leaders Ezeelo</title>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<script type="text/javascript" src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
+<script type="text/javascript" src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
+<script type="text/javascript" src="https://unpkg.com/jquery-mousewheel@3.1.13"></script>
+<script src="~/Scripts/ZoomImage/hammer.min.js"></script>
+<script type="text/javascript" src="https://unpkg.com/jquery-hammerjs@2.0.0"></script>
+<script src="~/Scripts/ZoomImage/imgViewer.js"></script>
+
+<style>
+    figure img {
+        width: 550px;
+        height: 350px;        
+    }
+
+    /* Important part */
+    .modal-dialog {
+        overflow-y: initial !important
+    }
+
+    .mystyle {
+        max-height: 550px;
+        overflow-y: auto;
+    }
+</style>
+<main>
+    <header></header>
+
+    <div id="myModal" class="modal" style="background: rgba(130, 129, 129, 0.77); ">
+        <div class="modal-dialog modal-lg">
+            <!-- Modal content -->
+            <div class="modal-content" style="padding:25px;text-align:center;">
+                <a onclick="$('#myModal').hide()"><span class="close"><i class="fa fa-close"></i></span></a>
+                <div class="row mystyle" style="padding: 10px;">
+                    <img id="imgfull" src="" style="width:100%;" />
+                </div>
+            </div>
+        </div>
+    </div>
+    <section class="mainProfileContent">
+        <div class="container-fluid">
+            <div class="ProfileMainInnerContent">
+
+                <div class="profileRight">
+                    <div class=" tab" style="text-align:center">
+                        <h5 style=" color:green">User Details</h5>
+                    </div>
+
+                    <div id="Paris" class="tabcontent Bank&KYC" style="display:block">
+                        <div class="tab-pane animation-slide-left active" id="E-Wallet" role="tabpanel">
+                            <div class="container-fluid">
+
+                                <div class="ezeelo-table table-responsive p-xs-0 pt-sm-50">
+                                    <table class="table">
+                                        <tbody class="form-group form-material">
+                                            <tr>
+                                                <td class="heading" data-input="name">
+                                                    <i class="fa fa-user-circle"></i>&nbsp;&nbsp;Name:
+                                                </td>
+                                                <td class="details" id="name-input">@Html.DisplayFor(modelItem => Model.FullName)</td>
+                                            </tr>
+                                            <tr>
+                                                <td class="heading" data-input="phone">
+                                                    <i class="fa fa-mobile" aria-hidden="true"></i>&nbsp;&nbsp;Phone Number:
+                                                </td>
+                                                <td class="details verification" id="mobile">@Html.DisplayFor(modelItem => Model.Mobile)</td>
+                                            </tr>
+                                            <tr>
+                                                <td class="heading" data-input="email-disabled">
+                                                    <i class="fa fa-envelope"></i>&nbsp;&nbsp;Email:
+                                                </td>
+                                                <td class="details">@Html.DisplayFor(modelItem => Model.Email)</td>
+                                            </tr>
+                                            <tr>
+                                                <td class="heading" data-input="address">
+                                                    <i class="fa fa-map-marker"></i>&nbsp;&nbsp;Address:
+                                                </td>
+                                                <td class="details">@Html.DisplayFor(modelItem => Model.Address)</td>
+                                            </tr>
+                                            <tr>
+                                                <td class="heading" data-input="ref_id">
+                                                    <i class="fa fa-envelope"></i>&nbsp;&nbsp;Referral ID:
+                                                </td>
+                                                <td class="details verification" id="Ref_ID">@Html.DisplayFor(modelItem => Model.RefferelID)</td>
+                                            </tr>
+                                            <tr>
+                                                <td class="heading" data-input="dob">
+                                                    <i class="fa fa-calendar"></i>&nbsp;&nbsp;Date of Birth:
+                                                </td>
+                                                <td class="details" data-filter="dob">@Html.DisplayFor(modelItem => Model.DOB)</td>
+                                            </tr>
+                                            <tr>
+                                                <td class="heading" data-input="gender">
+                                                    <i class="fa fa-venus-mars"></i>&nbsp;&nbsp;Gender:
+                                                </td>
+                                                <td class="details" data-filter="gender">@Html.DisplayFor(modelItem => Model.Gender)</td>
+                                            </tr>
+                                            <tr>
+                                                <td class="heading" data-input="pincode">
+                                                    <i class="fa fa-map-pin"></i>&nbsp;&nbsp;Pincode:
+                                                </td>
+                                                <td class="details" data-filter="pincode">@Html.DisplayFor(modelItem => Model.Pincode)</td>
+                                            </tr>
+
+                                            <tr>
+                                                <td class="heading" data-input="city">
+                                                    <i class="fa fa-map-marker"></i>&nbsp;&nbsp;City:
+                                                </td>
+                                                <td class="details">@Html.DisplayFor(modelItem => Model.City)</td>
+                                            </tr>
+
+                                            <tr>
+                                                <td class="heading" data-input="district">
+                                                    <i class="fa fa-map-marker"></i>&nbsp;&nbsp;District:
+                                                </td>
+                                                <td class="details">@Html.DisplayFor(modelItem => Model.District)</td>
+                                            </tr>
+
+                                            <tr>
+                                                <td class="heading" data-input="state">
+                                                    <i class="fa fa-map-marker"></i>&nbsp;&nbsp;State:
+                                                </td>
+                                                <td class="details">@Html.DisplayFor(modelItem => Model.State)</td>
+                                            </tr>
+                                            <tr>
+                                                <td class="heading" data-input="bankname">
+                                                    <i class="fa fa-building"></i>&nbsp;&nbsp;Benificiary Name:
+                                                </td>
+                                                <td class="details" data-filter="bankname" data-bank-id="-">@Html.DisplayFor(modelItem => Model.BenificiaryName)</td>
+                                            </tr>
+                                            @*---end---*@
+                                            <tr>
+                                                <td class="heading" data-input="bankname">
+                                                    <i class="fa fa-building"></i>&nbsp;&nbsp;Bank:
+                                                </td>
+                                                <td class="details" data-filter="bankname" data-bank-id="-">@Html.DisplayFor(modelItem => Model.BankName)</td>
+                                            </tr>
+
+                                            <tr>
+                                                <td class="heading" data-input="bankname">
+                                                    <i class="fa fa-building"></i>&nbsp;&nbsp;Branch Name:
+                                                </td>
+                                                <td class="details" data-filter="bankname" data-bank-id="-">@Html.DisplayFor(modelItem => Model.BranchName)</td>
+                                            </tr>
+                                            <tr>
+                                                <td class="heading" data-input="banknumber">
+                                                    <i class="fa fa-sort-numeric-asc"></i>&nbsp;&nbsp;Account Number:
+                                                </td>
+                                                <td class="details">@Html.DisplayFor(modelItem => Model.AccountNumber)</td>
+                                            </tr>
+                                            <tr>
+                                                <td class="heading" data-input="bankifsc">
+                                                    <i class="fa fa-id-badge"></i>&nbsp;&nbsp;Bank IFSC:
+                                                </td>
+                                                <td class="details verification" id="ifsc_code">@Html.DisplayFor(modelItem => Model.IFSC)</td>
+                                            </tr>
+                                            <tr>
+                                                <td class="heading" data-input="accounttype">
+                                                    <i class="fa fa-files-o"></i>&nbsp;&nbsp;Account Type:
+                                                </td>
+                                                <td class="details" data-filter="accounttype">@Html.DisplayFor(modelItem => Model.AccountType)</td>
+                                            </tr>
+                                            <tr>
+                                                <td class="heading" data-input="aadhar">
+                                                    <i class="fa fa-id-card"></i>&nbsp;&nbsp;Aadhar Card No:
+                                                </td>
+                                                <td class="details">@Html.DisplayFor(modelItem => Model.AdharCardNo)</td>
+                                            </tr>
+                                            <tr>
+                                                <td class="heading" data-input="pancard">
+                                                    <i class="fa fa-id-card"></i>&nbsp;&nbsp;Pan Card:
+                                                </td>
+                                                <td class="details">@Html.DisplayFor(modelItem => Model.PAN)</td>
+                                            </tr>
+
+                                            <tr>
+                                                <td class="heading" data-input="pancard">
+                                                    <i class="fa fa-id-card"></i>&nbsp;&nbsp;Benificiary Email:
+                                                </td>
+                                                <td class="details">@Html.DisplayFor(modelItem => Model.BenificiaryEmail)</td>
+                                            </tr>
+                                            <tr>
+                                                @using (Html.BeginForm("SendSMS", "KYCDocument", FormMethod.Post))
+                                                {
+                                                    @Html.HiddenFor(modelItem => Model.UserID)
+                                                    <td class="heading" data-input="pancard">
+                                                        <i class="fa fa-mobile"></i>&nbsp;&nbsp;Send SMS to complete KYC:
+                                                    </td>
+                                                    <td class="details">
+                                                        <span>Hi, @Model.FirstName</span>
+                                                        <br />
+                                                        @Html.TextAreaFor(modelItem => Model.SMSText, 3, 90, null)
+                                                        <br />
+                                                        @Html.HiddenFor(modelItem => Model.UserID)
+                                                        <input type="submit" value="Send SMS" class="btn btn-info btn-sm" />
+                                                    </td>
+                                                }
+                                            </tr>
+                                            <tr>
+                                                @if (Model.IsVerified)
+                                                {
+                                                    using (Html.BeginForm("CancelApprovalKYC", "KYCDocument", FormMethod.Post))
+                                                    {
+                                                        @Html.HiddenFor(modelItem => Model.UserID)
+                                                        <td class="heading" data-input="pancard">
+                                                            <i class="fa fa-id-card"></i>&nbsp;&nbsp;Remark:
+                                                        </td>
+                                                        <td class="details">
+                                                            @Html.TextAreaFor(modelItem => Model.Remark, 3, 90, null)
+                                                            <br />
+                                                            <input type="submit" value="Cancel Approval" class="btn btn-danger btn-sm" />
+                                                            @Html.ActionLink("Back", "Index", null, new { @class = "btn btn-warning btn-sm" })
+                                                        </td>
+                                                    }
+                                                }
+                                                else
+                                                {
+                                                    <td class="heading" data-input="pancard"></td>
+                                                    <td class="details">
+                                                        @using (Html.BeginForm("ApproveKYC", "KYCDocument", FormMethod.Post))
+                                                        {
+                                                            @Html.HiddenFor(modelItem => Model.UserID)
+                                                            <input type="submit" value="Approve" class="btn btn-success btn-sm" />
+                                                            @Html.ActionLink("Back", "Index", null, new { @class = "btn btn-warning btn-sm" })
+                                                        }
+                                                    </td>
+                                                }
+                                            </tr>
+
+                                        </tbody>
+                                    </table>
+                                    <label style="color:#ff0000;font-weight:bold">Note: Use scroll to zoom in/out</label>
+                                    <div class="row mt-30">
+                                        <div class="col-xs-6 col-sm-6 col-md-6">
+                                            <p>Adhaar Card Image</p>
+                                            <div class="dropify-wrapper touch-fallback ">
+                                                <div class="dropify-message">
+                                                    <span class="file-icon ">
+                                                        <figure>
+
+                                                            @if (Model.AdhaarImageUrl != null)
+                                                            {
+
+                                                                <img id="imgAadhar" class="" src="@Model.AdhaarImageUrl" onerror="this.src = '/Content/Images/no_image.png'" alt=" eZeelo ">
+                                                            }
+                                                            else
+                                                            {
+                                                                <img id="imgAadhar" src="/Content/Images/no_image.png" alt=" eZeelo ">
+                                                            }
+
+                                                        </figure>
+                                                    </span>
+                                                </div>
+                                                <div class="dropify-loader"></div>
+                                                <div class="dropify-errors-container">
+                                                    <ul></ul>
+                                                </div>
+                                                <div class="dropify-preview">
+                                                    <span class="dropify-render"></span>
+                                                    <div class="dropify-infos">
+                                                        <div class="dropify-infos-inner">
+                                                            <p class="dropify-filename">
+                                                                <span class="file-icon"></span>
+                                                                <span class="dropify-filename-inner"></span>
+                                                            </p>
+                                                            <p class="dropify-infos-message"></p>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-xs-6 col-sm-6 col-md-6">
+                                            <p>PAN Card Image</p>
+                                            <div class="dropify-wrapper touch-fallback ">
+                                                <div class="dropify-message">
+                                                    <span class="file-icon">
+
+                                                        <figure>
+
+                                                            @if (Model.PANImage != null)
+                                                            {
+                                                                <img id="imgPAN" src="@Model.PANImage" onerror="this.src = '/Content/Images/no_image.png'" alt=" eZeelo ">
+                                                            }
+                                                            else
+                                                            {
+                                                                <img id="imgAadhar" src="/Content/Images/no_image.png" alt=" eZeelo ">
+                                                            }
+                                                        </figure>
+
+
+                                                    </span>
+                                                </div>
+                                                <div class="dropify-loader"></div>
+                                                <div class="dropify-errors-container">
+                                                    <ul></ul>
+                                                </div>
+                                                <div class="dropify-preview">
+                                                    <span class="dropify-render"></span>
+                                                    <div class="dropify-infos">
+                                                        <div class="dropify-infos-inner">
+                                                            <p class="dropify-filename">
+                                                                <span class="file-icon"></span>
+                                                                <span class="dropify-filename-inner"></span>
+                                                            </p>
+                                                            <p class="dropify-infos-message"></p>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-xs-6 col-sm-6 col-md-6">
+                                            <p>Passbook Image</p>
+                                            <div class="dropify-wrapper touch-fallback ">
+                                                <div class="dropify-message">
+                                                    <span class="file-icon">
+
+                                                        <figure>
+
+                                                            @if (Model.PassbookImage != null)
+                                                            {
+                                                                <img id="imgPassbok" src="@Model.PassbookImage" onerror="this.src = '/Content/Images/no_image.png'" alt=" eZeelo ">
+                                                            }
+                                                            else
+                                                            {
+                                                                <img id="imgAadhar" src="/Content/Images/no_image.png" alt=" eZeelo ">
+                                                            }
+                                                        </figure>
+
+
+                                                    </span>
+                                                </div>
+                                                <div class="dropify-loader"></div>
+                                                <div class="dropify-errors-container">
+                                                    <ul></ul>
+                                                </div>
+                                                <div class="dropify-preview">
+                                                    <span class="dropify-render"></span>
+                                                    <div class="dropify-infos">
+                                                        <div class="dropify-infos-inner">
+                                                            <p class="dropify-filename">
+                                                                <span class="file-icon"></span>
+                                                                <span class="dropify-filename-inner"></span>
+                                                            </p>
+                                                            <p class="dropify-infos-message"></p>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-xs-6 col-sm-6 col-md-6">
+                                            <p>Scan KYC Form</p>
+                                            <div class="dropify-wrapper touch-fallback ">
+                                                <div class="dropify-message">
+                                                    <span class="file-icon">
+
+                                                        <figure>
+
+                                                            @if (Model.KYCForm != null)
+                                                            {
+                                                                <img id="imgKYC" src="@Model.KYCForm" onerror="this.src = '/Content/Images/no_image.png'" alt=" eZeelo ">
+
+
+                                                            }
+                                                            else
+                                                            {
+                                                                <img id="imgAadhar" src="/Content/Images/no_image.png" alt=" eZeelo ">
+
+                                                            }
+                                                        </figure>
+
+
+                                                    </span>
+                                                </div>
+                                                <div class="dropify-loader"></div>
+                                                <div class="dropify-errors-container">
+                                                    <ul></ul>
+                                                </div>
+
+                                                <div class="dropify-preview">
+                                                    <span class="dropify-render"></span>
+                                                    <div class="dropify-infos">
+                                                        <div class="dropify-infos-inner">
+                                                            <p class="dropify-filename">
+                                                                <span class="file-icon"></span>
+                                                                <span class="dropify-filename-inner"></span>
+                                                            </p>
+                                                            <p class="dropify-infos-message"></p>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                </div>
+
+                            </div>
+
+
+                        </div>
+                    </div>
+
+
+                </div>
+            </div>
+        </div>
+    </section>
+    <script>
+        $(document).ready(function () {
+            $("figure img").click(function () {
+                $("#myModal").show();
+                $("#imgfull").attr("src", $(this).attr("src"));
+            });
+        });
+    </script>
+  
+    <script type="text/javascript">
+        ; (function ($) {
+            $(window).on("load", function () {
+                $(document).ready(function () {                    
+                    function click_test2(e) {
+                        var pos = this.cursorToImg(e.pageX, e.pageY);
+                        var imgpos = this.relposToImage(pos);
+                    }
+                    var $imgAdhar = $("#imgAadhar").imgViewer();
+                    $imgAdhar.imgViewer("option", "onClick", click_test2);
+
+                    var $imgPan = $("#imgPAN").imgViewer();
+                    $imgPan.imgViewer("option", "onClick", click_test2);
+
+                    var $imgPassbook = $("#imgPassbok").imgViewer();
+                    $imgPassbook.imgViewer("option", "onClick", click_test2);
+
+                    var $imgKYC = $("#imgKYC").imgViewer();
+                    $imgKYC.imgViewer("option", "onClick", click_test2);
+
+                });
+            });
+        })(jQuery);
+    </script>
+</main>
+
+
+

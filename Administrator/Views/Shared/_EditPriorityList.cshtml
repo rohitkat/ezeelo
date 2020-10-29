@@ -1,0 +1,165 @@
+﻿@model ModelLayer.Models.ViewModel.ShopPriorityList
+
+@using (Html.BeginForm("LevelOnePriority", "ShopPriority"))
+{
+    <div>
+        <div class="form-actions" style="clear:both;">
+            <input type="submit" name="submit" id="btnSubmit" class="btn btn-success" />
+        </div>
+        <div style="color:red; font-weight:bold;">
+            <marquee behavior="alternate">Note:-  UP/DOWN Priority Will only Affected After Submit</marquee>
+        </div>
+        @if (ViewBag.CategoryID != null)
+        {
+            @Html.Hidden("CategoryID", (Int64)ViewBag.CategoryID)
+        }
+        @if (ViewBag.Franchise != null)
+        {
+            @Html.Hidden("Franchise", (Int64)ViewBag.Franchise)
+        }
+        <div style="width:100%; margin-top:10px;"></div>
+        <table class="table table-bordered ">
+            <thead>
+                <tr id="toptr">
+                    <th>
+                        Priority
+                    </th>
+                    <th>
+                        ShopName
+                    </th>
+
+                    <th></th>
+
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                </tr>
+            </thead>
+
+            @for (int i = 0; i < Model.shopListByPriority.Count(); i++)
+            {
+
+                <tr>
+                    <td class="shopPriority">
+
+                        @*@Html.HiddenFor(x => x.shopListByPriority[i].id)*@
+                        @Html.HiddenFor(x => x.shopListByPriority[i].Priority)
+                        @Html.DisplayFor(x => x.shopListByPriority[i].Priority)
+
+                    </td>
+                    <td class="shop">
+                        @Html.DisplayFor(x => x.shopListByPriority[i].ShopName)
+                    </td>
+                    <td>
+                        @Html.HiddenFor(x => x.shopListByPriority[i].Id)
+                        @Html.HiddenFor(x => x.shopListByPriority[i].CityID)
+                        @Html.HiddenFor(x => x.shopListByPriority[i].ShopID)
+                    </td>
+                    <td> <a href="#noname" class='up'>Up</a></td>
+                    <td> <a href="#noname" class='down'>Down</a></td>
+
+                    <td>
+                        @Html.ActionLink("Edit", "Edit", new { id = Model.shopListByPriority[i].Id }, new { @class = "btn btn-small btn-success" })
+                        @Html.ActionLink("Details", "Details", new { id = Model.shopListByPriority[i].Id }, new { @class = "btn btn-small btn-primary" })
+                        @Html.ActionLink("Delete", "Delete", new { id = Model.shopListByPriority[i].Id }, new { @class = "btn btn-small btn-danger" })
+                    </td>
+                </tr>
+            }
+
+        </table>
+    </div>
+}
+
+<div class="form-actions">
+
+    @Html.ActionLink("Back to List", "Index", string.Empty, new { @class = "btn btn-brown" })
+
+</div>
+
+
+@*<script src="~/Scripts/jquery-1.10.2.min.js"></script>*@
+<script>
+    $(document).ready(function () {
+        //{
+           // $(".table").tablesorter();
+        //}
+
+      
+
+
+        $(".up,.down").click(function () {
+
+            var $element = this;
+            var row = $($element).parents("tr:first");
+            var val = $($element).parents("tr:first").children("td:first").text();
+
+            if ($(this).is('.up')) {
+                $('.table').find('tr').removeAttr('style');
+                //row.children("td:first").text(row.prev().children("td:first").text());
+                //row.prev().children("td:first").text(val);
+                //row.insertBefore(row.prev());
+                if (row.prev('tr').html() != undefined) {
+
+
+
+                    var shopName = row.children("td:nth-child(2)").html();
+                    var shopID = row.children("td:nth-child(3)").find("[id*=ShopID]").val();
+                    var cityID = row.children("td:nth-child(3)").find("[id*=CityID]").val();
+                    //var ID = row.children("td:nth-child(3)").find(".ID").val();
+
+                    var previousShopName = row.prev().children("td:nth-child(2)").html();
+                    var previousShopID = row.prev().children("td:nth-child(3)").find("[id*=ShopID]").val();
+                    var previousCityID = row.prev().children("td:nth-child(3)").find("[id*=CityID]").val();
+                    //var previousID = row.prev().children("td:nth-child(3)").find(".ID").val();
+
+                    row.children("td:nth-child(2)").html(previousShopName);
+                    row.children("td:nth-child(3)").find("[id*=ShopID]").val(previousShopID);
+                    row.children("td:nth-child(3)").find("[id*=CityID]").val(previousCityID);
+                    //row.children("td:nth-child(3)").find(".ID").val(previousID);
+
+
+
+                    row.prev().children("td:nth-child(2)").html(shopName);
+                    row.prev().children("td:nth-child(3)").find("[id*=ShopID]").val(shopID);
+                    row.prev().children("td:nth-child(3)").find("[id*=CityID]").val(cityID);
+                    row.prev('tr').css('background-color', '#ace8a9');
+                    //row.prev().children("td:nth-child(3)").find(".ID").val(ID);
+                }
+            }
+            else {
+                //row.children("td:first").text(row.next().children("td:first").text());
+                //row.next().children("td:first").text(val);
+                //row.insertAfter(row.next());
+                $('.table').find('tr').removeAttr('style');
+                if ($(this).parents().not("tr:last")) {
+                    if (row.next('tr').html() != undefined) {
+                        var shopName = row.children("td:nth-child(2)").html();
+                        var shopID = row.children("td:nth-child(3)").find("[id*=ShopID]").val();
+                        var cityID = row.children("td:nth-child(3)").find("[id*=CityID]").val();
+                        //var ID = row.children("td:nth-child(3)").find(".ID").val();
+
+                        var nextShopName = row.next().children("td:nth-child(2)").html();
+                        var nextShopID = row.next().children("td:nth-child(3)").find("[id*=ShopID]").val();
+                        var nextCityID = row.next().children("td:nth-child(3)").find("[id*=CityID]").val();
+                        //var nextID = row.next().children("td:nth-child(3)").find(".ID").val();
+
+                        row.children("td:nth-child(2)").html(nextShopName);
+                        row.children("td:nth-child(3)").find("[id*=ShopID]").val(nextShopID);
+                        row.children("td:nth-child(3)").find("[id*=nextCityID]").val(nextShopID);
+                        //row.children("td:nth-child(3)").find(".ID").val(nextShopID);
+
+                        row.next().children("td:nth-child(2)").html(shopName);
+                        row.next().children("td:nth-child(3)").find("[id*=ShopID]").val(shopID);
+                        row.next().children("td:nth-child(3)").find("[id*=nextCityID]").val(cityID);
+                        row.next('tr').css('background-color', '#ace8a9');
+                        //row.next().children("td:nth-child(3)").find(".ID").val(ID);
+                    }
+                }
+            }
+        });
+
+    });
+
+</script>
+<script src="~/Content/js/custom.js"></script>
+<script src="~/Content/js/jquery.dataTables.min.js"></script>

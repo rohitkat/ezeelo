@@ -1,0 +1,73 @@
+﻿@model ModelLayer.Models.ShopPaymentMode
+
+@{
+    ViewBag.Title = "Edit";
+}
+<div id="content" class="span10">
+    <ul class="breadcrumb">
+        <li>
+            <a href="index.html">Shop Payment Mode</a>
+        </li>
+    </ul>
+    <div class="row-fluid">
+        <div class="box span12">
+            <div class="box-header">
+                <h2><i class="icon-edit"></i><span class="break"></span>Edit</h2>
+
+            </div>
+            @if (ViewBag.Messaage != null)
+            {
+                @Html.Label("Messaage", (string)ViewBag.Messaage, new { @class = "deleteMsg" })
+            }
+            else
+            {
+                @Html.Label("Messaage", "", new { @class = "deleteMsg" })
+            }
+
+            @using (Html.BeginForm())
+            {
+                @Html.AntiForgeryToken()
+                <div class="box-content">
+                    <div class="form-horizontal">
+
+                        @Html.ValidationSummary(true)
+                        @Html.HiddenFor(model => model.ID)
+
+                        <div class="control-group">
+                            @Html.LabelFor(model => model.ShopID, new { @class = "control-label span2" })
+                            <div class="controls">
+                                @Html.EditorFor(model => model.ShopID)
+                                @Html.ValidationMessageFor(model => model.ShopID)
+                            </div>
+                        </div>
+
+                        <div class="control-group">
+                            @Html.LabelFor(model => model.PaymentModeID, new { @class = "control-label span2" })
+                            <div class="controls">
+                                @Html.EditorFor(model => model.PaymentModeID)
+                                @Html.ValidationMessageFor(model => model.PaymentModeID)
+                            </div>
+                        </div>
+
+                        <div class="control-group">
+                            @Html.LabelFor(model => model.IsActive, new { @class = "control-label span2" })
+                            <div class="controls">
+                                @Html.EditorFor(model => model.IsActive)
+                                @Html.ValidationMessageFor(model => model.IsActive)
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+
+            <div class="form-actions" style="    padding-left: 195px;">
+                <input type="submit" value="Save" class="btn btn-success" />
+                @Html.ActionLink("Back to List", "Index", null, new { @class = "btn" })
+            </div>
+
+            @section Scripts {
+                @Scripts.Render("~/bundles/jqueryval")
+            }
+        </div>
+    </div>
+</div>

@@ -1,0 +1,32 @@
+﻿@model IEnumerable<ModelLayer.Models.ServiceMaster>
+@using System.Text.RegularExpressions;
+@using System.Globalization;
+<li style="list-style-type: none; border-bottom: 1px dotted #CCC;">
+
+    <a class="parent" href="#"><img class="icon-menu" alt="" src="" style="width: 30px; height: 30px; border-radius: 20px; margin-right: 5px;" onerror="this.src = '/Content/Images/no_image.png'">Services In Your City</a>@*////added franchiseId=franchiseID*@
+
+
+    <div class="dropdown-menu-category-section">
+        <div class="dropdown-menu-category-section-inner">
+            <div class="dropdown-menu-category-section-content">
+
+
+                <div class="col-md-3 " style="border-right: 1px solid #d9d9d9;">
+
+                    <h5 class="dropdown-menu-category-title"><a style="color: #663399; font-weight: 800; " href='#'>Services</a></h5>
+                    <ul class="dropdown-menu-category-list">
+                        @foreach (var item in Model)
+                        {
+                            string serviceName = Regex.Replace(@item.Name.Substring(0, Math.Min(@item.Name.Length, 30)), @"[\/\\#,+()$~%.':*?<>{} ]", "-").Replace("&", "and").ToLower();
+                            serviceName = Regex.Replace(serviceName, @"\-+", "-");
+                            serviceName = serviceName.Trim(new[] { '-' });
+                            <li>
+                                <a href="@Url.Action("List", "Merchant",new{id=item.Id})">@serviceName</a>
+                            </li>
+                        }
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</li>

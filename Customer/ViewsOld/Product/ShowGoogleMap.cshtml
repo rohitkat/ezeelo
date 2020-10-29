@@ -1,0 +1,41 @@
+﻿@{
+    ViewBag.Title = "ShowGoogleMap";
+}
+
+<h2>ShowGoogleMap</h2>
+
+@if (Request.QueryString["lat"] != null && Request.QueryString["lon"] != null)
+{
+    @Html.Hidden("hfLattitude", Request.QueryString["lat"].ToString())
+    @Html.Hidden("hfLongitude", Request.QueryString["lon"].ToString())
+}
+else
+{
+    @Html.Hidden("hfLattitude", "")
+    @Html.Hidden("hfLongitude", "")
+}
+
+<div id="description">
+    @if (TempData["shopDescription"] != null)
+    {
+        <h5>@TempData["shopDescription"]</h5>
+    }
+
+</div>
+<div id="googleMap" style="width: 964px; height: 380px;"></div>
+
+<script src="http://maps.googleapis.com/maps/api/js"></script>
+<script>
+    function initialize() {
+        var lat = $("[id*=hfLattitude]").val();
+        var lon = $("[id*=hfLongitude]").val();
+        var mapProp = {
+            center: new google.maps.LatLng(lat, lon),
+            zoom: 5,
+            mapTypeId: google.maps.MapTypeId.ROADMAP
+        };
+        var map = new google.maps.Map(document.getElementById("googleMap"), mapProp);
+    }
+    google.maps.event.addDomListener(window, 'load', initialize);
+</script>
+

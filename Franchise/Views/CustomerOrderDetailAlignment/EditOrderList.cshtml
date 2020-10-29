@@ -1,0 +1,538 @@
+﻿@model Franchise.Models.ViewModel.NewCustomerOrderDetailListViewModel
+@*@using ModelLayer.Models;*@
+@using Franchise.Models.ViewModel;
+@using Franchise.Common;
+
+
+
+@{
+    ViewBag.Title = "Customer Order Detail";
+    Layout = null;
+}
+
+<style>
+    input[type=number] {
+        width: 60px;
+    }
+
+    textarea {
+        width: 99%;
+    }
+
+    .not-active {
+        background-color: rgba(255, 0, 0, 0.24);
+    }
+</style>
+@*@using (Html.BeginForm("EditOrderList", "CustomerOrderDetail", new { COID = 11019, customerorderdetails = Model.ToList() }, FormMethod.Post, null))*@
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+    <div class="row">
+        <div class="col-md-12">
+            <!-- TABLE: LATEST ORDERS -->
+            <div class="widget" style="text-align: left; margin-left: 30px; margin-top: -20px;">
+                @*<div class="widget-header">
+                        <i class="icon-list-alt"></i>
+                        <h3>Order List</h3>
+                    </div>*@<!-- /.box-header -->
+                @Html.HiddenFor(x => x.COID)
+                @Html.Hidden("ProductDetail", string.Empty)
+                @Html.Hidden("PaymentMode", (string)ViewBag.PaymentMode)
+
+                <div class="widget-content" style="border:none">
+                    <input type="checkbox" name="chkAll" class="chkAll"> Select All &nbsp;&nbsp;&nbsp;
+                    Set Status
+                    <select name="AllStatus" style="width:200px;" class="AllStatus">
+                        <option class="placeholder" selected disabled value="">Select Order Status</option>
+                        @*<option value="0">Change Order Status for Selected</option>*@
+                        @foreach (var sl in (SelectList)ViewBag.OrderStatus)
+                        {
+                            <option value="@sl.Value">@sl.Text</option>
+                        }
+                    </select>
+                    @if (Model.IsBusinessBoosterOrder)
+                    {
+                        <span style="font-weight:bold;color:#049017;font-size:medium">&nbsp;&nbsp; Business Booster Plan Order</span>
+                    }
+                    @if (ViewBag.ShortageQty != null)
+                    {
+                        <span style="color:red;font-weight:bold">@ViewBag.ShortageQty</span>
+                    }
+
+                    <table class="table table-bordered table-condensed table-hover table-responsive table-striped" id="tblListProduct">
+                        <thead>
+                            <tr>
+                                <th>Sr.No</th>
+                                <th>
+                                    Select
+                                </th>
+                                <th>
+                                    ShopOrderCode
+                                </th>
+                                <th>
+                                    Product
+                                </th>
+                                <th>Size</th>
+                                <th>Batch</th>
+                                <th>
+                                    Qty
+                                </th>
+                                <th>
+                                    OrderStatus
+                                </th>
+                                <th>
+                                    MRP
+                                </th>
+                                <th>
+                                    SaleRate
+                                </th>
+                                <th style="display:none;">
+                                    OfferRs
+                                </th>
+                                <th>
+                                    TotalAmount
+                                </th>
+                                <th>
+                                    IsActive
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @{int SrNo = 0;
+                                List<ProductList> lProductList = (List<ProductList>)TempData["ProductList"];
+                            }
+                            @for (int i = 0; i < Model.customerOrderDetails.Count(); i++)
+                            {
+                                @Html.HiddenFor(x => x.customerOrderDetails[i].ShopID)
+                                @Html.HiddenFor(x => x.customerOrderDetails[i].ShopStockID)
+                                @Html.HiddenFor(x => x.customerOrderDetails[i].WarehouseStockID)
+                                @Html.HiddenFor(x => x.customerOrderDetails[i].ID)
+                                @Html.HiddenFor(x => x.customerOrderDetails[i].BusinessPointPerUnit) @*Added by Zubair for MLM on 07-03-2018*@
+                                @Html.HiddenFor(x => x.customerOrderDetails[i].CashbackPointPerUnit)
+                                @Html.HiddenFor(x => x.customerOrderDetails[i].CashbackPoints)
+
+                                SelectList lOrderStatus = (SelectList)ViewBag.OrderStatus;
+                                string lOrderStatusStr = lOrderStatus.FirstOrDefault(x => x.Value == Model.customerOrderDetails[i].OrderStatus.ToString()).Text;
+                                int lOrderStatusVal = Convert.ToInt32(lOrderStatus.FirstOrDefault(x => x.Value == Model.customerOrderDetails[i].OrderStatus.ToString()).Value);
+                                string OrderStatusName = "customerOrderDetails[" + i + "].OrderStatus";
+
+                                switch (lOrderStatusVal)
+                                {
+                                    case (int)Constant.ORDER_STATUS.CANCELLED:
+                                        //lOrderStatus = new SelectList(lOrderStatus.Where(x => x.Value == Convert.ToString((int)Constant.ORDER_STATUS.PLACED) ||
+                                        //                                                      x.Value == Convert.ToString((int)Constant.ORDER_STATUS.CONFIRM) ||
+                                        //                                                      x.Value == Convert.ToString((int)Constant.ORDER_STATUS.PACKED) ||
+                                        //                                                      x.Value == Convert.ToString((int)Constant.ORDER_STATUS.CANCELLED)).ToList(), "value", "Text", lOrderStatusVal);
+                                        lOrderStatus = new SelectList(lOrderStatus.Where(x => x.Value == Convert.ToString((int)Constant.ORDER_STATUS.CANCELLED)).ToList(), "value", "Text", lOrderStatusVal);
+
+                                        break;
+                                    case (int)Constant.ORDER_STATUS.RETURNED:
+                                        lOrderStatus = new SelectList(lOrderStatus.Where(x => x.Value == Convert.ToString((int)Constant.ORDER_STATUS.RETURNED)).ToList(), "value", "Text", lOrderStatusVal);
+                                        break;
+                                    case (int)Constant.ORDER_STATUS.DELIVERED:
+                                        lOrderStatus = new SelectList(lOrderStatus.Where(x => x.Value == Convert.ToString((int)Constant.ORDER_STATUS.RETURNED) ||
+                                                                                              x.Value == Convert.ToString((int)Constant.ORDER_STATUS.DELIVERED)).ToList(), "value", "Text", lOrderStatusVal);
+                                        break;
+                                    case (int)Constant.ORDER_STATUS.DISPATCHED_FROM_SHOP:
+                                    case (int)Constant.ORDER_STATUS.IN_GODOWN:
+                                    case (int)Constant.ORDER_STATUS.DISPATCHED_FROM_GODOWN:
+                                        //case (int)Constant.ORDER_STATUS.DELIVERED:
+                                        lOrderStatus = new SelectList(lOrderStatus.Where(x => x.Value == Convert.ToString((int)Constant.ORDER_STATUS.DISPATCHED_FROM_SHOP) ||
+                                                                                              x.Value == Convert.ToString((int)Constant.ORDER_STATUS.IN_GODOWN) ||
+                                                                                              x.Value == Convert.ToString((int)Constant.ORDER_STATUS.DISPATCHED_FROM_GODOWN) ||
+                                                                                              x.Value == Convert.ToString((int)Constant.ORDER_STATUS.DELIVERED)).ToList(), "value", "Text", lOrderStatusVal);
+                                        break;
+                                    case (int)Constant.ORDER_STATUS.PLACED:
+                                    case (int)Constant.ORDER_STATUS.CONFIRM:
+                                    case (int)Constant.ORDER_STATUS.PACKED:
+                                        //case (int)Constant.ORDER_STATUS.DISPATCHED_FROM_SHOP:
+                                        lOrderStatus = new SelectList(lOrderStatus.Where(x => x.Value == Convert.ToString((int)Constant.ORDER_STATUS.PLACED) ||
+                                                                                              x.Value == Convert.ToString((int)Constant.ORDER_STATUS.CONFIRM) ||
+                                                                                              x.Value == Convert.ToString((int)Constant.ORDER_STATUS.PACKED) ||
+                                                                                              x.Value == Convert.ToString((int)Constant.ORDER_STATUS.DISPATCHED_FROM_SHOP) ||
+                                                                                              x.Value == Convert.ToString((int)Constant.ORDER_STATUS.CANCELLED)).ToList(), "value", "Text", lOrderStatusVal);
+
+                                        break;
+
+                                }
+
+                                SrNo++;
+
+                                <tr>
+                                    <td> @SrNo </td>
+                                    <td><input type="checkbox" name="chkBox" class="chkBox chkBBP" /></td>
+                                    <td><span>@Model.customerOrderDetails[i].ShopOrderCode</span></td>
+                                    <td>
+                                        @{
+                                            try
+                                            {
+                                                <span>@lProductList.FirstOrDefault(y => y.ShopStockID == Model.customerOrderDetails[i].ShopStockID).Name</span>
+                                            }
+                                            catch (Exception)
+                                            { //throw;
+                                            }
+                                        }
+
+
+                                    </td>
+                                    <td>@Model.customerOrderDetails[i].ShopStock.ProductVarient.Size.Name</td>
+                                    <td>@lProductList.FirstOrDefault(y => y.ShopStockID == Model.customerOrderDetails[i].ShopStockID).Batch</td>
+                                    @{
+                                        if (lOrderStatusVal >= 4)
+                                        {
+                                            <td>
+                                                @{
+                                                    string Qty = "Qty$" + Model.customerOrderDetails[i].ID;
+                                                    string QtyName = "customerOrderDetails[" + i + "].Qty";
+                                                }
+                                                <input type="number" min="1" step="1" value="@Model.customerOrderDetails[i].Qty" class="Qty" name="@QtyName" readonly="readonly" />
+                                            </td>
+                                            <td>
+                                                <select name="@OrderStatusName" style="width:100px;" class="OrderStatus chkBBP" onclick="return">
+                                                    @foreach (var sl in lOrderStatus)
+                                                    {
+                                                        if (sl.Value == Model.customerOrderDetails[i].OrderStatus.ToString())
+                                                        {
+                                                            <option value="@sl.Value" selected="selected">@sl.Text</option>
+                                                        }
+                                                        else
+                                                        {
+                                                            <option value="@sl.Value">@sl.Text</option>
+                                                        }
+
+                                                    }
+                                                </select>
+                                            </td>
+                                            <td>
+                                                @{
+                                                    string MrpID = "Mrp$" + Model.customerOrderDetails[i].ID;
+                                                    string MRPName = "customerOrderDetails[" + i + "].MRP";
+                                                }
+                                                <input type="number" step="any" min="1" value="@Model.customerOrderDetails[i].MRP" id=@MrpID class="MRP" name="@MRPName" readonly="readonly" />
+                                            </td>
+                                            <td>
+                                                @{
+                                                    string SaleRate = "SaleRate$" + Model.customerOrderDetails[i].ID;
+                                                    string SaleRateName = "customerOrderDetails[" + i + "].SaleRate";
+                                                }
+                                                <input type="number" step="any" min="1" value="@Model.customerOrderDetails[i].SaleRate" id=@SaleRate class="SaleRate" name="@SaleRateName" readonly="readonly" />
+                                            </td>
+                                            <td style="display:none;">
+                                                @{string OfferRs = "OfferRs$" + Model.customerOrderDetails[i].ID;}
+                                                <span class="OfferRs" id="@OfferRs">@Model.customerOrderDetails[i].OfferRs</span>
+                                            </td>
+                                            <td>
+                                                @{string TotalAmount = "TotalAmount$" + Model.customerOrderDetails[i].ID;}
+                                                <span class="TotalAmount" id="@TotalAmount">@Model.customerOrderDetails[i].TotalAmount</span>
+                                            </td>
+                                            <td>
+                                                @{
+                                                    string IsActive = "IsActive$" + Model.customerOrderDetails[i].ID;
+                                                    string IsActiveName = "customerOrderDetails[" + i + "].IsActive";
+                                                }
+                                                @Html.CheckBoxFor(x => x.customerOrderDetails[i].IsActive, new { @class = "remove chkBBP", @readonly = "readonly", style = "pointer-events:none;" })
+                                            </td>
+                                        }
+                                        else
+                                        {
+                                            <td>
+                                                @{
+                                                    Boolean lWrite = false;
+                                                    if (Convert.ToString(ViewBag.PaymentMode).Trim().ToUpper() == "ONLINE")
+                                                    {
+                                                        lWrite = true;
+                                                    }
+                                                    string Qty = "Qty$" + Model.customerOrderDetails[i].ID;
+                                                    string QtyName = "customerOrderDetails[" + i + "].Qty";
+                                                }
+                                                <input type="number" min="1" step="1" value="@Model.customerOrderDetails[i].Qty" class="Qty" name="@QtyName" readonly="@lWrite" />
+                                            </td>
+                                            <td>
+                                                <select name="@OrderStatusName" style="width: 100px;" class="OrderStatus chkBBP">
+                                                    @foreach (var sl in lOrderStatus)
+                                                    {
+                                                        if (sl.Value == Model.customerOrderDetails[i].OrderStatus.ToString())
+                                                        {
+                                                            <option value="@sl.Value" selected="selected">@sl.Text</option>
+                                                        }
+                                                        else
+                                                        {
+                                                            <option value="@sl.Value">@sl.Text</option>
+                                                        }
+
+                                                    }
+                                                </select>
+                                            </td>
+                                            <td>
+                                                @{
+                                                    string MrpID = "Mrp$" + Model.customerOrderDetails[i].ID;
+                                                    string MRPName = "customerOrderDetails[" + i + "].MRP";
+                                                }
+                                                <input type="number" step="any" min="1" value="@Model.customerOrderDetails[i].MRP" id=@MrpID class="MRP" name="@MRPName" readonly="@lWrite" />
+                                            </td>
+                                            <td>
+                                                @{
+                                                    string SaleRate = "SaleRate$" + Model.customerOrderDetails[i].ID;
+                                                    string SaleRateName = "customerOrderDetails[" + i + "].SaleRate";
+                                                }
+                                                <input type="number" step="any" min="1" value="@Model.customerOrderDetails[i].SaleRate" id=@SaleRate class="SaleRate" name="@SaleRateName" readonly="@lWrite" />
+                                            </td>
+                                            <td style="display:none;">
+                                                @{string OfferRs = "OfferRs$" + Model.customerOrderDetails[i].ID;}
+                                                <span class="OfferRs" id="@OfferRs">@Model.customerOrderDetails[i].OfferRs</span>
+                                            </td>
+                                            <td>
+                                                @{string TotalAmount = "TotalAmount$" + Model.customerOrderDetails[i].ID;}
+                                                <span class="TotalAmount" id="@TotalAmount">@Model.customerOrderDetails[i].TotalAmount</span>
+                                            </td>
+                                            <td>
+                                                @{
+                                                    string IsActive = "IsActive$" + Model.customerOrderDetails[i].ID;
+                                                    string IsActiveName = "customerOrderDetails[" + i + "].IsActive";
+                                                }
+                                                @{string state = (lWrite ? "none" : "visible");}
+                                                @Html.CheckBoxFor(x => x.customerOrderDetails[i].IsActive, new { @class = "remove chkBBP", style = "pointer-events:" + state })
+                                            </td>
+                                        }
+                                    }
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                    <table class="table table-condensed table-bordered table-hover table-responsive table-striped">
+                        <tr class="bg-red-gradient">
+                            <td width="100px" style="vertical-align:top;">
+                                Delivery Charge<br />
+                                <input type="number" step="any" min="0" value="@ViewBag.DeliveryCharge" name="DeliveryCharge" id="DeliveryCharge" class="text-black" required="required" />
+                            </td>
+                            <td>
+                                <div class="form-group">
+                                    <label class="col-sm-2 control-label">Logs</label>
+                                    <div class="col-sm-10 control-group">
+                                        @Html.TextArea("Log", new { @class = "newlargecss form-control", placeholder = "Write Log", required = "required" })
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>&nbsp;</td>
+                            <td>
+                                <select name="CType">
+                                    <option value="CUST_ORD_FULFILL">All Products are Available in Order</option>
+                                    <option value="CUST_PTL_ORD_FULFILL">Some Products are not Available in Order</option>
+                                    <option value="CUST_CHN_ORD">Update Order on Request of customer</option>
+                                </select>
+                                <input type="checkbox" name="sendSMSToCustomer" style="margin-left:20px;" />
+                                <span class="control-label">Send SMS & Email to Customer</span>
+                            </td>
+                        </tr>
+                    </table>
+                    <div>
+                        <button onclick="window.history.back();" class="btn btn-sm btn-warning pull-left">Cancel</button>
+
+                        <button type="submit" class="btn btn-sm btn-danger pull-right">Update</button>
+                    </div>
+                    <br />
+                    <br />
+                    @if (Model.customerOrderDetails.FirstOrDefault().CustomerOrder.PaymentMode.ToUpper().Trim() != "ONLINE" && Model.IsBusinessBoosterOrder != true)
+                    {
+                        <div style=" text-align: center; margin-bottom: 10px;">
+                            <a href="#" class="btn btn-sm btn-primary text-center" id="show">Add New</a>
+                        </div>
+                        <div id="newrecords" align="center" style="display:none">
+                            @Html.TextBox("PName", string.Empty, new { placeholder = "Enter Product Name" })
+                            <a href="#" class="btn btn-sm btn-success" style="margin-bottom:10px;" onclick="GetProducts();">Go</a>
+                            <img id="Product_Loader" src="~/Content/Images/ajax_loader.gif" style="width: 30px; height: 30px; display: none" />
+
+                        </div>
+                    }
+                </div><!-- /.table-responsive -->
+                <!-- /.box-body -->
+                <div class="box-footer clearfix">
+                    <!--<a href="javascript::;" class="btn btn-sm btn-info btn-flat pull-left">Place New Order</a>
+                    <a href="javascript::;" class="btn btn-sm btn-default btn-flat pull-right">View All Orders</a>-->
+                </div><!-- /.box-footer -->
+            </div><!-- /.box -->
+        </div><!-- /.col -->
+
+
+    </div>
+}
+
+
+<div id="divProductList" style="width: 80%;">
+    @*to load Product Details*@
+</div>
+
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
+<script>
+    $(document).ready(function () {
+        $(".chkBBP").click(function (e) {            
+            if ('@Model.IsBusinessBoosterOrder' == 'True') {
+                alert('Business booster plan order not allowed to change product wise status.')
+                e.preventDefault();
+                return false;
+            }
+        });
+    });
+</script>
+<script>
+    $(document).ready(function () {
+        $("#show").click(function () {
+            $("#newrecords").show(1000);
+        });
+    });
+</script>
+<script>
+    $(document).ready(function () {
+        $('.MRP').change(function () {
+            var Mrp = $(this).val();
+            var SaleRate = $(this).closest('tr').find('.SaleRate').val();
+            if (parseFloat(Mrp) < parseFloat(SaleRate)) {
+                alert("MRP Should be greater than or equal to SaleRate!!");
+                $(this).focus();
+            }
+            var OfferRs = parseFloat(Mrp) - parseFloat(SaleRate);
+            $(this).closest('tr').find('.OfferRs').text(OfferRs);
+        });
+        $('.SaleRate').change(function () {
+            var SaleRate = $(this).val();
+            var Mrp = $(this).closest('tr').find('.MRP').val();
+            var OfferRs = parseFloat(Mrp) - parseFloat(SaleRate);
+            $(this).closest('tr').find('.OfferRs').text(OfferRs);
+            var Qty = $(this).closest('tr').find('.Qty').val();
+            var TotalAmount = parseFloat(Qty) * parseFloat(SaleRate);
+            $(this).closest('tr').find('.TotalAmount').text(TotalAmount);
+            if (parseFloat(Mrp) < parseFloat(SaleRate)) {
+                alert("SaleRate Should be less than or equal to MRP!!");
+                $(this).focus();
+            }
+        });
+        $('.Qty').change(function () {
+            var Qty = $(this).val();
+            if (parseFloat(Qty) == parseInt(Qty)) {
+                var SaleRate = $(this).closest('tr').find('.SaleRate').val();
+                var TotalAmount = parseFloat(Qty) * parseFloat(SaleRate);
+                $(this).closest('tr').find('.TotalAmount').text(TotalAmount);
+            }
+            else {
+                alert('Only Integer Value Is Allowed in Qty..')
+                $(this).val(parseInt(Qty));
+            }
+        });
+        $('.remove').click(function () {
+           if ('@Model.IsBusinessBoosterOrder' == 'True') {
+                return false;
+            }
+            var IsActive = $(this).prop("checked");
+            if (IsActive == true) {
+                $(this).closest('tr').removeClass('not-active');
+            }
+            else if (IsActive == false) {
+                $(this).closest('tr').addClass('not-active');
+                $(this).closest('tr').find('.OrderStatus').val(9);
+                $(this).closest('tr').find('[id*=IsActive]').css("pointer-events", "none");
+            }
+        });
+        $('#DeliveryCharge').change(function () {
+            var Charge = $(this).val();
+            if (parseFloat(Charge) < 0) {
+                alert('Please enter +ve value in Delivery Charge');
+                $(this).val('');
+            }
+        });
+
+        $('.chkAll').click(function () {
+            var IsSelect = $(this).prop("checked");
+            if (IsSelect == true) {
+                $('.chkBox').prop("checked", true);
+            }
+            else if (IsSelect == false) {
+                $('.chkBox').prop("checked", false);
+            }
+        });
+
+        $('.AllStatus').change(function () {
+            var Status = $(this).val();
+            if (Status != "") {
+                var IsSelect = $('.chkAll').prop("checked");
+                if (IsSelect == true) {
+                    $.each($('#tblListProduct tr:gt(0)'), function () {
+                        if ($(this).find('.chkBox').prop("checked") == true) {
+                            $(this).closest('tr').find('.OrderStatus').val(Status);
+                        }
+                        if ($(this).closest('tr').find('.OrderStatus').val() == Status) {
+                            OnChangeStatus($(this).find('.OrderStatus'));
+                        }
+                    });
+                }
+            }
+        });
+
+
+        $('.OrderStatus').change(function () {
+            OnChangeStatus($(this));
+        });
+
+        function OnChangeStatus(obj) {
+            if ($(obj).val() <= 4) {
+                if ($("[id*=PaymentMode]").val().trim().toUpperCase() != "ONLINE") {
+                    $(obj).closest('tr').find('[id*=IsActive]').css("pointer-events", "visible");
+                    $(obj).closest('tr').find('[id*=IsActive]').attr("readonly", false);
+                    $(obj).closest('tr').find('.SaleRate').attr("readonly", false);
+                    $(obj).closest('tr').find('.MRP').attr("readonly", false);
+                    $(obj).closest('tr').find('.Qty').attr("readonly", false);
+                }
+                else {
+                    $(obj).closest('tr').find('[id*=IsActive]').css("pointer-events", "none");
+                    $(obj).closest('tr').find('[id*=IsActive]').attr("readonly", true);
+                    $(obj).closest('tr').find('.SaleRate').attr("readonly", true);
+                    $(obj).closest('tr').find('.MRP').attr("readonly", true);
+                    $(obj).closest('tr').find('.Qty').attr("readonly", true);
+                }
+            }
+            else {
+                $(obj).closest('tr').find('[id*=IsActive]').css("pointer-events", "none");
+                $(obj).closest('tr').find('[id*=IsActive]').attr("readonly", true);
+                $(obj).closest('tr').find('.SaleRate').attr("readonly", true);
+                $(obj).closest('tr').find('.MRP').attr("readonly", true);
+                $(obj).closest('tr').find('.Qty').attr("readonly", true);
+            }
+
+            if ($(obj).val() == 9) {
+                $(obj).closest('tr').find('[id*=IsActive]').prop("checked", false);
+            }
+        }
+
+        $.each($('tbody tr:gt(0)'), function () {
+            //alert($(this).find('.remove').prop("checked"));
+            if ($(this).find('.remove').prop("checked") == false) {
+                $(this).addClass("not-active");
+            }
+        });
+
+
+    });
+
+    function GetProducts() {
+
+        var PName = $('#PName').val();
+        if (PName.trim().length > 0) {
+            $('#divProductList').empty();
+            $('#Product_Loader').show();
+            $.get('/CustomerOrderDetailAlignment/GetProducts', { PName: PName }, function (data) {
+                $('#divProductList').html(data);
+                $('#Product_Loader').hide();
+            });
+            $('#Product_Loader').hide();
+        }
+        else {
+            alert('Enter Product Name !!');
+        }
+    }
+
+</script>
+
+

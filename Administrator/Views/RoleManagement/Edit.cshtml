@@ -1,0 +1,196 @@
+﻿@*@model IEnumerable<ModelLayer.Models.RoleMenu>*@
+
+@model ModelLayer.Models.ViewModel.RoleManagerViewModel
+@{
+    ViewBag.Title = "Role Management";
+}
+
+<br />
+
+<div class="row-fluid" style="margin-left:15px;">
+    <div class="box span12">
+        <div class="box-header">
+            <h2><i class="icon-edit"></i><span class="break"></span>Edit Role Management</h2>
+        </div>
+        <div class="box-content">
+            <div class="form-horizontal">
+                @*<marquee> <noscript> Please enable the javascript</noscript></marquee>*@
+                <div class="table">
+
+                    @using (Html.BeginForm())
+                    {
+
+                        <div>
+                            <span class="span3">
+                                <label style="font-weight:bold;">Select Role</label>
+                                @*@Html.DropDownListFor(model => model.rolemenuCollection[0].RoleID, (SelectList)ViewBag.RoleList, "Select Role", new { @onchange = "this.form.submit();" })*@
+                                @Html.DropDownList("RoleList", (SelectList)ViewBag.RoleList)
+                                @*<input type="submit" name="submit" value="Submit" class="btn btn-success" />*@
+                               
+                            </span>
+                            <div class="span9" style="margin-bottom: 15px;">
+                                <label style="font-weight:bold;">Select Module</label>
+                                @Html.DropDownList("MasterMenu", (SelectList)ViewBag.MasterMenu, "Select Menu")
+                                <span>
+                                    <button class="btn btn-primary">@Html.ActionLink("Get All Role", "Edit")</button>
+                                </span>
+                                @Html.ActionLink("Back to List", "Index", string.Empty, new { @class = "btn" })
+                            </div>
+                            <br />
+                            <span colspan="2"><p id="pMessage"></p></span>
+                            <span colspan="2">@Html.Display("pMessage", "Select Parent Role") </span>
+                            <span style="color:red;font-weight:bold;"> @Html.Display("Message", "Done Message") </span>
+                           
+                        </div>
+                        <div id="divSpecification" style="display:block;"></div>
+
+                    }
+
+                </div>
+            </div>
+        </div>
+    </div><!--/span-->
+
+</div>
+
+<script src="~/Scripts/jquery-1.10.2.min.js"></script>
+
+<script>
+    $(document).ready(function () {
+
+
+        $("#MasterMenu").change(function () {
+            /* Get the selected value of dropdownlist */
+            var selectedID = $(this).val();
+            var roleList = $("#RoleList").val();
+
+            /*Check Condition*/
+            $('#divSpecification').html(null);
+
+            /*Processing Image*/
+            $("#pageloaddiv").css('display', 'block');
+            $("#pageloaddiv").fadeOut(1000);
+
+
+            /* Request the partial view with .get request. */
+            $.get('/RoleManagement/EditPartialRoleMenu/?MasterMenu=' + selectedID + '&RoleList=' + roleList, function (data) {
+                /* data is the pure html returned from action method, load it to your page */
+                $('#divSpecification').html(data);
+                /* little fade in effect */
+                $('#divSpecification').fadeIn('fast');
+            });
+
+            $("#pageloaddiv").css('display', 'none');
+            $("#pageloaddiv").fadeOut(1000);
+
+        });
+    });
+
+</script>
+
+<script>
+    $(function () {
+        $("#btnSubmit").click(function () {
+            var selectedVal = $("#RoleList option:selected").val();
+            if (selectedVal == '') {
+                pMessage.textContent = 'Please select the role'
+                return false;
+            }
+        });
+    });
+
+    $(function () {
+        $("#RoleList").change(function () {
+            var selectedVal = $("#RoleList option:selected").val();
+            if (selectedVal > 0) {
+
+                $.ajax({
+                    type: "POST",
+                    url: "RoleExistOrNot",
+                    data: "{ id: '" + selectedVal + "'}",
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    async: "true",
+                    cache: "false",
+                    success: function (msg) {
+                        if (msg > 0) {
+                            pMessage.textContent = 'Role Already Exists'
+                            return false;
+                        }
+                        else {
+                            pMessage.textContent = ''
+                        }
+                    },
+                    Error: function (x, e) {
+                        pMessage.textContent = 'Error in Role Selection'
+                    }
+                });
+            }
+        });
+    });
+</script>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $("#CanRead").click(function () {
+            $("[id*=CanRead]").prop('checked', $(this).prop('checked'));
+        });
+    });
+
+
+
+    $(document).ready(function () {
+        $("#CanWrite").click(function () {
+            $("[id*=CanWrite]").prop('checked', $(this).prop('checked'));
+        });
+    });
+
+    $(document).ready(function () {
+        $("#CanDelete").click(function () {
+            $("[id*=CanDelete]").prop('checked', $(this).prop('checked'));
+        });
+    });
+
+    $(document).ready(function () {
+        $("#CanPrint").click(function () {
+            $("[id*=CanPrint]").prop('checked', $(this).prop('checked'));
+        });
+    });
+
+    $(document).ready(function () {
+        $("#CanExport").click(function () {
+            $("[id*=CanExport]").prop('checked', $(this).prop('checked'));
+        });
+    });
+
+    $(document).ready(function () {
+        $("#CanImport").click(function () {
+            $("[id*=CanImport]").prop('checked', $(this).prop('checked'));
+        });
+    });
+
+    $(document).ready(function () {
+        $("#IsActive").click(function () {
+            $("[id*=IsActive]").prop('checked', $(this).prop('checked'));
+        });
+    });
+</script>
+
+<script>
+    $(document).ready(function () {
+        $("#RoleList").change(function () {
+            var selectedVal = $("#RoleList option:selected").val();
+            $.ajax({
+                url: '@Url.Action("MenuRoleList", "RoleManagement")',
+                data: { 'id': RoleList },
+                type: "Post",
+                cache: false,
+                success: function (result) {
+                    $("#ajax_loading_message").css("display", "none");
+                    window.parent.$("#divStockVarient").html(result);
+                }
+            });
+        });
+    });
+    
+    </script>

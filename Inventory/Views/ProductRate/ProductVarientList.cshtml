@@ -1,0 +1,975 @@
+﻿@model ModelLayer.Models.ViewModel.ProductRateListViewModel
+
+
+@*
+    <script src="~/Content/js/jquery-2.1.3.min.js"></script>
+    <link href="~/Content/css/jquery.dataTables.css" rel="stylesheet" />
+    <script src="~/Content/js/jquery.dataTables.js" language="jascript"></script>*@
+
+<script type="text/javascript" class="init">
+    $(document).ready(function () {
+
+        var IsFlatMarginInput = true;
+        function HideCol() {
+            var colToHide1 = $(".CalRate1");
+            $(colToHide1).hide();
+        }
+        HideCol();
+        //add datepicker
+        var table = document.getElementById('tblData');
+        var rowLength = table.rows.length;
+
+        var my_date = new Date();
+        var dateValid = new Date(my_date.getFullYear(), (my_date.getMonth()), (my_date.getDate() + 1), 0, 0, 0, 0);
+
+        for (var i = 0; i < rowLength - 1; i++) {
+            $('.table #RateExpiry-' + i).each(function () {
+                $(this).datepicker({ dateFormat: 'mm/dd/yy', minDate: dateValid });
+            });
+        }
+
+
+        //if select all tick then tick all and enable all textbox
+        $("#selectAll").click(function () {
+            if (!$("#selectAll").prop('readonly')) {
+                var tblChkBox = $('.case');
+                $(tblChkBox).prop('checked', $(this).prop('checked'));
+                var table1 = document.getElementById('tblData');
+                var rowLength1 = table1.rows.length;
+                if ($(this).prop('checked')) {
+                    for (var i = 0; i < rowLength1 - 1; i++) {
+                        //var IsEditablVar = "IsEditable-" + i;
+                        //var IsEditable = $("#" + IsEditablVar).text();
+
+                        //if (IsEditable.trim() == 'True') {
+                        EnableInputField(i);
+                        //}
+                        //else {
+                        //    $(this).removeAttr("checked");
+                        //    var checkboxVar = "checkbox-" + i;
+                        //    $("#" + checkboxVar).removeAttr("checked");
+                        //}
+                    }
+
+                } else {
+                    for (var i = 0; i < rowLength1 - 1; i++) {
+                        //var IsEditablVar = "IsEditable-" + i;
+                        //var IsEditable = $("#" + IsEditablVar).text();
+
+                        //if (IsEditable.trim() == 'True') {
+                        DisableInputField(i);
+                        //}
+                        //else {
+                        //    $(this).removeAttr("checked");
+                        //    var checkboxVar = "checkbox-" + i;
+                        //    $("#" + checkboxVar).removeAttr("checked");
+                        //}
+                    }
+                }
+            }
+            else {
+                $(this).removeAttr("checked");
+            }
+        });
+
+
+
+        //Common Function to enable Input Field
+        function EnableInputField(index) {
+            var MPRVar = "MRP-" + index;
+            var GSTInPerVar = "GSTInPer-" + index;
+            var GrossMarginFlatVar = "GrossMarginFlat-" + index;
+            var BaseInwardPriceEzeeloVar = "BaseInwardPriceEzeelo-" + index;
+            var DecidedSalePriceVar = "DecidedSalePrice-" + index;
+            var ExpiryVar = "RateExpiry-" + index;
+            var IsActiveVar = "IsActive-" + index;
+            var IsEditablVar = "IsEditable-" + index;
+            var IsEditable = $("#" + IsEditablVar).text();
+            if (IsEditable.trim() == 'False') {
+                $('#' + MPRVar).addClass("disabledBorder");
+                $('#' + GSTInPerVar).addClass("disabledBorder");
+                $('#' + GrossMarginFlatVar).addClass("disabledBorder");
+                $('#' + BaseInwardPriceEzeeloVar).addClass("disabledBorder");
+                $('#' + DecidedSalePriceVar).addClass("disabledBorder");
+                $('#' + ExpiryVar).removeClass('animated flash');
+                $('#' + ExpiryVar).addClass('animated flash');
+                $('#' + ExpiryVar).focus();
+            }
+            else {
+                if ($('#' + MPRVar).val() == "0") {
+                    $('#' + MPRVar).val("");
+                }
+                $('#' + MPRVar).removeAttr("readonly");
+
+                if ($('#' + GSTInPerVar).val() == "0") {
+                    $('#' + GSTInPerVar).val("");
+                }
+                $('#' + GSTInPerVar).removeAttr("readonly");
+
+                $('#' + BaseInwardPriceEzeeloVar).removeAttr("readonly");
+                if ($('#' + BaseInwardPriceEzeeloVar).val() == "0") {
+                    $('#' + BaseInwardPriceEzeeloVar).val("");
+                }
+
+                $('#' + GrossMarginFlatVar).removeAttr("readonly");
+                if ($('#' + GrossMarginFlatVar).val() == "0") {
+                    $('#' + GrossMarginFlatVar).val("");
+                }
+
+                $('#' + DecidedSalePriceVar).removeAttr("readonly");
+                if ($('#' + DecidedSalePriceVar).val() == "0") {
+                    $('#' + DecidedSalePriceVar).val("");
+                }
+                $('#' + MPRVar).removeClass('animated flash');
+                $('#' + MPRVar).addClass('animated flash');
+                $('#' + MPRVar).focus();
+            }
+            $('#' + IsActiveVar).removeAttr("readonly");
+
+        }
+
+
+
+        //Common Function to DisableInput Field
+        function DisableInputField(index) {
+            var MPRVar = "MRP-" + index;
+            var GSTInPerVar = "GSTInPer-" + index;
+            var GrossMarginFlatVar = "GrossMarginFlat-" + index;
+            var DecidedSalePriceVar = "DecidedSalePrice-" + index;
+            var ExpiryVar = "RateExpiry-" + index;
+            var GSTOnPRVar = "GSTOnPR-" + index;
+            var PRpreGSTVar = "PRpreGST-" + index;
+            var MaxInwardMarginVar = "MaxInwardMargin-" + index; ////Yashaswi 21/6/2018
+            var MarginPassedToCustomerVar = "MarginPassedToCustomer-" + index; ////Yashaswi 21/6/2018
+            var ActualFlatMarginVar = "ActualFlatMargin-" + index; ////Yashaswi 21/6/2018
+            var IsActiveVar = "IsActive-" + index;
+            var BaseInwardPriceEzeeloVar = "BaseInwardPriceEzeelo-" + index;
+            var IsMarginEntryVar = "IsMarginEntry-" + index;
+
+            $('#' + MPRVar).attr("readonly", "readonly");
+            $('#' + GSTInPerVar).attr("readonly", "readonly");
+            $('#' + GrossMarginFlatVar).attr("readonly", "readonly");
+            $('#' + BaseInwardPriceEzeeloVar).attr("readonly", "readonly");
+            $('#' + DecidedSalePriceVar).attr("readonly", "readonly");
+            $('#' + ExpiryVar).attr("readonly", "readonly");
+            $('#' + IsActiveVar).attr("readonly", "readonly");
+
+            var ValuePostGSTVar = "ValuePostGST-" + index;
+            var DividendVar = "Dividend-" + index;
+
+            var InwardMarginValueVar = "InwardMarginValue-" + index;
+            var i = index;
+
+
+            $('#' + MPRVar).val($('#lbl' + MPRVar).text());
+            $('#' + GSTInPerVar).val($('#lbl' + GSTInPerVar).text());
+            $('#' + GrossMarginFlatVar).val($('#lbl' + GrossMarginFlatVar).text());
+            $('#' + DecidedSalePriceVar).val($('#lbl' + DecidedSalePriceVar).text());
+            $('#' + ExpiryVar).val($('#lbl' + ExpiryVar).text());
+            $('#' + ValuePostGSTVar).val($('#lbl' + ValuePostGSTVar).text());
+            $('#' + DividendVar).val($('#lbl' + DividendVar).text());
+            $('#' + BaseInwardPriceEzeeloVar).val($('#lbl' + BaseInwardPriceEzeeloVar).text());
+            $('#' + InwardMarginValueVar).val($('#lbl' + InwardMarginValueVar).text());
+            $('#' + GSTOnPRVar).val($('#lbl' + GSTOnPRVar).text());
+            $('#' + PRpreGSTVar).val($('#lbl' + PRpreGSTVar).text());
+            $('#' + MaxInwardMarginVar).val($('#lbl' + MaxInwardMarginVar).text());
+            $('#' + MarginPassedToCustomerVar).val($('#lbl' + MarginPassedToCustomerVar).text());
+            $('#' + ActualFlatMarginVar).val($('#lbl' + ActualFlatMarginVar).text());
+            $('#' + IsActiveVar).prop('checked', $('#lbl' + IsActiveVar).text());
+            $('#' + IsMarginEntryVar).val("");
+        }
+
+        //particular check box tick check and enable textbox
+        $('.case').click(function (e) {
+            if (!$('.case').prop('readonly')) {
+
+                if ($(".case").length == $(".case:checked").length) {
+                    $("#selectAll").attr("checked", "checked");
+                } else {
+                    $("#selectAll").removeAttr("checked");
+                }
+
+                var name = e.target.id;
+                var nameSplit = name.split('-');
+
+                var checkboxVar = "checkbox-" + nameSplit[1];
+
+                //var IsEditablVar = "IsEditable-" + nameSplit[1];
+                //var IsEditable = $("#" + IsEditablVar).text();
+
+                //if (IsEditable.trim() == 'True') {
+                if ($("#" + checkboxVar).attr("checked")) {
+                    EnableInputField(nameSplit[1]);
+
+                } else {
+                    DisableInputField(nameSplit[1]);
+                }
+                //}
+                //else {
+                //    $(this).removeAttr("checked");
+                //    $("#selectAll").removeAttr("checked");
+                //    Warning_Msg(' Rate is in used. Rate Modification is not allowed!');
+                //}
+            }
+            else {
+                $(this).removeAttr("checked");
+            }
+        });
+
+        $('.IsAct').click(function (e) {
+            //alert($('.IsAct').prop('readonly'))
+            if ($('.IsAct').prop('readonly')) {
+                var name = e.target.id;
+                var nameSplit = name.split('-');
+                var checkboxVar = "checkbox-" + nameSplit[1];
+                if ($("#" + checkboxVar).attr("checked")) {
+
+                } else {
+                    e.preventDefault();
+                }
+            }
+        });
+
+
+
+        ///Apply searching and sorting and paging
+        //$('#tblData').DataTable({
+        //    dom: 'T<"clear">lfrtip',
+        //    "processing": true,
+        //    "serverSide": true,
+        //    "aaSorting": []
+        //});
+
+        //Make By defalt All Textbox Readonly
+        $('input[type=checkbox]').attr("readonly", "true");
+
+
+        //Add rate cal input field
+        $("#btnAddRate").click(function () {
+            $('.case').removeAttr("readonly");
+            $("#selectAll").removeAttr("readonly");
+            $("#tblData").removeClass("tblwidth1");
+
+            showCol();
+
+            $("#btnSave").show();
+            $("#btnAddRate").hide();
+
+            $('input[type=text]').attr("readonly", "readonly");
+            $("#lblmsg").text("");
+            $("#lblmsg").text("Field with * are mandatory");
+            $("#lblmsg").removeClass('hidemsg');
+            $("#lblmsg").addClass('animated flash');
+
+        });
+
+
+        function showCol() {
+            var colToHide = $(".hideRate");
+            $(colToHide).hide();
+            var colToShow = $(".CalRate1");
+            $(colToShow).show();
+            $(colToShow).addClass('animated fadeInLeft');
+
+        }
+
+        $('.Number').keypress(function (event) {
+            if ((event.which > 47 && event.which < 58) || event.which == 46 || event.which == 8) {
+                $("#lblmsg").removeClass('infinite');
+                $("#lblmsg").addClass('hidemsg');
+            }
+            else {
+                $("#lblmsg").text("");
+                $("#lblmsg").text("Only Numbers are Allowed.");
+                $("#lblmsg").removeClass('hidemsg');
+                $("#lblmsg").addClass('animated flash');
+                event.preventDefault();
+            }
+        }).on('paste', function (event) {
+            event.preventDefault();
+        });
+
+        $('.Number').keyup(function (event) {
+            var name = event.target.id;
+            var nameSplit = name.split('-');
+            var DecidedSalePriceVar = "DecidedSalePrice-" + nameSplit[1];
+            if (name == DecidedSalePriceVar) {
+                var MRPVar = "MRP-" + nameSplit[1];
+                var MRP = Number($('#' + MRPVar).val());
+                var DecidedSalePrice = Number($('#' + DecidedSalePriceVar).val());
+                if (DecidedSalePrice > MRP) {
+                    $('#' + DecidedSalePriceVar).val(MRP);
+
+                    $("#lblmsg").removeClass('animated flash');
+                    $("#lblmsg").text("");
+                    $("#lblmsg").text("Decided Sale Price can not be greater than MRP.");
+                    $("#lblmsg").removeClass('hidemsg');
+                    $("#lblmsg").addClass('animated flash');
+                }
+                else {
+                    $("#lblmsg").addClass('hidemsg');
+                }
+            }
+
+            CalculateRate($(this).attr('id'));
+        }).on('paste', function (event) {
+            event.preventDefault();
+        });
+
+        $('input[id ^="DecidedSalePrice"]').blur(function (event) {
+            var name = event.target.id;
+            var nameSplit = name.split('-');
+            var DecidedSalePriceVar = "DecidedSalePrice-" + nameSplit[1];
+            var BaseInwardPriceEzeeloVar = "BaseInwardPriceEzeelo-" + nameSplit[1];
+            var DecidedSalePrice = Number($('#' + DecidedSalePriceVar).val());
+            var BaseInwardPriceEzeelo = Number($('#' + BaseInwardPriceEzeeloVar).val());
+            //var DecidedSalePrice = $('#' + DecidedSalePriceVar).val();
+            //var BaseInwardPriceEzeelo = $('#' + BaseInwardPriceEzeeloVar).val();
+            if (DecidedSalePrice < BaseInwardPriceEzeelo) {
+                $('#' + DecidedSalePriceVar).focus();
+                $('#btnSave').attr("disabled", "disabled");
+                $("#lblmsg").removeClass('animated flash');
+                $("#lblmsg").text("");
+                $("#lblmsg").text("Decided Sale Price can not be less than Base Inward Price for Ezeelo.");
+                $("#lblmsg").removeClass('hidemsg');
+                $("#lblmsg").addClass('animated flash');
+            }
+            else {
+                //$("#lblmsg").addClass('hidemsg');
+                $('#btnSave').removeAttr("disabled");
+                var InwardMarginValueVar = "InwardMarginValue-" + nameSplit[1];
+                var InwardMarginValue = $('#' + InwardMarginValueVar).val();
+                var Varient = $('#lblVarientName-' + nameSplit[1]).text();
+                CheckInvardMargin(DecidedSalePrice, InwardMarginValue, Varient)
+            }
+
+        });
+
+
+        $('.Number').click(function (event) {
+            if ($(this).attr("readonly") == "readonly") {
+                var name = event.target.id;
+                var nameSplit = name.split('-');
+                var IsEditableVar = "IsEditable-" + nameSplit[1];
+                var IsEditable = $("#" + IsEditableVar).text();
+                if (IsEditable.trim() == 'False') {
+                    $("#lblmsg").removeClass('infinite');
+                    $("#lblmsg").removeClass('animated flash');
+                    $("#lblmsg").text("");
+                    $("#lblmsg").text(" Rate is in used. Rate Modification is not allowed!  Only Rate Expiry And IsActive Field Is Editable.");
+                    $("#lblmsg").removeClass('hidemsg');
+                    $("#lblmsg").addClass('animated flash');
+                } else {
+                    $("#lblmsg").removeClass('infinite');
+                    $("#lblmsg").removeClass('animated flash');
+                    $("#lblmsg").text("");
+                    $("#lblmsg").text("To enable input field, please check checkbox.");
+                    $("#lblmsg").removeClass('hidemsg');
+                    $("#lblmsg").addClass('animated flash');
+                }
+            }
+
+        });
+
+        function CalculateRate(activeEle) {
+            var table_ = document.getElementById('tblData');
+            var rowLength_ = table_.rows.length;
+
+            for (var i = 0; i < rowLength_ - 1; i++) {
+                var checkboxVar = "checkbox-" + i;
+                if ($("#" + checkboxVar).attr("checked")) {
+                    var IsMarginEntry = $('#IsMarginEntry-' + i).val();
+                    var Varient = $('#lblVarientName-' + i).text();
+
+                    var MPRVar = "MRP-" + i;
+                    var GSTVar = "GSTInPer-" + i;
+                    var GrossMarginFlatVar = "GrossMarginFlat-" + i;
+                    var DecidedSalePriceVar = "DecidedSalePrice-" + i;
+                    var ValuePostGSTVar = "ValuePostGST-" + i;
+                    var DividendVar = "Dividend-" + i;
+                    var BaseInwardPriceEzeeloVar = "BaseInwardPriceEzeelo-" + i;
+                    var InwardMarginValueVar = "InwardMarginValue-" + i;
+                    var GSTOnPRVar = "GSTOnPR-" + i;
+                    var PRpreGSTVar = "PRpreGST-" + i;
+                    var MaxInwardMarginVar = "MaxInwardMargin-" + i; ////Yashaswi 6/6/2018
+                    var MarginPassedToCustomerVar = "MarginPassedToCustomer-" + i; ////Yashaswi 6/6/2018
+                    var ActualFlatMarginVar = "ActualFlatMargin-" + i; ////Yashaswi 21/6/2018
+
+                    var MRP = Number($('#' + MPRVar).val());
+                    var GSTInPer = Number($('#' + GSTVar).val());
+                    var GrossMarginFlat = ($('#' + GrossMarginFlatVar).val());
+                    var DecidedSalePrice = Number($("#" + DecidedSalePriceVar).val());
+                    var BaseInwardPriceEzeelo = ($("#" + BaseInwardPriceEzeeloVar).val());
+
+                    var ValuePostGST;
+                    var Dividend;
+                    var InwardMarginValue;
+                    var GSTOnPR;
+                    var PRpreGST;
+                    var MaxInwardMargin; ////Yashaswi 6/6/2018
+                    var MarginPassedToCustomer; ////Yashaswi 6/6/2018
+                    var ActualFlatMargin; ////Yashaswi 21/6/2018
+
+                    ///............Formula..................
+                    //  1. ValuePostGST = (MRP / ( 1 + GSTInPer / 100))
+                    //  2. Dividend = (( 1 + GrossMarginFlat) / 100)
+                    //  3. BaseInwardPriceEzeelo = (MRP / Dividend)
+                    //  4. InwardMarginValue = (DecidedSalePrice - BaseInwardPriceEzeelo)
+                    //  5. GSTOnPR = (BaseInwardPriceEzeelo - (BaseInwardPriceEzeelo / 1+ (GSTInPer/100)))
+                    //  6. PRpreGST = InwardMarginValue-GSTOnPR
+
+                    ValuePostGST = GetTwoDecimal(MRP / (1 + GSTInPer / 100));
+                    if (activeEle.indexOf("BaseInwardPriceEzeelo") == 0 || IsMarginEntry == "1") {
+                        $('#IsMarginEntry-' + i).val("1");
+                        GrossMarginFlat = GetTwoDecimal(((MRP * 100) / BaseInwardPriceEzeelo) - 100);
+                        Dividend = GetTwoDecimal(1 + (GrossMarginFlat / 100));
+                        if (GrossMarginFlat == Infinity || Dividend == Infinity) {
+                            GrossMarginFlat = 0;
+                            Dividend = 0;
+                        }
+                        if (BaseInwardPriceEzeelo == "" || BaseInwardPriceEzeelo == 0 || BaseInwardPriceEzeelo == "0") {
+                            GrossMarginFlat = 0;
+                            Dividend = 0;
+                        }
+                        $('#' + BaseInwardPriceEzeeloVar).addClass("FlatOrPREntry");
+                        $('#' + GrossMarginFlatVar).removeClass("FlatOrPREntry");
+                        //alert(BaseInwardPriceEzeelo);
+                    } else {
+                        if (GrossMarginFlat != "" && GrossMarginFlat != "0" && GrossMarginFlat != 0) {                            
+                            Dividend = GetTwoDecimal(1 + (GrossMarginFlat / 100));
+                            BaseInwardPriceEzeelo = GetTwoDecimal(MRP / (1 + (GrossMarginFlat / 100)));
+                        } else {
+                            Dividend = 0;
+                            BaseInwardPriceEzeelo = 0;
+                        }
+                        $('#' + GrossMarginFlatVar).addClass("FlatOrPREntry");
+                        $('#' + BaseInwardPriceEzeeloVar).removeClass("FlatOrPREntry");
+                    }
+
+
+                    GSTOnPR = GetTwoDecimal(BaseInwardPriceEzeelo - (BaseInwardPriceEzeelo / (1 + GSTInPer / 100)));
+                    PRpreGST = GetTwoDecimal(BaseInwardPriceEzeelo - GSTOnPR);
+                    if (DecidedSalePrice > 0) {
+                        InwardMarginValue = GetTwoDecimal(DecidedSalePrice - BaseInwardPriceEzeelo);
+                        CheckInvardMargin(DecidedSalePrice, InwardMarginValue, Varient); ////Yashaswi 6/6/2018
+                        ActualFlatMargin = GetTwoDecimal((DecidedSalePrice * 100 / BaseInwardPriceEzeelo) - 100);////Yashaswi 21/6/2018
+                    }
+                    else {
+                        InwardMarginValue = 0;
+                        ActualFlatMargin = 0;
+                    }
+                    MaxInwardMargin = GetTwoDecimal(MRP - BaseInwardPriceEzeelo); ////Yashaswi 6/6/2018
+                    MarginPassedToCustomer = GetTwoDecimal(MaxInwardMargin - InwardMarginValue); ////Yashaswi 6/6/2018
+
+
+
+                    //Start //Yashaswi 6/6/2018
+                    if (Number(InwardMarginValue) > Number(MaxInwardMargin)) {
+                        $("#lblmsg").show();
+                        $("#lblmsg").addClass('animated infinite flash');
+                        $("#lblmsg").text("");
+                        var msgTxt = $("#lblmsg").text();
+                        if (msgTxt != "") {
+                            msgTxt = msgTxt + "\n";
+                        }
+                        msgTxt = msgTxt + "Inward Margin Value can not be greater than Maximum Inward Margin Value.";
+                        $("#lblmsg").text(msgTxt);
+                        $("#lblmsg").removeClass('hidemsg');
+                    }
+                    //End
+
+
+                    $('#' + ValuePostGSTVar).val(ValuePostGST);
+                    $('#' + DividendVar).val(Dividend);
+                    $('#' + BaseInwardPriceEzeeloVar).val(BaseInwardPriceEzeelo);
+                    $('#' + GrossMarginFlatVar).val(GrossMarginFlat);
+                    $('#' + InwardMarginValueVar).val(InwardMarginValue);
+                    $('#' + GSTOnPRVar).val(GSTOnPR);
+                    $('#' + PRpreGSTVar).val(PRpreGST);
+                    $('#' + MaxInwardMarginVar).val(MaxInwardMargin); ////Yashaswi 6/6/2018
+                    $('#' + MarginPassedToCustomerVar).val(MarginPassedToCustomer); ////Yashaswi 6/6/2018
+                    $('#' + ActualFlatMarginVar).val(ActualFlatMargin); ////Yashaswi 21/6/2018
+                }
+            }
+        }
+
+        //function CalculateRate(activeEle) {
+        //    var table_ = document.getElementById('tblData');
+        //    var rowLength_ = table_.rows.length;
+
+        //    for (var i = 0; i < rowLength_ - 1; i++) {
+        //        var checkboxVar = "checkbox-" + i;
+        //        if ($("#" + checkboxVar).attr("checked")) {
+        //            var Varient = $('#lblVarientName-' + i).text();
+
+        //            var MPRVar = "MRP-" + i;
+        //            var GSTVar = "GSTInPer-" + i;
+        //            var GrossMarginFlatVar = "GrossMarginFlat-" + i;
+        //            var DecidedSalePriceVar = "DecidedSalePrice-" + i;
+        //            var ValuePostGSTVar = "ValuePostGST-" + i;
+        //            var DividendVar = "Dividend-" + i;
+        //            var BaseInwardPriceEzeeloVar = "BaseInwardPriceEzeelo-" + i;
+        //            var InwardMarginValueVar = "InwardMarginValue-" + i;
+        //            var GSTOnPRVar = "GSTOnPR-" + i;
+        //            var PRpreGSTVar = "PRpreGST-" + i;
+        //            var MaxInwardMarginVar = "MaxInwardMargin-" + i; ////Yashaswi 6/6/2018
+        //            var MarginPassedToCustomerVar = "MarginPassedToCustomer-" + i; ////Yashaswi 6/6/2018
+        //            var ActualFlatMarginVar = "ActualFlatMargin-" + i; ////Yashaswi 21/6/2018
+
+        //            var MRP = Number($('#' + MPRVar).val());
+        //            var GSTInPer = Number($('#' + GSTVar).val());
+        //            var GrossMarginFlat = ($('#' + GrossMarginFlatVar).val());
+        //            var DecidedSalePrice = Number($("#" + DecidedSalePriceVar).val());
+        //            var BaseInwardPriceEzeelo = ($("#" + BaseInwardPriceEzeeloVar).val());
+
+        //            var ValuePostGST;
+        //            var Dividend;
+        //            var InwardMarginValue;
+        //            var GSTOnPR;
+        //            var PRpreGST;
+        //            var MaxInwardMargin; ////Yashaswi 6/6/2018
+        //            var MarginPassedToCustomer; ////Yashaswi 6/6/2018
+        //            var ActualFlatMargin; ////Yashaswi 21/6/2018
+
+        //            ///............Formula..................
+        //            //  1. ValuePostGST = (MRP / ( 1 + GSTInPer / 100))
+        //            //  2. Dividend = (( 1 + GrossMarginFlat) / 100)
+        //            //  3. BaseInwardPriceEzeelo = (MRP / Dividend)
+        //            //  4. InwardMarginValue = (DecidedSalePrice - BaseInwardPriceEzeelo)
+        //            //  5. GSTOnPR = (BaseInwardPriceEzeelo - (BaseInwardPriceEzeelo / 1+ (GSTInPer/100)))
+        //            //  6. PRpreGST = InwardMarginValue-GSTOnPR
+
+        //            ValuePostGST = (MRP / (1 + GSTInPer / 100)).toFixed(2);
+        //            if (activeEle.indexOf("BaseInwardPriceEzeelo") == 0 ) {
+
+        //                GrossMarginFlat = (((MRP * 100) / BaseInwardPriceEzeelo) - 100).toFixed(2);
+        //                Dividend = (1 + (GrossMarginFlat / 100)).toFixed(2);
+        //                if (GrossMarginFlat == Infinity || Dividend == Infinity) {
+        //                    GrossMarginFlat = 0;
+        //                    Dividend = 0;
+        //                }
+        //            } else {
+        //                if (GrossMarginFlat != "" && GrossMarginFlat != "0" && GrossMarginFlat != 0) {
+        //                    Dividend = (1 + (GrossMarginFlat / 100)).toFixed(2);
+        //                    BaseInwardPriceEzeelo = (MRP / Dividend).toFixed(2);
+        //                } else {
+        //                    Dividend = 0;
+        //                    BaseInwardPriceEzeelo = 0;
+        //                }
+        //            }
+
+
+        //            GSTOnPR = (BaseInwardPriceEzeelo - (BaseInwardPriceEzeelo / (1 + GSTInPer / 100))).toFixed(2);
+        //            PRpreGST = (BaseInwardPriceEzeelo - GSTOnPR).toFixed(2);
+        //            if (DecidedSalePrice > 0) {
+        //                InwardMarginValue = (DecidedSalePrice - BaseInwardPriceEzeelo).toFixed(2);
+        //                CheckInvardMargin(DecidedSalePrice, InwardMarginValue, Varient); ////Yashaswi 6/6/2018
+        //                ActualFlatMargin = ((DecidedSalePrice * 100 / BaseInwardPriceEzeelo) - 100).toFixed(2);////Yashaswi 21/6/2018
+        //            }
+        //            else {
+        //                InwardMarginValue = 0;
+        //                ActualFlatMargin = 0;
+        //            }
+        //            MaxInwardMargin = (MRP - BaseInwardPriceEzeelo).toFixed(2); ////Yashaswi 6/6/2018
+        //            MarginPassedToCustomer = (MaxInwardMargin - InwardMarginValue).toFixed(2); ////Yashaswi 6/6/2018
+
+
+
+        //            //Start //Yashaswi 6/6/2018
+        //            if (InwardMarginValue > MaxInwardMargin) {
+        //                $("#lblmsg").show();
+        //                $("#lblmsg").addClass('animated infinite flash');
+        //                $("#lblmsg").text("");
+        //                var msgTxt = $("#lblmsg").text();
+        //                if (msgTxt != "") {
+        //                    msgTxt = msgTxt + "\n";
+        //                }
+        //                msgTxt = msgTxt + "Inward Margin Value can not be greater than Maximum Inward Margin Value.";
+        //                $("#lblmsg").text(msgTxt);
+        //                $("#lblmsg").removeClass('hidemsg');
+        //            }
+        //            //End
+
+
+        //            $('#' + ValuePostGSTVar).val(ValuePostGST);
+        //            $('#' + DividendVar).val(Dividend);
+        //            $('#' + BaseInwardPriceEzeeloVar).val(BaseInwardPriceEzeelo);
+        //            $('#' + GrossMarginFlatVar).val(GrossMarginFlat);
+        //            $('#' + InwardMarginValueVar).val(InwardMarginValue);
+        //            $('#' + GSTOnPRVar).val(GSTOnPR);
+        //            $('#' + PRpreGSTVar).val(PRpreGST);
+        //            $('#' + MaxInwardMarginVar).val(MaxInwardMargin); ////Yashaswi 6/6/2018
+        //            $('#' + MarginPassedToCustomerVar).val(MarginPassedToCustomer); ////Yashaswi 6/6/2018
+        //            $('#' + ActualFlatMarginVar).val(ActualFlatMargin); ////Yashaswi 21/6/2018
+        //        }
+        //    }
+        //}
+
+        function GetTwoDecimal(num) {
+            if (num == 0 || num == "0" || num == Number.NEGATIVE_INFINITY || num == Number.POSITIVE_INFINITY) {
+                return 0;
+            } else {
+                var with2Decimals = num.toString().match(/^-?\d+(?:\.\d{0,2})?/)[0]
+                return with2Decimals;
+            }
+        }
+
+        function CheckInvardMargin(DecidedSalePrice, InwardMarginValue, Varient) {
+            var EzSalePrice = ((DecidedSalePrice / (1 + (6 / 100))) / (1 + (2 / 100)));
+            var FVDVMargin = DecidedSalePrice - EzSalePrice;
+
+            var EzMargin = InwardMarginValue - FVDVMargin;
+            if (EzMargin <= 0) {
+                EzMargin = EzMargin.toFixed(2) * -1;
+                $("#lblmsg").show();
+                $("#lblmsg").addClass('animated infinite flash');
+                $("#lblmsg").text("");
+                $("#lblmsg").text("This Decided Sale Price for " + Varient + " will result into " + EzMargin + " Rs Loss For Ezeelo");
+                $("#lblmsg").removeClass('hidemsg');
+            }
+            else {
+                $("#lblmsg").removeClass('infinite');
+                $("#lblmsg").addClass('hidemsg');
+            }
+        }
+
+
+
+        $("#RateForm_").on("submit", function (e) {
+
+            var table_ = document.getElementById('tblData');
+            var rowLength_ = table_.rows.length;
+            var IsNoData = false;
+            var CheckCnt = 0;
+            var IsValid = true;
+            for (var i = 0; i < rowLength_ - 1; i++) {
+                var checkboxVar = "checkbox-" + i;
+                if ($("#" + checkboxVar).attr("checked")) {
+                    CheckCnt = CheckCnt + 1;
+                    var MPRVar = "MRP-" + i;
+                    var DecidedSalePriceVar = "DecidedSalePrice-" + i;
+                    var RateExpiryVar = "RateExpiry-" + i;
+                    var GrossMarginFlatVar = "GrossMarginFlat-" + i;
+                    var GSTInPerVar = "GSTInPer-" + i;
+                    
+
+                    var MRP = Number($('#' + MPRVar).val());
+                    var DecidedSalePrice = Number($("#" + DecidedSalePriceVar).val());
+                    var RateExpiry = $("#" + RateExpiryVar).val();
+                    var GrossMarginFlat = Number($('#' + GrossMarginFlatVar).val());
+                    var GSTInPer = Number($('#' + GSTInPerVar).val());
+                    var content_msg = "";
+
+                    var dateSplit = RateExpiry.split('/');
+                    var SelectedDate = new Date(dateSplit[2], Number(dateSplit[0]) - 1, dateSplit[1]);
+                    var Currentdate = new Date();
+
+                    if (MRP == 0) {
+                        content_msg = "MRP value can not be ZERO.";
+                    }
+                    
+                    if (GrossMarginFlat == 0) {
+                        content_msg = content_msg + "<br/> Gross Margin Flat value can not be ZERO.";
+                    }
+                    if (SelectedDate <= Currentdate) {
+                        content_msg = content_msg + "<br/> Expiry Date cant not be less than Current Date.";
+                    }
+                    if (RateExpiry == "01/01/0001" || RateExpiry == "1/1/0001") {
+                        content_msg = content_msg + "<br/> Please Select Expiry Date for Rate.";
+                    }
+                    if (DecidedSalePrice == 0) {
+                        content_msg = content_msg + "<br/> Decided Sale Price value can not be ZERO.";
+                    }
+
+                    if (content_msg.trim() != "") {
+                        IsValid = false;
+                        Warning_Msg(content_msg);
+                        e.preventDefault();
+                        break;
+                    } else {
+                        IsValid = true;
+                    }
+                }
+                else {
+                    IsNoData = true;
+                }
+            }
+
+
+
+            if (IsNoData == true && CheckCnt == 0) {
+                e.preventDefault();
+                Warning_Msg("No data to save.");
+                IsValid = false;
+            }
+
+            if (IsValid == true) {
+                Lobibox.progress({
+                    title: 'Please wait',
+                    label: 'Saving Your Data..',
+                    onShow: function ($this) {
+                        var i = 0;
+                        var inter = setInterval(function () {
+                            window.console.log(i);
+                            if (i > 100) {
+                                inter = clearInterval(inter);
+                            }
+                            i = i + 0.08;
+                            $this.setProgress(i);
+                        }, 10);
+                    }
+                });
+            }
+
+        });
+
+
+        function Warning_Msg(content_Warning) {
+            if (content_Warning == null || content_Warning != '') {
+                Lobibox.alert("warning",
+                        {
+                            size: 'large',
+                            title: '<i class="icon-warning-sign" title="Generate Quotation"></i>',
+                            delayIndicator: false,
+                            msg: content_Warning,
+                            showClass: 'rollIn',//'zoomInUp',                // Show animation class
+                            hideClass: 'rollOut',//'zoomOutDown',               // Hide animation class
+                        });
+                $.ajax({
+                    url: "/Common/Make_WarningSessionNull",
+                    type: "POST",
+                    dataType: "json",
+                    traditional: true,
+                    contentType: "application/json; charset=utf-8",
+                    success: function (data) {
+
+                    },
+                    error: function () {
+
+                    }
+                });
+            }
+        }
+
+    });
+</script>
+<style>
+    .disabledBorder {
+        border-color: gray !important;
+    }
+
+    .header {
+        background-color: #536075 !important; /*4B77BE*/
+        color: white;
+    }
+
+    .tblwidth1 {
+        width: 50% !important;
+    }
+
+
+    .header span {
+        color: red;
+    }
+
+    .hidemsg {
+        visibility: hidden;
+    }
+
+    .FlatOrPREntry {
+        border: solid !important;
+        border-color: green !important;
+    }
+</style>
+
+@using (Html.BeginForm("ProductVarientList", "ProductRate", null, FormMethod.Post, new { id = "RateForm_" }))
+{
+<section class="right_side_main_part">
+    <div class="row-fluid">
+        <div class="box span12 right_side_up_part">
+            <div class="box-header">
+                <h2>
+                    <i class="icon-list-alt"></i>
+                    <span class="break"></span>
+                    Product Varient List
+                </h2>
+            </div>
+
+
+            <div class="box-content">
+                <ol style="float:right;" type="1">
+                    <li style="color:red">Note</li>
+                    <li style="color: #84c378">Product From Quotation</li>
+                    <li style="color: #d75e5e"> Product Rate Expired</li>
+                </ol>
+                <div>
+                    <table style="text-align:center;width:40%;margin-left:30%">
+                        <tr>
+                            <td>
+                                <h1 style="color:#083a5f"><b><u> @Model.ProductName</u></b></h1>
+                                @Html.HiddenFor(model => model.ProductId)
+                            </td>
+                        </tr>
+                        <tr>
+                            <td> <h2>HSN Code : @Model.HSNCode </h2> </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <h2>Varient Count : @Model.VarientList.Count() </h2>
+                            </td>
+                        </tr>
+
+                    </table>
+                </div>
+                <center>
+                    <br />
+                    <input type="button" id="btnAddRate" value="Add Rate" class="btn btn-success mrg-left mrg-top" />
+                    <input type="submit" id="btnSave" value="Save Rate" class="btn btn-success mrg-left mrg-top" style="display:none" />
+
+                    <br />
+                    <label id="lblmsg" style="color: red; position: relative; margin-top: 20px;" class="hidemsg"></label>
+                    <br />
+                    <table id="tblData" class="table border-table display tblwidth1">
+                        <thead>
+                            <tr>
+                                <th class="header CalRate1"><input type="checkbox" id="selectAll" /> </th>
+                                <th class="header hideRate">Sr.No</th>
+                                <th class="header">Varient</th>
+                                <th class="header hideRate">MRP</th>
+                                <th class="header hideRate">Purchase Rate</th>
+
+                                <th class="header CalRate1">MRP<span>*</span></th>
+                                <th class="header CalRate1">GST%<span>*</span></th>
+                                <th class="header CalRate1">Value Post GST</th>
+                                <th class="header CalRate1">Gross Margin Flat<span style="color:#f3e810">*</span></th>
+                                <th class="header CalRate1">Actual Flat Margin for supply Chain</th> @*21/6/2018*@
+                                <th class="header CalRate1">Dividend</th>
+                                <th class="header CalRate1">Base Inward <br />Price Ezeelo <br />With GST <span style="color: #f3e810">*</span></th>
+                                <th class="header CalRate1">GST On PR</th>
+                                <th class="header CalRate1">Base Inward <br />Price Ezeelo <br />Pre GST</th>
+                                @* Start Yashaswi //6/6/2018*@
+                                <th class="header CalRate1">Max Inward Margin </th>
+                                <th class="header CalRate1">Margin Passed to Customer</th>
+                                @* End //*@
+                                <th class="header CalRate1">Inward <br />Margin Value </th>
+                                <th class="header CalRate1">Decided Sale Price<span>*</span></th>
+                                <th class="header CalRate1">Rate Valid Up To<span>*</span><br /><span style="color:red"> <i class="icon-info-sign"></i> MM/dd/yyyy </span></th>
+                                <th class="header CalRate1">IsActive</th>
+                            </tr>
+                        </thead>
+
+                        @{
+                            DateTime currDate = DateTime.Now.Date;
+                            DateTime NoDate = new DateTime(0001, 01, 01);
+                        }
+                        @for (var i = 0; i < Model.VarientList.Count(); i++)
+                        {
+                            <tr id="Row-@i" style="@( (@Model.VarientList[i].RateExpiry < currDate && @Model.VarientList[i].RateExpiry != null && @Model.VarientList[i].RateExpiry != NoDate) ? " background-color:#fed2d2": @Model.VarientList[i].IsFromQuotation == true ? "background-color:#e4fedf":"" ) ">
+
+                                <td class="CalRate1">
+                                    @Html.CheckBoxFor(model => model.VarientList[i].checkbox, new { id = "checkbox-" + i, @class = "case" })
+                                    @Html.HiddenFor(model => model.VarientList[i].ProductVarientId)
+                                    @Html.HiddenFor(model => model.VarientList[i].ProductId)
+                                    @Html.HiddenFor(model => model.VarientList[i].IsEditable)
+                                    @Html.HiddenFor(model => model.VarientList[i].ID)
+                                    <input type="hidden" id="IsMarginEntry-@i" />
+                                    <label id="ProductVarientId-@i" style="display:none;"> @Model.VarientList[i].ProductVarientId</label>
+                                    <label id="ProductId-@i" style="display:none;"> @Model.VarientList[i].ProductId</label>
+                                    <label id="IsEditable-@i" style="display:none;"> @Model.VarientList[i].IsEditable</label>
+                                </td>
+                                <td class="hideRate">
+                                    @{
+                                        var j = i;
+                                        j = j + 1;
+                                    }
+                                    @j
+                                </td>
+                                <td>
+                                    @Model.VarientList[i].VarientName
+                                    <label style="display:none" id="lblVarientName-@i">@Model.VarientList[i].VarientName</label>
+                                </td>
+                                <td class="hideRate">
+                                    @Model.VarientList[i].MRP_
+                                </td>
+                                <td class="hideRate">
+                                    @Model.VarientList[i].PurchaseRate
+                                </td>
+
+
+                                <td class="CalRate1">
+                                    @Html.TextBoxFor(model => model.VarientList[i].MRP, new { style = "width:60px;border:double;border-color:green !important", id = "MRP-" + i, @class = "Number" })
+                                    <label style="display:none" id="lblMRP-@i">@Model.VarientList[i].MRP</label>
+                                </td>
+                                <td class="CalRate1">
+                                    @Html.TextBoxFor(model => model.VarientList[i].GSTInPer, new { style = "width:60px;border:double;border-color:green !important", id = "GSTInPer-" + i, @class = "Number" })
+                                    <label style="display:none" id="lblGSTInPer-@i">@Model.VarientList[i].GSTInPer</label>
+                                </td>
+                                <td class="CalRate1">
+                                    @Html.TextBoxFor(model => model.VarientList[i].ValuePostGST, new { style = "width:60px", id = "ValuePostGST-" + i })
+                                    <label style="display:none" id="lblValuePostGST-@i">@Model.VarientList[i].ValuePostGST</label>
+                                </td>
+                                <td class="CalRate1">
+                                    @Html.TextBoxFor(model => model.VarientList[i].GrossMarginFlat, new { style = "width:60px;border:double;border-color:green !important", id = "GrossMarginFlat-" + i, @class = "Number" })
+                                    <label style="display:none" id="lblGrossMarginFlat-@i">@Model.VarientList[i].GrossMarginFlat</label>
+                                </td>
+                                @*21/6/2018*@
+                                <td class="CalRate1">
+                                    @Html.TextBoxFor(model => model.VarientList[i].ActualFlatMargin, new { style = "width:60px", id = "ActualFlatMargin-" + i })
+                                    <label style="display:none" id="lblActualFlatMargin-@i">@Model.VarientList[i].ActualFlatMargin</label>
+                                </td>
+                                @*End*@
+                                <td class="CalRate1">
+                                    @Html.TextBoxFor(model => model.VarientList[i].Dividend, new { style = "width:60px", id = "Dividend-" + i })
+                                    <label style="display:none" id="lblDividend-@i">@Model.VarientList[i].Dividend</label>
+                                </td>
+                                <td class="CalRate1">
+                                    @Html.TextBoxFor(model => model.VarientList[i].BaseInwardPriceEzeelo, new { style = "width:60px;border:double;border-color:green !important", id = "BaseInwardPriceEzeelo-" + i, @class = "Number" })
+                                    <label style="display:none" id="lblBaseInwardPriceEzeelo-@i">@Model.VarientList[i].BaseInwardPriceEzeelo</label>
+                                </td>
+                                <td class="CalRate1">
+                                    @Html.TextBoxFor(model => model.VarientList[i].GSTOnPR, new { style = "width:60px", id = "GSTOnPR-" + i })
+                                    <label style="display:none" id="lblGSTOnPR-@i">@Model.VarientList[i].GSTOnPR</label>
+                                </td>
+                                <td class="CalRate1">
+                                    @Html.TextBoxFor(model => model.VarientList[i].BaseInwardPriceEzeelopreGSt, new { style = "width:60px", id = "PRpreGST-" + i })
+                                    <label style="display:none" id="lblBaseInwardPriceEzeelopreGSt-@i">@Model.VarientList[i].BaseInwardPriceEzeelopreGSt</label>
+                                </td>
+                                @* Start Yashaswi //6/6/2018*@
+                                <td class="CalRate1">
+                                    @Html.TextBoxFor(model => model.VarientList[i].MaxInwardMargin, new { style = "width:60px", id = "MaxInwardMargin-" + i })
+                                    <label style="display:none" id="lblMaxInwardMargin-@i">@Model.VarientList[i].MaxInwardMargin</label>
+                                </td>
+                                <td class="CalRate1">
+                                    @Html.TextBoxFor(model => model.VarientList[i].MarginPassedToCustomer, new { style = "width:60px", id = "MarginPassedToCustomer-" + i })
+                                    <label style="display:none" id="lblMarginPassedToCustomer-@i">@Model.VarientList[i].MarginPassedToCustomer</label>
+                                </td>
+                                @* End //6/6/2018*@
+                                <td class="CalRate1">
+                                    @Html.TextBoxFor(model => model.VarientList[i].InwardMarginValue, new { style = "width:60px", id = "InwardMarginValue-" + i })
+                                    <label style="display:none" id="lblInwardMarginValue-@i">@Model.VarientList[i].InwardMarginValue</label>
+                                </td>
+                                <td class="CalRate1">
+                                    @Html.TextBoxFor(model => model.VarientList[i].DecidedSalePrice, new { style = "width:60px;border:double;border-color:green !important", id = "DecidedSalePrice-" + i, @class = "Number" })
+                                    <label style="display:none" id="lblDecidedSalePrice-@i">@Model.VarientList[i].DecidedSalePrice</label>
+                                </td>
+                                <td class="CalRate1">
+                                    @Html.TextBoxFor(model => model.VarientList[i].RateExpiry, "{0:MM/dd/yyyy}", new { style = "width:70px;border:double;border-color:green !important", @readonly = "readonly", placeholder = "Rate Valid UpTo", @required = "required", id = "RateExpiry-" + i, @class = "DateTxt" })
+                                    <label style="display:none" id="lblRateExpiry-@i">@Model.VarientList[i].RateExpiry.ToString("MM/dd/yyyy")</label>
+                                </td>
+                                <td class="CalRate1">
+                                    @Html.CheckBoxFor(model => model.VarientList[i].IsActive, new { id = "IsActive-" + i, @class = "IsAct" })
+                                    <label style="display:none" id="lblIsActive-@i">@Model.VarientList[i].IsActive</label>
+                                </td>
+                            </tr>
+                        }
+                    </table>
+                </center>
+                <p>
+                    @Html.ActionLink("Back to Product List", "ProductList", null, new { @class = "btn btn-default mrg-left mrg-top" })
+
+                </p>
+            </div>
+        </div>
+    </div>
+</section>
+}

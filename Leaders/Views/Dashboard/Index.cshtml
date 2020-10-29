@@ -1,0 +1,505 @@
+﻿@model ModelLayer.Models.ViewModel.DashboardViewModel
+@{
+    ViewBag.Title = "Dashboard";
+    Layout = "~/Views/Shared/_LeaderUsersLayout.cshtml";
+    Html.EnableClientValidation(true);
+}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Leaders</title>
+
+    <script>
+        $(document).ready(function () {
+            $('#btnsubmitReff').click();
+            $('#btnsubmit').click();
+            if ('@Model.isUserActive' == 'True') {
+                $("#divQRP span").css("color", "#42a240");
+                $("#divQRP").removeClass("QualifyingRetailPointsMain");
+                $("#divQRP").addClass("QualifyingRetailPointsMainGreen");
+                $("#imgQRP").attr("src", "../Templates/UsersTemplate/img/total-3-green.jpg");
+            }
+           
+        });
+    </script>
+</head>
+
+<body>
+    <div class="wrapper">
+        <section class="container-fluid mainContent">
+            <div class="mainContentInner">
+                @*Amit 27-8-2018*@
+                @if (@TempData["Alert"] != null)
+                {
+                    <div class="alert alert-warning alert-dismissible">
+                        <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                        <strong>Warning!!</strong>@TempData["Alert"] First
+                    </div>
+                }
+                    <div class="mainContentinnerPartMain">
+                        <!-- First row -->
+                        <div class="mainContentinnerPartfirstRow">
+                            <!-- fisrbox_firstBox -->
+                            <div class="mainContentinnerPartfirstrow-boxbigSizeBox">
+                                <div class="firstboxup">
+                                    @{
+                                        ModelLayer.Models.ViewModel.RefferalByFilter objRefferalByFilter = (ModelLayer.Models.ViewModel.RefferalByFilter)Model.objRefferalByFilter;
+                                    }
+                                    @Html.Partial("~/Views/Dashboard/_RefferalByFilter.cshtml", objRefferalByFilter)
+                                </div>
+                            </div>
+                            <!-- fisrbox_firstBox -->
+                            <!-- fisrbox_SecondBox -->
+                            <div class="mainContentinnerPartfirstrow-boxbigSizeBox">
+                                <div class="firstboxup">
+                                    <div class="Referralsleft third-box boxNumberSecond">
+                                        <figure>
+                                            <img src="~/Templates/UsersTemplate/img/withdraw.png" />
+                                        </figure>
+                                        <h5>Withdrawn</h5>
+                                    </div>
+                                    <div class="Referralsright">
+                                        <i class="fa fa-inr"></i>
+                                        <span>@Model.Withdrawn</span>
+                                    </div>
+                                    <div class="ReferralsDownContent">
+                                        <div class="report-card dropdown vertical-align-bottom font-size-14">
+                                            <div style="width: 100%; border-bottom: 1px solid #cfcdcf;" class="pr-40 pl-40 pt-20 pb-20">
+                                                <div class="dropdown vertical-align-bottom font-size-14 dropdown-menu-toggle">
+                                                    <select class="dropdown-toggle toggle-head">
+                                                        <option>
+                                                            Till Date
+                                                        </option>
+
+                                                    </select>
+
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <figure class="WithdrawnIMGgraph">
+                                            <img src="~/Templates/UsersTemplate/img/graphoneLIne.png">
+                                        </figure>
+                                    </div>
+
+
+
+                                </div>
+                            </div>
+                            <!-- fisrbox_SecondBox -->
+                            <!-- fisrbox_ThirdBox -->
+                            <div class="mainContentinnerPartfirstrow-boxbigSizeBox">
+                                <div class="firstboxup">
+                                    <div class="Referralsleft third-box">
+                                        <figure>
+                                            <img src="~/Templates/UsersTemplate/img/withdraw.png" />
+                                        </figure>
+                                        <h5>Total ERP</h5>
+                                    </div>
+                                    <div class="Referralsright boxnumberThird_ ERP-IMG-page">
+                                        <figure class="ERP-IMG-pageInnerMain">
+                                            <img src="~/Templates/UsersTemplate/img/E.jpg" />
+                                        </figure>
+                                        <span>@Model.ERP</span>
+                                    </div>
+                                    <div class="ReferralsDownContent">
+                                        <div class="report-card dropdown vertical-align-bottom font-size-14">
+                                            <div style="width: 100%; border-bottom: 1px solid #cfcdcf;" class="pr-40 pl-40 pt-20 pb-20">
+                                                <div class="dropdown vertical-align-bottom font-size-14 dropdown-menu-toggle">
+                                                    <select id="Erp-drp">
+                                                        <!--id added 31/10/2018  For Graphics display only in Oct month Payout-->
+                                                        <option>
+                                                            Current Cycle
+                                                        </option>
+
+                                                    </select>
+
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <figure class="WithdrawnIMGgraph" id="Erp-graph">
+                                            <!--id added 31/10/2018  For Graphics display only in Oct month Payout-->
+                                            <img src="~/Templates/UsersTemplate/img/graph.png">
+                                        </figure>
+                                        @*<!--Start 31/10/2018  For Graphics display only in Oct month Payout-->
+                        <div class="erp_point_img_main">
+                            <figure>
+                                <img src="~/Templates/UsersTemplate/img/erp-points-gift.gif">
+                            </figure>
+                        </div>
+                        <!--End 31/10/2018  For Graphics display only in Oct month Payout-->*@
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- fisrbox_ThirdBox -->
+                            <!-- fisrbox_FourBox -->
+                            <div class="mainContentinnerPartfirstrow-boxbigSizeBox lastmaininner">
+                                <div class="boxnumberFour_leftMain">
+                                    <ul>
+                                        <li>
+                                            <div class="boxnumberFour_left">
+                                                <i class="fa fa-money inRed">
+                                                    <span>Inactive Points</span>
+                                                </i>
+
+                                            </div>
+                                        </li>
+                                        <li>
+                                            <div class="boxnumberFour_left">
+                                                <i class="fa fa-money ingreen">
+                                                    <span>Pending Ezee Money</span>
+                                                </i>
+                                            </div>
+                                        </li>
+                                        <li>
+                                            <div class="boxnumberFour_left">
+                                                <i class="fa fa-money ingrey">
+                                                    <span>Payout Requested</span>
+                                                </i>
+                                            </div>
+                                        </li>
+                                    </ul>
+                                </div>
+                                <div class="boxnumberFour_rightMain">
+                                    <ul>
+                                        <li>
+                                            <div class="boxnumberFour_left">
+                                                <figure>
+                                                    <img src="~/Templates/UsersTemplate/img/right_img-1.jpg" />
+                                                    <span>@Model.Inactive_Points</span>
+                                                </figure>
+                                            </div>
+                                        </li>
+                                        <li>
+                                            <div class="boxnumberFour_left">
+                                                <figure>
+                                                    <img src="~/Templates/UsersTemplate/img/right_img-2.jpg" />
+                                                    <span>@Model.Pending_EzeeMoney</span>
+                                                </figure>
+                                            </div>
+                                        </li>
+                                        <li>
+                                            <div class="boxnumberFour_left">
+                                                <figure>
+                                                    <img src="~/Templates/UsersTemplate/img/right_img-3.jpg" />
+                                                    <span>@Model.Payout_Requested</span>
+                                                </figure>
+                                            </div>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- fisrbox_FourBox -->
+                        <!-- First row -->
+                        <!-- middle row -->
+                        <div class="mainContentinnerPartMiddleRow">
+                            <!-- middle row firstBox -->
+                            <div class="mainContentinnerPartfirstrow-boxsmallSizeBox">
+                                <h3>Total Members (Till 6 Level)</h3>
+                                <div class="innermiddleRowContent">
+                                    <figure>
+                                        <img src="~/Templates/UsersTemplate/img/total.png" />
+                                    </figure>
+                                    <span>@Model.TOTAL_MEMBERS</span>
+                                </div>
+                            </div>
+                            <!-- middle row firstBox -->
+                            <!-- middle row SecondBox -->
+                            <div class="mainContentinnerPartfirstrow-boxsmallSizeBox">
+                                <h3>My Ezee-Money</h3>
+                                <div class="innermiddleRowContent Ezee-money">
+                                    <figure>
+                                        <img src="~/Templates/UsersTemplate/img/total-2.png" />
+                                        <img class="rupayIMG" src="~/Templates/UsersTemplate/img/rupay.png" />
+                                    </figure>
+                                    <span>@Model.EZEE_MONEY</span>
+                                </div>
+                            </div>
+                            <!-- middle row SecondBox -->
+                            <!-- middle row ThirdBox -->
+                            <div id="divQRP" class="mainContentinnerPartfirstrow-boxsmallSizeBox QualifyingRetailPointsMain">
+                                <h3>Qualifying Retail Points (Current Cycle)</h3>
+                                <div class="innermiddleRowContent QualifyingRetailPoints">
+                                    <figure>
+                                        <img id="imgQRP" src="~/Templates/UsersTemplate/img/total-3.png" />&nbsp;&nbsp;
+                                    </figure>
+                                    <span> @Model.QUALIFYING_RETAIL_POINTS</span>
+                                </div>
+                            </div>
+                            <!-- middle row ThirdBox -->
+                            <!-- middle row FourBox -->
+                            <div class="mainContentinnerPartfirstrow-boxsmallSizeBox lastmaininner DaysLeft">
+                                <h3>Days Left @*@Model.CYCLE_LAST_DATE*@</h3>
+                                <div class="innermiddleRowContent">
+                                    <figure>
+                                        <img src="~/Templates/UsersTemplate/img/total-4.png " />>&nbsp;&nbsp;
+                                    </figure>
+                                    @if (@Model.DAYS_LEFT == 1)
+                                    {
+                                        <span>@Model.DAYS_LEFT Day </span>
+                                    }
+                                    else
+                                    {
+                                        <span>@Model.DAYS_LEFT Days </span>
+                                    }
+
+                                </div>
+                            </div>
+                            <!-- middle row FourBox -->
+                        </div>
+                        <!-- middle row -->
+                        <!-- last row -->
+                        <div class="mainContentinnerPartlastInnerRow">
+                            <div class="mainContentinnerPartfirstrow-boxsmallSizeBox">
+                                <h3>My Purchases (Current Cycle)</h3>
+                                <div class="innermiddleRowContent">
+                                    <figure>
+                                        <img src="~/Templates/UsersTemplate/img/my-1.png" />
+                                    </figure>
+                                    <span>@Model.MY_PURCHASES</span>
+                                </div>
+                            </div>
+                            <div class="mainContentinnerPartfirstrow-boxsmallSizeBox">
+                                <h3>Expected ERP </h3>
+                                <div class="innermiddleRowContent">
+                                    <figure>
+                                        <img src="~/Templates/UsersTemplate/img/my-2.jpg" />
+                                    </figure>
+                                    <span>@Model.EXPECTED_ERP</span>
+                                </div>
+                            </div>
+                            <div class="mainContentinnerPartfirstrow-boxsmallSizeBox">
+                                <h3>RP on My Purchase (Current Cycle)</h3>
+                                <div class="innermiddleRowContent">
+                                    <figure>
+                                        <img src="~/Templates/UsersTemplate/img/my-2.jpg" />
+                                    </figure>
+                                    <span>@Model.RP_ON_MY_PURCHASE</span>
+                                </div>
+                            </div>
+
+
+                            <div class="mainContentinnerPartfirstrow-boxsmallSizeBox lastmaininner">
+                                <h3>Inactive Members (Current Cycle)</h3>
+                                <div class="innermiddleRowContent">
+                                    <figure>
+                                        <img src="~/Templates/UsersTemplate/img/my-4.jpg" />
+                                    </figure>
+                                    <span>@Model.INACTIVE_MEMBERS</span>
+                                </div>
+                            </div>                            
+
+
+                        </div>
+                        <div class="mainContentinnerPartMiddleRow">
+                            <!-- middle row firstBox -->
+                            <div class="mainContentinnerPartfirstrow-boxsmallSizeBox">
+                                <h3>Designation </h3>
+                                <div class="innermiddleRowContent">
+                                    <figure>
+                                        <img src="~/Templates/UsersTemplate/img/total.png" />
+                                    </figure>
+                                    <span>  @Model.UserDesignation </span>
+                                </div>
+                            </div>
+                            <!-- middle row firstBox -->
+                            <!-- middle row SecondBox -->
+                            <div class="mainContentinnerPartfirstrow-boxsmallSizeBox">
+                                <h3>Cashback Points on My Purchase (Current Cycle) </h3>
+                                <div class="innermiddleRowContent">
+                                    <figure>
+                                        <img src="~/Templates/UsersTemplate/img/my-2.jpg" />
+                                    </figure>
+                                    <span>@Model.CasbackPoints</span>
+                                </div>
+                            </div>
+                            <!-- middle row SecondBox -->
+                            <!-- middle row ThirdBox -->
+                            <div class="mainContentinnerPartfirstrow-boxsmallSizeBox">
+                                <h3>Cashback Ezee Money </h3>
+                                <div class="innermiddleRowContent">
+                                    <figure>
+                                        <img src="~/Templates/UsersTemplate/img/total-2.png" />
+                                        <img class="rupayIMG" src="~/Templates/UsersTemplate/img/rupay.png" />
+                                    </figure>
+                                    <span>@Model.CasbackEzeeMoney</span>
+                                </div>
+                            </div>
+                            <!-- middle row ThirdBox -->
+                           
+                        </div>
+                        <!-- last row -->
+                    </div>
+            </div>
+        </section>
+
+        <section class="container-fluid recentJoinMain">
+            <div class="recentJoinchild">
+                <div class="recentJoininner">
+                    <div class="recentparthead">
+                        <h4>Recent joinees</h4>
+                        <div class="recentInnerContent recentJoininnerScrollingBar">
+                            <ul>
+                                @if (@Model.listRecentJoinees.Count != 0)
+                                {
+                                    foreach (var item in @Model.listRecentJoinees)
+                                    {
+                                        <li>
+                                            <div class="recentInnerContentIMG">
+                                                <figure>
+                                                    <img src="~/Templates/UsersTemplate/img/profile-1.png" />
+                                                </figure>
+                                            </div>
+                                            <div class="recentInnerContentRightSide">
+
+
+
+                                                <ul>
+
+                                                    <li>
+                                                        <h5>@item.Name</h5>
+                                                        <small>
+                                                            <i></i>Level: @item.NetworkLevel &nbsp;&nbsp;|&nbsp;&nbsp;
+                                                            <i class="fa fa-calendar-o"></i>&nbsp;@item.JoinDate.ToString("dd-MM-yy . HH:mm")
+                                                        </small>
+                                                        <br>
+                                                        <small class="captalise">
+                                                            <i class="fa fa-retweet"></i> @item.ParantUser @@ L: @item.ParantUserLevel
+                                                        </small>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                        </li>
+                                    }
+                                }
+                                else
+                                {
+                                    <li class="nouserFoundMainLIST-IMG">
+                                        <div class="nouserFound">
+                                            <figure>
+                                                <img src="~/Templates/UsersTemplate/img/noUser.png" />
+                                            </figure>
+                                            <div class="nouserFoundHeading">
+                                                <p>No Users Joined you yet!</p>
+                                                <span>
+                                                    Go Out & Interact with your friends
+                                                    and bring them here
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </li>
+                                }
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="recentparthead">
+                        <h4>Invite Users</h4>
+                        <div class="recentInnerContent InviteUsers">
+                            @{
+                                ModelLayer.Models.ViewModel.InviteUser objInviteUser = (ModelLayer.Models.ViewModel.InviteUser)Model.objInviteUser;
+                            }
+                            @Html.Partial("~/Views/Dashboard/_InviteUser.cshtml", objInviteUser)
+                        </div>
+                    </div>
+                    <div class="recentparthead HighPerformer_box">
+                        <h4>High Performer</h4>
+                        @{
+                            ModelLayer.Models.ViewModel.HighPerformer objHighPerformer = (ModelLayer.Models.ViewModel.HighPerformer)Model.objHighPerformer;
+                        }
+                        @Html.Partial("~/Views/Dashboard/_HighPerformer.cshtml", objHighPerformer)
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="ezeeloOffers">
+            <div class="container-fluid">
+                <h3>Ezeelo Offers</h3>
+                <div class="ezeeloOffersSlider">
+                    <div class="">
+                        <div class='row'>
+                            <div class='col-md-12'>
+                                <div class="carousel slide media-carousel" id="media">
+                                    <div class="carousel-inner">
+                                        <div class="item  active">
+                                            <div class="row">
+                                                <div class="col-md-4">
+                                                    <a class="thumbnail" href="#">
+                                                        <img alt="" src="~/Templates/UsersTemplate/img/grocery-img-1.jpg">
+                                                    </a>
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <a class="thumbnail" href="#">
+                                                        <img alt="" src="~/Templates/UsersTemplate/img/grocery-img-2.jpg">
+                                                    </a>
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <a class="thumbnail" href="#">
+                                                        <img alt="" src="~/Templates/UsersTemplate/img/grocery-img-3.jpg">
+                                                    </a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="item">
+                                            <div class="row">
+                                                <div class="col-md-4">
+                                                    <a class="thumbnail" href="#">
+                                                        <img alt="" src="~/Templates/UsersTemplate/img/grocery-img-1.jpg">
+                                                    </a>
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <a class="thumbnail" href="#">
+                                                        <img alt="" src="~/Templates/UsersTemplate/img/grocery-img-2.jpg">
+                                                    </a>
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <a class="thumbnail" href="#">
+                                                        <img alt="" src="~/Templates/UsersTemplate/img/grocery-img-3.jpg">
+                                                    </a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="item">
+                                            <div class="row">
+                                                <div class="col-md-4">
+                                                    <a class="thumbnail" href="#">
+                                                        <img alt="" src="~/Templates/UsersTemplate/img/grocery-img-1.jpg">
+                                                    </a>
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <a class="thumbnail" href="#">
+                                                        <img alt="" src="~/Templates/UsersTemplate/img/grocery-img-2.jpg">
+                                                    </a>
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <a class="thumbnail" href="#">
+                                                        <img alt="" src="~/Templates/UsersTemplate/img/grocery-img-3.jpg">
+                                                    </a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <a data-slide="prev" href="#media" class="left carousel-control">
+                                        <
+                                    </a>
+                                    <a data-slide="next" href="#media" class="right carousel-control">></a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+                    <script src="https://netdna.bootstrapcdn.com/bootstrap/3.0.0/js/bootstrap.min.js"></script> -->
+                    <script>
+                        $(document).ready(function () {
+                            $('#media').carousel({
+                                pause: true,
+                                interval: false,
+                            });
+                        });
+                    </script>
+                </div>
+            </div>
+        </section>
+    </div>
+</body>
+</html>

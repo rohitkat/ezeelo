@@ -1,0 +1,255 @@
+﻿@using PagedList;
+@using PagedList.Mvc;
+@{
+    ViewBag.Title = "Track search Report";
+}
+
+
+@model IPagedList<ModelLayer.Models.TrackSearch>
+
+
+                       <div class="box-content">
+                @*<div class="span7">
+                    @using (Html.BeginForm("GetReport", "TrackReport", FormMethod.Post, new { enctype = "multipart/form-data" }))
+                    {
+
+                        <div class="span12">
+                            <div class="span5">@Html.TextBox("StartDate", null, new { id = "StartDate", @class = "datepicker glyphicons-iconcalendar", @placeholder = "Start Date", @style = "margin-top:10px;", required = "requird" })</div>
+                            <div class="span7">
+                                @Html.TextBox("EndDate", null, new { id = "EndDate", @class = "datepicker glyphicons-iconcalendar", @placeholder = "End Date", @style = "margin-top:10px;", required = "requird" })
+                            <input type="submit" id="btnSearch" value="Search" class="btn btn-primary btn-search" onclick="return DateValidation()" />
+                        </div>
+                        <label id="lblMsg" style="color:red"></label>
+                    
+
+                    }
+                   
+                    </div>*@
+
+
+
+                @*<div>
+                    @using (Html.BeginForm("Export", "TrackReport", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+                    {
+                        <div class="span12" style="margin-top: 10px;margin-left: 0px;">
+
+                            <div class="span4 control-group forDate2" style="margin-top: 13px;">
+                                @*<input type="submit" value="Export" id="btnExport" class="btn btn-small btn-warning1" />*@
+
+                                @*<input type="submit" value="Print" id="btnPrint" class="btn btn-small btn-warning1" onclick="PrintReport()" />*@
+
+                             
+
+                                @*@Html.ActionLink("EXCEL", "Export", new { option = 1 }, new { @class = "btn btn-brown" })
+                                @Html.ActionLink("CSV", "Export", new { option = 2 }, new { @class = "btn btn-brown" })
+                                @Html.ActionLink("PDF", "Export", new { option = 3 }, new { @class = "btn btn-brown" })
+
+                                <input type="button" value="PRINT" class="btn btn-brown" onclick="javascript:PrintDivContent('divToPrint');" />
+                            </div>
+                        </div>
+
+                    }
+
+                </div>*@
+                
+                <div id="divToPrint">
+                    <table class="table table-striped table-bordered bootstrap-datatable datatable dataTable" id="myTable">
+                        <tr>
+                            <th>
+                                City
+                            </th>
+                            <th>
+                                Product Name
+                            </th>
+                            <th>
+                                Device Type
+                            </th>
+                            <th>
+                                Total Count
+                            </th>
+
+                        </tr>
+                        @if(Model!=null)
+                        { 
+
+                       foreach (var item in Model.Where(x => x.ID <= 10))
+                        {
+                            <tr>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.City)
+                                </td>
+                                <td>
+                                    @{
+                            string lProductName = item.ProductName;
+                            if (lProductName.Length > 50)
+                              {
+                                lProductName = lProductName.Substring(0, 49) + "...";
+                              }
+                                    }
+                                    @lProductName
+                                </td>
+
+                                <td>
+                                   
+                                    @Html.DisplayFor(modelItem => item.DeviceType)
+
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.TotalCount)
+
+                                </td>
+
+                                @*<td>
+                                        @Html.ActionLink("Edit", "Edit", new { id = item.ID }) |
+                                        @Html.ActionLink("Details", "Details", new { id = item.ID }) |
+                                        @Html.ActionLink("Delete", "Delete", new { id = item.ID })
+                                    </td>*@
+                            </tr>
+                        }
+                        }
+                    </table>
+                </div>
+
+                <div class="pager">
+                    @Html.PagedListPager(Model, Page => Url.Action("GetReport", new
+                       {
+                          
+                           page = Page,
+                           StartDate = ViewBag.StartDate,
+                           EndDate = ViewBag.EndDate
+
+                       }),
+                                                                new PagedListRenderOptions()
+                                                                {
+                                                                    Display = PagedListDisplayMode.IfNeeded
+                                                                })
+                    
+                    <h4><span>Total Count:&nbsp;@ViewBag.TotalCount</span></h4>
+                </div>
+            </div>
+       
+
+
+@section MyScripts{
+
+    <script src="~/Content/js/jquery-1.9.1.min.js"></script>
+
+    <script src="~/Content/js/jquery-1.9.1.min.js"></script>
+<script type="text/javascript">
+            $(function () {
+                $("input#btnSearch").on('click', function () {
+                    $('#loader_img').show();
+                    var pagecount = 0;
+                    var page = 1;
+                    var toDate = $('#txtToDate').val();
+                    var fromDate = $('#txtFromDate').val();
+                    var shopID = 0;
+                    if ($("select#shopID option:selected").val() > 0) {
+                        shopID = $("select#shopID option:selected").val();
+                    }
+                    var isValid = ValidateDate(fromDate, toDate);
+                    if (isValid == false) {
+                        $('#loader_img').hide();
+                        return;
+                    }
+                    $.ajax({
+                        url: '@Url.Action("GetReport", "TrackReport")',
+                        data: {'fromDate': fromDate, 'toDate': toDate,},
+                        type: "Post",
+                        cache: false,
+                        success: function (data) {
+                            //alert(data);
+                            $('#loader_img').hide();
+                            $('#divReport').empty();
+                            $('#divReport').append(data);
+                        },
+                        error: function (data) {
+
+                        }
+                    });
+                });
+            });
+
+           
+
+
+            $("select#ddlCity").bind('change', function () {
+
+                var cityID = $("select#ddlCity option:selected").val();
+                if (cityID == 0) {
+                    $('#ddlfranchise').empty();
+                    $('#ddlMerchant').empty();
+                    return;
+                }
+
+                $.ajax({
+                    type: "POST",
+                    url: '@Url.Action("GetFranchiseByCityId", "OrderTransactionReport")',
+                    data: { 'cityID': cityID },
+                    //dataType: "json",
+                    cache: false,
+                    success: function (msg) {
+                        $('#ddlfranchise').empty();
+                        $('#ddlfranchise').append('<option value=0>Select Franchise</option>');
+                        $.each(msg, function (index, item) {
+                            $('#ddlfranchise').append('<option value=' + item.FranchiseID + '>' + item.FranchiseName + '</option>');
+                        });
+                    },
+                    error: function (x, e) {
+                        alert('Failure');
+
+                    }
+                });
+
+                //}
+            });
+
+
+            function ValidateDate(fromDate, toDate) {
+                if (fromDate == '' && toDate == '') {
+                    $('[id*=lblMsg]').text('Please Select From Date and To Date.');
+                    return false;
+                }
+                else if (fromDate == '') {
+                    $('[id*=lblMsg]').text('Please Select From Date.');
+                    return false;
+                }
+                else if (toDate == '') {
+                    $('[id*=lblMsg]').text('Please Select To Date.');
+                    return false;
+                }
+
+                if (fromDate != '' && toDate != '') {
+                    dateFirst = fromDate.split('/');
+                    dateSecond = toDate.split('/');
+                    var from = new Date(dateFirst[2], dateFirst[1], dateFirst[0]); //Year, Month, Date
+                    var to = new Date(dateSecond[2], dateSecond[1], dateSecond[0]);
+                    if (from > to) {
+                        $('[id*=lblMsg]').text('To Date must be greater than From Date.');
+                        return false;
+                    }
+                    else {
+                        $('[id*=lblMsg]').text('');
+                    }
+                }
+            }
+
+
+          
+
+
+</script>
+
+    <script language="javascript" type="text/javascript">
+        function PrintDivContent(divId) {
+            var printContent = document.getElementById(divId);
+            var WinPrint = window.open('', '', 'left=0,top=0,toolbar=0,sta­tus=0');
+            WinPrint.document.write(printContent.innerHTML);
+            WinPrint.document.close();
+            WinPrint.focus();
+            WinPrint.print();
+        }
+    </script>
+}
+
+

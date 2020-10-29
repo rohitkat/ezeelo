@@ -1,0 +1,343 @@
+﻿@using PagedList;
+@using PagedList.Mvc;
+@model IPagedList<ModelLayer.Models.ViewModel.TrackCartReportViewModel>
+
+
+
+<link href="~/Content/css/Site.css" rel="stylesheet" />
+<script src="~/Content/js/jquery.dataTables.min.js"></script>
+<script src="~/Content/js/bootstrap.min.js"></script>
+<style>
+    .matchdivheight {
+        overflow: scroll;
+        height: 450px;
+    }
+
+    select {
+        width: 109px;
+        background-color: #fff;
+        border: 1px solid #ccc;
+        text-transform: lowercase;
+    }
+
+    .widget {
+        margin-left: 37px;
+    }
+
+    .widget-content {
+        margin-top: -8px;
+        margin-left: -23px;
+    }
+
+    .btn_print {
+        float: right;
+        margin-top: -56px;
+        margin-right: 395px;
+    }
+
+    .widget-content h4 span {
+        float: right;
+        margin-top: -42px;
+        margin-right: 160px;
+    }
+
+    .dataTables_info {
+        display: none;
+    }
+
+    .box-content {
+        z-index: 1 !important;
+    }
+
+    .export a {
+        border: 1px solid #ccc;
+        padding: 4px 12px;
+        background: #486086;
+        color: #fff;
+    }
+
+        .export a:hover {
+            background: #486056;
+            color: #fff;
+            text-decoration: none !important;
+        }
+
+    .bg-box {
+        background: #F5F5F5 !important;
+    }
+
+    .dataTables_filter {
+        float: right;
+    }
+
+    .btn-brown {
+        color: #ffffff;
+        background-color: #267196;
+        border-color: #8AA0B9;
+        background-image: none;
+        filter: none;
+        text-shadow: none;
+        width: 47px;
+        margin-left: 7px;
+        padding: 1px !important;
+    }
+
+    .my_table {
+        height: auto;
+        min-height: 300px;
+        max-height: 540px;
+        overflow: auto;
+    }
+
+    .btn-search {
+        width: 76px;
+        margin-left: 18px;
+    }
+
+    .box-header {
+        background: rgba(137, 142, 149, 0.37);
+    }
+
+    .uneditable-input, input[type=text] {
+        width: 95px;
+    }
+
+    .margingnew {
+        margin-top: 10px;
+    }
+
+    #content {
+        width: 100%;
+        padding: 28px 5px 28px 5px;
+        margin: 0px 0px;
+        margin-left: 0 !important;
+    }
+
+    .open > .dropdown-menu {
+        display: block;
+    }
+</style>
+<script language="javascript" type="text/javascript">
+    function PrintDivContent(divId) {
+        var printContent = document.getElementById(divId);
+        var WinPrint = window.open('', '', 'left=0,top=0,toolbar=0,sta­tus=0');
+        WinPrint.document.write(printContent.innerHTML);
+        WinPrint.document.close();
+        WinPrint.focus();
+        WinPrint.print();
+    }
+</script>
+<script src="~/Content/js/js/jquery.dataTables.min1.js"></script>
+@{
+    <div class="span10" id="content">
+        <div class="row-fluid">
+            <div class=" box span12 ">
+                <div class="box-header"><h2 style="font-weight:bold;">Abandoned Cart Report</h2></div>
+                <div class="box bg-box">
+                    <div class="row-fluid" @*style="padding-left:44px;"*@>
+                        <div class="span9">
+                            @using (Html.BeginForm())
+                            {
+                                <div class="span12">
+                                    <div class="span10" style="margin-left: 10px;">
+                                        <div class="span2">
+                                            @Html.TextBox("StartDate", null, new { id = "StartDate", @class = "datepicker glyphicons-iconcalendar", @placeholder = "Start Date", @style = "margin-top:10px;", required = "requird" })
+                                            @Html.TextBox("SearchEmail", null, new { @class = "search_input", placeholder = "Email ID" })
+                                        </div>
+                                        <div class="span2">
+                                            @Html.TextBox("EndDate", null, new { id = "EndDate", @class = "datepicker glyphicons-iconcalendar", @placeholder = "End Date", @style = "margin-top:10px;", required = "requird" })
+                                            @Html.TextBox("SearchMobile", null, new { @class = "search_input", placeholder = "Mobile No" })
+                                        </div>
+                                        <div class="span2">
+                                            @Html.TextBox("SearchProName", null, new { @class = "search_input margingnew", placeholder = "Product Name" })
+                                            @Html.DropDownList("SearchStage", new List<SelectListItem>
+                                      {
+                                        new SelectListItem{ Text="SHOPING_CART", Value = "SHOPING_CART" },
+                                        new SelectListItem{ Text="PAYMENT_MODE", Value = "PAYMENT_MODE" },
+                                        new SelectListItem{ Text="CHECK_OUT", Value = "CHECK_OUT" }
+                                      }, "Select Stage")
+                                        </div>
+                                        <div class="span2">
+                                            @Html.TextBox("SearchCustName", null, new { @class = "search_input margingnew", placeholder = "Customer Name" })
+                                            @Html.DropDownList("CityList", "Select City")
+                                           
+                                        </div>
+                                        <div class="span3">
+                                            @Html.DropDownList("FranchiseList", null, "Select Franchise", new { @style = "margin-top: 50px;" }) @*////added*@
+                                        </div>
+                                        <label id="lblMsg" style="color:red"></label>
+                                    </div>
+                                    <div class="span2" style="    margin-left: 0px;">
+                                        <input type="submit" value="Search" class="btn btn-primary btn-search" style="margin-left: 0px; margin-top: 50px; " onclick="return DateValidation()" />
+                                    </div>
+                                    </div>
+                            }
+                        </div>
+                        <div class="span3" style="margin-top:10px; text-align:right;">
+                            @using (Html.BeginForm("Export", "TrackCartReport", FormMethod.Post, new { enctype = "multipart/form-data" }))
+                            {
+
+                                @Html.ActionLink("EXCEL", "Export", new { StartDate = ViewBag.StartDate, EndDate = ViewBag.EndDate, option = 1, SearchProName = ViewBag.SearchProName, 
+                                    SearchMobile = ViewBag.SearchMobile, SearchEmail = ViewBag.SearchEmail, SearchCustName = ViewBag.SearchCustName, SearchStage = ViewBag.SearchStage,
+                                    CityList = ViewBag.selectedCity,FranchiseList = ViewBag.selectedFranchise}, new { @class = "btn btn-brown" }) ////added FranchiseList=ViewBag.selectedFranchise
+                                @Html.ActionLink("CSV", "Export", new { StartDate = ViewBag.StartDate, EndDate = ViewBag.EndDate, option = 2, SearchProName = ViewBag.SearchProName,
+                                    SearchMobile = ViewBag.SearchMobile, SearchEmail = ViewBag.SearchEmail, SearchCustName = ViewBag.SearchCustName, SearchStage = ViewBag.SearchStage,
+                                    CityList = ViewBag.selectedCity,FranchiseList = ViewBag.selectedFranchise}, new { @class = "btn btn-brown" })////added FranchiseList=ViewBag.selectedFranchise
+                                @Html.ActionLink("PDF", "Export", new {StartDate = ViewBag.StartDate, EndDate = ViewBag.EndDate, option = 3, SearchProName = ViewBag.SearchProName,
+                                     SearchMobile = ViewBag.SearchMobile, SearchEmail = ViewBag.SearchEmail, SearchCustName = ViewBag.SearchCustName, SearchStage = ViewBag.SearchStage,
+                                     CityList = ViewBag.selectedCity,FranchiseList = ViewBag.selectedFranchise}, new { @class = "btn btn-brown" }) ////added FranchiseList=ViewBag.selectedFranchise
+                                @* @Html.ActionLink("PRINT", "PDF", new { StartDate = ViewBag.StartDate, EndDate = ViewBag.EndDate },new {target="_blank"})*@
+                                <input value="PRINT" class="btn btn-brown" onclick="javascript:PrintDivContent('divToPrint');" />
+
+                            }
+                        </div>
+
+                    </div>
+                </div>
+
+                <div class="box-content" id="divToPrint">
+                    <div class="my_table">
+                        <table class=" table table-striped table-bordered ">
+                            <thead>
+                                <tr>
+                                    <th>
+                                        Sr.No.
+                                    </th>
+                                    <th>
+                                        Date
+                                    </th>
+                                    <th>
+                                        Customer Name
+                                    </th>
+                                    <th>
+                                        Address
+                                    </th>
+                                    <th>
+                                        Mobile No
+                                    </th>
+                                    <th style="width:100px">
+                                        Email ID
+                                    </th>
+                                    <th>
+                                        Price
+                                    </th>
+                                    <th>
+                                        Sale Rate
+                                    </th>
+                                    <th>
+                                        Landing Price
+                                    </th>
+                                    <th>
+                                        Product Name
+                                    </th>
+                                    <th>
+                                        Stage
+                                    </th>
+                                    <th>
+                                        City
+                                    </th>
+                                    <th>
+                                        Franchise  @*////added*@
+                                    </th>
+
+                                </tr>
+                            </thead>
+                            @{int i = 1;}
+                            @foreach (var item in Model)
+                            {
+
+                                <tr>
+                                    <td>@{int SrNo = ((ViewBag.PageNumber - 1) * ViewBag.PageSize) + i; i = i + 1; } @SrNo</td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.Date)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.CustomerName)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.Adress)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.Mobile)
+                                    </td>
+                                    <td style="width:100px">
+                                        @Html.DisplayFor(modelItem => item.Email)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.Price)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.SaleRate)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.LandingPrice)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.ProductName)
+                                    </td>
+
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.Stage)
+                                    </td>
+
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.City)
+                                    </td>
+                                    <td>
+                                        @*@Html.DisplayFor(modelItem => item.FranchiseID)*@ @*////added*@
+                                        @Html.DisplayFor(modelItem => item.Franchises) @*////added*@
+                                    </td>
+
+                                </tr>
+                            }
+
+                        </table>
+                    </div>
+                </div>
+                <div class="pager">
+                    @Html.PagedListPager(Model, Page => Url.Action("Index", new
+                       {
+                           page = Page,
+                           StartDate = ViewBag.StartDate,
+                           EndDate = ViewBag.EndDate,
+                           SearchProName = ViewBag.SearchProName,
+                           SearchMobile = ViewBag.SearchMobile,
+                           SearchEmail = ViewBag.SearchEmail,
+                           SearchCustName = ViewBag.SearchCustName,
+                           SearchStage = ViewBag.SearchStage,
+                           CityList = ViewBag.selectedCity,
+                           FranchiseList = ViewBag.selectedFranchise ////added
+                       }),
+                                                                    new PagedListRenderOptions()
+                                                                    {
+                                                                        Display = PagedListDisplayMode.IfNeeded
+                                                                    })
+                    <h4><span>Total Count:&nbsp;@ViewBag.TotalCount</span></h4>
+                </div>
+            </div>
+        </div>
+    </div>
+
+}
+<script>
+    function DateValidation() {
+        var FromDate = $('#StartDate').val();
+        var ToDate = $('#EndDate').val();
+        if (FromDate != null && ToDate != null) {
+            if (FromDate != '' && ToDate != '') {
+                FirstDate = FromDate.split('/');
+                SecondDate = ToDate.split('/');
+                var from = new Date(FirstDate[2], FirstDate[1], FirstDate[0]); //Year, Month, Date
+                var to = new Date(SecondDate[2], SecondDate[1], SecondDate[0]);
+                if (from > to) {
+                    $('[id*=lblMsg]').text('To Date must be greater than From Date.');
+                    return false;
+                }
+                else {
+                    $('[id*=lblMsg]').text('');
+                    return true;
+                }
+            }
+        }
+    }
+</script>

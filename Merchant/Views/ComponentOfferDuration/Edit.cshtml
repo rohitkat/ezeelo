@@ -1,0 +1,119 @@
+﻿@model ModelLayer.Models.StockComponentOfferDuration
+
+@{
+    ViewBag.Title = "Edit";
+}
+
+<style>
+    #ddlFrmHour {width:130px;
+    }
+    #ddlFrmMin {
+        width: 130px;
+    }
+    #ddlFrmAmPm {width:80px;
+    }
+    #ddlToHour {
+        width: 130px;
+    }
+    #ddlToMin {
+        width: 130px;
+    }
+    #ddlToAmPm {
+        width: 80px;
+    }
+    </style>
+
+
+<div id="content" class="span10">
+    @using (Html.BeginForm())
+    {
+        @Html.AntiForgeryToken()
+
+        <div class="row-fluid ">
+            <div class="box ">
+                <div class="box-header">
+                    <h2><i class="icon-edit"></i><span class="break"></span>Edit</h2>
+
+                </div>
+                <div class="box-content">
+                    <form class="form-horizontal">
+
+
+                        @Html.ValidationSummary(true)
+
+                        @Html.HiddenFor(model => model.ID)
+
+                        <div class="form-group">
+                            @Html.Label("OfferName", "Offer Name", new { @class = "control-label col-md-2" })
+                            <div class="col-md-10">
+                                @Html.DropDownList("OfferID", null, String.Empty, new { disabled = "disabled" })
+                                @Html.HiddenFor(model => model.ComponentOfferID)
+                              </div>
+                        </div>
+
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.StartDateTime, "Start DateTime", new { @class = "control-label col-md-2" })
+                            <div class="col-md-10">
+                                @{string SDate = "";}
+                                @if (@Model.StartDateTime != null)
+                            {
+                                SDate = @Model.StartDateTime.ToString("dd/MM/yyyy").Replace('-', '/');
+                            }
+                                @Html.TextBoxFor(model => model.StartDateTime, new { @Value = SDate, @class = "input-large span2 datepicker", id = "calendor", @readonly = "readonly" })
+                                <label for="calendor" class="dtPic"><i class="glyphicons-icon calendar"></i></label>
+                                @Html.DropDownList("ddlFrmHour")
+                                @Html.DropDownList("ddlFrmMin")
+                                @Html.DropDownList("ddlFrmAmPm", new List<SelectListItem>
+
+                 {
+                    new SelectListItem{ Text="AM", Value = "AM" },
+                    new SelectListItem{ Text="PM", Value = "PM" }
+                 })
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.EndDateTime, "End DateTime", new { @class = "control-label col-md-2" })
+                            <div class="col-md-10">
+                                @{string EDate = "";}
+                                @if (@Model.EndDateTime != null)
+                            {
+                                EDate = @Model.EndDateTime.ToString("dd/MM/yyyy").Replace('-', '/');
+                            }
+                                @Html.TextBoxFor(model => model.EndDateTime, new { @Value = EDate, @class = "input-large span2 datepicker", id = "calendor", @readonly = "readonly" })
+                                <label for="calendor" class="dtPic"><i class="glyphicons-icon calendar"></i></label>
+                                @Html.DropDownList("ddlToHour")
+                                @Html.DropDownList("ddlToMin")
+                                @Html.DropDownList("ddlToAmPm", new List<SelectListItem>
+                 {
+                    new SelectListItem{ Text="AM", Value = "AM" },
+                    new SelectListItem{ Text="PM", Value = "PM" }
+                 })
+
+
+                            </div>
+                        </div>
+
+                        <div class="control-group">
+                            @Html.LabelFor(model => model.IsActive, new { @class = "control-label span2" })
+                            <div class="col-md-10">
+                                @Html.EditorFor(model => model.IsActive)
+                                @Html.ValidationMessageFor(model => model.IsActive)
+                            </div>
+                        </div>
+
+
+                        <div class="form-actions">
+                            <div class="col-md-offset-2 col-md-10">
+                                <input type="submit" value="Save" class="btn  btn-Ifrm-submit1 dollr" />
+                                @Html.ActionLink("Back to List", "Index", string.Empty, new { @class = "btn btn-brown" })
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+    }
+</div>
+

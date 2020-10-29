@@ -1,0 +1,79 @@
+﻿@model ModelLayer.Models.CategoryDimension
+
+@{
+    ViewBag.Title = "Create";
+}
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+    <div id="content" class="span10">
+        <ul class="breadcrumb">
+            <li>
+                <a href="index.html">Category Dimension/Create</a>
+            </li>
+        </ul>
+        <div class="row-fluid">
+            <div class="box span12">
+                <div class="box-header">
+                    <h2><i class="halflings-icon edit"></i><span class="break"></span>Create</h2>
+                </div>
+                <div class="box-content">
+                    <form class="form-horizontal">
+                        @if (ViewBag.Messaage != null)
+                        {
+                            @Html.Label("Messaage", (string)ViewBag.Messaage, new { @class = "deleteMsg" })
+                        }
+                        else
+                        {
+                            @Html.Label("Messaage", "", new { @class = "deleteMsg" })
+                        }
+                        @Html.ValidationSummary(true)
+                        <div class="control-group">
+                            @Html.LabelFor(model => model.CategoryID, "CategoryID", new { @class = "control-label span2" })
+                            <div class="controls">
+                                @Html.DropDownList("CategoryID", "Select Category")
+                                @Html.ValidationMessageFor(model => model.CategoryID)
+                            </div>
+                        </div>
+
+                        <div class="control-group">
+                            @Html.LabelFor(model => model.DimensionID, "DimensionID", new { @class = "control-label span2" })
+                            <div class="controls">
+                                @Html.DropDownList("DimensionID", "Select Dimension")
+                                @Html.ValidationMessageFor(model => model.DimensionID)
+                            </div>
+                        </div>
+
+
+                        <div class="control-group">
+                            @Html.LabelFor(model => model.IsActive, new { @class = "control-label span2" })
+                            <div class="controls">
+                                <label class="checkbox span10">
+                                    <div id="uniform-optionsCheckbox2" class="checker">
+                                        <span>
+                                            @Html.EditorFor(model => model.IsActive)
+                                            @Html.ValidationMessageFor(model => model.IsActive)
+                                        </span>
+                                    </div>
+                                </label>
+                            </div>
+                        </div>
+
+                        <div class="form-actions" style="margin-top: 50px; padding-left: 150px;">
+
+                            <input type="submit" value="Create" class="btn btn-success" />
+                            @Html.ActionLink("Back to List", "Index", null, new { @class = "btn" })
+
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}
+
+

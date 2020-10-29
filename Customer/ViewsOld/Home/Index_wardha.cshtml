@@ -1,0 +1,430 @@
+﻿@{
+    Layout = "~/Views/Shared/_Layout_Home.cshtml";
+}
+<style>
+    #contenhomeslider {
+        margin-left: 0 !important;
+    }
+
+    .crackerimg {
+        width: 100%;
+    }
+
+    .gifimage {
+        width: 40px;
+        height: 50px;
+    }
+
+    .offer-strip {
+        background: #ABA7A3;
+        color: #FFFFFF;
+        height: 35px;
+        display: block;
+        margin-bottom: -30px;
+        margin-top: 16px;
+    }
+
+        .offer-strip h3 {
+            padding-left: 54px;
+            font-size: 21px;
+            line-height: 31px;
+            text-align: center;
+        }
+
+    .festival-banner {
+        height: 150px;
+        text-align: center;
+    }
+
+        .festival-banner img {
+            height: 150px;
+        }
+
+    #newrightdiv {
+        box-sizing: content-box;
+        width: 100% !important;
+        height: 90px !important;
+        box-shadow: 0px 1px 3px #ccc;
+        position: relative;
+        font-size: 0px;
+        position: relative;
+        background-repeat: no-repeat;
+        margin-top: 10px;
+        background-color: yellow;
+        background-image: url(../Images/tags/expired_tag.png);
+        background-size: 100px;
+        background-position-x: 164px;
+        background-position-y: -8px;
+    }
+
+    .headdiv {
+        padding-top: 18px;
+        padding-left: 5px;
+        text-shadow: 2px 8px 6px rgba(0,0,0,0.2), 0px -5px 35px rgba(255,255,255,0.3);
+    }
+
+    .header-top-right .homeslider img {
+        width: 100%;
+        height: 330px;
+    }
+
+    .header-top-right .homeslider img {
+        width: 100%;
+        height: 275px;
+    }
+
+    .bx-viewport {
+        height: 330px;
+    }
+
+    .elastislide-list {
+        text-align: center;
+    }
+
+    .elastislide-carousel ul li {
+        overflow: hidden;
+    }
+
+        .elastislide-carousel ul li a img {
+            display: block;
+            border: 2px solid white;
+            max-width: 100%;
+            height: 225px;
+        }
+
+    .viewmore {
+        color: blue;
+    }
+
+        .viewmore:hover {
+            color: red !important;
+            text-decoration: underline;
+        }
+
+    .viewbtn {
+        width: 80%;
+        background-color: #f0ad4e !important;
+        border-color: #eea236 !important;
+        border: 1px solid #eea236 !important;
+        display: block;
+        border-radius: 0px !important;
+        margin-top: -20px !important;
+    }
+
+        .viewbtn:hover {
+            background-color: #f0ad4e !important;
+            border-color: #eea236 !important;
+            border: 1px solid black !important;
+        }
+
+    .sideimg {
+        height: 280px;
+        width: 100%;
+    }
+
+    .newadd {
+        margin: 5px 0px 5px 0px;
+    }
+
+    .newbook {
+        margin: 5px 0px 5px 0px;
+    }
+
+    .newhr {
+        margin-bottom: 0px;
+        background-color: #DDD !important;
+        width: 100%;
+    }
+
+    .nootimg {
+        width: 100px;
+        height: 75px;
+    }
+
+    .newbook img {
+        border: 1px solid#eaeaea;
+    }
+
+    .newadd img {
+        border: 1px solid#eaeaea;
+    }
+
+    .offerimage {
+        height: 135px;
+        width: 100%;
+        border: 1px solid #ccc;
+        margin-top: 3px;
+    }
+
+    .offerimage1 {
+        height: 135px;
+        width: 100%;
+        border: 1px solid #ccc;
+    }
+
+    .onepage {
+        padding-left: 2px;
+        padding-right: 2px;
+        margin-top: 3px;
+    }
+
+    .productnew {
+        padding-left: 2px;
+        padding-right: 2px;
+        margin-top: 3px;
+        border: 1px solid #ccc;
+        text-align: center;
+    }
+
+        .productnew:hover {
+            border: 1px solid #A8CF45;
+            box-shadow: 0px 0px 25px #A8CF45;
+        }
+
+    .productimg img {
+        height: 170px;
+    }
+</style>
+<!DOCTYPE html>
+<!-- Home slideder-->
+<link href="~/Content/css/Site.css" rel="stylesheet" />
+<link href="~/Content/Slider/css/custom.css" rel="stylesheet" />
+<link href="~/Content/Slider/css/demo.css" rel="stylesheet" />
+<link href="~/Content/Slider/css/elastislide.css" rel="stylesheet" />
+<script src="~/Content/Slider/js/modernizr.custom.17475.js"></script>
+<script type="text/javascript">
+    function AddProduct(shopStockId, itemId) {
+        var _url = '@Url.Action("AddProductInShoppingCart", "Product")';
+        AddProductToShppingCartWithoutQuantity(shopStockId, itemId, _url);
+    }
+</script>
+@{
+    string cityName = "", city = "";
+    if (Request.Cookies["CityCookie"] != null && Request.Cookies["CityCookie"].Value != "")
+    {
+        cityName = Request.Cookies["CityCookie"].Value.Split('$')[1].ToLower();
+        city = Request.Cookies["CityCookie"].Value.Split('$')[0];
+    }
+}
+<div id="home-slider" style="margin-bottom:20px;">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-3 col-md-3 col-sm-0 col-xs-0" style="padding-right:2px;margin-top:4px;">
+                @*@if (Request.Cookies["CityCookie"] != null)
+            {
+                <a href="@Url.RouteUrl("Managed", new { CatName = "vegetables", ParentCatID = "1282", Level = 3, cityId = city, city = cityName })">
+                    <img src="~/Content/update(5-10)/images/wardha_img/fnv_wardha.jpg" class="offerimage" />
+                </a>
+            }
+            @if (Request.Cookies["CityCookie"] != null)
+            {
+                <a href="@Url.RouteUrl("Managed", new { CatName = "beautyandpersonalcare", ParentCatID ="1313", Level = 3, cityId = city, city = cityName })">
+                    <img src="~/Content/update(5-10)/images/wardha_img/beauty_wardha.jpg" class="offerimage" />
+                </a>
+            }*@
+                @*<a href="@Url.RouteUrl("Holioffers", new { city = cityName })">
+                <img src="~/Images/Care.jpg" class="offerimage" />
+            </a>*@
+                @*<a href="@Url.RouteUrl("CategoryPages", new { city = cityName, catName = "meat-and-poultry", catID = 1338 })">
+                <img src="~/Images/meat2.jpg" class="offerimage" />
+            </a>*@
+            </div>
+            <div class="col-lg-9 col-md-9 col-sm-12 col-xs-12 header-top-right">
+                <div class="col-sm-12 clearfix" style="padding-right:0px">
+                    <div class="col-sm-9" style="padding-left:2px;padding-right:2px">
+                        <div class="homeslider">
+                            <div class="bx-wrapper" style="max-width: 100%;">
+                                <div class="bx-viewport" style="width: 100%; overflow: hidden; position: relative; height:276px;">
+                                    <ul id="contenhomeslider" style="width: 515%; position: relative; transition-duration: 0s; transform: translate3d(-900px, 0px, 0px);">
+                                        @*<li style="float: left; list-style: none; position: relative; width: 900px;" class="bx-clone"><a href="@Url.RouteUrl("HoliOffers", new { city = cityName })"><img alt="banner1" src="~/Content/update(5-10)/images/Banner_new1.jpg"></a></li>*@
+                                        @*<li style="float: left; list-style: none; position: relative; width: 900px;"><a href="@Url.RouteUrl("pre-prod-name", new { itemId = 61289, itemName = "Lakme Sun Expert SPF 24 PA".ToLower().Replace(' ', '-'), city = cityName })"><img alt="banner2" src="~/Content/update(5-10)/images/wardha_img/Banner_new2.jpg"></a></li>*@
+                                        <li style="float: left; list-style: none; position: relative; width: 900px;"><a href="#"><img alt="banner3" src="~/Content/update(5-10)/images/wardha_img/Banner_NewW1.jpg"></a></li>
+                                        <li style="float: left; list-style: none; position: relative; width: 900px;"><a href="@Url.RouteUrl("CategoryPages", new { city = cityName, catName = "fruits-and-vegetables-", catID = 15 })"><img alt="banner4" src="~/Content/update(5-10)/images/wardha_img/Banner_NewW2.jpg"></a></li>
+                                        <li style="float: left; list-style: none; position: relative; width: 900px;"><a href="@Url.RouteUrl("Managed", new { CatName = "jeans--jackets--and-t-shirts-", ParentCatID = "1017", Level = 3, cityId = city, city = cityName })"><img alt="banner2" src="~/Content/update(5-10)/images/wardha_img/Banner_NewW3.jpg"></a></li>
+                                        <li style="float: left; list-style: none; position: relative; width: 900px;"><a href="@Url.RouteUrl("ShopSearch2", new { shopID = "10419", shopName = "ARADHANA WARDHA".ToLower().Replace(' ', '-'), city = cityName })"><img alt="banner3" src="~/Content/update(5-10)/images/wardha_img/Banner_NewW4.jpg"></a></li>
+                                        @*<li style="float: left; list-style: none; position: relative; width: 900px;"><a href="@Url.RouteUrl("CategoryPages", new { city = cityName, catName = "jeans--jackets--and-t-shirts-", catID = 1017 })"><img alt="banner4" src="~/Content/update(5-10)/images/Banner_New7.jpg"></a></li>*@
+                                    </ul>
+                                </div>
+                                <div class="bx-controls bx-has-pager bx-has-controls-direction">
+                                    <div class="bx-pager bx-default-pager">
+                                        <div class="bx-controls-direction">@*<a class="bx-prev" href=""><i class="fa fa-angle-left"></i></a><a class="bx-next" href=""><i class="fa fa-angle-right"></i></a>*@</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-3" style="padding-left:2px;padding-right:2px;margin-top:4px;">
+                        @if (Request.Cookies["CityCookie"] != null)
+                        {
+                            <a href="@Url.RouteUrl("Managed", new { CatName = "chicken", ParentCatID = "87", Level = 3, cityId = city, city = cityName })">
+                                <img src="~/Content/update(5-10)/images/wardha_img/mp_wardha.jpg" class="offerimage" />
+                            </a>
+                        }
+                        <a href="@Url.RouteUrl("CategoryPages", new { city = cityName, catName = "electronics", catID = 7 })">
+                            <img src="~/Content/update(5-10)/images/wardha_img/Electro_wardha.jpg" class="offerimage" />
+                        </a>
+                    </div>
+                </div>
+                <div class="col-sm-12 clearfix" style="padding-right:0px">
+                    <div class="col-sm-3 onepage">
+                        @if (Request.Cookies["CityCookie"] != null)
+                        {
+                            <a href="@Url.RouteUrl("Managed", new { CatName = "vegetables", ParentCatID = "1282", Level = 3, cityId = city, city = cityName })">
+                                <img src="~/Content/update(5-10)/images/wardha_img/fnv_wardha.jpg" class="offerimage" />
+                            </a>
+                        }
+
+                    </div>
+                    <div class="col-sm-3 onepage">
+                        @if (Request.Cookies["CityCookie"] != null)
+                        {
+                            <a href="@Url.RouteUrl("Managed", new { CatName = "beautyandpersonalcare", ParentCatID ="1313", Level = 3, cityId = city, city = cityName })">
+                                <img src="~/Content/update(5-10)/images/wardha_img/beauty_wardha.jpg" class="offerimage" />
+                            </a>
+                        }
+                    </div>
+                    <div class="col-sm-3 onepage">
+                        <a href="@Url.RouteUrl("Nursery", new { city = cityName })">
+                            <img src="~/Content/update(5-10)/images/plant.jpg" class="offerimage1" />
+                        </a>
+                    </div>
+                    <div class="col-sm-3 onepage">
+                        <a href="@Url.RouteUrl("ShopSearch2", new { shopID = "10382", shopName = "SUPER SAVER STORE".ToLower().Replace(' ', '-'), city = cityName })">
+                            <img src="~/Content/update(5-10)/images/rice-festival.png" class="offerimage1" />
+                        </a>
+                    </div>
+                </div>
+                @*<div class="col-sm-12 clearfix">
+                <div class="col-sm-3" style="padding-left: 2px; padding-right: 2px; margin-top: 3px; border: 1px solid #eaeaea; text-align: center; ">
+                    <a href="@Url.RouteUrl("pre-prod-name", new { itemId = 28797, itemName = "Larah Green Herbs Opal Glass 19 Pcs Dinner Set".ToLower().Replace(' ', '-'), city = cityName })"><img src="~/Content/update(5-10)/images/j10.png" alt="image01" /><input type="button" class="btn viewbtn" value=" View" /></a>
+                </div>
+                <div class="col-sm-3" style="padding-left: 2px; padding-right: 2px; margin-top: 3px; border: 1px solid #eaeaea; text-align: center; ">
+                    <a href="@Url.RouteUrl("pre-prod-name", new { itemId = 25407, itemName = "JVL Rectangular Double Big 2 Containers Lunch Box".ToLower().Replace(' ', '-'), city = cityName })"><img src="~/Content/update(5-10)/images/j11.png" alt="image02" /><input type="button" class="btn viewbtn" value=" View" /></a>
+                </div>
+                <div class="col-sm-3" style="padding-left: 2px; padding-right: 2px; margin-top: 3px; border: 1px solid #eaeaea; text-align: center; ">
+                    <a href="@Url.RouteUrl("pre-prod-name", new { itemId = 24492, itemName = "Hawkins Futura Frying Pan with Lid".ToLower().Replace(' ', '-'), city = cityName })"><img src="~/Content/update(5-10)/images/j12.png" alt="image03" /><input type="button" class="btn viewbtn" value=" View" /></a>
+
+                </div>
+                <div class="col-sm-3" style="padding-left: 2px; padding-right: 2px; margin-top: 3px; border: 1px solid #eaeaea; text-align: center; ">
+                    <a href="@Url.RouteUrl("pre-prod-name", new { itemId = 28825, itemName = "Prestige Granite Byk.4pc Set".ToLower().Replace(' ', '-'), city = cityName })"><img src="~/Content/update(5-10)/images/d10.png" alt="image04" /><input type="button" class="btn viewbtn" value=" View" /></a>
+
+                </div>
+            </div>*@
+            </div>
+
+            </div>
+            <div class="row">
+                <div class="col-lg-3 col-md-3 col-sm-0 col-xs-0" style="padding-right:2px;margin-top:4px;">
+
+                </div>
+                <div class="col-lg-9 col-md-9 col-sm-12 col-xs-12 header-top-right">
+                    <div class="col-sm-12 clearfix" style="padding-right:0px;">
+                        <h3 style="padding:10px;background-color:#eaeaea;margin-bottom:10px;margin-top:10px;">
+                            Latest Product :
+                        </h3>
+                        <div class="col-sm-12 clearfix productimg" style="padding-left: 0px;padding-right: 0px;">
+                            <div class="col-sm-2 col-xs-6 productnew">
+                                <a href="@Url.RouteUrl("pre-prod-name", new { itemId = 24678, itemName = "Men's T Shirt Polyester Cotton".ToLower().Replace(' ', '-'), city = cityName })"><img src="~/Content/update(5-10)/images/wardha_img/L1.png" alt="image01" /><input type="button" class="btn viewbtn" value=" View" /></a>
+                            </div>
+                            <div class="col-sm-2 col-xs-6 productnew">
+                                <a href="@Url.RouteUrl("pre-prod-name", new { itemId = 17199, itemName = "Lords Men's Blue Formal Office Wear Shirt".ToLower().Replace(' ', '-'), city = cityName })"><img src="~/Content/update(5-10)/images/wardha_img/L2.png" alt="image02" /><input type="button" class="btn viewbtn" value=" View" /></a>
+                            </div>
+                            <div class="col-sm-2 col-xs-6 productnew">
+                                <a href="@Url.RouteUrl("pre-prod-name", new { itemId = 22480, itemName = "Men's Stylish Ethnic Neharu-modi Jacket".ToLower().Replace(' ', '-'), city = cityName })"><img src="~/Content/update(5-10)/images/wardha_img/L3.png" alt="image03" /><input type="button" class="btn viewbtn" value=" View" /></a>
+                            </div>
+                            <div class="col-sm-2 col-xs-6 productnew">
+                                <a href="@Url.RouteUrl("pre-prod-name", new { itemId = 17176, itemName = "Lords Women Ethnic Sari,Saree with Blouse".ToLower().Replace(' ', '-'), city = cityName })"><img src="~/Content/update(5-10)/images/wardha_img/L4.png" alt="image04" /><input type="button" class="btn viewbtn" value=" View" /></a>
+                            </div>
+                            <div class="col-sm-2 col-xs-6 productnew">
+                                <a href="@Url.RouteUrl("pre-prod-name", new { itemId = 17204, itemName = "Lords Men's Single Button Tuxedo".ToLower().Replace(' ', '-'), city = cityName })"><img src="~/Content/update(5-10)/images/wardha_img/L5.png" alt="image05" /><input type="button" class="btn viewbtn" value=" View" /></a>
+                            </div>
+                            <div class="col-sm-2 col-xs-6 productnew">
+                                <a href="@Url.RouteUrl("pre-prod-name", new { itemId = 17166, itemName = "Lords Women Ethnic Sari,Saree with Blouse".ToLower().Replace(' ', '-'), city = cityName })"><img src="~/Content/update(5-10)/images/wardha_img/L6.png" alt="image06" /><input type="button" class="btn viewbtn" value=" View" /></a>
+                            </div>
+                        </div>
+                        <div class="col-sm-12 clearfix productimg" style="padding-left: 0px;padding-right: 0px;">
+                            <div class="col-sm-2 col-xs-6 productnew">
+                                <a href="@Url.RouteUrl("pre-prod-name", new { itemId = 17775, itemName = "Canon SX410 IS Point and Shoot Digital Camera".ToLower().Replace(' ', '-'), city = cityName })"><img src="~/Content/update(5-10)/images/wardha_img/E1.png" alt="image01" /><input type="button" class="btn viewbtn" value=" View" /></a>
+                            </div>
+                            <div class="col-sm-2 col-xs-6 productnew">
+                                <a href="@Url.RouteUrl("pre-prod-name", new { itemId = 40047, itemName = "Zebronics 2.1 Multimedia SW2490 RUCF Wired Home Audio Speaker (Blue, 2.1 Channel)".ToLower().Replace(' ', '-'), city = cityName })"><img src="~/Content/update(5-10)/images/wardha_img/E2.png" alt="image02" /><input type="button" class="btn viewbtn" value=" View" /></a>
+                            </div>
+                            <div class="col-sm-2 col-xs-6 productnew">
+                                <a href="@Url.RouteUrl("pre-prod-name", new { itemId = 40069, itemName = "Sony CP-V10A 10000 mAh".ToLower().Replace(' ', '-'), city = cityName })"><img src="~/Content/update(5-10)/images/wardha_img/E4.png" alt="image04" /><input type="button" class="btn viewbtn" value=" View" /></a>
+                            </div>
+                            <div class="col-sm-2 col-xs-6 productnew">
+                                <a href="@Url.RouteUrl("pre-prod-name", new { itemId = 40098, itemName = "Zebronics H-11HM Computer Headphone WMic".ToLower().Replace(' ', '-'), city = cityName })"><img src="~/Content/update(5-10)/images/wardha_img/E5.png" alt="image05" /><input type="button" class="btn viewbtn" value=" View" /></a>
+                            </div>
+                            <div class="col-sm-2 col-xs-6 productnew">
+                                <a href="@Url.RouteUrl("pre-prod-name", new { itemId = 40267, itemName = "Zebronics 43.18 cm (17) Black Lcd Monitor".ToLower().Replace(' ', '-'), city = cityName })"><img src="~/Content/update(5-10)/images/wardha_img/E6.png" alt="image06" /><input type="button" class="btn viewbtn" value=" View" /></a>
+                            </div>
+                            <div class="col-sm-2 col-xs-6 productnew">
+                                <a href="@Url.RouteUrl("pre-prod-name", new { itemId = 41359, itemName = "Kores Easycount 441 Cash Counting Machine".ToLower().Replace(' ', '-'), city = cityName })"><img src="~/Content/update(5-10)/images/wardha_img/E7.png" alt="image07" /><input type="button" class="btn viewbtn" value=" View" /></a>
+                            </div>
+                        </div>
+                        <div class="col-sm-12 clearfix productimg" style="padding-left: 0px;padding-right: 0px;">
+                            <div class="col-sm-2 col-xs-6 productnew">
+                                <a href="@Url.RouteUrl("pre-prod-name", new { itemId = 44282, itemName = "Kisankraft KK-GE-200 Petrol Start Kerosene Run engine".ToLower().Replace(' ', '-'), city = cityName })"><img src="~/Content/update(5-10)/images/wardha_img/E_M1.png" alt="image01" /><input type="button" class="btn viewbtn" value=" View" /></a>
+                            </div>
+                            <div class="col-sm-2 col-xs-6 productnew">
+                                <a href="@Url.RouteUrl("pre-prod-name", new { itemId = 44307, itemName = "Kisankraft KK-WPK-20 Kerosene Water Pump".ToLower().Replace(' ', '-'), city = cityName })"><img src="~/Content/update(5-10)/images/wardha_img/E_M2.png" alt="image02" /><input type="button" class="btn viewbtn" value=" View" /></a>
+                            </div>
+                            <div class="col-sm-2 col-xs-6 productnew">
+                                <a href="@Url.RouteUrl("pre-prod-name", new { itemId = 44283, itemName = "Kisankraft Heavy Duty KK-CSP-6020 Chainsaw Petrol 20 Inch Bar and Chain".ToLower().Replace(' ', '-'), city = cityName })"><img src="~/Content/update(5-10)/images/wardha_img/E_M3.png" alt="image03" /><input type="button" class="btn viewbtn" value=" View" /></a>
+                            </div>
+                            <div class="col-sm-2 col-xs-6 productnew">
+                                <a href="@Url.RouteUrl("pre-prod-name", new { itemId = 44309, itemName = "Kisankraft KK-LMM-450 Manual Lawn Mowers".ToLower().Replace(' ', '-'), city = cityName })"><img src="~/Content/update(5-10)/images/wardha_img/E_M4.png" alt="image04" /><input type="button" class="btn viewbtn" value=" View" /></a>
+                            </div>
+                            <div class="col-sm-2 col-xs-6 productnew">
+                                <a href="@Url.RouteUrl("pre-prod-name", new { itemId = 44279, itemName = "Kisankraft Economy Series FB-CSE-2418 Chainsaw Electric 18 Inch Bar and Chain".ToLower().Replace(' ', '-'), city = cityName })"><img src="~/Content/update(5-10)/images/wardha_img/E_M5.png" alt="image05" /><input type="button" class="btn viewbtn" value=" View" /></a>
+                            </div>
+                            <div class="col-sm-2 col-xs-6 productnew">
+                                <a href="@Url.RouteUrl("pre-prod-name", new { itemId = 44290, itemName = "Kisankraft KK-LMM-350 Manual Lawn Mowers".ToLower().Replace(' ', '-'), city = cityName })"><img src="~/Content/update(5-10)/images/wardha_img/E_M6.png" alt="image06" /><input type="button" class="btn viewbtn" value=" View" /></a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    @*<div id="load-content"></div>*@
+    <script type="text/javascript">
+        $(document).ready(function () {
+            //added for url routing - by snehal
+            var city = getCookie("CityCookie");
+            if (city == null || city == "" || city == undefined) {
+                city = "";
+            }
+            else if (window.location.href.indexOf(city.split("$")[1]) == -1) {
+                var _url = '@(Html.Raw(Url.RouteUrl("Default", new { city = "_city_" })))';
+                history.replaceState(null, document.title, _url.replace("_city_", city.split("$")[1].toLowerCase()));
+            }
+        });
+
+        function getCookie(name) {
+            var dc = document.cookie;
+            var prefix = name + "=";
+            var begin = dc.indexOf("; " + prefix);
+            if (begin == -1) {
+                begin = dc.indexOf(prefix);
+                if (begin != 0) return null;
+            } else {
+                begin += 2;
+            }
+            var end = document.cookie.indexOf(";", begin);
+            if (end == -1) {
+                end = dc.length;
+            }
+            return unescape(dc.substring(begin + prefix.length, end));
+        }
+    </script>
+    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
+    <script src="~/Content/Slider/js/jquerypp.custom.js"></script>
+    <script src="~/Content/Slider/js/jquery.elastislide.js"></script>
+    <script type="text/javascript">
+
+        $('#carousel').elastislide();
+        $('#carousel1').elastislide();
+        $('#carousel2').elastislide();
+    </script>

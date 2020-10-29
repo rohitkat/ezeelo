@@ -1,0 +1,181 @@
+﻿@model IEnumerable<ModelLayer.Models.MerchantTopupRechargeLog>
+
+@{
+    ViewBag.Title = "Recharge List";
+    Layout = "~/Views/Shared/_LeadersLayout.cshtml";
+}
+
+
+<link rel="stylesheet" href="http://cdn.datatables.net/1.10.2/css/jquery.dataTables.min.css" />
+<script type="text/javascript" src="http://cdn.datatables.net/1.10.2/js/jquery.dataTables.min.js"></script>
+
+<script src="~/Scripts/MerchantMenuOpenup.js"></script>
+<div class="container">
+    <div id="divLoading" style="background-color:#808080;display:none">
+        <p style="position: absolute; color: White; top: 35%; left: 45%;">
+            <img src="~/img/ajax-loading-gif-transparent-background-8.gif">
+        </p>
+    </div>
+    <div class="card">
+        <div class="card-header">
+            <strong>Topup Recharge Request List</strong>
+        </div>
+        <div class="card-body card-block">
+            <table id="tbl" class="table table-striped table-bordered bootstrap-datatable datatable dataTable" width="100%">
+                <thead>
+                    <tr>
+                        <th>
+                            Sr No
+                        </th>
+                        <th>
+                            Shop Name
+                        </th>
+                        <th>
+                            Recharge Amount
+                        </th>
+                        <th>
+                            Mode
+                        </th>
+                        <th>
+                            Transaction Ref/Check No
+                        </th>
+                        <th>
+                            Recharge Date
+                        </th>
+                        <th>
+                            Status
+                        </th>
+                        <th>
+                            Pending Transaction
+                        </th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @{
+                        int i = 0;
+                        foreach (var item in Model)
+                        {
+                            <tr>
+                                <td>
+                                    @{
+                                        i = i + 1;
+                                    }
+                                    @i
+                                </td>
+                                <td>
+                                    @item.recharge
+                                </td>
+                                <td>
+                                    <span id="spn-@item.ID">  @item.TopupAmount</span> <a class="topupAmount" id="a-@item.ID"><i style="color:green;cursor:pointer" class="fa fa-pencil"></i></a>
+                                    <input id="txt-@item.ID" type="text" value="@item.TopupAmount" style="width:80px;display:none" />
+                                </td>
+                                <td>
+                                    @item.Mode
+                                </td>
+                                <td>
+                                    <span style="word-break:break-all"> @item.TransactionID_CheckNo</span>
+                                </td>
+                                <td>
+                                    @item.CreateDate.ToString("dd-MM-yyyy")
+                                </td>
+                                <td id="status" style="font-weight:bold">
+                                    @if (item.Status == 0)
+                                    {
+                                        <span style="color:deepskyblue">Pending</span>
+                                    }
+                                    else if (item.Status == 1)
+                                    {
+                                        <span style="color:green">Approve</span>
+                                    }
+                                    else
+                                    {
+                                        <span style="color:red">Reject</span>
+                                    }
+                                </td>
+                                <td>
+                                    @item.PendingTransaction
+                                </td>
+                                <td>
+                                    @if (item.Status == 0)
+                                    {
+                                        <a value="@item.ID" class="btn btn-sm btn-success" id="btnApprove"> Approve </a>
+                                        <a value="@item.ID" class="btn btn-sm btn-danger" id="btnReject"> Reject </a>
+                                    }
+                                </td>
+                            </tr>
+                        }
+                    }
+                </tbody>
+
+            </table>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $(".topupAmount").click(function () {
+            var aid = $(this).attr("id");
+            var spanId = 'spn-' + aid.split('-')[1];
+            var txtId = 'txt-' + aid.split('-')[1];
+            $("#" + spanId).hide();
+            $("#" + txtId).show();
+            $(this).hide();
+            $("#" + txtId).focus();
+        });
+        $("#btnApprove").click(function () {
+            var Remark = prompt("Please enter Remark", "");
+            if (Remark != null && Remark != "") {
+                var id = $(this).attr("value");
+                var Amount = $("#txt-" + id).val();
+                $("#divLoading").show();
+                $.ajax({
+                    type: "POST",
+                    url: "@Url.Action("RechargeReq_Accept", "MerchantMaster")",
+                    data: "{'Id':" + id + ",'Remark':'" + Remark + "','Amount':" + Amount+"}",
+                    contentType: "application/json; charset = utf-8",
+                    dataType: "json",
+                    cache: false,
+                    success: function (data) {
+                        $("#divLoading").hide();
+                        alert(data);
+                        window.location.reload();
+                    },
+                    error: function (x, e) {
+                        $("#divLoading").hide();
+                    }
+                });
+            }
+        });
+        $("#btnReject").click(function () {
+            var Remark = prompt("Please enter Remark", "");
+            if (Remark != null && Remark != "") {
+                var id = $(this).attr("value");
+                $("#divLoading").show();
+                $.ajax({
+                    type: "POST",
+                    url: "@Url.Action("RechargeReq_Reject", "MerchantMaster")",
+                    data: "{'Id':" + id + ",'Remark':'" + Remark +"'}",
+                    contentType: "application/json; charset = utf-8",
+                    dataType: "json",
+                    cache: false,
+                    success: function (data) {
+                        $("#divLoading").hide();
+                        alert(data);
+                        window.location.reload();
+                    },
+                    error: function (x, e) {
+                        $("#divLoading").hide();
+                    }
+                });
+            }
+        });
+
+        $('#tbl').DataTable({
+
+        });
+
+
+    });
+</script>

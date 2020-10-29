@@ -1,0 +1,68 @@
+﻿@model ModelLayer.Models.ShopTimingMaster
+@{
+    ViewBag.Title = "ShopTimingUpdate";
+    Layout = "~/Views/Shared/_LeadersLayout.cshtml";
+}
+<script src="~/Scripts/MerchantMenuOpenup.js"></script>
+<style>
+    .form-control-label {
+        width: 100px !important;
+    }
+</style>
+<script>
+    $(document).ready(function () {
+        $("#frmMerMst").submit(function (e) {
+            if ('@ViewBag.IsInUse' == 'True') {
+                if (confirm('Value is in use wish to update')) {
+                    return true;
+                } else {
+                    e.preventDefault();
+                    return false;
+                }
+            }
+        });
+    });
+</script>
+<div class="container">
+    @using (Html.BeginForm("ShopTimingUpdate", "MerchantMaster", FormMethod.Post, new { id = "frmMerMst" }))
+    {
+        @Html.AntiForgeryToken()
+        @Html.ValidationSummary(true)
+        <div class="card">
+            <div class="card-header">
+                <strong>Shop Timing Master</strong>
+            </div>
+            <div class="card-body card-block">
+                <p style="color:red">*Time in 24 hours format</p>
+                @if (ViewBag.IsInUse == true)
+                {
+                    <label style="color:red;font-weight:bold">Service in use</label>
+                    <br />
+                }
+                <div class="form-group">
+                    <label for="company" class=" form-control-label">From Time</label>
+                    @Html.TextBoxFor(model => model.FromTime, new { @Type = "Time" })
+                    @Html.ValidationMessageFor(model => model.FromTime, null, new { @class = "text-danger" })
+                </div>
+                <div class="form-group">
+                    <label for="company" class=" form-control-label">To Time</label>
+                    @Html.TextBoxFor(model => model.ToTime, new { @Type = "Time" })
+                    @Html.ValidationMessageFor(model => model.ToTime, null, new { @class = "text-danger" })
+                </div>
+                <div class="form-group">
+                    <label for="company" class=" form-control-label">IsActive</label>
+                    @Html.EditorFor(model => model.IsActive)
+                    @Html.ValidationMessageFor(model => model.IsActive)
+                </div>
+                <div class="form-group">
+                    <div class="col-md-offset-2 col-md-10">
+                        <input type="submit" value="Update" class="btn btn-primary btn-sm" />
+                        <a class="btn btn-info btn-sm" href="@Url.Action("ShopTimingIndex", "MerchantMaster", new { area = "Admin" })">Back To List</a>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    }
+</div>
+

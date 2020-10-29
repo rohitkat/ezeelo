@@ -1,0 +1,352 @@
+﻿@model ModelLayer.Models.HomePageDynamicSection
+
+@{
+    ViewBag.Title = "HomePageDynamicSectionCreate";
+}
+
+
+<style>
+    #dvPreview {
+        border: 3px solid#CEC4C4;
+        margin-bottom: 10px;
+    }
+
+    select {
+        width: 219px;
+    }
+
+    .uploader input {
+        right: 95px !important;
+    }
+
+    div.uploader span.action {
+        display: inline;
+        padding: 8px 19px;
+        background: #08c;
+        overflow: hidden;
+        cursor: pointer;
+        color: #fff;
+        text-shadow: none;
+        font-size: 14px;
+        line-height: 28px;
+    }
+
+    .img {
+        height: 100% !important;
+    }
+
+    .image_span7 {
+        border-left: 2px dashed rgba(0, 136, 204, 0.15);
+        padding-left: 42px;
+        overflow: auto;
+    }
+</style>
+<div id="content" class="span10">
+    <ul class="breadcrumb">
+        <li>
+            <div>HomePageDynamicSectionPortal</div>
+        </li>
+    </ul>
+    @using (Html.BeginForm("HomePageDynamicSectionCreate", "HomePageDynamicSectionPortal", FormMethod.Post, new { enctype = "multipart/form-data" }))
+    {
+        @Html.AntiForgeryToken()
+        <div class="row-fluid">
+            <div class="box span12">
+                <div class="box-header">
+                    <h2><i class="icon-edit"></i><span class="break"></span>Add Section</h2>
+                </div>
+                @if (TempData["Messaage"] != null)
+                {
+                    <div style="font-weight:bold; color:red;">@TempData["Messaage"]</div>
+                }
+                <div class="box-content">
+                    <div class="span12">
+                        <div class="span5">
+                            <div class="form-horizontal">
+                                <br />
+                                @Html.ValidationSummary(true)
+
+                                <div class="control-group">
+                                    <label class="control-label col-md-2">Select City</label>
+                                    <div class="col-md-10 controls">
+                                        @Html.DropDownList("CityList", "Select City")
+
+                                        <span id="CityErro" style="font-weight:bold;color:red;"></span>
+                                    </div>
+                                </div>
+
+                                <div class="control-group">
+                                    <label class="control-label col-md-2">Select Francise </label>
+                                    <div class="col-md-10 controls">
+                                        @Html.DropDownList("FranchiseID", "Select FranchiseID")
+
+                                        <span id="FranchiseListErro" style="font-weight:bold;color:red;"></span>
+                                    </div>
+                                </div>
+
+
+                                <div class="control-group">
+                                    <label class="control-label col-md-2">Select Section Header</label>
+                                    <div class="col-md-10 controls">
+                                        @Html.DropDownList("SectionHeader", "Select Section Header")
+
+                                        <span id="SectionHeaderErro" style="font-weight:bold;color:red;"></span>
+                                    </div>
+                                </div>
+
+                                <div class="control-group">
+                                    <label class="control-label col-md-2">Display Name</label>
+                                    <div class="col-md-10 controls">
+                                        @Html.EditorFor(model => model.SectionDisplayName, new { @class = "control-label col-md-2" })
+
+                                        <span id="SectionDisplayNameErro" style="font-weight:bold;color:red;"></span>
+                                    </div>
+                                </div>
+
+                                <div class="control-group">
+                                    <label class="control-label col-md-2">Select Section Style</label>
+                                    <div class="col-md-10 controls">
+                                        @Html.DropDownList("SectionStyle", "select Section Style")
+
+                                        <span id="SectionStyleError" style="font-weight:bold;color:red;"></span>
+                                    </div>
+                                </div>
+
+
+                                <div class="control-group">
+                                    <label class="control-label col-md-2">Sequence Order</label>
+
+                                    <div class="col-md-10 controls">
+                                        <input type="number" id="SequenceOrder" name="SequenceOrder" min="0" />
+                                        @*@Html.EditorFor(model => model.SequenceOrder, new { htmlAttributes = new { @min = "0" } })*@
+                                        @Html.ValidationMessageFor(model => model.SequenceOrder)
+                                        <span id="SequenceOrderErro" style="font-weight:bold;color:red;"></span>
+                                    </div>
+                                </div>
+
+                                <div class="control-group">
+                                    @Html.LabelFor(model => model.IsActive, new { @class = "control-label col-md-2" })
+                                    <div class="col-md-10 controls">
+                                        @Html.CheckBoxFor(model => model.IsActive)
+                                        @Html.ValidationMessageFor(model => model.IsActive)
+                                        <span id="IsActiveErro" style="font-weight:bold;color:red;"></span>
+                                    </div>
+                                </div>
+
+                                <div class="control-group" style="display:none" id="banner">
+                                    @Html.LabelFor(model => model.IsBanner, new { @class = "control-label col-md-2" })
+                                    <div class="col-md-10 controls">
+                                        @Html.EditorFor(model => model.IsBanner)
+                                        @Html.ValidationMessageFor(model => model.IsBanner)
+                                        <span id="IsActiveErro" style="font-weight:bold;color:red;"></span>
+                                    </div>
+                                </div>
+
+                                <div class="control-group" style="display:none" id="category">
+                                    @Html.LabelFor(model => model.IsCategory, new { @class = "control-label col-md-2" })
+                                    <div class="col-md-10 controls">
+                                        @Html.EditorFor(model => model.IsCategory)
+                                        @Html.ValidationMessageFor(model => model.IsCategory)
+                                        <span id="IsActiveErro" style="font-weight:bold;color:red;"></span>
+                                    </div>
+                                </div>
+
+                                <div class="control-group" style="display:none" id="product">
+                                    @Html.LabelFor(model => model.IsProduct, new { @class = "control-label col-md-2" })
+                                    <div class="col-md-10 controls">
+                                        @Html.EditorFor(model => model.IsProduct)
+                                        @Html.ValidationMessageFor(model => model.IsProduct)
+                                        <span id="IsActiveErro" style="font-weight:bold;color:red;"></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="form-actions no-color">
+            <div class=" col-md-offset-2 col-md-10" style="text-align:center;">
+                <input type="submit" value="Create" class="btn btn-primary" />
+
+                @Html.ActionLink("Back to List", "Index", null, new { @class = "btn btn-default" })
+            </div>
+        </div>
+    }
+</div>
+<div class="span4 spanLeft" style="margin-top:12px;">
+    <div id="divAddNew"></div>
+</div>
+
+
+
+<script src="~/Scripts/jquery-1.10.2.min.js"></script>
+<script>
+    var height = 0;
+    var width = 0;
+
+    $(document).ready(function () {
+        debugger
+        $(".btn-primary").click(function () { //remain validation for image
+            var ErrorCount = 0;
+            var cityid = $("#CityList option:selected").text();
+            var franchise = $("#FranchiseID option:selected").text();
+            var SectionHeader = $("#SectionHeader option:selected").text(); 
+            var SectionStyle = $("#SectionStyle option:selected").text();
+         
+            var PriorityLevel = $("#SequenceOrder").val();
+           
+            var isActive = $("#IsActive option:selected").text();
+
+            if (isActive == 'Not Set') {
+                $('#IsActiveErro').html('Please Select the IsActive');
+                ErrorCount = ErrorCount + 1;
+            }
+            else {
+                $('#IsActiveErro').html('');
+            }
+            if (cityid == 'Select City') {
+                $('#CityErro').html('Please Select City');
+                ErrorCount = ErrorCount + 1;
+            }
+            else {
+                $('#CityErro').html('');
+            }
+
+            if (franchise == 'Select FranchiseID') {
+                $('#FranchiseListErro').html('Please Select Franchise');
+                ErrorCount = ErrorCount + 1;
+            }
+            else {
+                $('#FranchiseListErro').html('');
+            }
+
+            if (SectionHeader == 'Select Section Header') {
+                $('#SectionHeaderErro').html('Please Select Section Header');
+                ErrorCount = ErrorCount + 1;
+            }
+            else {
+                $('#SectionHeaderErro').html('');
+            }
+            if (SectionStyle == "select Section Style") {
+                $('#SectionStyleError').html('Please select Section Style');
+                ErrorCount = ErrorCount + 1;
+            }
+            else {
+                $('#SectionStyleError').html('');
+            }
+         
+            if (PriorityLevel == '') {
+                $('#SequenceOrderErro').html('Please Select Sequence Order or Set to Zero (0)');
+                ErrorCount = ErrorCount + 1;
+            }
+            else {
+                $('#SequenceOrderErro').html('');
+            }
+          
+            if (ErrorCount > 0) {
+                return false;
+            }
+        });
+
+
+
+
+        $("#SectionHeader").change(function () {
+          
+            $("#SectionDisplayName").val($("#SectionHeader option:selected").text())
+        });
+
+    });
+
+
+
+
+    $("#SectionStyle").change(function () {
+      
+        var SelectedID = $(this).val();
+
+        if (SelectedID == "LOGO_SLIDER" || SelectedID == "BOTTOM_BANNER" || SelectedID == "TWO_FIRST_ROW_TWO_SECOND_ROW" || SelectedID == "FOUR_SUBCAT_BANNERS" )
+        {
+
+                
+            $("#IsBanner").prop("checked", false);
+
+            $('#IsCategory').prop("checked", true);
+
+            $('#IsProduct').prop("checked", false);
+        }
+        if (SelectedID == "MAIN_BANNER") {
+
+            $("#IsBanner").prop("checked", true);
+
+            $('#IsCategory').prop("checked", false);
+
+            $('#IsProduct').prop("checked", false);
+        }
+        if (SelectedID == "LEFT_SQUARE_MAIN_BANNER_AND_RIGHT_FOUR_SUBCAT_BANNERS" || SelectedID == "FULL_WIDTH_MAIN_BANNER_AND_BELOW_THREE_SUBCAT_BANNERS" ) {
+
+            $("#IsBanner").prop("checked", true);
+
+            $('#IsCategory').prop("checked", true);
+
+            $('#IsProduct').prop("checked", false);
+        }
+        if (SelectedID == "FULL_WIDTH_MAIN_BANNER_AND_PRODUCT_BELOW") {
+
+            $("#IsBanner").prop("checked", true);
+
+            $('#IsCategory').prop("checked", false);
+
+            $('#IsProduct').prop("checked", true);
+        }
+        
+    });
+
+
+
+    $("#CityList").change(function () {
+        var selectedVal = $("#CityList option:selected").val();
+        if (selectedVal > 0) {
+
+            $.ajax({
+                type: "POST",
+                url: "/HomePageDynamicSectionPortal/getFranchise",
+                data: "{ CityID: '" + selectedVal + "'}",
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                async: true,
+                cache: false,
+                success: function (msg) {
+
+                    $('#FranchiseID').empty();
+                    $('#FranchiseID').append('<option value=0>Select Franchise</option>');
+                    $.each(msg, function (index, item) {
+                        $('#FranchiseID').append('<option value=' + item.value + '>' + item.text + '</option>');
+                    });
+                },
+                error: function (x, e) {
+                    //alert("The call to the server side failed. " + x.responseText);
+                }
+            });
+
+        }
+    });
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

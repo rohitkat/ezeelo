@@ -1,0 +1,132 @@
+﻿@model IEnumerable<ModelLayer.Models.Career>
+@{
+    ViewBag.Title = "Join Us";
+
+    string cityName = "";
+    int franchiseID = 0;////added
+    if (Request.Cookies["CityCookie"] != null && Request.Cookies["CityCookie"].Value != "")
+    {
+        cityName = Request.Cookies["CityCookie"].Value.Split('$')[1].ToLower();
+        franchiseID = Convert.ToInt32(Request.Cookies["CityCookie"].Value.Split('$')[2]);
+    }
+}
+<div class="gap"></div>
+<div class="tabbable product-tabs">
+    <img src="~/Content/Images/tags/career.jpg" style="width:100%;margin-bottom:5px;" />
+    <ul class="nav nav-tabs" id="myTab">
+        <li class="active">
+            <a href="#tab-1" data-toggle="tab">Why Join Us</a>
+        </li>
+        <li>
+            <a href="#tab-2" data-toggle="tab">Current Openings</a>
+        </li>
+    </ul>
+    <div class="tab-content">
+        <div class="tab-pane fade in active" id="tab-1">
+            <h3>Why eZeelo?</h3>
+            <img src="~/Content/Images/hh_logo.png" style="float: left; width: 140px; padding: 10px; " />
+            <p style="text-align:justify">
+                <b>eZeelo</b> work is fun, you will get the opportunity to lead projects and own deliverables early on in your career. This is a place where youcan give your ideas a stage, create waves of change and work towards developing expertise in a few chosen areas.
+                We always believe in collaborative efforts more than just titles. We urge our associates to bring up their ideas, innovateand strive to deliver their best.We value skills and commitment over anything else.We encourage you to explore the current opportunities, if you are ready to enthusiastically take up the plunge into continued learning, to grow your skills, experience and achievements with us.
+                If you think you can provide answers to problems that matter, then eZeelo is the place for you!
+
+            </p>
+        </div>
+        <div class="tab-pane fade" id="tab-2">
+            <div class="row">
+                @if (Model.Count() > 0)
+                {
+                    foreach (var item in Model)
+                    {
+                        <h3>
+                            @Html.DisplayFor(modelItem => item.Jobtitle)
+                        </h3>
+                        <div class="table-shopping-cart" style="width: 100%; padding: 10px;text-align:justify">
+                            <span><b>Qualification & role specific knowledge :</b> @Html.DisplayFor(modelItem => item.Education)</span>
+                            <br />
+                            <span><b>Vacancies :</b> @Html.DisplayFor(modelItem => item.NoOfOpening)</span>
+                            <br />
+                            <span><b>Experience required :</b> @Html.DisplayFor(modelItem => item.ExperienceRequired)</span>
+                            <br />
+                            <span><b>Skill set required :</b> @Html.DisplayFor(modelItem => item.SkillRequired)</span>
+                            <br />
+                            <span><b>Job description :</b> @Html.DisplayFor(modelItem => item.Description)</span>
+                            <br />
+                            @Html.RouteLink("Apply Now", "CareerApplyNow", new { id = item.ID, city = cityName, franchiseId = franchiseID }, new { @class = "btn btn-warning" })
+                        </div>
+                        <hr />
+                    }
+                }
+
+                else
+                {
+                    <div class="col-md-12" style="text-align:center;">
+                        <h2>We are always looking out for great talent to join our family</h2>
+                        <p> Currently we don’t have any openings. Drop your resume at <label style="color: #337ab7">career@ezeelo.com</label> Our team will get back to you.</p>
+                    </div>
+                }
+
+
+            </div>
+
+        </div>
+    </div>
+</div>
+<div class="gap"></div>
+<script>
+    $(document).ready(function () {
+        $(".warning").click(function () {
+
+            var p = $(this).attr("id");
+            var id = p.substring(4, p.length);
+            $("#apply" + id).show(1000);
+            $("#show" + id).hide();
+        });
+
+        $("[id*=submit]").click(function () {
+            var p = $(this).attr("id");
+            var id = p.substring(6, p.length);
+            alert(id);
+        });
+        /*Upload Resume*/
+        function uploadFiles(event) {
+            event.stopPropagation(); // Stop stuff happening
+            event.preventDefault(); // Totally stop stuff happening
+
+            // START A LOADING SPINNER HERE
+
+            // Create a formdata object and add the files
+            var data = new FormData();
+            $.each(files, function (key, value) {
+                data.append(key, value);
+            });
+
+            $.ajax({
+                url: 'submit.php?files',
+                type: 'POST',
+                data: data,
+                cache: false,
+                dataType: 'json',
+                processData: false, // Don't process the files
+                contentType: false, // Set content type to false as jQuery will tell the server its a query string request
+                success: function (data, textStatus, jqXHR) {
+                    if (typeof data.error === 'undefined') {
+                        // Success so call function to process the form
+                        submitForm(event, data);
+                    }
+                    else {
+                        // Handle errors here
+                        console.log('ERRORS: ' + data.error);
+                    }
+                },
+                error: function (jqXHR, textStatus, errorThrown) {
+                    // Handle errors here
+                    console.log('ERRORS: ' + textStatus);
+                    // STOP LOADING SPINNER
+                }
+            });
+        }
+        /***********************************/
+
+    });
+</script>

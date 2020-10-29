@@ -1,0 +1,2148 @@
+﻿@using System.Globalization;
+@{
+    string cityName = System.Configuration.ConfigurationManager.AppSettings["DFLT_CITY_NAME"]; @*//Yashaswi 01/12/2018 Default City Change *@
+    int franchiseID = Convert.ToInt16(System.Configuration.ConfigurationManager.AppSettings["DFLT_FRANCHISE_ID"]); @*//Yashaswi 01/12/2018 Default City Change *@
+    if (Request.Cookies["CityCookie"] != null && Request.Cookies["CityCookie"].Value != "")
+    {
+        cityName = Request.Cookies["CityCookie"].Value.Split('$')[1].ToLower();
+        franchiseID = Convert.ToInt32((Request.Cookies["CityCookie"].Value.Split('$')[2].ToLower()));//added
+    }
+
+    List<ModelLayer.Models.ViewModel.BlockViewModel> blocks = new List<ModelLayer.Models.ViewModel.BlockViewModel>();
+}
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    @*Commented and Changes by Zubair on 27-07-2017 for SEO*@
+    @*<meta name="description" content="eZeelo � India�s leading online Shopping store with wide range of grocery, Daily Needs, vegetables, fruits, Meat, personal care, home care products.">*@
+
+    <meta name="keywords" content="online shopping, online store, beauty products online, buy fresh fruits, vegetables, groceries, home appliances, sweets, supermarket, india, lucknow, kanpur">
+    <meta name="language" content="English">
+    <script>
+        (function (i, s, o, g, r, a, m) {
+            i['GoogleAnalyticsObject'] = r; i[r] = i[r] || function () {
+                (i[r].q = i[r].q || []).push(arguments)
+            }, i[r].l = 1 * new Date(); a = s.createElement(o),
+                m = s.getElementsByTagName(o)[0]; a.async = 1; a.src = g; m.parentNode.insertBefore(a, m)
+        })(window, document, 'script', 'https://www.google-analytics.com/analytics.js', 'ga');
+
+        ga('create', 'UA-102017214-1', 'auto');
+        ga('send', 'pageview');
+    </script>
+
+
+    <!-- Google Tag Manager -->
+    <script>
+        (function (w, d, s, l, i) {
+            w[l] = w[l] || []; w[l].push({
+                'gtm.start':
+                    new Date().getTime(), event: 'gtm.js'
+            }); var f = d.getElementsByTagName(s)[0],
+                j = d.createElement(s), dl = l != 'dataLayer' ? '&l=' + l : ''; j.async = true; j.src =
+                    'https://www.googletagmanager.com/gtm.js?id=' + i + dl; f.parentNode.insertBefore(j, f);
+        })(window, document, 'script', 'dataLayer', 'GTM-TR78CNF');</script>
+    <!-- End Google Tag Manager -->
+
+    <link href="~/Content/css/font-awesome.css" rel="stylesheet" />
+    <link href="~/Content/css/font-awesome.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="~/Content/css/bootstrap.css">
+    <link rel="stylesheet" href="~/Content/css/styles.css">
+
+    <link rel="stylesheet" href="~/Content/css/stylesheet.css"> <!--added by Paras-->
+    <link rel="stylesheet" href="~/Content/css/font-awesome.min.css">
+    <link rel="stylesheet" href="~/Content/css/mystyles.css">
+    <link rel="stylesheet" href="~/Content/css/switcher.css">
+    <link rel='shortcut icon' type='image/x-icon' href='~/Content/Images/logo.png' />
+    <script src="~/Scripts/jquery-1.10.2.js"></script>
+
+    <style>
+        .carousel-inner > .item > img,
+        .carousel-inner > .item > a > img {
+            width: 100%;
+            margin: auto;
+        }
+
+        #myAlert {
+            display: none;
+            position: fixed;
+            top: 152px;
+            z-index: 100;
+            width: 100%;
+            background: rgba(168, 207, 69, 0.83);
+            color: black;
+            border: 1px solid rgba(168, 207, 69, 0.83);
+            text-align: center;
+            text-transform: uppercase;
+        }
+
+        /*Yashaswi Start mlm signup 19-7-2018*/
+        #SignUp {
+            display: none;
+            position: fixed;
+            top: 105px;
+            z-index: 999 !important;
+            width: 100%;
+            background: rgba(168, 207, 69, 0.83);
+            color: black;
+            border: 1px solid rgba(168, 207, 69, 0.83);
+            text-align: center;
+        }
+
+        .back-to-top {
+            cursor: pointer;
+            position: fixed !important;
+            bottom: 20px;
+            right: 20px;
+            display: none;
+            z-index: 100000;
+        }
+
+        select {
+            border-radius: 0px 0px 0px 0px !important;
+            background: transparent;
+            padding: 0px 15px 0px 5px !important;
+            font-size: 14px;
+            border: 1px solid #E9B800;
+            height: 30px;
+            /*-webkit-appearance: none;*/
+            /*-moz-appearance: none;*/
+            appearance: none;
+            float: left;
+            /*background: url(/Content/Images/drop.gif) 96% / 10px no-repeat !important;*/
+        }
+
+        .City {
+            width: 280px !important;
+            min-height: 30px !important;
+            top: 245px !important;
+            overflow: auto !important;
+            max-height: 200px !important;
+            left: 39.4% !important;
+            margin-left: 19% !important;
+        }
+    </style>
+    <script type="application/ld+json">
+        /*{ "context" : "http://schema.org",
+        "type" : "Organization",
+        " name " : " eZeelo pvt ltd ",
+        "url" : " @System.Configuration.ConfigurationManager.AppSettings["EZEELO_CUSTOMER_URL"] / @System.Configuration.ConfigurationManager.AppSettings["DFLT_CITY_NAME"]/@System.Configuration.ConfigurationManager.AppSettings["DFLT_FRANCHISE_ID"] ", @*////added /2*@
+        "sameAs" : [ " https://www.facebook.com/ezeelocom ",
+        " https://twitter.com/eZeeloCom ",
+        " https://plus.google.com/u/0/116348735803658149077/ ",
+        " https://www.youtube.com/channel/UCVWnnSwkDcgnHQXl5XffMyA/",
+        " https://www.instagram.com/eZeeloCom/",
+        " https://www.linkedin.com/company/ezeelo ",
+        " https://in.pinterest.com/eZeelocom/ "]
+        }*/
+    </script>
+
+
+
+    @*Yashaswi mlm SignUp*@
+    <script>
+        $(document).ready(function () {
+
+            @*if ('@cityName' == "kanpur") {
+                $("#main-body").show();
+                $("#sonipat_City_main_pageContent").hide();
+                $("#Lucknow_City_main_pageContent").hide();
+                $("#Hisar_City_main_pageContent").hide();
+                $("#north_east_delhi_City_main_pageContent").hide();
+                $("#noida_City_main_pageContent").hide();
+                $("#mumbai_City_main_pageContent").hide();
+            }
+            else if ('@cityName' == "sonipat") {
+                $("#sonipat_City_main_pageContent").show();
+                $("#main-body").hide();
+                $("#Lucknow_City_main_pageContent").hide();
+                $("#Hisar_City_main_pageContent").hide();
+                $("#north_east_delhi_City_main_pageContent").hide();
+                $("#noida_City_main_pageContent").hide();
+                $("#mumbai_City_main_pageContent").hide();
+                $("#navi-mumbai_City_main_pageContent").hide();
+            }
+            else if ('@cityName' == "lucknow") {
+                $("#Lucknow_City_main_pageContent").show();
+                $("#sonipat_City_main_pageContent").hide();
+                $("#main-body").hide();
+                $("#Hisar_City_main_pageContent").hide();
+                $("#north_east_delhi_City_main_pageContent").hide();
+                $("#noida_City_main_pageContent").hide();
+                $("#mumbai_City_main_pageContent").hide();
+                $("#navi-mumbai_City_main_pageContent").hide();
+            }
+            else if ('@cityName' == "hisar") {
+                $("#Hisar_City_main_pageContent").show();
+                $("#sonipat_City_main_pageContent").hide();
+                $("#main-body").hide();
+                $("#Lucknow_City_main_pageContent").hide();
+                $("#north_east_delhi_City_main_pageContent").hide();
+                $("#noida_City_main_pageContent").hide();
+                $("#mumbai_City_main_pageContent").hide();
+                $("#navi-mumbai_City_main_pageContent").hide();
+            }
+            else if ('@cityName' == "north-east-delhi") {
+                $("#north_east_delhi_City_main_pageContent").show();
+                $("#sonipat_City_main_pageContent").hide();
+                $("#main-body").hide();
+                $("#Lucknow_City_main_pageContent").hide();
+                $("#Hisar_City_main_pageContent").hide();
+                $("#noida_City_main_pageContent").hide();
+                $("#mumbai_City_main_pageContent").hide();
+                $("#navi-mumbai_City_main_pageContent").hide();
+            }
+            else if ('@cityName' == "noida") {
+                $("#noida_City_main_pageContent").show();
+                $("#sonipat_City_main_pageContent").hide();
+                $("#main-body").hide();
+                $("#Lucknow_City_main_pageContent").hide();
+                $("#Hisar_City_main_pageContent").hide();
+                $("#north_east_delhi_City_main_pageContent").hide();
+                $("#mumbai_City_main_pageContent").hide();
+                $("#navi-mumbai_City_main_pageContent").hide();
+            }
+            else if ('@cityName' == "mumbai-south") {
+                $("#mumbai_City_main_pageContent").show();
+                $("#noida_City_main_pageContent").hide();
+                $("#sonipat_City_main_pageContent").hide();
+                $("#main-body").hide();
+                $("#Lucknow_City_main_pageContent").hide();
+                $("#Hisar_City_main_pageContent").hide();
+                $("#north_east_delhi_City_main_pageContent").hide();
+                $("#navi-mumbai_City_main_pageContent").hide();
+            }
+            else if ('@cityName' == "navi-mumbai") {
+                $("#navi-mumbai_City_main_pageContent").show();
+                $("#mumbai_City_main_pageContent").hide();
+                $("#noida_City_main_pageContent").hide();
+                $("#sonipat_City_main_pageContent").hide();
+                $("#main-body").hide();
+                $("#Lucknow_City_main_pageContent").hide();
+                $("#Hisar_City_main_pageContent").hide();
+                $("#north_east_delhi_City_main_pageContent").hide();
+            }
+            else {
+                $("#sonipat_City_main_pageContent").hide();
+                $("#main-body").hide();
+                $("#Lucknow_City_main_pageContent").hide();
+                $("#Hisar_City_main_pageContent").hide();
+                $("#north_east_delhi_City_main_pageContent").hide();
+                $("#noida_City_main_pageContent").hide();
+                $("#mumbai_City_main_pageContent").hide();
+                $("#navi-mumbai_City_main_pageContent").hide();
+            }*@
+
+
+            @*if ('@cityName' == "kanpur") {
+                $("#main-body").show();
+            }
+            else {
+                $("#main-body").hide();
+            }*@
+            var  msg;
+            var modalFromValidReferalIdAfter = document.getElementById('divCheckRefIdBeforSignLeadersAfter');
+            if ('@TempData["IsLeadersSignUp"]' != null && '@TempData["IsLeadersSignUp"]' != "") {
+                msg = '@TempData["IsLeadersSignUp"]';
+            }
+            if (msg != null && msg != "" && msg != undefined) {
+                if (msg.indexOf("order") != -1) {
+                    $("#signUpmsg").text(msg);
+                    $('#SignUp').css('display', 'block');
+                    setTimeout(function () {
+                        $("#SignUp").hide('blind', {}, 4000)
+                    }, 3000);
+                }
+                else {
+                    $("#spParentName").text(msg);
+                    modalFromValidReferalIdAfter.style.display = "block";
+                }
+            }
+
+            $("#btnSignLeadersAfterOk").click(function () {
+                modalFromValidReferalIdAfter.style.display = "none";
+            });
+        });
+    </script>
+    @*Yashaswi mlm SignUp*@
+
+
+
+    <script>
+        $(document).ready(function () {
+            $(window).scroll(function () {
+                if ($(this).scrollTop() > 50) {
+                    $('#back-to-top').fadeIn();
+                } else {
+                    $('#back-to-top').fadeOut();
+                }
+            });
+            // scroll body to 0px on click
+            $('#back-to-top').click(function () {
+                $('#back-to-top').tooltip('hide');
+                $('body,html').animate({
+                    scrollTop: 0
+                }, 800);
+                return false;
+            });
+            $('#back-to-top').tooltip('show');
+            // Onclick menubutton code
+            $('.navbar-toggle').click(function () {
+                $('body,html').animate({
+                    scrollTop: 0
+                }, 800);
+            });
+
+            //Start 18/12/2018 pincode refresh button
+            $("#RefreshCityCookies").click(function () {
+                var oldAreaID = localStorage.getItem("AreaId");
+                localStorage.removeItem("CityID");
+                localStorage.removeItem("PinArea");
+                localStorage.removeItem("AreaId");
+                localStorage.removeItem("SelectedPincode");
+                localStorage.removeItem("IsLocConfirmed");
+
+                var cookies = document.cookie.split(";");
+                for (var i = 0; i < cookies.length; i++) {
+                    var equals = cookies[i].indexOf("=");
+                    var name = equals > -1 ? cookies[i].substr(0, equals) : cookies[i];
+                    document.cookie = name + "=;expires=Thu, 01 Jan 1970 00:00:00 GMT";
+                }
+
+                var changeUrl = '@(Html.Raw(Url.RouteUrl("ChangeCity", new { city = cityName, CityID = "_CityID_", CityName = "_CityName_", FranchiseID = "_FranchiseID_", HelpLineNumber = "_HelpLineNumber_", OldAreaId = "OldAreaId" })))';
+                changeUrl = changeUrl.replace("_CityID_", "@System.Configuration.ConfigurationManager.AppSettings["DFLT_CITY_ID"]").replace("_CityName_", "@System.Configuration.ConfigurationManager.AppSettings["DFLT_CITY_NAME"]").replace("_FranchiseID_", "@System.Configuration.ConfigurationManager.AppSettings["DFLT_FRANCHISE_ID"]").replace("_HelpLineNumber_", "@System.Configuration.ConfigurationManager.AppSettings["DFLT_HELPLINE_NO"]").replace("OldAreaId", oldAreaID);
+
+                window.location.href = changeUrl;
+            });
+            //End 18/12/2018 pincode refresh button
+        });
+    </script>
+    @if (Request.Cookies["CityCookie"] == null || Request.Cookies["CityCookie"].Value == string.Empty)
+    {
+        <title>India's Online Shopping Store of Groceries, Fruits & Vegetables</title>
+        @*Added by Zubair on 27-07-2017 for SEO*@
+        <meta name="description" content="eZeelo � India�s leading online Shopping store with wide range of grocery, Daily Needs, vegetables, fruits, Meat, personal care, home care products.">
+    }
+    else
+    {
+
+        // this code for dinamic city change.
+        string city = Request.Cookies["CityCookie"].Value.Split('$')[1].ToLower();
+        int franchise = Convert.ToInt32(Request.Cookies["CityCookie"].Value.Split('$')[2]);////added
+
+        //string str = "Largest Online Shopping Store for Kanpur, Lucknow, Nagpur, Varanasi";
+        //Added by pri
+        string str = "India's Online Shopping Store of Groceries, Fruits And Vegetables";
+
+        if (city == "nagpur" && franchise == 2)
+        { str = "Nagpur's Online Shopping Store Of Groceries, Fruits And Vegetables"; }
+        else if (city == "kanpur" && franchise == 3)
+        {
+            @*Commented and Changes by Zubair on 27-07-2017 for SEO*@
+            //str = "Kanpur�s Online Shopping Store Of Groceries, Fruits And Vegetables";
+            str = "Kanpur's Online Grocery, Vegetables, Fruits, Meat, Chicken, Sweet Store";
+            <meta name="description" content="eZeelo � Leading online Daily Needs Store with wide range of grocery, vegetables, fruits, Meat, personal care & home care products in Kanpur City.">
+        }
+        else if (city == "varanasi" && franchise == 4)
+        { str = "Varanasi's Online Shopping Store Of Groceries, Fruits And Vegetables"; }
+        //Added by pri
+        else if (city == "lucknow" && franchise == 26)//modified by harshada on 03/02/2017  change condition (city == "Lucknow" && franchise == 26)
+        {
+            @*Commented and Changes by Zubair on 27-07-2017 for SEO*@
+            //str = "Lucknow�s Online Shopping Store Of Groceries, Fruits And Vegetables";
+            str = "Lucknow's Online Grocery, Vegetables, Fruits, Meat, Chicken, Sweet Store";
+            <meta name="description" content="eZeelo � Leading online Daily Needs Store with wide range of grocery, vegetables, fruits, Meat, personal care & home care products in Lucknow City.">
+
+        }
+        else if (city == "wardha" && franchise == 8)
+        { str = "Wardha's Online Shopping Store Of Groceries, Fruits And Vegetables"; }
+
+        <title>@str</title>
+    }
+
+    <script>
+        $(function () {
+            var a = getCookie("ShortListCookie");
+            if (a != null) {
+                $("[id*=spanShortlistCount]").text(a.split(',').length);
+            }
+            else {
+                $("[id*=spanShortlistCount]").text(0);
+            }
+        });
+    </script>
+    @* Commented by Tejaswee (2-7-2016) *@
+    <script type="application/ld+json">
+        {
+        "@@context": "http://schema.org",
+        "@@type": "WebSite",
+        "url": "@System.Configuration.ConfigurationManager.AppSettings["EZEELO_CUSTOMER_URL"]@cityName/@franchiseID",@*//// added @franchiseID*@
+        "potentialAction": {
+        "@@type": "SearchAction",
+        "target": "@System.Configuration.ConfigurationManager.AppSettings["EZEELO_CUSTOMER_URL"]@cityName/@franchiseID/products?item={search_term}", @*//// added @franchiseID*@
+        "query-input": "required name=search_term"
+        }
+        }
+    </script>
+
+    @*Only use this cond in this page only as per SEO Requirment----Comment By Mohit*@
+    <link href="https://plus.google.com/+ezeelo" rel="publisher" />
+    @*End Of Comment*@
+
+
+
+    <!--App Download PopUp Mobile Device-->
+    <script type="text/javascript">
+        $(document).ready(function () {
+            if ($(window).width() < 600) {
+                var a = getCookie("CityCookie");
+                if (a == null || a == "") {
+                    $("#dialog").css('display', 'block');
+                    $("#mask").css('display', 'block');
+                    if ($("#dialog").css('display') == 'none') {
+                        $("#mask").css('display', 'none');
+                    } else {
+                        $("#mask").css('display', 'block');
+                    }
+                }
+            }
+            else {
+                $(".appCover").css('display', 'none');
+                var a = getCookie("CityCookie");
+                if (a == null || a == "") {
+                    $("#dialog").css('display', 'block');
+                    $("#mask").css('display', 'block');
+                    if ($("#dialog").css('display') == 'none') {
+                        $("#mask").css('display', 'none');
+                    } else {
+                        $("#mask").css('display', 'block');
+                    }
+                }
+            }
+            $(".skip").click(function () {
+                $(".appCover").css('display', 'none');
+                $(".appDownload").css('display', 'none');
+            });
+            $(".LogOut").click(function () {
+                $(".LogOut ul").toggle();
+            });
+            $(".openCity").click(function () {
+                $(".openCity ul").toggle();
+            });
+        });
+    </script>
+    <script>
+        $(document).ready(function () {
+            $(".windowclose").click(function () {
+                $(".window").hide();
+                $("#mask").hide();
+            });
+            $("#SpanChangeCity").click(function () {
+                $(".window").show();
+                $("#mask").show();
+            });
+            $(".closeTag").click(function () {
+                $(".window").hide();
+                $("#mask").hide();
+            });
+        });
+    </script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('#cart > .heading a').click(function () {
+                $('#cart').addClass('active');
+                $('#cart').mouseleave(function () {
+                    $(this).removeClass('active');
+                });
+            });
+        });
+    </script>
+    <!--ON SCROLL LOAD PARTIOAL VIEW IN INDEX PAGE ONLY Create by Gopal-->
+    @*<script type="text/javascript">
+            $(document).ready(function () {
+                //$('body').click(function (event) {
+                //    if ($(event.target).is('#customerdiv')) {
+                //        alert();
+                //    }
+                //    //else if ($(event.target).is('#l2')) {
+                //    //    log.html(event.target.id + ' was clicked.');
+                //    //} else if ($(event.target).is('#l3')) {
+                //    //    log.html(event.target.id + ' was clicked.');
+                //    //} else if ($(event.target).is('#l4')) {
+                //    //    log.html(event.target.id + ' was clicked.');
+                //    //} else {
+                //    //    log.html('');
+                //    //}
+                //});
+
+
+                $(window).load(function () {
+                    AddModal();
+                });
+                AddModal = function () {
+                    var partialHtml;
+                    var url = 'nagpur/Home/HomeGenerate';
+
+                    $.get(url, function (data) {
+                        $("#load-content").html(data);
+                    });
+                };
+
+
+                $("#customerdiv").click(function () {
+                    $("#newdropdown").toggle();
+                    //alert($("#newdropdown").attr("style"));
+                    //alert($("#newdropdown").css('display'));
+
+                });
+
+            });
+        </script>*@
+
+    <script>
+        $(document).click(function (e) {
+            if ($(e.target).parents(".dropdown-toggle").length === 0) {
+                $(".split-content").hide();
+            }
+        });
+    </script>
+    <!--New header part smoothly scroll jquery create by Gopal Shende-->
+    <!--End Jquery-->
+    @*<script type="text/javascript">
+            var web = "ezeelo";
+            var sourceName = "website";  // More like utm_source
+            var titlePop = 'Stay updated on the most stunning offers and updates of our website ';
+            var descPop = 'Just click on the Yes button and you are done!';
+        </script>*@
+    @*<script src="~/Scripts/popup.js"></script>*@
+    <script>
+        function findOffset(element) {
+            var top = 0, left = 0;
+
+            do {
+                top += element.offsetTop || 0;
+                left += element.offsetLeft || 0;
+                element = element.offsetParent;
+            } while (element);
+
+            return {
+                top: top,
+                left: left
+            };
+        }
+
+        window.onload = function () {
+            var stickyHeader = document.getElementById('sticky');
+            var headerOffset = findOffset(stickyHeader);
+
+            window.onscroll = function () {
+                // body.scrollTop is deprecated and no longer available on Firefox
+                var bodyScrollTop = document.documentElement.scrollTop || document.body.scrollTop;
+
+                if (bodyScrollTop > headerOffset.top) {
+                    stickyHeader.classList.add('fixed');
+                    //  $('#logodiv').css('display', 'none');
+                    // $('#cat').css('display', 'none');
+                } else {
+                    stickyHeader.classList.remove('fixed');
+                    // $('#logodiv').css('display', 'block');
+                    // $('#cat').css('display', 'block');
+                }
+            };
+        };
+
+    </script>
+    <style>
+        body {
+            margin: 0;
+        }
+
+        .sticky {
+            width: 100%;
+        }
+
+        .fixed {
+            position: fixed;
+            top: 0;
+            box-shadow: 0px 2px 1px #E9B800;
+        }
+
+        iframe {
+            display: none !important;
+        }
+    </style>
+    <script type="text/javascript">
+        var web = "ezeelo";
+        var sourceName = "website";  // More like utm_source
+        var titlePop = 'Stay updated on the most stunning offers and updates of our website ';
+        var descPop = 'Just click on the Yes button and you are done!';
+    </script>
+    @*<script src="~/Scripts/popup.js"></script>*@
+
+    <!-- Facebook Pixel Code -->
+    <script>
+        !function (f, b, e, v, n, t, s) {
+            if (f.fbq) return; n = f.fbq = function () {
+                n.callMethod ?
+                    n.callMethod.apply(n, arguments) : n.queue.push(arguments)
+            }; if (!f._fbq) f._fbq = n;
+            n.push = n; n.loaded = !0; n.version = '2.0'; n.queue = []; t = b.createElement; t.async = !0;
+            t.src = v; s = b.getElementsByTagName[0]; s.parentNode.insertBefore(t, s)
+        }(window,
+            document, 'script', 'https://connect.facebook.net/en_US/fbevents.js');
+        fbq('init', '1854334538152853'); // Insert your pixel ID here.
+        fbq('track', 'PageView');
+
+    </script>
+    <noscript>
+        <img height="1" width="1" style="display:none"
+             src="https://www.facebook.com/tr?id=1854334538152853&ev=PageView&noscript=1" />
+    </noscript>
+    <!-- DO NOT MODIFY -->
+    <!-- End Facebook Pixel Code -->
+
+</head>
+
+<body class="home option2" id="container">
+
+    <div class="alert alert-success" id="myAlert">
+        <h3>Item added in cart successfully</h3>
+    </div>
+
+    @*Start yashaswi mlm Signup*@
+
+    <div class="alert alert-success" id="SignUp">
+        <h3 id="signUpmsg"></h3>
+    </div>
+
+    @*End yashaswi mlm Signup zo2388*@
+
+    <!-- Google Tag Manager (noscript) -->
+    <noscript>
+        <iframe src="https://www.googletagmanager.com/ns.html?id=GTM-TR78CNF"
+                height="0" width="0" style="display:none;visibility:hidden"></iframe>
+    </noscript>
+    <!-- End Google Tag Manager (noscript) -->
+    <!-- Google Code for ezeelo Conversion Page -->
+    <script type="text/javascript">
+        /* <![CDATA[ */
+        var google_conversion_id = 854083791;
+        var google_conversion_language = "en";
+        var google_conversion_format = "3";
+        var google_conversion_color = "ffffff";
+        var google_conversion_label = "cq87CNX3wnIQz5GhlwM";
+        var google_remarketing_only = false;
+        /* ]]> */
+    </script>
+    <script type="text/javascript" src="//www.googleadservices.com/pagead/conversion.js">
+    </script>
+    <noscript>
+        <div style="display:inline;">
+            <img height="1" width="1" style="border-style:none;" alt="" src="//www.googleadservices.com/pagead/conversion/854083791/?label=cq87CNX3wnIQz5GhlwM&;guid=ON&amp;script=0" />
+        </div>
+    </noscript>
+
+    <!--patch of nav-bar add by paras 01-09-2019-->
+    <nav id="sticky" class="navbar navbar-default navbar-main-white navbar-pad-top navbar-first sticky">
+        <div class="container">
+            <!--change in container-->
+            <div class="navbar-header" style="float:right;margin-top:10px; color:#0f6bb2!important;font-weight:bold;cursor:pointer">
+                @*<a onclick="ServiceList()"><span>&nbsp; Services </span><br /><span>In Your City</span></a>*@
+                <a title="MarketPlace - click to see all services in your city" onclick="ServiceList()">
+                    <img src="~/Content/img/logo.jpg" />
+                </a>
+                <script>
+                    function ServiceList() {
+                       var cname = "@System.Configuration.ConfigurationManager.AppSettings["EZEELO_CUSTOMER_URL"]";
+                        var ActiveUrl = window.location.href;
+                        if (ActiveUrl.toLowerCase().indexOf('www.') > 0) {
+                            var indexval = cname.indexOf('ezeelo');
+                            cname = cname.slice(0, indexval) + "www." + cname.slice(indexval);
+                        }
+                        //var cname = ActiveUrl.replace("@System.Configuration.ConfigurationManager.AppSettings["EZEELO_CUSTOMER_URL"]", '');
+                        var str = getCookie("CityCookie");
+                        var cucity = "";// getCookie("CityCookie");
+                        var cufranchiseId = 0;
+                        if (str != null && str != "" && str != undefined) {
+                            var str1 = [];
+                            str1 = str.split('$');
+                            cucity = str1[1].toLowerCase();
+                            cufranchiseId = str1[2];
+                        }
+                        window.location = cname  + cucity + "/" + cufranchiseId+"/Merchant/List";
+                    }
+                </script>
+            </div>
+            <div class="navbar-header" id="logodiv">
+                @if (TempData["DynamicBlocks"] != null)
+                {
+                    blocks = (List<ModelLayer.Models.ViewModel.BlockViewModel>)TempData["DynamicBlocks"];
+
+                    ModelLayer.Models.ViewModel.BlockViewModel block = blocks.Where(x => x.Name.ToLower().Trim() == "logo").FirstOrDefault();
+
+                    if (block != null && block.blockItemsList != null)
+                    {
+                        int max = block.blockItemsList.Count;
+                        if (block.MaxLimit < block.blockItemsList.Count)
+                        {
+                            max = block.MaxLimit;
+                        }
+                        for (int i = 0; i < max; i++)
+                        {
+                            <a href="@block.blockItemsList[i].LinkUrl">
+                                <img alt="@block.blockItemsList[i].Tooltip" src="@block.blockItemsList[i].ImageName" id="gblogo" title="@block.blockItemsList[i].Tooltip" onerror="this.src = '/Content/Images/no_image.png'">
+                            </a>
+                        }
+                    }
+                }
+            </div>
+            @Html.Partial("_SearchPartial")
+            <ul class="nav navbar-nav navbar-right navbar-mob-item-left">
+                <li id="mlmLink" title="Go To Ezeelo Leader's Site." class="dropdown">
+                    @*Yashaswi 20-7-2018 leaders signup*@
+                    @if (Session["LeaderSignUpLink"] == null)
+                    {
+                        <a title="Go To Ezeelo Leader's Site." href='@System.Configuration.ConfigurationManager.AppSettings["EZEELO_LEADER_URL"]' target="_blank" style="padding: 0;">
+                            <img alt="Be A Leader" src="~/Content/Images/tags/mlm.png" title="Go To Ezeelo Leader's Site." style="float: left; width:30px" />
+                        </a>
+                    }
+                    else
+                    {
+                        <a target="_blank" href="javascript:void(0) " onclick="window.open('@Session["LeaderSignUpLink"]','_blank')">
+                            <img alt="Be A Leader" src="~/Content/Images/tags/mlm.png" title="Go To Ezeelo Leader's Site." style="float: left; width:30px" />
+                            <div class="mlm_logo-change-color"></div>
+                        </a>
+                    }
+                </li>
+                <li id="ChangeCity1">
+                    <a class="dropdown-toggle" id="myBtn" style="text-align: center; padding-left: 2px !important; padding-right: 3px !important; height: auto !important;">
+                        Delivering At @CultureInfo.CurrentCulture.TextInfo.ToTitleCase(cityName.ToLower()) <!--remove br tag-->
+                        <span id="spPinArea" style="font-size: 11px !important;"></span>
+                    </a>
+                    <!--content change and remove br tag-->
+
+                    <div id="myModal" class="modal" style="background: rgba(130, 129, 129, 0.77); ">
+                        <div class="modal-dialog modal-lg">
+                            <!-- Modal content -->
+                            <div class="modal-content" style="padding:25px;text-align:center">
+                                <span class="close"><i class="fa fa-close"></i></span>
+                                <div class="row" style="padding: 10px;">
+                                    <div class="col-lg-12">
+                                        <div id="logodiv" style="width:100%;text-align:center;">
+                                            <img src="~/Content/Images/logo_1.png" style="height: 85px;" class="gblogopopup" />
+                                        </div>
+                                    </div>
+                                    <div class="col-xs-12">
+                                        <h4 style="color: #663399; margin:15px 0; ">SELECT DELIVERY LOCATION</h4>@*Yashaswi 1/6/2018*@
+                                        <a id="RefreshCityCookies" title="Reset" style="float:right;"><i class="fa fa fa-refresh fa-2x" style="font-size: 18px;color: #663399;"><span style="margin-left: 5%;">Refresh</span></i></a>
+                                        <select class="select select1 form-control" id="ddlSelectCity" name="SelectCity" style=" "></select>
+
+                                        <div id="divSearchPicode" style="display:none">
+                                            <div style="display:inline-block; width:100%;">
+                                                <div class="divSearchPicode-main-head">
+                                                    <table style="width:100%">
+                                                        <tr>
+                                                            <td class="divSearchPicode-main-head-inner-left-checkBox">
+                                                                <div class="divSearchPicode-inner-rd_Pincode">
+                                                                    <input id="rd_Pincode" type="radio" name="searchBy" value="Pincode" checked /><label>Pincode</label>
+                                                                </div>
+
+                                                                <div class="divSearchPicode-inner-rd_Area">
+                                                                    <input id="rd_Area" type="radio" name="searchBy" value="Area" /><label>Area</label>
+                                                                </div>
+                                                            </td>
+
+                                                            <td class="divSearchPicode-main-head-inner-right-textBox">
+                                                                <input id="txtPincodeSearch" type="search" placeholder="Search By Pincode..." class="textpincode form-control ui-autocomplete-input" />
+                                                            </td>
+                                                        </tr>
+                                                    </table>
+                                                </div>
+                                            </div>
+
+                                            <select class="select select1 form-control" id="ddlSelectPinCode" name="SelectPincode">
+                                                <option>
+                                                    ---
+                                                </option>
+                                            </select>
+                                        </div>
+                                        <select class="select select1" id="ddlSelectArea" name="SelectArea" style="width: 100%; margin-top: 5px; display: none"></select>
+                                        <label id="lblarea" style="color:red"></label>
+                                    </div>
+                                    <div class="col-xs-12" style="text-align: left; font-weight: 900;color:#777;">
+                                        <h5 style=" margin-bottom: 10px;"><i class="fa fa fa-gift fa-2x" aria-hidden="true" style="margin: 0 1% 0 0; width: 25px; color: #663399; text-align: center;"></i> AMAZING DEALS, OFFERS AND COUPONS</h5>
+                                        <h5 style=" margin-bottom: 10px;"><i class="fa fa-truck  fa-2x" aria-hidden="true" style="margin: 0 1% 0 0;width: 25px; color: #663399; text-align: center;"></i> FREE DELIVERY</h5>
+                                        <h5 style=" margin-bottom: 10px;"><i class="fa fa-fire fa-2x" aria-hidden="true" style="margin: 0 1% 0 0; width: 25px; color: #663399; text-align: center;"></i> QUALITY YOU CAN TRUST</h5>
+                                        <h5 style=" margin-bottom: 10px;"><i class="fa fa-inr fa-2x" aria-hidden="true" style="margin: 0 1% 0 0;width: 25px; color: #663399; text-align: center;"></i> EASY PAYMENT METHODS</h5>
+                                        <h5 style=" margin-bottom: 10px;"><i class="fa fa-mobile-phone fa-2x" aria-hidden="true" style="margin: 0 1% 0 0; width: 25px; color: #663399; text-align: center;"></i> PAY BY CASH OR ONLINE</h5>
+                                        <h5 style=" margin-bottom: 10px;"><i class="fa fa-smile-o fa-2x" aria-hidden="true" style="margin: 0 1% 0 0;width: 25px; color: #663399; text-align: center;"></i> 100% SECURE PAYMENTS</h5>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    @*Start Yashaswi 1/6/2018*@
+                    <div id="divPinArea" class="modal" style="background: rgba(130, 129, 129, 0.77); ">
+                        <div class="modal-dialog modal-sm" style="width:350px !important;">
+                            <div class="modal-content" style="padding:10px;text-align:center">
+                                <div class="row" style="padding: 10px;">
+                                    <div class="col-lg-12" style="text-align:left">
+                                        <p>
+                                            <span style="font-size: 18px; color: #09a9f8"> <i class="fa fa-info-circle"></i> Alert </span>
+                                            <hr style="margin-top:-8px;margin-bottom:5px" />
+                                            You are viewing products which can only be delivered to
+                                            <span id="sp-PinArea" style="font-size:16px"> </span>
+                                        </p>
+                                        <div style="text-align:center">
+                                            <input type="button" class="btn btn-success" style="font-size:10px !important; " value="Change Location" onclick="LocPopupChange()" />  &nbsp;&nbsp;&nbsp;
+                                            <input type="button" class="btn btn-warning" style="font-size:10px !important" value="Continue" onclick="LocPopupContinue();" />
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="divPinAreaChange" class="modal" style="background: rgba(130, 129, 129, 0.77); ">
+                        <div class="modal-dialog modal-sm">
+                            <div class="modal-content" style="padding:10px;text-align:center">
+                                <div class="row" style="padding: 10px;">
+                                    <div class="col-lg-12" style="text-align:left">
+                                        <p>
+                                            <span style="font-size:18px; color:orange"> <i class="fa  fa-exclamation-circle"></i> Warning </span>
+                                            <hr style="margin-top:-8px;margin-bottom:5px" />
+                                            <b style="color:#b01e1e"> Product Prices, Coupons and offers are “Area” specific and may change on changing your Selected Delivery Area.</b> <br />
+                                            <br />
+                                            CONFIRM if you wish to change your area to <span id="spnewArea"></span>  ,<br /> CANCEL if you wish to continue to shop from <span id="spoldArea"></span>.
+
+                                            <hr style="margin-top:10px;margin-bottom:5px" />
+
+                                            <b> Note: By clicking on confirm, all products will remove from your cart and products of new location needs to be added again.</b>
+                                        </p>
+                                        <div style="text-align:center">
+                                            <input type="button" class="btn btn-success" style="font-size:10px !important; " value="Cancel" onclick="CancelChangeAreaConfirmWindow()" />  &nbsp;&nbsp;&nbsp;
+                                            <input type="button" class="btn btn-warning" style="font-size:10px !important" value="Confirm" onclick="ContinueChangeAreaConfirmWindow()" />
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="divCheckLoc" class="modal" style="background: rgba(130, 129, 129, 0.77); ">
+                        <div class="modal-dialog modal-sm" style="width:450px !important;">
+                            <div class="modal-content" style="padding:10px;text-align:center">
+                                <div class="row" style="padding: 10px;">
+                                    <div class="col-lg-12" style="text-align:left">
+                                        <p>
+                                            <span style="font-size:18px; color:red"> <i class="fa  fa-exclamation-circle"></i> Sorry! This items can't be delivered at your location!!! </span>
+                                            <span>Note : Please change your Location. </span>
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <div id="divCheckRefIdBeforSignLeadersAfter" class="modal" style="background: rgba(130, 129, 129, 0.77); ">
+                        <div class="modal-dialog modal-sm" style="width:470px !important;">
+                            <div class="modal-content" style="padding-top:10px;text-align:center;background-color:#ff5d5d;padding-bottom:0px!important; ">
+                                <div class="row" style="padding-top: 10px;padding-bottom:0px!important;">
+                                    <div class="col-lg-12" style="text-align:left;padding-bottom:0px!important;">
+                                        <p style="text-align: center;color:white">
+                                            <img src="~/Content/img/smiley_icon_white.png" style="width:80px;height:80px;" />
+                                            <br />
+                                            <span style="font-size:x-large;color:white">
+                                                Congratulations
+                                            </span>
+                                            <br />
+                                            <span style="font-size:medium">
+                                                <span id="spParentName"></span>
+                                                <br />
+                                                Welcome to Ezeelo Family
+                                            </span>
+                                        </p>
+                                        <canter>
+                                            <table style="width:96%;margin-left:2%; ">
+                                                <tr>
+                                                    <td style="font-size:medium;width:100%;height:40px;background-color:white;text-align:center;border-bottom-left-radius:6px;border-right:inset" id="btnSignLeadersAfterOk">
+                                                        OK
+                                                    </td>
+                                                </tr>
+                                            </table>
+                                        </canter>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    @*End Yashaswi 1/6/2018*@
+                    <script>
+                        ////start Yashaswi
+                        var UrlAfterConfirm;
+                        ///New Yashaswi
+                        var LocStorddlSelectCityI;
+                        var LocStorPinArea;
+                        var LocStorAreaId;
+                        var LocStorSelectedPincode;
+                        //End
+                        var modalPinAreaChange = document.getElementById('divPinAreaChange');
+                        var modalPinArea = document.getElementById('divPinArea');
+                        var modaldivCheckLoc = document.getElementById('divCheckLoc');
+
+                        //End
+                        // Get the modal
+                        var modal = document.getElementById('myModal');
+
+                        // Get the button that opens the modal
+                        var btn = document.getElementById("myBtn");
+
+                        // Get the <span> element that closes the modal
+                        var span = document.getElementsByClassName("close")[0];
+
+                        // When the user clicks the button, open the modal
+                        btn.onclick = function () {
+                            modal.style.display = "block";
+                            //********* Multiple Franchise in same city By Ashish***********//
+                            if ($("#ddlSelectCity").val() !== null) {
+                                $("#lblarea").text('');
+                            }
+                            $("#ddlSelectCity").val(0);
+                            //Start Yashaswi 30-11-2018 Pincode Selection
+
+                            //$("#txtSelectPincode").hide();
+                            $("#ddlSelectArea").hide();
+                            //$("#txtSelectPincode").val('');
+                            $("#SignUp").hide();
+                            $("#ddlSelectArea").val('');
+                            $("#divSearchPicode").hide();
+                            $("#txtPincodeSearch").val('');
+                            //End Yashaswi 30-11-2018 Pincode Selection
+                            //*********************************
+                            //Yashaswi 1/6/2018 Show Selected City And PinCode and Area
+                            if (localStorage.getItem("CityID") != null) {
+                                $("#ddlSelectCity").val(localStorage.getItem("CityID"));
+                                var IsFranchise = 0;
+                                $("#ddlSelectCity > option").each(function (index, element) {
+                                    if (localStorage.getItem("CityID") == $(element).val()) {
+                                        IsFranchise = $(element).attr("data-val");
+                                    }
+                                });
+
+                                if (IsFranchise == "1" && IsFranchise != undefined && IsFranchise != "undefined") {
+                                    $("#ddlSelectCity").change();
+                                } else {
+                                    $("#ddlSelectCity").val(0);
+                                }
+                            }
+                            //
+                        }
+
+                        // When the user clicks on <span> (x), close the modal
+                        span.onclick = function () {
+                            modal.style.display = "none";
+                        }
+
+                        // When the user clicks anywhere outside of the modal, close it
+                        window.onclick = function (event) {
+                            //if (event.target == modal) {
+                            //    modal.style.display = "none";
+                            //}
+                            //Yashaswi
+                            if (event.target == modalPinAreaChange) {
+                                modalPinAreaChange.style.display = "none";
+                            }
+                            if (event.target == modalPinArea) {
+                                modalPinArea.style.display = "none";
+                            }
+                            if (event.target == modaldivCheckLoc) {
+                                modaldivCheckLoc.style.display = "none";
+                            }
+                            //End
+                        }
+                        ////added by ashish
+                        var startshopBtn = document.getElementById('startshoppingID');
+                        startshopBtn.onclick = (function () {
+                            modal.style.display = "none";
+                        });
+                        //Yashaswi
+                        function CancelChangeAreaConfirmWindow() {
+                            modalPinAreaChange.style.display = "none";
+
+                        }
+                        function ContinueChangeAreaConfirmWindow() {
+                            localStorage.removeItem("IsLocConfirmed");
+                            localStorage.setItem("CityID", LocStorddlSelectCityI);
+                            localStorage.setItem("PinArea", LocStorPinArea);
+                            localStorage.setItem("AreaId", LocStorAreaId);
+                            localStorage.setItem("SelectedPincode", LocStorSelectedPincode);
+                            window.location.href = UrlAfterConfirm;
+                        }
+                        //End
+
+
+                    </script>
+                    <div>
+                        <ul class="inline-list" id="Locations" style="margin-left:15px;"></ul>
+                    </div>
+                </li>
+                <li class="dropdown" id="customerdiv">
+                    @Html.Hidden("hdnSessionID", Session["UID"])
+                    @if (Session["UID"] != null)
+                    {
+                        <a href="#" class="dropdown-toggle">
+                            <span>Hi, @(Session["FirstName"].ToString().Trim().Split(' ')[0].Substring(0, Math.Min(Session["FirstName"].ToString().Trim().Split(' ')[0].Length, 10)))</span>
+
+                            @*<i class="fa fa-user"></i> Account*@
+                        </a>
+                    }
+                    else if (Request.Cookies["UserName"] != null && Request.Cookies["UserName"].Value != string.Empty)
+                    {
+                        <a href="#" class="dropdown-toggle">
+                            <span>
+                                Sign in,
+                                @(Request.Cookies["UserName"].Value.Split('$')[0].ToString().Trim().Split(' ')[0].Substring(0, Math.Min(Request.Cookies["UserName"].Value.Split('$')[0].ToString().Trim().Split(' ')[0].Length, 10)))
+                            </span>
+                        </a>
+                    }
+                    else
+                    {
+                        <!--changes by paras --><a href="#" class="dropdown-toggle"><span>Login & Signup</span></a><!--changes by paras -->
+                    }
+                    <!--change by paras 1-7-2018-->
+                    <ul class="dropdown-menu dropdown-menu-shipping-login" id="newdropdown">
+                        @if (Session["UID"] == null)
+                        {
+                            <li style="width:100%"><a href="/@cityName/@franchiseID/login"><i class="fa fa-sign-in"></i> SignIn</a></li>@*//// added /@franchiseID*@
+                        }
+                        else
+                        {
+                            <li style="width:100%"><a href="@Url.RouteUrl("my-profile", new { id = @Session["UID"], city = cityName, franchiseId = franchiseID })"><figure><img src="/Content/Images/menu_icons/profile.png"></figure> My Profile</a></li>
+
+                            @*<li style="width:100%"><a href="@Url.RouteUrl("Logout", new { city = cityName, franchiseId = franchiseID })"><i class="fa fa-sign-out"></i> Logout</a></li>*@
+
+
+
+
+                            if (Session["LeaderSignUpLink"] != null)
+                            {
+
+                                <li id="mlmLink" title="Go To Ezeelo Leader's Site." class="dropdown" style="width:100%;transition: .2s;text-align: center;">
+
+                                    <a title="Go To Ezeelo Leader's Site." href=@Session["LeaderSignUpLink"] target="_blank" style="padding:0;">
+
+                                        <figure><img src="/Content/Images/menu_icons/wallet.png"></figure>
+                                        My Ezee-Money
+                                        <span class="fa fa-inr" id="gbWalletAmt" style="font-weight:900"> </span>
+
+                                    </a>
+                                </li>
+                            }
+
+
+                            @*<li style="width:100%"> @Html.RouteLink(" My Profile", "my-profile", new { id = @Session["UID"], city = cityName, franchiseId = franchiseID })</li>
+                                <li style="width:100%">@Html.RouteLink(" Logout", "Logout", new { city = cityName, franchiseId = franchiseID })</li>*@
+                            List<string> IDs = new List<string>();
+                            if (!string.IsNullOrEmpty(System.Configuration.ConfigurationManager.AppSettings["SITEMAP_ID"]))
+                            {
+                                IDs = System.Configuration.ConfigurationManager.AppSettings["SITEMAP_ID"].Trim().ToString().Split(',').ToList();
+                            }
+                            if (IDs.Contains(Session["UID"].ToString()))
+                            {
+                                <li style="width:100%"><a href="@Url.RouteUrl("SiteMapMaker", new { city = cityName, franchiseId = franchiseID })"><i class="fa fa-map"></i> Site Map</a></li>
+                                @*<li style="width:100%">@Html.RouteLink("SiteMap Generator", "SiteMapMaker", new { city = cityName, franchiseId = franchiseID })</li>*@
+                            }
+                        }
+                        @if (Session["UID"] == null)
+                        {
+                            @*<li style="width:100%"><a href="@Url.RouteUrl("cust-reg", new { city = cityName })" title="Register" style="color: #60A917; font-size: 14px;">Register</a></li>*@
+                        }
+
+                        <li style="width:100%"><a href="@Url.RouteUrl("CustomerOrder/myorders", new { trackorder = "true", city = cityName, franchiseId = franchiseID })"><figure><img src="/Content/Images/menu_icons/order1.png"></figure> My Orders</a></li>
+
+                        @*<li style="width:100%"><a href="@Url.RouteUrl("AllShops", new { city = cityName, franchiseId = franchiseID })" class="all-shop-mobile"><figure><img src="/Content/Images/menu_icons/store1.png"></figure> Top Stores</a></li>*@
+
+                        <li style="width:100%"><a href="@Url.RouteUrl("DownloadApp", new { city = cityName, franchiseId = franchiseID })"><figure><img src="/Content/Images/menu_icons/download1.png"></figure> Download App</a></li>
+                        @if (Session["UID"] != null)
+                        {
+                            <li style="width:100%"><a href='https://api.ezeelo.com/ScanQrCode.html?uli=@Session["UID"]' target="_blank">&nbsp;<i style="font-weight:900" class="fa fa-qrcode"></i> &nbsp;&nbsp; Scan QRCode</a></li>
+
+                            <li style="width:100%"><a href="@Url.RouteUrl("Logout", new { city = cityName, franchiseId = franchiseID })"><figure><img src="/Content/Images/menu_icons/logout1.png"></figure> Logout</a></li>
+                        }
+                    </ul>
+                    <!--change by paras 1-7-2018-->
+                </li>
+                @*<li>
+                        <a href="@Url.RouteUrl("ReferDetails", new { city = cityName, franchiseId = franchiseID })" title="GB Wallet">
+                            <span class="fa fa-inr" id="gbWalletAmt" style="font-weight:900"></span>
+                            <i class="fa fa-google-wallet"></i> GB Points
+                        </a>
+                    </li>*@
+                <li class="dropdown">
+                    <a href="@Url.RouteUrl("cart", new { city = cityName, franchiseId = franchiseID })" title="Cart" id="shoppingcart">
+                        @if (Request.Cookies["ShoppingCartCookie"] != null)
+                        {
+                            @Html.Hidden("ShoppingCartCookieValue", Request.Cookies["ShoppingCartCookie"].Value)
+
+                        }
+                        else
+                        {
+                            @Html.Hidden("ShoppingCartCookieValue", 0)
+                        }
+
+                        <!--changes by paras 12-24-2018-->
+                        <!--<span>Your Cart</span>-->
+                        <i class="fa fa-shopping-cart"> <span id="spanShoppingCartCount" style=" color: #white; font-weight: 700;"> 0 </span></i>
+                        <!--changes by paras 12-24-2018-->
+
+                    </a>
+
+                </li>
+
+                <div class="navbar-header">
+                    <button class="navbar-toggle" type="button" data-toggle="collapse" data-target="#main-nav-collapse" area_expanded="false" aria-expanded="true">
+                        <span class="sr-only">Main Menu</span><span class="icon-bar"></span><span class="icon-bar"></span><span class="icon-bar"></span>
+                    </button>
+                </div>
+            </ul>
+        </div>
+
+        <!--12-18-2018 by paras-->
+        <section class="CATEGORIES_main-navi-bar">
+            <div class="CATEGORIES_main-navi-bar_inner-content">
+                <nav class="navbar-default navbar-main-white yamm" id="cat">
+                    <div class="container">
+                        <div class="navbar-collapse navbar-collapse-no-pad collapse" id="main-nav-collapse" aria-expanded="true">
+                            <ul class="nav navbar-nav" style="width: 100%;">
+
+                                <li class="dropdown" style="background: transparent; padding:0;">
+
+
+                                    <!-- 12-18-2018 by paras color change-->
+                                    <a href="#" style="font-size: 18px; padding-top: 6px; padding-bottom: 6px; color: #0f6bb2; font-weight: 700;">
+
+
+                                        <!-- 12-18-2018 by paras color change-->
+                                        @*<span>Shop by</span>*@
+
+                                        <!--comment by paras 12-20-2018-->  <i class="fa fa fa-bars" data-toggle="dropdown" aria-expanded="false">&nbsp <span>CATEGORIES</span></i>
+                                    </a>
+
+                                    <div class="dropdown-menu dropdown-menu-category" style="">
+                                        <div id="MenuListing">
+
+                                        </div>
+                                    </div>
+                                </li>
+                                <li class="dropdown" id="offerdiv" style="">
+                                    @{
+                                        ModelLayer.Models.ViewModel.BlockViewModel offerBlock = blocks.Where(x => x.Name.ToLower().Trim() == "navigation bar").FirstOrDefault();
+
+                                        if (offerBlock != null && offerBlock.blockItemsList != null)
+                                        {
+                                            int max = offerBlock.blockItemsList.Count;
+                                            if (offerBlock.MaxLimit < offerBlock.blockItemsList.Count)
+                                            {
+                                                max = offerBlock.MaxLimit;
+                                            }
+                                            for (int i = 0; i < max; i++)
+                                            {
+                                                <div class="col-xs-4 col-sm-6 col-md-6 col-lg-6 " style="display:none;">
+                                                    <a class="navbar-item-top" href="@offerBlock.blockItemsList[i].LinkUrl">
+                                                        <img alt="@offerBlock.blockItemsList[i].Tooltip" src="@offerBlock.blockItemsList[i].ImageName" id="gblogo" title="@offerBlock.blockItemsList[i].Tooltip" onerror="this.src = '/Content/Images/no_image.png'" style="width: 100%; height: 32px;float:left">
+                                                    </a>
+                                                </div>
+                                            }
+                                        }
+                                    }
+
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </nav>
+            </div>
+        </section>
+        <!--12-18-2018 by paras-->
+    </nav>
+    <!--patch of nav-bar add by paras 01-09-2019-->
+    <!-- end header -->
+
+    <div class="body-content" id="body-content">
+        @RenderBody()
+    </div><div id="mobile-content"></div>
+    <!-- Footer -->
+    @*<div id="mobileFooter">
+
+        </div>*@
+    <a id="back-to-top" href="#" class="btn btn-primary back-to-top" role="button"><span class="fa fa-arrow-circle-up fa-2x"></span></a>
+
+
+
+    <footer id="footer" class="main-footer">
+        <div class="col-md-12 col-sm-12" style="padding-left:0px;padding-right:0px;">
+            @Html.Partial("_footer")
+        </div>
+        <div id="trademark-text-box" class="container" style=" padding: 5px;">
+
+        </div>
+
+        <div class="lower_footer" style="background: #0f6bb2;">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-5 col-sm-5">
+                        <p class="copyright-text">Copyright © <a href="@System.Configuration.ConfigurationManager.AppSettings["EZEELO_CUSTOMER_URL"]" style="color:#fff">eZeelo</a> 2020. All rights reserved</p>
+                    </div>
+                    <div class="col-md-7 col-sm-7">
+                        @*<a href="http://www.freecouponindia.in/ezeelo-coupons/" target="_blank" title="Free coupon india">
+                                <img src="/Content/Images/tags/Freecoupon.png" style="width: 85px; height: 40px;">
+                            </a>
+                            <a href="http://www.couponcenter.in/coupons/ezeelo" target="_blank" title="Coupon center">
+                                <img src="/Content/Images/tags/Ccenter.png" style="width: 85px; ">
+                            </a>
+                            <a href="http://www.couponzguru.com/ezeelo-coupons/" target="_blank" title="Couponz guru">
+                                <img src="/Content/Images/tags/Couponguru.png" style="width: 85px; ">
+                            </a>
+                            <a href="#" title="Comodo Secure">
+                                <img src="~/Content/Images/tags/comodo_secure.png" style="width: 85px; " />
+                            </a>*@
+                        <img class="img-responsive payment-img" src="/Content/Images/4-1.png">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+    </footer>
+
+    <a href="#" class="scroll_top" title="Scroll to Top" style="display: none;">Scroll</a>
+    @*@Scripts.Render("~/bundles/jquery")
+        @Scripts.Render("~/bundles/bootstrap")*@
+    @RenderSection("scripts", required: false)
+    @RenderSection("MyScripts", required: false)
+    @RenderSection("itemScripts", required: false)
+    @RenderSection("BotDetectStyles", required: false)
+    <script src="~/Content/js/jquery.js"></script>
+    <script src="~/Content/js/bootstrap.js"></script>
+    @*<script src="~/Content/js/switcher.js"></script>*@
+    <script src="~/Scripts/jquery-ui-1.8.7.min.js"></script>
+    <script src="~/Scripts/Cookie.js"></script>
+    <script type="text/javascript">
+        //Start Yashaswi 28-11-2018 Pincode Selection
+        $(document).ready(function () {
+            var showSelectedAreaMsg = localStorage.getItem("showSelectedAreaMsg");
+            if (showSelectedAreaMsg == 1) {
+                localStorage.setItem("showSelectedAreaMsg","0");
+                var res = localStorage.getItem("PinArea");
+                var msg = "Viewing Products for Selected Delivery Area: " + res;
+                $("#signUpmsg").text(msg);
+                $('#SignUp').css('display', 'block');
+                var modal = document.getElementById('myModal');
+                if (modal.style.display == 'block') {
+                    $("#SignUp").hide();
+                }
+                setTimeout(function () {
+                    if (modal.style.display == 'block') {
+                        $("#SignUp").hide();
+                    }
+                    else {
+                        $("#SignUp").hide('blind', {}, 4000)
+                    }
+                }, 3000);
+            }
+        });
+
+        $("input[name = 'searchBy']").click(function () {
+            $("#txtPincodeSearch").attr("placeholder", "Search by " + $(this).val() + "...");
+            callPincode();
+        });
+
+        $("#txtPincodeSearch").keyup(function () {
+            var PinSearchValue = $("#txtPincodeSearch").val();
+            if (PinSearchValue != '') {
+                if ($("input[name='searchBy']:checked").val() == "Area") {
+                    if (PinSearchValue.match(/^\d+$/)) {
+                        $("#lblarea").text('Please Select Pincode Option');
+                        return;
+                    }
+                }
+                else {
+                    if (!PinSearchValue.match(/^\d+$/)) {
+                        $("#lblarea").text('Please Select Area Option');
+                        return;
+                    }
+                }
+            }
+             callPincode();
+        });
+
+        function showSelectedAreaMsg() {
+            localStorage.setItem("showSelectedAreaMsg", "1");
+        }
+
+        function callPincode() {
+	        var url_Cust = window.location.href;
+            url_Cust = url_Cust.replace("www.", '');
+            var cname = url_Cust.replace('@System.Configuration.ConfigurationManager.AppSettings["EZEELO_CUSTOMER_URL"]', '');
+            var cfranchise = cname;
+            cname = cname.substring(0, cname.indexOf('/'));
+            var removecname = cname + '/';
+            cfranchise = cfranchise.replace(removecname, '');
+            var SearchBy = $("#txtPincodeSearch").val();
+            if (SearchBy != null || SearchBy != '') {
+                SearchBy = $("input[name='searchBy']:checked").val() + "=" + SearchBy;
+            }
+            else {
+                SearchBy = '';
+            }
+            //Start Yashaswi 01/12/2018 Default City Change
+            if (cname == "") {
+                cname = "@System.Configuration.ConfigurationManager.AppSettings["DFLT_CITY_NAME"]";
+                cfranchise = "@System.Configuration.ConfigurationManager.AppSettings["DFLT_FRANCHISE_ID"]";
+            }
+            //End Yashaswi 01/12/2018 Default City Change
+
+            if ($("#ddlSelectCity").val() != 0 && $("#ddlSelectCity").val() != null) {
+                $("#lblarea").text('Please wait..');
+                $.ajax({
+                    type: "POST",
+                    url: "/" + cname + "/" + cfranchise + "/Home/GetPincode?cityid=" + $("#ddlSelectCity").val() + "&SearchBy=" + SearchBy,//added
+                    dataType: "json",
+                    async: true,
+                    cache: false,
+                    success: function (msg) {
+                        $("#divSearchPicode").show();
+                        var ddlPincodes = $("[id*=ddlSelectPinCode]");
+                        ddlPincodes.empty().append('<option selected="selected" value="0">Select Pincode</option>');
+                        $.each(msg, function (index, item) {
+                            ddlPincodes.append($("<option></option>").val(this['ID']).html(this['Name']));
+                        });
+                        $("#lblarea").text('');
+                        $("#ddlSelectPinCode").attr("size", 8);
+                    },
+                    error: function (x, e) {
+                        $("#lblarea").text('Problem In Getting Pincode List. Please Try After Some Time.');
+                    }
+                });
+            }
+        }
+
+        $("#ddlSelectPinCode").change(function () {
+                        $("#lblarea").text('');
+                        $("#lblarea").text('Please wait..');
+                        var OldAreaId = localStorage.getItem("AreaId");
+                        if (OldAreaId == null) {
+                            OldAreaId = 0;
+                        }
+            var NewAreaId = $("#ddlSelectPinCode").val();
+            var PinArea = $("#ddlSelectPinCode option:selected").text();
+
+            var ID = $("#ddlSelectCity").val();
+            var Name = $("#ddlSelectCity option:selected").text();
+
+                        var selectedPincode = PinArea.split('-')[0];
+                        var CartCount = $("#spanShoppingCartCount").text();
+                        $("#spnewArea").text(PinArea);
+                        $("#spoldArea").text(localStorage.getItem("PinArea"));
+                        PinArea = PinArea.replace(" - ", ", ");
+                        var AreaID = NewAreaId;
+                        var Area_Pin_ID = "GetFranchiseID?cityid=" + ID + "&" + "pincide_areaid=" + AreaID;
+                        var urlAPIFranciseID = "@System.Configuration.ConfigurationManager.AppSettings["EZEELO_API_URL"]" + Area_Pin_ID;
+                        $.getJSON(urlAPIFranciseID, { format: "json" })
+                            .done(function (jsonfid) {
+                                if (jsonfid.HTTPStatusCode == "200") {
+                                    var count = jsonfid.Data.length;
+                                    if (parseInt(count) > 1) {
+                                        var ddlArea = $("[id*=ddlSelectArea]");
+                                        ddlArea.empty().append('<option selected="selected" value="0">Select Area</option>');
+                                        $.each(jsonfid.Data, function (index, item) {
+                                            var City = this['CityName'] + " - " + this['FranchiseOfficePincode'];
+                                            ddlArea.append($("<option></option>").val(this['FranchiseIDs']).html(City));
+                                        });
+                                        $("#ddlSelectArea").show();
+                                        $("#lblarea").text('');
+                                    }
+                                    else {
+                                        var FranchiseID = jsonfid.Data[0].FranchiseIDs;
+                                        var HelpLineContact = "GetHelpLineNumber?franchiseid=" + FranchiseID;
+                                        var urlAPIHelpLineNo = "@System.Configuration.ConfigurationManager.AppSettings["EZEELO_API_URL"]" + HelpLineContact;
+                                        $.getJSON(urlAPIHelpLineNo, { format: "json" })
+                                            .done(function (jsonfcontact) {
+                                                if (jsonfcontact.HTTPStatusCode == "200") {
+                                                    var countfc = jsonfcontact.Data.length;
+                                                    if (parseInt(countfc) > 0) {
+                                                        var HelpLineNumber = jsonfcontact.Data[0].HelpLineNumber;
+                                                        var changeUrl = '@(Html.Raw(Url.RouteUrl("ChangeCity", new { city = cityName, CityID = "_CityID_", CityName = "_CityName_", FranchiseID = "_FranchiseID_", HelpLineNumber = "_HelpLineNumber_", OldAreaId = "OldAreaId" })))';
+                                                        var url = changeUrl.replace("_CityID_", ID).replace("_CityName_", Name).replace("_FranchiseID_", FranchiseID).replace("_HelpLineNumber_", HelpLineNumber).replace("OldAreaId", OldAreaId);
+                                                        if (url != undefined) {
+                                                            //if (OldAreaId != NewAreaId) {
+                                                                if (CartCount == "0") {
+                                                                    localStorage.removeItem("IsLocConfirmed");
+                                                                    localStorage.setItem("CityID", $("#ddlSelectCity").val());
+                                                                    localStorage.setItem("PinArea", PinArea);
+                                                                    localStorage.setItem("AreaId", AreaID);
+                                                                    localStorage.setItem("SelectedPincode", selectedPincode);
+                                                                    showSelectedAreaMsg();
+                                                                    window.location.href = url;
+                                                                }
+                                                                else {
+                                                                   var CheckAreaURL = "/" + Name + "/" + FranchiseID + "/PaymentProcess/CheckSelectedAreaCode";
+                                                                    $.ajax({
+                                                                        type: "POST",
+                                                                        url: CheckAreaURL,
+                                                                        data: "{ NewAreaId: " + NewAreaId + ",OldAreaId:" + OldAreaId + "}",
+                                                                        contentType: "application/json; charset=utf-8",
+                                                                        dataType: "json",
+                                                                        async: true,
+                                                                        cache: false,
+                                                                        success: function (msg) {
+                                                                            $("#lblarea").text('');
+                                                                            modal.style.display = "none";
+                                                                            if (msg == false) {
+                                                                                LocStorddlSelectCityI = $("#ddlSelectCity").val();
+                                                                                LocStorPinArea = PinArea;
+                                                                                LocStorAreaId = AreaID;
+                                                                                LocStorSelectedPincode = selectedPincode;
+                                                                                showSelectedAreaMsg();
+                                                                                UrlAfterConfirm = url;
+                                                                                modalPinAreaChange.style.display = "block";
+                                                                            }
+                                                                            else {
+                                                                                localStorage.setItem("CityID", $("#ddlSelectCity").val());
+                                                                                localStorage.setItem("PinArea", PinArea);
+                                                                                localStorage.setItem("AreaId", AreaID);
+                                                                                localStorage.setItem("SelectedPincode", selectedPincode);
+                                                                                showSelectedAreaMsg();
+                                                                                window.location.href = url;
+                                                                            }
+
+
+                                                                        },
+                                                                        error: function (x, e) {
+                                                                            // alert("unable to Retrive Mobile No ");
+                                                                        }
+                                                                    });
+
+                                                                }
+                                                            //} else {
+                                                            //    $("#lblarea").text('');
+                                                            //    modal.style.display = "none";
+                                                            //}
+                                                        }
+                                                    }
+                                                }
+                                                else if (jsonfcontact.HTTPStatusCode == "204") {
+                                                    var HelpLineNumber = "Contact not found.";
+                                                    var changeUrl = '@(Html.Raw(Url.RouteUrl("ChangeCity", new { city = cityName, CityID = "_CityID_", CityName = "_CityName_", FranchiseID = "_FranchiseID_", HelpLineNumber = "_HelpLineNumber_", OldAreaId = "OldAreaId" })))';
+                                                    var url = changeUrl.replace("_CityID_", ID).replace("_CityName_", Name).replace("_FranchiseID_", FranchiseID).replace("_HelpLineNumber_", HelpLineNumber).replace("OldAreaId", OldAreaId);
+                                                    if (url != undefined) {
+                                                        //if (OldAreaId != NewAreaId) {
+                                                            if (CartCount == "0") {
+                                                                localStorage.removeItem("IsLocConfirmed");
+                                                                localStorage.setItem("CityID", $("#ddlSelectCity").val());
+                                                                localStorage.setItem("PinArea", PinArea);
+                                                                localStorage.setItem("AreaId", AreaID);
+                                                                localStorage.setItem("SelectedPincode", selectedPincode);
+                                                                showSelectedAreaMsg();
+                                                                window.location.href = url;
+                                                            }
+                                                            else {
+                                                                var CheckAreaURL = "/" + Name + "/" + FranchiseID + "/PaymentProcess/CheckSelectedAreaCode"
+                                                                $.ajax({
+                                                                    type: "POST",
+                                                                    url: CheckAreaURL,
+                                                                    data: "{ NewAreaId: " + NewAreaId + ",OldAreaId:" + OldAreaId + "}",
+                                                                    contentType: "application/json; charset=utf-8",
+                                                                    dataType: "json",
+                                                                    async: true,
+                                                                    cache: false,
+                                                                    success: function (msg) {
+                                                                        $("#lblarea").text('');
+                                                                        modal.style.display = "none";
+                                                                        if (msg == false) {
+                                                                            LocStorddlSelectCityI = $("#ddlSelectCity").val();
+                                                                            LocStorPinArea = PinArea;
+                                                                            LocStorAreaId = AreaID;
+                                                                            LocStorSelectedPincode = selectedPincode;
+                                                                            showSelectedAreaMsg();
+                                                                            UrlAfterConfirm = url;
+                                                                            modalPinAreaChange.style.display = "block";
+                                                                        }
+                                                                        else {
+                                                                            localStorage.setItem("CityID", $("#ddlSelectCity").val());
+                                                                            localStorage.setItem("PinArea", PinArea);
+                                                                            localStorage.setItem("AreaId", AreaID);
+                                                                            localStorage.setItem("SelectedPincode", selectedPincode);
+                                                                            showSelectedAreaMsg();
+                                                                            window.location.href = url;
+                                                                        }
+                                                                    },
+                                                                    error: function (x, e) {
+                                                                        // alert("unable to Retrive Mobile No ");
+                                                                    }
+                                                                });
+
+                                                            }
+                                                        //} else {
+                                                        //    $("#lblarea").text('');
+                                                        //    modal.style.display = "none";
+                                                        //}
+                                                    }
+                                                }
+                                                else if (jsonfcontact.HTTPStatusCode == "400") {
+                                                }
+                                            })
+                                            .fail(function (jqXHR, textStatus, error) {
+                                                var err = textStatus + ", " + error;
+                                            });
+
+                                        //******************** End Call 3rd API ****************//
+                                        //if (url != undefined) {
+                                            //$("#lblarea").text('Sorry! We are facing problem in processing your request. Please Try after some time. ');
+                                        //}
+                                    }
+
+                                }
+                                else if (json.HTTPStatusCode == "204") {
+                                    //// alert("No Record found.");
+                                }
+                                else if (json.HTTPStatusCode == "400") {
+                                    //// alert("Failed.");
+                                }
+                            })
+                            .fail(function (jqXHR, textStatus, error) {
+                                  var err = textStatus + ", " + error;
+                            });
+                })
+
+        //End Yashaswi 28-11-2018 Pincode Selection
+
+        //Yashaswi 1/6/2018 Show Selected City And PinCode and Area
+        $(document).ready(function () {
+
+            if (localStorage.getItem("PinArea") != null) {
+                $("#spPinArea").text(localStorage.getItem("PinArea"));
+                $("#sp-PinArea").text(localStorage.getItem("PinArea") + " ," + '@CultureInfo.CurrentCulture.TextInfo.ToTitleCase(cityName.ToLower())');
+            }
+
+        });
+
+        //
+        //-------------Code By Mohit To save GB Track for ----------------//
+        $(function () {
+            $.ajax({
+                url: '@Url.Action("InsertGBTrack", "GBTrack")?URL=' + window.location.href,
+                type: "GET",
+                success: function (result) {
+                },
+                error: function (data) {
+                }
+            });
+
+            // CallAutoComplete1();///call
+        });
+        //-------------End of Code By Mohit To save GB Track for ----------------//
+
+        $(function () {
+            var custSessionId = $("#hdnSessionID").val();
+            if (custSessionId != null && custSessionId != "") {
+                $.ajax({
+                    type: "POST",
+                    url: '@Url.Action("GetGBWalletAmt", "Home")',
+                    data: "{'userID':" + custSessionId + "}",
+                    contentType: "application/json; charset = utf-8",
+                    dataType: "json",
+                    success: function (response) {
+                        $("#gbWalletAmt").text(parseFloat(response).toFixed(2));
+                        // alert(response);
+                    },
+                    failure: function (response) {
+                    },
+                    error: function (response) {
+                    }
+                });
+            }
+            else {
+                $("#gbWalletAmt").text("0.00");
+            }
+
+
+            //// CallAutoComplete();
+
+            //********* Multiple Franchise in same city By Ashish***********//
+            var source = [];
+            var jsonGloble = [];
+            $("#ddlSelectCity").change(function () {
+                // $("#loader").show();
+                $("#lblarea").text('');
+                $("#lblarea").text('Please wait..');
+
+                if ($("#ddlSelectCity").val() == 0) {
+                    //Start Yashaswi 28-11-2018 Pincode Selection
+                    //$("#txtSelectPincode").val('');
+                    //$("#txtSelectPincode").hide();
+                    $("#ddlSelectArea").val('');
+                    $("#ddlSelectArea").hide();
+                    $("#lblarea").text('');
+                    $("#divSearchPicode").hide();
+                    $("#txtPincodeSearch").val('');
+                }
+                else {
+                    $("#divSearchPicode").hide();
+                    $("#txtPincodeSearch").val('');
+                    $('#rd_Pincode').attr('checked', true);
+                    //callPincode();
+                    if ($("#ddlSelectCity Option:Selected").attr("data-val") == "1") {
+                        callPincode();
+                    }
+                    else {
+                        localStorage.removeItem("CityID");
+                        localStorage.removeItem("PinArea");
+                        localStorage.removeItem("AreaId");
+                        localStorage.removeItem("SelectedPincode");
+                        localStorage.removeItem("IsLocConfirmed");
+                        var SelCityName = $("#ddlSelectCity option:selected").text();
+                        var SelCityId = $("#ddlSelectCity").val();
+                        localStorage.setItem("CityID", SelCityId);
+                        var OldAreaId = localStorage.getItem("AreaId");
+                        if (OldAreaId == null) {
+                            OldAreaId = 0;
+                        }
+                        var changeUrl = '@(Html.Raw(Url.RouteUrl("ChangeCity", new { city = cityName, CityID = "_CityID_", CityName = "_CityName_", FranchiseID = "_FranchiseID_", HelpLineNumber = "_HelpLineNumber_", OldAreaId = "OldAreaId" })))';
+                        var url = changeUrl.replace("_CityID_", SelCityId).replace("_CityName_", SelCityName).replace("_FranchiseID_", 1).replace("_HelpLineNumber_", "9172221910").replace("OldAreaId", OldAreaId);
+
+                        window.location.href = url;
+                    }
+                }
+                //End Yashaswi 28-11-2018 Pincode Selection
+
+                //Start Commented by Yashaswi 30-11-2018 for Pincode Selection
+                $("#ddlSelectArea").val('');
+                //$("#txtSelectPincode").val('');
+                $("#ddlSelectArea").hide();
+                //$("#txtSelectPincode").show();
+
+                //******************** Call 1st API ****************//
+
+
+
+                @*var ID = $("#ddlSelectCity").val();
+                var Name = $("#ddlSelectCity option:selected").text();
+                //alert(ID);
+                var fLocation = "GetFranchiseAllottedLocation?cityid=" + ID;
+                //var urlAPILocation = "http://beta.api.ezeelo.in/api/" + fLocation;
+                var urlAPILocation = "@System.Configuration.ConfigurationManager.AppSettings["EZEELO_API_URL"]" + fLocation;
+                //alert(urlAPILocation)
+
+                $.getJSON(urlAPILocation, { format: "json" })
+               .done(function (json) {
+                   //  loading...
+                   // alert("Success");
+                   if (json.HTTPStatusCode == "200") {
+                       jsonGloble = json.Data;
+                       //debugger;
+                       $("#txtSelectPincode").show();
+                       // $("#loader").hide();
+                       $("#lblarea").text('');
+                   }
+                   else if (json.HTTPStatusCode == "204") {
+                       //alert("No Record found.");
+                   }
+                   else if (json.HTTPStatusCode == "400") {
+                       //alert("Failed.");
+                   }
+
+               })
+                   .fail(function (jqXHR, textStatus, error) {
+                       var err = textStatus + ", " + error;
+                       // alert('Unable to Connect to Server.\n Try again Later.\n Request Failed: ' + err);
+
+                   });
+
+                //******************** End Call 1st API ****************//*@
+
+
+            });
+             //end Commented by Yashaswi 30-11-2018 for Pincode Selection
+            $("#ddlSelectArea").change(function () {
+                $("#lblarea").text('Please wait..');
+                var ID2 = $("#ddlSelectCity").val();
+                var Name2 = $("#ddlSelectCity option:selected").text();
+                var FranchiseID2 = $("#ddlSelectArea").val();
+                var HelpLineContact2 = "GetHelpLineNumber?franchiseid=" + FranchiseID2;
+                //var urlAPIHelpLineNo2 = "http://beta.api.ezeelo.in/api/" + HelpLineContact2;
+                var urlAPIHelpLineNo2 = "@System.Configuration.ConfigurationManager.AppSettings["EZEELO_API_URL"]" + HelpLineContact2;
+
+                //alert(urlAPIHelpLineNo2)
+                $.getJSON(urlAPIHelpLineNo2, { format: "json" })
+                   .done(function (jsonfcontact) {
+                       if (jsonfcontact.HTTPStatusCode == "200") {
+                           var countfc = jsonfcontact.Data.length;
+                           if (parseInt(countfc) > 0) {
+                               var HelpLineNumber2 = jsonfcontact.Data[0].HelpLineNumber;
+                               var changeUrl2 = '@(Html.Raw(Url.RouteUrl("ChangeCity", new { city = cityName, CityID = "_CityID_", CityName = "_CityName_", FranchiseID = "_FranchiseID_", HelpLineNumber = "_HelpLineNumber_" })))';
+                               var url2 = changeUrl2.replace("_CityID_", ID2).replace("_CityName_", Name2).replace("_FranchiseID_", FranchiseID2).replace("_HelpLineNumber_", HelpLineNumber2);
+                               if (url2 != undefined) {
+                                   window.location.href = url2;
+                               }
+                           }
+                           $("#lblarea").text('');
+                       }
+                       else if (json.HTTPStatusCode == "204") {
+                           var HelpLineNumber = "Contact not found.";
+                           var changeUrl2 = '@(Html.Raw(Url.RouteUrl("ChangeCity", new { city = cityName, CityID = "_CityID_", CityName = "_CityName_", FranchiseID = "_FranchiseID_", HelpLineNumber = "_HelpLineNumber_" })))';
+                           var url2 = changeUrl2.replace("_CityID_", ID2).replace("_CityName_", Name2).replace("_FranchiseID_", FranchiseID2).replace("_HelpLineNumber_", HelpLineNumber2);
+                           if (url2 != undefined) {
+                               window.location.href = url2;
+                           }
+                       }
+                       else if (json.HTTPStatusCode == "400") {
+                       }
+                   })
+               .fail(function (jqXHR, textStatus, error) {
+               });
+            });
+
+        });
+
+    </script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            var str = getCookie("CityCookie");
+            ///New Yashaswi 20/6/2018
+            if (localStorage.getItem("CityID") == null || localStorage.getItem("CityID") == undefined || localStorage.getItem("CityID") == "undefined") {
+                str = null;
+            }
+            //End
+
+
+            var cucity = "";
+            var cityId = 0;
+            var cufranchiseId = 0;//added
+            if (str != null && str != "" && str != undefined) {
+                callCity();////added
+                var str1 = [];
+                str1 = str.split('$');
+                cityId = str1[0];
+                cucity = str1[1].toLowerCase();
+                cufranchiseId = str1[2];//added
+                // alert(cityId + "==" + cucity + "==" + cufranchiseId);
+                $("#ChangeCity1").removeClass("active-container");
+                //$(".modal").css("display", "block!important");
+
+                $(".open").css("display", "none");
+
+                $("#smallHeader").css("background-color", "#FFF");
+                $("#smallHeader").css("box-shadow", "inset 0px -5px 5px #cacaca");
+                $("#container").css("background-color", "#FFF");
+                $("#shoppingcart").css("display", "block");
+
+                $("#body-content").css("pointer-events", "visible");
+                $("#footer").css("pointer-events", "visible");
+                $("#logodiv").css("pointer-events", "visible");
+                $("#searchdiv").css("pointer-events", "visible");
+                $(".shotlistdiv").css("pointer-events", "visible");
+                $("#category_menu").css("pointer-events", "visible");
+                $("#gb_wallet").css("pointer-events", "visible");
+            }
+            else {
+                //$("#ChangeCity1").addClass("active-container");
+                $("#mask").css("background-color", "none!important");
+                //$(".modal").css("display", "block");
+                $("#myModal").css("display", "block"); //Yashaswi Change class name to id
+
+                ///New Yashaswi 20/6/2018
+                localStorage.removeItem("CityID");
+                localStorage.removeItem("PinArea");
+                localStorage.removeItem("AreaId");
+                localStorage.removeItem("SelectedPincode");
+                //End
+
+                //Start Yashaswi 01/12/2018 Default City Change
+                localStorage.setItem("CityID", "@System.Configuration.ConfigurationManager.AppSettings["DFLT_CITY_ID"]");
+                localStorage.setItem("PinArea", "@System.Configuration.ConfigurationManager.AppSettings["DFLT_PINCODE_NAME"]" +", " + "@System.Configuration.ConfigurationManager.AppSettings["DFLT_AREA_NAME"]");
+                localStorage.setItem("AreaId", "@System.Configuration.ConfigurationManager.AppSettings["DFLT_AREA_ID"]");
+                localStorage.setItem("SelectedPincode", "@System.Configuration.ConfigurationManager.AppSettings["DFLT_PINCODE_NAME"]");
+                if (localStorage.getItem("CityID") != null) {
+                    $("#ddlSelectCity").val(localStorage.getItem("CityID"));
+                    var IsFranchise = 0;
+                    $("#ddlSelectCity > option").each(function () {
+                        if (localStorage.getItem("CityID") == $(element).val()) {
+                            IsFranchise = $(element).attr("data-val");
+                        }
+                    });
+                    if (IsFranchise == "1" && IsFranchise != undefined && IsFranchise != "undefined") {
+                        $("#ddlSelectCity").change();
+                    } else {
+                        $("#ddlSelectCity").val(0);
+                    }
+                }
+
+                $("#spPinArea").text(localStorage.getItem("PinArea"));
+                $("#sp-PinArea").text(localStorage.getItem("PinArea") + " ," + '@CultureInfo.CurrentCulture.TextInfo.ToTitleCase(cityName.ToLower())');
+                callCity();
+                //End
+
+                $(".open").css("display", "block");
+                $("#shoppingcart").css("display", "block");
+                $("#body-content").addClass("body-contentblur");
+                $("#footer").addClass("body-contentblur");
+                $("#logodiv").addClass("logodivblur");
+                $("#searchdiv").addClass("logodivblur");
+                $(".shotlistdiv").addClass("logodivblur");
+                $("#category_menu").addClass("logodivblur");
+                $("#gb_wallet").addClass("logodivblur");
+                $("#cart").addClass("logodivblur");
+                $("#spanShoppingCartCount").addClass("logodivblur");
+
+                $("#smallHeader").css("background-color", "rgba(0, 0, 0, 0)");
+                $("#smallHeader").css("box-shadow", "none");
+                $("#container").css("background-color", "rgba(0, 0, 0, 0.80)");
+                $("#body-content").css("pointer-events", "none");
+                $("#footer").css("pointer-events", "none");
+                $("#logodiv").css("pointer-events", "none");
+                $("#searchdiv").css("pointer-events", "none");
+                $(".shotlistdiv").css("pointer-events", "none");
+                $("#category_menu").css("pointer-events", "none");
+                $("#gb_wallet").css("pointer-events", "none");
+                cityId = @System.Configuration.ConfigurationManager.AppSettings["DFLT_CITY_ID"];
+                cucity = "@System.Configuration.ConfigurationManager.AppSettings["DFLT_CITY_NAME"]";
+                cufranchiseId = @System.Configuration.ConfigurationManager.AppSettings["DFLT_FRANCHISE_ID"];//added
+                //createCookie("CityCookie", "4968$Nagpur", 30);//hide
+                //createCookie("CityCookie", "4968$Nagpur$2$9860890890", 30);//added
+                createCookie("CityCookie", cityId + "$" + cucity + "$" + cufranchiseId + "$" +@System.Configuration.ConfigurationManager.AppSettings["DFLT_HELPLINE_NO"], 30);
+            }
+            //-- added--/
+            var cname = window.location.href.replace('@System.Configuration.ConfigurationManager.AppSettings["EZEELO_CUSTOMER_URL"]', '');
+            var cfranchise = cname;
+            cname = cname.substring(0, cname.indexOf('/'));
+            var removecname = cname + '/';
+            cfranchise = cfranchise.replace(removecname, '');
+            //alert("Home: "+cname + "==" + cfranchise);
+            //-- End Add --//
+            function callCity() {
+                //$("#loader").show();
+                $("#divSearchPicode").hide(); // Yashaswi 30-11-2018 Pincode Selection
+                $("[id*=ddlSelectPinCode]").empty();// Yashaswi 30-11-2018 Pincode Selection
+                $("#lblarea").text('Please wait..');
+                $.ajax({
+                    type: "POST",
+                    // url: "/nagpur/Home/GetCities",//hide
+                    url: "/" + cname + "/" + cfranchise + "/Home/GetCities",//added
+                    dataType: "json",
+                    async: true,
+                    cache: false,
+                    success: function (msg) {
+
+                        $('#Locations').empty();
+                        ////var changeUrl = '@(Html.Raw(Url.RouteUrl("ChangeCity", new { city = cityName, CityID = "_CityID_", CityName = "_CityName_" })))'; //Hide old code
+                        //********* Multiple Franchise in same city By Ashish***********//
+                        var ddlCities = $("[id*=ddlSelectCity]");
+                        ddlCities.empty().append('<option selected="selected" value="0">Select City</option>');
+                        //********* End Multiple Franchise in same city ***********//
+                        $.each(msg, function (index, item) {
+
+                            if (cityId == 4968) {
+                                if (item.Name.toLowerCase() == "nagpur") {
+                                    cityId = item.ID;
+                                    cucity = "nagpur";
+                                    cufranchiseId = 2;//added
+                                    $('#ChangeLocation').html("Nagpur");
+                                }
+                            }
+                            //********* Multiple Franchise in same city By Ashish ***********//
+                            ddlCities.append($("<option data-val="+ this["IsFranchise"]+" ></option>").val(this['ID']).html(this['Name']));
+                            //********* End Multiple Franchise in same city ***********//
+                            //// var url = changeUrl.replace("_CityID_", item.ID).replace("_CityName_", item.Name);//Hide old code
+                            ////  $('#Locations').append('<li style="width:44%;float:left;margin-right:10px;margin-bottom: 10px;"><a class="button popupsuccess" href="' + url + '" value=' + item.ID + '>' + item.Name + '</a></li>');//Hide old code
+
+                        });
+                        // $("#loader").hide();
+                        $("#lblarea").text('');
+                    },
+                    error: function (x, e) {
+                        //alert("Sorry No Such Type of City Is available. ");
+                    }
+                });
+            }
+
+            /****************** cart cookie****/
+
+            if ($("#ShoppingCartCookieValue").val() != 0) {
+                var cnt = $("#ShoppingCartCookieValue").val().split(",").length;
+                //alert(cnt);
+                // Set value for shopping cart count
+                $("#spanShoppingCartCount").text(cnt);
+
+            }
+            else {
+                $("#spanShoppingCartCount").text(0);
+            }
+
+            /**************************/
+
+
+            /* Request the partial view with .get request. */
+            //$.get('/' + cucity + '/Home/GetMenuListing', function (data) {//hide
+            $.get('/' + cucity + '/' + cufranchiseId + '/Home/GetMenuListing', function (data) {//added
+                /* data is the pure html returned from action method, load it to your page */
+                $('#MenuListing').html(data);
+
+                /* little fade in effect */
+                //$('#MenuListing').fadeIn('fast');
+
+                // $.get('/' + cucity + '/Home/GetFooterMenuListing?Width=' + $(window).width(), function (data) {
+                $.get('/' + cucity + '/' + cufranchiseId + '/Home/GetFooterMenuListing?Width=' + $(window).width(), function (data) {//added
+                    /* data is the pure html returned from action method, load it to your page */
+                    if ($(window).width() > 800) {
+                        $('#trademark-text-box').html(data);
+                    }
+                    else {
+                        $('#mobileFooter').html(data);
+                    }
+                });
+
+
+            });
+            //alert($(window).width());
+            //if ($(window).width() < 974) {
+            //    $('#MenuListing').css('display', 'none');
+            //    $('.box-vertical-megamenus h4').css("pointer-events", "visible");
+
+            //} else {
+            //    $('#MenuListing').css('display', 'block');
+            //    $('.box-vertical-megamenus h4').css("pointer-events", "none");
+
+            //}
+        });
+        $("#ChangeCity1").click(function () {
+            $("#body-content").removeClass("body-contentblur");
+            $("#footer").removeClass("body-contentblur");
+            $("#logodiv").removeClass("logodivblur");
+            $("#searchdiv").removeClass("logodivblur");
+            $("#ChangeCity1").removeClass("active-container");
+            $(".shotlistdiv").removeClass("logodivblur");
+            $("#category_menu").removeClass("logodivblur");
+            $("#gb_wallet").removeClass("logodivblur");
+            $("#cart").removeClass("logodivblur");
+            $("#spanShoppingCartCount").removeClass("logodivblur");
+
+            $("#smallHeader").css("background-color", "#FFF");
+            $("#smallHeader").css("box-shadow", "inset 0px -5px 5px #cacaca");
+            $("#container").css("background-color", "#FFF");
+            $("#shoppingcart").css("display", "block");
+            $("#body-content").css("pointer-events", "visible");
+            $("#footer").css("pointer-events", "visible");
+            $("#logodiv").css("pointer-events", "visible");
+            $("#searchdiv").css("pointer-events", "visible");
+            $(".shotlistdiv").css("pointer-events", "visible");
+            $("#category_menu").css("pointer-events", "visible");
+            $("#gb_wallet").css("pointer-events", "visible");
+        });
+
+        flagToggle = false;
+
+        function removeLightBox() {
+            $("#body-content").removeClass("body-contentblur");
+            $("#footer").removeClass("body-contentblur");
+            $("#logodiv").removeClass("logodivblur");
+            $("#searchdiv").removeClass("logodivblur");
+            $(".shotlistdiv").removeClass("logodivblur");
+            $("#category_menu").removeClass("logodivblur");
+            $('#ChangeCity1').removeClass("active-container");
+            $("#gb_wallet").removeClass("logodivblur");
+            $("#cart").removeClass("logodivblur");
+            $("#spanShoppingCartCount").removeClass("logodivblur");
+
+            $("#smallHeader").css("background-color", "#FFF");
+            $("#smallHeader").css("box-shadow", "inset 0px -5px 5px #cacaca");
+            $("#container").css("background-color", "#FFF");
+            $("#shoppingcart").css("display", "block");
+            $("#body-content").css("pointer-events", "visible");
+            $("#footer").css("pointer-events", "visible");
+            $("#logodiv").css("pointer-events", "visible");
+            $("#searchdiv").css("pointer-events", "visible");
+            $(".shotlistdiv").css("pointer-events", "visible");
+            $("#category_menu").css("pointer-events", "visible");
+            $("#gb_wallet").css("pointer-events", "visible");
+        }
+
+        function addLightBox() {
+            $("#body-content").addClass("body-contentblur");
+            $("#footer").addClass("body-contentblur");
+            $("#logodiv").addClass("logodivblur");
+            $("#searchdiv").addClass("logodivblur");
+            $(".shotlistdiv").addClass("logodivblur");
+            $("#category_menu").addClass("logodivblur");
+            $("#gb_wallet").addClass("logodivblur");
+            $("#cart").addClass("logodivblur");
+            $("#spanShoppingCartCount").addClass("logodivblur");
+
+            $("#smallHeader").css("background-color", "rgba(0, 0, 0, 0)");
+            $("#smallHeader").css("box-shadow", "none");
+            $("#container").css("background-color", "rgba(0, 0, 0, 0.80)");
+            $("#shoppingcart").css("display", "block");
+            $("#body-content").css("pointer-events", "none");
+            $("#footer").css("pointer-events", "none");
+            $("#logodiv").css("pointer-events", "none");
+            $("#searchdiv").css("pointer-events", "none");
+            $(".shotlistdiv").css("pointer-events", "none");
+            $("#category_menu").css("pointer-events", "none");
+            $("#gb_wallet").css("pointer-events", "none");
+        }
+
+        //- Toggle Lightbox for change city
+        $(document).click(function () {
+            removeLightBox();
+            flagToggle = false;
+        });
+
+        //added
+        $(document).change(function () {
+            removeLightBox();
+            flagToggle = false;
+        });
+
+        $(document).keyup(function (e) {
+            if (e.keyCode == 27) { // escape key maps to keycode `27`
+                // <DO YOUR WORK HERE>
+                removeLightBox();
+                flagToggle = false;
+            }
+        });
+        $("#customerdiv").click(function () {
+            //alert('12');
+            $("#newdropdown").toggle();
+            //alert($("#newdropdown").attr("style"));
+            //alert($("#newdropdown").css('display'));
+
+        });
+        $("#ChangeLocation").click(function () {
+            // alert("ChangeLocation");
+            flagToggle = !flagToggle;
+            //alert(flagToggle);
+            if (flagToggle) {
+                addLightBox();
+            }
+            else {
+                removeLightBox();
+            }
+        });
+
+
+    </script>
+    @*javascript for scroll page start*@
+    <script>
+        //$(window).scroll(function () {
+        //    if ($(window).scrolltop() > 100) {
+        //        $("#menulisting").css('display', 'none');
+        //    }
+        //    else {
+        //        $("#menulisting").css('display', 'block');
+        //    }
+        //});
+    </script>
+    @*javascript for scroll page End*@
+    <script>
+        // alert($("#spanShoppingCartCount").text());
+        //alert($("#spanShoppingCartCount").val());
+        /*$('#myAlert').css('display', 'block');
+        setTimeout(function () {
+            $("#myAlert").hide('blind', {}, 500)
+        }, 2000);*/
+
+        function showDialog(id) {
+            var ww = $(window).width();
+            var cw = (ww / 2);
+            var dialog = $("#" + id).width();
+            var dw = (dialog / 2);
+            var lp = (cw - dw);
+            $("#" + id).css('left', lp);
+            if ($("#" + id).css('display') == 'none') {
+                $("#" + id).css('display', 'block');
+            } else {
+                $("#" + id).css('display', 'none');
+            }
+            $(".closeDilog").click(function () {
+                $("#" + id).css('display', 'none');
+            });
+        }
+
+        $(function () {
+            //alert($("#CityID").val());
+            if ($("#CityID").val() != 0) {
+                //$("#SpanChangeCity").text($("#CityID").val().split("$")[1]);
+                $("#divCity").css("display", "none");
+            }
+            else {
+                $("#dialog9").css("display", "block");
+            }
+        });
+
+
+        function OpenShortlist() {
+            $("#dialog6").css("display", "block");
+
+        }
+        function closeShortlist() {
+            $("#dialog6").css("display", "none");
+
+        }
+        function getCookie(name) {
+            var dc = document.cookie;
+            var prefix = name + "=";
+            var begin = dc.indexOf("; " + prefix);
+            if (begin == -1) {
+                begin = dc.indexOf(prefix);
+                if (begin != 0) return null;
+            } else {
+                begin += 2;
+            }
+            var end = document.cookie.indexOf(";", begin);
+            if (end == -1) {
+                end = dc.length;
+            }
+            return unescape(dc.substring(begin + prefix.length, end));
+        }
+
+        function setCookie(c_name, value, expiredays) {
+            document.cookie = c_name + "=" + value;
+        }
+
+        function LoadShortList() {
+            $('#ShortListDiv').load('@Url.Action("ShortList", "Shortlist")');
+            $.ajax({
+                type: "POST",
+                url: '@Url.Action("ShortList", "Shortlist")',
+                data: {},
+                contentType: "application/json; charset = utf-8",
+                dataType: "json",
+                success: function (response) {
+                    alert("Short list div reload");
+                },
+                failure: function (response) {
+
+                },
+                error: function (response) {
+
+                }
+            });
+        }
+
+    </script>
+
+
+
+    <!--Flying Image add to cart Jquery Added by Gopal-->
+
+
+</body>
+</html>
+
+
+
+
+

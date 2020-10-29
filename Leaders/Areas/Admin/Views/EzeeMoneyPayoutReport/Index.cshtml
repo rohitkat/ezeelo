@@ -1,0 +1,194 @@
+﻿@model ModelLayer.Models.ViewModel.EzeeMoneyPayoutReportViewModel
+
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_LeadersLayout.cshtml";
+}
+<script src="~/Scripts/jquery-1.12.4.js"></script>
+<link href="//cdn.datatables.net/1.10.19/css/jquery.dataTables.min.css" rel="stylesheet" />
+<script src="//cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
+<h2>EzeeMoney Payout Report</h2>
+<script type="text/javascript" class="init">
+    $(document).ready(function () {
+        $('#tblData').DataTable({
+            dom: 'T<"clear">lfrtip',
+            "processing": true,
+            "serverSide": true,
+            "iDisplayLength": 20,
+        });
+
+        $("#btnExport").click(function () {
+            debugger;
+            var flag = 0;
+            if ($("#chkAll").prop("checked") == true) {
+
+                flag = 1;
+            }
+            window.location = "/EzeeMoneyPayoutReport/ExportToExcel?flag=" + flag
+        });
+    });
+</script>
+<style>
+    #pageloaddiv {
+        position: fixed;
+        left: 0px;
+        top: 0px;
+        width: 100%;
+        height: 100%;
+        z-index: 1000;
+        background: url('../../Content/Images/lg.palette-rotating-ring-loader.gif') no-repeat center center;
+        background-size: 100px;
+        display: none;
+    }
+</style>
+<div class="container">
+    <div class="row">
+        <div class="col-3">
+            All
+
+        </div>
+        <div class="col-3">
+            Payout Month
+
+        </div>
+        <div class="col-3">
+            Status
+        </div>
+        <div style="display:none;">hjhjhkjkj</div>
+
+    </div>
+    <div class="row">
+        
+        <div class="col-3">
+            @Html.CheckBox("All", false, new { id = "chkAll" })
+        </div>
+        <div class="col-3">
+            @Html.DropDownListFor(m => m.PayoutDateFilter, Model.PayoutDateFilter, "Select Payout Month", new { @class = "BuildType", @id = "PayoutDateFilterid" })
+            @*@for (int i = 0; i <= @Model.PayoutDateFilter.Count(); i++)
+            {
+                @Html.DropDownListFor(model => @Model.PayoutDateFilter[i].ID, @Model.PayoutDateFilter[i].FromDate, "Select Payout Month", new { style = "width:60px;", @id = "PayoutMonthId-" + i.ToString() })
+            }*@
+        </div>
+        <div class="col-3">
+            @Html.DropDownList("Status" , new List<SelectListItem>
+                   {
+                       new SelectListItem{Text="Select Status"},
+                       //new SelectListItem{ Text="All", Value = "2" },
+                       new SelectListItem{ Text="Active", Value = "1" },
+                       new SelectListItem{ Text="InActive", Value = "0" },
+                    })
+        </div>
+        <div class="col-3">
+            <button id="btnExport" onclick="fnExcelReport();" class="btnPrint btn btn-success btn-small">EXPORT TO EXCEL</button>
+        </div>
+    </div>
+   
+
+    <br />
+    <div id="pageloaddiv"></div>
+    <div id="EzeeMoneyPayoutId">
+
+    </div>
+    <div id="EzeeMoneyPayoutDetailDiv">
+
+    </div>
+    <div class="filterTable">
+
+    </div>
+    <br />
+    <br />
+
+</div>
+<script>
+   
+    $(document).ready(function () {
+        $('#tblData').DataTable();
+       // $("#pageloaddiv").css('display', 'block');
+        $("#chkAll").change(function () {
+            
+            //debugger
+            //alert("hii");
+            var status = "";
+            if ($(this).prop("checked") == true) {
+                $("#pageloaddiv").css('display', 'block');
+                $("#EzeeMoneyPayoutDetailDiv").load("/Admin/EzeeMoneyPayoutReport/GetAllGroupData");
+                
+            }
+            else {
+                $("#EzeeMoneyPayoutDetailDiv").empty();
+            }
+        })
+        $("#PayoutDateFilterid").change(function () {
+            $("#pageloaddiv").css('display', 'block');
+            $("#chkAll").prop("checked", false);
+            var id = $("#PayoutDateFilterid").val();
+            $("#EzeeMoneyPayoutDetailDiv").load("/Admin/EzeeMoneyPayoutReport/GetAllDataByPayoutMonth?id=" + id);
+
+        });
+        $("#Status").change(function () {
+            $("#pageloaddiv").css('display', 'block');
+            $("#chkAll").prop("checked", false);
+            $("#PayoutDateFilterid").val('');
+            var status = $("#Status").val();
+            $("#EzeeMoneyPayoutDetailDiv").load("/Admin/EzeeMoneyPayoutReport/GetAllDataByStatus?status=" + status);
+
+        });
+    });
+
+
+</script>
+@*<script type="text/javascript">
+    function fnExcelReport() {
+        var tab_text = '<table border="1px" style="font-size:20px" ">';
+        var textRange;
+        var j = 0;
+        var tab = document.getElementById('tblData'); // id of table
+        if (tab == null) {
+            tab = document.getElementById('tblData');
+        }
+        var lines = tab.rows.length;
+
+        // the first headline of the table
+        if (lines > 0) {
+            tab_text = tab_text + '<tr bgcolor="#DFDFDF">' + tab.rows[0].innerHTML + '</tr>';
+        }
+
+        // table data lines, loop starting from 1
+        for (j = 1; j < lines; j++) {
+            tab_text = tab_text + "<tr>" + tab.rows[j].innerHTML + "</tr>";
+        }
+
+
+
+
+        var fileName = 'Test file.xls';
+        var blob = new Blob([tab_text], {
+            type: "application/xls;charset=utf-8;"
+        });
+
+        if (window.navigator.msSaveBlob) {
+            // FOR IE BROWSER
+            navigator.msSaveBlob(blob, fileName);
+        } else {
+            // FOR OTHER BROWSERS
+            var csvUrl = URL.createObjectURL(blob);
+
+
+
+            //new added by Priti
+            let a = $("<a />", {
+                //href: 'data:application/vnd.ms-excel,' + encodeURIComponent(blob),
+                href: csvUrl,
+                download: "EzeeMoneyPayoutReport.xls"
+            })
+                .appendTo("body")
+                .get(0)
+                .click();
+            //$('#exportbutton').attr({
+            //    'download': fileName,
+            //    'href': csvUrl
+            //});
+        }
+    }
+
+</script>*@

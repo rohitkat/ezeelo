@@ -1,0 +1,961 @@
+﻿@using CaptchaMvc.HtmlHelpers
+@using CaptchaMvc;
+@model ModelLayer.Models.ViewModel.PaymentProcessViewModel
+
+@{
+    Layout = null;
+    ViewBag.Title = "eZeelo: Electronics, Fashion, Coupons, Home Appliances | Lowest Price "; //Yashaswi 01/12/2018 Default City Change
+    ViewBag.Test = Model;
+    if (Request.QueryString["Subscription"] != null)
+    {
+        TempData["Subscription"] = Request.QueryString["Subscription"];
+    }
+
+    if (Request.QueryString["AlreadyExist"] != null)
+    {
+        TempData["IsAlreadyExist"] = Request.QueryString["AlreadyExist"];
+    }
+    if (Request.QueryString["ReferredByLoginID"] != null)
+    {
+        TempData["ReferredByLoginID"] = Request.QueryString["ReferredByLoginID"];
+    }
+
+    if (Request.QueryString["CorporateGift"] != null)
+    {
+        TempData["IsCorporateGift"] = Request.QueryString["CorporateGift"];
+    }
+
+    string cityName = string.Empty;
+    int franchiseID = 0;////added
+    if (Request.Cookies["CityCookie"] != null && Request.Cookies["CityCookie"].Value != "")
+    {
+        cityName = Request.Cookies["CityCookie"].Value.Split('$')[1].ToLower();
+        franchiseID = Convert.ToInt32(Request.Cookies["CityCookie"].Value.Split('$')[2]);////added
+    }
+    Layout = "~/Views/Shared/_Layout_Internal.cshtml";
+}
+
+<span class="msg_head" style="color:red;">@TempData["TransFailuer"]</span>
+<script src="~/Scripts/PaymentProcess.js"></script>
+<style>
+    .DeliverySlot table, th {
+
+    {
+        border: 1px solid rgb(135, 135, 135) !important;
+    }
+
+    border-collapse: collapse; font-weight: bold; text-align: center; -moz-box-shadow: inset 0 0 60px rgb(135, 135, 135); -webkit-box-shadow: inset 0 0 60px rgb(135, 135, 135); box-shadow: inset 0 0 60px rgb(135, 135, 135);
+    }
+
+    .DeliverySlot table, td {
+        border: 1px solid #ddd !important;
+        border-collapse: collapse;
+    }
+
+    .selectedtime {
+        background: #e9f0da;
+        border: 2px solid #669966 !important;
+    }
+
+    .passtime {
+        background: #d1d3d4 !important;
+    }
+
+    .accordion > .frame.active > .heading {
+        background-color: #0f6bb2;
+        border-color: #663399;
+        color: #fff;
+        font-weight: 900;
+        font-size: 15px;
+    }
+
+    .accordion > .frame {
+        font-weight: 900;
+        font-size: 15px;
+        margin-top: 5px !important;
+        border-bottom: 2px solid rgba(128, 128, 128, 0.46);
+        box-shadow: 1px 5px 5px rgba(128, 128, 128, 0.36);
+    }
+
+    .table > thead > tr > th {
+        padding: 5px;
+    }
+
+    .iframdiv {
+        width: 100% !important;
+        height: auto !important;
+        min-height: 243px;
+        max-height: 450px;
+        overflow: auto;
+    }
+
+    #divOnlinePayment img {
+        float: left;
+        width: 100%;
+    }
+
+    .COD {
+        padding-top: 10px;
+        background: url("/Content/Images/cashondelivery.png") no-repeat;
+        width: 217px;
+        height: 72px;
+        cursor: pointer;
+    }
+
+    .CODisable {
+        padding-top: 10px;
+        background: url("/Content/Images/cashondelivery.png") no-repeat;
+        width: 217px;
+        height: 72px;
+        cursor: not-allowed;
+        opacity: 0.2;
+        z-index: -1;
+        pointer-events: none;
+    }
+
+    .Onlinepay {
+        padding-top: 10px;
+        background: url("/Content/Images/online_payment.png") no-repeat;
+        width: 217px;
+        height: 72px !important;
+        cursor: pointer;
+    }
+
+    .NetBankingDisable {
+        padding-top: 10px;
+        cursor: not-allowed;
+        background: url("/Content/Images/netbanking.png") no-repeat;
+        width: 217px;
+        height: 72px;
+        opacity: 0.2;
+        pointer-events: none;
+    }
+
+    .NetBanking {
+        padding-top: 10px;
+        cursor: pointer;
+        background: url("/Content/Images/netbanking.png") no-repeat;
+        width: 217px;
+        height: 72px;
+    }
+
+    .CashNCarryDisable {
+        padding-top: 10px;
+        cursor: not-allowed;
+        background: url("/Content/Images/cashncarry.png") no-repeat;
+        width: 217px;
+        height: 72px;
+        opacity: 0.2;
+        pointer-events: none;
+    }
+
+    .CashNCarry {
+        padding-top: 10px;
+        cursor: pointer;
+        background: url("/Content/Images/cashncarry.png") no-repeat;
+        width: 217px;
+        height: 72px;
+    }
+
+
+    .divleft {
+        float: left;
+        list-style-type: none;
+    }
+
+    .hidedivleft {
+        display: none !important;
+    }
+
+    .divcapcha {
+        float: left;
+        padding-left: 10px;
+        /*margin-top: 10px;*/
+    }
+
+    #CaptchaInputText {
+        -webkit-appearance: none;
+        appearance: none;
+        position: relative;
+        border: 1px #d9d9d9 solid;
+        width: 100%;
+        height: 100%;
+        padding: .3125rem;
+        z-index: 0;
+    }
+
+    .btnnewblue {
+        background-color: #2086bf !important;
+        color: white !important;
+    }
+
+    .btnheadnew {
+        background-color: rgb(131, 212, 236) !important;
+    }
+
+    .warning {
+        background: #fa6800 !important;
+        color: #ffffff !important;
+        border-color: #fa6800 !important;
+    }
+
+    .inActive {
+        cursor: none;
+    }
+
+    .disabled {
+        pointer-events: none;
+    }
+
+    .image-buttonnew {
+        padding: 0.5rem;
+        text-align: center;
+        vertical-align: middle !important;
+        background-color: #787878;
+        border: 1px #d9d9d9 solid;
+        color: #FFFFFF;
+        cursor: pointer;
+        display: inline-block;
+        outline: none;
+        margin: .15625rem 0;
+        position: relative;
+        border: 0;
+        padding-left: 2.75rem;
+    }
+
+    .divdisable {
+        background: #666 none repeat scroll 0% 0% !important;
+        cursor: pointer;
+        color: white !important;
+    }
+
+        .divdisable:hover {
+            background: rgba(102, 102, 102, 0.69) none repeat scroll 0% 0% !important;
+            cursor: pointer;
+            color: white !important;
+        }
+
+    .divactives {
+        background-color: #1BA1E2 !important;
+        color: white !important;
+        cursor: pointer;
+    }
+
+        .divactives:hover {
+            background-color: rgba(27, 161, 226, 0.47) !important;
+            color: white !important;
+            cursor: pointer;
+        }
+
+    .divcomplete {
+        background-color: #60A917 !important;
+        color: white !important;
+        cursor: pointer;
+    }
+
+        .divcomplete:hover {
+            background-color: rgba(96, 169, 23, 0.72);
+            color: white;
+            cursor: pointer;
+        }
+
+    .newcounttable {
+        line-height: 5px;
+        margin-top: 47px;
+        width: 100%;
+    }
+
+    .Onlinepay1 {
+        padding-top: 10px;
+        background: transparent url("/Content/Images/online_payment1.png") no-repeat scroll 0% 0%;
+        width: 217px;
+        height: 72px !important;
+        cursor: pointer;
+    }
+
+    .COD1 {
+        padding-top: 10px;
+        background: transparent url("/Content/Images/cashondelivery1.png") no-repeat scroll 0% 0%;
+        width: 217px;
+        height: 72px;
+        cursor: pointer;
+    }
+
+    #btnRefreshCaptcha {
+        border: 1px solid #ccc !important;
+    }
+
+    .testselect {
+        border: none;
+        border-radius: 0px 0px 0px 0px !important;
+        /* background: transparent; */
+        width: 200px !important;
+        padding: 1px 15px 5px 5px !important;
+        font-size: .875rem;
+        border: 1px solid #ddd;
+        height: 30px;
+        /*-webkit-appearance: none;*/
+        /*-moz-appearance: none;*/
+        appearance: none;
+        margin: 5px;
+        /*background: url(../Content/Images/drop.gif) 97% / 10px no-repeat #fff !important;*/
+    }
+
+    .heading {
+        padding: 10px;
+    }
+</style>
+<script>
+    $(document).ready(function () {
+        $("#orderdetailsbutton").click(function () {
+            $("#orderdetails").toggle(1000);
+        });
+
+        $("#ChangeCity1").css("pointer-events", "none");
+    });
+</script>
+@*<!-- Google Code for GB Adword Conversion Checkout (order-placed) Conversion Page (Added by harshada on 13/1/2017)  -->
+    <script type="text/javascript">
+        /* <![CDATA[ */
+        var google_conversion_id = 950176197;
+        var google_conversion_language = "en";
+        var google_conversion_format = "3";
+        var google_conversion_color = "ffffff";
+        var google_conversion_label = "XF7UCOSD42wQxZOKxQM";
+        var google_remarketing_only = false;
+        /* ]]> */
+    </script>
+    <script type="text/javascript" src="//www.googleadservices.com/pagead/conversion.js">
+    </script>
+    <noscript>
+        <div style="display:inline;">
+            <img height="1" width="1" style="border-style:none;" alt="" src="//www.googleadservices.com/pagead/conversion/950176197/?label=XF7UCOSD42wQxZOKxQM&amp;guid=ON&amp;script=0" />
+        </div>
+    </noscript>
+
+    <!-- End of Google Code for GB Adword Conversion Checkout (order-placed) Conversion Page (Added by harshada on 13/1/2017)  -->*@
+<body>
+    <div id="mask" align="center" class="loader">
+        <img src="~/Content/Images/ajax_loader.gif" style="width:130px;margin-top:10%" />
+    </div>
+    <div class="payment_process-main">
+        <!-- End of gad block -->
+        <div class="example">
+            <div class="grid">
+                <div class="row ">
+
+                    <div class="cell">
+
+                        <h3 style="margin-left:0px;">Payment Process</h3>
+                        <div class="accordion" data-role="accordion" data-close-any="true">
+                            @if (Model == null)
+                            {
+                                //Tejaswee (19-10-2015)
+                                //add style display:none to hide guest checkout
+                                <input type="button" value="Already Registered" id="loginDiv" style="display:none" />
+                                <input type="button" value="Guest Checkout" id="guestCheckout" style="display:none" />
+                            }
+                            <div class="frame active" id="btnLoginDetails">
+                                <div class="heading ">
+                                    Login
+                                    @*<button class="button mini-button" style="float: right; width: 140px;">Change Login</button>*@
+                                    @*<b>  @Html.ActionLink("Change Login", "Logout", new { ID = "btnChangeLogin" }, new { @class = "button mini-button", @Style = "float: right; width: 140px;padding-top: 4px!important;background-color: rgba(128, 128, 128, 0.99);color: #eee;" })</b>*@
+                                </div>
+                                @if (Model != null)
+                                {
+                                    <div id="divLogonDetail" style="font-size: 17px; display:none">
+                                        @if (Model.LogonDetails.EmailId != null && Model.LogonDetails.EmailId != string.Empty)
+                                        {
+                                            <span> User Name: @Model.LogonDetails.EmailId</span>
+                                        }
+                                        else
+                                        {
+                                            <span> User Name: @Model.LogonDetails.MobileNo</span>
+                                        }
+
+                                        <br />
+                                        @Html.ActionLink("Change Login", "Logout", new { ID = ViewBag.ID }, new { @class = "btn btn-success" })
+                                        <b><input type="button" id="ChangeLoginContinue" class="btn btn-warning" value="Continue >>" onclick="ChangeLoginContinue(event)" /></b>
+                                    </div>
+                                }
+                                <div class="content">
+                                    <div id="divLogin">
+                                        @using (Html.BeginForm("Login", "Login", new { callFrom = "paymentProcess", isExpressBuy = string.IsNullOrEmpty(Request.QueryString["IsExpressBuy"]) ? "false" : Request.QueryString["IsExpressBuy"] }, FormMethod.Post))
+                                        {
+                                            @Html.Hidden("callFrom", "paymentProcess")
+                                            if (Model == null)
+                                            {
+                                                @Html.Partial("_Login")
+                                            }
+                                        }
+                                    </div>
+                                    <div id="divGuestCheckout" style="display:none;">
+                                        @using (Html.BeginForm("GuestCheckout", "Login", new { callFrom = "paymentProcess", isExpressBuy = string.IsNullOrEmpty(Request.QueryString["IsExpressBuy"]) ? "false" : Request.QueryString["IsExpressBuy"] }, FormMethod.Post))
+                                        {
+                                            if (Model == null)
+                                            {
+                                                @Html.Partial("_GuestCheckOut")
+                                            }
+                                        }
+                                    </div>
+                                    @*Tejaswee check for OTP*@
+                                    <div id="divGuestOTP" style="display:none;">
+                                        @using (Html.BeginForm("CheckOTP", "Login", new { callFrom = "paymentProcess", isExpressBuy = string.IsNullOrEmpty(Request.QueryString["IsExpressBuy"]) ? "false" : Request.QueryString["IsExpressBuy"] }, FormMethod.Post))
+                                        {
+                                            if (Model == null)
+                                            {
+                                                @Html.Partial("_VerifyOTP")
+                                            }
+                                        }
+                                    </div>
+
+
+                                </div>
+
+
+                            </div>
+                            <div class="frame " id="btnShippingDetails">
+                                <div class="heading">
+                                    Address
+                                    @*<button class="button mini-button" onclick="GetShippingDetails()" style="float: right; width: 140px; background-color: rgba(128, 128, 128, 0.99); color: #eee; padding-top: 4px !important;">
+                                            CHANGE ADDRESS
+                                        </button>*@
+                                </div>
+                                <div class="content" id="addrcontent">
+                                    <div id="divShippingAddress">
+                                        <span id="NoAddressMessage" style="display:none;">Please save shipping address!!</span>
+                                        <iframe src='@Url.Action("Index", "ShippingAddress", new { CurrentAddressID = ViewBag.SelectedAddress })' class="iframdiv" frameborder="0" style="width: 100%; height: 265px; padding: 5px;"></iframe>
+                                        <input class="btn btn-warning" type="button" value="Continue >>" id="btnShippingContinue" style="margin-left: 10px;" />
+                                        <span id="NoDeliveryMessage" style="display:none;color:red">Home Delivery NOT AVAILABLE to the PINCODE of Selected Address! Please, Verify PINCODE again...!!!</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="frame" id="btnOrderDetails">
+                                <div class="heading">
+                                    Order Details
+                                    @*<button class="button mini-button" onclick="ReviewOrder()" style="float: right; width: 140px; background-color: rgba(128, 128, 128, 0.99); color: #eee; padding-top: 4px !important;">
+                                            REVIEW ORDER
+                                        </button>*@
+                                </div>
+                                <div class="content" id="divCartContent">
+                                    <div id="divCartDetailsShow" style="display:none;">
+                                        @*<a id="orderdetailsbutton" class="image-buttonnew icon-right" style="width: 100%;">Check Order Details</a>*@
+                                        <div id="orderdetails" style="background:#fff">
+
+                                        </div>
+                                        <input class="btn btn-warning" type="button" value="Continue >>" id="btnOrderDetailCartNext" style="display: none; margin-left: 10px;" />
+                                    </div>
+
+                                </div>
+                            </div>
+                            @*New delivery slot add tab start
+                                 <div class="frame" id="btnDeliverySlot">
+                                     <div class="heading">
+                                         Delivery Slot
+                                     </div>
+                                     <div class="content" id="divDeliverySlotContent" style="display:block!important;height:200px;">
+                                         <div id="divDeliverySlotShow" >
+                                             <div id="DeliverySlot" style="text-align: center;">
+                                                 <h5 class="successnew" style="padding:5px"><b>Select Preferred Delivery Schedule</b></h5>
+                                                 <table style="width: 80%; margin: auto;" >
+                                                     <tr>
+                                                         <th>Delivery Date</th>
+                                                         <th colspan="3" >Delivery Slot</th>
+                                                     </tr>
+                                                     <tr>
+                                                         <td style="background: rgba(223, 223, 223, 0.65);">30 Sep Tomorrow</td>
+                                                         <td class="passtime"> 9:30 AM - 12:00 PM</td>
+                                                         <td class="selectedtime"> 9:30 AM - 12:00 PM</td>
+                                                         <td> 9:30 AM - 12:00 PM</td>
+                                                     </tr>
+                                                     <tr>
+                                                         <td style="background: rgba(223, 223, 223, 0.65);">1 Oct Saturday</td>
+                                                         <td> 9:30 AM - 12:00 PM</td>
+                                                         <td> 9:30 AM - 12:00 PM</td>
+                                                         <td> 9:30 AM - 12:00 PM</td>
+                                                     </tr>
+                                                     <tr>
+                                                         <td style="background: rgba(223, 223, 223, 0.65);">2 Oct Sunday</td>
+                                                         <td> 9:30 AM - 12:00 PM</td>
+                                                         <td> 9:30 AM - 12:00 PM</td>
+                                                         <td> 9:30 AM - 12:00 PM</td>
+                                                     </tr>
+                                                     <tr>
+                                                         <td style="background: rgba(223, 223, 223, 0.65);">3 Oct Monday</td>
+                                                         <td> 9:30 AM - 12:00 PM</td>
+                                                         <td> 9:30 AM - 12:00 PM</td>
+                                                         <td> 9:30 AM - 12:00 PM</td>
+                                                     </tr>
+                                                 </table>
+                                             </div>
+                                             <input class="button warning" type="button" value="Continue >>" id="btnDeliverySlotNext" style="font-weight: 600; margin-left: 10px;" />
+                                         </div>
+
+                                     </div>
+                                 </div>
+                                New delivery slot add tab End*@
+                            <div class="frame" id="btnModeDetails">
+                                <div class="heading">Payment</div>
+                                @using (Html.BeginForm("CustomerPaymentProcess", "PaymentProcess", new { isExpressBuy = string.IsNullOrEmpty(Request.QueryString["IsExpressBuy"]) ? "false" : Request.QueryString["IsExpressBuy"] }))
+                                {
+                                    @Html.Hidden("SelectedAddress")
+                                    @Html.Hidden("IsOnlinePayment")
+                                    @Html.Hidden("CaptchaRefresh")
+                                    //Yashaswi
+                                    @Html.Hidden("CityId_")
+                                    @Html.Hidden("AreaId_")
+                                    @Html.Hidden("CityName_")
+                                    @Html.Hidden("AreaName_")
+                                    @Html.Hidden("PincodeName_")
+                                    //End
+
+                                    if (Model != null && Model.shoppingCartDetail != null)
+                                    {
+                                        @Html.Hidden("PayableAmount", Model.shoppingCartDetail.lShoppingCartOrderDetails.PayableAmount)
+                                    }
+                                    if (Model != null && Request.QueryString["checkOTP"] == null)
+                                    {
+                                        //.change by harshada (tejaswee)
+                                        //display:none.to hide div when page loads after click on place order
+
+
+                                        <div class="content" id="paymentdiv" style="margin-top:7px;height:auto">
+                                            <div id="divCaptchaCode" style="display:none">
+                                                <ul id="iddivleft" class="divleft">
+
+                                                    @{
+                                                        @*if(Model.shoppingCartDetail.lShoppingCartOrderDetails.PayableAmount>0)
+                                                            {
+                                                                    <li id="OP" class="Onlinepay1" onclick="DisplayView(this);"></li>
+                                                            }
+                                                                     else
+                                                                     {
+                                                                        <li id="OP" class="CashNCarryDisable disabled" onclick="DisplayView(this);"></li>
+                                                                     }*@
+                                                        var resultOnline1 = Model.PaymentModes.AvailablePaymentModeList.Contains("Net Banking");
+                                                        if (resultOnline1 == true)
+                                                        {
+                                                            <li id="OP" class="Onlinepay1" onclick="DisplayView(this);"></li>
+                                                        }
+                                                        var resultCOD1 = Model.PaymentModes.AvailablePaymentModeList.Contains("Cash On Delivery");
+                                                        @Html.Hidden("IsCOD", resultCOD1);
+                                                        if (resultCOD1 == true)
+                                                        {
+                                                            <li id="COD" class="COD" onclick="DisplayView(this);"></li>
+                                                        }
+                                                        else
+                                                        {
+                                                            @*<li id="COD" class="CODisable" onclick="DisplayView(this);"></li>*@
+                                                        }
+                                                        @*<li id="CC" class="CashNCarryDisable disabled" onclick="DisplayView(this);"></li>*@
+                                                    }
+
+                                                </ul>
+                                                @*Start Yashaswi 16-7-2018 Hide Catpcha*@
+                                                <div id="divCOD" class="divcapcha" style="display:none;">
+                                                    @*<iframe id="iframe1" src="@Url.Action("Index", "Captcha")" class="paymentimg">
+                                                            <img src='@Html.Partial("_Captcha") ' />
+                                                        </iframe><br />
+                                                        @Html.TextBox("captchaCode", null, new { @class = "captchaCode", maxLength = "8" })*@
+                                                    <br />
+                                                    @*<br />
+                                                        <br />
+                                                            <br />*@
+                                                    <button id="btnCompleteOrder" type="submit" value="Complete Order" class="btn btn-warning" style="margin-bottom:10px;">
+                                                        <span id="spnLoader" style="display:none;float:left" class="mif-spinner4 mif-ani-spin"></span>Complete Order
+                                                    </button>
+                                                    <br />
+                                                    @*<button id="btnRefreshCaptcha" onclick="RefreshCaptcha(event)" type="submit" class="btn btn-default" title="Refresh"><i class="fa fa-refresh"></i></button>*@
+                                                    <p class="Error" style="color:red;">  @ViewBag.ErrorMessage </p><br />
+                                                </div>
+                                                @*End Yashaswi 16-7-2018 Hide Catpcha*@
+                                                @*@if(Model.shoppingCartDetail.lShoppingCartOrderDetails.PayableAmount>0)
+                                                    {*@
+                                                @if (resultOnline1 == true)
+                                                {
+                                                    <div id="divOnlinePayment" class="divOnlinePayment">
+                                                        @*@if (Session["UID"].ToString() == "364" || Session["UID"].ToString() == "11502")
+                                                            {*@
+                                                        <div class="row">
+                                                            <div class="Div_avenue">
+                                                                @*<h4 class="pay-header">Select Payment Gateway</h4>*@
+                                                                @*<div class="border-box">
+                                                                    <button id="btnCCAvenue" type="submit" value="CCAvenue" style="float: left;">
+                                                                        <span id="spnLoaderMP" style="display:none;" class="mif-spinner4 mif-ani-spin"></span>
+                                                                        <img src="~/Content/Images/hdfcpayment.jpg" />    
+                                                                    </button>
+                                                                </div>*@
+                                                                <div class="border-box1">
+                                                                    <button id="btnMakePayment" type="submit" value="Make Payment">
+                                                                        <span id="spnLoaderMP" style="display:none;" class="mif-spinner4 mif-ani-spin"></span>
+                                                                        <img src="~/Content/Images/tags/PayU_biz.png" />
+                                                                    </button>
+                                                                </div>
+                                                                @*<div class="border-box1">
+                                                                        <button id="btnPayU_biz" type="submit" value="Make Payment">
+                                                                            <span id="spnLoaderMP" style="display:none;" class="mif-spinner4 mif-ani-spin"></span><img src="~/Content/Images/tags/PayU_biz.png" />
+                                                                        </button>
+                                                                    </div>*@
+                                                            </div>
+                                                        </div>
+                                                        @*}
+                                                            else
+                                                            {
+                                                                <img src="~/Content/Images/PayUPaymentProcess.png" />
+                                                                <button id="btnMakePayment" type="submit" value="Make Payment" class="button flotdivright warning" style="margin-left:3px;">
+                                                                    <span id="spnLoaderMP" style="display:none;" class="mif-spinner4 mif-ani-spin"></span>Make Payment
+                                                                </button>
+                                                            }*@
+                                                    </div>
+                                                }
+                                                @*}*@
+                                                <div id="divCashNCarry" style="display:none;">
+                                                    <span> Place Order</span>
+                                                </div>
+                                                <div id="divNetBanking" style="display:none;">
+                                                    <span> Place Order</span>
+                                                </div>
+                                            </div>
+
+                                        </div>
+
+                                    }
+                                }
+                            </div>
+                        </div>
+                        <br />
+                        <br />
+                    </div>
+                </div>
+            </div>
+        </div> <!-- End example -->
+    </div>
+    @Html.Hidden("ID")
+    @Html.Hidden("CaptchaWrong")
+    @if (Request.QueryString["checkout"] != null)
+    {
+        @Html.Hidden("hdnCheckout", Request.QueryString["checkout"])
+    }
+    else
+    {
+        @Html.Hidden("hdnCheckout")
+    }
+
+
+    @if (Request.QueryString["IsExpressBuy"] != null)
+    {
+        @Html.Hidden("hdnIsExpressBuy", Request.QueryString["IsExpressBuy"]);
+    }
+    else
+    {
+        @Html.Hidden("hdnIsExpressBuy");
+    }
+    @*Tejaswee Check for OTP*@
+    @*@if (Request.QueryString["checkOTP"] != null)
+        {
+
+            @Html.Hidden("hdnCheckOTP", Request.QueryString["checkOTP"])
+        }
+        else
+        {
+
+            @Html.Hidden("hdnCheckOTP", Request.QueryString["checkOTP"])
+        }*@
+
+    @Html.Hidden("hdnCheckOTP", "False")
+
+    @if (Session["UID"] != null)
+    {
+        @Html.Hidden("hdnUID", Convert.ToString(Session["UID"]))
+    }
+    else
+    {
+        @Html.Hidden("hdnUID")
+    }
+
+    <script type="text/javascript">
+
+        $(function () {
+
+            $("#btnShippingContinue").click(function () {
+
+                //alert(window.parent.$("[id*=SelectedAddress]").val());
+                var selectedAddress = window.parent.$("[id*=SelectedAddress]").val();
+                if (selectedAddress != "") {
+                    var isExpressBuy = $("#hdnIsExpressBuy").val();
+                    //Yashaswi
+                    var selectedArea = localStorage.getItem("AreaId");
+                    // this code added to check pin code
+                    $.ajax({
+                        type: "POST",
+                        //url: "CheckSelectedPincode",
+                        url: "@Url.Action("CheckSelectedPincode", "PaymentProcess")",
+                        data: "{ addressID: '" + selectedAddress + "',IsExpressBuy:'" + isExpressBuy + "',selectedArea:'" + selectedArea + "'}",//Yashaswi
+                        contentType: "application/json; charset=utf-8",
+                        dataType: "json",
+                        async: true,
+                        cache: false,
+                        success: function (msg) {
+
+                            if (msg == 'false') {
+
+                                $("#NoDeliveryMessage").text("Home Delivery NOT AVAILABLE to the PINCODE of Selected Address! Please, Verify PINCODE again...!!!");
+                                $("#NoDeliveryMessage").css("display", "block");
+                                //Yashaswi
+                                modalFromPaymentProcess.style.display = "block";
+                                $("#cancelPayProcessWarning").css("pointer-events", "auto");
+                                $("#confirmPayProcessWarning").css("pointer-events", "auto");
+                                var AreaName_ = window.parent.$("[id*=AreaName_]").val();
+                                var PincodeName_ = window.parent.$("[id*=PincodeName_]").val();
+                                var CityName_ = window.parent.$("[id*=CityName_]").val();
+                                $("#spnewAreaPayProc").text(AreaName_ + ' ,' + PincodeName_ + ' ,' + CityName_);
+                                //End
+                                return;
+                            }
+                            else {
+                                //Yashaswi
+                                modalFromPaymentProcess.style.display = "none";
+                                //End
+                                if (selectedAddress != "") {
+                                    //ShowOrderDetails();
+                                    //ShowModeDetails();
+                                    $("#btnModeDetails").addClass('disabled');
+                                    //$("#btnOrderDetailCartNext").removeAttr('disabled');
+                                    $("#NoAddressMessage").css("display", "none");
+                                    $("divCartDetailsShow").css("display", "block");
+                                    //$("#orderdetails").load('Url.Action("_OrderDetailCart")');
+                                    $("#btnLoginDetails").addClass('active');
+                                    $("#btnShippingDetails").removeAttr('disabled');
+                                    $("#btnShippingDetails").addClass('active');
+                                    // $("#btnOrderDetails").removeAttr('disabled');
+                                    $("#btnOrderDetails").removeClass('disabled');
+                                    //$("#btnOrderDetails").addClass('active');
+
+                                    $("#btnOrderDetailCartNext").css("display", "block");
+                                    $("#NoDeliveryMessage").css("display", "none");
+                                    ShowOrderDetails();
+                                    //$('#orderdetails').load('/PaymentProcess/LoadCart?IsExpressBuy=' + isExpressBuy);
+                                    var orderUrl = '@Url.Action("LoadCart", "PaymentProcess", new { IsExpressBuy = "_IsExpressBuy_" })';
+                                    $('#orderdetails').load(orderUrl.replace("_IsExpressBuy_", isExpressBuy));
+                                }
+                                else {
+                                    $("#NoAddressMessage").css("display", "block");
+                                }
+                            }
+                        },
+                        error: function (x, e) {
+                            // alert("unable to Retrive Mobile No ");
+                            ///New Yashaswi 20/6/2018
+                            $("#NoDeliveryMessage").text("Home Delivery NOT AVAILABLE to the PINCODE of Selected Address! Please, Verify PINCODE again...!!!");
+                            $("#NoDeliveryMessage").css("display", "block");
+                            //Yashaswi
+                            modalFromPaymentProcess.style.display = "block";
+                            $("#cancelPayProcessWarning").css("pointer-events", "auto");
+                            $("#confirmPayProcessWarning").css("pointer-events", "auto");
+                            var AreaName_ = window.parent.$("[id*=AreaName_]").val();
+                            var PincodeName_ = window.parent.$("[id*=PincodeName_]").val();
+                            var CityName_ = window.parent.$("[id*=CityName_]").val();
+                            $("#spnewAreaPayProc").text(AreaName_ + ' ,' + PincodeName_ + ' ,' + CityName_);
+                            //End
+                        }
+                    });
+                }
+                else {
+                    alert("Address Not Found! Please Add New Address");
+                }
+            });
+
+
+            $("#btnOrderDetails").click(function (e) {
+                $("#btnModeDetails").addClass('disabled');
+
+                var isExpressBuy = $("#hdnIsExpressBuy").val();
+
+                var orderUrl = '@Url.Action("LoadCart", "PaymentProcess", new { IsExpressBuy = "_IsExpressBuy_" })';
+
+                $('#orderdetails').load(orderUrl.replace("_IsExpressBuy_", isExpressBuy));
+                //alert(orderUrl.replace("_IsExpressBuy_", isExpressBuy));
+                ShowOrderDetails();
+                $("#btnOrderDetailCartNext").css("display", "block");
+                e.stopPropagation();
+
+            });
+
+
+        });
+
+        //======================= Snehal (30-10-2015) ============================
+        function SetModeForOutstation() {
+            var selectedAddress = window.parent.$("[id*=SelectedAddress]").val();
+
+            $.ajax({
+                type: "POST",
+                url: '@Url.Action("IsOutstationDelivery", "PaymentProcess")',
+                data: "{CustaddrID: '" + selectedAddress + "'}",
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                async: true,
+                cache: false,
+                success: function (msg) {
+                    $("#divCartDetailsShow").removeAttr("style");
+                    $("#divCartDetailsShow").css("display", "none");
+                    $("#divCaptchaCode").removeAttr("style");
+                    $("#divCaptchaCode").css("display", "block");
+                    if (msg == 'false') {
+                        // alert("h1");
+                        $("#btnOrderDetails").removeClass("divactives").addClass("divcomplete");
+
+                        $("#COD").addClass('CODisable');
+                        $("#CC").addClass('CashNCarryDisable');
+                        $("#OP").removeClass('CODisable');
+                        $("#divCashNCarry").hide();
+                        $("#divCOD").hide();
+                        $("#divNetBanking").hide();
+                        $("#divOnlinePayment").show();
+                        return;
+                    }
+                    //Check for 0 payable amount
+                    var PayableAmount = window.parent.$("[id*=PayableAmount]").val();
+                    if (parseInt(PayableAmount) == 0) {
+                        //  alert("h2");
+                        $("#OP").addClass('CODisable');
+                        $("#CC").addClass('CashNCarryDisable');
+                        $("#COD").addClass('CODisable');
+                        $("#divCashNCarry").hide();
+                        //Yashaswi 02-02-2019 To hide payment mode selection div if amt is 0
+                        $("#iddivleft").addClass('hidedivleft');
+
+                        $("#divCOD").show();
+                        $("#divNetBanking").hide();
+                        $("#divOnlinePayment").hide();
+                        return;
+                    }
+                    else {
+                        var Subscription = "@ViewBag.Subscription";
+                        var Corporategift = "@ViewBag.CorporateGift";
+                        if ($("#IsCOD").val() && Subscription != 2 && Corporategift != 2) {
+                            $("#COD").removeClass('CODisable');
+                        }
+                    }
+                },
+                error: function (x, e) {
+                    //alert("12121210");
+                }
+            });
+
+            /// end
+        }
+
+    </script>
+
+    <style type="text/css">
+        .selected {
+            background: #60A917 none repeat scroll 0% 0% !important;
+            color: #FFF !important;
+            border-color: #60A917 !important;
+        }
+
+        .unSelected {
+            padding: 0px 1rem;
+            height: 2.125rem;
+            text-align: center;
+            vertical-align: middle !important;
+            background-color: #FFF !important;
+            border: 1px solid #D9D9D9 !important;
+            color: #262626 !important;
+            cursor: pointer;
+            display: inline-block;
+            outline: medium none;
+            font-size: 0.875rem;
+            line-height: 1;
+            margin: 0.15625rem 0px;
+            position: relative;
+        }
+
+        #iframe1 {
+            width: 300px;
+            height: 100px;
+            border: 1px;
+            margin-top: 10px;
+        }
+
+        #captchaCode {
+            height: 32px;
+            border: 1px solid rgba(128, 128, 128, 0.31);
+            width: 52%;
+            padding-left: 10px;
+            float: left;
+            margin-bottom: 10px;
+        }
+
+        #iframe1 .paymentimg {
+            width: 200px;
+            border: 1px;
+        }
+
+        #mask {
+            width: 100%;
+            height: 100%;
+            position: fixed;
+            left: 0;
+            top: 0;
+            background: rgba(0,0,0,0.7);
+            z-index: 10000;
+        }
+    </style>
+
+    <script type="text/javascript">
+        $(function () {
+            $("#btnCompleteOrder").click(function () {
+                //alert("hello");
+                $("#spnLoader").css("display", "block");
+                $(this).css("cursor", "not-allowed");
+                // $(this).attr('disabled', 'disabled');
+                $(".Onlinepay").css("pointer-events", "none");
+                // $(".Onlinepay").addClass("OPDisable");
+                $(".Onlinepay").attr('disabled', 'disabled');
+                //$(".Onlinepay").css("cursor", "not-allowed");
+                $("#mask").show();
+            });
+
+            $("#btnMakePayment").click(function () {
+                $("#spnLoaderMP").css("display", "block");
+                $(this).css("cursor", "not-allowed");
+                // $(this).attr('disabled', 'disabled');
+                //$(".COD").addClass("OPDisable");
+                $(".COD").css("pointer-events", "none");
+                $(".COD").attr('disabled', 'disabled');
+                $("#mask").show();
+
+            });
+        });
+        $(document).ready(function () {
+            //yashaswi
+            $("#cancelPayProcessWarning").click(function () {
+                modalFromPaymentProcess.style.display = "none";
+            });
+            $("#confirmPayProcessWarning").click(function () {
+                var CityId_ = window.parent.$("[id*=CityId_]").val();
+                //var PincodeName = window.parent.$("[id*=PincodeName_]").val();
+                modalFromPaymentProcess.style.display = "none";
+                modal.style.display = "block";
+                $("#myModal").css("pointer-events", "auto");
+                $("#btnCancelArea").css("pointer-events", "auto");
+                $("#btnContinueArea").css("pointer-events", "auto");
+                $("#ddlSelectCityI").val(CityId_);
+                $("#ddlSelectCityI").change();
+                //$("#txtSelectPincodeI").val(PincodeName);
+                //$("#txtSelectPincodeI").autocomplete("search", PincodeName);
+
+            });
+            //end
+        });
+    </script>
+    @*Added by Rumana on 16-05-2019 for Disabling next click on HDFC and PayUbiz button*@
+    <script type="text/javascript">
+        $(window).on('beforeunload', function () {
+            $("#btnCCAvenue").prop("disabled", "disabled");
+            $("#btnMakePayment").prop("disabled", "disabled");
+        });
+    </script>
+</body>

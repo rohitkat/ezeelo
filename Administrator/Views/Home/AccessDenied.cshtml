@@ -1,0 +1,115 @@
+﻿
+@{
+    ViewBag.Title = "AccessDenied";
+}
+<link href="~/Content/css/rotating-heads.css" rel="stylesheet" />
+<script src="~/Content/js/jquery-1.9.1.min.js"></script>
+<script src="~/Content/js/js/HeadImage.js"></script>
+<style type="text/css">
+    body {
+        background-color:#fff;
+    }
+    .accessDen {
+        width:90%;
+    }
+     .accessDen h2 {
+        text-align: center;
+        margin-top: 30px;
+    }
+        .accessDen h2 span {
+            font-size: 24px;
+            font-family: Calibri;
+            color: #c80103;
+        }
+    .accessLink {
+        font-size: 18px;
+        font-family: Calibri;
+        text-align: center;
+        color: #02688e;
+        margin-top: 25px;
+    }
+</style>
+<div class="accessDen">
+    <div class="circleStat">
+        @if (ViewBag.returnurl != null)
+{
+    <h2><span> You are not Authorised to Access</span></h2>
+            <label class="accessLink">@ViewBag.returnurl</label>
+        }
+    </div>
+    <div class="content-wrapper">
+ 
+            <div class="column-1-3">
+                
+                <div class="image-holder one">
+                    @*<img class="circle" src="img/circle.png" />*@
+                    <img class="head-image up" src="~/Content/Images/up.jpg" />
+                    <img class="head-image up-left" src="~/Content/Images/upleft.jpg" />
+                    <img class="head-image left" src="~/Content/Images/left.jpg" />
+                    <img class="head-image down-left" src="~/Content/Images/downleft.jpg" />
+                    <img class="head-image down" src="~/Content/Images/down.jpg" />
+                    <img class="head-image down-right" src="~/Content/Images/downright.jpg" />
+                    <img class="head-image right" src="~/Content/Images/right.jpg" />
+                    <img class="head-image up-right" src="~/Content/Images/upright.jpg" />
+                    <img class="head-image front" src="~/Content/Images/front.jpg" />
+                </div>
+            </div>
+
+        </div>
+        </div>
+<script type="text/javascript">
+
+    /* Declaring the global variables */
+    var mouseX;
+    var mouseY;
+    var imageOne;
+    var imageTwo;
+    var imageThree;
+    var imageFour;
+    var imageFive;
+
+    /* Calling the initialization function */
+    $(init);
+
+    /* The images need to re-initialize on load and on resize, or else the areas
+     * where each image is displayed will be wrong. */
+    $(window).load(init);
+    $(window).resize(init);
+
+    /* Setting the mousemove event caller */
+    $(window).mousemove(getMousePosition);
+
+    /* This function is called on document ready, on load and on resize
+     * and initiallizes all the images */
+    function init() {
+
+        /* Instanciate the mouse position variables */
+        mouseX = 0;
+        mouseY = 0;
+
+        /* Instanciate a HeadImage class for every image */
+        imageOne = new HeadImage("one");
+        imageTwo = new HeadImage("two");
+        imageThree = new HeadImage("three");
+        imageFour = new HeadImage("four");
+        imageFive = new HeadImage("five");
+    }
+
+    /* This function is called on mouse move and gets the mouse position.
+     * It also calls the HeadImage function to display the correct image*/
+    function getMousePosition(event) {
+
+        /* Setting the mouse position variables */
+        mouseX = event.pageX;
+        mouseY = event.pageY;
+
+        /*Calling the setImageDirection function of the HeadImage class
+         * to display the correct image*/
+        imageOne.setImageDirection();
+        imageTwo.setImageDirection();
+        imageThree.setImageDirection();
+        imageFour.setImageDirection();
+        imageFive.setImageDirection();
+    }
+
+</script>

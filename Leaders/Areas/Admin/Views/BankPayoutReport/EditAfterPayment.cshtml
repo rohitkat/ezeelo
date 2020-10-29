@@ -1,0 +1,120 @@
+﻿@model ModelLayer.Models.LeadersPayoutRequest
+
+@{
+    ViewBag.Title = "EditAfterPayment";
+    if (Session["RoleName"] != null && Session["RoleName"].ToString() == "accounts")
+    {
+        Layout = "~/Views/Shared/_AccountsLayout.cshtml";
+    }
+    else
+    {
+        Layout = "~/Views/Shared/_LeadersLayout.cshtml";
+    }
+}
+
+@if (TempData["Alert"] != null)
+{
+    <div class="alert alert-warning alert-dismissible">
+        <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+        <strong>Warning!!</strong><h5>Please Select Payment Status</h5>
+    </div>
+}
+
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+
+    <div class="card">
+
+        <div class="card-header"><strong>Update Payment Status</strong><small> Form</small></div>
+        <div class="card-body card-block">
+            <hr />
+            @Html.ValidationSummary(true)
+            @Html.HiddenFor(model => model.UserLoginID)
+
+
+            <div class="form-group">
+                <div class="col-md-2">
+                    Transaction Date
+
+                </div>
+                <div class="col-md-10">
+                    @Html.TextBoxFor(model => model.TransactionDate, new { @readonly = "readonly" })
+                    @Html.ValidationMessageFor(model => model.TransactionDate)
+                </div>
+
+
+
+            </div>
+            <br />
+            <div class="form-group">
+                <div class="col-md-2">
+                    Payment Status
+
+                </div>
+                <div class="col-md-10">
+                    @Html.DropDownListFor(x => x.PaymentStatus, new SelectListItem[]{
+                    new SelectListItem() {Text = "Select", Value="0"},
+                    new SelectListItem() {Text = "Pending", Value="1"},
+                    new SelectListItem() {Text = "Done", Value="2"},
+              
+                new SelectListItem() {Text = "Decline", Value="4"}})
+
+                    @*@Html.EditorFor(model => model.PaymentStatus)*@
+                    @Html.ValidationMessageFor(model => model.PaymentStatus)
+                </div>
+
+
+            </div>
+            <br />
+            <div class="form-group">
+                <div class="col-md-2">
+                    Transaction ID
+
+                </div>
+                <div class="col-md-10">
+                    @Html.EditorFor(model => model.TransactionID)
+                    @Html.ValidationMessageFor(model => model.TransactionID)
+                </div>
+
+
+            </div>
+            <br />
+            <div class="form-group">
+
+                <div class="col-md-2">
+                    Remark
+
+                </div>
+                <div class="col-md-10">
+                    @Html.TextAreaFor(model => model.Remark)
+                    @Html.ValidationMessageFor(model => model.Remark)
+                </div>
+
+
+            </div>
+
+            <div class="form-group">
+                <div class="col-md-offset-2 col-md-10">
+                    <input type="submit" value="Save" class="btn btn-primary" />
+                </div>
+            </div>
+        </div>
+    </div>
+}
+<div>
+    @Html.ActionLink("Back to List", "Index")
+</div>
+
+
+<script>
+    $(document).ready(function () {
+        $("#TransactionDate").datepicker();
+        // $("#eDate").datepicker();
+
+    });
+</script>
+
+
+

@@ -1,0 +1,210 @@
+﻿@model ModelLayer.Models.DeliveryPartner
+
+@{
+    Layout = "~/Views/Shared/_LayoutPartial.cshtml";
+}
+<style>
+    /*select {
+        width: 60px;
+    }*/
+
+    textarea {
+        width: 50%;
+        height: 50px;
+    }
+</style>
+<div class="widget-content">
+    @using (Html.BeginForm())
+    {
+        @Html.AntiForgeryToken()
+
+        <div class="form-horizontal">
+            @Html.ValidationSummary(true)
+
+            <div class="control-group">
+                <span class="control-label">Godown Address</span>
+                <div class="controls">
+                    @Html.EditorFor(model => model.GodownAddress)
+                    @Html.ValidationMessageFor(model => model.GodownAddress)
+                </div>
+            </div>
+
+            <div class="control-group">
+                <span class="control-label">Pincode</span>
+                <div class="controls">
+                    @Html.TextBox("Pincode", null, new { @id = "Pincode", @class = "form-control-Widout-block", @placeholder = "Enter Pincode", @onkeypress = "return isValidPincode(event)" })
+                    <img id="Pincode_loading" src="~/Content/Images/ajax_loader.gif" style="width: 30px; height: 30px; display: none" />
+                    <div id="divPincodeError" style="width:400px; display: none; padding:5px" class="alert-danger focused">  </div>
+                </div>
+            </div>
+            <div id="divAddress">
+                @*to load Address Details*@
+            </div>
+
+            <div class="control-group">
+                <span class="control-label">Service Number</span>
+                <div class="controls">
+                    @Html.EditorFor(model => model.ServiceNumber)
+                    @Html.ValidationMessageFor(model => model.ServiceNumber)
+                </div>
+            </div>
+
+            <div class="control-group">
+                <span class="control-label">Service Level</span>
+                <div class="controls">
+                    @Html.EditorFor(model => model.ServiceLevel)
+                    @Html.ValidationMessageFor(model => model.ServiceLevel)
+                </div>
+            </div>
+
+            <div class="control-group">
+                <span class="control-label">Contact Person</span>
+                <div class="controls">
+                    @Html.EditorFor(model => model.ContactPerson)
+                    @Html.ValidationMessageFor(model => model.ContactPerson)
+                </div>
+            </div>
+
+            <div class="control-group">
+                <span class="control-label">Mobile</span>
+                <div class="controls">
+                    @Html.EditorFor(model => model.Mobile)
+                    @Html.ValidationMessageFor(model => model.Mobile)
+                </div>
+            </div>
+
+            <div class="control-group">
+                <span class="control-label">Email</span>
+                <div class="controls">
+                    @Html.EditorFor(model => model.Email)
+                    @Html.ValidationMessageFor(model => model.Email)
+                </div>
+            </div>
+
+            <div class="control-group">
+                <span class="control-label">Landline</span>
+                <div class="controls">
+                    @Html.EditorFor(model => model.Landline)
+                    @Html.ValidationMessageFor(model => model.Landline)
+                </div>
+            </div>
+
+            <div class="control-group">
+                <span class="control-label">FAX</span>
+                <div class="controls">
+                    @Html.EditorFor(model => model.FAX)
+                    @Html.ValidationMessageFor(model => model.FAX)
+                </div>
+            </div>
+
+            <div class="control-group">
+                <span class="control-label">Vehicle Type</span>
+                <div class="controls">
+                    @Html.DropDownList("VehicleTypeID", String.Empty)
+                    @Html.ValidationMessageFor(model => model.VehicleTypeID)
+                </div>
+            </div>
+
+            <div class="control-group">
+                <span class="control-label">Opening Time</span>
+                <div class="controls">
+                    @*@Html.EditorFor(model => model.OpeningTime)
+                    @Html.ValidationMessageFor(model => model.OpeningTime)*@
+                    @Html.DropDownList("OpeningTime", null, new { style = "width:104px;" })
+                    @Html.ValidationMessageFor(model => model.OpeningTime)
+                    <span class="add-on"><i class="icon-time"></i></span>
+                </div>
+            </div>
+
+            <div class="control-group">
+                <span class="control-label">Closing Time</span>
+                <div class="controls">
+                    @*@Html.EditorFor(model => model.ClosingTime)
+                    @Html.ValidationMessageFor(model => model.ClosingTime)*@
+                    @Html.DropDownList("ClosingTime", null, new { style = "width:104px;" })
+                    @Html.ValidationMessageFor(model => model.ClosingTime)
+                    <span class="add-on"><i class="icon-time"></i></span>
+                </div>
+            </div>
+
+            <div class="control-group">
+                <span class="control-label">Weekly Off</span>
+                <div class="controls">
+                    @*@Html.EditorFor(model => model.WeeklyOff)*@
+                    @Html.DropDownList("WeeklyOff", null, new { style = "width:104px;" })
+                    @Html.ValidationMessageFor(model => model.WeeklyOff)
+                </div>
+            </div>
+
+            <div class="control-group">
+                <div style="float:right">
+                    <input type="submit" value="Save" class="btn btn-danger" />
+                </div>
+            </div>
+        </div>
+    }
+    </div>
+@section Myscripts{
+    <script type="text/javascript">
+        //----------------------------------------------------------------------To GetAddress From Pincode---//
+
+        var lPincode = $('#Pincode').val()
+
+        $('#Pincode').bind('input propertychange', function () {
+            var lPincode = $('#Pincode').val()
+            $('#divPincodeError').hide();
+
+            if (lPincode.length == 6) {
+                $('#Pincode_loading').show();
+                $.ajax({
+                    url: '@Url.Action("GetAddress", "DeliveryPartner")?Pincode=' + lPincode,
+                    type: "GET",
+                    success: function (result) {
+                        $('#divAddress').html(result);
+                        $('#Pincode_loading').hide();
+                        $('#divPincodeError').hide();
+                    },
+                    error: function (data) {
+                        //alert('Pincode : ' + lPincode + ' Dose Not Exist, please Contact to ADMIN');
+                        $('#divAddress').empty();
+                        $('#Pincode_loading').hide();
+                        $('#divPincodeError').show();
+                        $('#divPincodeError').html('Pincode [' + lPincode + '] dose not exist, please Contact to ADMIN');
+                        $('#Pincode').val('');
+                    }
+                });
+            }
+        });
+
+
+        function isValidMobile(evt) {
+            var charCode = (evt.which) ? evt.which : event.keyCode
+            var l = $('#RegMobile').val().length + 1;
+
+            if (charCode > 31 && (charCode < 48 || charCode > 57))
+                return false;
+
+            if (l > 10 && charCode != 8) {
+                return false;
+            }
+
+            return true;
+        }
+
+        function isValidPincode(evt) {
+            var charCode = (evt.which) ? evt.which : event.keyCode
+            var l = $('#Pincode').val().length + 1;
+
+            if (charCode > 31 && (charCode < 48 || charCode > 57))
+                return false;
+
+            if (l > 6 && charCode != 8) {
+                return false;
+            }
+
+            return true;
+        }
+
+
+    </script>
+}

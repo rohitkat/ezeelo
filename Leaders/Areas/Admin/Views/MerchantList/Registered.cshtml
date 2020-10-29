@@ -1,0 +1,121 @@
+﻿@model IEnumerable<ModelLayer.Models.Merchant>
+
+@{
+    ViewBag.Title = "REgistered Merchant's";
+    Layout = "~/Views/Shared/_LeadersLayout.cshtml";
+}
+
+<link rel="stylesheet" href="http://cdn.datatables.net/1.10.2/css/jquery.dataTables.min.css" />
+<script type="text/javascript" src="http://cdn.datatables.net/1.10.2/js/jquery.dataTables.min.js"></script>
+
+<script src="~/Scripts/MerchantMenuOpenup.js"></script>
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('#tblData').DataTable();
+    });
+</script>
+<style>
+    th {
+        cursor: pointer !important;
+    }
+</style>
+@if (TempData["Result"] != null)
+{
+    <script>
+        alert("@TempData["Result"]");
+    </script>
+}
+@*<link href="//cdn.datatables.net/1.10.19/css/jquery.dataTables.min.css" rel="stylesheet" />
+    <link href="//cdn.datatables.net/fixedcolumns/3.2.6/css/fixedColumns.dataTables.min.css" rel="stylesheet" />
+    <script src="//cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
+    <script src="//cdn.datatables.net/fixedcolumns/3.2.6/js/dataTables.fixedColumns.min.js"></script>*@
+<div class="container">
+    <div class="card">
+        <div class="card-header">
+            <strong>Registered Merchant List</strong>
+        </div>
+        <div class="card-body card-block" style="overflow:auto">
+            <table id="tblData" class="table table-striped table-bordered bootstrap-datatable datatable dataTable" width="100%">
+                <thead>
+                    <tr>
+                        <th>
+                            Sr.No
+                        </th>
+                        <th>
+                            Leader's Contact No
+                        </th>
+                        <th>
+                            Shop Name
+                        </th>
+                        <th>
+                            Contact Person
+                        </th>
+                        <th>
+                            Contact Number
+                        </th>
+                        <th>
+                            City
+                        </th>
+                        <th>
+                            Status
+                        </th>
+                        <th>
+                            Remark
+                        </th>
+                        <th></th>
+                    </tr>
+                </thead>
+                @{ int i = 1;}
+                @foreach (var item in Model)
+                {
+                    <tr style=@((item.Status_ != null && item.Status_.ToLower() == "reject")?"background-color:#fee0e0":"")>
+                        <td>
+                            @i
+                            @{ i = i + 1;}
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.LeaderContactNo)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.FranchiseName)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.ContactPerson)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.ContactNumber)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.CityDetail.Name)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Status)
+                        </td>
+                        <td>
+                            @if (item.Status_ != null && item.Status_.ToLower() == "reject")
+                            {
+                                <span style="font-weight:bold;color:red;white-space: pre-line">
+                                    Rejected
+                                </span>
+                            }
+                            <span style="font-weight:bold;color:brown;white-space: pre-line">
+                                @Html.DisplayFor(modelItem => item.Remark)
+                            </span>
+
+                        </td>
+                        <td>
+                            @Html.ActionLink("View", "Details", new { id = item.Id }, new { @class = "btn btn-warning btn-sm" })
+                            @if (item.IsKYCComplete)
+                            {
+                                @Html.ActionLink("KYC", "KYC", new { Id = item.Id }, new { @class = "btn btn-warning btn-sm", style = "background-color:#956ddc;border-color:#673AB7;color:white" })
+                                @*<a target="_blank" href="@System.Configuration.ConfigurationManager.AppSettings["EZEELO_CUSTOMER_URL"]/merchant/preview?id=@item.Id" class="btn btn-success btn-sm">Preview</a>*@
+                            }
+                        </td>
+                    </tr>
+                }
+
+            </table>
+        </div>
+    </div>
+</div>
+

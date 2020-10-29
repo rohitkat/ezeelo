@@ -1,0 +1,112 @@
+﻿@model ModelLayer.Models.ViewModel.BBPDashboardViewModel
+@{
+    /**/
+
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_LeadersLayout.cshtml";
+}
+<script src="~/Scripts/BBPMenuOpenup.js"></script>
+@if (Session["RoleName"].ToString() == "superadmin")
+{
+    using (Html.BeginForm("Index", "BBPDashboard", null, FormMethod.Post, new { id = "bbpDashboard" }))
+    {
+        <div class="form-group" style="float:right">
+            @Html.DropDownListFor(m => m.PayoutDateFilterID, Model.PayoutDateFilter, "Select Payout Week", new { @class = "form-control" })
+        </div>
+    }
+    <h3>Business Booster Plan Dashboard</h3>
+    <br />
+    <br />
+    <div class="col-sm-4 col-lg-2">
+        <div class="card text-white bg-flat-color-4">
+            <div class="card-body pb-1">
+                <div class="dropdown float-right">
+
+                </div>
+                <h4 class="mb-0" style="font-weight:bold">
+                    <span class="count">@Model.TotalSubscriber</span>
+                </h4>
+                <a  target="_blank" href="@Url.Action("BBPSubscribers", "BBPReports",new {PayoutDateFilterID = Session["PayoutDateFilterID"] })"><p class="text-light"><br />Total no. of <b>Subscriber</b></p></a>
+                <div class="chart-wrapper px-3" style="height:20px;" height="70">
+                    <canvas id="widgetChart4"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-sm-4 col-lg-2">
+        <div class="card text-white bg-flat-color-6" style="background: #2cc863 !important;">
+            <div class="card-body pb-1">
+                <div class="dropdown float-right">
+
+                </div>
+                <h4 class="mb-0" style="font-weight:bold">
+                    <span class="count">@Model.TotalActiveSubscriber</span>
+                </h4>
+                <a  target="_blank" href="@Url.Action("BBPSubscribers", "BBPReports",new {PayoutDateFilterID = Session["PayoutDateFilterID"],Search="Active" })"><p class="text-light">Total no. of <b>Active Subscriber</b></p></a>
+                <div class="chart-wrapper px-3" style="height:20px;" height="70">
+                    <canvas id="widgetChart4"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-sm-4 col-lg-2">
+        <div class="card text-white bg-flat-color-2">
+            <div class="card-body pb-1">
+                <div class="dropdown float-right">
+
+                </div>
+                <h4 class="mb-0" style="font-weight:bold">
+                    <span class="count">@Model.TotalOrder</span>
+                </h4>
+                <a  target="_blank" href="@Url.Action("BBPOrders", "BBPReports",new {PayoutDateFilterID = Session["PayoutDateFilterID"] })"><p class="text-light"><br />Total no. of <b>Order</b></p></a>
+                <div class="chart-wrapper px-3" style="height:20px;" height="70">
+                    <canvas id="widgetChart4"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-sm-4 col-lg-2">
+        <div class="card text-white bg-flat-color-6" style="background: #bd3359 !important;">
+            <div class="card-body pb-1">
+                <div class="dropdown float-right">
+
+                </div>
+                <h4 class="mb-0" style="font-weight:bold">
+                    <span class="count">@Model.TotalDeliveries</span>
+                </h4>
+                <a  target="_blank" href="@Url.Action("BBPOrders", "BBPReports",new {PayoutDateFilterID = Session["PayoutDateFilterID"],Search="Delivered"})"><p class="text-light">Total no. of <b>Delivered Order</b></p></a>
+                <div class="chart-wrapper px-3" style="height:20px;" height="70">
+                    <canvas id="widgetChart4"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-sm-4 col-lg-2">
+        <div class="card text-white bg-flat-color-3">
+            <div class="card-body pb-1">
+                <div class="dropdown float-right">
+
+                </div>
+                <h4 class="mb-0" style="font-weight:bold">
+                    <span class="count">@Model.PendingDeliveries</span>
+                </h4>
+                <a  target="_blank" href="@Url.Action("BBPOrders", "BBPReports",new {PayoutDateFilterID = Session["PayoutDateFilterID"],Search="Placed" })"><p class="text-light">Total no. of <b>Placed Order &nbsp; &nbsp;</b></p></a>
+                <div class="chart-wrapper px-3" style="height:20px;" height="70">
+                    <canvas id="widgetChart4"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+<script>
+    $(document).ready(function () {
+        $("#PayoutDateFilterID").change(function () {
+            $("#bbpDashboard").submit();
+        });
+    })
+</script>

@@ -1,0 +1,165 @@
+﻿@model ModelLayer.Models.ViewModel.MerchantReport
+
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_LeadersLayout.cshtml";
+}
+
+<link href="//cdn.datatables.net/1.10.19/css/jquery.dataTables.min.css" rel="stylesheet" />
+<script src="//cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
+<script src="~/Scripts/MerchantMenuOpenup.js"></script>
+<style>
+    table {
+        border-collapse: separate;
+        border-spacing: 15px;
+    }
+
+    .nav-link {
+        color: #007bff !important;
+    }
+
+    a.nav-link.active.show {
+        color: black !important;
+    }
+
+    popup {
+        margin-left: -220px;
+        position: fixed;
+        width: 200px;
+        word-break: break-all;
+        box-shadow: 4px -5px 6px black;
+        border-radius: 10px;
+        padding: 5px;
+    }
+
+    active {
+        background-color: #90fa90
+    }
+
+    inactive {
+        background-color: #f86c6c
+    }
+</style>
+   `
+<script>
+    $(document).ready(function () {
+        $("#FromDate").datepicker();
+        $("#ToDate").datepicker({});
+        $("#btnExport").click(function () {
+            window.location = "/admin/MerchantReport/ExportToExcel_RatingReport";
+        })
+    });
+</script>
+
+@if (TempData["Result"] != null)
+{
+    <script>
+    alert("@TempData["Result"]");
+    </script>
+}
+<div class="container">
+    <div id="progress" class="modal">
+        <div class="center">
+            <img src="~/img/ajax-loading-gif-transparent-background-8.gif" />
+        </div>
+    </div>
+
+    <div class="card" id="maindiv">
+        <div class="card-header"><strong>Merchant Rating/Review Report </strong></div>
+        <div class="card-body card-block">
+            @using (Html.BeginForm("RatingReport", "MerchantReport"))
+            {
+                @Html.AntiForgeryToken()
+                <table>
+                    <tr>
+                        <td>
+                            @Html.TextBoxFor(model => model.FromDate, Model.FromDate.ToString("MM/dd/yyyy"), new { @class = "form-control", style = "width:120px" })
+                            @Html.HiddenFor(model => model.FromDate)
+                        </td>
+                        <td>
+                            @Html.TextBoxFor(model => model.ToDate, Model.ToDate.ToString("MM/dd/yyyy"), new { @class = "form-control", style = "width:120px" })
+                            @Html.HiddenFor(model => model.ToDate)
+                        </td>
+                        <td>
+                            @Html.DropDownListFor(m => m.MerchantID, Model.MerchantList, "Select Merchant/Shop", new { @class = "form-control" })
+                        </td>
+                        <td>
+                            <input id="btnGo" type="submit" value="Go" name="Go" class="btn btn-info" />
+                        </td>
+                        <td>
+                            <input id="btnSave" type="submit" value="Save" name="Save" class="btn btn-success" />
+                        </td>
+                        <td>
+                            <input id="btnExport" type="button" value="Export To Excel" class="btn btn-warning" />
+                        </td>
+                    </tr>
+                </table>
+
+                if (Model != null)
+                {
+                    <div style="max-width:1000px;overflow:auto">
+                        <table id="tblData" class="table table-bordered table-striped table-condensed display" width="100%">
+                            <thead>
+                                <tr>
+                                    <th>Select All<input type="checkbox" id="checkALL" /></th>
+                                    <th>FranchiseName</th>
+                                    <th>City</th>
+                                    <th>UserLoginId</th>
+                                    <th>Name</th>
+                                    <th>Rating</th>
+                                    <th>Review</th>
+                                    <th>CreateDate</th>
+
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @{ var i = 0; }
+                                @if (Model.ratingReviewLists.Count != 0)
+                                {
+                                    for (i = 0; i < @Model.ratingReviewLists.Count; i++)
+                                    {
+                                        <tr>
+                                            <td>
+                                                @Html.CheckBoxFor(modelItem => Model.ratingReviewLists[i].isdisplay, new { @class = "chkSingle" })
+                                                @Html.HiddenFor(modelItem => Model.ratingReviewLists[i].UserLoginID)
+                                                @Html.HiddenFor(modelItem => Model.ratingReviewLists[i].MerchantID)
+                                                @Html.DisplayFor(modelItem => Model.ratingReviewLists[i].SrNo)
+                                            </td>
+                                            <td>
+                                                @Html.DisplayFor(modelItem => Model.ratingReviewLists[i].FranchiseName)
+                                            </td>
+                                            <td>
+                                                @Html.DisplayFor(modelItem => Model.ratingReviewLists[i].City)
+                                            </td>
+                                            <td>
+                                                @Html.DisplayFor(modelItem => Model.ratingReviewLists[i].UserLoginID)
+                                            </td>
+                                            <td>
+                                                @Html.DisplayFor(modelItem => Model.ratingReviewLists[i].Name)
+                                            </td>
+                                            <td>
+                                                @Html.DisplayFor(modelItem => Model.ratingReviewLists[i].Rating)
+                                            </td>
+                                            <td>
+                                                @Html.DisplayFor(modelItem => Model.ratingReviewLists[i].Review)
+                                            </td>
+                                            <td>
+                                                @Model.ratingReviewLists[i].CreateDate.ToString("dd/MM/yyyy HH:mm")
+                                            </td>
+                                        </tr>
+                                    }
+                                }
+                               
+                            </tbody>
+                        </table>
+                    </div>
+                }
+            }
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('#tblData').DataTable();
+    });
+</script>

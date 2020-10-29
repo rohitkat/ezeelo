@@ -1,0 +1,348 @@
+﻿@model ModelLayer.Models.ViewModel.MerchantRegisterViewModel
+
+@{
+    ViewBag.Title = "Login";
+
+}
+
+<style>
+    #Salutation {
+        width: 204px;
+    }
+    #Mobile {
+        width: 192px;
+    } 
+    #personalDetail_FirstName {
+        width: 190px;
+    }
+
+    #personalDetail_LastName {
+        width: 204px;
+    }
+
+    #SecurityQuestion {
+        width: 204px;
+    }
+
+    #loginSecurityAnswer_Answer {
+        width: 204px;
+    }
+
+    .btn-gray {
+        background-color: #898484;
+        border: 1px solid#898484;
+    }
+</style>
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title></title>
+    <link href="~/Content/css/style_asset.css" rel="stylesheet" />
+ 
+    @*<link href="~/Content/assets/css/form-design.css" rel="stylesheet" />*@
+
+</head>
+<body>
+
+
+    @using (Html.BeginForm())
+    {
+        @Html.AntiForgeryToken()
+        <div id="content" class="span10">
+
+            <div class="row-fluid">
+                <div class="box span12">
+                    <div class="box-header">
+                        <h2><i class="icon-user"></i><span class="break"></span>Create</h2>
+                    </div>
+                    <div class="box-content">
+                        <form class="form-horizontal">
+                            <div>
+                                <div class="clearfix"></div>
+                                @if (TempData["Message1"] != null)
+                                {
+                                    <div class="breadcrumbs1 dark  pull-left">
+                                        @TempData["Message1"]
+                                    </div>
+                                }
+                            </div>
+
+                            @*@using (Html.BeginForm())
+                                {
+                                    @Html.AntiForgeryToken()*@
+                            @Html.ValidationMessage("CustomError")
+                            <div class="control-group">
+                                @*<select size="1" name="tblData_length" class="form-control pull-left wdth-small mrg-leftSm">
+                                        <option selected="selected">Mr</option>
+                                        <option>Mrs</option>
+                                    </select>*@
+                                <div class="span12">
+                                    <div class="span3 ">
+                                        @Html.DropDownList("Salutation", null, new { @class = "form-control pull-left wdth-small mrg-leftSm" })
+                                        @Html.ValidationMessageFor(model => model.salutation.ID)
+                                    </div>
+                                    <div class="span3 ">
+                                        @Html.TextBoxFor(model => model.personalDetail.FirstName, new { @placeholder = "First Name", @class = "form-control  pull-left wdth-mid mrg-leftSm", required = "required" })
+                                        @Html.ValidationMessageFor(model => model.personalDetail.FirstName)
+                                    </div>
+                                    <div class="span3 ">
+                                        @Html.TextBoxFor(model => model.personalDetail.LastName, new { @placeholder = "Last Name", @class = "form-control  pull-left wdth-mid mrg-leftSm", required = "required" })
+                                        @Html.ValidationMessageFor(model => model.personalDetail.LastName)
+                                    </div>
+                                    <div class="span3 ">
+                                        @Html.TextBox("Mobile", null, new { @id = "Mobile", @class = "form-control-Widout-block form-control", @placeholder = "Enter Mobile", @onkeydown = "return ValidateNumber(event);", @onchange = "return ValidateMobile(this);", @onkeypress = "return isValidPincode(event)", required = "required", maxlength = 10 })
+                                        <div id="divMobileError" style="width: 229px;display: none;" class="alert-danger focused">  </div>
+                                    </div>
+                                </div>
+                                <div class="span12" style="margin-left:0px;">
+                                    <div class="span3 ">
+                                        @Html.TextBoxFor(model => model.shop.TIN, new { @placeholder = "TIN Number", @class = "form-control-Widout-block form-control  pull-left wdth-large mrg-leftSm", required = "required", maxlength = 11 })
+                                        @Html.ValidationMessageFor(model => model.shop.TIN)
+                                    </div>
+                                    <div class="span3 ">
+                                        @Html.TextBox("Pincode", null, new { @id = "Pincode", @class = "form-control-Widout-block form-control  pull-left wdth-large mrg-leftSm", @placeholder = "Enter Pincode", @onkeypress = "return isValidPincode(event)", required = "required" })
+                                        <img id="Pincode_loading" src="~/Content/img/ajax_loader.gif" style="width:20px; height:20px; display: none;margin-left:-21px; " />
+                                        <div id="divPincodeError" style=" display: none; font-size:12px;" class="alert-danger focused">  </div>
+                                    </div>
+                                    <div class="span3 ">
+                                        @Html.TextBoxFor(model => model.userLogin.Email, new { @placeholder = "Email", @class = "form-control", @onchange = "return ValidateEmail(this);", required = "required" })
+                                        @Html.ValidationMessageFor(model => model.userLogin.Email)
+                                        <div id="divEmailError" style="width: 278px; display: none;" class="alert-danger focused">  </div>
+                                    </div>
+                                    <div class="span3 ">
+                                        @Html.TextBoxFor(model => model.userLogin.Password, new { @placeholder = "Password", @class = "form-control-Widout-block form-control  pull-left wdth-large mrg-leftSm", required = "required", type = "password", minlength = 6, @onchange = "setFocus();" })
+                                        @Html.ValidationMessageFor(model => model.userLogin.Password)
+                                    </div>
+                                </div>
+                                <div class="span12" style="margin-left:0px;">
+                                    <div class="span3 ">
+                                        @Html.TextBoxFor(model => model.ConfirmPassword, new { @placeholder = "Confirm Password", @class = "form-control-Widout-block form-control  pull-left wdth-large mrg-leftSm", required = "required", type = "password", @onchange = "return ValidateConfirmPassword(this);" })
+                                        @Html.ValidationMessageFor(model => model.ConfirmPassword)
+                                        <div id="divPwdError" style="width:229px; display: none; " class="alert-danger focused">  </div>
+                                    </div>
+                                    <div class="span3 ">
+                                        @Html.DropDownList("SecurityQuestion", null, "Select Security Question", new { @class = "form-control-Widout-block form-control  pull-left wdth-large mrg-leftSm", required = "required" })
+                                        @Html.ValidationMessageFor(model => model.securityQuestion.ID)
+                                    </div>
+                                    <div class="span3 ">
+                                        @Html.TextBoxFor(model => model.loginSecurityAnswer.Answer, new { @placeholder = "Security Answer", @class = "form-control-Widout-block form-control  pull-left securty mrg-leftSm", required = "required", type = "password" })
+                                        @Html.ValidationMessageFor(model => model.loginSecurityAnswer.Answer)
+                                    </div>
+                                    <div class="span3 ">
+
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="control-group">
+                                <button type="submit" id="Save" value="Save" class="btn btn-small btn-success " name=" action">Save</button>
+                                @Html.ActionLink("Back to List", "MerchantList", "MerchantRegister", null, new { @class = "btn btn-small btn-gray" })
+                            </div>
+                            @*}*@
+
+
+
+
+
+                        </form>
+
+
+
+
+
+
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+
+
+    <script src="~/Content/js/jquery-2.1.3.min.js"></script>
+
+    <script type="text/javascript">
+        //alert("1");
+        var lPincode = $('#Pincode').val()
+        //alert("2");
+        $('#Pincode').bind('input propertychange', function () {
+            var lPincode = $('#Pincode').val()
+            $('#divPincodeError').hide();
+
+            if (lPincode.length == 6) {
+                $('#Pincode_loading').show();
+                $.ajax({
+                    url: '@Url.Action("GetAddress", "MerchantRegister")?Pincode=' + lPincode,
+                    type: "GET",
+                    success: function (result) {
+                        //$('#divAddress').html(result);
+                        $('#Pincode_loading').hide();
+                        $('#divPincodeError').hide();
+                        if (result == "1") {
+                            $('#divPincodeError').show();
+                            $('#divPincodeError').html('[' + lPincode + '] dose not exist,Contact to ADMIN');
+                            $('#Pincode').val('');
+                        }
+                    },
+                    error: function (data) {
+                        //alert('Pincode : ' + lPincode + ' Dose Not Exist, please Contact to ADMIN');
+                        //$('#divAddress').empty();
+                        //$('#Pincode_loading').hide();
+                        $('#divPincodeError').hide();
+                        //$('#divPincodeError').html('Pincode [' + lPincode + '] dose not exist, please Contact to ADMIN');
+                        //$('#Pincode').val('');
+                    }
+                });
+            }
+        });
+
+    </script>
+
+    <script type="text/javascript">
+        $('#userLogin_Email').bind('input propertychange', function () {
+            var lEmail = $('#userLogin_Email').val();
+            $('#divEmailError').hide();
+            $.ajax({
+                url: '@Url.Action("IsEmailAvailable", "MerchantRegister")?Email=' + lEmail,
+                type: "GET",
+                success: function (result) {
+                    $('#divEmailError').hide();
+                    if (result == "1") {
+                        $('#divEmailError').show();
+                        $('#divEmailError').html('Email [' + lEmail + '] already exist');
+                        $('#userLogin_Email').val('');
+                    }
+                },
+                error: function (data) {
+                    $('#divEmailError').hide();
+                }
+            });
+        });
+    </script>
+
+
+    <script type="text/javascript">
+
+        function ValidateNumber(e) {
+            var evt = (e) ? e : window.event;
+            var charCode = (evt.keyCode) ? evt.keyCode : evt.which;
+            if ((charCode > 45 && charCode < 58) || (charCode > 95 && charCode < 105) || charCode == 8 || charCode == 127 || charCode == 37 || charCode == 39) { // (charCode > 31 && (charCode < 48 || charCode > 57)) {
+                return true;
+            }
+            else if (charCode == 9) {
+                SendKeys("{tab}");
+                return true;
+            }
+            return false;
+        };
+
+        function ValidateEmail(obj) {
+            var email = $(obj).val();
+            var filter = /^([\w-\.]+@@([\w-]+\.)+[\w-]{2,4})?$/;
+            $('#divEmailError').hide();
+            if (filter.test(email)) {
+                return true;
+            }
+            else {
+                $('#divEmailError').show();
+                $('#divEmailError').html('Invalid Email [' + email + ']');
+                $('#userLogin_Email').val('');
+                $('#userLogin_Email').focus();
+                return false;
+            }
+        }
+
+        function ValidateMobile(obj) {
+            var mobile = $(obj).val();
+            var filter = /^[7-9]{1}[0-9]{9}$/;
+            $('#divMobileError').hide();
+            if (filter.test(mobile)) {
+                return true;
+            }
+            else {
+                $('#divMobileError').show();
+                $('#divMobileError').html('Invalid Mobile [' + mobile + ']');
+                $('#Mobile').val('');
+                $('#Mobile').focus();
+                return false;
+            }
+        }
+
+        function ValidatePincode() {
+            var pin = $('#Pincode').val();
+            var filter = /\d{6}/;
+            $('#divPincodeError').hide();
+            if (filter.test(pin)) {
+                return true;
+            }
+            else {
+                $('#divPincodeError').show();
+                $('#divPincodeError').html('Invalid Pincode [' + pin + ']');
+                $('#Pincode').val('');
+                $('#Pincode').focus();
+                return false;
+            }
+        }
+
+        function ValidateConfirmPassword(obj) {
+            var pwd = $('#userLogin_Password').val();
+            var cpwd = $('#ConfirmPassword').val();
+            $('#divPwdError').hide();
+            if (pwd == cpwd)
+            { return true; }
+            else
+            {
+                $('#divPwdError').show();
+                $('#divPwdError').html('Invalid Confirm Password');
+                $(obj).val('');
+                //$(obj).select();
+                $(obj).focus();
+                return false;
+            }
+        };
+
+        function setFocus() {
+            var pwd = $('#userLogin_Password').val();
+            $('#divPwdError').hide();
+            if (pwd == '') {
+                $('#ConfirmPassword').val('');
+                $('#userLogin_Password').focus();
+            }
+            else {
+                $('#ConfirmPassword').val('');
+                $('#ConfirmPassword').focus();
+            }
+        };
+
+    </script>
+    <script type="text/javascript">
+        $('#Mobile').bind('input propertychange', function () {
+            var lMobile = $('#Mobile').val();
+            $('#divMobileError').hide();
+            if (lMobile.length == 10) {
+                $.ajax({
+                    url: '@Url.Action("IsMobileAvailable", "MerchantRegister")?Mobile=' + lMobile,
+                    type: "GET",
+                    success: function (result) {
+                        $('#divlMobileError').hide();
+                        if (result == "1") {
+                            $('#divMobileError').show();
+                            $('#divMobileError').html('Mobile [' + lMobile + '] already exist');
+                            $('#Mobile').val('');
+                        }
+                    },
+                    error: function (data) {
+                        $('#divlMobileError').hide();
+                    }
+                });
+            }
+        });
+    </script>
+
+
+</body>
+</html>
+
+

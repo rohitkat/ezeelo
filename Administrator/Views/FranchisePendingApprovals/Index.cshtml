@@ -1,0 +1,68 @@
+﻿@*//-----------------------------------------------------------------------
+        // <copyright file="Index.cshtml" company="Ezeelo Consumer Services Pvt. Ltd.">
+        //     Copyright (c) Ezeelo Consumer Services Pvt. Ltd. All rights reserved.
+        //
+    </copyright>
+        // <author>Snehal Shende</author>
+        //-----------------------------------------------------------------------*@
+
+@model IEnumerable<ModelLayer.Models.ViewModel.FranchisePendingApprovalViewModel>
+
+@{
+    ViewBag.Title = "Index";
+}
+
+@*<h2>Pending Request of Franchise</h2>*@
+<style>
+    .dataTables_length {
+        margin-left: 0px;
+        margin-top: 7px;
+    }
+
+    .pagination {
+        margin: 0 40px;
+    }
+</style>
+<div class="span10" id="content">
+    <ul class="breadcrumb">
+        <li>
+            <label>Pending Request of Franchise</label>
+            @*<i class="icon-trash"></i>*@
+        </li>
+        @*<li><a href="#">Tables</a></li>*@
+    </ul>
+    <div class="row-fluid" style="margin-top:28px;">
+        <div class="box span12">
+            <div class="box-header">
+                <h2>Franchise Pending Approvals</h2>
+            </div>
+            <div class="box-content">
+                <table class="table table table-striped table-bordered bootstrap-datatable datatable dataTable">
+                    <thead>
+                        <tr>
+                            <th>
+                                Franchise Name
+                            </th>
+
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Name)
+                            </td>
+                            <td>
+                                @Html.ActionLink("Apply Plan", "Index", "OwnerPlan", new { ownerId = item.OwnerId }, new { @class = "btn btn-primary" })
+                                @*| @Html.ActionLink("View Charge", "ViewCharge", "OwnerPlanCategoryCharge", new { ownerId = item.OwnerId }, new { @class = "btn btn-success" })*@
+                                @*@Html.ActionLink("Apply Charge", "Index", "OwnerPlanCategoryCharge", new { ownerId = item.OwnerId }, new { @class = "btn btn-success" })*@
+                            </td>
+                        </tr>
+                    }
+
+                </table>
+            </div>
+        </div>
+    </div>
+</div>

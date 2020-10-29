@@ -1,0 +1,126 @@
+﻿@model ModelLayer.Models.ViewModel.MerchantRequisitionViewModel
+
+@{
+    ViewBag.Title = "Create";
+}
+
+<style>
+    div.checker {
+        margin-right: 25px;
+    }
+    .pay-mode {margin-top:-8px;
+    }
+</style>
+
+@using (Html.BeginForm("Create", "MerchantRequisition", FormMethod.Post))
+{
+    @Html.AntiForgeryToken()
+    <div class="span10" id="content">
+        <ul class="breadcrumb">
+            <li>
+                <i class="icon-group"></i>
+                <a href="#">Merchant Requisition</a>
+                @*<i class="icon-angle-right"></i>*@
+            </li>
+            @*<li><a href="#">Tables</a></li>*@
+        </ul>
+        <div class="row-fluid">
+            <div class="box span12">
+                <div class="box-header">
+                    <h2><i class="icon-edit"></i><span class="break"></span>Create</h2>
+
+                </div>
+                <div class="box-content">
+                    <div class="form-horizontal readonlydetails">
+                        @Html.ValidationMessage("CustomError")
+                        @Html.ValidationSummary(true)
+
+                        @Html.HiddenFor(model => model.ShopID)
+                        @*<div class="form-group">
+                                @Html.LabelFor(model => model.ShopName, new { @class = "control-label col-md-2" })
+                                <div class="col-md-10">
+                                    @Html.TextBoxFor(model => model.ShopName, new { @readonly = "readonly", @class = "readonlyTextBox" })
+                                    @Html.ValidationMessageFor(model => model.ShopName)
+                                </div>
+                            </div>*@
+
+                        <div class="control-group">
+                            @Html.LabelFor(model => model.MerchantName, new { @class = "control-label span2" })
+                            <div class="col-md-10">
+                                @Html.TextBoxFor(model => model.MerchantName, new { @readonly = "readonly", @class = "readonlyTextBox" })
+                                @Html.ValidationMessageFor(model => model.MerchantName)
+                            </div>
+                        </div>
+
+                        <div class="control-group">
+                            @Html.LabelFor(model => model.Mobile, new { @class = "control-label span2" })
+                            <div class="col-md-10">
+                                @Html.TextBoxFor(model => model.Mobile, new { @readonly = "readonly", @class = "readonlyTextBox" })
+                                @Html.ValidationMessageFor(model => model.Mobile)
+                            </div>
+                        </div>
+
+                        <div class="control-group">
+                            @Html.LabelFor(model => model.Email, new { @class = "control-label span2" })
+                            <div class="col-md-10">
+                                @Html.TextBoxFor(model => model.Email, new { @readonly = "readonly", @class = "readonlyTextBox" })
+                                @Html.ValidationMessageFor(model => model.Email)
+                            </div>
+                        </div>
+
+                        <div class="control-group">
+                            @Html.LabelFor(model => model.TIN, new { @class = "control-label span2" })
+                            <div class="col-md-10">
+                                @Html.TextBoxFor(model => model.TIN, new { @readonly = "readonly", @class = "readonlyTextBox" })
+                                @Html.ValidationMessageFor(model => model.TIN)
+                            </div>
+                        </div>
+
+                        <div class="control-group">
+                            @Html.LabelFor(model => model.Pincode, new { @class = "control-label span2" })
+                            <div class="col-md-10">
+                                @Html.TextBoxFor(model => model.Pincode, new { @readonly = "readonly", @class = "readonlyTextBox" })
+                                @Html.ValidationMessageFor(model => model.Pincode)
+                            </div>
+                        </div>
+
+                        <div class="control-group">
+                            @Html.LabelFor(model => model.FranchiseID, new { @class = "control-label span2" })
+                            <div class="controls">
+                                @Html.DropDownList("FranchiseID", "Select Franchise")
+                                @Html.ValidationMessageFor(model => model.FranchiseID)
+                            </div>
+                        </div>
+
+                        <div class="control-group">
+                            @Html.Label("Payment Modes", new { @class = "control-label span2 pay-mode" })
+                            <div class="controls">
+                                @*@Html.DropDownList("PaymentModeID", "Select Payment Mode")
+
+                @Html.ValidationMessageFor(model => model.PaymentModeID)*@
+
+                                @for (int i = 0; i < Model.PaymentModeList.Count(); i++)
+                                {
+                                    @Html.HiddenFor(model => model.PaymentModeList[i].ID)
+                                    @Html.HiddenFor(model => model.PaymentModeList[i].Name)
+                                    @Html.DisplayFor(model => model.PaymentModeList[i].Name)
+                                    @Html.HiddenFor(model => model.PaymentModeList[i].IsSelected)
+                                    @*@Html.CheckBox("chkBox", Model.PaymentModeList[i].IsSelected)*@
+                                    <input type="checkbox" class="chkBox" name="chkBox" checked="@Model.PaymentModeList[i].IsSelected" value=@Model.PaymentModeList[i].ID>
+                                }
+                            </div>
+                        </div>
+
+
+                        <div class="form-actions">
+                            <div class="col-md-offset-2">
+                                <input type="submit" value="Assign" class="btn btn-primary" />
+                                @Html.ActionLink("Back to List", "Index", new { franchiseID = Model.FranchiseID }, new { @class = "btn" })
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}

@@ -1,0 +1,45 @@
+﻿@{
+    Layout = null;
+}
+
+@model IEnumerable<ModelLayer.Models.ViewModel.Report.Account.ReportTransactionInputPendingAccountViewModel>
+
+<style>
+    .tbl th {
+        border: solid 1px #808080 !important;
+    }
+
+    .tbl td {
+        border: solid 1px #808080 !important;
+        background:#f8d7d7 !important;
+
+    }
+</style>
+<div class="row" style="width:100%; height:550px; overflow:scroll; margin:5px;">
+    <h3 class="btn btn-danger" style="width:100%;">Pending POD [ @Model.ToList().Count ]</h3>
+    <table class="table table-bordered table-condensed table-hover table-responsive table-striped tbl">
+        <tr>
+            <th>Sr.No</th>
+            <th>OrderCode</th>
+            <th>OrderAmount</th>
+            <th>PaymentMode</th>
+            <th>PayableAmount</th>
+            <th>OrderDate</th>
+        </tr>
+        @{ int i = 1;
+        }
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td> @i @{i++;}</td>
+                <td><a href="#" class="ordercode">@item.OrderCode</a></td>
+                <td>@Html.DisplayFor(modelItem => item.OrderAmount)</td>
+                <td>@Html.DisplayFor(modelItem => item.PaymentMode)</td>
+                <td>@Html.DisplayFor(modelItem => item.PayableAmount)</td>
+                <td>@Html.DisplayFor(modelItem => item.CreateDate)</td>
+            </tr>
+        }
+
+    </table>
+</div>
+

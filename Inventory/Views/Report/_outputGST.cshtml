@@ -1,0 +1,195 @@
+﻿@using PagedList.Mvc
+@model PagedList.IPagedList<ModelLayer.Models.ViewModel.InputOutputGSTReport>
+
+<style>
+    .OutputGSTReport table {
+        border-collapse: separate;
+        width: 1500px;
+        max-width: 1500px;
+        overflow-x: scroll;
+        display: block;    
+        max-height:2500px !important;    
+    }
+
+    .OutputGSTReport thead, .OutputGSTReport tfoot {
+        background-color: #EFEFEF;
+    }
+
+    .OutputGSTReport thead, .OutputGSTReport tbody, .OutputGSTReport tfoot {
+        display: block;
+    }
+
+    .OutputGSTReport tbody {
+        overflow-y: scroll;
+        overflow-x: auto;
+        max-height: 500px;
+    }
+
+    .OutputGSTReport td, .OutputGSTReport th {
+        padding: 5px;
+        min-width: 80px;
+        height: 25px;
+        border: inset 1px lightblue;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        max-width: 80px;
+        word-break: break-all;
+        text-align: center;
+    }
+
+    .gstCol {
+        min-width: 35px !important;
+        max-width: 35px !important;
+    }
+
+    .number {
+        min-width: 45px !important;
+        max-width: 45px !important;
+    }
+
+    .gstAmt {
+        min-width: 65px !important;
+        max-width: 65px !important;
+    }
+
+    .item {
+        min-width: 200px !important;
+        max-width: 200px !important;
+    }
+
+    .gstNo {
+        min-width: 120px !important;
+        max-width: 120px !important;
+    }
+
+    .invoiceCode {
+        min-width: 120px !important;
+        max-width: 120px !important;
+    }
+
+    .pagination-container {
+        float: left !important;
+        margin-top: -20px !important;
+    }
+</style>
+<script>
+    $(document).ready(function () {
+        $('.OutputGSTReport').on('scroll', function () {
+            $(".OutputGSTReport > *").width($(".OutputGSTReport").width() + $(".OutputGSTReport").scrollLeft());
+        });
+        $("#loading").fadeOut();
+        $("#btnExport").removeAttr("disabled");
+    })
+</script>
+<div id="loading">
+    <div id="loadingcontent">
+        <p id="loadingspinner">
+            Loading Report....
+        </p>
+    </div>
+</div>
+<table class="OutputGSTReport">
+    <thead>
+        <tr>
+            <th>
+                Invoice Date
+            </th>
+            <th class="invoiceCode">
+                Invoice Code
+            </th>
+            <th class="gstNo">
+                GST No
+            </th>
+            <th class="item">
+                Items
+            </th>
+            <th class="gstCol">
+                GST%
+            </th>
+            <th class="number">
+                MRP
+            </th>
+            <th class="number">
+                Buy <br /> Rate
+            </th>
+            <th class="number">
+                Base <br /> Rate
+            </th>
+            <th class="number">
+                GST
+            </th>
+            <th class="number">
+                Qty
+            </th>
+            <th class="gstAmt">
+                GST <br /> Amount
+            </th>
+
+
+        </tr>
+    </thead>
+    <tbody>
+        @if (Model.Count != 0)
+        {
+            foreach (var item in Model)
+            {
+                <tr>
+                    <td>
+                        @Convert.ToDateTime(item.Date).ToString("dd/MM/yyyy")
+                    </td>
+                    <td class="invoiceCode">
+                        @Html.DisplayFor(modelItem => item.Invoice_No)
+                    </td>
+                    <td class="gstNo">
+                        @Html.DisplayFor(modelItem => item.GST_No)
+                    </td>
+                    <td class="item">
+                        @Html.DisplayFor(modelItem => item.Items)
+                    </td>
+                    <td class="gstCol">
+                        @Html.DisplayFor(modelItem => item.GST)
+                    </td>
+                    <td class="number">
+                        @Html.DisplayFor(modelItem => item.MRP)
+                    </td>
+                    <td class="number">
+                        @Html.DisplayFor(modelItem => item.Buy_rate_per_unit)
+                    </td>
+                    <td class="number">
+                        @Html.DisplayFor(modelItem => item.Base_rate_per_unit)
+                    </td>
+                    <td class="number">
+                        @Html.DisplayFor(modelItem => item.GST_per_unit)
+                    </td>
+                    <td class="number">
+                        @Html.DisplayFor(modelItem => item.Qty)
+                    </td>
+                    <td class="gstAmt">
+                        @Html.DisplayFor(modelItem => item.Total_GST_Amt)
+                    </td>
+
+                </tr>
+            }
+        }
+        else
+        {
+            <tr>
+                <td colspan="12" style="min-width:960px;max-width:960px">
+                    <label style=" color: #138afc; ">No Record Found.... </label>
+</td>
+            </tr>
+        }
+    </tbody>
+    <tfoot>
+        <tr>
+            <td colspan="12" style="min-width:960px;max-width:960px">
+                <div id="pager">
+                    <p style="float: right; color: #138afc; ">
+                        Page @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) of @Model.PageCount
+                        @Html.PagedListPager(Model, page => Url.Action("OutputGSTReport", new { isFV = ViewBag.isFV, page = page, Month = ViewBag.Month, WarehouseId = ViewBag.WarehouseId, SearchCat = ViewBag.SearchCat, searchTxt = ViewBag.searchTxt, frmDate = ViewBag.frmDate, toDate = ViewBag.toDate }))
+                    </p>
+                </div>
+            </td>
+        </tr>
+    </tfoot>
+</table>

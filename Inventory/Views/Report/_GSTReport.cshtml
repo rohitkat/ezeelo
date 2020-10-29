@@ -1,0 +1,158 @@
+﻿@using PagedList.Mvc
+@model PagedList.IPagedList<ModelLayer.Models.ViewModel.GSTReport>
+
+<style>
+    .GSTReport table {
+        border-collapse: separate;
+        width: 1000px;
+        max-width: 1000px;
+        overflow-x: scroll;
+        display: block;
+        
+    }
+
+    .GSTReport thead, .GSTReport tfoot {
+        background-color: #EFEFEF;
+    }
+
+    .GSTReport thead, .GSTReport tbody, .GSTReport tfoot {
+        display: block;
+    }
+
+    .GSTReport tbody {
+        overflow-y: scroll;
+        overflow-x: auto;
+        max-height: 500px;
+    }
+
+    .GSTReport td, .GSTReport th {
+        padding: 5px;
+        min-width: 160px;
+        height: 25px;
+        border: inset 1px lightblue;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        max-width: 160px;
+        word-break: break-all;
+        text-align: center;
+    }
+
+
+    .pagination-container {
+        float: left !important;
+        margin-top: -20px !important;
+    }
+</style>
+<script>
+    $(document).ready(function () {
+        $('.GSTReport').on('scroll', function () {
+            $(".GSTReport > *").width($(".GSTReport").width() + $(".GSTReport").scrollLeft());
+        });
+        $("#loading").fadeOut();
+        $("#btnExport").removeAttr("disabled");
+        $("#spheading").text('@ViewBag.Heading');
+        $("#spMonth").text('@ViewBag.MonthName');
+        $("#spGst").text('@ViewBag.GSTNO');
+        $("#spYear").text('@ViewBag.Year');
+        $("#spTotal").text('@ViewBag.Total');
+        $("#spInputTotal").text('@ViewBag.InputTotal');
+        $("#spOutputTotal").text('@ViewBag.OutputTotal');
+    })
+</script>
+<table class="GSTReport" id="tblGSTReport" style="font-size:17px !important;">
+    <thead>
+        <tr>
+            <th colspan="5">
+                <span id="spheading" style="color: #7b0606; text-decoration: underline; "> Monthly GST Report</span>
+            </th>
+        </tr>
+        <tr>
+            <th><span id="spMonth"></span></th>
+            <th colspan="3"><span id="spGst"></span></th>
+            <th><span id="spYear"></span></th>
+        </tr>
+        <tr>
+            <th>
+                Input GST Heads
+            </th>
+            <th>
+                Input GST
+            </th>
+            <th>
+                Output GST Heads
+            </th>
+            <th>
+                Output GST
+            </th>
+            <th>
+                Balance
+            </th>
+
+        </tr>
+    </thead>
+    <tbody>
+        @if (Model.Count != 0)
+        {
+            foreach (var item in Model)
+            {
+                <tr>
+
+                    <td>
+                        @Html.DisplayFor(modelItem => item.InputGSTHeads)%
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.InputGSTAmount)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.OutputGSTHeads)%
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.OutputGSTAmount)
+                    </td>
+                    <td>
+                        <b>  @Html.DisplayFor(modelItem => item.Balance)</b>
+                    </td>
+
+                </tr>
+            }
+        }
+        else
+        {
+            <tr>
+                <td style="min-width:960px;max-width:960px">
+                    <label style=" color: #138afc; ">No Record Found.... </label>
+                </td>
+            </tr>
+        }
+    </tbody>
+    <tfoot>
+        <tr style="color: #7b0606;">
+            <td style="min-width:160px;max-width:160px">
+                <span style="color: #7b0606; font-weight: bold; " >Total </span>
+            </td>
+            <td style="min-width:160px;max-width:160px">
+                <span style="color: #7b0606; font-weight: bold" id="spInputTotal"> </span>
+            </td>
+            <td style="min-width:160px;max-width:160px">
+                <span style="color: #7b0606; font-weight: bold; " > </span>
+            </td>
+            <td style="min-width:160px;max-width:160px">
+                <span style="color: #7b0606; font-weight: bold; " id="spOutputTotal"> </span>
+            </td>           
+            <td style="min-width:160px;max-width:160px">
+                <span style="color: #7b0606; font-weight: bold; " id="spTotal"> </span>
+            </td>
+        </tr>
+        <tr>
+            <td colspan="5">
+                <div id="pager">
+                    <p style="float: right; color: #138afc; ">
+                        Page @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) of @Model.PageCount
+                        @Html.PagedListPager(Model, page => Url.Action("GSTReport", new { isFV = ViewBag.isFV, page = page, Month = ViewBag.Month, WarehouseId = ViewBag.WarehouseId }))
+                    </p>
+                </div>
+            </td>
+        </tr>
+    </tfoot>
+</table>
+

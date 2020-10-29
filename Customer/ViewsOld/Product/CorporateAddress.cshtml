@@ -1,0 +1,304 @@
+﻿@model ModelLayer.Models.ViewModel.ShopProductVarientViewModelCollection
+@{
+    ViewBag.Title = "CorporateAddress";
+}
+<style>
+    .copimg {
+        width: 100px;
+        height: 100px;
+    }
+
+    .proname {
+        float: left;
+    }
+
+    .imgdiv {
+        float: left;
+        margin-right: 20px;
+    }
+
+    .giftname {
+        font-size: 12px;
+        font-weight: 700;
+        height: 50px;
+    }
+
+    .newselect {
+        border: none;
+        border-radius: 0px 0px 0px 0px !important;
+        background: transparent;
+        width: 150px;
+        padding: 5px 35px 5px 5px;
+        font-size: .875rem;
+        border: 1px solid #eaeaea;
+        height: 34px;
+        /*-webkit-appearance: none;*/
+        /*-moz-appearance: none;*/
+        appearance: none;
+        /*background: url(../Content/Images/drop.gif) 98% / 3% no-repeat #fff !important;*/
+    }
+
+    .selectadd {
+        border: 1px #d9d9d9 solid;
+        width: 33%;
+        padding: 5px;
+        float: left;
+        margin-right: 5px;
+        margin-top: 2px;
+    }
+
+    .success {
+        background: #60a917 !important;
+        color: #ffffff !important;
+        border-color: #60a917 !important;
+    }
+
+    .warning {
+        background: #fa6800 !important;
+        color: #ffffff !important;
+        border-color: #fa6800 !important;
+    }
+
+    #tblAddress {
+        min-height: 230px;
+        max-height: 230px;
+        overflow-y: auto;
+    }
+
+    .quantity {
+        width: 30px;
+        border: 1px solid rgba(128, 128, 128, 0.55);
+        text-align: center;
+    }
+
+    .addnextaddress {
+        width: 50%;
+        float: left;
+    }
+
+    .tablenew {
+        font-family: Calibri;
+        border: 1px solid rgba(128, 128, 128, 0.35);
+    }
+    /* added custom font-family  */
+
+    table.one {
+        margin-bottom: 3em;
+        border-collapse: collapse;
+    }
+
+    .tablenew td { /* removed the border from the table data rows  */
+        text-align: center;
+        width: 10em;
+        padding: 5px;
+    }
+
+    .tablenew th { /* removed the border from the table heading row  */
+        text-align: center;
+        padding: 5px;
+        background-color: #4390df; /* added a red background color to the heading cells  */
+        color: white;
+    }
+    /* added a white font color to the heading text */
+
+    .tablenew tr {
+        height: 1em;
+    }
+
+        .tablenew tr:nth-child(even) { /* added all even rows a #eee color  */
+            background-color: rgb(238, 238, 238);
+        }
+
+        .tablenew tr:nth-child(odd) { /* added all odd rows a #fff color  */
+            background-color: #fff;
+        }
+</style>
+@*<h2>CorporateAddress</h2>*@
+<div class="form-horizontal">
+    <div class="example" data-text="">
+        <div class="grid">
+            @{
+                <div><span style="color:red" class="ErrorMsg"></span></div>
+                <div class="cell">
+                    <div class="imgdiv">
+                        <img id="imgProductImage" src="@Url.Content(string.IsNullOrEmpty(Model.lShopProductVarientViewModel.FirstOrDefault().StockThumbPath) ? "/Content/Images/no_image.png" : Model.lShopProductVarientViewModel.FirstOrDefault().StockThumbPath)" class="copimg" alt= "eZeelo" />
+                    </div>
+                    <div class="proname"><span class="giftname"> @Model.lShopProductVarientViewModel.FirstOrDefault().ProductName</span></div>
+                </div>
+                <table class="tablenew" style="width:100%">
+                    <tr>
+                        <th>Name</th>
+                        <th>Qty</th>
+                        <th>Sale Rate</th>
+                        <th>Sub total</th>
+                    </tr>
+                    <tr>
+                        <td><span>Enter Quantity</span></td>
+                        <td><input type="text" id="txtTotalQty" placeholder="Qty" class="quantity" onkeypress="return validatePincode(event);" onkeyup="CalculateTotalOrderAmount();" /></td>
+                        <td><span class="ProductAmount">@Model.lShopProductVarientViewModel.FirstOrDefault().SaleRate</span></td>
+                        <td><span class="OrderAmount"></span></td>
+                    </tr>
+                    <tr>
+                        <td>Delivery Charges</td>
+                        <td><input type="text" id="txtDeliveryCharges" placeholder="Qty" class="delivery quantity" readonly="readonly" /></td>
+                        <td><span class="DeliveryAmount">50.00</span></td>
+                        <td><span class="TotalDeliveryAmount"></span></td>
+                    </tr>
+                    <tr>
+                        <td>Gift Wrap</td>
+                        <td><input type="checkbox" name="SelectFacility" class="classFacility" value="@Model.lCorporateShippingFacility.FirstOrDefault().AmountInRs" id="@Model.lCorporateShippingFacility.FirstOrDefault().ID" onclick="AddFacilityamount(this.id,value)" />@*@Model.lCorporateShippingFacility.FirstOrDefault().Name*@</td>
+                        <td><span class="facilityName">@Model.lCorporateShippingFacility.FirstOrDefault().AmountInRs</span></td>
+                        <td><span class="TotalFacilityAmount"></span></td>
+                    </tr>
+                    <tr>
+                        <td colspan="3" style="text-align: right;" class="giftname">Total order amount</td>
+                        <td><span class="TotalOrderAmount giftname"></span></td>
+                    </tr>
+                </table>
+                <div>
+                    <input type="button" id="btnSave" value="Place Order" class="save success" onclick="SaveAddress()" />
+                </div>
+
+            }
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+    CorporateFacilityDetailsViewModel = [];
+
+    function AddFacilityamount(id, value) {
+        $(".ErrorMsg").text('');
+        var lTotalQty = $("#txtTotalQty").val();
+        var lTotalOrderAmount = $(".TotalOrderAmount").text();
+        var lFacilityAmount = value;
+        var lTotalFacilityAmount = parseFloat(lTotalQty) * parseFloat(lFacilityAmount);
+        if ($("[id='" + id + "']").prop('checked')) {
+            if (lTotalQty == "") {
+                $(".ErrorMsg").text('Please enter total quantity');
+                $("[id='" + id + "']").removeAttr('checked');
+                return;
+            }
+            var lTotalOrderAmount = parseFloat(lTotalOrderAmount) + parseFloat(lTotalFacilityAmount);
+            $(".TotalOrderAmount").text(parseFloat(lTotalOrderAmount).toFixed(2));
+            $(".TotalFacilityAmount").text(parseFloat(lTotalFacilityAmount).toFixed(2));
+        }
+        else {
+            var lTotalOrderAmount = parseFloat(lTotalOrderAmount) - parseFloat(lTotalFacilityAmount);
+            $(".TotalOrderAmount").text(parseFloat(lTotalOrderAmount).toFixed(2));
+            $(".TotalFacilityAmount").text('');
+
+        }
+        CorporateFacilityDetailsViewModel = [];
+        $('input[name="SelectFacility"]').each(function () {
+            var FacilityID = $(this).attr("id");
+            var ShippingFacilityCharges = $(this).val();
+            var obj = { "FacilityID": FacilityID, "ShippingFacilityCharges": ShippingFacilityCharges };
+            CorporateFacilityDetailsViewModel.push(obj);
+        });
+    }
+
+    function CalculateTotalOrderAmount() {
+        var lTotalQty = $("#txtTotalQty").val();
+        if (lTotalQty != "") {
+            $("#txtDeliveryCharges").val(lTotalQty);
+            var lProductAmount = $(".ProductAmount").text();
+            var lDeliveryAmount = $(".DeliveryAmount").text();
+            var lOrderAmount = parseFloat(parseFloat(lTotalQty) * parseFloat(lProductAmount)).toFixed(2);
+            var FacilityAmount = $('.facilityName').text();
+            var lTotalFacilityAmount = parseFloat(parseFloat(lTotalQty) * parseFloat(FacilityAmount)).toFixed(2);
+            $(".OrderAmount").text(lOrderAmount);
+
+            var lTotalDeliveryAmount = parseFloat(parseFloat(lTotalQty) * parseFloat(lDeliveryAmount)).toFixed(2);
+            $(".TotalDeliveryAmount").text(lTotalDeliveryAmount);
+            var lTotalOrderAmount = parseFloat(lOrderAmount) + parseFloat(lTotalDeliveryAmount);
+            $(".TotalOrderAmount").text(parseFloat(lTotalOrderAmount).toFixed(2));
+            $(".TotalFacilityAmount").text(parseFloat(lTotalFacilityAmount).toFixed(2));
+        }
+        else {
+            $(".OrderAmount").text(0.00);
+            $(".TotalDeliveryAmount").text(0.00);
+            $(".TotalOrderAmount").text(0.00);
+            $("#txtDeliveryCharges").val('');
+            $(".TotalFacilityAmount").text(0.00);
+        }
+        CorporateFacilityDetailsViewModel = [];
+        $('input[name="SelectFacility"]').each(function () {
+            if ($(this).prop('checked')) {
+                if (lTotalQty != "") {
+                    var facilitycharge = $(this).val();
+                    var TotalFacilityCharge = parseFloat(facilitycharge) * parseFloat(lTotalQty);
+                    var TOrderAmount = $(".TotalOrderAmount").text();
+                    $(".TotalOrderAmount").text(parseFloat(parseFloat(TOrderAmount) + parseFloat(TotalFacilityCharge)).toFixed(2));
+                    var FacilityID = $(this).attr("id");
+                    var ShippingFacilityCharges = $(this).val();
+                    var obj = { "FacilityID": FacilityID, "ShippingFacilityCharges": ShippingFacilityCharges };
+                    CorporateFacilityDetailsViewModel.push(obj);
+                }
+            } else {
+                // Do your stuff with unchecked
+            }
+        });
+
+    }
+    function validatePincode(evt) {
+        var charCode = (evt.which) ? evt.which : event.keyCode
+        if (charCode > 35 && charCode < 40 || charCode > 45 && charCode < 58 || charCode == 127 || charCode == 8 || charCode == 190 || charCode == 110) {
+
+            return true;
+        }
+        else {
+            return false;
+
+        }
+    }
+
+
+    function ValidateBeforeSave() {
+        flag = false;
+        var lTotalQty = $("#txtTotalQty").val();
+        var qty = 0;
+        if (lTotalQty == "") {
+            $(".ErrorMsg").text('Please enter total quantity to Place Order');
+            flag = false;
+            return;
+        }
+        $("#tblAddress div.cell1").each(function () {
+            var Quantity = $(this).find('.cmpQuantity').val();
+            qty = parseInt(qty) + parseInt(Quantity);
+        });
+        if (lTotalQty != qty) {
+            $(".ErrorMsg").text('Total Quantity and quantity entered should be same.');
+            flag = false;
+        }
+        else if (lTotalQty == qty) {
+            flag = true;
+        }
+        return flag;
+    }
+
+    function SaveAddress() {
+
+        var Totalqty = $("#txtTotalQty").val();
+        var SaleRate = "@ViewBag.SaleRate";
+        var deliveryCharges = $('.TotalDeliveryAmount').text();
+        $.ajax({
+            contentType: 'application/json; charset=utf-8',
+            dataType: 'json',
+            url: '@Url.Action("MakeOrder", "Product")',
+            data: "{'SaleRate':" + SaleRate + ", 'TotalQuantity': " + Totalqty + ", 'CorporateFacilityDetailsViewModel':" + JSON.stringify(CorporateFacilityDetailsViewModel) + " }",
+            type: "POST",
+            success: function (result) {
+                if (result.ok) {
+                    window.location = result.newurl;
+                    return;
+                }
+            },
+
+
+            error: function (data) {
+
+            }
+        });
+
+    }
+</script>

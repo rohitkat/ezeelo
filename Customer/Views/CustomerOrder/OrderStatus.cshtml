@@ -1,0 +1,58 @@
+﻿@model ModelLayer.Models.ViewModel.OrderStatusViewModel
+<style>
+    .success {
+        background: #60a917 !important;
+        color: #ffffff !important;
+        border-color: #60a917 !important;
+    }
+    .dark{
+        color:red;
+        font-size:14px;
+    }
+</style>
+@{
+    ViewBag.Title = "eZeelo: Online Jewellery, Home Appliances, Electronics & Fashion Store"; //Yashaswi 01/12/2018 Default City Change 
+}
+<div class="gap"></div>
+<div class="row box" data-gutter="15" style="min-height:320px;">
+    <div class="col-md-12">
+        @using (Html.BeginForm("OrderHistory", "CustomerOrder", FormMethod.Post))
+        {
+            @Html.AntiForgeryToken()
+            if (TempData["Message"] != null)
+            {
+                <div class="breadcrumbs dark">
+                    @TempData["Message"]
+                </div>
+            }
+
+            <h3>Order Status</h3>
+            @Html.ValidationSummary(true)
+
+            <div class="col-md-6">
+                <label class="">Enter your Order No</label>
+                <div class="">
+                    @Html.TextBoxFor(model => model.OrderNo, null, new { @class = "orderNo form-control" })
+                    @Html.ValidationMessageFor(model => model.OrderNo)
+                </div>
+            </div>
+            <div class="col-md-6">
+                <label>Enter your Email ID/Mobile No</label>
+                <div class="form-group">
+                    @Html.TextBoxFor(model => model.EmailId, null, new { @class = "emailId form-control" })
+                    @Html.ValidationMessageFor(model => model.EmailId)
+                </div>
+            </div>
+            <div class="col-md-6">
+                <button id="btnTrack" type="submit" value="Track Order" class="btn success"><span class="mif-location"></span><span> Track Order</span></button>
+            </div>
+        }
+    </div>
+</div>
+<div class="gap"></div>
+
+
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}

@@ -1,0 +1,99 @@
+﻿@{
+    string cityName = "";
+    string cityID = "";
+    int franchiseID = 0;////added
+    if (Request.Cookies["CityCookie"] != null && Request.Cookies["CityCookie"].Value != "")
+    {
+        cityName = Request.Cookies["CityCookie"].Value.Split('$')[1].ToLower();
+        cityID = Request.Cookies["CityCookie"].Value.Split('$')[0].Trim();
+        franchiseID = Convert.ToInt32(Request.Cookies["CityCookie"].Value.Split('$')[2]);////added
+
+        @Html.Hidden("hidcityName", Request.Cookies["CityCookie"].Value.Split('$')[1].ToLower()); //-- Added for Multiple MCO by Ashish --//
+    @Html.Hidden("hidfranchiseid", Request.Cookies["CityCookie"].Value.Split('$')[2].ToLower());//-- Added for Multiple MCO by Ashish --//
+    @Html.Hidden("hidhelplineno", Request.Cookies["CityCookie"].Value.Split('$')[3].ToLower());//-- Added for Multiple MCO by Ashish --//
+    }
+}
+<div class="container-fluid" style="background: rgba(113, 113, 113, 0.29); color: rgb(60, 60, 60); padding-top: 5px; padding-bottom: 5px; ">
+    <div class="container" style="padding-left:0px;padding-right:0px;">
+        <div class="col-md-3 col-sm-6">
+            <i class="fa fa-phone fa-3x pull-left" aria-hidden="true"></i> <h4 id="liHelpLine" style=" margin-top: 10px;text-transform:uppercase"></h4>
+        </div>
+        <div class="col-md-3 col-sm-6">
+            <i class="fa fa-envelope fa-3x pull-left " aria-hidden="true"></i> <h4 style=" margin-top: 10px;">support@ezeelo.com</h4>
+        </div>
+        <div class="col-md-6 col-sm-12">
+            <ul class="main-footer-social-list" style="margin-top: 0px;">
+                <li>
+                    @*Yashaswi*@
+                    <a class="fa fa-facebook fa-2x" href="https://www.facebook.com/ezeelocom" title="facebook" target="_blank" style="text-decoration:none !important;"></a>
+                    @*<a class="fa fa-facebook fa-2x" href="https://www.facebook.com/ezeelo" title="facebook" target="_blank"></a>*@
+                </li>
+                <li>
+                    <a class="fa fa-twitter fa-2x" href="https://twitter.com/ezeelo" title="twitter" target="_blank"></a>
+                </li>
+                <li>
+                    <a class="fa fa-pinterest fa-2x" href="https://in.pinterest.com/ezeelo/" title="pinterest" target="_blank"></a>
+                </li>
+                <li>
+                    <a class="fa fa-youtube fa-2x" href="https://www.youtube.com/c/ezeelo" title="youtube" target="_blank"></a>
+                </li>
+                <li>
+                    <a class="fa fa-instagram fa-2x" href="https://www.instagram.com/ezeelo/" title="instagram" target="_blank"></a>
+                </li>
+                <li>
+                    <a class="fa fa-linkedin fa-2x" href="https://www.linkedin.com/company/ezeelo" title="linkedin" target="_blank"></a>
+                </li>
+                <li>
+                    <a class="fa fa-google-plus fa-2x" href="https://plus.google.com/+ezeelo" title="google-plus" target="_blank"></a>
+                </li>
+                <li>
+                    <a class="fa fa-bold fa-2x" href="http://ezeelo.blogspot.in/" title="blog" target="_blank"></a>
+                </li>
+            </ul>
+        </div>
+    </div>
+
+</div>
+<div class="container">
+    <div class="row " style="margin-bottom: 0px; margin-top: 10px;">
+        <div class="col-md-12">
+            @*<h4 class="widget-title-sm">Customer services</h4>*@
+            <ul class="main-footer-tag-list">
+                <li><a href="@Url.RouteUrl("aboutus", new { city = cityName, franchiseId = franchiseID })" title="About Us"><i class="fa fa-smile-o"></i> About Us</a></li>
+                <li><a href="@Url.RouteUrl("policies", new { city = cityName, franchiseId = franchiseID })" title="Policies"><i class="fa fa-clipboard"></i> Policies</a></li>
+                <li><a href="@Url.RouteUrl("terms", new { city = cityName, franchiseId = franchiseID })" title="Terms of use"><i class="fa fa-align-justify"></i> Terms of use</a></li>
+                <li><a href="@Url.RouteUrl("faq", new { city = cityName, franchiseId = franchiseID })" title="FAQ"><i class="fa fa-question"></i> FAQ</a></li>
+                <li><a href="@Url.RouteUrl("Refer", new { city = cityName, franchiseId = franchiseID })" title="Refer And Earn"><i class="fa fa-rupee"></i> Refer And Earn</a></li>
+                <li><a href="@Url.RouteUrl("contactus", new { city = cityName, franchiseId = franchiseID })" title="Contact Us"><i class="fa fa-envelope"></i> Contact Us</a></li>
+                <li><a href="@Url.RouteUrl("career", new { city = cityName, franchiseId = franchiseID })" title="Career"><i class="fa fa-book"></i> Career</a></li>
+                <li><a href="@Url.RouteUrl("feedback", new { city = cityName, franchiseId = franchiseID })" title="Feedback"><i class="fa fa-mail-forward"></i> Feedback</a></li>
+                <li><a href="@Url.RouteUrl("merchantguide", new { city = cityName, franchiseId = franchiseID })" title="Merchants"><i class="fa fa-exchange"></i> Merchants</a></li>
+                <li><a href="http://Partner.ezeelo.com/" title="Partner"><i class="fa fa-users"></i> Partner</a></li>
+                <li><a href="@Url.RouteUrl("allshops", new { city = cityName, franchiseId = franchiseID })" title="Stores"><i class="fa fa-university"></i>Stores</a></li>
+                <li><a href="@Url.RouteUrl("RequestForPartner", new { city = cityName, franchiseId = franchiseID })"><i class="fa fa-user"></i> Become a Partner</a></li>
+            </ul>
+        </div>
+    </div>
+    <div class="row " id="footerdescription">
+        <div class="col-md-12" style="text-align:justify;font-size:10px;">
+            <p style="line-height:12px;">
+                @*Yashaswi 12-7-2018 *@
+                Ezeelo have wide range of products along with attractive income generation plans available to every customer in our unique PDI (Peoples Direct Involvement) led Multi-brand retailing eco System. Our Product range includes Staples, Personal Care, Home Care and Processed Food. Customers get free home delivery on their purchases.
+                <br />
+                Along with attractive Prices which are invariably at a handsome discount over the MRP customers also earns Retail Points which enables them to create Multi-Level of down line members. Ezeelo is all set to become one of the largest Online Retailer of India in the near future by setting up its fulfillment Centers in all the Tier 1, Tier2 and Tier 3 cities of India.
+                <br />
+                Ezeelo is becoming a favorite online shopping destination for a large number of customers as this is the only online store where customers becomes perpetual stakeholder of this unique and emerging eco system.
+            </p>
+        </div>
+    </div>
+</div>
+<script src="~/Scripts/jquery-2.1.3.min.js"></script>
+<script>
+    //-- Added for Multiple MCO by Ashish --//
+    var cityName = document.getElementById("hidcityName").value;
+    var helplineno = document.getElementById("hidhelplineno").value;
+    document.getElementById("liHelpLine").innerHTML = cityName + ' : ' + helplineno;
+    //-- End Added for Multiple MCO by Ashish --//
+</script>
+
+

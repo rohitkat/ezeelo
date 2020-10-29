@@ -1,0 +1,557 @@
+@model ModelLayer.Models.ViewModel.WarehouseViewModel
+
+@* This partial view defines form fields that will appear when creating and editing entities *@
+
+<style>
+    #msform1 fieldset:not(:first-of-type) {
+        display: none;
+    }
+
+    .field-validation-error {
+        color: #000000 !important;
+    }
+
+    .succes-msg {
+        color: #31A012;
+        font-size: 20px;
+    }
+
+    .beatpicker-clearButton button {
+        display: none;
+    }
+
+    .input-parent button {
+        display: none;
+    }
+
+    .textarea-adjust {
+        width: 85%;
+    }
+    /*Beatpicker Css*/
+    .beatpicker-clearButton button {
+        display: none;
+    }
+
+    .input-parent button {
+        display: none;
+    }
+
+    .header-navbar-button {
+        position: absolute !important;
+    }
+
+    .beatpicker .main-nav .current-indicator {
+        text-align: center !important;
+    }
+
+    .beatpicker .main-nav .prev1 {
+        left: 0 !important;
+        width: 14%;
+        padding: 0px 10px;
+        color: #fff;
+        font-size: 16px;
+    }
+
+    .beatpicker .main-nav .next1 {
+        right: 0 !important;
+        width: 9%;
+        color: #fff;
+        font-size: 16px;
+    }
+
+    .beatpicker .main-nav .prev1:hover {
+        left: 0 !important;
+        width: 14%;
+        padding: 0px 10px;
+        color: #fff;
+        font-size: 20px;
+        cursor: pointer !important;
+    }
+
+    .beatpicker .main-nav .next1:hover {
+        right: 0 !important;
+        width: 9%;
+        color: #fff;
+        font-size: 20px;
+        cursor: pointer !important;
+    }
+    /*Beatpicker Css End*/
+</style>
+
+<link href="~/Content/css/BeatPicker.min.css" rel="stylesheet" />
+<script src="~/Content/js/jquery-1.11.0.min.js"></script>
+<script src="~/Content/js/BeatPicker.js"></script>
+<link href="~/Content/assets/css/style.css" rel="stylesheet" />
+<script src="~/Content/js/jquery-1.9.1.min.js"></script>
+<link href="http://www.jqueryscript.net/css/jquerysctipttop.css" rel="stylesheet" type="text/css">
+<link href="~/Content/assets/css/form-design.css" rel="stylesheet" />
+
+<div class="col-lg-8 col-md-7 col-sm-4 col-xs-12">
+    <div class=" clearfix"></div>
+    @if (TempData["Message"] != null)
+    {
+        <div class="breadcrumbs1 dark  pull-left">
+            @TempData["Message"]
+        </div>
+    }
+</div>
+
+<div class="row-fluid">
+
+    <div class="box span12 right_side_up_part">
+        <div class="box-header creatProduct clearfix" data-original-title="">
+            <h2>
+                <i class="icon-exclamation-sign"></i>
+                <span class="break"></span>
+                @ViewBag.Heading
+            </h2>
+        </div>
+
+        <div class="box-content nameDscrp">
+            <div class="form-horizontal">
+                <div class="control-group mrg-btm">
+                    <div class="NameDescription">
+
+                        @*Added  by Priti on 14-2-2019*@
+                        @*<div class="control-group mrg-left">
+
+                            @Html.LabelFor(model => model.StateName, "StateName", new { @class = "col-md-2" })
+                            <div class="control-group">
+                                @Html.DropDownList("StateID", null, "Select State", new { @class = "form-control", required = "required" })
+                                @Html.ValidationMessageFor(model => model.StateID)
+                            </div>
+                            @Html.LabelFor(model => model.CityName, "CityName", new { @class = "col-md-2" })
+                            <div class="control-group">
+                                @Html.DropDownList("CityID", null, "Select City", new { @class = "form-control", required = "required" })
+                                @Html.ValidationMessageFor(model => model.CityID)
+                            </div>
+
+                        </div>*@
+
+
+                        @Html.HiddenFor(model => model.Entity)@*Yashaswi 4-12-2018 For EVW*@
+                        <div class="control-group mrg-left">
+                            @Html.LabelFor(model => model.Name, "Warehouse Name", new { @class = "col-md-2" })
+                            <div class="">
+                                @Html.TextBoxFor(model => model.Name, new { @required = "required", @maxlength = "150" })
+                                @Html.ValidationMessageFor(model => model.Name)
+                            </div>
+                        </div>
+
+                        <div class="control-group mrg-left">
+                            @Html.LabelFor(model => model.GSTNumber, "GST Number", new { @class = "col-md-2" })
+
+                            <div>
+                                @Html.TextBoxFor(model => model.GSTNumber, new { @maxlength = "25" })
+                                @Html.ValidationMessageFor(model => model.GSTNumber)
+                            </div>
+                        </div>
+
+
+                        @*//Add by Priti on 11-3-2019*@
+                        <div class="control-group mrg-left">
+                            @Html.LabelFor(model => model.PAN, "PAN NO.", new { @class = "col-md-2" })
+
+                            <div class="">
+                                @Html.TextBoxFor(model => model.PAN, new { @maxlength = "10" })
+                                @Html.ValidationMessageFor(model => model.PAN)
+                            </div>
+                        </div>
+
+
+
+
+
+                        <div class="control-group mrg-left">
+                            @Html.LabelFor(model => model.ServiceNumber, "Service Number", new { @class = "col-md-2" })
+
+                            <div class="">
+                                @Html.TextBoxFor(model => model.ServiceNumber, new { @maxlength = "25" })
+                                @Html.ValidationMessageFor(model => model.ServiceNumber)
+                            </div>
+                        </div>
+
+                        <div class="control-group mrg-left">
+                            @Html.LabelFor(model => model.BusinessDetails.ContactPerson, "Contact Person", new { @class = "col-md-2" })
+
+                            <div>
+                                @Html.TextBoxFor(model => model.BusinessDetails.ContactPerson, new { @maxlength = "150" })
+                                @Html.ValidationMessageFor(model => model.BusinessDetails.ContactPerson)
+                            </div>
+                        </div>
+
+                        <div class="control-group mrg-left">
+                            @Html.LabelFor(model => model.BusinessDetails.Mobile, "Mobile", new { @class = "col-md-2" })
+
+                            <div>
+                                @Html.TextBoxFor(model => model.BusinessDetails.Mobile, new { @id = "Mobile", @class = "form-control-Widout-block ", @placeholder = "Enter Mobile", @required = "required", @maxlength = "10", @minLength = "10" })
+                                @Html.ValidationMessageFor(model => model.BusinessDetails.Mobile)
+                                <img id="Pincode_loading" src="~/Content/img/ajax_loader.gif" style="height: 20px; float: right; display: none" />
+                                <div id="divMobileError" class="alert-danger focused divMobileError-Class1" style="display:none;"> </div>
+                            </div>
+                        </div>
+                        <div class="clr"></div>
+                    </div>
+
+                    <div class="NameDescription">
+
+                        <div class="control-group mrg-left">
+                            @Html.LabelFor(model => model.BusinessDetails.Landline1, "Landline1", new { @class = "col-md-2" })
+
+                            <div>
+                                @Html.TextBoxFor(model => model.BusinessDetails.Landline1, new { @maxlength = "13" })
+                                @Html.ValidationMessageFor(model => model.BusinessDetails.Landline1)
+                            </div>
+                        </div>
+
+                        <div class="control-group mrg-left">
+                            @Html.LabelFor(model => model.BusinessDetails.Landline2, "Landline2", new { @class = "col-md-2" })
+                            <div>
+                                @Html.TextBoxFor(model => model.BusinessDetails.Landline2, new { @maxlength = "13" })
+                                @Html.ValidationMessageFor(model => model.BusinessDetails.Landline2)
+                            </div>
+                        </div>
+
+                        <div class="control-group mrg-left">
+                            @Html.LabelFor(model => model.BusinessDetails.Email, "Email", new { @class = "col-md-2" })
+                            <div>
+                                @Html.TextBoxFor(model => model.BusinessDetails.Email, new { required = "required", @maxlength = "150" })
+                                @Html.ValidationMessageFor(model => model.BusinessDetails.Email)
+                            </div>
+                        </div>
+
+                        <div class="control-group mrg-left">
+                            @Html.LabelFor(model => model.PincodeID, "Pincode", new { @class = "col-md-2" })
+
+                            <div class="editor-field">
+                                @Html.TextBoxFor(model => model.PincodeID, @Model.PincodeID.ToString(), new { @id = "PincodeID", @class = "form-control-Widout-block ", @placeholder = "Enter Pincode", @onkeypress = "return isValidPincode(event)", @required = "required", @maxlength = "6", @minLength = "6" })
+                                <img id="Pincode_loading" src="~/Content/img/ajax_loader.gif" style="height: 20px; float: right; display: none" />
+                                <div id="divPincodeError" class="alert-danger focused divPincodeError-Class1" style="display:none;"> </div>
+                            </div>
+                        </div>
+                        <div class="control-group mrg-left">
+                            @Html.LabelFor(model => model.BusinessDetails.FAX, "FAX", new { @class = "col-md-2" })
+                            <div>
+                                @Html.TextBoxFor(model => model.BusinessDetails.FAX, new { @maxlength = "13" })
+                                @Html.ValidationMessageFor(model => model.BusinessDetails.FAX)
+                            </div>
+                        </div>
+
+
+                  
+
+                        <div class="clr"></div>
+                    </div>
+
+                    <div class="NameDescription">
+
+                        <div class="control-group mrg-left">
+                            @Html.LabelFor(model => model.BusinessDetails.Website, "Website", new { @class = "col-md-2" })
+                            <div>
+                                @Html.TextBoxFor(model => model.BusinessDetails.Website, new { @maxlength = "150" })
+                                @Html.ValidationMessageFor(model => model.BusinessDetails.Website)
+                            </div>
+                        </div>
+
+                        <div class="control-group mrg-left">
+                            @Html.LabelFor(model => model.NearbyTransport, "Nearby Landmark", new { @class = "col-md-2" })
+
+                            <div>
+                                @Html.TextBoxFor(model => model.NearbyTransport, new { @maxlength = "500" })
+                                @Html.ValidationMessageFor(model => model.NearbyTransport)
+                            </div>
+                        </div>
+
+                        <div class="control-group mrg-left">
+                            @Html.LabelFor(model => model.Measurement, "Measurements(m)", new { @class = "col-md-2" })
+
+                            <div>
+                                @Html.TextBoxFor(model => model.Measurement, new { @maxlength = "10" })
+                                @Html.ValidationMessageFor(model => model.Measurement)
+                            </div>
+                        </div>
+
+                        <div class="control-group mrg-left">
+                            @Html.LabelFor(model => model.FloorSpace, "Floor Space(sqf)", new { @class = "col-md-2" })
+
+                            <div>
+                                @Html.TextBoxFor(model => model.FloorSpace, new { @maxlength = "10" })
+                                @Html.ValidationMessageFor(model => model.FloorSpace)
+                            </div>
+                        </div>
+
+                        <div class="control-group mrg-left">
+                            @Html.LabelFor(model => model.Volume, "Volume(cubic cm)", new { @class = "col-md-2" })
+
+                            <div>
+                                @Html.TextBoxFor(model => model.Volume, new { @maxlength = "10" })
+                                @Html.ValidationMessageFor(model => model.Volume)
+                            </div>
+                        </div>
+                        @*////Added by Priti*@
+                        <div class="control-group mrg-left">
+                            @Html.LabelFor(model => model.FSSILicenseNo, "FSSI License No.", new { @class = "col-md-2" })
+
+                            <div>
+                                @Html.TextBoxFor(model => model.FSSILicenseNo, new { @maxlength = "25" })
+                                @Html.ValidationMessageFor(model => model.FSSILicenseNo)
+                            </div>
+                        </div>
+
+
+                        <div class="control-group mrg-left">
+                            @Html.LabelFor(model => model.InsecticidesLicenseNo, "Insecticides License No.", new { @class = "col-md-2" })
+
+                            <div>
+                                @Html.TextBoxFor(model => model.InsecticidesLicenseNo, new { @maxlength = "25" })
+                                @Html.ValidationMessageFor(model => model.InsecticidesLicenseNo)
+                            </div>
+                        </div>
+                        @*end by Priti*@
+                        <div class="clr"></div>
+                        <div class="NameDescription">
+
+                            @*<div style="visibility:hidden" class="control-group mrg-left">
+                                    @Html.LabelFor(model => model.CustomEntry, "Custom Entry", new { @class = "col-md-2" })
+
+                                    <div>
+                                        @Html.EditorFor(model => model.CustomEntry, new { @maxlength = "50" })
+                                        @Html.ValidationMessageFor(model => model.CustomEntry)
+                                    </div>
+                                </div>
+                                <div style="visibility:hidden" class="control-group mrg-left">
+                                    @Html.LabelFor(model => model.CustomExit, "Custom Exit", new { @class = "col-md-2" })
+                                    <div>
+                                        @Html.EditorFor(model => model.CustomExit, new { @maxlength = "50" })
+                                        @Html.ValidationMessageFor(model => model.CustomExit)
+                                    </div>
+                                </div>*@
+
+                            <div class="control-group mrg-left">
+                                @Html.LabelFor(model => model.Password, "Password", new { @class = "col-md-2" })
+
+                                <div>
+                                    @Html.TextBoxFor(model => model.Password, new { @placeholder = "Password", @type = "password", @required = "required", @maxlength = "50" })
+                                    @Html.ValidationMessageFor(model => model.Password)
+
+                                    @Html.LabelFor(model => model.Password, "Confirm Password", new { @class = "col-md-2" })
+                                    @Html.TextBoxFor(model => model.ConfirmPassword, new { @id = "ConfirmPassword", @maxlength = "50", autocomplete = "off", @type = "password", placeholder = "Confirm Password" })
+                                    @Html.ValidationMessageFor(model => model.ConfirmPassword)
+                                </div>
+                            </div>
+
+                            <div class="control-group mrg-left">
+                                @Html.LabelFor(model => model.BusinessDetails.Address, "Address", new { @class = "col-md-2" })
+                                <div>
+                                    @Html.TextAreaFor(model => model.BusinessDetails.Address, new { @class = "discrip_box textarea-adjust" })
+                                    @Html.ValidationMessageFor(model => model.BusinessDetails.Address)
+                                </div>
+                            </div>
+                            @*yashaswi 5/4/2018*@
+                            @Html.HiddenFor(model => model.IsFulfillmentCenter)
+
+                            @*@if(Session["WarehouseID"]==null)
+                                  {
+                                  <div class="control-group mrg-left">
+                                 @Html.LabelFor(model => model.IsFulfillmentCenter,"Is FulFillment Center", new { @class = "col-md-2" })
+
+                                 <div class="editor-field">
+
+                                  @Html.CheckBoxFor(model => model.IsFulfillmentCenter, new { @checked = true})
+                                  @Html.ValidationMessageFor(model => model.IsFulfillmentCenter)
+                                </div>
+                                </div>
+                                 }
+                                 else
+                                  {
+                                      @Html.HiddenFor(model=>model.IsFulfillmentCenter)
+                                  }*@
+                            @if (Model.Entity.Trim() == "DV" || Model.Entity.Trim() == "FV")//Yashaswi 4-12-2018 For EVW If condition add
+                            {
+                            <div class="control-group mrg-left">
+                                Franchise
+
+                                <div style="margin-left:18px">
+                                    @*@Html.ListBoxFor(model => model.FranchiseIds, Model.lFranchises, new { @class = "list" })*@
+                                    @*@Html.ListBoxFor(model => model.lFranchises, new SelectList(Model.lFranchises, "Value", "Text"), new {@class = "listbox", size = 5 })*@
+                                    <table>
+                                        @if (Model.franchiseList.Count() == 0)
+                                        {
+                                            <tr> <td colspan="2">No Record Available...</td></tr>
+                                        }
+                                        else
+                                        {
+                                            for (var i = 0; i < Model.franchiseList.Count(); i++)
+                                            {
+                                                <tr>
+                                                    <td>
+                                                        @*yashaswi5/4/2018*@
+                                                        @if (@Model.IsFulfillmentCenter)
+                                                        {
+                                                            @Html.RadioButtonFor(m => m.Franchise, Model.franchiseList[i].ID, new { id = Model.franchiseList[i].ID, @checked = Model.franchiseList[i].IsSelected })
+                                                        }
+                                                        else
+                                                        {
+                                                            @Html.CheckBoxFor(it => it.franchiseList[i].IsSelected, new { Style = "vertical-align:3px}", @class = "brandCheckBox" })
+                                                        }
+                                                    </td>
+                                                    <td>
+                                                        @Html.HiddenFor(it => it.franchiseList[i].ID)
+                                                        @Html.HiddenFor(it => it.franchiseList[i].Name)
+                                                        @Html.DisplayFor(it => it.franchiseList[i].Name)
+                                                    </td>
+                                                </tr>
+                                            }
+                                        }
+                                    </table>
+                                </div>
+                            </div>
+                            }
+                            @if (Session["WarehouseID"] == null)
+                            {
+                                <div class="control-group mrg-left">
+                                    @Html.LabelFor(model => model.IsActive, new { @class = "col-md-2" })
+
+                                    <div class="editor-field">
+                                        @Html.CheckBoxFor(model => model.IsActive, new { @checked = true })
+                                        @Html.ValidationMessageFor(model => model.IsActive)
+                                    </div>
+                                </div>
+                            }
+                            else
+                            {
+                                @Html.HiddenFor(model => model.IsActive)
+                            }
+                            @Html.HiddenFor(model => model.CreateBy)
+                            @Html.HiddenFor(model => model.CreateDate)
+                            <div class="clr"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script type="text/javascript">
+    var lPincode = $('#PincodeID').val()
+    //alert("2");
+    $('#PincodeID').bind('input propertychange', function () {
+        var lPincode = $('#PincodeID').val()
+        $('#divPincodeError').hide();
+
+        if (lPincode.length == 6) {
+            $('#Pincode_loading').show();
+            $.ajax({
+                url: '@Url.Action("GetAddress", "Suppliers")?Pincode=' + lPincode,
+                type: "GET",
+                success: function (result) {
+                    if (result > 0) {
+                        $('#Pincode_loading').hide();
+                        $('#divPincodeError').hide();
+                    }
+                    else {
+                        $('#Pincode_loading').hide();
+                        $('#divPincodeError').show();
+                        $('#divPincodeError').html('[' + lPincode + '] dose not exist,Contact to ADMIN');
+                        $('#PincodeID').val('');
+                    }
+                },
+                error: function (result) {
+                    //alert(result)
+                    //alert('Pincode : ' + lPincode + ' Dose Not Exist, please Contact to ADMIN');
+                    $('#Pincode_loading').hide();
+                    $('#divPincodeError').show();
+                    $('#divPincodeError').html('[' + lPincode + '] dose not exist,Contact to ADMIN');
+                    $('#PincodeID').val('');
+                }
+            });
+        }
+    });
+</script>
+
+
+<script type="text/javascript">
+    var lMobile = $('#Mobile').val()
+    //alert("2");
+    $('#Mobile').bind('input propertychange', function () {
+        var lMobile = $('#Mobile').val()
+        $('#divMobileError').hide();
+
+        if (lMobile.length == 10) {
+            $('#Pincode_loading').show();
+            $.ajax({
+                url: '@Url.Action("IsMobileAvailable", "Warehouses")?Mobile=' + lMobile,
+                type: "GET",
+                success: function (result) {
+                    if (result > 0) {
+                        $('#Pincode_loading').hide();
+                        $('#divMobileError').show();
+                        $('#divMobileError').html('[' + lMobile + '] already exist');
+                        $('#Mobile').val('');
+                    }
+                    else {
+                        $('#Pincode_loading').hide();
+                        $('#divMobileError').hide();
+
+                    }
+                },
+                error: function (result) {
+                    //alert(result)
+                    //alert('Pincode : ' + lMobile + ' Dose Not Exist, please Contact to ADMIN');
+                    $('#Pincode_loading').hide();
+                    $('#divMobileError').show();
+                    $('#divMobileError').html('[' + lMobile + '] already exist');
+                    $('#Mobile').val('');
+                }
+            });
+        }
+    });
+</script>
+
+
+<script type="text/javascript">
+    function isValidPincode(evt) {
+        var charCode = (evt.which) ? evt.which : event.keyCode
+        var l = $('#PincodeID').val().length + 1;
+
+        if (charCode > 31 && (charCode < 48 || charCode > 57))
+            return false;
+
+        if (l > 6 && charCode != 8) {
+            return false;
+        }
+
+        return true;
+    }
+</script>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+
+        $('#submit').click(function () {
+
+            var pwd = $("#Password").val();
+            var cnfrmPwd = $("#ConfirmPassword").val();
+
+            if ((pwd != cnfrmPwd)) {
+                $("#mask").hide();
+            }
+            else {
+                $("#mask").show();
+            }
+
+        });
+
+    });
+</script>
+
+
+
+
+
+
+
+
+

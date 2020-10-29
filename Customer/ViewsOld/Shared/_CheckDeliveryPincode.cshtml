@@ -1,0 +1,157 @@
+﻿@{
+    string cityName = "";
+    int franchiseID = 0;////added
+    if (Request.Cookies["CityCookie"] != null && Request.Cookies["CityCookie"].Value != "")
+    {
+        cityName = Request.Cookies["CityCookie"].Value.Split('$')[1].ToLower();
+        franchiseID = Convert.ToInt32(Request.Cookies["CityCookie"].Value.Split('$')[2]);////added
+    }
+}
+
+@if (Request.Cookies["DeliverablePincode"] != null)
+{
+    <div id="divPincodeLink">
+        @*<span>Delivery Pincode: </span> <span class="spanPincode">@Request.Cookies["DeliverablePincode"].Value</span><a onclick="DisplayPincodeDiv()">Change Pincode</a>*@
+        @*Yashaswi 1/6/2018 Show Selected City And PinCode and Area*@
+        <span>Delivery Location: </span> <span class="spanPincode" id="sp-Pincode">@Request.Cookies["DeliverablePincode"].Value</span>
+        @*<a onclick="DisplayPincodeDiv()">Change Pincode</a>*@
+    </div>
+    <div id="divPincodeVerification" style="display:none;">
+        <input id="txtPincode" type="text" onkeypress="return IsNumeric(event);" maxlength="6" ondrop="return false;" onpaste="return false;" class="inputbox" placeholder="Enter Pincode" style="padding-left:5px;">
+        <input type="button" value="Check" onclick="CheckDeliveryPincode();" class="button checkBtn" />
+        <span id="error" style="color: Red; display: none;" class="errorMsg">* Input digits (0 - 9)</span>
+    </div>
+}
+else
+{
+    <div id="divPincodeVerification">
+        <input id="txtPincode" type="text" onkeypress="return IsNumeric(event);" maxlength="6" ondrop="return false;" onpaste="return false;" class="inputbox" placeholder="Enter Pincode" style="padding-left:5px;">
+        <input type="button" value="Check" onclick="CheckDeliveryPincode();" class="button checkBtn" />
+        <span id="error" style="color: Red; display: none;" class="errorMsg">* Input digits (0 - 9)</span>
+    </div>
+    <div id="divPincodeLink" style="display:none;">
+        <span>Delivery Pincode: </span> <span class="spanPincode"></span><a onclick="DisplayPincodeDiv()">Change Pincode</a>
+    </div>
+}
+<span class="spnMessage errorMsg"></span>
+
+@*Js for checking delivery pincode*@
+<script type="text/javascript">
+    function CheckDeliveryPincode() {
+        var pincode = $("#txtPincode").val();
+
+        if (pincode != '') {
+            $(".spnMessage").text("");
+            $.ajax({
+                type: "POST",
+                url: '@Url.Action("CheckDeliveryPincode", "PreviewItem", new { city = cityName, franchiseId = franchiseID })',////added franchiseId=franchiseID
+                data: "{'pincode':" + pincode + "}",
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (response) {
+                    if (response == true) {
+                        $(".spnMessage").css("display", "block");
+                        $(".spanPincode").text(pincode);
+                        $(".spnMessage").text("This items can be delivered at your location!!");
+                        $(".spnMessage").css("color", "green");
+                        $("[id=divPincodeLink]").css("display", "block");
+                        $("[id=divPincodeVerification]").css("display", "none");
+                        $("#error").css("display", "none");
+                    }
+                    else {
+                        $(".spnMessage").css("display", "block");
+                        $(".spnMessage").text("Sorry! This items can't be delivered at your location!!");
+                        $(".spnMessage").css("color", "red");
+                        $("#error").css("display", "none");
+                    }
+                },
+                failure: function (response) {
+
+                },
+                error: function (response) {
+
+                }
+            });
+        }
+        else {
+            $(".spnMessage").css("display", "block");
+            $(".spnMessage").text("Please enter pincode!!");
+            $(".spnMessage").css("color", "red");
+            $("#error").css("display", "none");
+        }
+    }
+
+    var specialKeys = new Array();
+    specialKeys.push(8); //Backspace
+    specialKeys.push(37); //left arrow key
+    specialKeys.push(38); //up arrow key
+    specialKeys.push(39); //right arrow key
+    specialKeys.push(40); //down arrow key
+
+    function IsNumeric(e) {
+        //alert(e);
+        var keyCode = e.which ? e.which : e.keyCode
+        if (keyCode != 13 && keyCode != 9) {
+            var ret = ((keyCode >= 48 && keyCode <= 57) || specialKeys.indexOf(keyCode) != -1);
+            document.getElementById("error").style.display = ret ? "none" : "inline";
+            $(".spnMessage").css("display", "none");
+            return ret;
+        }
+        else {
+
+            CheckDeliveryPincode();
+            return false;
+        }
+    }
+
+    $(function () {
+        var pincodeCookie = getCookie("DeliverablePincode");
+        if (pincodeCookie != null && pincodeCookie != "") {
+            $("[id=divPincodeLink]").css("display", "block");
+            $("[id=divPincodeVerification]").css("display", "none");
+        }
+        else {
+            $("[id=divPincodeLink]").css("display", "none");
+            $("[id=divPincodeVerification]").css("display", "block");
+        }
+    });
+
+    function getCookie(name) {
+        var dc = document.cookie;
+        var prefix = name + "=";
+        var begin = dc.indexOf("; " + prefix);
+        if (begin == -1) {
+            begin = dc.indexOf(prefix);
+            if (begin != 0) return null;
+        } else {
+            begin += 2;
+        }
+        var end = document.cookie.indexOf(";", begin);
+        if (end == -1) {
+            end = dc.length;
+        }
+        return unescape(dc.substring(begin + prefix.length, end));
+    }
+
+    function DisplayPincodeDiv() {
+        $("[id=divPincodeLink]").css("display", "none");
+        $("[id=divPincodeVerification]").css("display", "block");
+    }
+    //Yashaswi 1/6/2018 Show Selected City And PinCode and Area
+    $(document).ready(function () {
+        if (localStorage.getItem("PinArea") != null) {
+            var txtPinArea = localStorage.getItem("PinArea");
+            var ary = txtPinArea.split(',');
+            if (ary.length != 0) {
+                $("#txtPincode").val(ary[0]);
+                CheckDeliveryPincode();
+                $("#sp-Pincode").text(ary[1] + ", " + ary[0]);
+            }
+        }
+    });
+    //
+</script>
+@*End*@
+
+
+

@@ -1,0 +1,25 @@
+﻿@model ModelLayer.Models.ViewModel.TestModel
+@using BotDetect.Web.UI.Mvc;
+@using ModelLayer.Models.ViewModel;
+
+
+@section BotDetectStyles {
+    <link href="@BotDetect.Web.CaptchaUrls.Absolute.LayoutStyleSheetUrl" rel="stylesheet" type="text/css" />
+}
+
+@* add Captcha validation controls to the protected action View *@
+@{
+    MvcCaptcha registrationCaptcha = CaptchaHelper.GetRegistrationCaptcha();
+}
+@if (!registrationCaptcha.IsSolved)
+{
+    <div class="editor-label">
+        @Html.LabelFor(m => m.CaptchaCode)
+        @Html.Captcha(registrationCaptcha)
+    </div>
+    <div class="editor-field">
+        @Html.TextBoxFor(m => m.CaptchaCode)
+        @Html.ValidationMessageFor(m => m.CaptchaCode)
+    </div>
+    <input type="submit" value="Submit" />
+}

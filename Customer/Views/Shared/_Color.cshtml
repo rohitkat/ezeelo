@@ -1,0 +1,42 @@
+﻿@model ModelLayer.Models.ViewModel.ProductViewModel
+
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $(".contentcolor").show(200);
+        $(".titlenew").click(function () {
+            $(".contentcolor").toggle();
+        });
+    });
+</script>
+
+@if (Model != null)
+{
+    if (Model.colorList != null)
+    {
+        if (Model.colorList.Count() > 0)
+        {
+            if (!(Model.colorList.Count() == 1 && Model.colorList[0].ID == 1))
+            {
+
+                <table id="tblColor">
+                    @for (var i = 0; i < Model.colorList.Distinct().Count(); i++)
+                    {
+                        <tr>
+                            <td>
+                                @Html.CheckBoxFor(it => it.colorList[i].IsSelected, new { onchange = "this.form.submit();", Style = "vertical-align:3px}", @class = "colorCheckBox" })
+                            </td>
+                            <td>
+                                @Html.HiddenFor(it => it.colorList[i].ID)
+                                @Html.HiddenFor(it => it.colorList[i].Name)
+                                @Html.DisplayFor(it => it.colorList[i].Name)
+                            </td>
+
+                        </tr>
+                    }
+                </table>
+
+            }
+        }
+    }
+}

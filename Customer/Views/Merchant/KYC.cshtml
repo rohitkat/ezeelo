@@ -1,0 +1,571 @@
+﻿@model ModelLayer.Models.MerchantKYC
+@{
+
+    Layout = "~/Views/Shared/_Layout_Internal.cshtml";
+    ViewBag.Title = "eZeelo: Electronics, Fashion, Coupons, Home Appliances | Lowest Price";
+}
+<link href="~/Content/css/material-design.minfd53.css" rel="stylesheet" />
+<link rel="stylesheet" href="~/Content/css/dropify.minfd53.css">
+<link rel="stylesheet" href="~/Content/css/custom.css">
+<style type="text/css">
+
+    .row {
+        margin: 0 !important;
+    }
+
+    p {
+        font-size: 1.2em;
+        line-height: 1.7em;
+        font-weight: bold;
+        color: #999;
+        padding-top: 20px;
+    }
+
+    .col-md-4 {
+        padding-left: 15px;
+        padding-right: 15px;
+    }
+
+    .dropify-wrapper input {
+        position: absolute;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        left: 0;
+        height: 100%;
+        width: 100%;
+        opacity: 0;
+        cursor: pointer;
+        z-index: 5;
+    }
+
+    .dropify-font-upload:before, .dropify-wrapper .dropify-message span.file-icon:before {
+        content: '\f382';
+        display: none !important;
+    }
+
+    .dropify-font:before, .dropify-wrapper .dropify-message span.file-icon:before, .dropify-wrapper .dropify-preview .dropify-infos .dropify-infos-inner p.dropify-filename span.file-icon:before, [class*=" dropify-font-"]:before, [class^=dropify-font-]:before {
+        font-family: dropify;
+        font-style: normal;
+        font-weight: 400;
+        speak: none;
+        display: inline-block;
+        text-decoration: inherit;
+        width: 1em;
+        margin-left: .2em;
+        margin-right: .2em;
+        text-align: center;
+        font-variant: normal;
+        text-transform: none;
+        line-height: 1em;
+    }
+
+    .row.mt-30 .col-xs-4.col-sm-4.col-md-4 .dropify-wrapper.touch-fallback .dropify-message {
+        padding: 0;
+    }
+
+    .dropify-wrapper.touch-fallback .dropify-message span.file-icon figure #imgBanner {
+        width: 520px !important;
+        height: 200px !important;
+    }
+
+    .dropify-wrapper.touch-fallback .dropify-message span.file-icon figure img {
+        width: 265px;
+        height: 200px;
+    }
+
+
+    .dropify-wrapper.touch-fallback .dropify-message {
+        padding: 0;
+    }
+</style>
+@using (Html.BeginForm(null, null, FormMethod.Post, new { enctype = "multipart/form-data", id = "frmMerchantKYC" }))
+{
+    @Html.AntiForgeryToken()
+
+    <div class="container">
+        <div class="row">
+
+            <div class="col-md-12">
+                <div class="box-lg">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="example">
+                                <div class="grid">
+                                    @Html.ValidationSummary(true)
+                                    <h3 id="title" class="widget-title" style="padding-top:20px">Merchant KYC Details</h3>
+                                    <h5>Welcome, <span id="spName"></span></h5>
+
+                                    @if (TempData["Messaage"] != null)
+                                    {
+                                        <div class="alert alert-danger alert-dismissible">
+                                            <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                                            <strong>Danger!</strong> @TempData["Messaage"]
+                                        </div>
+                                    }
+
+                                    <div class="row" style="text-align: center;">
+                                        <span id="errorMessage" class="breadcrumbs dark" style="width:100%;text-align:center;color:red;font-weight:bold"></span>
+                                    </div>
+
+                                    @Html.HiddenFor(model => model.MerchantID, new { @Value = ViewBag.ID })
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-6 col-md-6">
+                                    <div class="form-group">
+                                        <label>
+                                            Registered Contact No.
+                                        </label>
+                                        @Html.TextBox("ContactNo", null, new { autocomplete = "off", maxlength = 10, placeholder = "Enter Registered Contact NO.", @class = "form-control", required = "required", @onkeypress = "return ValidateNumber(event);", @value = ViewBag.ContactNo })
+
+                                        <label class="danger" style="color:red;display:none" id="msgLeader"></label>
+                                    </div>
+                                </div>
+                            </div>
+                            <span style="color:red;font-weight:bold;display:block">*Note : Images accepted formats: png, jpg, jpeg, raw  & Maximum size for Image: 150KB & for Banner 300KB(1200 * 400)</span>
+                            <span style="color:green;font-weight:bold;display:block">*Note : Please contact on 9860890890 our customer care no if you face any difficulty in processing this.</span>
+
+                            <span id="spImgMsg" style="color:red;font-weight:bold;display:block"></span>
+                            <div class="row mt-30">
+                                <div class="col-xs-4 col-sm-4 col-md-4 ">
+                                    <p> Photo of the shop</p>
+                                    <div class="dropify-wrapper touch-fallback">
+                                        <div class="dropify-message">
+                                            <span class="file-icon">
+                                                <figure class="">
+                                                    <img  id="imgPhoto" src="/Content/Images/no_image.png" alt=" eZeelo ">
+                                                </figure>
+                                            </span>
+                                        </div>
+                                        <input accept="image/x-png,image/jpg,image/jpeg" type="file" class="dropify KYCUploadinput" name="photo" data-show-remove="false" onchange="readfile(this,'Photo');">
+                                    </div>
+                                </div>
+                                <div class="col-xs-8 col-sm-8 col-md-8">
+                                    <p>Shop Banner Image (Optional)</p>
+                                    <div class="dropify-wrapper touch-fallback">
+                                        <div class="dropify-message">
+                                            <span class="file-icon">
+                                                <figure>
+                                                    <img id="imgBanner" src="/Content/Images/no_image.png" alt="eZeelo">
+                                                </figure>
+                                            </span>
+                                        </div>
+                                        <input accept="image/x-png,image/jpg,image/jpeg" type="file" class="dropify KYCUploadinput" name="Banner" data-show-remove="false" onchange="readfile(this,'Banner');">
+                                    </div>
+                                </div>
+                                <div class="col-xs-4 col-sm-4 col-md-4">
+                                    <p>Shop Establishment Certificate Image</p>
+                                    <div class="dropify-wrapper touch-fallback">
+                                        <div class="dropify-message">
+                                            <span class="file-icon">
+                                                <figure>
+                                                    <img id="imgShop" src="/Content/Images/no_image.png" alt=" eZeelo ">
+                                                </figure>
+                                            </span>
+                                        </div>
+                                        <input accept="image/x-png,image/jpg,image/jpeg" type="file" class="dropify KYCUploadinput" name="shopCertificate" data-show-remove="false" onchange="readfile(this,'Shop');">
+                                    </div>
+                                </div>
+                                <div class="col-xs-4 col-sm-4 col-md-4">
+                                    <p>PAN Card Image</p>
+                                    <div class="dropify-wrapper touch-fallback">
+                                        <div class="dropify-message">
+                                            <span class="file-icon">
+                                                <figure>
+                                                    <img id="imgPAN" src="/Content/Images/no_image.png" alt="eZeelo">
+                                                </figure>
+                                            </span>
+                                        </div>
+                                        <input accept="image/x-png,image/jpg,image/jpeg" type="file" class="dropify KYCUploadinput" name="pan" data-show-remove="false" onchange="readfile(this,'PAN');">
+                                    </div>
+                                </div>
+                                <div class="col-xs-4 col-sm-4 col-md-4">
+                                    <p>
+                                        GST Registration Certificate Image
+                                        @if (ViewBag.GST == "")
+                                        {
+                                            <span>(Optional)</span>
+                                        }
+                                    </p>
+                                    <div class="dropify-wrapper touch-fallback">
+                                        <div class="dropify-message">
+                                            <span class="file-icon">
+                                                <figure>
+                                                    <img id="imgGST" src="/Content/Images/no_image.png" alt="eZeelo">
+                                                </figure>
+                                            </span>
+                                        </div>
+                                        <input accept="image/x-png,image/jpg,image/jpeg" type="file" class="dropify KYCUploadinput" name="gst" data-show-remove="false" onchange="readfile(this,'GST');">
+                                    </div>
+                                </div>
+                                <div class="col-xs-4 col-sm-4 col-md-4">
+                                    <p>Address Proof Image</p>
+                                    <div class="dropify-wrapper touch-fallback">
+                                        <div class="dropify-message">
+                                            <span class="file-icon">
+                                                <figure>
+                                                    <img id="imgAddress" src="/Content/Images/no_image.png" alt="eZeelo">
+                                                </figure>
+                                            </span>
+                                        </div>
+                                        <input accept="image/x-png,image/jpg,image/jpeg" type="file" class="dropify KYCUploadinput" name="address" data-show-remove="false" onchange="readfile(this,'Address');">
+                                    </div>
+                                </div>
+                                <div class="col-xs-4 col-sm-4 col-md-4">
+                                    <p>Visiting Card Image (Optional)</p>
+                                    <div class="dropify-wrapper touch-fallback">
+                                        <div class="dropify-message">
+                                            <span class="file-icon">
+                                                <figure>
+                                                    <img id="imgVistingCard" src="/Content/Images/no_image.png" alt="eZeelo">
+                                                </figure>
+                                            </span>
+                                        </div>
+                                        <input accept="image/x-png,image/jpg,image/jpeg" type="file" class="dropify KYCUploadinput" name="visitingCard" data-show-remove="false" onchange="readfile(this,'Visiting');">
+                                    </div>
+                                </div>
+                                <div class="col-xs-4 col-sm-4 col-md-4">
+                                    <p>Cancelled Blank Cheque Image</p>
+                                    <div class="dropify-wrapper touch-fallback">
+                                        <div class="dropify-message">
+                                            <span class="file-icon">
+                                                <figure>
+                                                    <img id="imgCheque" src="/Content/Images/no_image.png" alt="eZeelo">
+                                                </figure>
+                                            </span>
+                                        </div>
+                                        <input accept="image/x-png,image/jpg,image/jpeg" type="file" class="dropify KYCUploadinput" name="cancelledCheque" data-show-remove="false" onchange="readfile(this,'Cheque');">
+                                    </div>
+                                </div>
+
+                                <br />
+                                <br />
+
+                            </div>
+                            <div class="form-group" style="padding-left:15px;margin-top:15px">
+                                <input type="submit" value="Upload" class="btn btn-info" id="submit" disabled />
+
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="divPopupLoading" class="modal" style="background: rgba(130, 129, 129, 0.77); ">
+        <div class="modal-dialog modal-sm" style="margin-top:15%">
+            <div class="modal-content" style="padding:10px;text-align:center">
+                <div class="row" style="padding: 10px;">
+                    <img src="~/Content/Images/ajax_loader.gif" style="width:50%;height:50%" />
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="divPopupMsg" class="modal" style="background: rgba(130, 129, 129, 0.77); ">
+        <div class="modal-dialog modal-sm" style="width:500px !important;">
+            <div class="modal-content" style="padding:20px;text-align:center">
+                <div class="row" style="padding: 10px;">
+                    <div class="col-lg-12" style="text-align:left">
+                        <p>
+                            <span id="DelivryMsg_Id" style="font-size:16px"> </span>
+                        </p>
+                        <div style="text-align:center">
+                            <a onclick="$('#divPopupMsg').hide()" class="btn btn-warning" style="font-size:15px;width:90px;height:35px !important">OK</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    if (ViewBag.Message != null)
+    {
+        <script>
+        $("#DelivryMsg_Id").html('@ViewBag.Message');
+        $("#divPopupMsg").show();
+        </script>
+    }
+}
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+
+<script type="text/javascript">
+
+        $(document).ready(function () {
+            if ('@TempData["Messaage"]' != '') {
+                alert('@TempData["Messaage"]')
+            }
+
+            $("#frmMerchantKYC").submit(function (e) {
+                var result = "";
+                if ($("#imgPhoto").attr("src") == "/Content/Images/no_image.png") {
+                    result = "1";
+                    $("#imgPhoto").parents("div.dropify-wrapper.touch-fallback").css("border", "2px solid red");
+                }
+                else {
+                    $("#imgPhoto").parents("div.dropify-wrapper.touch-fallback").css("border", "2px solid #E5E5E5");
+                }
+
+                if ($("#imgShop").attr("src") == "/Content/Images/no_image.png") {
+                    result = "1";
+                    $("#imgShop").parents("div.dropify-wrapper.touch-fallback").css("border", "2px solid red");
+                }
+                else {
+                    $("#imgShop").parents("div.dropify-wrapper.touch-fallback").css("border", "2px solid #E5E5E5");
+                }
+                if ($("#imgPAN").attr("src") == "/Content/Images/no_image.png") {
+                    result = "1";
+                    $("#imgPAN").parents("div.dropify-wrapper.touch-fallback").css("border", "2px solid red");
+                }
+                else {
+                    $("#imgPAN").parents("div.dropify-wrapper.touch-fallback").css("border", "2px solid #E5E5E5");
+                }
+                if ('@ViewBag.GST' != "") {
+                    if ($("#imgGST").attr("src") == "/Content/Images/no_image.png") {
+                        result = "1";
+                        $("#imgGST").parents("div.dropify-wrapper.touch-fallback").css("border", "2px solid red");
+                    }
+                    else {
+                        $("#imgGST").parents("div.dropify-wrapper.touch-fallback").css("border", "2px solid #E5E5E5");
+                    }
+                }
+                if ($("#imgAddress").attr("src") == "/Content/Images/no_image.png") {
+                    result = "1";
+                    $("#imgAddress").parents("div.dropify-wrapper.touch-fallback").css("border", "2px solid red");
+                    }
+                else {
+                    $("#imgAddress").parents("div.dropify-wrapper.touch-fallback").css("border", "2px solid #E5E5E5");
+                }
+
+                if ($("#imgCheque").attr("src") == "/Content/Images/no_image.png") {
+                    result = "1";
+                    $("#imgCheque").parents("div.dropify-wrapper.touch-fallback").css("border", "2px solid red");
+                }
+                else {
+                    $("#imgCheque").parents("div.dropify-wrapper.touch-fallback").css("border", "2px solid #E5E5E5");
+                }
+                if (result == "1") {
+                    $("#spMsg").parent().css("display", "block");
+                    $("#spMsg").html("Warning! Please select highlighted image.");
+                    return false;
+                }
+                //setTimeout(function () {
+                //    if ($('.input-validation-error').length == 0) {
+                //        $("#divPopupLoading").show();
+
+
+
+                //        return true;
+                //    }
+                //    else {
+                //        $("#divPopupLoading").hide();
+                //    }
+                //}, 1000);
+                var formData = new FormData($('form')[0]);
+                if ($('.input-validation-error').length == 0) {
+                    $('#submit').prop("disabled", true);
+                    $("#divPopupLoading").show();
+                        $.ajax({
+                        type: "POST",
+                        url: "@Url.Action("KYC", "Merchant")",
+                        data: formData,
+                        contentType: false,
+                        cache: false,
+                        processData: false,
+                            success: function (data) {
+                                $("#divPopupLoading").hide();
+                                alert("Success");
+                            // alert(data);
+                            //if (data.Message == "") {
+                            //    $('#submit').prop("disabled", true);
+                            //    $('#msgLeader').css("display", "block");
+                            //    $('#msgLeader').html('Invalid Contact No.');
+                            //    $("#OTPDiv").slideUp(1000);
+                            //}
+                            //else {
+                            //    $('#submit').prop("disabled", false);
+                            //    $('#msgLeader').html(data.Message);
+                            //    if (data.Success == 1)
+                            //        $('#msgLeader').css("color", "green");
+                            //    else
+                            //        $('#msgLeader').css("color", "red");
+                            //    $("#OTPDiv").slideDown(1000);
+                            //    $("#OTP").focus();
+                            //    $("#ContactNo").attr("disabled", "disabled");
+                            //}
+
+                        },
+                            error: function (x, e) { 
+                                $("#divPopupLoading").hide();
+                                console.log(x, e);
+                                alert("error");
+                        }
+                    });
+                }
+            });
+        });
+
+        function ValidateNumber(e) {
+
+            var evt = (e) ? e : window.event;
+            var charCode = (evt.keyCode) ? evt.keyCode : evt.which;
+            if ((charCode > 45 && charCode < 58) || (charCode > 95 && charCode < 106) || charCode == 8 || charCode == 127 || charCode == 37 || charCode == 39) { // (charCode > 31 && (charCode < 48 || charCode > 57)) {
+                return true;
+            }
+            else if (charCode == 9) {
+                SendKeys("{tab}");
+                return true;
+            }
+            return false;
+        };
+
+        $("#ContactNo").bind('keyup', function () {
+            //alert($("#ContactNo").val().length);
+            //alert($("#MerchantID").val());
+            if ($("#ContactNo").val().length > 9) {
+                $('#msgLeader').css("color", "red");
+                $('#msgLeader').css("display", "block");
+                $('#msgLeader').html('Please wait, verifying your registered contact no...');
+                $.ajax({
+                    type: "POST",
+                    url: "@Url.Action("ValidateMerchantContactNo", "Merchant")",
+                    data: "{'contactNo':" + $("#ContactNo").val() + ",'id':" + $("#MerchantID").val() + "}",//,'id:" + $("#MerchantID").val() + "'
+                    contentType: "application/json; charset = utf-8",
+                    dataType: "json",
+                    cache: false,
+                    success: function (data) {
+                        // alert(data);
+                        if (data == "") {
+                            $('#submit').prop("disabled", true);
+                            $('#msgLeader').css("display", "block");
+                            $('#msgLeader').html('Invalid Contact No.');
+                            $("#spName").html(data);
+                        }
+                        else {
+                            $('#submit').prop("disabled", false);
+                            $('#msgLeader').html('Succeed !!!');
+                            $('#msgLeader').css("color", "green");
+                            $("#spName").html(data);
+                        }
+
+                    },
+                    error: function (x, e) {
+                        //alert('Failure');
+
+                    }
+                });
+            }
+    });
+
+
+        function readfile(input, type) {
+            const file = input.files[0];
+            var pattern = /image-*/;
+
+            if (!file.type.match(pattern)) {
+                alert('Invalid format. Accepted formats are images and PDF');
+                return;
+            }
+
+            if (input.files && input.files[0]) {
+                var reader = new FileReader();
+                //Image size validation
+                if (input.files[0].size > 150000 && type != "Banner") {
+                    alert("Selected Image Size can not be greater than 150KB");
+                    return false;
+                } else if (input.files[0].size > 300000) {
+                    alert("Selected Banner Size can not be greater than 300KB");
+                    return false;
+                }
+
+                if (type == "Photo") {
+                    reader.onload = function (e) {
+                        $('#imgPhoto').attr('src', e.target.result);
+                        var image = new Image();
+                        image.onload = function () {
+                            document.getElementById("imgPhoto").src = image.src;
+                            var canvas = document.createElement("canvas");
+                            var context = canvas.getContext("2d");
+                            canvas.width = 300;
+                            canvas.height = 200;
+                            context.drawImage(image,
+                                0,
+                                0,
+                                image.width,
+                                image.height,
+                                0,
+                                0,
+                                canvas.width,
+                                canvas.height
+                            );
+
+                            document.getElementById("imgPhoto").src = canvas.toDataURL();
+                        }
+                        image.src = event.target.result;
+                    }
+                }
+                if (type == "Shop") {
+                    reader.onload = function (e) {
+                        $('#imgShop').attr('src', e.target.result);
+                    }
+                }
+                if (type == "PAN") {
+                    reader.onload = function (e) {
+                        $('#imgPAN').attr('src', e.target.result);
+                    }
+                }
+                if (type == "GST") {
+                    reader.onload = function (e) {
+                        $('#imgGST').attr('src', e.target.result);
+                    }
+                }
+                if (type == "Address") {
+                    reader.onload = function (e) {
+                        $('#imgAddress').attr('src', e.target.result);
+                    }
+                }
+                if (type == "Visiting") {
+                    reader.onload = function (e) {
+                        $('#imgVistingCard').attr('src', e.target.result);
+                    }
+                }
+                if (type == "Cheque") {
+                    reader.onload = function (e) {
+                        $('#imgCheque').attr('src', e.target.result);
+                    }
+                }
+                if (type == "Banner") {
+                    reader.onload = function (e) {
+                        $('#imgBanner').attr('src', e.target.result);
+
+                        var image = new Image();
+                        image.onload = function () {
+                            document.getElementById("imgBanner").src = image.src;
+                            var canvas = document.createElement("canvas");
+                            var context = canvas.getContext("2d");
+                            canvas.width = 1200;
+                            canvas.height = 400;
+                            context.drawImage(image,
+                                0,
+                                0,
+                                image.width,
+                                image.height,
+                                0,
+                                0,
+                                canvas.width,
+                                canvas.height
+                            );
+
+                            document.getElementById("imgBanner").src = canvas.toDataURL();
+                        }
+                        image.src = event.target.result;
+                    }
+                }
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+
+
+</script>
+}

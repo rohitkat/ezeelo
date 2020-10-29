@@ -1,0 +1,256 @@
+﻿@model ModelLayer.Models.ViewModel.RoleManagerViewModel
+@{
+    ViewBag.Title = "Detail";
+}
+<style>
+    .table th, .table td {
+        padding: 6px !important;
+    }
+
+    div.checker {
+        margin-top: -16px !important;
+    }
+        div.checker span input {
+            vertical-align: middle;
+        }
+</style>
+<br />
+<div class="row-fluid">
+    <div class="box span12">
+        <div class="box-header">
+            <h2><i class="icon-edit"></i><span class="break"></span>Detail Role Management</h2>
+        </div>
+        <div class="box-content">
+            <div class="form-horizontal">
+                <table class="table">
+
+                    @using (Html.BeginForm())
+                    {
+                        <tr>
+                            <td>@Html.DropDownListFor(model => model.rolemenuCollection[0].RoleID, (SelectList)ViewBag.RoleList, "Select Role", new { @onchange = "this.form.submit();" }) </td>
+                            <td colspan="2"><p id="pMessage"></p></td>
+                            <td colspan="2">@Html.Display("pMessage", "Select Parent Role") </td>
+                            <td> @Html.Display("Message", "Done Message") </td>
+                            <td></td>
+                            @*<td>@Html.ActionLink("Get All Menu", "Create") </td>*@
+                            <td>
+                                <button class="btn btn-primary">@Html.ActionLink("Get All Menu", "Create")</button>
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <th>
+                                Menu Name
+                            </th>
+
+                            <th>
+                                @Html.CheckBox("CanRead", new { @class = "chkBox" }) CanRead
+                            </th>
+                            <th>
+                                @Html.CheckBox("CanWrite", new { @class = "chkBox" }) CanWrite
+                            </th>
+                            <th>
+                                @Html.CheckBox("CanDelete", new { @class = "chkBox" }) CanDelete
+                            </th>
+                            <th>
+                                @Html.CheckBox("CanPrint", new { @class = "chkBox" }) CanPrint
+                            </th>
+                            <th>
+                                @Html.CheckBox("CanImport", new { @class = "chkBox" }) CanImport
+                            </th>
+                            <th>
+                                @Html.CheckBox("CanExport", new { @class = "chkBox" }) CanExport
+                            </th>
+                            <th>
+                                @Html.CheckBox("IsActive", new { @class = "chkBox" }) IsActive
+                            </th>
+
+                        </tr>
+
+                        if (Model.rolemenuCollection.Count() > 0)
+                        {
+
+                            for (int i = 0; i < Model.rolemenuCollection.Count(); i++)
+                            {
+                                if (Model.rolemenuCollection[i].MenuParentID == 0)
+                                {
+                                    <tr>
+
+
+                                        <td>
+                                            <b> @Html.DisplayFor(x => x.rolemenuCollection[i].MenuName)</b>
+                                        </td>
+
+                                    </tr>
+                                }
+                                for (int j = 0; j < Model.rolemenuCollection.Count(); j++)
+                                {
+                                    if (Model.rolemenuCollection[j].MenuParentID == Model.rolemenuCollection[i].MenuID && Model.rolemenuCollection[i].MenuParentID >= 0)
+                                    {
+                                        <tr>
+
+                                            <td>
+                                                @Html.HiddenFor(y => y.rolemenuCollection[j].MenuID)
+                                                @Html.HiddenFor(y => y.rolemenuCollection[j].MenuName)
+                                                @Html.HiddenFor(y => y.rolemenuCollection[j].RoleMenuID)
+
+                                                @Html.DisplayFor(y => y.rolemenuCollection[j].MenuName, new { @class = "chkBox" })
+                                            </td>
+
+                                            <td>
+                                                @Html.DisplayFor(y => y.rolemenuCollection[j].CanRead, new { @class = "chkBox" })
+                                            </td>
+                                            <td>
+                                                @Html.DisplayFor(y => y.rolemenuCollection[j].CanWrite, new { @class = "chkBox" })
+
+                                            </td>
+                                            <td>
+                                                @Html.DisplayFor(y => y.rolemenuCollection[j].CanDelete, new { @class = "chkBox" })
+
+
+                                            </td>
+                                            <td>
+                                                @Html.DisplayFor(y => y.rolemenuCollection[j].CanPrint, new { @class = "chkBox" })
+                                            </td>
+                                            <td>
+                                                @Html.DisplayFor(y => y.rolemenuCollection[j].CanImport, new { @class = "chkBox" })
+                                            </td>
+                                            <td>
+                                                @Html.DisplayFor(y => y.rolemenuCollection[j].CanExport, new { @class = "chkBox" })
+                                            </td>
+                                            <td>
+                                                @Html.DisplayFor(y => y.rolemenuCollection[j].IsActive, new { @class = "chkBox" })
+                                            </td>
+
+                                        </tr>
+                                    }
+                                }
+
+                            }
+                        }
+
+                    }
+
+                </table>
+            </div>
+
+        </div>
+    </div><!--/span-->
+    <div class="form-actions">
+        @Html.ActionLink("Back to List", "Index", string.Empty, new { @class = "btn" })
+    </div>
+</div>
+
+
+
+
+@*<table class="table">
+
+    @using (Html.BeginForm())
+    {
+        <tr>
+            <td>@Html.DropDownListFor(model => model.rolemenuCollection[0].RoleID, (SelectList)ViewBag.RoleList, "Select Role", new { @onchange = "this.form.submit();" }) </td>
+            <td colspan="2"><p id="pMessage"></p></td>
+            <td colspan="2">@Html.Display("pMessage", "Select Parent Role") </td>
+            <td> @Html.Display("Message", "Done Message") </td>
+            <td></td>
+            <td></td>
+            <td><input type="submit" name="submit" id="btnSubmit" /></td>
+            <td>@Html.ActionLink("Get All Menu", "Create") </td>
+
+        </tr>
+
+        <tr>
+            <th>
+                Menu Name
+            </th>
+
+            <th>
+                @Html.CheckBox("CanRead") CanRead
+            </th>
+            <th>
+                @Html.CheckBox("CanWrite") CanWrite
+            </th>
+            <th>
+                @Html.CheckBox("CanDelete") CanDelete
+            </th>
+            <th>
+                @Html.CheckBox("CanPrint") CanPrint
+            </th>
+            <th>
+                @Html.CheckBox("CanImport") CanImport
+            </th>
+            <th>
+                @Html.CheckBox("CanExport") CanExport
+            </th>
+            <th>
+                @Html.CheckBox("IsActive") IsActive
+            </th>
+
+        </tr>
+
+        if (Model.rolemenuCollection.Count() > 0)
+        {
+
+            for (int i = 0; i < Model.rolemenuCollection.Count(); i++)
+            {
+                if (Model.rolemenuCollection[i].MenuParentID == 0)
+                {
+                    <tr>
+
+
+                        <td>
+                            <b> @Html.DisplayFor(x => x.rolemenuCollection[i].MenuName)</b>
+                        </td>
+
+                    </tr>
+                }
+                for (int j = 0; j < Model.rolemenuCollection.Count(); j++)
+                {
+                    if (Model.rolemenuCollection[j].MenuParentID == Model.rolemenuCollection[i].MenuID && Model.rolemenuCollection[i].MenuParentID >= 0)
+                    {
+                        <tr>
+
+                            <td>
+                                @Html.HiddenFor(y => y.rolemenuCollection[j].MenuID)
+                                @Html.HiddenFor(y => y.rolemenuCollection[j].MenuName)
+                                @Html.HiddenFor(y => y.rolemenuCollection[j].RoleMenuID)
+
+                                @Html.DisplayFor(y => y.rolemenuCollection[j].MenuName)
+                            </td>
+
+                            <td>
+                                @Html.DisplayFor(y => y.rolemenuCollection[j].CanRead)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(y => y.rolemenuCollection[j].CanWrite)
+
+                            </td>
+                            <td>
+                                @Html.DisplayFor(y => y.rolemenuCollection[j].CanDelete)
+
+
+                            </td>
+                            <td>
+                                @Html.DisplayFor(y => y.rolemenuCollection[j].CanPrint)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(y => y.rolemenuCollection[j].CanImport)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(y => y.rolemenuCollection[j].CanExport)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(y => y.rolemenuCollection[j].IsActive)
+                            </td>
+
+                        </tr>
+                    }
+                }
+
+            }
+        }
+
+    }
+
+</table>*@

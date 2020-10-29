@@ -1,0 +1,242 @@
+﻿@model ModelLayer.Models.FranchiseOrderGMVTarget
+
+@{
+    ViewBag.Title = "Create";
+}
+
+
+<div id="content" class="span10">
+    <ul class="breadcrumb">
+        <li>
+            <a href="#">FranchiseOrderGMVTarget/Create</a>
+        </li>
+    </ul>
+    <span class="eror-msg">@ViewBag.lblError</span>
+    <div class="row-fluid">
+
+        <div class="box span12">
+            <div class="box-header">
+                <h2><i class="icon-edit"></i><span class="break"></span>Create</h2>
+            </div>
+            <div class="box-content">
+                @using (Html.BeginForm())
+                {
+                    @Html.AntiForgeryToken()
+
+                    <div class="form-horizontal">
+
+                        @Html.ValidationSummary(true)
+
+                            <label id="lblMsges" style="color: #b94a48"></label>
+
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.CityID, "City", new { @class = "control-label col-md-2" })
+                            <div class="col-md-10">
+                                @Html.DropDownList("CityID", "---City---")
+                                @Html.ValidationMessageFor(model => model.CityID)
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.FranchiseID, "Franchise", new { @class = "control-label col-md-2" })
+                            <div class="col-md-10">
+                                @Html.DropDownList("FranchiseID", "---Franchise---")
+                                @Html.ValidationMessageFor(model => model.FranchiseID)
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.MonthlyOrderTarget, "Monthly Order Target", new { @class = "control-label col-md-2" })
+                            <div class="col-md-10">
+                                @Html.EditorFor(model => model.MonthlyOrderTarget)
+                                @Html.ValidationMessageFor(model => model.MonthlyOrderTarget)
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.MonthlyGMVTarget, "Monthly GMV Target", new { @class = "control-label col-md-2" })
+                            <div class="col-md-10">
+                                @Html.EditorFor(model => model.MonthlyGMVTarget)
+                                @Html.ValidationMessageFor(model => model.MonthlyGMVTarget)
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.ForYear, "For Year", new { @class = "control-label col-md-2" })
+                            <div class="col-md-10">
+                                @Html.EditorFor(model => model.ForYear)
+                                @Html.ValidationMessageFor(model => model.ForYear)
+                            </div>
+                        </div>
+                        @*<div class="form-group">
+                            @Html.LabelFor(model => model.ForMonthFrom, "For Month From", new { @class = "control-label col-md-2" })
+                            <div class="col-md-10">
+                                @Html.EditorFor(model => model.ForMonthFrom)
+                                @Html.ValidationMessageFor(model => model.ForMonthFrom)
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.ForMonthTo, "For Month To", new { @class = "control-label col-md-2" })
+                            <div class="col-md-10">
+                                @Html.EditorFor(model => model.ForMonthTo)
+                                @Html.ValidationMessageFor(model => model.ForMonthTo)
+                            </div>
+                        </div>*@
+                        <div class="span3">
+                            @{
+                    //var itemsStartMonths = new SelectList(ViewBag.SeasonalStartMonth, "Key", "Value", "S");
+                    var itemsStartMonths = new SelectList(ViewBag.SeasonalStartMonth, "Key", "Value", "S");
+                            }
+                            @Html.DropDownListFor(m => m.FromMonth, @itemsStartMonths, "From Month", new { id = "txtFromMonth" })
+                            <span id="SeasonalMsgFrmMonthId" class="alert-danger focused"></span>
+                            @Html.ValidationMessageFor(model => model.FromMonth)
+                        </div>
+
+
+                        <div class="span3">
+                            @*@Html.TextBoxFor(model => model.SeasonalMsgToMonth, new { id = "txtSeasonalToMonth", @class = "datepicker glyphicons-iconcalendar", @placeholder = "Seasonal End Month", @style = "margin-top:-2px;" })*@
+                            @{
+                    //var itemsEndMonths = new SelectList(ViewBag.SeasonalStartMonth, "Key", "Value", "S");
+                    var itemsEndMonths = new SelectList(ViewBag.SeasonalStartMonth, "Key", "Value", "S");
+                            }
+                            @Html.DropDownListFor(m => m.ToMonth, @itemsEndMonths, "To Month", new { id = "txtToMonth" })
+                            <span id="SeasonalMsgToMonthId" class="alert-danger focused"></span>
+                            @Html.ValidationMessageFor(model => model.ToMonth)
+                        </div>
+
+
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.IsActive, new { @class = "control-label col-md-2" })
+                            <div class="col-md-10">
+                                @Html.EditorFor(model => model.IsActive)
+                                @Html.ValidationMessageFor(model => model.IsActive)
+                            </div>
+                        </div>
+
+
+                        @*<div class="form-group">
+                                @Html.LabelFor(model => model.CreateDate, new { @class = "control-label col-md-2" })
+                                <div class="col-md-10">
+                                    @Html.EditorFor(model => model.CreateDate)
+                                    @Html.ValidationMessageFor(model => model.CreateDate)
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.CreateBy, new { @class = "control-label col-md-2" })
+                                <div class="col-md-10">
+                                    @Html.EditorFor(model => model.CreateBy)
+                                    @Html.ValidationMessageFor(model => model.CreateBy)
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.ModifyDate, new { @class = "control-label col-md-2" })
+                                <div class="col-md-10">
+                                    @Html.EditorFor(model => model.ModifyDate)
+                                    @Html.ValidationMessageFor(model => model.ModifyDate)
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.ModifyBy, new { @class = "control-label col-md-2" })
+                                <div class="col-md-10">
+                                    @Html.EditorFor(model => model.ModifyBy)
+                                    @Html.ValidationMessageFor(model => model.ModifyBy)
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.NetworkIP, new { @class = "control-label col-md-2" })
+                                <div class="col-md-10">
+                                    @Html.EditorFor(model => model.NetworkIP)
+                                    @Html.ValidationMessageFor(model => model.NetworkIP)
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.DeviceType, new { @class = "control-label col-md-2" })
+                                <div class="col-md-10">
+                                    @Html.EditorFor(model => model.DeviceType)
+                                    @Html.ValidationMessageFor(model => model.DeviceType)
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.DeviceID, new { @class = "control-label col-md-2" })
+                                <div class="col-md-10">
+                                    @Html.EditorFor(model => model.DeviceID)
+                                    @Html.ValidationMessageFor(model => model.DeviceID)
+                                </div>
+                            </div>*@
+
+                    </div>
+                    <div class="form-actions no-color" style="padding-left:180px">
+                        <input type="submit" value="Create" class="btn btn-primary" id="btnSubmit" />
+                        @Html.ActionLink("Back to List", "Index", string.Empty, new { @class = "btn btn-default" })
+                    </div>
+
+                }
+
+
+            </div>
+        </div>
+    </div>
+</div>
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}
+
+
+
+
+<script src="~/Scripts/jquery-1.10.2.min.js"></script>
+<script>
+    $(function () {
+
+        $("#btnSubmit").click(function () {
+            var FromMonth = $('#txtFromMonth option:selected').val();
+            var ToMonth = $('#txtToMonth option:selected').val();
+            if (parseInt(ToMonth) < parseInt(FromMonth)) {
+                $('[id*=lblMsges]').text('To Month should not be grater then From Month.');
+                return false;
+            }
+            else {
+                $('[id*=lblMsges]').text('');
+            }
+
+        });
+
+
+        $('#CityID').change(function (e) {
+            var selectedVal = $("#CityID option:selected").val();
+            if (selectedVal > 0) {
+                //alert(selectedVal);
+                $.ajax({
+                    type: "POST",
+                    url: "/FranchiseOrderGMVTarget/getFranchise",
+                    data: "{ CityID: '" + selectedVal + "'}",
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    async: true,
+                    cache: false,
+                    success: function (msg) {
+
+                        $('#FranchiseID').empty();
+                        $('#FranchiseID').append('<option value=0>Select Franchise</option>');
+                        $.each(msg, function (index, item) {
+                            $('#FranchiseID').append('<option value=' + item.value + '>' + item.text + '</option>');
+                        });
+                    },
+                    error: function (x, e) {
+                        alert("The call to the server side failed. " + x.responseText);
+                    }
+                });
+            }
+        });
+
+
+
+    });
+
+
+</script>

@@ -1,0 +1,401 @@
+@model ModelLayer.Models.ViewModel.PurchaseOrderViewModelList
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<style>
+    select {
+        text-transform: capitalize !important;
+    }
+
+    .pro_th thead tr th {
+        font-size: 12px;
+        border-bottom: 1px solid #EEE;
+        padding: 6px 0;
+        background-color: #26A69A;
+    }
+
+    .pro_th tbody td {
+        font-size: 12px;
+        text-align: center;
+        border: 1px solid #EEE;
+    }
+
+        .pro_th tbody td.btn-set {
+            white-space: nowrap;
+        }
+
+    .dataTables_length {
+        margin-left: 0px !important;
+        margin-top: 7px;
+    }
+
+    .pagination {
+        margin: 0 26px;
+    }
+
+    form {
+        margin: 0 0 -15px;
+    }
+
+    section.right_side_main_part div#content .content div a.btn.btn-primary {
+        border-radius: 5px !important;
+    }
+
+    .box.span12.right_side_up_part .box-content .form-control .pull-left button#Search {
+        margin-top: 0;
+    }
+
+    .box.span12.right_side_up_part .box-content .form-control .pull-left select#SupplierID {
+        margin-bottom: 0;
+        border-radius: 5px !important;
+    }
+
+    .box.span12.right_side_up_part .box-content table#tblData tbody tr td {
+        white-space: nowrap;
+    }
+
+        .box.span12.right_side_up_part .box-content table#tblData tbody tr td a.btn.btn-small.btn-info {
+            padding: 2px 10px;
+            border-radius: 5px !important;
+        }
+
+    table#tblData thead tr th {
+        white-space: nowrap;
+    }
+
+    .box.span12.right_side_up_part .box-content table#tblData tbody tr td a#Print {
+        margin: 0;
+        padding: 2px 15px;
+    }
+
+    .box.span12.right_side_up_part .box-content table#tblData tbody tr td a#Print1 {
+        padding: 2px 15px;
+        margin: 0;
+    }
+</style>
+
+<script src="~/Content/js/jquery-2.1.3.min.js"></script>
+<link href="~/Content/css/jquery.dataTables.css" rel="stylesheet" />
+<script src="~/Content/js/jquery.dataTables.js" language="jascript"></script>
+<link href="~/Content/assets/css/font-awesome.min.css" rel="stylesheet" />
+
+<script type="text/javascript" class="init">
+    $(document).ready(function () {
+        $('#tblData').DataTable({
+            dom: 'T<"clear">lfrtip',
+            "processing": true,
+            "serverSide": true,
+            "iDisplayLength": 20,    /// Added by Priti   to show 20 entires by default on date 14-11-2018
+        });
+
+        $("#btnCreate").click(function (e) {
+            if ($("#DVWarehouseId").val().trim() == "" || $("#FVWarehouseId").val().trim() == "") {
+                alert("Please select DV-FV/Warehouse name.");
+                e.preventDefault();
+            }
+            else {
+                e.preventDefault();
+                window.location.href = "/PurchaseOrders/Create?Dvid=" + $("#DVWarehouseId").val() + "&FvId=" + $("#FVWarehouseId").val();
+            }
+        })
+
+        $("#DVWarehouseId").change(function () {
+            if ($("#DVWarehouseId").val().trim() != "") {
+                        $.ajax({
+                            type: "POST",
+                            url: '@Url.Action("GetFVList", "PurchaseOrders")',
+                            data: { 'DvId': $("#DVWarehouseId").val() },
+                            cache: false,
+                            success: function (data) {
+                                $("#FVWarehouseId").empty();
+                                $("#FVWarehouseId").prepend("<option value='' selected='selected'>--Select FV--</option>");
+
+                                $.each(data, function (index, item) {
+                                    ID = item.ID;
+                                    $('#FVWarehouseId').append('<option value=' + item.ID + '>' + item.Name + '</option>');
+                                });
+                                if ('@Session["Entity"]' == "FV") {
+                                     $("#FVWarehouseId").val('@Session["WarehouseId"]');
+                                    $("#FVWarehouseId").prop("disabled", "disabled");
+                                    $("#FVWarehouseId").change();
+                                }
+                            },
+                            error: function (x, e) {
+                            }
+                        });
+            }
+        })
+
+        if ('@Session["Entity"]' == "EVW") {
+
+        }
+        else if ('@Session["Entity"]' == "DV") {
+            $("#DVWarehouseId").val('@Session["WarehouseId"]');
+            $("#DVWarehouseId").prop("disabled", "disabled");
+            $("#DVWarehouseId").change();
+        }
+        else if ('@Session["Entity"]' == "FV") {
+            $("#DVWarehouseId").val('@ViewBag.DVId');
+            $("#DVWarehouseId").prop("disabled", "disabled");
+            $("#DVWarehouseId").change();
+        }
+    });
+</script>
+<section class="right_side_main_part">
+    <div id="content" class="span10" style="min-height: 403px;">
+        <div class="content">
+            <p>
+                @if (Session["Entity"].ToString().Trim() != "HO")
+                {
+                    <div>
+                        @Html.DropDownList("DVWarehouseId", ((IEnumerable<ModelLayer.Models.Warehouse>)ViewBag.PossibleWarehouse).Select(option => new SelectListItem
+                   {
+                       Text = (option == null ? "None" : option.Name),
+                       Value = option.ID.ToString(),
+                       Selected = (Model != null) && (option.ID == Model.SupplierID)
+                   }), "--Select DV--")
+                        @Html.DropDownList("FVWarehouseId", Enumerable.Empty<SelectListItem>(), "--Select FV--")
+
+                        @Html.ActionLink("Create New", "Create", new { }, new { @class = "btn btn-small btn-primary", id = "btnCreate" })
+                    </div>
+                }
+            </p>
+
+            <div class="row-fluid">
+                <div class="box span12 right_side_up_part">
+                    <div class="box-header">
+                        <h2>
+                            <i class="icon-list-alt"></i>
+                            <span class="break"></span>
+                            Purchase Order List
+                        </h2>
+                    </div>
+                    <div class="box-content">
+                        <div class="form-control" style="margin:10px;">
+                            <h4 class="pull-left">Filter by Supplier</h4>
+                            <div class="pull-left" style="margin-left:10px;">
+                                @Html.DropDownListFor(model => model.SupplierID, ((IEnumerable<ModelLayer.Models.Supplier>)ViewBag.PossibleSuppliers).Select(option => new SelectListItem
+                           {
+                               Text = (option == null ? "None" : option.Name),
+                               Value = option.ID.ToString(),
+                               Selected = (Model != null) && (option.ID == Model.SupplierID)
+                           }), "--All Suppliers--")
+
+                                <button id="Search" type="button" class="btnRemove btn btn-warning btn-small">Search</button>
+
+                            </div>
+                        </div>
+                        <table class="table table-bordered table-striped table-condensed display" id="tblData">
+                            <thead>
+                                <tr>
+                                    <th>Sr.No.</th>
+                                    @*<th>
+                                            Warehouse
+                                        </th>*@
+                                    <th>
+                                        Supplier
+                                    </th>
+                                    <th>
+                                        PO Code
+                                    </th>
+                                    <th style="text-align:center">
+                                        Total Item(s)
+                                    </th>
+                                    <th style="text-align:right">
+                                        Amount
+                                    </th>
+                                    <th>
+                                        Order Date
+                                    </th>
+                                    <th>Expected Delivery Date</th>
+                                    <th>
+                                        Is Sent
+                                    </th>
+                                    <th>Status</th>
+                                    <th>Action</th>
+                                    <th>Old-Print</th>
+                                </tr>
+                            </thead>
+                            @{
+                                var i = 1;
+                            }
+                            @foreach (var item in Model.lPurchaseOrderViewModel)
+                            {
+                                <tr>
+                                    <td style="text-align:center">
+                                        @i
+                                        @{
+                                            i = i + 1;
+                                        }
+                                    </td>
+                                    @*<td>
+                                            @(item.WarehouseName == null ? "None" : item.WarehouseName)
+                                        </td>*@
+                                    <td>
+                                        @(item.SupplierName == null ? "None" : item.SupplierName)
+                                    </td>
+                                    @*<td>
+                                        </td>*@
+                                    <td style="color: #3C73DC; font-weight:bold">
+                                        @(item.PurchaseOrderCode == null ? "" : item.PurchaseOrderCode)
+                                    </td>
+                                    <td style="text-align:center"> @item.TotalItems</td>
+                                    <td style="text-align:right"> @item.Amount</td>
+
+                                    <td>
+                                        @item.OrderDate.ToString("dd MMM yyyy")
+                                    </td>
+                                    <td>@item.ExpetedDeliveryDate.ToString("dd MMM yyyy")</td>
+
+                                    <td style="text-align:center">
+                                        @if (@item.IsSent == true)
+                                        {
+                                            <span><i class="fa fa-check"></i></span>
+                                        }
+                                        else
+                                        {
+                                            <span><b>No</b></span>
+                                        }
+                                    </td>
+
+                                    <td style="text-align:center">
+                                        @if (@item.IsAcceptedBySupplier == 1)
+                                        {
+                                            if (@item.OrderedQuantity == @item.ReceivedQuantity)
+                                            {
+                                                <span style="color:green;"><b>Delivered</b></span>
+                                            }
+                                            else
+                                            {
+                                                <span style="color: violet;"><b>Accepted</b></span>
+                                            }
+                                        }
+                                        else if (@item.IsAcceptedBySupplier == 2)
+                                        {
+                                            <span style="color:Red;"><b>Rejected</b></span>
+                                        }
+                                        else
+                                        {
+                                            if (@item.OrderedQuantity == @item.ReceivedQuantity)
+                                            {
+                                                <span style="color:green;"><b>Delivered</b></span>
+                                            }
+                                            else
+                                            {
+                                                <span style="color:blue"><b>Pending</b></span>
+                                            }
+                                        }
+                                    </td>
+                                    @if (@item.IsAcceptedBySupplier == 1 && @item.IsSent == true)
+                                    {
+                                        <td>
+                                            @Html.ActionLink("Details", "Details", new { id = item.PurchaseOrderID }, new { @class = "btn btn-small btn-info" })
+                                            |<a id="Print" class="print btn btn-warning btn-small" href="@Url.Action("PrintOrder1", "PurchaseOrders", new { id = item.PurchaseOrderID })" target="_blank">Print</a>
+                                        </td>
+                                    }
+                                    else if (@item.IsAcceptedBySupplier == 2)
+                                    {
+                                        <td>
+                                            @Html.ActionLink("Details", "Details", new { id = item.PurchaseOrderID }, new { @class = "btn btn-small btn-info" })
+                                            |<a id="Print" class="print btn btn-warning btn-small" href="@Url.Action("PrintOrder1", "PurchaseOrders", new { id = item.PurchaseOrderID })" target="_blank">Print</a>
+                                        </td>
+                                    }
+                                    else if (@item.IsSent == true)
+                                    {
+                                        if (@item.OrderedQuantity == @item.ReceivedQuantity)
+                                        {
+                                            <td>
+                                                @Html.ActionLink("Details", "Details", new { id = item.PurchaseOrderID }, new { @class = "btn btn-small btn-info" })
+                                                |<a id="Print" class="print btn btn-warning btn-small" href="@Url.Action("PrintOrder1", "PurchaseOrders", new { id = item.PurchaseOrderID })" target="_blank">Print</a>
+                                            </td>
+                                        }
+                                        else
+                                        {
+                                            <td>
+                                                @Html.ActionLink("Edit", "Edit", new { id = item.PurchaseOrderID }, new { @class = "btn btn-small btn-primary" })|@Html.ActionLink("Details", "Details", new { id = item.PurchaseOrderID }, new { @class = "btn btn-small btn-info" })
+                                                |<a id="Print" class="print btn btn-warning btn-small" href="@Url.Action("PrintOrder1", "PurchaseOrders", new { id = item.PurchaseOrderID })" target="_blank">Print</a>
+                                            </td>
+                                        }
+                                    }
+                                    else
+                                    {
+                                        <td>
+                                            @Html.ActionLink("Edit", "Edit", new { id = item.PurchaseOrderID }, new { @class = "btn btn-small btn-primary" })|@Html.ActionLink("Details", "Details", new { id = item.PurchaseOrderID }, new { @class = "btn btn-small btn-info" })
+                                            |<a id="Print" class="print btn btn-warning btn-small" href="@Url.Action("PrintOrder1", "PurchaseOrders", new { id = item.PurchaseOrderID })" target="_blank">Print</a>   |@Html.ActionLink("Send Now", "Send", new { id = item.PurchaseOrderID }, new { @class = "btn btn-small btn-success" })
+                                        </td>
+                                    }
+
+
+
+
+
+                                    @*/////If print1  is  click then show older  po//*@
+
+                                    @if (@item.IsAcceptedBySupplier == 1 && @item.IsSent == true)
+                                    {
+                                        <td>
+
+                                            |<a id="Print1" class="print btn btn-warning btn-small" href="@Url.Action("PrintOrder", "PurchaseOrders", new { id = item.PurchaseOrderID })" target="_blank">Print</a>
+                                        </td>
+                                    }
+                                    else if (@item.IsAcceptedBySupplier == 2)
+                                    {
+                                        <td>
+
+                                            |<a id="Print1" class="print btn btn-warning btn-small" href="@Url.Action("PrintOrder", "PurchaseOrders", new { id = item.PurchaseOrderID })" target="_blank">Print</a>
+                                        </td>
+                                    }
+                                    else if (@item.IsSent == true)
+                                    {
+                                        if (@item.OrderedQuantity == @item.ReceivedQuantity)
+                                        {
+                                            <td>
+
+                                                |<a id="Print1" class="print btn btn-warning btn-small" href="@Url.Action("PrintOrder", "PurchaseOrders", new { id = item.PurchaseOrderID })" target="_blank">Print</a>
+                                            </td>
+                                        }
+                                        else
+                                        {
+                                            <td>
+
+                                                |<a id="Print1" class="print btn btn-warning btn-small" href="@Url.Action("PrintOrder", "PurchaseOrders", new { id = item.PurchaseOrderID })" target="_blank">Print</a>
+                                            </td>
+                                        }
+                                    }
+                                    else
+                                    {
+                                        <td>
+
+                                            |<a id="Print1" class="print btn btn-warning btn-small" href="@Url.Action("PrintOrder", "PurchaseOrders", new { id = item.PurchaseOrderID })" target="_blank">Print</a>   |@Html.ActionLink("Send Now", "Send", new { id = item.PurchaseOrderID }, new { @class = "btn btn-small btn-success" })
+                                        </td>
+                                    }
+
+
+                                    @*<td>
+                                           @Html.ActionLink("Edit", "Edit", new { id = item.PurchaseOrderID }, new { @class = "btn btn-small btn-info" })|@Html.ActionLink("Details", "Details", new { id = item.PurchaseOrderID }, new { @class = "btn btn-small btn-info" })
+                                            |<a id="Print" class="print btn btn-warning btn-small" href="@Url.Action("PrintOrder", "PurchaseOrders", new { id = item.PurchaseOrderID })" target="_blank">Print</a>
+                                        </td>*@
+                                </tr>
+                            }
+
+                        </table>
+
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<script type="text/javascript">
+    $(function () {
+        $("#Search").click(function () {
+            var SupplierID = $("select#SupplierID option:selected").val();
+            window.location = "/PurchaseOrders/Search?SupplierID=" + SupplierID;
+        });
+    });
+
+</script>

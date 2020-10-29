@@ -1,0 +1,322 @@
+﻿@using PagedList;
+
+@using PagedList.Mvc;
+
+@model IPagedList<ModelLayer.Models.ViewModel.LeadersOrderDetailsViewModel>
+
+
+@*@model IEnumerable<ModelLayer.Models.ViewModel.LeadersOrderDetailsViewModel>*@
+
+@{
+    ViewBag.Title = "OrderDetails";
+    Layout = "~/Views/Shared/_LeaderUsersLayout.cshtml";
+}
+
+    <!-- <script defer src="https://use.fontawesome.com/releases/v5.0.13/js/fontawesome.js" integrity="sha384-6OIrr52G08NpOFSZdxxz1xdNSndlD4vdcf/q2myIUVO0VsqaGHJsB0RaBE01VTOY"
+        crossorigin="anonymous"></script> -->
+    <link rel="stylesheet" href="~/Templates/UsersTemplate/css/material-design.minfd53.css">
+    <link rel="stylesheet" href="~/Templates/UsersTemplate/css/style3.css">
+    <link rel="stylesheet" href="~/Templates/UsersTemplate/css/dropify.minfd53.css">
+    <link rel="stylesheet" href="~/Templates/UsersTemplate/css/custom.css">
+    <link rel="stylesheet" href="~/Templates/UsersTemplate/css/tablesaw.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <title>Order Details</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+   
+        
+                    @*<div class="container-fluid">*@
+                        @*<div class="page" style="touch-action: pan-y; user-select: none; -webkit-user-drag: none; -webkit-tap-highlight-color: rgba(0, 0, 0, 0);">*@
+                            
+
+                            <div class="page-content container-fluid">
+                            <div class="page-header purchase-main-heading-orders-deatils">
+                                @*<legend><h2 class="page-title">Order Details</h2></legend>
+                                <p>for Order ID- @ViewBag.OrderCode</p>*@
+                            </div>
+                                <div class="row">
+                                    <div class="col-sm-12">
+                                        <!-- Panel Kitchen Sink -->
+                                        <div class="panel">
+                                            
+
+                                            <div class="panel-body ">
+                                                <div class="tablesaw-bar tablesaw-mode-columntoggle">
+                                                    @*<div class="tablesaw-sortable-switch tablesaw-bar-section">
+                                                        <label>
+                                                            Sort:
+                                                            <span class="btn tablesaw-btn btn-select tablesaw-btn-select waves-effect waves-classic">
+                                                                <span aria-hidden="true">Item Description (A-Z)</span>
+                                                                <select>
+                                                                    <option selected="" value="0_asc">Item Description (A-Z)</option>
+                                                                    <option value="0_desc">Item Description (Z-A)</option>
+                                                                    <option value="1_asc">Qty &uarr;</option>
+                                                                    <option value="1_desc">Qty &darr;</option>
+                                                                    <option value="2_asc">
+                                                                        MRP &uarr;
+                                                                    </option>
+                                                                    <option value="2_desc">
+                                                                        MRP &darr;
+                                                                    </option>
+                                                                    <option value="3_asc">Discount &uarr;</option>
+                                                                    <option value="3_desc">Discount &darr;</option>
+                                                                    <option value="4_asc">Amount &uarr;</option>
+                                                                    <option value="4_desc">Amount &darr;</option>
+                                                                    <option value="5_asc">Total &uarr;</option>
+                                                                    <option value="5_desc">Total &darr;</option>
+                                                                    <option value="6_asc">Points &uarr;</option>
+                                                                    <option value="6_desc">Points &darr;</option>
+                                                                </select>
+                                                            </span>
+                                                        </label>
+                                                    </div>*@
+
+                                                    <div class="tablesaw-columntoggle-btnwrap tablesaw-advance popup" onclick="myFunction()">
+                                                        <a href="#tablesaw-2523-popup" class="btn tablesaw-btn btn-micro tablesaw-columntoggle-btn tablesaw-nav-btn down waves-effect waves-classic"
+                                                           data-popup-link="">
+                                                            <span>Columns</span>
+                                                        </a>
+
+                                                        <div class="tablesaw-columntoggle-popup popuptext" id="myPopup">
+                                                            <div class="btn-group">
+                                                                <label>
+                                                                    <input type="checkbox" id="qty" checked="">Qty
+                                                                </label>
+                                                                <label>
+                                                                    <input type="checkbox" id="mrp" checked="">MRP
+                                                                </label>
+                                                                <label>
+                                                                    <input type="checkbox" id="discount" checked="">Discount
+                                                                </label>
+                                                                <label>
+                                                                    <input type="checkbox" id="amount" checked="">Amount
+                                                                </label>
+                                                                <label>
+                                                                    <input type="checkbox" id="total" checked="">Total
+                                                                </label>
+                                                                <label>
+                                                                    <input type="checkbox" id="points" checked="">Points
+                                                                </label>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="tablesaw-advance minimap" style="display: block;">
+                                                        <ul class="tablesaw-advance-dots"><li><i></i></li><li><i></i></li><li><i></i></li><li><i></i></li><li><i></i></li><li><i></i></li><li><i></i></li></ul>
+                                                    </div>
+                                                </div>
+
+
+                                                <!-- Order item table  -->
+                                                <div class="tablesaw-overflow OrdeitemtableLIST" style="">
+                                                    <table class="tablesaw table table-bordered tablesaw-columntoggle report-table tablesaw-sortable" data-tablesaw-mode="columntoggle"
+                                                           data-tablesaw-sortable="" data-tablesaw-sortable-switch="" data-tablesaw-minimap=""
+                                                           id="tablesaw-7746">
+                                                        <thead>
+                                                            <tr>
+                                                                <th data-tablesaw-sortable-col="" data-tablesaw-priority="persist" class="width-ms tablesaw-sortable-head tablesaw-sortable-ascending"
+                                                                    data-tablesaw-sortable-numeric="false" data-tablesaw-sortable-default-col="true">
+                                                                    <button class="tablesaw-sortable-btn">
+                                                                        Item Description
+
+                                                                    </button>
+                                                                </th>
+                                                                <!-- <th data-tablesaw-sortable-col data-tablesaw-priority="1">HSN Code</th> -->
+                                                                <th data-tablesaw-sortable-col="" data-tablesaw-priority="2" class="text-center tablesaw-priority-2 tablesaw-sortable-head"
+                                                                    data-tablesaw-sortable-numeric="">
+                                                                    <button class="tablesaw-sortable-btn">
+                                                                        Qty
+
+                                                                    </button>
+                                                                </th>
+
+                                                                <!-- <th data-tablesaw-sortable-col data-tablesaw-priority="3">Size/Unit</th> -->
+                                                                <th data-tablesaw-sortable-col="" data-tablesaw-priority="4" class="text-center tablesaw-priority-4 tablesaw-sortable-head"
+                                                                    data-tablesaw-sortable-numeric="">
+                                                                    <button class="tablesaw-sortable-btn">
+                                                                        MRP
+
+                                                                    </button>
+                                                                </th>
+                                                                <th data-tablesaw-sortable-col="" data-tablesaw-priority="5" class="text-center tablesaw-priority-5 tablesaw-sortable-head"
+                                                                    data-tablesaw-sortable-numeric="">
+                                                                    <button class="tablesaw-sortable-btn">
+                                                                        Discount
+
+                                                                    </button>
+                                                                </th>
+                                                                <th data-tablesaw-sortable-col="" data-tablesaw-priority="5" class="text-center tablesaw-priority-5 tablesaw-sortable-head"
+                                                                    data-tablesaw-sortable-numeric="">
+                                                                    <button class="tablesaw-sortable-btn">
+                                                                        Amount
+
+                                                                    </button>
+                                                                </th>
+                                                                <th data-tablesaw-sortable-col="" data-tablesaw-priority="5" class="text-center tablesaw-priority-5 tablesaw-sortable-head"
+                                                                    data-tablesaw-sortable-numeric="">
+                                                                    <button class="tablesaw-sortable-btn">
+                                                                        Total
+
+                                                                    </button>
+                                                                </th>
+                                                                <th data-tablesaw-sortable-col="" data-tablesaw-priority="5" class="text-center tablesaw-priority-5 tablesaw-sortable-head"
+                                                                    data-tablesaw-sortable-numeric="">
+                                                                    <button class="tablesaw-sortable-btn">
+                                                                        Points
+                                                                        <span class="tablesaw-sortable-arrow"></span>
+                                                                    </button>
+                                                                </th>
+
+                                                                <th data-tablesaw-sortable-col="" data-tablesaw-priority="5" class="text-center tablesaw-priority-5 tablesaw-sortable-head"
+                                                                    data-tablesaw-sortable-numeric="">
+                                                                    <button class="tablesaw-sortable-btn">
+                                                                       Order Status
+
+                                                                    </button>
+                                                                </th>
+                                                            </tr>
+                                                            <!--  'product_name','qty','MRP','sale_rate','tax','points','product_ID','HSN' -->
+                                                        </thead>
+                                                        @foreach (var item in Model)
+                                                        {
+                                                            
+                                                        <tbody>
+                                                            <tr item-status="true" class="good-item">
+                                                                <td data-type="item">
+                                                                    <img src="@item.ItemImage"
+                                                                         width="40">&nbsp;&nbsp;@item.ItemDescription
+                                                                    </td>
+                                                                    <!-- <td>802</td> -->
+                                                                    <td class="text-center tablesaw-priority-2" data-type="qty">@Html.DisplayFor(modelItem => item.Qty)</td>
+                                                                    <!-- <td> - </td> -->
+                                                                    <td class="text-center tablesaw-priority-4" data-type="mrp">@Html.DisplayFor(modelItem => item.MRP)</td>
+                                                                    <td class="text-center tablesaw-priority-5" data-type="discount">@Html.DisplayFor(modelItem => item.DiscountAmount)</td>
+                                                                    <td class="text-center tablesaw-priority-5" data-type="amount">@Html.DisplayFor(modelItem => item.Amount)</td>
+                                                                    <td class="text-center tablesaw-priority-5" data-type="totalamount">@Html.DisplayFor(modelItem => item.TotalAmount)</td>
+                                                                    <td class="text-center tablesaw-priority-5" data-type="points">@Html.DisplayFor(modelItem => item.BusinessPointsTotal)</td>
+                                                                    <td class="text-center tablesaw-priority-5" data-type="points">@Html.DisplayFor(modelItem => item.OrdStatus)</td>
+                                                                </tr>
+                                                           
+                                                            
+
+                                                        </tbody>
+                                                        }
+                                                        <tr class="total">
+                                                            <td class="text-right">
+                                                                Total
+                                                                <total data-total="items"></total>
+                                                            </td>
+                                                            <td class="text-center tablesaw-priority-2" data-total="qty" data-type="total">@Model.Sum(i => i.Qty)</td>
+                                                            <td class="text-center tablesaw-priority-4" data-total="mrp" data-type="total">@Model.Sum(i => i.MRP).Value.ToString("N0")</td>
+                                                            <td class="text-center tablesaw-priority-5" data-total="discount" data-type="total">@Model.Sum(i => i.DiscountAmount).Value.ToString("N0")</td>
+                                                            <td class="text-center tablesaw-priority-5" data-total="amount" data-type="total">@Model.Sum(i => i.Amount).Value.ToString("N0")</td>
+                                                            <td class="text-center tablesaw-priority-5" data-total="totalamount" data-type="total">@Model.Sum(i => i.TotalAmount).Value.ToString("N0")</td>
+                                                            <td class="text-center tablesaw-priority-5" data-total="points" data-type="total">@Model.Sum(i => i.BusinessPointsTotal).Value.ToString("N0")</td>
+                                                            <td class="text-center tablesaw-priority-5" data-total="points" data-type="total"></td>
+                                                        </tr>
+                                                    </table>
+                                                    @Html.PagedListPager(Model, pageNumber => Url.Action("OrderDetails", new
+                                               {
+                                                   pageNumber,
+                                                   OrderCode=ViewBag.OrderCode
+                                                   //option = Request.QueryString["option"],
+                                                   // search = Request.QueryString["search"]
+                                               }))
+                                                </div>
+                                                <!-- Order item table  -->
+
+                                            </div>
+                                        </div>
+                                        <!-- <p></p> -->
+                                        <!-- End Panel Kitchen Sink -->
+
+                                    </div>
+                                </div>
+                            </div>
+                       
+                    
+
+    
+    <script type="text/javascript">
+        
+        // When the user clicks on div, open the popup (div#tablesaw-2523-popup)
+        function myFunction() {
+            var popup = document.getElementById("myPopup");
+            popup.classList.toggle("show");
+        }
+
+    </script>
+    <!-- jQuery CDN - Slim version (=without AJAX) -->
+<script>
+    $(document).ready(function () {
+
+
+        $('#qty').bind('change', function () {
+
+
+            if ($(this).is(':checked')) {
+
+                $('td:nth-child(2),th:nth-child(2)').show();
+
+            }
+
+            else {
+
+                $('td:nth-child(2),th:nth-child(2)').hide();
+            }
+
+        });
+
+        $('#mrp').bind('change', function () {
+
+
+            if ($(this).is(':checked'))
+                $('td:nth-child(3),th:nth-child(3)').show();
+            else
+                $('td:nth-child(3),th:nth-child(3)').hide();
+
+        });
+
+
+        $('#discount').bind('change', function () {
+
+
+            if ($(this).is(':checked'))
+                $('td:nth-child(4),th:nth-child(4)').show();
+            else
+                $('td:nth-child(4),th:nth-child(4)').hide();
+
+        });
+
+
+        $('#amount').bind('change', function () {
+
+
+            if ($(this).is(':checked'))
+                $('td:nth-child(5),th:nth-child(5)').show();
+            else
+                $('td:nth-child(5),th:nth-child(5)').hide();
+
+        });
+
+        $('#total').bind('change', function () {
+
+
+            if ($(this).is(':checked'))
+                $('td:nth-child(6),th:nth-child(6)').show();
+            else
+                $('td:nth-child(6),th:nth-child(6)').hide();
+
+        });
+
+        $('#points').bind('change', function () {
+
+
+            if ($(this).is(':checked'))
+                $('td:nth-child(7),th:nth-child(7)').show();
+            else
+                $('td:nth-child(7),th:nth-child(7)').hide();
+
+        });
+
+    });
+</script>
+    

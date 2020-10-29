@@ -1,0 +1,328 @@
+﻿@model ModelLayer.Models.ViewModel.InvoiceViewModel
+@using ModelLayer.Models.ViewModel
+
+<style type="text/css">
+    #msform1 fieldset:not(:first-of-type) {
+        display: none;
+    }
+
+    .field-validation-error {
+        color: #000000 !important;
+    }
+
+    .succes-msg {
+        color: #31A012;
+        font-size: 20px;
+    }
+
+    .beatpicker-clearButton button {
+        display: none;
+    }
+
+    .input-parent button {
+        display: none;
+    }
+
+    .textarea-adjust {
+        width: 85%;
+    }
+    /*Beatpicker Css*/
+    .beatpicker-clearButton button {
+        display: none;
+    }
+
+    .input-parent button {
+        display: none;
+    }
+
+    .header-navbar-button {
+        position: absolute !important;
+    }
+
+    .beatpicker .main-nav .current-indicator {
+        text-align: center !important;
+    }
+
+    .beatpicker .main-nav .prev1 {
+        left: 0 !important;
+        width: 14%;
+        padding: 0px 10px;
+        color: #fff;
+        font-size: 16px;
+    }
+
+    .beatpicker .main-nav .next1 {
+        right: 0 !important;
+        width: 9%;
+        color: #fff;
+        font-size: 16px;
+    }
+
+    .beatpicker .main-nav .prev1:hover {
+        left: 0 !important;
+        width: 14%;
+        padding: 0px 10px;
+        color: #fff;
+        font-size: 20px;
+        cursor: pointer !important;
+    }
+
+    .beatpicker .main-nav .next1:hover {
+        right: 0 !important;
+        width: 9%;
+        color: #fff;
+        font-size: 20px;
+        cursor: pointer !important;
+    }
+
+    #divImages .remove {
+        background: url(/Content/img/remove-icon.png) no-repeat 0px 0px #fff;
+        float: left;
+        font-size: 0 !important;
+        width: 23px !important;
+        padding: 2px 4px;
+    }
+    /*Beatpicker Css End*/
+</style>
+
+
+<link href="~/Content/css/BeatPicker.min.css" rel="stylesheet" />
+<script src="~/Content/js/jquery-1.11.0.min.js"></script>
+<script src="~/Content/js/BeatPicker.js"></script>
+<link href="~/Content/assets/css/style.css" rel="stylesheet" />
+<script src="~/Content/js/jquery-1.9.1.min.js"></script>
+<link href="http://www.jqueryscript.net/css/jquerysctipttop.css" rel="stylesheet" type="text/css">
+<link href="~/Content/assets/css/form-design.css" rel="stylesheet" />
+<link href="~/Content/assets/css/font-awesome.min.css" rel="stylesheet" />
+
+<div class="row-fluid">
+    <div class="box span12">
+                <div style="text-align:right;padding-right:15px">            
+               Total Invoice Amount = @Html.TextBoxFor(model=>model.OrderAmount, "", new { id = "lblOrderAmount" })        
+                </div>
+        <div class="box-content">
+            <table id="tbl" class="table table-striped table-bordered bootstrap-datatable datatable dataTable" width="100%">
+                <tr>
+                    <th>Product</th>
+                    <th>Item</th>
+                    <th style="text-align:center">HSN Code</th>
+                    <th style="text-align:center">Required/ Remaining Qty</th>
+                    <th style="text-align:center">Received Qty</th>
+                    <th style="text-align:center">BuyRate PerUnit</th>                   
+                    <th>SaleRate</th>
+                    <th>MRP</th>
+                    <th style="display:none">
+                        CGST/Unit                       
+                    </th>
+                    <th style="display:none">
+                        SGST/Unit
+                    </th>
+                    <th style="display:none">
+                        IGST/Unit
+                    </th>
+                    <th>Amount</th>
+                    @*<th>Reorder Level</th>*@
+                    <th style="text-align:center">Item Expiry Date</th>
+                    <th>Remark</th>
+                </tr>
+                @*@foreach (var item in Model)*@
+                @for (int i = 0; i < Model.lInvoiceDetailViewModels.Count; i++)
+                {
+                    <tr>
+                        <td class="table-shopping-cart-img" style="text-align: left;">
+                            <img id=" imgproductimage" src="@Model.lInvoiceDetailViewModels[i].StockThumbPath" onerror="this.src = '/Content/Images/no_image.png'" style="width: 70px; height:70px;" alt=" eZeelo " />
+                      @Html.HiddenFor(model => @Model.lInvoiceDetailViewModels[i].StockThumbPath)
+                         </td>
+                        <td>@Model.lInvoiceDetailViewModels[i].ItemName
+                            @Html.HiddenFor(model => @Model.lInvoiceDetailViewModels[i].PurchaseOrderDetailsID)
+                            @Html.HiddenFor(model => @Model.lInvoiceDetailViewModels[i].ProductID)
+                            @Html.HiddenFor(model => @Model.lInvoiceDetailViewModels[i].ProductVarientID)
+                            @Html.HiddenFor(model=>@Model.lInvoiceDetailViewModels[i].GSTInPer)
+                        </td>
+                        <td>@Model.lInvoiceDetailViewModels[i].HSNCode</td>
+                        <td style="text-align:center">
+                            @Html.LabelFor(model => @Model.lInvoiceDetailViewModels[i].Quantity, @Model.lInvoiceDetailViewModels[i].Quantity.ToString(), new { text = @Model.lInvoiceDetailViewModels[i].Quantity, value = @Model.lInvoiceDetailViewModels[i].Quantity, id = "Quantity_" + i, placeholder = "0", Style = "width:30px" })
+                            @Html.HiddenFor(model => @Model.lInvoiceDetailViewModels[i].Quantity)
+                         </td>
+                        <td>@Html.TextBoxFor(model => @Model.lInvoiceDetailViewModels[i].ReceivedQuantity, null, new { id = "ReceivedQuantity_" + i, placeholder = "0", Style = "width:30px" })</td>
+                        <td style="text-align:right">
+                            @Html.LabelFor(model => @Model.lInvoiceDetailViewModels[i].BuyRatePerUnit, @Model.lInvoiceDetailViewModels[i].BuyRatePerUnit.ToString(), new { id = "BuyRatePerUnit_" + i, placeholder = "0", Style = "width:40px" })
+                        @Html.HiddenFor(model => @Model.lInvoiceDetailViewModels[i].BuyRatePerUnit)
+                    </td>     
+                        <td style="text-align:right">
+                            @Html.LabelFor(model => @Model.lInvoiceDetailViewModels[i].SaleRate,@Model.lInvoiceDetailViewModels[i].SaleRate.ToString())
+                            @Html.HiddenFor(model => @Model.lInvoiceDetailViewModels[i].SaleRate)
+                            @Html.ValidationMessageFor(model => @Model.lInvoiceDetailViewModels[i].SaleRate)
+                        </td>
+                        <td style="text-align:right">
+                            @Html.LabelFor(model => @Model.lInvoiceDetailViewModels[i].MRP, @Model.lInvoiceDetailViewModels[i].MRP.ToString())
+                            @Html.HiddenFor(model => @Model.lInvoiceDetailViewModels[i].MRP)
+                            @Html.ValidationMessageFor(model => @Model.lInvoiceDetailViewModels[i].MRP)
+                        </td>
+
+                        <td style="text-align:right;display:none">    
+                             @Html.LabelFor(model => @Model.lInvoiceDetailViewModels[i].CGSTAmount, @Model.lInvoiceDetailViewModels[i].CGSTAmount.ToString())
+                             @Html.HiddenFor(model => @Model.lInvoiceDetailViewModels[i].CGSTAmount)
+                            <span>(@Convert.ToDecimal(@Model.lInvoiceDetailViewModels[i].GSTInPer / 2)%)</span>
+
+                        </td>
+
+                        <td style="text-align: right; display: none">                          
+                           @Html.LabelFor(model => @Model.lInvoiceDetailViewModels[i].SGSTAmount, @Model.lInvoiceDetailViewModels[i].SGSTAmount.ToString())
+                            @Html.HiddenFor(model => @Model.lInvoiceDetailViewModels[i].SGSTAmount)
+                            <span>(@Convert.ToDecimal(@Model.lInvoiceDetailViewModels[i].GSTInPer / 2)%)</span>
+
+                        </td>
+                        <td style="display: none">                           
+                                       @Html.LabelFor(model => @Model.lInvoiceDetailViewModels[i].IGSTAmount, @Model.lInvoiceDetailViewModels[i].IGSTAmount.ToString())
+                                       @Html.HiddenFor(model => @Model.lInvoiceDetailViewModels[i].IGSTAmount)
+                                    
+                        </td>
+                                    <td>@Html.TextBoxFor(model => @Model.lInvoiceDetailViewModels[i].Amount, @Model.lInvoiceDetailViewModels[i].Amount.ToString(), new { @class = "txt", id = "Amount_" + i, placeholder = "0", Style = "width:80px" })</td>
+                                    @*<td>
+                        @Html.TextBoxFor(model => @Model.lInvoiceDetailViewModels[i].ReorderLevel, @Model.lInvoiceDetailViewModels[i].ReorderLevel.ToString(), new { placeholder = "0", Style = "width:40px" })
+                    </td>*@
+                                    <td>
+                                        @Html.TextBoxFor(model => @Model.lInvoiceDetailViewModels[i].ExpiryDate, "{0:MM/dd/yyyy}", new { id = "ExpiryDate_" + i, @readonly = "readonly", placeholder = "Expiry Date", Style = "width:70px" })
+                                    </td>
+                                    <td>
+                                        @Html.TextBoxFor(model => @Model.lInvoiceDetailViewModels[i].Remark, null, new { placeholder = "Remark", Style = "width:100px" })
+                                    </td>
+                                </tr>
+                                }
+                            </table>
+</div>
+    </div>
+</div>
+
+
+<script type="text/javascript">
+ 
+    $(document).ready(function () {
+
+        $(".btnRemove").click(function (evt) {
+            evt.preventDefault();
+            // Get the value from the clicked button           
+            var ProductVarientID = $(this).val();       
+            $("#ItemDetails").load("/PurchaseOrders/Remove", { 'ProductVarientID': ProductVarientID });
+        });       
+    });
+</script>
+
+<script language="javascript">
+
+    $(document).ready(function () {      
+        var table = document.getElementById('tbl');
+        var rowLength = table.rows.length;
+       
+      
+        for (var i = 0; i < rowLength-1; i++) {
+            $('.table #ExpiryDate_' + i).each(function () {
+                $(this).datepicker({ dateFormat: 'mm/dd/yy' });
+            });
+        }
+          
+
+        for (var i = 0; i < rowLength; i++) {
+            var OrderAmount = 0;
+
+            $('.table #ReceivedQuantity_' + i).keyup(function () {                
+                var sum = 0;
+                var rowindex = $(this).closest("tr")[0].rowIndex;
+                var Quantity = parseInt($('.table tr:eq(' + rowindex + ') td:eq(3)').text());
+                var BuyRatePerUnit = parseFloat($('.table tr:eq(' + rowindex + ') td:eq(5)').text());
+                var ReceivedQuantity = $(this).val();
+                //alert(Quantity)
+                //alert(BuyRatePerUnit)
+
+                //var oldAmount = $('.table tr:eq(' + rowindex + ') td:eq(8)').text();
+               
+               
+                if (isNaN(ReceivedQuantity))
+                {
+                    alert('Enter Only Number!')
+                    $(this).val('');
+                    $('.table #Amount_' + (rowindex - 1)).val('0');
+
+                    // iterate through each td based on class and add the values
+                    $(".txt").each(function () {
+
+                        var value = $(this).val();
+                        //alert(value)
+                        // add only if the value is number
+                        if (!isNaN(value) && value.length != 0) {
+                            sum += parseFloat(value);
+                        }
+                    });
+                    if (sum > 0) {
+                        $('#lblOrderAmount').val(sum);
+                    }
+                    else {
+                        $('#lblOrderAmount').val(0);
+                    }
+
+                    return false;
+                }
+
+                if (parseInt(ReceivedQuantity) > parseInt(Quantity))
+                {
+                    alert('Received Quantity can not be greater than Required Quantity.')
+                    $(this).val('');
+                    $('.table #Amount_' + (rowindex - 1)).val('0');
+                    // iterate through each td based on class and add the values
+                    $(".txt").each(function () {
+
+                        var value = $(this).val();
+                        //alert(value)
+                        // add only if the value is number
+                        if (!isNaN(value) && value.length != 0) {
+                            sum += parseFloat(value);
+                        }
+                    });
+                    if (sum > 0) {
+                        $('#lblOrderAmount').val(sum);
+                    }
+                    else {
+                        $('#lblOrderAmount').val(0);
+                    }
+                    return false;
+                }
+               
+
+                //Calculate Product Amount as per quantity
+                var Amount = (parseFloat(ReceivedQuantity) * parseFloat(BuyRatePerUnit));
+                //$('.table tr:eq(' + rowindex + ') td:eq(8)').text(Amount);
+                $('.table #Amount_' + (rowindex - 1)).val(Amount);
+               
+               
+            
+                // iterate through each td based on class and add the values
+                $(".txt").each(function () {
+
+                    var value = $(this).val();
+                    //alert(value)
+                    // add only if the value is number
+                    if (!isNaN(value) && value.length != 0) {
+                        sum += parseFloat(value);
+                    }
+                }); 
+                //OrderAmount = (parseFloat(OrderAmount) + parseFloat($('.table tr:eq(' + rowindex + ') td:eq(8)').text()) - parseFloat(oldAmount));
+                if (sum > 0) {
+                    $('#lblOrderAmount').val(sum);
+                }
+                else {
+                    $('#lblOrderAmount').val(0);
+                }
+
+                });           
+        }
+    });
+
+    //30/5/2018
+    $(document).ready(function () {
+        $("#lblOrderAmount").attr("readonly", "readonly");
+        //Yashaswi 18-6-2018
+        $("input[id^='Amount_']").attr("readonly", "readonly");
+    });
+     
+</script>

@@ -1,0 +1,91 @@
+﻿@model ModelLayer.Models.CustomerRatingAndFeedback
+
+@{
+    Layout = "~/Views/Shared/_LayoutPartial.cshtml";
+}
+
+<div class="row margin_left_right_decress">
+    <div class="span4">
+        <div class="widget">
+            <div class="widget-header">
+                <i class="icon-list-alt"></i>
+                <h3> Details Feedback</h3>
+            </div>
+            <!-- /widget-header -->
+            <div class="widget-content">
+                <div class="widget big-stats-container">
+                    <div class="widget-content matchdivheight">
+                        <p>
+                            @Html.ActionLink("Edit", "Edit", new { ID = @Model.ID }, new { @class = "btn btn-small btn-danger" }) |
+                            <button class="btn btn-small btn-success" onclick="Back()">Back</button>
+                        </p>
+                        <dl class="dl-horizontal">
+                            <dt>
+                                Product
+                            </dt>
+
+                            <dd>
+                                &nbsp;@Request.QueryString["Product"]
+                            </dd>
+
+                            <dt>
+                                Point
+                            </dt>
+
+                            <dd>
+                                @*&nbsp;@Html.DisplayFor(model => model.Point)*@
+                                @for (int i = 1; i <= Model.Point; i++)
+                                {
+                                    <span class=" icon-star" style="color:red"></span>
+                                }
+                            </dd>
+
+                            <dt>
+                                Comment
+                            </dt>
+
+                            <dd>
+                                &nbsp;@Html.DisplayFor(model => model.Feedback)
+                            </dd>
+                            <dt>
+                                Date
+                            </dt>
+
+                            <dd>
+                                &nbsp;@Html.DisplayFor(model => model.CreateDate)
+                            </dd>
+                            <dt>
+                                Is Approved
+                            </dt>
+
+                            <dd>
+                                &nbsp;@Html.DisplayFor(model => model.IsApproved)
+                            </dd>
+
+                            <dt>
+                                Analysed By
+                            </dt>
+
+                            <dd>
+                                &nbsp;@Html.DisplayFor(model => model.PersonalDetail.FirstName)
+                            </dd>
+
+
+
+                        </dl>
+                    </div>
+                </div>
+                <!-- /widget-content -->
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    function Back() {
+        //window.parent.$("[id$=divtable]").removeClass('span8');
+        //window.parent.$("[id$=divtable]").addClass('span12');
+        //window.parent.$("[id$=Details]").hide();
+        //$('#loader_img').hide();
+        parent.location.reload();
+    }
+</script>

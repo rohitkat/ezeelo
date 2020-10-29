@@ -1,0 +1,21 @@
+﻿@model ModelLayer.Models.ViewModel.HighPerformer
+
+@using (Ajax.BeginForm("GetHighPerformer", "Dashboard", new AjaxOptions { LoadingElementId = "progressHighPer", UpdateTargetId = "divHighPerformer" }))
+{
+    <div id="progressHighPer" class="modal">
+        <div class="center">
+            <img src="~/img/ajax-loading-gif-transparent-background-8.gif" />
+        </div>
+    </div>
+    <input id="btnsubmit" style="display:none" type="submit" value="show" class="btn btn-primary mt-20 col-lg-12 waves-effect waves-classic">
+    <div class="recentInnerContent">
+        <div style="width: 100%; border-bottom: 1px solid #cfcdcf;" class="pr-40 pl-40 pt-20 pb-20">
+            <div class="dropdown vertical-align-bottom font-size-14 dropdown-menu-toggle">
+                @Html.DropDownListFor(model => model.searchId, Model.SearchParameter, new { @class = "dropdown-toggle toggle-head", onchange = "$('#btnsubmit').click();" })                               
+            </div>            
+        </div> 
+        <div id="divHighPerformer" class="recentInnerContent recentJoininnerScrollingBar" style="border:none;overflow:auto">
+            @{ Html.RenderPartial("~/Views/Dashboard/_GetHighPerformer.cshtml", Model.listHighPerformerViewModel); }
+        </div>       
+    </div>
+}

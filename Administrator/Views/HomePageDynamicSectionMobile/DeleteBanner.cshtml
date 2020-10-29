@@ -1,0 +1,555 @@
+﻿@model ModelLayer.Models.HomePageDynamicSectionBanner
+
+@{
+    ViewBag.Title = "DeleteBanner";
+}
+<style>
+
+    select {
+        width: 219px;
+    }
+
+    .uploader input {
+        right: 95px !important;
+    }
+
+    div.uploader span.action {
+        display: inline;
+        padding: 8px 19px;
+        background: #08c;
+        overflow: hidden;
+        cursor: pointer;
+        color: #fff;
+        text-shadow: none;
+        font-size: 14px;
+        line-height: 28px;
+    }
+
+    .CategoryDiv {
+        width: 233px;
+        float: left;
+        padding: 10px;
+    }
+
+        .CategoryDiv span {
+            display: block;
+            font-size: 15px;
+            font-weight: 600;
+        }
+
+        .CategoryDiv label {
+            display: block;
+            font-size: 15px;
+            font-weight: 600;
+            text-align: left !important;
+        }
+
+        .CategoryDiv select {
+            display: block;
+        }
+
+    div.uploader span.filename {
+        border-right: none;
+    }
+
+    #dvPreview {
+        /*float: left;*/
+        width: 120px;
+    }
+
+    .uploader {
+        margin-top: 35px;
+    }
+
+    #dvPreview img {
+        border: 3px solid#CEC4C4;
+        margin-bottom: 10px;
+        height: 124px;
+    }
+
+    div.uploader {
+        left: -12px;
+        top: 121px;
+    }
+
+    .top_cat {
+        margin-top: 2px; /*margin-bottom:45px;*/
+        border: 1px solid #ccc;
+        width: 173px;
+        height: 135px;
+    }
+
+    #dvPreview {
+        margin-top: -60px;
+        width: 164px;
+        padding: 0px 1px;
+    }
+</style>
+<div id="content" class="span10">
+    <ul class="breadcrumb">
+        <li>
+            <div> HomePageDynamicSectionMobile </div>
+        </li>
+    </ul>
+    @using (Html.BeginForm("DeleteBanner", "HomePageDynamicSectionMobile", FormMethod.Post, new { enctype = "multipart/form-data" }))
+    {
+        @Html.AntiForgeryToken()
+        @Html.Hidden("HomepageDynamicSectionID")
+        @Html.Hidden("franchiseId")
+
+        @*@Html.HiddenFor(model => model.CreateDate);
+        @Html.HiddenFor(model => model.ImageName);
+        @Html.HiddenFor(model => model.NetworkIp);
+        @Html.HiddenFor(model => model.CreatedBy);
+        @Html.HiddenFor(model => model.BrandID);
+        @Html.HiddenFor(model => model.CategoryID);*@
+        // @Html.HiddenFor(model => model.Keyword);
+        //@Html.HiddenFor(model => model.OfferId);
+        //@Html.HiddenFor(model => model.ShopId);
+
+        <div class="row-fluid">
+            <div class="box span12">
+                <div class="box-header">
+                    <h2><i class="icon-edit"></i><span class="break"></span>Offer Section</h2>
+                </div>
+                @if (TempData["Messaage"] != null)
+                {
+                    <div style="font-weight:bold; color:red;">@TempData["Messaage"]</div>
+                }
+                <div class="box-content">
+
+                    <div class="span8">
+                        <div class="">
+                            <div class="form-horizontal">
+                                <br />
+                                @Html.ValidationSummary(true)
+
+                                <div class="control-group">
+                                    <label class="control-label col-md-2">Select Start Date</label>
+                                    <div class="col-md-10 controls">
+                                        <input type="text" id="SDate" name="SDate" value="@ViewBag.SDate" class="datepicker" readonly="readonly" />
+                                        <span id="SDateErro" style="font-weight:bold;color:red;"></span>
+                                    </div>
+                                </div>
+
+                                <div class="control-group">
+                                    <label class="control-label col-md-2">Select End Date</label>
+                                    <div class="col-md-10 controls">
+                                        <input type="text" id="EDate" name="EDate" value="@ViewBag.EDate" class="datepicker" readonly="readonly" />
+                                        <span id="EDateErro" style="font-weight:bold;color:red;"></span>
+                                        <span id="DateErro" style="font-weight:bold;color:red;"></span>
+                                    </div>
+                                </div>
+
+                                <div class="clr"></div>
+
+                                <div class="control-group">
+                                    <label class="control-label col-md-2"> Franchise :</label>
+                                    <div class="col-md-10 controls">
+                                        @ViewBag.FranchiseName
+
+                                        <span id="SectionHeaderErro" style="font-weight:bold;color:red;"></span>
+                                    </div>
+                                </div>
+
+                                <div class="control-group">
+                                    <label class="control-label col-md-2"> Section Name :</label>
+                                    <div class="col-md-10 controls">
+                                        @ViewBag.SectionDisplayName
+
+                                        <span id="SectionHeaderErro" style="font-weight:bold;color:red;"></span>
+                                    </div>
+                                </div>
+
+                                <div class="control-group">
+                                    <label class="control-label col-md-2"> Section Style :</label>
+                                    <div class="col-md-10 controls">
+                                        @ViewBag.SectionStyle
+
+                                        <span id="SectionHeaderErro" style="font-weight:bold;color:red;"></span>
+                                    </div>
+                                </div>
+
+                                <div class="control-group">
+                                    <label class="control-label col-md-2">Select List</label>
+
+                                    <div class="col-md-10 controls">
+                                        @Html.DropDownList("Category", null, "Select Category", new { @readonly = "readonly", style = "pointer-events:none;" })
+                                        <span id="IsCategoryErro" style="font-weight:bold;color:red;"></span>
+                                    </div>
+                                </div>
+                                <div class="control-group">
+                                    @Html.LabelFor(model => model.SequenceOrder, new { @class = "control-label col-md-2" })
+                                    <div class="col-md-10 controls">
+                                        @*<input type="number" id="SequenceOrder" name="SequenceOrder" min="0" />*@
+
+                                        @Html.DisplayFor(model => model.SequenceOrder, new { @min = "1" })
+                                        @Html.ValidationMessageFor(model => model.SequenceOrder)
+                                        <span id="SequenceOrderErro" style="font-weight:bold;color:red;"></span>
+                                    </div>
+                                </div>
+
+
+
+                                <div class="control-group">
+                                    @Html.LabelFor(model => model.IsActive, new { @class = "control-label col-md-2" })
+                                    <div class="col-md-10 controls">
+                                        @*<input type="checkbox" id="IsActive " name="IsActive " />*@
+                                        @Html.DisplayFor(model => model.IsActive_)
+                                        @Html.ValidationMessageFor(model => model.IsActive_)
+                                        <span id="IsActiveErro" style="font-weight:bold;color:red;"></span>
+                                    </div>
+                                </div>
+
+                                <div class="control-group">
+                                    @*@Html.LabelFor(model => model.IsBanner, new { @class = "control-label col-md-2" })*@
+                                    <label class="control-label col-md-2"> Banner </label>
+                                    <div class="col-md-10 controls">
+                                        @*<input type="checkbox" id="IsBanner " name="IsBanner " />*@
+                                        @Html.DisplayFor(model => model.IsBanner_)
+                                        @Html.ValidationMessageFor(model => model.IsBanner_)
+                                        <span id="IsActiveErro" style="font-weight:bold;color:red;"></span>
+                                    </div>
+                                </div>
+                                <div class="control-group">
+                                    @*@Html.LabelFor(model => model.IsBanner, new { @class = "control-label col-md-2" })*@
+                                    <label class = "control-label col-md-2" >Sub Banner </label>
+                                    <div class="col-md-10 controls">
+                                        @*<input type="checkbox" id="IsBanner " name="IsBanner " />*@
+                                        @Html.DisplayFor(model => model.IsCategory)
+                                        @Html.ValidationMessageFor(model => model.IsCategory)
+                                        <span id="IsActiveErro" style="font-weight:bold;color:red;"></span>
+                                    </div>
+                                </div>
+
+                                <div class="control-group" id="categorylevel" style="display:none">
+
+                                    <label class="control-label col-md-2">Category List (select level one or two)</label>
+                                    <div class="col-md-10 controls">
+                                        @*<input type="checkbox" id="IsBanner " name="IsBanner " />*@
+                                        <input type="checkbox" id="Iscategourylist" onclick="OnCheckFunction()">
+
+                                        <span id="IsActiveErro" style="font-weight:bold;color:red;"></span>
+                                    </div>
+                                </div>
+
+
+
+                                <div class="pull-left" id="levelonemenu" style="display: none;">
+                                    <label class="control-label col-md-2">select Level One Category</label>
+                                    <div class="col-md-10 controls">
+                                        @Html.DropDownList("leveloneId", null, "Select category", new { @Id = "leveloneId", style = "width:auto;" })
+
+                                        <span id="field" style="font-weight:bold;color:red;"></span>
+                                    </div>
+
+                                </div>
+                                <div class="pull-left" id="leveltwomenu" style="display: none;">
+                                    <label class="control-label col-md-2">select Level Two Category</label>
+                                    <div class="col-md-10 controls">
+                                        @Html.DropDownList("leveltwoId", null, "Select category", new { @Id = "leveltwoId", style = "width:auto;" })
+
+
+
+                                        <span id="fieldl" style="font-weight:bold;color:red;"></span>
+                                    </div>
+
+                                </div>
+
+                                <div class="col-md-6">
+                                    <div class="pull-left" id="Keywordshow" style="display: none;margin-bottom:20px;">
+                                        <label class="control-label col-md-2">Search Keyword</label>
+                                        <div class="col-md-10 controls">
+                                            @*<input type="text" id="Keyword" name="Keyword" onclick="Keyword()">*@
+                                            @*@Html.TextBoxFor(model => model.Keyword, new { @onclick = "KeywordFunction()" })*@
+                                            @Html.TextBoxFor(model => model.Keyword, new { @onclick = "KeywordFunction()" })
+                                            @*<input type="text" id="Keyword" name="Keyword" onclick="KeywordFunction()">*@
+
+                                            @Html.ValidationMessageFor(model => model.Keyword)
+                                            <span id="fieldk" style="font-weight:bold;color:red;"></span>
+                                        </div>
+
+                                        <div class="clr"></div>
+                                        <span id="textErro" style="font-weight:bold;color:red;"></span>
+                                    </div>
+
+                                    <div class="pull-left" id="Shopdropmenu" style="display: none;">
+                                        <label class="control-label col-md-2">select Shop</label>
+                                        <div class="col-md-10 controls">
+                                            @Html.DropDownList("ShopName", null, "Select Shop", new { @Id = "ShopId", style = "width:auto;" })
+
+                                            <span id="fields" style="font-weight:bold;color:red;"></span>
+                                        </div>
+
+                                        <br /><span id="droperror" style="color: #777;"></span>
+                                        <div id="dvPreviewdrop">
+                                        </div>
+                                        <div class="clr"></div>
+                                        <span id="dropErro" style="font-weight:bold;color:red;"></span>
+                                    </div>
+                                    <div class="pull-left" id="Categorydropmenu" style="display: none;">
+                                        <label class="control-label col-md-2">Select Level Three  Category</label>
+                                        <div class="col-md-10 controls">
+                                            @Html.DropDownList("LevelThree", null, "Select category", new { @Id = "LevelThreeId", style = "width:auto;" })
+
+                                            <span id="fieldlt" style="font-weight:bold;color:red;"></span>
+                                        </div>
+
+                                        <br /><span id="droperror" style="color: #777;"></span>
+                                        <div id="dvPreviewdrop">
+                                        </div>
+                                        <div class="clr"></div>
+                                        <span id="dropErro" style="font-weight:bold;color:red;"></span>
+                                    </div>
+                                    <div class="pull-left" id="Branddropmenu" style="display: none;">
+                                        <label class="control-label col-md-2">select Brand</label>
+                                        <div class="col-md-10 controls">
+                                            @Html.DropDownList("brandname", null, "Select Brand", new { @Id = "brandnameId", style = "width:auto;" })
+
+                                            <span id="fieldb" style="font-weight:bold;color:red;"></span>
+                                        </div>
+
+                                        <br /><span id="droperror" style="color: #777;"></span>
+                                        <div id="dvPreviewdrop">
+                                        </div>
+                                        <div class="clr"></div>
+                                        <span id="dropErro" style="font-weight:bold;color:red;"></span>
+                                    </div>
+                                    <div class="pull-left" id="Offerdropmenu" style="display: none;">
+                                        <label class="control-label col-md-2">select Offer</label>
+                                        <div class="col-md-10 controls">
+                                            @Html.DropDownList("Offername", null, "Select Offer", new { @Id = "OffernameId", style = "width:auto;" })
+
+                                            <span id="fieldo" style="font-weight:bold;color:red;"></span>
+                                        </div>
+
+                                        <br />
+                                        <div id="dvPreviewdrop">
+                                        </div>
+                                        <div class="clr"></div>
+
+                                    </div>
+                                </div>
+
+
+                                <div class="col-md-4" id="butnid" style="display:none">
+                                    <input type="button" value="Choose Category" onclick="butnidFunction()" style="margin-left:10px; margin-top:2px">
+                                </div>
+
+                                <input type="hidden" id="tempcategory" name="tempcategory">
+
+
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="span4">
+                        <span id="ImageErro" style="font-weight:bold;color:red;"></span>
+                        <span id="imgSize" style="color: #777;"></span>
+                        <div class="top_cat pull-left">
+                            @*<span id="ImageErro" style="font-weight:bold;color:red;"></span>*@
+                            <div class=" categorydiv">
+                                <input type="file" name="File" id="File" class="pull-right" />
+
+                                <div id="dvPreview">
+                                    <img src="@Model.ImageName_" onerror="this.src = '../../Content/Images/No_thumbnail.png'" style="border: 2px solid#CEC4C4;  padding: 5px; height: 121px; width: 160px;" />
+                                </div><div class="clr"></div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="form-actions no-color">
+            <div class=" col-md-offset-2 col-md-10" style="text-align:center;">
+                
+                <input type="submit" value="Delete" class="btn btn-danger" />
+
+                @Html.ActionLink("Back to List", "Index", null, new { @class = "btn btn-default" })
+            </div>
+        </div>
+    }
+</div>
+<div class="span4 spanLeft" style="margin-top:12px;">
+    <div id="divAddNew"></div>
+</div>
+@*<h2>DeleteBanner</h2>
+
+<h3>Are you sure you want to delete this?</h3>
+<div>
+    <h4>HomePageDynamicSectionBanner</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.HomePageDynamicSectionId)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.HomePageDynamicSectionId)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.ImageName)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.ImageName)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.StartDate)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.StartDate)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.EndDate)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.EndDate)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.SequenceOrder)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.SequenceOrder)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.ToolTip)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.ToolTip)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.LinkURL)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.LinkURL)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Keyword)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Keyword)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.ShopId)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.ShopId)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.BrandID)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.BrandID)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.CategoryID)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.CategoryID)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.OfferId)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.OfferId)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.DisplayViewApp)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.DisplayViewApp)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.IsActive)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.IsActive)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.IsBanner)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.IsBanner)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.CreateDate)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.CreateDate)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.CreatedBy)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.CreatedBy)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.ModifyDate)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.ModifyDate)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.ModifyBy)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.ModifyBy)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.NetworkIp)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.NetworkIp)
+        </dd>
+
+    </dl>
+
+    @using (Html.BeginForm())
+    {
+        @Html.AntiForgeryToken()
+
+        <div class="form-actions no-color">
+            <input type="submit" value="Delete" class="btn btn-default" /> |
+            @Html.ActionLink("Back to List", "Index")
+        </div>
+    }
+</div>*@

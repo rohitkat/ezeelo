@@ -1,0 +1,519 @@
+﻿@using PagedList;
+@using PagedList.Mvc;
+
+@using System.Collections;
+@*@using ModelLayer.Models;*@
+
+@model IPagedList<Franchise.Models.ViewModel.CustomerOrderViewModel>
+
+@{
+    ViewBag.Title = "List [ Order ]";
+    Layout = "~/Views/Shared/_Layout_franchise2.cshtml";
+
+}
+<style>
+    a {
+        text-decoration: none !important;
+    }
+
+    .mainNav1 {
+        float: left;
+        transform: perspective(500px);
+        transform-style: preserve-3d;
+        margin-top: -15px;
+    }
+
+        .mainNav1 ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .mainNav1 span {
+            background-color: rgba(98, 68, 48, 0.75);
+            background-image: linear-gradient(hsla(0,0%,100%,.05), hsla(0,0%,0%,.05)), linear-gradient(-72deg, hsla(0,0%,100%,.05) 50%, transparent 50%);
+            backface-visibility: hidden;
+            box-shadow: inset 0 0 .25em hsla(0,0%,0%,.1), inset 0 0 1.5em hsla(0,0%,0%,.25);
+            color: #fff;
+            display: block;
+            font: bold 1em/3 sans-serif;
+            padding: 0 1.5em;
+            position: relative;
+            text-align: center;
+            text-decoration: none;
+            transition: .5s;
+            transform-origin: 50% 0;
+            transform-style: preserve-3d;
+            width: 20px;
+        }
+
+
+
+    .mainNav {
+        float: left;
+        transform: perspective(500px);
+        transform-style: preserve-3d;
+        margin-top: -15px;
+    }
+
+        .mainNav ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .mainNav span {
+            background-color: rgb(119, 79, 44);
+            background-image: linear-gradient(hsla(0,0%,100%,.05), hsla(0,0%,0%,.05)), linear-gradient(-72deg, hsla(0,0%,100%,.05) 50%, transparent 50%);
+            backface-visibility: hidden;
+            box-shadow: inset 0 0 .25em hsla(0,0%,0%,.1), inset 0 0 1.5em hsla(0,0%,0%,.25);
+            color: #ffffff;
+            display: block;
+            font: bold 1em/3 sans-serif;
+            padding: 0 1.5em;
+            position: relative;
+            text-align: center;
+            text-decoration: none;
+            transition: .5s;
+            transform-origin: 50% 0;
+            transform-style: preserve-3d;
+            width: 6em;
+        }
+
+            .mainNav span:after {
+                background-color: inherit;
+                background-image: linear-gradient(hsla(0,0%,100%,.05), hsla(0,0%,0%,.05)), linear-gradient(-72deg, hsla(0,0%,100%,.05) 50%, transparent 50%), linear-gradient(hsla(0,0%,0%,.25), hsla(0,0%,0%,.25));
+                box-shadow: inset 0 0 .25em hsla(0,0%,0%,.2), inset 0 0 1.5em hsla(0,0%,0%,.3);
+                bottom: 0;
+                color: #fff;
+                content: attr(data-title);
+                left: 100%;
+                line-height: 3;
+                position: absolute;
+                top: 0;
+                transform: rotateY(90deg);
+                transform-origin: 0 0;
+                width: 100%;
+            }
+
+            .mainNav span:before {
+                background-color: inherit;
+                background-image: linear-gradient(hsla(0,0%,100%,.07), hsla(0,0%,0%,.07)), linear-gradient(hsla(0,0%,0%,.5), hsla(0,0%,0%,.5));
+                bottom: 0;
+                content: '';
+                height: 9em;
+                left: 100%;
+                position: absolute;
+                top: 0;
+                transform-origin: 0 0;
+                width: 100%;
+            }
+
+        .mainNav li {
+            display: inline;
+        }
+
+            .mainNav li:nth-child(-n+2) span:before {
+                transform: rotateX(-90deg) translateX(-9em) translateZ(3em);
+            }
+
+            .mainNav li:nth-child(n+3) span:before {
+                transform: rotateX(-90deg) translateX(-9em);
+            }
+
+            .mainNav li:hover span {
+                transform: rotateY(-90deg) translateX(-4.5em) translateZ(4.5em);
+                z-index: 10;
+            }
+
+    .indian_currency {
+        display: block;
+    }
+</style>
+
+<style>
+    .a_white {
+        color: #ffffff !important;
+    }
+
+    .close {
+        float: right;
+        font-size: 20px;
+        font-weight: bold;
+        line-height: 18px;
+        color: #000000;
+        text-shadow: 0 1px 0 #ffffff;
+        opacity: 1 !important;
+        filter: alpha(opacity=100) !important;
+    }
+
+    .modal1.fade.in {
+        top: 10% !important;
+        width: auto;
+        bottom: 10% !important;
+    }
+
+    .modal1 {
+        position: fixed;
+        top: 50%;
+        z-index: 1050;
+        overflow: auto;
+        width: 560px;
+        margin: 0px 0 0 0px !important;
+        background-color: #ffffff;
+        border: 1px solid #999;
+        border: 1px solid rgba(0, 0, 0, 0.3);
+        -webkit-border-radius: 6px;
+        -moz-border-radius: 6px;
+        border-radius: 6px;
+        -webkit-box-shadow: 0 3px 7px rgba(0, 0, 0, 0.3);
+        -moz-box-shadow: 0 3px 7px rgba(0, 0, 0, 0.3);
+        box-shadow: 0 3px 7px rgba(0, 0, 0, 0.3);
+        -webkit-background-clip: padding-box;
+        -moz-background-clip: padding-box;
+        background-clip: padding-box;
+    }
+
+    .modal1-body {
+        overflow-y: auto;
+        max-height: 400px;
+        padding: 15px;
+        overflow-x: hidden;
+    }
+
+    input {
+        width: 80px;
+    }
+
+    .accordion-group {
+        margin-bottom: -18px !important;
+        border: 1px solid #e5e5e5;
+        -webkit-border-radius: 4px;
+        -moz-border-radius: 4px;
+        border-radius: 4px;
+    }
+
+    .h4_line_height {
+        line-height: 36px !important;
+    }
+
+    .margin_padding_zero {
+        background-color: rgb(141, 121, 107);
+        color: #fff !important;
+        padding: 5px !important;
+    }
+
+    .accordion-heading a {
+        color: #FFFFFF;
+    }
+</style>
+
+<style>
+    .panel1 {
+        position: fixed;
+        top: 148px;
+        left: 90px;
+    }
+
+    .btn-primary {
+        background-color: #643C24;
+        border-color: #643C24;
+    }
+
+        .btn-primary:hover {
+            background-color: #643C24;
+            border-color: #643C24;
+        }
+</style>
+<script src="~/Scripts/bootstrap.js"></script>
+@{
+    Dictionary<string, int> lOrderStatus = ViewBag.OrderStatusCount;
+    List<ModelLayer.Models.GetwayPaymentTransaction> lGetwayPaymentTransaction = (List<ModelLayer.Models.GetwayPaymentTransaction>)ViewBag.GetwayPaymentTransactions;
+}
+
+
+<table class="table table-bordered" style="margin-top:-30px; margin-bottom:4px;">
+    <tr>
+        <td style="background-color:red;"><a style="color:white; font-weight:bold;" href="@Url.Action("Index", "CustomerOrder", new { OrderStatus = (int)Franchise.Common.Constant.ORDER_STATUS.ONLINE_PAYMENT_PENDING, FromDate = ViewBag.FromDate, ToDate = ViewBag.ToDate })">Pending</a></td>
+        <td style="background-color:red;"><a style="color:white; font-weight:bold;" href="@Url.Action("Index", "CustomerOrder", new { OrderStatus = (int)Franchise.Common.Constant.ORDER_STATUS.PLACED, FromDate = ViewBag.FromDate, ToDate = ViewBag.ToDate })">Placed</a></td>
+        <td style="background-color:red;"><a style="color:white; font-weight:bold;" href="@Url.Action("Index", "CustomerOrder", new { OrderStatus = (int)Franchise.Common.Constant.ORDER_STATUS.CONFIRM, FromDate = ViewBag.FromDate, ToDate = ViewBag.ToDate })">Confirm</a></td>
+        <td style="background-color:red;"><a style="color:white; font-weight:bold;" href="@Url.Action("Index", "CustomerOrder", new { OrderStatus = (int)Franchise.Common.Constant.ORDER_STATUS.PACKED, FromDate = ViewBag.FromDate, ToDate = ViewBag.ToDate })">Packed</a></td>
+        <td style="background-color:red;"><a style="color:white; font-weight:bold;" href="@Url.Action("Index", "CustomerOrder", new { OrderStatus = (int)Franchise.Common.Constant.ORDER_STATUS.DISPATCHED_FROM_SHOP, FromDate = ViewBag.FromDate, ToDate = ViewBag.ToDate })">Shop Out</a></td>
+        <td style="background-color:red;"><a style="color:white; font-weight:bold;" href="@Url.Action("Index", "CustomerOrder", new { OrderStatus = (int)Franchise.Common.Constant.ORDER_STATUS.IN_GODOWN, FromDate = ViewBag.FromDate, ToDate = ViewBag.ToDate })">In Godown</a></td>
+        <td style="background-color:red;"><a style="color:white; font-weight:bold;" href="@Url.Action("Index", "CustomerOrder", new { OrderStatus = (int)Franchise.Common.Constant.ORDER_STATUS.DISPATCHED_FROM_GODOWN, FromDate = ViewBag.FromDate, ToDate = ViewBag.ToDate })">Dispatch</a></td>
+        <td style="background-color:red;"><a style="color:white; font-weight:bold;" href="@Url.Action("Index", "CustomerOrder", new { OrderStatus = (int)Franchise.Common.Constant.ORDER_STATUS.DELIVERED, FromDate = ViewBag.FromDate, ToDate = ViewBag.ToDate })">Delivered</a></td>
+        <td style="background-color:red;"><a style="color:white; font-weight:bold;" href="@Url.Action("Index", "CustomerOrder", new { OrderStatus = (int)Franchise.Common.Constant.ORDER_STATUS.RETURNED, FromDate = ViewBag.FromDate, ToDate = ViewBag.ToDate })">Returned</a></td>
+        <td style="background-color:red;"><a style="color:white; font-weight:bold;" href="@Url.Action("Index", "CustomerOrder", new { OrderStatus = (int)Franchise.Common.Constant.ORDER_STATUS.CANCELLED, FromDate = ViewBag.FromDate, ToDate = ViewBag.ToDate })">Cancelled</a></td>
+        <td style="background-color:red;"><a style="color:white; font-weight:bold;" href="@Url.Action("Index", "CustomerOrder", new { OrderStatus = (int)Franchise.Common.Constant.ORDER_STATUS.ABANDONED, FromDate = ViewBag.FromDate, ToDate = ViewBag.ToDate })">Abandoned</a></td> @*Added by Zubair on 23-11-2017*@
+    </tr>
+
+    <tr>
+        <td style="background-color: rgb(6, 132, 196); color:white; font-weight:bold;">@lOrderStatus["OnlinePaymentPending"]</td>
+        <td style="background-color: rgb(6, 132, 196); color:white; font-weight:bold;">@lOrderStatus["Placed"]</td>
+        <td style="background-color: rgb(6, 132, 196); color:white; font-weight:bold;">@lOrderStatus["Confirm"]</td>
+        <td style="background-color: rgb(6, 132, 196); color:white; font-weight:bold;">@lOrderStatus["Packed"]</td>
+        <td style="background-color: rgb(6, 132, 196); color:white; font-weight:bold;">@lOrderStatus["DispatchFromShop"]</td>
+        <td style="background-color: rgb(6, 132, 196); color:white; font-weight:bold;">@lOrderStatus["InGodown"]</td>
+        <td style="background-color: rgb(6, 132, 196); color:white; font-weight:bold;">@lOrderStatus["DispatchFromGodown"]</td>
+        <td style="background-color: rgb(6, 132, 196); color:white; font-weight:bold;">@lOrderStatus["Delivered"]</td>
+        <td style="background-color: rgb(6, 132, 196); color:white; font-weight:bold;">@lOrderStatus["Returned"]</td>
+        <td style="background-color: rgb(6, 132, 196); color:white; font-weight:bold;">@lOrderStatus["Cancelled"]</td>
+        <td style="background-color: rgb(6, 132, 196); color:white; font-weight:bold;">@lOrderStatus["Abandoned"]</td> @*Added by Zubair on 23-11-2017*@
+    </tr>
+</table>
+
+
+<div id="divtable">
+    <div class="widget">
+        <div class="widget-header">
+            <i class="icon-list-alt"></i>
+            @{
+                int orderStatus = 0;
+                int.TryParse(Convert.ToString(ViewBag.OrderStatus), out orderStatus);
+            }
+            <h3> List Order [ @Franchise.Common.Common.GetDeliveryStatus(orderStatus) ]</h3>
+        </div>
+        <!-- /widget-header -->
+        <div class="widget-content">
+            <div class="widget big-stats-container">
+                <div class="widget-content matchdivheight">
+
+                    @using (Html.BeginForm("Index", "CustomerOrder", FormMethod.Post))
+                    {@Html.AntiForgeryToken()
+                    <div class="form-horizontal">
+                        @Html.Hidden("OrderStatus")
+                        <table>
+                            <tr>
+                                <td>From Date</td>
+                                <td>@Html.TextBox("FromDate", null, new { @readonly = "readonly" })</td>
+                                <td>To Date</td>
+                                <td>@Html.TextBox("ToDate", null, new { @readonly = "readonly" })</td>
+                                <td>Order Code</td>
+                                <td>@Html.TextBox("SearchString", ViewBag.SearchString as string, new { @class = "search" })</td>
+                                <td>
+                                    <button type="submit" value="Search" class="btn btn-small btn-warning">
+                                        <span class="glyphicon glyphicon-search"></span> Search
+                                    </button>
+                                    <button type="button" class="btn btn-small btn-info" id="btn_clear">Clear</button>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                }
+
+
+
+                    <table class="table table-bordered table-hover table-responsive table-striped">
+                        <thead>
+                            <tr>
+                                <th style="width:21px;">Sr</th>
+                                <th style="width:112px;">
+                                    Order Code
+                                </th>
+                                <th style="width:60px;">
+                                    Order Amt
+                                </th>
+                                <th style="width:60px;">
+                                    Wallet Amount Used      @*-------------added by amit------------*@
+                                </th>
+                                <th style="width:57px;">
+                                    Payable Amount
+                                </th>
+                                <th style="width:45px;">
+                                    Payment Mode
+                                </th>
+                                <th style="width:104px;">
+                                    Customer
+                                </th>
+                                <th style="width:75px;">
+                                    Mobile
+                                </th>
+                                <th style="width:93px;">
+                                    Create Date
+                                </th>
+                                <th style="width:95px;">
+                                    Delivery Date
+                                </th>
+                                <th style="width: 75px;">
+                                    Delivery Time
+                                </th>
+                                <th style="width: 75px;">
+                                    @*Yashaswi 31-7-2018*@
+                                    Reason
+                                </th>
+                                <th style="width: 30px;">
+                                    BBP
+                                </th>
+                                <th style="width:73px;">Details</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+
+                            @if (Model.Count() == 0)
+                            {
+                                <tr>
+                                    <td colspan="14" class="text-center"><h3>No Record Found...</h3></td>
+                                </tr>
+                            }
+                            else
+                            {
+                                <tr>
+                                    <td colspan="14" style="padding:0;">
+                                        <div class="accordion" id="accordion2">
+                                            @{ int i = 1; }
+                                            @foreach (var item in Model)
+                                            {
+                                                <div class="accordion-group" style="height: auto !important; ">
+                                                    <div class="accordion-heading">
+                                                        <table class="table table-bordered table-hover table-responsive table-striped">
+                                                            <tr>
+                                                                <td style="width:17px;">@{int SrNo = ((ViewBag.PageNumber - 1) * ViewBag.PageSize) + i; i = i + 1; } @SrNo </td>
+                                                                <td style="width: 90px;">
+                                                                    <p class="label label-small label-success">@Html.DisplayFor(modelItem => item.OrderCode)</p>
+                                                                    @if (lGetwayPaymentTransaction.Any(x => x.CustomerOrderID == item.ID))
+                                                                    {
+                                                                        <span class="btn btn-small btn-info" style="word-break: break-word;">[@lGetwayPaymentTransaction.FirstOrDefault(x => x.CustomerOrderID == item.ID).PaymentGetWayTransactionId]</span>
+                                                                    }
+                                                                </td>
+                                                                <td style="width:53px;">
+                                                                    <span class="indian_currency"></span> @Html.DisplayFor(modelItem => item.OrderAmount)
+                                                                </td>
+                                                                @*-------------added by amit------------*@
+                                                                <td style="width:53px;">
+                                                                    <span class="indian_currency"></span> @Html.DisplayFor(modelItem => item.WalletAmountUsed)
+                                                                </td>
+                                                                @*---------end----------*@
+                                                                <td style="width:53px; ">
+                                                                    <span class="indian_currency"></span> @Html.DisplayFor(modelItem => item.PayableAmount)
+                                                                </td>
+                                                                <td style="width:52px;">
+                                                                    @Html.DisplayFor(modelItem => item.PaymentMode).ToString().ToUpper()
+                                                                    @if (lGetwayPaymentTransaction.Any(x => x.CustomerOrderID == item.ID))
+                                                                    {
+                                                                        <span class="btn btn-small btn-info" style="word-break: break-word;">[@lGetwayPaymentTransaction.FirstOrDefault(x => x.CustomerOrderID == item.ID).Description]</span>
+                                                                    }
+                                                                </td>
+                                                                <td style="width:100px;">
+                                                                    @Html.DisplayFor(modelItem => item.Salutation)
+                                                                    @Html.DisplayFor(modelItem => item.PersonName)
+                                                                </td>
+                                                                <td style="width:75px;">
+                                                                    @Html.DisplayFor(modelItem => item.PrimaryMobile)
+                                                                </td>
+                                                                <td style="width:75px;">
+                                                                    @*@Html.DisplayFor(modelItem => item.CreateDate)*@
+                                                                    @item.CreateDate.ToString("dd/MM/yyyy hh:mm:ss tt")
+                                                                </td>
+                                                                @*-------------------- Added by Tejaswee for delivery schedule (30-11-2015)  START-----------------------*@
+                                                                <td style="width: 75px; word-break: break-all; ">
+                                                                    @{string lDeliveryDateStr = "";}
+                                                                    @if (item.DeliveryDate != null && !item.DeliveryDate.ToString().Contains("01/01/0001"))
+                                                                    {
+                                                                        DateTime lDeliveryTime = Convert.ToDateTime(item.DeliveryDate);
+                                                                        lDeliveryDateStr = lDeliveryTime.ToString("dd/MM/yyyy");
+                                                                    }
+                                                                    <span>@lDeliveryDateStr</span>
+                                                                </td>
+
+                                                                <td style="width:65px; word-break: break-all; ">
+                                                                    @Html.DisplayFor(modelItem => item.DeliveryScheduleName)
+                                                                </td>
+                                                                <td style="width:65px; word-break: break-all; ">
+                                                                    @*Yashaswi 31-7-2018*@
+                                                                    @Html.DisplayFor(modelItem => item.Reason)
+                                                                </td>
+                                                                <td style="width:40px; word-break: break-all; ">
+                                                                    @{
+                                                                        string res = "";
+                                                                        res = item.IsBusinessBoosterPlan == true ? "Yes" : "No";
+                                                                    }
+                                                                    @res
+                                                                </td>
+                                                                @*-------------------- Added by Tejaswee for delivery schedule (26-11-2015)  END-----------------------*@
+                                                                <td style="width:50px;">
+                                                                    @if (item.CustomerOrderDetailStatus == 0)
+                                                                    {
+                                                                        <a href="#"><span class="btn btn-small btn-danger">Call Head Office</span></a>
+                                                                    }
+                                                                    else
+                                                                    {
+                                                                        <a class="accordion-toggle margin_padding_zero" data-toggle="collapse" data-parent="#accordion2" href="#@item.ID"><span class="btn btn-small btn-primary">Details</span></a>
+                                                                    }
+                                                                    <a href="@Url.Action("ForPrint", "CustomerOrderDetail", new { CustomerOrderID = item.ID })" target="_blank"><span class="btn btn-warning btn-small">Print</span></a>
+
+                                                                </td>
+                                                            </tr>
+                                                        </table>
+                                                    </div>
+                                                    <div id="@item.ID" class="accordion-body collapse">
+                                                        @*<div class="widget-content">*@
+                                                        @*<iframe id="frameCreate_@item.ID" name="frameCreate_@item.ID" src='@Url.Action("index", "CustomerOrderDetail", new { CustomerOrderID = item.ID})' width="100%" height="600px" frameborder="0"></iframe> hide*@
+                                                        <iframe id="frameCreate_@item.ID" name="frameCreate_@item.ID" src='@Url.Action("index", "CustomerOrderDetail", new { CustomerOrderID = item.ID, PaymentMode = item.PaymentMode, OrderCode = item.OrderCode })' width="100%" height="600px" frameborder="0"></iframe> @*-- Add by Ashish --*@
+                                                        @*</div>*@
+                                                    </div>
+                                                </div>
+                                            }
+                                        </div>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+
+
+                    <div class="pager">
+                        @Html.PagedListPager(Model, Page => Url.Action("Index", new
+                   {
+                       page = Page,
+                       SearchString = ViewBag.SearchString,
+                       FromDate = ViewBag.FromDate,
+                       ToDate = ViewBag.ToDate,
+                       OrderStatus = Request.QueryString["OrderStatus"]
+                   }),
+                                                                new PagedListRenderOptions()
+                                                                {
+                                                                    Display = PagedListDisplayMode.IfNeeded
+                                                                })
+                    </div>
+                </div>
+
+                <!-- /widget-content -->
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@section MyScripts{
+    <script>
+        //----------------------------------------------------------------------For datepicker---//
+        //<![CDATA[
+        $(window).load(function () {
+            //$('#DOB').datepicker('setDate', new Date());
+            $('#FromDate').datepicker('update');
+            $('#ToDate').datepicker('update');
+        });//]]>
+
+    </script>
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

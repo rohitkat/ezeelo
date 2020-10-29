@@ -1,0 +1,57 @@
+﻿@model IEnumerable<ModelLayer.Models.ViewModel.HighPerformerViewModel>
+<ul>
+    @if (Model.Count() != 0)
+    {
+        foreach (var item in Model)
+        {
+            <li>
+                <div class="recentInnerContentIMG">
+                    <figure>
+                        <img src="~/Templates/UsersTemplate/img/profile-1.png" />
+                    </figure>
+                </div>
+                <div class="recentInnerContentRightSide">
+                    <ul>
+                        <li>
+                            <h5>@item.Name</h5>
+                            <small>
+                                <i></i>Level: @item.Level &nbsp;&nbsp;|&nbsp;&nbsp;
+                                @if (@item.searchBy == 1)
+                                {
+                                    <i class="fa fa-users"></i> @item.UsersCont
+                                }
+                                else if (@item.searchBy == 2)
+                                {
+                                    <i class="fa fa-inr"></i> @item.money
+                                }
+                                else if (@item.searchBy == 3)
+                                {
+                                   @* <i class="fa fa-inr"> </i> *@ 
+                                   <figure class="high-img-erp"><img src="~/Templates/UsersTemplate/img/E.png" /></figure>  
+                                    @item.money
+                                }
+                            </small>
+                        </li>
+                    </ul>
+                </div>
+            </li>
+        }
+    }
+    else
+    {
+        <li>
+            <div class="recentInnerContentIMG">
+                <figure>
+                    <img src="~/Templates/UsersTemplate/img/profile-1.png" />
+                </figure>
+            </div>
+            <div class="recentInnerContentRightSide">
+                <ul>
+                    <li>
+                        <h5>No User Found</h5>
+                    </li>
+                </ul>
+            </div>
+        </li>
+    }
+</ul>

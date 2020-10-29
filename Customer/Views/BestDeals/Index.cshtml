@@ -1,0 +1,269 @@
+﻿@using ModelLayer.Models.ViewModel;
+@model ModelLayer.Models.ViewModel.ProductStockVarientViewModel
+@{
+    ViewBag.Title = "eZeelo: Electronics, Fashion, Coupons, Home Appliances | Lowest Price"; //Yashaswi 01/12/2018 Default City Change 
+    Layout = "~/Views/Shared/_BestDealLayoutPage.cshtml";
+    BestDealProductCollection bdpc = ViewBag.offerProducts;
+}
+
+<style>
+    #ulProduct {
+        padding-left: 0px;
+        margin: 0px;
+        clear: both;
+    }
+
+    .product-img {
+        text-align: center;
+    }
+
+    .divimg {
+        width: 185px;
+        height: 185px;
+    }
+
+    .lablehead {
+        color: black;
+        display: inline-block;
+    }
+
+        .lablehead h3 {
+            font-size: 14px;
+            margin-top: 0;
+        }
+
+    .lableheadright span {
+        font-size: 14px;
+    }
+
+    .lableheadright div.MRP lable {
+        font-size: 14px !important;
+    }
+
+    .lableheadright {
+        float: right;
+        padding-right: 5px;
+        color: brown;
+    }
+
+
+
+    #ulProduct li {
+        float: left;
+    }
+
+    .divborder {
+        border: 1px solid rgba(128, 128, 128, 0.21);
+    }
+
+    .tile-widenew {
+        display: block;
+        float: left;
+        margin: 5px;
+        background-color: #FFF;
+        box-shadow: 0px 0px 1px #FFC inset;
+        cursor: pointer;
+        position: relative;
+        -moz-user-select: none;
+        transform: perspective(1000px);
+        overflow: visible;
+        width: 310px;
+        height: 276px;
+    }
+
+    .tile-content.slide-up:hover .slide-over {
+        top: 55%;
+        text-align: left;
+    }
+
+    .op-cyan {
+        background-color: rgba(0, 0, 0, 0.4) !important;
+    }
+</style>
+<div id="divMain" class="container">
+    <div class="grid">
+        <ul id="ulProduct">
+            @if (Model != null)
+            {
+                for (var i = 0; i < Model.ProductInfo.Count(); i++)
+                {
+                    <li>
+                        <div class="a tile-group1 double">
+                            <div class="tile-container">
+                                <div class='tile-widenew fg-white divborder' data-role='tile'>
+                                    <div class='tile-content slide-up'>
+                                        <div class='cart_items'>
+                                            <div class='content'>
+                                                <div class="PRODUCT-IMAGE">
+                                                    <img src="@Url.Content(string.IsNullOrEmpty(Model.ProductInfo[i].StockThumbPath) ? "/Content/Images/no_image.png" : Model.ProductInfo[i].StockThumbPath)" alt= "eZeelo" class="divimg" />
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="slide-over op-cyan text-small padding10">
+                                            <div class="PRODUCT-NAME">
+                                                <h2 style="text-align:left!important;">@Html.DisplayFor(it => it.ProductInfo[i].ProductName)</h2>
+                                                <div style="padding-left: 10px">
+                                                    @if (Model.ProductInfo[i].ColorName != "N/A")
+                                                    {<span>@Model.ProductInfo[i].ColorName</span> }
+                                                    @if (Model.ProductInfo[i].DimensionName != "N/A")
+                                                    { <span>@Model.ProductInfo[i].DimensionName</span> }
+                                                    @if (Model.ProductInfo[i].MaterialName != "N/A")
+                                                    { <span>@Model.ProductInfo[i].MaterialName</span> }
+                                                </div>
+                                            </div>
+                                            @if (Model.ProductInfo[i].MRP > Model.ProductInfo[i].SaleRate)
+                                            {
+                                                <div class="MRP">
+                                                    <del><span>MRP : @Html.DisplayFor(it => it.ProductInfo[i].MRP)</span></del>
+                                                </div>
+                                                <div class="SALE_RATE">
+                                                    <span>Sale Rate : @Html.DisplayFor(it => it.ProductInfo[i].SaleRate)</span>
+                                                </div>
+                                            }
+                                            else
+                                            {
+                                                <div class="SALE_RATE">
+                                                    <span>Sale Rate : @Html.DisplayFor(it => it.ProductInfo[i].SaleRate)</span>
+                                                </div>
+                                            }
+
+                                            <div class="btnoffer">
+                                                @Html.ActionLink("Buy", "Index", "PreviewItem", new { itemId = Model.ProductInfo[i].ProductID, shopStockID = Model.ProductInfo[i].ShopStockID }, new { @class = "button success loading-pulse" })
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="PRODUCT-ID">
+                                @Html.DisplayFor(it => it.ProductInfo[i].ProductID)
+                            </div>
+
+                            <div class="CATEGORY-ID">
+                                @Html.DisplayFor(it => it.ProductInfo[i].CategoryID)
+                            </div>
+                            <div class="STOCK-STATUS lablehead">
+                                <h3>@Html.DisplayFor(it => it.ProductInfo[i].ShopName)</h3>
+                            </div>
+                            <div class="SALE_RATE lableheadright">
+                                <span>Sale Rate : @Html.DisplayFor(it => it.ProductInfo[i].SaleRate)</span>
+                            </div>
+                        </div>
+                    </li>
+                }
+            }
+        </ul>
+    </div>
+</div>
+@using (Html.BeginForm())
+{
+    <div class="panelnew">
+        @Html.Hidden("CityID")
+        @Html.Hidden("OfferID", Request.QueryString["OfferID"])
+        @Html.Hidden("OfferType", Request.QueryString["OfferType"])
+        @Html.Hidden("CategoryID")
+        @Html.Hidden("BrandID")
+        @Html.Hidden("PageCount")
+        @Html.Hidden("ProductCount")
+        @Html.Hidden("FranchiseID")  @*////added*@
+    </div>
+
+    @section MyBestDealScripts {
+        <script src="~/Scripts/jquery-1.10.2.min.js"></script>
+        <script type="text/javascript">
+            var pageIndex = 1;
+            var pageCount = $("#PageCount").val();
+
+            $(window).scroll(function () {
+                if ($(document).height() == ($(window).scrollTop() + $(window).height())) {
+                    GetRecords();
+                }
+            });
+            function GetRecords() {
+                pageIndex++;
+                var mydata = {
+                    "cityID": $("#CityID").val(),
+                    "franchiseID": $("#FranchiseID").val(),////added
+                    "offerID": $("#OfferID").val(),
+                    "offerType": $("#OfferType").val(),
+                    "categoryID": $("#CategoryID").val(),
+                    "brandID": $("#BrandID").val(),
+                    "pageIndex": pageIndex,
+                    "pageSize": 12
+                };
+                if (pageIndex == 2 || pageIndex <= pageCount) {
+                    $.ajax({
+                        type: "POST",
+                        url: "/BestDeals/GetBestDealProducts",
+                        data: "{'myParam':" + JSON.stringify(mydata) + "}",
+                        contentType: "application/json; charset = utf-8",
+                        dataType: "json",
+                        success: OnSuccess,
+                        failure: function (response) {
+                        },
+                        error: function (response) {
+                        }
+                    });
+                }
+            }
+
+            function OnSuccess(response) {
+                $.each(response, function (j, dataVal) {
+                    var varientValue;
+                    if (dataVal.ColorName != "N/A")
+                        varientValue = dataVal.ColorName;
+                    if (dataVal.DimensionName != "N/A")
+                        varientValue = varientValue + dataVal.DimensionName;
+                    if (dataVal.MaterialName != "N/A")
+                        varientValue = varientValue + dataVal.MaterialName;
+
+                    var price;
+                    if (dataVal.MRP > dataVal.SaleRate) {
+                        price = "<div class='MRP'>" + "<lable class='MRP' style='font-size:18px'>  MRP : </lable>" +
+                                                       "<del class='MRP' style='font-size:18px'>" + dataVal.MRP + "</del>" + "</div>" + "<div class='MRP'>" +
+                                                        "<lable class='MRP' style='font-size:18px'> Sale Rate : </lable>" +
+                                                      "<lable class='SALE_RATE' style='font-size:18px'>" + dataVal.SaleRate + "</lable>" + "</div>";
+                    }
+                    else {
+                        price = "<div class='MRP'>" + "<lable class='MRP' style='font-size:18px'> Sale Rate : </lable>" +
+                                                      "<lable class='SALE_RATE' style='font-size:18px'>" + dataVal.SaleRate + "</lable>" + "</div>";
+                    }
+
+                    var imgURL;
+                    //check image url is empty or not
+                    if (dataVal.StockThumbPath == "")
+                        imgURL = "/Content/Images/no_image.png";
+                    else
+                        imgURL = dataVal.StockThumbPath;
+
+                    $("[id*=ulProduct]").append("<li><div class='a tile-group1 double'>" +
+                                                     "<div class='tile-container'>" +
+                                                     "<div class='tile-widenew fg-white divborder' data-role='tile'>" +
+                                                     "<div class='tile-content slide-up'>" +
+                                                     "<div class='cart_items'>" +
+                                                     "<div class='content'>" +
+                                                       "<div class='PRODUCT-IMAGE'>" +
+                                                       "<img src='" + imgURL + "' class='divimg' />" +
+                                                       "</div>" +
+                                                       "</div>" +
+                                                       "</div>" +
+                                                       "<div class='slide-over op-cyan text-small padding10'>" +
+                                                      "<div class='PRODUCT-NAME'>" + "<h2 style='text-align:left!important;'>" + dataVal.ProductName + "<h2 style='text-align:left!important;'>" + varientValue + "</div>" +
+                                                     price +
+                                                      "<div class='btnoffer'>" +
+                                                       "<a href='@Url.Action("Index", "PreviewItem")?itemId=" + dataVal.ProductID + "&shopStockID=" + dataVal.ShopStockID + "' class='button success loading-pulse'>Buy</a>" +
+                                                      "</div>" +
+                                                      "</div>" +
+                                                      "</div>" +
+                                                      "</div>" +
+                                                      "</div>" +
+                                                      "<div class='PRODUCT-ID'>" + dataVal.ProductID + "</div>" +
+                                                       "<div class='CATEGORY-ID'>" + dataVal.CategoryID + "</div>" +
+                                                      "<div class='STOCK-STATUS lablehead'>" + "<h3>" + dataVal.ShopName + "</h3>" + "</div>" +
+                                                      "<lable class='SALE_RATE lableheadright' style='font-size:14px'>" + price + "</lable>" +
+                                                      "</div></li>");
+                });
+            }
+        </script>
+    }
+}

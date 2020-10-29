@@ -1,0 +1,115 @@
+﻿@model Gandhibagh.Controllers.CompareProductPreview
+
+@{
+    ViewBag.Title = "Index";
+    string cityName = "";
+    int franchiseID = 0;////added
+    if (Request.Cookies["CityCookie"] != null && Request.Cookies["CityCookie"].Value != "")
+    {
+        cityName = Request.Cookies["CityCookie"].Value.Split('$')[1].ToLower();
+        franchiseID = Convert.ToInt32(Request.Cookies["CityCookie"].Value.Split('$')[2]);////added
+    }
+    if (Session["UID"] != null)
+    {
+        @Html.Hidden("hdnSessionValue", (Session["UID"]))
+    }
+    else
+    {
+        @Html.Hidden("hdnSessionValue", 0)
+    }
+}
+@using (Html.BeginForm())
+{
+    <div class="boxCompare3">
+        <a class="RemoveCompareList" style="margin-left: 5px;float:left; display: block;"
+           href="@Url.Action("DeleteFromCompareProduct", "ProductCompare", new { itemId = Model.ProductID })">
+
+        </a>
+
+        <div class="product-img product-imgnew">
+            <a href="@Url.RouteUrl("pre-prod-name", new { itemId = @Model.ProductID, itemName = Model.ProductName.ToLower().Substring(0, Math.Min(@Model.ProductName.ToLower().Length, 30)).Replace(' ', '-').Replace("&", "%20").Replace('.', '-'), city = cityName, franchiseId = franchiseID })">
+                @*////added franchiseId=franchiseID*@
+                <img src="@Url.Content(string.IsNullOrEmpty(Model.Image_Path) ? "/Content/Images/no_image.png" : @Model.Image_Path)" alt="@Model.ProductName" class="img-responsive divimg" />
+            </a>
+        </div>
+        <div class="rating">
+            @{
+    int ratingPoint = 0;
+    if (@Model.productReviews.AvgPoints.AvgRatingPonts == null)
+    {
+        ratingPoint = 3;
+    }
+    else
+    {
+        ratingPoint = Convert.ToInt32(Math.Ceiling(Convert.ToDouble(@Model.productReviews.AvgPoints.AvgRatingPonts)));
+    }
+
+    for (int j = 1; j <= ratingPoint; j++)
+    {
+        <span class="star on"></span>
+    }
+    for (int j = 1; j <= 5 - ratingPoint; j++)
+    {
+        <span class="star"></span>
+    }
+    if (@Model.productReviews.AvgPoints.AvgRatingPonts == null)
+    {
+        <a href="#divProductRating" class="rating-view">Be the first to review</a>
+    }
+    else
+    {
+        <a href="#divProductRating">@Model.productReviews.AvgPoints.Count Rating(s)</a> <span>|</span> <a href="#divProductRating">@Model.productReviews.AvgPoints.Count Review(s)</a>
+    }
+            }
+        </div>
+        <a class="productCompName" href="@Url.RouteUrl("pre-prod-name", new { itemId = @Model.ProductID, itemName = @Model.ProductName.ToLower().Substring(0, Math.Min(@Model.ProductName.ToLower().Length, 30)).Replace(' ', '-').Replace("&", "%20").Replace('.', '-'), city = cityName, franchiseId = franchiseID })">
+            @*////added franchiseId=franchiseID*@
+            <span>
+                @if (@Model.ProductName.Length > 57)
+                {
+                    @Model.ProductName.Substring(0, 57).ToString()
+                }
+                else
+                {
+                    @Html.DisplayFor(model => model.ProductName)
+                }
+            </span>
+            <div id="toolTip">@Html.DisplayFor(model => model.ProductName)</div>
+        </a>
+
+        <div style=" font-weight: bold; font-size: 17px; color: #b00;" class="mrpComp">
+            <span>Rs.</span> @Html.DisplayFor(model => model.SaleRate)
+        </div>
+        <span class="shopNameCom">Shop Name :- <strong> @Html.DisplayFor(model => model.SellerName)</strong></span>
+
+        @if (Model.IsInstock)
+        {
+            <div class="instackDiv">
+                <span class="in-stock">In Stock.</span>
+                <span class="shop-deals"><strong> @Html.DisplayFor(model => model.SellersCount)</strong> Shops Deals in same Product</span>
+            </div>
+
+            <button id="@Model.ProductID" class="addToCartJquery btn-buy btnBuy compare-buy" type="button"
+                    onclick="AddProduct(@Model.ShopStockID,@Model.ProductID)">
+                Add To Cart
+            </button>
+        }
+        else
+        {
+            <div class="instackDiv">
+                <span class="in-stock">
+                    Out of Stock.
+                </span>
+                <span class="shop-deals"><strong>@Html.DisplayFor(model => model.SellersCount)</strong> Shops Deals in same Product</span>
+            </div>
+        }
+
+    </div>
+}
+<script src="~/Scripts/Products.js"></script>
+<script type="text/javascript">
+    function AddProduct(shopStockId, itemId) {
+        var _url = '@Url.Action("AddProductInShoppingCart", "Product")';
+        AddProductToShppingCartWithoutQuantity(shopStockId, itemId, _url);
+    }
+</script>

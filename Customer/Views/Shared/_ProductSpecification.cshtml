@@ -1,0 +1,54 @@
+﻿@model ModelLayer.Models.ViewModel.PreviewItemViewModel
+@using ModelLayer.Models.ViewModel;
+@Html.Hidden("hdnProductDescFilePath", @Model.GeneralSpecifications)
+<!--Product Specification-->
+@if ((Model.GeneralSpecifications != null && Model.GeneralSpecifications != string.Empty) || (Model.TechnicalSpecification != null && Model.TechnicalSpecification.Count() > 0))
+{
+    <div class="">
+        <div class="ProSpec">
+            @if (Model.GeneralSpecifications != null && Model.GeneralSpecifications != string.Empty)
+            {
+                <div class="frame active">
+                    @*<div class="heading">General Specification</div>*@
+                    <!-- another link. uses the same overlay -->
+                    <div id="productGeneralSpecification">
+                        @Html.Raw(Model.GeneralSpecifications)
+
+                    </div>
+                </div>
+            }
+            @if (Model.TechnicalSpecification != null && Model.TechnicalSpecification.Count() > 0)
+            {
+                <div class="frame active">
+                    <div class="heading">Technical Specification </div>
+                    <div class="content">
+                        @{
+                var parentNode = Model.TechnicalSpecification.Select(x => new { x.ParentSpecificationID, x.ParentSpecificationName }).Where(x => x.ParentSpecificationID != null).Distinct().ToList();
+                if (parentNode.Count() > 0)
+                {
+                    for (int i = 0; i < parentNode.Count(); i++)
+                    {
+                        var parentSpecificationID = @parentNode[i].ParentSpecificationID;
+                        <h2 class="speName"> @parentNode[i].ParentSpecificationName </h2>
+
+                        var childNode = Model.TechnicalSpecification.Where(x => x.ParentSpecificationID == parentSpecificationID).Distinct().ToList();
+
+                        if (childNode.Count() > 0)
+                        {
+
+                            for (int j = 0; j < childNode.Count(); j++)
+                            {
+                                <p class="techPara"><label>@childNode[j].SpecificationName </label>:  <span>@childNode[j].Value</span></p>
+
+                            }
+                        }
+                    }
+                }
+                        }
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+}
+<!--End Div-->

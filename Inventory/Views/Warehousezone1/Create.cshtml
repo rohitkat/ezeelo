@@ -1,0 +1,202 @@
+﻿@model ModelLayer.Models.WarehouseZone
+
+@{
+
+    ViewBag.Title = "Index";
+}
+
+<style>
+    #msform1 fieldset:not(:first-of-type) {
+        display: none;
+    }
+
+    .field-validation-error {
+        color: #000000 !important;
+    }
+
+    .succes-msg {
+        color: #31A012;
+        font-size: 20px;
+    }
+
+    .beatpicker-clearButton button {
+        display: none;
+    }
+
+    .input-parent button {
+        display: none;
+    }
+
+    .textarea-adjust {
+        width: 85%;
+    }
+    /*Beatpicker Css*/
+    .beatpicker-clearButton button {
+        display: none;
+    }
+
+    .input-parent button {
+        display: none;
+    }
+
+    .header-navbar-button {
+        position: absolute !important;
+    }
+
+    .beatpicker .main-nav .current-indicator {
+        text-align: center !important;
+    }
+
+    .beatpicker .main-nav .prev1 {
+        left: 0 !important;
+        width: 14%;
+        padding: 0px 10px;
+        color: #fff;
+        font-size: 16px;
+    }
+
+    .beatpicker .main-nav .next1 {
+        right: 0 !important;
+        width: 9%;
+        color: #fff;
+        font-size: 16px;
+    }
+
+    .beatpicker .main-nav .prev1:hover {
+        left: 0 !important;
+        width: 14%;
+        padding: 0px 10px;
+        color: #fff;
+        font-size: 20px;
+        cursor: pointer !important;
+    }
+
+    .beatpicker .main-nav .next1:hover {
+        right: 0 !important;
+        width: 9%;
+        color: #fff;
+        font-size: 20px;
+        cursor: pointer !important;
+    }
+    /*Beatpicker Css End*/
+</style>
+
+@using (Html.BeginForm("Create", "Warehousezone1", FormMethod.Post))
+{
+    <div class="box span12">
+        <div class="box-header creatProduct clearfix" data-original-title="">
+            <h2>
+                <i class="icon-exclamation-sign"></i>
+                <span class="break"></span>
+                Warehouse Zone
+            </h2>
+        </div>
+
+        <div class="box-content nameDscrp">
+            <div class="form-horizontal">
+                <div class="control-group mrg-btm">
+                    <div class="NameDescription">
+
+                        <div class="control-group mrg-left">
+                            Zone/Area
+                            <div class="col-sm-3">
+                                @Html.DropDownListFor(model => model.ZoneID, Model.ZoneList, "select", null)
+                                @Html.ValidationMessageFor(model => model.ID)
+                            </div>
+                        </div>
+
+                        <div class="control-group mrg-left">
+                            Next Zone
+                            <div class="col-sm-3">
+                               
+                                @Html.TextBoxFor(model => model.Name, null, new { @class = "col-md-2", disabled = "disabled" })
+                                @Html.Hidden("hdnName")
+                                
+                            </div>
+
+                        </div>
+                        <div class="clr"></div>
+                    </div>
+
+                    <div>
+                        <input type="submit" value="Save" class="btn btn-success mrg-left mrg-top" />
+                        @Html.ActionLink("Back to List", "Index", null, new { @class = "btn btn-default mrg-left mrg-top" })
+                        
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div> 
+}
+<script src="~/Scripts/jquery-1.10.2.min.js"></script>
+<script>
+
+    $(document).ready(function () {
+        $("#ZoneID").change(function () {
+            //alert('Abbreviation')
+            var ZoneID = $('option:selected', this).val();
+            //var ZoneID = $("select#ZoneID optionelected".val());
+
+            //alert(ZoneID)
+
+            $.ajax({
+                url: '/Warehousezone1/GetZone',
+                data: { 'ZoneID': ZoneID },
+
+                success: function (responce) {
+                    //alert('fg');
+                    //  to add the value from dropdawoun list into textbox//
+                    $("#Name").val(responce);
+                    $("#hdnName").val(responce);//here the value is passed i.e name is shown //
+                    //alert(responce)
+
+                },
+
+                error: function (responce) { alert(responce.data) }
+            });
+
+        });
+    });
+
+</script>
+@*<script>
+
+        $("select#Zone".bind('change', function () {
+            var ZoneID = $("select#Zone optionelected".val();
+            alert('ghjh')
+            $.ajax({
+                type: "POST",
+                url: '@Url.Action("GetZone", "Warehousezone1")',
+                data: { 'ZoneID': ZoneID },
+                //dataType: "json",
+                cache: false,
+                success: function (data) {
+                    var xmlDoc = $.parseXML(data);
+                    alert(ZoneID)
+                    //var xml = $(xmlDoc);
+                   // var $person = xml.find("NewDataSet";
+                   // $person.each(function () {
+                    //    var SizeID = $(this).find('SizeID').text(),
+                    //        StockIn = $(this).find('StockIn').text();
+
+                    //    if(SizeID==1)
+                    //    {
+                    //        alert('Size not alloted to this Item! Please contact with Admin.');
+                    //        return false;
+                    //    }
+
+                        //$("#StockIn".val(StockIn);
+
+                    //});
+
+                },
+                error: function (x, e) {
+                    alert('Failure');
+                    alert("The call to the server side failed. ";
+                }
+            });
+        });
+
+
+    </script>*@
+

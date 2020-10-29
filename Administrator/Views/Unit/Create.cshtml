@@ -1,0 +1,65 @@
+﻿@model ModelLayer.Models.Unit
+
+@{
+    ViewBag.Title = "Create";
+}
+
+
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+    <div class="span10" id="content">
+        <div class="row-fluid">
+            <div class="box span12">
+                <div class="box-header">
+                    <h2>Unit</h2>
+
+                </div>
+                <div class="box-content">
+
+                    <div class="form-horizontal">
+
+                        @if (ViewBag.Messaage != null)
+                        {
+                            @Html.Label("Messaage", (string)ViewBag.Messaage, new { @class = "deleteMsg" })
+                        }
+                        else
+                        {
+                            @Html.Label("Messaage", "", new { @class = "deleteMsg" })
+                        }
+
+                        <hr />
+                        @Html.ValidationSummary(true)
+
+                        <div class="control-group">
+                            @Html.LabelFor(model => model.Name, new { @class = "control-label col-md-2" })
+                            <div class="controls">
+                                @Html.EditorFor(model => model.Name)
+                                @Html.ValidationMessageFor(model => model.Name)
+                            </div>
+                        </div>
+
+                        <div class="control-group">
+                            @Html.LabelFor(model => model.IsActive, new { @class = "control-label col-md-2" })
+                            <div class="controls">
+                                @Html.EditorFor(model => model.IsActive)
+                                @Html.ValidationMessageFor(model => model.IsActive)
+                            </div>
+                        </div>
+
+
+
+                        <div class="form-actions">
+                            <div class="col-md-offset-2 col-md-10">
+                                <input type="submit" value="Create" class="btn btn-primary" />
+                                @Html.ActionLink("Back to List", "Index", null, new { @class = "btn" })
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+

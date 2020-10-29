@@ -1,0 +1,106 @@
+﻿@using PagedList;
+@using PagedList.Mvc;
+@model IPagedList<ModelLayer.Models.ViewModel.MerchantRegisterViewModel>
+
+@*@model IEnumerable<ModelLayer.Models.ViewModel.MerchantRegisterViewModel>*@
+
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="row-fluid">
+    <div class="box span12">
+        <div class="box-header">
+            <h2><i class="icon-edit"></i><span class="break"></span>Customer List</h2>
+        </div>
+       
+        <div class="box-content">
+            @using (Html.BeginForm())
+            {
+                <div class="search_div">
+                    @Html.TextBox("SearchString", null, new { @class = "search_input", placeholder = "search" })
+                    <input type="submit" value="Search" class="btn btn-small btn-primary" style="margin-top: -11px;" />
+                </div>
+            }
+            <div class="div_class">
+                <table class="table table-striped table-bordered ">
+                    <thead>
+                        <tr>
+                            <th>
+                                Customer Name
+                            </th>
+                            <th>
+                                Mobile Number
+                            </th>
+                            <th>
+                                Email ID
+                            </th>
+                            <th>
+                                Locked
+                            </th>
+
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td>
+                                @Html.HiddenFor(modelItem => item.personalDetail.PincodeID)
+                                @Html.DisplayFor(modelItem => item.personalDetail.FirstName)
+                            </td>
+                            <td>
+                                @Html.HiddenFor(modelItem => item.userLogin.ID)
+
+                                @Html.DisplayFor(modelItem => item.userLogin.Mobile)
+
+
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.userLogin.Email)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.userLogin.IsLocked)
+                            </td>
+                            <td>
+                                @Html.ActionLink("Edit", "Edit", new { UserLoginID = item.userLogin.ID }, new { @class = "btn btn-small btn-danger" })
+                                @if (item.userLogin.Email != null && item.userLogin.Mobile != null && item.userLogin.IsLocked != false)
+                                {
+
+                            @Html.ActionLink("Apply For Merchant Registration", "Approval", "MerchantRegister",
+                                 new
+                                 {
+                                     confirm = true,
+                                     UserLoginID = item.userLogin.ID,
+                                     CutomerName = item.personalDetail.FirstName,
+                                     Mobile = item.userLogin.Mobile,
+                                     Email = item.userLogin.Email,
+                                     PincodeID = item.personalDetail.PincodeID
+                                 },
+                                           new { onclick = "return confirm('Do you really want to Apply for Merchant?')", @class = "btn btn-small btn-primary" })
+                                }
+
+                            </td>
+                        </tr>
+                    }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="pager">
+            @Html.PagedListPager(Model, Page => Url.Action("Index", new
+                       {
+                           page = Page,
+                           searchString = ViewBag.CurrentFilter as string
+
+                       }),
+                                                                    new PagedListRenderOptions()
+                                                                    {
+                                                                        Display = PagedListDisplayMode.IfNeeded
+                                                                    })
+            <h4><span>Total Count:&nbsp;@ViewBag.TotalCount</span></h4>
+        </div>
+    </div>
+</div>

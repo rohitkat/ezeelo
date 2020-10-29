@@ -1,0 +1,542 @@
+﻿@{
+    ViewBag.Title = "Login";
+
+    string cityName = "";
+    int franchiseID = 0;////added
+    if (Request.Cookies["CityCookie"] != null && Request.Cookies["CityCookie"].Value != "")
+    {
+        cityName = Request.Cookies["CityCookie"].Value.Split('$')[1].ToLower();
+        franchiseID = Convert.ToInt32(Request.Cookies["CityCookie"].Value.Split('$')[2]);////added
+    }
+
+}
+@*<link href="~/Content/css/Site.css" rel="stylesheet" />*@
+<link href="~/Content/css/Site.css" rel="stylesheet" />
+<style>
+    .google {
+        background-image: url("/Content/Images/tags/g.png");
+        width: 144px;
+        height: 22px;
+        background-size: 144px 25px;
+        /*margin-top: 4px;*/
+        border-radius: 3px;
+    }
+    /*Yashaswi*/
+    .mlm {
+        background-color: #47ce0d;
+        width: 144px;
+        height: 22px;
+        background-size: 144px 25px;
+        margin-top: 4px;
+        border-radius: 3px;
+    }
+    /*End*/
+
+    .facebook {
+        vertical-align: top;
+    }
+
+    .right {
+        border-right: 2px solid #eaeaea;
+        padding-left: 0px;
+        padding-right: 20px;
+        height: auto;
+    }
+</style>
+<script>
+    $(document).ready(function () {
+        $("#myBtn").css("cursor", "auto");
+        $('#myBtn').on("click", function (e) {
+            $("#myModal").hide();
+        });
+    })
+</script>
+@model ModelLayer.Models.ViewModel.LoginViewModel
+
+@Html.Hidden("IsSuccess")
+@{
+    if (Request.QueryString["callFrom"] != null)
+    {
+
+    }
+}
+<div class="gap gap-small"></div>
+<div class="container">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="box-lg">
+                <div class="row" data-gutter="60">
+                    <div class="col-md-6">
+                        @using (Html.BeginRouteForm("Login", new { isExpressBuy = false, returnUrl = ViewBag.returnurl, city = cityName, franchiseId = franchiseID }, FormMethod.Post, new { id = "btnLoginForm" }))
+                        {
+                            @Html.AntiForgeryToken()
+
+                            <div class="grid">
+                                @if (TempData["Message"] != null)
+                                {
+                                    <div class="breadcrumbs dark">
+                                        @TempData["Message"]
+                                    </div>
+                                }
+
+                                @Html.ValidationSummary(true)
+                                <h3 class="widget-title">Login to your account</h3>
+                                @if (ViewBag.returnurl != null)
+                                {
+                                    @Html.Hidden("returnurl", (string)ViewBag.returnurl)
+                                }
+                                <div class="form-group">
+                                    <label>E-mail / Mobile no.</label>
+                                    @if (TempData["mobEmail"] != null)
+                                    {
+                                        <input class="form-control" autocomplete="off" data-val="true" data-val-required="Please Enter the User Name" id="txtUserName" maxlength="150" name="UserName" type="text" value="@TempData["mobEmail"].ToString()" placeholder="Email">
+                                    }
+                                    else
+                                    {
+                                        @Html.TextBoxFor(model => model.UserName, null, new { autocomplete = "off", maxlength = 150, id = "txtUserName", placeholder = "Email", @class = "form-control" })
+                                    }
+                                    @Html.ValidationMessageFor(model => model.UserName)
+                                </div>
+                                <div class="form-group">
+                                    <label>Password (Use eZeelo password)</label>
+                                    @Html.PasswordFor(model => model.Password, new { maxlength = 100, autocomplete = "off", placeholder = "Password", @class = "form-control" })
+                                    @Html.ValidationMessageFor(model => model.Password, "", new { @class = "PasswordValidation" })
+                                </div>
+                                @*Yashaswi Leaders SignUp 19-7-2018*@
+                                <div class="form-group">
+                                    <label>Use Your Referral Id and Become Leader (Only for new user)</label>
+                                    @Html.TextBoxFor(model => model.ReferralId, new { placeholder = "Referral Id", @class = "form-control", style = "font-family: Consolas" })
+                                    @Html.ValidationMessageFor(model => model.ReferralId)
+                                </div>
+                                <div style="margin-top: 15px;">
+                                    <button id="btnLogin" type="submit" style="float:left;" value="Login" class="btn btn-success">
+                                        <span id="spnLoader" style="display:none;float:left;" class="fa fa-circle-o-notch fa-spin"></span>Login
+                                    </button>
+                                    @*<button id="btnForgotPassword" style="float: left; margin-left: 15px; border: 1px solid #eaeaea !important;color:white; " class="button primary ">Forgot Password</button>*@
+                                    <input type="button" id="btnForgotPassword" value="Forgot Password" style="float: left; margin-left: 15px; border: 1px solid #eaeaea !important; color: white; background:#2086BF" class="btn btn-primary" />
+                                </div>
+                                <span id="test" style="display:none;"> click to check</span>
+                                <br />
+                                <span id="lblMessage" style="color: red; float: left;"></span>
+                                <br />
+                                <img id="loader_img1" src="~/Content/Images/ajax_loader.gif" style="display: none" height="30" width="30" />
+                                <hr style="border: 1px solid #eaeaea; height: 1px; background-color: #eaeaea; margin-top: 5px; margin-bottom: 10px; " />
+
+                                @*<h3 class="widget-title">Login to eZeelo using</h3>*@
+                                @*External Login Facility  Date :- 20-01-2015    Developer:-  Pradnyakar Badge
+                                    Google+  login button*@
+                                @*<a href='#' onclick='login();' class="gIcon" id="loginText" style="width:300px;height:60px;">
+                                    <div style="display:inline-block;" class="google">
+
+                                    </div>
+                                </a>*@
+                                @**********************end of Google Login button************************@
+
+                                @*External Login Facility  Date :- 21-01-2015    Developer:-  Pradnyakar Badge
+                                    facebook  login button*@
+
+                                @*<fb:login-button scope="public_profile,email" class="fb-login-button facebook" onlogin="checkLoginState();">
+                                    Login with Facebook
+                                </fb:login-button>*@
+                                <div id="status" style="display:none;">
+                                </div>
+
+                                @**********************end of facebook Login button************************@
+
+                                @*start Yashaswi*@
+                                @*New Yashaswi 9-7-2018*@
+                                @*<h3 class="widget-title">Sign Up to eZeelo Leader’s Site</h3>
+                                    <a title="Go To Ezeelo Leader's Site." href='http://leaders.ezeelo.com/' target="_blank" style="width:300px;height:60px;">
+
+                                        <div style="display:inline-block;color:white;text-align:center" class="mlm">
+                                            Sign Up
+                                        </div>
+                                    </a>*@
+                                @*End*@
+                            </div>
+                        }
+
+                    </div>
+
+                    <div class="col-md-6">
+                        @*@Html.Partial("_CustomerRegistration", Model)*@
+                        @*Yashaswi mlm SignUp*@
+                        @Html.Partial("_CustomerRegistration", (ModelLayer.Models.ViewModel.CustomerRegistrationViewModel)ViewBag.CustomerRegistrationViewModel)
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="gap gap-small"></div>
+<div class="col-lg-2 col-md-1 col-sm-1"></div>
+<div id="fb-root"></div>
+
+
+<script type="text/javascript">
+    $(function () {
+
+        if (window.location.href.indexOf("payment-process") != -1) {
+            var _url = window.location.href.substring(0, window.location.href.indexOf("payment-process")) + "payment-process-login";
+            history.replaceState(null, document.title, _url);
+        }
+
+        if ($("#IsSuccess").val() == "false") {
+            $("#spnLoader").css("display", "none");
+            $("#btnLogin").css("cursor", "pointer");
+        }
+        //Yashaswi Leaders SignUp 19-7-2018
+        var IsMsgShow = 0;
+        $("#ReferralId").blur(function () {
+            IsMsgShow = 0;
+        });
+        $("#btnLogin").click(function (e) {
+            //    $("#spnLoader").css("display", "block");
+            //    $(this).css("cursor", "not-allowed");
+            var obj = $(".input-validation-error");
+            if (obj.attr("id") == "ReferralId") {
+                modalFromValidReferalId.style.display = "block";
+                $("#spInputRefId").text($("#ReferralId").val());
+            }
+        });        
+        $("#btnLoginForm").submit(function (e) {
+        //$(document).on('click', "#btnLoginForm", function (e) {
+            var Ref_Id = $("#ReferralId").val();
+            var obj = $(".input-validation-error");
+            if (obj.attr("id") != "ReferralId") {
+                if (Ref_Id.trim() != "" && IsMsgShow == 0) {
+                    //Yashaswi 15-3-2019
+                    e.preventDefault();
+                    $.ajax({
+                        contentType: 'application/json; charset=utf-8',
+                        dataType: 'json',
+                        url: '@Url.Action("GetParentName", "Login")' + '?ReferralId=' + Ref_Id + '&UserName=' + $("#txtUserName").val(),
+                        type: "GET",
+                        success: function (result) {
+                            if (result != "") {
+                                if (result.match("^1")) {
+                                    $("#sp_LeadersRegMsg").text("You Are Already Registered As Ezeelo Member under ");
+                                    result=  result.replace("1", "");
+                                }
+                                else {
+                                    $("#sp_LeadersRegMsg").text("You are going to join Ezeelo under ");
+                                    result= result.replace("0", "");
+                                }
+                                $("#sp_parentname").text(result);
+                                IsMsgShow = 1;
+                                modalFromValidReferalIdMsg.style.display = "block";
+                                return false;
+                            }
+                            else {
+                                return true;
+                            }
+                        },
+                        error: function (data) {
+                            modalFromValidReferalIdMsg.style.display = "none";
+                            return true;
+                        }
+                    });
+                }
+            }
+        });
+        $("#btnGoBackLogin1").click(function () {
+            modalFromValidReferalIdMsg.style.display = "none";
+            if ($("#FirstName").val() != "") {
+                $(".refId").focus();
+            } else {
+                $("#ReferralId").focus();
+            }
+        });
+        $("#btnContinueLogin1").click(function () {
+
+            modalFromValidReferalIdMsg.style.display = "none";
+            if ($("#FirstName").val() != "") {
+                $("#formsubmit").click();
+            } else {
+                $("#btnLogin").click();
+            }
+        });
+        $("#btnGoBackLogin").click(function () {
+            modalFromValidReferalId.style.display = "none";
+            if ($("#FirstName").val() != "") {
+                $(".refId").focus();
+            } else {
+                $("#ReferralId").focus();
+            }
+        });
+        $("#btnContinueLogin").click(function () {
+            modalFromValidReferalId.style.display = "none";
+            if ($("#FirstName").val() != "") {
+                $(".refId").val("");
+                $("#formsubmit").click();
+            } else {
+                $("#ReferralId").val("");
+                $("#btnLogin").click();
+            }
+        });
+        $(document).ready(function () {
+          
+            $("#txtUserName").val("@TempData["UserName"]");
+            $("#Password").val("");
+        });
+        //Yashaswi Leaders SignUp 19-7-2018
+    });
+    $("#btnForgotPassword").click(function () {
+        var userName = $("#txtUserName").val();
+        $(".PasswordValidation").text(" ");
+        if (userName != '' && userName != null) {
+            $("#loader_img1").show();
+            $.ajax({
+                contentType: 'application/json; charset=utf-8',
+                dataType: 'json',
+                url: '@Url.Action("SendForgotPassword", "Login")' + '?pUsername=' + userName,
+                type: "GET",
+                success: function (result) {
+
+                    if (result != "True") {
+                        $("#lblMessage").text(result);
+                    }
+                    else {
+
+                        $("#lblMessage").text("Password is sent to your mobile through SMS or Email.");
+                    }
+                    $("#loader_img1").hide();
+                },
+                error: function (data) {
+                    $("#lblMessage").text("We are unavailable to process your request.");
+                    $("#loader_img1").hide();
+                }
+            });
+        }
+        else {
+            $("#spnLoader").css("display", "none");
+            $("#btnLogin").css("cursor", "pointer");
+        }
+    });
+
+</script>
+
+
+@***Developer:-Pradnyakar Badge ***Dated :- ******26-01-2016*****************************************************************@
+@****************************************************************************************************************************@
+@**********************************************External Loging Changes Start*************************************************@
+@***************************************************Please Don't Change******************************************************@
+@****************************************************************************************************************************@
+
+<script src="https://apis.google.com/js/platform.js" async defer></script>
+<script src="~/Scripts/jquery-1.10.2.min.js">
+    $.noConflict()
+</script>
+<script src="~/Scripts/connectFacebook.js"></script>
+<script>
+    // This is called with the results from from FB.getLoginStatus().
+    function statusChangeCallback(response) {
+        console.log('statusChangeCallback');
+        console.log(response);
+        // The response object is returned with a status field that lets the
+        // app know the current login status of the person.
+        // Full docs on the response object can be found in the documentation
+        // for FB.getLoginStatus().
+        if (response.status === 'connected') {
+            // Logged into your app and Facebook.
+            //testAPI();
+        } else if (response.status === 'not_authorized') {
+            // The person is logged into Facebook, but not your app.
+            document.getElementById('status').innerHTML = 'Please log ' +
+              'into this app.';
+        } else {
+            // The person is not logged into Facebook, so we're not sure if
+            // they are logged into this app or not.
+            document.getElementById('status').innerHTML = 'Please log ' +
+              'into Facebook.';
+        }
+    }
+
+    // This function is called when someone finishes with the Login
+    // Button.  See the onlogin handler attached to it in the sample
+    // code below.
+    function checkLoginState() {
+        FB.getLoginStatus(function (response) {
+            statusChangeCallback(response);
+            testAPI();
+        });
+    }
+
+    window.fbAsyncInit = function () {
+        FB.init({
+            appId: '918378811602741',
+            cookie: true,  // enable cookies to allow the server to access
+            // the session
+            xfbml: true,  // parse social plugins on this page
+            version: 'v2.2' // use version 2.2
+        });
+
+        // Now that we've initialized the JavaScript SDK, we call
+        // FB.getLoginStatus().  This function gets the state of the
+        // person visiting this page and can return one of three states to
+        // the callback you provide.  They can be:
+        //
+        // 1. Logged into your app ('connected')
+        // 2. Logged into Facebook, but not your app ('not_authorized')
+        // 3. Not logged into Facebook and can't tell if they are logged into
+        //    your app or not.
+        //
+        // These three cases are handled in the callback function.
+
+        FB.getLoginStatus(function (response) {
+            statusChangeCallback(response);
+        });
+
+    };
+
+    // Load the SDK asynchronously
+    (function (d, s, id) {
+        var js, fjs = d.getElementsByTagName(s)[0];
+        if (d.getElementById(id)) return;
+        js = d.createElement(s); js.id = id;
+        js.src = "//connect.facebook.net/en_US/sdk.js";
+        fjs.parentNode.insertBefore(js, fjs);
+    }(document, 'script', 'facebook-jssdk'));
+
+    // Here we run a very simple test of the Graph API after login is
+    // successful.  See statusChangeCallback() for when this call is made.
+    function testAPI() {
+        console.log('Welcome!  Fetching your information.... ');
+        FB.api('/me', { fields: 'name,email' }, function (response) {
+            console.log('Successful login for: ' + response.name);
+            document.getElementById('status').innerHTML =
+              'Thanks for logging in, ' + response.name + '!';
+
+            var callfrom = $("#callFrom").val();
+            var externalCallBackURL = $("#externalCallBackURL").html();
+            var email = response.email;
+            var useName = response.name;
+
+            var _url = '@(Html.Raw(Url.Action("ExternalLogin", "Login", new { email = "_email_", UserName = "_UserName_", mediaType = "google", callFrom = "_callFrom_", city = cityName, franchiseId = franchiseID })))'; ////added franchiseId=franchiseID
+
+            _url = _url.replace("_email_", email);
+            _url = _url.replace("_UserName_", useName);
+            _url = _url.replace("_callFrom_", callfrom);
+            window.location.href = _url;
+        });
+    }
+</script>
+
+
+@*gmail login dont touch*@
+<script type="text/javascript">
+    var OAUTHURL = 'https://accounts.google.com/o/oauth2/auth?';
+    var VALIDURL = 'https://www.googleapis.com/oauth2/v1/tokeninfo?access_token=';
+    var SCOPE = 'https://www.googleapis.com/auth/userinfo.profile https://www.googleapis.com/auth/userinfo.email';
+    var CLIENTID = '269045152924-7cnvv3ch5iv20137m6b815d3rrsno016.apps.googleusercontent.com';
+    var REDIRECT = '@System.Configuration.ConfigurationManager.AppSettings["EZEELO_CUSTOMER_URL"]/login';
+    var LOGOUT = 'http://accounts.google.com/Logout';
+    var TYPE = 'token';
+    var _url = OAUTHURL + 'scope=' + SCOPE + '&client_id=' + CLIENTID + '&redirect_uri=' + REDIRECT + '&response_type=' + TYPE;
+    var acToken;
+    var tokenType;
+    var expiresIn;
+    var user;
+    var loggedIn = false;
+    function login() {
+        //alert(_url);
+        var win = window.open(_url, "windowname1", 'width=800, height=600');
+        var pollTimer = window.setInterval(function () {
+            try {
+                console.log(win.document.URL);
+                if (win.document.URL.indexOf(REDIRECT) != -1) {
+                    window.clearInterval(pollTimer);
+                    var url = win.document.URL;
+                    acToken = gup(url, 'access_token');
+                    tokenType = gup(url, 'token_type');
+                    expiresIn = gup(url, 'expires_in');
+                    win.close();
+                    validateToken(acToken);
+                }
+            } catch (e) {
+            }
+        }, 500);
+    }
+    function validateToken(token) {
+        $.ajax({
+            url: VALIDURL + token,
+            data: null,
+            success: function (responseText) {
+                getUserInfo();
+                loggedIn = true;
+                $('#loginText').hide();
+                $('#logoutText').show();
+            },
+            dataType: "jsonp"
+        });
+    }
+    function getUserInfo() {
+        $.ajax({
+            url: 'https://www.googleapis.com/oauth2/v1/userinfo?access_token=' + acToken,
+            data: null,
+            success: function (resp) {
+                user = resp;
+                var callfrom = $("#callFrom").val();
+                var externalCallBackURL = $("#externalCallBackURL").html();
+                var email = user.email;
+                var useName = user.name;
+                var _url = '@(Html.Raw(Url.Action("ExternalLogin", "Login", new { email = "_email_", UserName = "_UserName_", mediaType = "google", callFrom = "_callFrom_", city = cityName, franchiseId = franchiseID })))'; ////added franchiseId = franchiseID
+                _url = _url.replace("_email_", email);
+                _url = _url.replace("_UserName_", useName);
+                _url = _url.replace("_callFrom_", callfrom);
+                window.location.href = _url;
+            },
+            dataType: "jsonp"
+        });
+    }
+    //credits: http://www.netlobo.com/url_query_string_javascript.html
+    function gup(url, name) {
+        name = name.replace(/[\[]/, "\\\[").replace(/[\]]/, "\\\]");
+        var regexS = "[\\#&]" + name + "=([^&#]*)";
+        var regex = new RegExp(regexS);
+        var results = regex.exec(url);
+        if (results == null)
+            return "";
+        else
+            return results[1];
+    }
+    function startLogoutPolling() {
+        $('#loginText').show();
+        $('#logoutText').hide();
+        loggedIn = false;
+        $('#uName').text('Welcome ');
+        $('#imgHolder').attr('src', 'none.jpg');
+    }
+
+</script>
+
+<script>
+    $("#test").click(function () {
+
+        var callfrom = $("#callFrom").val();
+        var externalCallBackURL = $("#externalCallBackURL").html();
+        var email1 = "pradnyakar786@gmail.com";
+        var useName = "Pradnyakar Badge";
+
+        $('#googleAlert').attr("style", "display:block");
+        $('#googleAlert').text("Click to Continue");
+        var _url = '@(Html.Raw(Url.Action("ExternalLogin", "Login", new { email = "_email_", UserName = "_UserName_", mediaType = "google", callFrom = "_callFrom_", city = cityName, franchiseId = franchiseID })))'; ////added franchiseId = franchiseID
+        _url = _url.replace("_email_", email1);
+        _url = _url.replace("_UserName_", useName);
+        _url = _url.replace("_callFrom_", callfrom);
+        // alert(_url);
+        window.location.href = _url;
+
+    });
+</script>
+@****************************************************************************************************************************@
+@****************************************************************************************************************************@
+@**********************************************Endo of External Loging Changes************************************************@
+@****************************************************************************************************************************@
+@****************************************************************************************************************************@
+
+
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}

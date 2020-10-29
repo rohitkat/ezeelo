@@ -1,0 +1,288 @@
+﻿@model ModelLayer.Models.ViewModel.PurchaseCompleteViewModel
+@using BusinessLogicLayer;
+@using System.Text.RegularExpressions;
+@{
+    ViewBag.Title = "eZeelo: Online Jewellery, Home Appliances, Electronics & Fashion Store Nagpur";
+}
+@{
+    string cityName = "";
+    int franchiseID = 0;////added
+    if (Request.Cookies["CityCookie"] != null && Request.Cookies["CityCookie"].Value != "")
+    {
+        cityName = Request.Cookies["CityCookie"].Value.Split('$')[1].ToLower();
+        franchiseID = Convert.ToInt32(Request.Cookies["CityCookie"].Value.Split('$')[2]);////added
+    }
+}
+@Html.Hidden("PID")
+@Html.Hidden("SID")
+
+@*@Html.Hidden("FrequentlyBuyedPageCount", Model.FrequentlyProducts.SearchCount.PageCount)
+@Html.Hidden("FrequentlyBuyedProductCount", Model.FrequentlyProducts.SearchCount.ProductCount)*@
+<div class="example">
+
+    <!-- Google Code for PPC Conversion Report Of eZeelo Conversion Page -->
+    @*<script type="text/javascript">
+        /* <![CDATA[ */
+        var google_conversion_id = 950176197;
+        var google_conversion_language = "en";
+        var google_conversion_format = "3";
+        var google_conversion_color = "ffffff";
+        var google_conversion_label = "XP7iCKvpjWgQxZOKxQM";
+        var google_conversion_value = 0.00;
+        var google_conversion_currency = "INR";
+        var google_remarketing_only = false;
+        /* ]]> */
+    </script>
+    <script type="text/javascript" src="//www.googleadservices.com/pagead/conversion.js">
+    </script>
+    <noscript>
+        <div style="display:inline;">
+            <img height="1" width="1" style="border-style:none;" alt="" src="//www.googleadservices.com/pagead/conversion/950176197/?value=0.00&;currency_code=INR&amp;label=XP7iCKvpjWgQxZOKxQM&amp;guid=ON&amp;script=0" />
+        </div>
+    </noscript>*@
+    <!-- Google Code for GB Adword Conversion Checkout (order-placed) Conversion Page --> 
+    <script type="text/javascript">
+        /* <![CDATA[ */
+        var google_conversion_id = 950176197;
+        var google_conversion_language = "en";
+        var google_conversion_format = "3";
+        var google_conversion_color = "ffffff";
+        var google_conversion_label = "XF7UCOSD42wQxZOKxQM";
+        var google_remarketing_only = false;
+        /* ]]> */
+    </script>
+    <script type="text/javascript" src="//www.googleadservices.com/pagead/conversion.js">
+    </script>
+    <noscript>
+        <div style="display:inline;">
+            <img height="1" width="1" style="border-style:none;" alt="" src="//www.googleadservices.com/pagead/conversion/950176197/?label=XF7UCOSD42wQxZOKxQM&amp;guid=ON&amp;script=0" />
+        </div>
+    </noscript>
+
+    <div class="gap gap-small"></div>
+    <div class="row">
+        <div class="box" style="text-align:center;">
+            <img src="~/Content/Images/onlinefailed.jpg" style="width:30%"/>
+           
+            <div class="table-shopping-cart" style="text-align: center; padding: 10px; color: red;">
+                <h4>Opps...Transaction Failed</h4>
+                @if (TempData["err"].ToString() != null)
+                {
+                    <h4>Error Number : @TempData["err"].ToString()</h4>
+                }
+                @if (TempData["errMsg"].ToString() != null)
+                {
+                    <h4>Error Message : @TempData["errMsg"].ToString()</h4>
+                }
+                @*@{
+                    string cName = string.Empty;
+                    int catID = CommonFunctions.GetCatNameID(@Model.CustomerOrder.OrderProducts.FirstOrDefault().ProductID, ref cName);
+                    cName = Regex.Replace(cName.Substring(0, Math.Min(cName.Length, 30)), @"[\/\\#,+()$~%.':*?<>{} ]", "-").Replace("&", "and").ToLower();
+                }*@
+                @*@Html.RouteLink("Cancel Order", "CancelOrder", new { city = cityName, franchiseId = franchiseID, orderID = Model.CustomerOrder.Orders.FirstOrDefault().CustomerOrderID, shopStockID = Model.CustomerOrder.OrderProducts.FirstOrDefault().ShopStockID }, new { @class = "btn btn-danger" })*@
+                @*@Html.RouteLink("Continue Shopping", "ProductsByCategory", new { item = cName, parentCategoryId = catID, city = cityName, franchiseId = franchiseID }, new { @class = "btn btn-warning" })
+                @Html.RouteLink("View Order History", "CustomerOrder/myorders", new { city = cityName, franchiseId = franchiseID }, new { @class = "btn btn-success" })
+                @Html.RouteLink("Current Order Detail", "CustomerOrder/OrderHistory", new { orderId = Model.CustomerOrder.Orders.FirstOrDefault().CustomerOrderID, uid = 0, city = cityName, franchiseId = franchiseID }, new { @class = "btn btn-primary" })*@
+               
+                @Html.RouteLink("Go To Home Page", "Home", new { city = cityName, franchiseId = franchiseID }, new { @class = "btn btn-warning" })
+            </div>
+        </div>
+    </div>
+    @*<div class="row">
+        <div class="box">
+            <table class="table-shopping-cart" style="width:100%;font-weight:700;">
+                <tr>
+                    <td>Order No. : @Model.CustomerOrder.Orders.FirstOrDefault().OrderCode</td>
+                    <td>Order Date : @Model.CustomerOrder.Orders.FirstOrDefault().OrderDate.ToString("dd MMM yyyy hh:mm:ss")</td>
+                </tr>
+            </table>
+        </div>
+    </div>*@
+    @*Pradnyakar Badge
+        Dated :- 22-12-2015
+    *@
+  
+    @*end of changes*@
+    <div class="gap gap-small"></div>
+</div>
+
+@*<div class="examplenew">
+    @if (Model.FrequentlyProducts != null)
+    {
+        if (Model.FrequentlyProducts.ProductList.Count() > 0)
+        {
+            <div id="divFrequentlyBuyedProducts" class="cell colspan12 mainCell">
+                @Html.Partial("_FrequentlyBuyedProduct", Model.FrequentlyProducts)
+            </div>
+        }
+    }
+</div>*@
+
+@section itemScripts{
+    @*Js for loading Frequently Buyed Products*@
+    <script type="text/javascript">
+        var fProductPageIndex = 1;
+        var fProductPageCount = $("#FrequentlyBuyedPageCount").val();
+
+        if (productPageCount == 1) {
+            $("#btnFNext").attr("disabled", "disabled");
+        }
+        else {
+            $("#btnFNext").removeAttr("disabled");
+        }
+
+        function GetFrequentlyBuyedProducts() {
+
+            if (fProductPageIndex == 0) {
+                fProductPageIndex++;
+            }
+            var mydata = {
+                "cityID": 0,
+                "franchiseId": 0,////added
+                "categoryID": 24,
+                "productID": $("#PID").val(),
+                "shopID": $("#SID").val(),
+                "pageIndex": fProductPageIndex,
+                "pageSize": 5
+            };
+
+            if (fProductPageIndex == 2 || fProductPageIndex <= fProductPageCount) {
+                $.ajax({
+                    type: "POST",
+                    url: "/CustomerOrder/BindFrequentlyBuyedProducts",
+                    data: "{'myParam':" + JSON.stringify(mydata) + "}",
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    success: function (response) {
+                        OnSuccessFrequentlyBuyedProducts(response);
+                    },
+                    failure: function (response) {
+
+                    },
+                    error: function (response) {
+
+                    }
+                });
+            }
+        }
+
+        function OnSuccessFrequentlyBuyedProducts(response) {
+            if (fProductPageIndex == fProductPageCount) {
+                $("#btnFNext").attr("disabled", "disabled");
+                $("#btnFPrevious").removeAttr("disabled");
+            }
+            else {
+                $("#btnFNext").removeAttr("disabled");
+                $("#btnFPrevious").attr("disabled", "disabled");
+            }
+
+            $("#tableFrequentlyProduct").html("");
+            $.each(response, function (j, dataVal) {
+                var pid = dataVal.ProductID;
+
+                $("#tableFrequentlyProduct").append(
+                "<div class='slide viewItem'>" +
+                        "<a href='@Url.Action("Index", "PreviewItem")?itemID=" + pid + "'>" +
+                               "<div class='viewImg'><img src='@Url.Content("/Content/Images/no_image.png")' height='100' width='100' /></div>" +
+                               "<div class='viewContent'>" +
+                                "<p><span>" + dataVal.Name + "</span></p>" +
+                                "<p>Rs. <span class='spnCross'>" + dataVal.MRP + "</span></p>" +
+                                "<p>Rs. <span>" + dataVal.SaleRate + "</span></p>" +
+                                "</div>" +
+
+                         "</a>" +
+                "</div>"
+                );
+            });
+        }
+
+        function setFPrevious() {
+            if (fProductPageIndex > 1) {
+                fProductPageIndex--;
+                GetFrequentlyBuyedProducts();
+            }
+            else if (fProductPageIndex == 1) {
+                fProductPageIndex = fProductPageCount;
+                GetFrequentlyBuyedProducts();
+            }
+        }
+
+        function setFNext() {
+            fProductPageIndex++;
+            GetFrequentlyBuyedProducts();
+        }
+
+    </script>
+}
+<script>
+    /* Pradnyakar Badge
+       Dated : 22-12-15
+    */
+
+    $(document).ready(function () {
+        var str = getCookie("CityCookie");
+        var city = "";
+        var franchise = 0;////added
+        if (pincodeCookie != null && pincodeCookie != "") {
+            var str1 = [];
+            str1 = str.split('$');
+            city = str1[1].toLowerCase();
+            franchise = str1[2];////added
+        }
+
+        var CustomerOrderID = $("#CustomerOrderID").val();
+        $.get('/' + city + '/' + franchise + '/CustomerOrder/NextBuyEnquiry/?CustomerOrderID=' + CustomerOrderID, function (data) {////added franchise
+            /* data is the pure html returned from action method, load it to your page */
+            $('#NextBuyEnquiry').html(data);
+
+            /* little fade in effect */
+            $('#NextBuyEnquiry').fadeIn('fast');
+        });
+
+    });
+
+
+    function getCookie(name) {
+        var dc = document.cookie;
+        var prefix = name + "=";
+        var begin = dc.indexOf("; " + prefix);
+        if (begin == -1) {
+            begin = dc.indexOf(prefix);
+            if (begin != 0) return null;
+        } else {
+            begin += 2;
+        }
+        var end = document.cookie.indexOf(";", begin);
+        if (end == -1) {
+            end = dc.length;
+        }
+        return unescape(dc.substring(begin + prefix.length, end));
+    }
+</script>
+
+<script type="text/javascript">
+
+    $(document).ready(function () {
+        window.history.forward(-1);
+    });
+</script>
+
+<!-- Google Code for PPC Conversion Report Of eZeelo Conversion Page -->
+<script type="text/javascript">
+    /* <![CDATA[ */
+    var google_conversion_id = 950176197;
+    var google_conversion_language = "en";
+    var google_conversion_format = "3";
+    var google_conversion_color = "ffffff";
+    var google_conversion_label = "XP7iCKvpjWgQxZOKxQM";
+    var google_conversion_value = 0.00;
+    var google_conversion_currency = "INR";
+    var google_remarketing_only = false;
+    /* ]]> */
+</script>
+<script type="text/javascript" src="//www.googleadservices.com/pagead/conversion.js"></script>
+<noscript>
+    <div style="display:inline;">
+        <img height="1" width="1" style="border-style:none;" alt="" src="//www.googleadservices.com/pagead/conversion/950176197/?value=0.00&amp;currency_code=INR&amp;label=XP7iCKvpjWgQxZOKxQM&amp;guid=ON&amp;script=0" />
+    </div>
+</noscript>

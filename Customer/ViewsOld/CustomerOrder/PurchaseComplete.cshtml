@@ -1,0 +1,510 @@
+﻿@model ModelLayer.Models.ViewModel.PurchaseCompleteViewModel
+@using BusinessLogicLayer;
+@using System.Text.RegularExpressions;
+@{
+    ViewBag.Title = "eZeelo: Online Jewellery, Home Appliances, Electronics & Fashion Store Nagpur";
+}
+@{
+    string cityName = "";
+    int franchiseID = 0;////added
+    if (Request.Cookies["CityCookie"] != null && Request.Cookies["CityCookie"].Value != "")
+    {
+        cityName = Request.Cookies["CityCookie"].Value.Split('$')[1].ToLower();
+        franchiseID = Convert.ToInt32(Request.Cookies["CityCookie"].Value.Split('$')[2]);////added
+    }
+}
+@Html.Hidden("PID")
+@Html.Hidden("SID")
+
+@Html.Hidden("FrequentlyBuyedPageCount", Model.FrequentlyProducts.SearchCount.PageCount)
+@Html.Hidden("FrequentlyBuyedProductCount", Model.FrequentlyProducts.SearchCount.ProductCount)
+<div class="example">
+
+    <!-- Google Code for PPC Conversion Report Of eZeelo Conversion Page -->
+    @*<script type="text/javascript">
+        /* <![CDATA[ */
+        var google_conversion_id = 950176197;
+        var google_conversion_language = "en";
+        var google_conversion_format = "3";
+        var google_conversion_color = "ffffff";
+        var google_conversion_label = "XP7iCKvpjWgQxZOKxQM";
+        var google_conversion_value = 0.00;
+        var google_conversion_currency = "INR";
+        var google_remarketing_only = false;
+        /* ]]> */
+    </script>
+    <script type="text/javascript" src="//www.googleadservices.com/pagead/conversion.js">
+    </script>
+    <noscript>
+        <div style="display:inline;">
+            <img height="1" width="1" style="border-style:none;" alt="" src="//www.googleadservices.com/pagead/conversion/950176197/?value=0.00&;currency_code=INR&amp;label=XP7iCKvpjWgQxZOKxQM&amp;guid=ON&amp;script=0" />
+        </div>
+    </noscript>*@
+    <!-- Google Code for GB Adword Conversion Checkout (order-placed) Conversion Page --> 
+    <script type="text/javascript">
+        /* <![CDATA[ */
+        var google_conversion_id = 950176197;
+        var google_conversion_language = "en";
+        var google_conversion_format = "3";
+        var google_conversion_color = "ffffff";
+        var google_conversion_label = "XF7UCOSD42wQxZOKxQM";
+        var google_remarketing_only = false;
+        /* ]]> */
+    </script>
+    <script type="text/javascript" src="//www.googleadservices.com/pagead/conversion.js">
+    </script>
+    <noscript>
+        <div style="display:inline;">
+            <img height="1" width="1" style="border-style:none;" alt="" src="//www.googleadservices.com/pagead/conversion/950176197/?label=XF7UCOSD42wQxZOKxQM&amp;guid=ON&amp;script=0" />
+        </div>
+    </noscript>
+
+    <div class="gap gap-small"></div>
+    <div class="row">
+        <div class="box">
+            <div class="table-shopping-cart" style="text-align: center; padding: 10px;">
+                <h4>Thank you! Your Order has been placed successfully.</h4>
+                <h5>You will get confirmation email and SMS Shortly.</h5>
+                @{
+                    string cName = string.Empty;
+                    int catID = CommonFunctions.GetCatNameID(@Model.CustomerOrder.OrderProducts.FirstOrDefault().ProductID, ref cName);
+                    cName = Regex.Replace(cName.Substring(0, Math.Min(cName.Length, 30)), @"[\/\\#,+()$~%.':*?<>{} ]", "-").Replace("&", "and").ToLower();
+                }
+                @*@Html.RouteLink("Cancel Order", "CancelOrder", new { city = cityName, franchiseId = franchiseID, orderID = Model.CustomerOrder.Orders.FirstOrDefault().CustomerOrderID, shopStockID = Model.CustomerOrder.OrderProducts.FirstOrDefault().ShopStockID }, new { @class = "btn btn-danger" })*@
+                @Html.RouteLink("Continue Shopping", "ProductsByCategory", new { item = cName, parentCategoryId = catID, city = cityName, franchiseId = franchiseID }, new { @class = "btn btn-warning" })
+                @Html.RouteLink("View Order History", "CustomerOrder/myorders", new { city = cityName, franchiseId = franchiseID }, new { @class = "btn btn-success" })
+                @Html.RouteLink("Current Order Detail", "CustomerOrder/OrderHistory", new { orderId = Model.CustomerOrder.Orders.FirstOrDefault().CustomerOrderID, uid = 0, city = cityName, franchiseId = franchiseID }, new { @class = "btn btn-primary" })
+
+
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="box">
+            <table class="table-shopping-cart" style="width:100%;font-weight:700;">
+                <tr>
+                    <td>Order No. : @Model.CustomerOrder.Orders.FirstOrDefault().OrderCode</td>
+                    <td>Order Date : @Model.CustomerOrder.Orders.FirstOrDefault().OrderDate.ToString("dd MMM yyyy hh:mm:ss")</td>
+                </tr>
+            </table>
+        </div>
+    </div>
+    <br />
+    <div class="row">
+        <div class="box" style="overflow: auto;">
+            <table class="table table table-shopping-cart">
+                <thead>
+                    <tr>
+                        <th>Product</th>
+                        <th>Product Details</th>
+                        <th>Retail Point</th>
+                        <th style=" text-align: right;">Amount</th>
+                        @*<th>Merchant</th>
+                            <th>Status</th>*@
+                    </tr>
+                </thead>
+                @for (int j = 1; j <= Model.CustomerOrder.OrderProducts.Count(); j++)
+                {
+                    var ProductImage = Model.CustomerOrder.OrderProducts[j - 1].StockThumbPath;
+                    <tr>
+                        @*<td>@j</td>*@
+                        <td><img src="@Url.Content(string.IsNullOrEmpty(ProductImage) ? " />Content/Images/no_image.png" : ProductImage)" height="50" width="50" /></td>
+                        @*<td>@Model.CustomerOrder.OrderProducts[j - 1].ProductName</td>*@
+                        @*//***** SEO URL Structure RULE by Ashish 18/11/2016 ******//*@
+                        @*<td>@Model.CustomerOrder.OrderProducts[j - 1].ProductName.Replace("+"," ")</td>*@
+
+                        @*<td> <span class="fa fa-inr"></span> @Math.Round(Model.CustomerOrder.OrderProducts[j - 1].SaleRate)</td>*@
+                        @*<td>@Model.CustomerOrder.OrderProducts[j - 1].Qty</td>*@
+                        <td>
+                            @Model.CustomerOrder.OrderProducts[j - 1].ProductName
+                            <br />
+                            Sale rate : <span class="fa fa-inr"></span> @Math.Round(Model.CustomerOrder.OrderProducts[j - 1].SaleRate),
+                            Qty : @Model.CustomerOrder.OrderProducts[j - 1].Qty ,
+                            Color : @if (Model.CustomerOrder.OrderProducts[j - 1].ColorName != null && Model.CustomerOrder.OrderProducts[j - 1].ColorName != string.Empty)
+                            {
+                                <span> @Model.CustomerOrder.OrderProducts[j - 1].ColorName </span>
+                            }
+                            else
+                            {
+                                <span>-</span>
+                            } ,
+                            Size : @if (Model.CustomerOrder.OrderProducts[j - 1].SizeName != null && Model.CustomerOrder.OrderProducts[j - 1].SizeName != string.Empty)
+                            {
+                                <span> @Model.CustomerOrder.OrderProducts[j - 1].SizeName </span>
+                            }
+                            else
+                            {
+                                <span>-</span>
+                            } ,
+                            Dimension : @if (Model.CustomerOrder.OrderProducts[j - 1].DimensionName != null && Model.CustomerOrder.OrderProducts[j - 1].DimensionName != string.Empty)
+                            {
+                                <span> @Model.CustomerOrder.OrderProducts[j - 1].DimensionName </span>
+                            }
+                            else
+                            {
+                                <span>-</span>
+                            }
+
+                        </td>
+                        <td>                           
+                            @*Yashaswi 2/5/2018 BP*@
+                             @{
+                    var BP = 0;
+                            }
+                            @if (Model.CustomerOrder.OrderProducts[j - 1].BusinessPoints > 0)
+                            {
+                                BP = Convert.ToInt32(@Model.CustomerOrder.OrderProducts[j - 1].BusinessPoints);
+                            }
+                            @BP
+                        </td>
+                        <td style=" text-align: right;"><span class="fa fa-inr"></span> @Model.CustomerOrder.OrderProducts[j - 1].TotalAmount</td>@*Modified by Harshada on 9/1/2017 Remove @Math.Round()*@
+                        @*<td>@Model.CustomerOrder.OrderProducts[j - 1].ShopName</td>
+                            <td>@Model.CustomerOrder.OrderProducts[j - 1].OrderStatusName</td>*@
+                    </tr>
+                }
+            </table>
+        </div>
+    </div>
+    <div class="row">
+        <div class="box col-md-12">
+            <div class="col-md-4">
+                <h4 style="padding: 5px; background: #e5e5e5;">My Information :</h4>
+                <table class="table-shopping-cart" style="width: 100%; font-weight: 700">
+                    <tr>
+                        <td style="width:40%">Customer Name </td>
+                        <td style="width:60%">: @Model.CustomerOrder.Orders.FirstOrDefault().FullName</td>
+                    </tr>
+                    <tr>
+                        <td>Email ID </td>
+                        <td>: @Model.CustomerOrder.Orders.FirstOrDefault().EmailID</td>
+                    </tr>
+                    <tr>
+                        @{
+                            string sMobileNo = string.Empty;
+                            if (!string.IsNullOrEmpty(Model.CustomerOrder.Orders.FirstOrDefault().SecondoryMobile))
+                            {
+                                if (Model.CustomerOrder.Orders.FirstOrDefault().SecondoryMobile.Trim().Equals(Model.CustomerOrder.Orders.FirstOrDefault().PrimaryMobile.Trim()))
+                                {
+                                    sMobileNo = Model.CustomerOrder.Orders.FirstOrDefault().SecondoryMobile;
+                                }
+                            }
+                        }
+                        <td>Mobile No </td>
+                        <td>: @Model.CustomerOrder.Orders.FirstOrDefault().PrimaryMobile @sMobileNo</td>
+                    </tr>
+                </table>
+            </div>
+            <div class="col-md-4">
+                <h4 style="padding: 5px; background: #e5e5e5;">Shipping Address :</h4>
+                <table class="table-shopping-cart" style="width: 100%; font-weight: 700">
+                    <tr>
+                        <td style="width:40%">Address </td>
+                        <td style="width:60%">: @Model.CustomerOrder.Orders.FirstOrDefault().ShippingAddress</td>
+                    </tr>
+                    <tr>
+                        <td>Area Name </td>
+                        <td>: @Model.CustomerOrder.Orders.FirstOrDefault().AreaName</td>
+                    </tr>
+                    <tr>
+                        <td>Pincode No </td>
+                        <td>: @Model.CustomerOrder.Orders.FirstOrDefault().Pincode</td>
+                    </tr>
+                    <tr>
+                        @{
+                            //string sMobileNo = string.Empty;
+                            if (!string.IsNullOrEmpty(Model.CustomerOrder.Orders.FirstOrDefault().SecondoryMobile))
+                            {
+                                if (Model.CustomerOrder.Orders.FirstOrDefault().SecondoryMobile.Trim().Equals(Model.CustomerOrder.Orders.FirstOrDefault().PrimaryMobile.Trim()))
+                                {
+                                    sMobileNo = Model.CustomerOrder.Orders.FirstOrDefault().SecondoryMobile;
+                                }
+                            }
+                        }
+                        <td>Mobile No </td>
+                        <td>: @Model.CustomerOrder.Orders.FirstOrDefault().PrimaryMobile @sMobileNo</td>
+                    </tr>
+                </table>
+            </div>
+            <div class="col-md-4">
+                <h4 style="padding: 5px; background: #e5e5e5;">Pay Amount :</h4>
+                <table class="table-shopping-cart" style="width:100%;font-weight:900">
+                    <tr>
+                        <td style="width:40%">Payment Mode </td>
+                        <td style="width:60%;text-align:right">: @Model.CustomerOrder.Orders.FirstOrDefault().PaymentMode</td>
+                    </tr>
+                    <tr>
+                        <td>Total Amount </td>
+                        <td style="text-align: right">: <b class="fa fa-inr"></b> <b>@Model.CustomerOrder.Orders.FirstOrDefault().OrderAmount</b> </td>
+                    </tr>
+@*Added by Zubair for MLM on 01-02-2018*@
+@if (Model.CustomerOrder.Orders.FirstOrDefault().MLMAmountUsed > 0)
+{
+    <tr>
+        <td>EWallet Amount Used </td>
+        <td style="text-align: right">: <b class="fa fa-inr" style="color:brown;"> <b>@Model.CustomerOrder.Orders.FirstOrDefault().MLMAmountUsed</b></b></td>
+    </tr>
+}
+    @*End*@
+
+                    <tr>
+                        @if (Model.CustomerOrder.Orders.FirstOrDefault().TotallDeliveryCharge > 0)
+                        {
+                            <td>Delivery Charges </td>
+                            <td style="text-align: right">: <b class="fa fa-inr" style="color:brown;"> <b>@Math.Round(Model.CustomerOrder.Orders.FirstOrDefault().TotallDeliveryCharge)</b></b></td>
+                        }
+                        else
+                        {
+                            <td>Delivery Charges </td>
+                            <td style="text-align: right">: Free</td>
+                        }
+                    </tr>
+                    <tr>
+                        @if (Model.CustomerOrder.Orders.FirstOrDefault().CoupenAmount > 0)
+                        {
+                            <td>Coupon Amount </td>
+                            <td style="text-align: right">: <b class="fa fa-inr" style="color:brown;"> @Math.Round(Convert.ToDecimal(Model.CustomerOrder.Orders.FirstOrDefault().CoupenAmount))</b></td>
+                        }
+                    </tr>
+                    <tr>
+                        @if (Model.CustomerOrder.Orders.FirstOrDefault().UsedWalletAnount > 0)
+                        {
+                            <td>Used Wallet Amount </td>
+                            <td style="text-align: right">: <b class="fa fa-inr" style="color:brown;"> @(Convert.ToDecimal(Model.CustomerOrder.Orders.FirstOrDefault().UsedWalletAnount))</b></td>
+                        }
+                    </tr>
+
+                    @if (Model.lCalculatedTaxList != null && Model.lCalculatedTaxList.Count() > 0)
+                    {
+                        foreach (var item in Model.lCalculatedTaxList)
+                        {
+                            if(@item.IsGSTInclusive==false)  // Added condition by Zubair for GST on 06-07-2017
+                            { 
+                            <tr>
+                                <td>@item.TaxPrefix </td>
+                                <td style="text-align: right">: <b class="fa fa-inr" style="color:brown;"> <b>@item.Amount</b></b></td>
+                            </tr>
+                            }
+                        }
+                    }
+
+                    <tr>
+                        <td>Payable Amount </td>
+                        <td style="text-align: right">: <b class="fa fa-inr" style="color:brown;font-weight:700;"> @Model.CustomerOrder.Orders.FirstOrDefault().PayableAmount</b></td>
+                    </tr>
+
+@*Added by Zubair for MLM on 06-01-2018*@
+@*Yashaswi 2/5/2018 BP*@
+@if (Model.CustomerOrder.Orders.FirstOrDefault().BusinessPointsTotal > 0)
+{
+    <tr>
+        <td>Retail Point Total </td>
+        <td style="text-align: right">: <b>@Convert.ToInt64(Model.CustomerOrder.Orders.FirstOrDefault().BusinessPointsTotal)</b></td>
+    </tr>
+}
+    @*End*@
+                </table>
+            </div>
+        </div>
+        <div class="gap gap-small"></div>
+        <div style="text-align:center;">
+            @Html.RouteLink("Continue Shopping", "ProductsByCategory", new { item = cName, parentCategoryId = catID, city = cityName, franchiseId = franchiseID }, new { @class = "btn btn-warning" })
+        </div>
+    </div>
+    <br />
+    @*<div class="row">
+        <div class="box">
+            <img src="~/Content/Images/order_stage.png" style=" width: 100%;" />
+        </div>
+    </div>*@
+    <br />
+    @*Pradnyakar Badge
+        Dated :- 22-12-2015
+    *@
+    <div style="width:100%">
+        @Html.Hidden("CustomerOrderID", @Model.CustomerOrder.Orders.FirstOrDefault().CustomerOrderID)
+        <div id="NextBuyEnquiry" style="width:100%" class="cell colspan12 mainCell">
+        </div>
+    </div>
+    @*end of changes*@
+</div>
+
+<div class="examplenew">
+    @if (Model.FrequentlyProducts != null)
+    {
+        if (Model.FrequentlyProducts.ProductList.Count() > 0)
+        {
+            <div id="divFrequentlyBuyedProducts" class="cell colspan12 mainCell">
+                @Html.Partial("_FrequentlyBuyedProduct", Model.FrequentlyProducts)
+            </div>
+        }
+    }
+</div>
+
+@section itemScripts{
+    @*Js for loading Frequently Buyed Products*@
+    <script type="text/javascript">
+        var fProductPageIndex = 1;
+        var fProductPageCount = $("#FrequentlyBuyedPageCount").val();
+
+        if (productPageCount == 1) {
+            $("#btnFNext").attr("disabled", "disabled");
+        }
+        else {
+            $("#btnFNext").removeAttr("disabled");
+        }
+
+        function GetFrequentlyBuyedProducts() {
+
+            if (fProductPageIndex == 0) {
+                fProductPageIndex++;
+            }
+            var mydata = {
+                "cityID": 0,
+                "franchiseId": 0,////added
+                "categoryID": 24,
+                "productID": $("#PID").val(),
+                "shopID": $("#SID").val(),
+                "pageIndex": fProductPageIndex,
+                "pageSize": 5
+            };
+
+            if (fProductPageIndex == 2 || fProductPageIndex <= fProductPageCount) {
+                $.ajax({
+                    type: "POST",
+                    url: "/CustomerOrder/BindFrequentlyBuyedProducts",
+                    data: "{'myParam':" + JSON.stringify(mydata) + "}",
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    success: function (response) {
+                        OnSuccessFrequentlyBuyedProducts(response);
+                    },
+                    failure: function (response) {
+
+                    },
+                    error: function (response) {
+
+                    }
+                });
+            }
+        }
+
+        function OnSuccessFrequentlyBuyedProducts(response) {
+            if (fProductPageIndex == fProductPageCount) {
+                $("#btnFNext").attr("disabled", "disabled");
+                $("#btnFPrevious").removeAttr("disabled");
+            }
+            else {
+                $("#btnFNext").removeAttr("disabled");
+                $("#btnFPrevious").attr("disabled", "disabled");
+            }
+
+            $("#tableFrequentlyProduct").html("");
+            $.each(response, function (j, dataVal) {
+                var pid = dataVal.ProductID;
+
+                $("#tableFrequentlyProduct").append(
+                "<div class='slide viewItem'>" +
+                        "<a href='@Url.Action("Index", "PreviewItem")?itemID=" + pid + "'>" +
+                               "<div class='viewImg'><img src='@Url.Content("/Content/Images/no_image.png")' height='100' width='100' /></div>" +
+                               "<div class='viewContent'>" +
+                                "<p><span>" + dataVal.Name + "</span></p>" +
+                                "<p>Rs. <span class='spnCross'>" + dataVal.MRP + "</span></p>" +
+                                "<p>Rs. <span>" + dataVal.SaleRate + "</span></p>" +
+                                "</div>" +
+
+                         "</a>" +
+                "</div>"
+                );
+            });
+        }
+
+        function setFPrevious() {
+            if (fProductPageIndex > 1) {
+                fProductPageIndex--;
+                GetFrequentlyBuyedProducts();
+            }
+            else if (fProductPageIndex == 1) {
+                fProductPageIndex = fProductPageCount;
+                GetFrequentlyBuyedProducts();
+            }
+        }
+
+        function setFNext() {
+            fProductPageIndex++;
+            GetFrequentlyBuyedProducts();
+        }
+
+    </script>
+}
+<script>
+    /* Pradnyakar Badge
+       Dated : 22-12-15
+    */
+
+    $(document).ready(function () {
+        var str = getCookie("CityCookie");
+        var city = "";
+        var franchise = 0;////added
+        if (pincodeCookie != null && pincodeCookie != "") {
+            var str1 = [];
+            str1 = str.split('$');
+            city = str1[1].toLowerCase();
+            franchise = str1[2];////added
+        }
+
+        var CustomerOrderID = $("#CustomerOrderID").val();
+        $.get('/' + city + '/' + franchise + '/CustomerOrder/NextBuyEnquiry/?CustomerOrderID=' + CustomerOrderID, function (data) {////added franchise
+            /* data is the pure html returned from action method, load it to your page */
+            $('#NextBuyEnquiry').html(data);
+
+            /* little fade in effect */
+            $('#NextBuyEnquiry').fadeIn('fast');
+        });
+
+    });
+
+
+    function getCookie(name) {
+        var dc = document.cookie;
+        var prefix = name + "=";
+        var begin = dc.indexOf("; " + prefix);
+        if (begin == -1) {
+            begin = dc.indexOf(prefix);
+            if (begin != 0) return null;
+        } else {
+            begin += 2;
+        }
+        var end = document.cookie.indexOf(";", begin);
+        if (end == -1) {
+            end = dc.length;
+        }
+        return unescape(dc.substring(begin + prefix.length, end));
+    }
+</script>
+
+<script type="text/javascript">
+
+    $(document).ready(function () {
+        window.history.forward(-1);
+    });
+</script>
+
+<!-- Google Code for PPC Conversion Report Of eZeelo Conversion Page -->
+<script type="text/javascript">
+    /* <![CDATA[ */
+    var google_conversion_id = 950176197;
+    var google_conversion_language = "en";
+    var google_conversion_format = "3";
+    var google_conversion_color = "ffffff";
+    var google_conversion_label = "XP7iCKvpjWgQxZOKxQM";
+    var google_conversion_value = 0.00;
+    var google_conversion_currency = "INR";
+    var google_remarketing_only = false;
+    /* ]]> */
+</script>
+<script type="text/javascript" src="//www.googleadservices.com/pagead/conversion.js"></script>
+<noscript>
+    <div style="display:inline;">
+        <img height="1" width="1" style="border-style:none;" alt="" src="//www.googleadservices.com/pagead/conversion/950176197/?value=0.00&amp;currency_code=INR&amp;label=XP7iCKvpjWgQxZOKxQM&amp;guid=ON&amp;script=0" />
+    </div>
+</noscript>

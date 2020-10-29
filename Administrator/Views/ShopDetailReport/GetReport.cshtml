@@ -1,0 +1,544 @@
+﻿@*<copyright file="GetReport.cshtml" company="Ezeelo Consumer Services Pvt. Ltd.">
+     Copyright (c) Ezeelo Consumer Services Pvt. Ltd. All rights reserved.
+    </copyright>
+    <author>Harshada Raghorte</author>*@
+@{
+    ViewBag.Title = "GetReport";
+    //Layout = null;
+}
+@using PagedList;
+@using PagedList.Mvc;
+@model IPagedList<ModelLayer.Models.ViewModel.ShopDetailReportViewModel>
+
+<link href="~/Content/css/Site.css" rel="stylesheet" />
+<script src="~/Content/js/bootstrap.js"></script>
+@*<script src="~/Content/js/jquery-1.9.1.min.js"></script>*@
+<script src="~/Content/js/jquery.dataTables.min.js"></script>
+<script src="~/Content/js/bootstrap.min.js"></script>
+<style>
+    .matchdivheight {
+        overflow-y: scroll;
+        height: 450px;
+        overflow-x: hidden;
+    }
+
+    .widget {
+        margin-left: 37px;
+    }
+
+    .widget-content {
+        margin-left: -23px;
+    }
+
+    .btn_print {
+        float: right;
+        margin-top: -58px;
+        margin-right: 65px;
+    }
+
+    .widget-content h4 span {
+        float: right;
+        margin-top: -42px;
+        margin-right: 160px;
+    }
+</style>
+
+<style>
+    .btn_Print {
+        margin-bottom: 7px;
+        margin-top: 7px;
+        margin-left: 5px;
+    }
+
+    .section {
+        position: relative;
+        border: 1px solid #000;
+        padding-top: 33px;
+        margin-left: 5px;
+        background: #A4A5A7;
+        margin-top: 105px;
+    }
+
+    #myTable_wrapper {
+        min-height: 61px;
+        margin-top: 2px;
+        max-height: 516px;
+    }
+
+    .fg-toolbar {
+        margin-top: -89px;
+    }
+
+    #myTable_filter {
+        position: absolute;
+        margin-top: 13px !important;
+    }
+
+    .section.positioned {
+        position: absolute;
+        top: 100px;
+        left: 100px;
+        width: 800px;
+        box-shadow: 0 0 15px #333;
+    }
+
+    .container_tbl {
+        /*overflow-y: auto;*/
+        /*height: 200px;*/ height: 480px;
+        width: 1083px;
+    }
+
+    table {
+        border-spacing: 0;
+        width: 100%;
+    }
+
+    td + td {
+        border-left: 1px solid #eee;
+    }
+
+    td, th {
+        border-bottom: 1px solid #eee;
+        /*background: #ddd;*/
+        color: #000;
+        padding: 10px 25px;
+    }
+
+    #myTable thead tr th {
+        height: 0;
+        line-height: 0 !important;
+        padding-top: 0 !important;
+        padding-bottom: 0 !important;
+        color: transparent;
+        border: none;
+        white-space: nowrap;
+    }
+
+    th div {
+        position: absolute;
+        background: transparent;
+        color: #000;
+        padding: 9px 10px;
+        top: 0;
+        margin-left: -9px;
+        line-height: normal;
+        /*border-left: 1px solid #800;*/ border-left: 1px solid #DDD;
+    }
+
+    th:first-child div {
+        border: none;
+    }
+
+    .wrap {
+        margin-top: 105px;
+    }
+
+    .widget-content table tbody {
+        margin-top: -18px;
+        display: block;
+    }
+    th div {
+        position: absolute;
+        background: transparent;
+        color: #000;
+        padding: 9px 2px;
+        top: 0;
+        margin-left: -9px;
+        line-height: normal;
+        /* border-left: 1px solid #800; */
+        border-left: 1px solid #DDD;
+    }
+    .wrap {
+        margin-top: 105px;
+    }
+
+    td:nth-child(1) {
+        width: 27px;
+        word-wrap: break-word;
+    }
+
+    td:nth-child(2) {
+        width: 60px;
+        word-wrap: break-word;
+    }
+
+    td:nth-child(3) {
+        max-width: 100px;
+        word-wrap: break-word;
+    }
+
+    td:nth-child(4) {
+        width: 75px;
+        word-wrap: break-word;
+    }
+
+    td:nth-child(5) {
+        max-width: 100px;
+        word-wrap: break-word;
+    }
+
+    td:nth-child(6) {
+        width: 78px;
+        word-wrap: break-word;
+    }
+
+    td:nth-child(7) {
+        max-width: 100px;
+        word-wrap: break-word;
+    }
+
+    td:nth-child(8) {
+        max-width: 40px;
+        word-wrap: break-word;
+    }
+
+    td:nth-child(9) {
+        width: 100px;
+        word-wrap: break-word;
+    }
+
+    td:nth-child(10) {
+        max-width: 96px;
+        word-wrap: break-word;
+    }
+
+    td:nth-child(11) {
+        width: 100px;
+        word-wrap: break-word;
+    }
+
+    .uneditable-input, input[type=text] {
+        width: 136px;
+    }
+    input[type=text] {
+        width: 100px;
+    }
+    select {
+        width: 130px;
+        background-color: #fff;
+        border: 1px solid #ccc;
+        text-transform: lowercase;
+    }
+    .btn-brown {
+        color: #ffffff;
+        background-color: #267196;
+        border-color: #8AA0B9;
+        background-image: none;
+        filter: none;
+        text-shadow: none;
+        width: 47px !important;
+        margin-left: 7px;
+        padding: 1px !important;
+    }
+    form {
+        margin: 0 0 0px;
+    }
+</style>
+<div class="row-fluid">
+    <div class=" box span12 ">
+        <div class="box-header"><h2 style="font-weight:bold;">Shop Detail</h2></div>
+        <div class="box bg-box">
+            <div class="row-fluid" @*style="padding-left:44px;"*@>
+                <div class="span12" style="margin-top:10px;">
+                    @using (Html.BeginForm("GetReport", "ShopDetailReport", FormMethod.Post, null))
+                    {
+                        @Html.AntiForgeryToken()
+
+    <div class="span8" style="margin-left:10px;">
+        <div class="span3">
+            @Html.DropDownList("FranchiseList", null, "Select Franchise")
+        </div>
+        <div class="span3">
+            @Html.DropDownList("Status", new List<SelectListItem>
+                                 {
+                                    new SelectListItem{ Text="Search By Status", Value = "0" },
+                                    new SelectListItem{ Text="Live", Value = "1" },
+                                    new SelectListItem{ Text="Not-Live", Value = "2" }
+                                 })
+        </div>
+        <div class="span3">
+            @Html.DropDownList("CatID", "Select Catagory")
+        </div>
+        <div class="span2">
+            @Html.TextBox("ShopName", null, new { ID = "Shop", @placeholder = "Shop Name" })
+        </div>
+        <div class="span1">
+            <button type="submit" value="Search" name="btnSubmit" class="btn btn-primary btn-warning1" style="float: left;">
+                <span class="glyphicon glyphicon-search"></span> Search
+            </button>
+        </div>
+    </div>
+
+                    }
+                    <div class="span4" style="margin-left: 0px;text-align: right;">
+                        <div class="span12">
+                            @*<input type="submit" value="Export" id="btnExport" class="btn btnSearch-f btn_ex" />*@
+                            @Html.ActionLink("EXCEL", "Export", new
+                     {
+                         FranchiseList = ViewBag.franchiseId,
+                         Status = ViewBag.Status,
+                         option = 1,
+                         print = 0,
+                         ShopName = ViewBag.ShopName,
+                         CatID = ViewBag.selectedCatID
+
+                     }, new { @class = "btn btn-brown" })
+                            @Html.ActionLink("CSV", "Export", new
+                     {
+                         FranchiseList = ViewBag.franchiseId,
+                         Status = ViewBag.Status,
+                         option = 2,
+                         print = 0,
+                         ShopName = ViewBag.ShopName,
+                         CatID = ViewBag.selectedCatID
+
+                     }, new { @class = "btn btn-brown" })
+                            @Html.ActionLink("PDF", "Export", new
+                     {
+                         FranchiseList = ViewBag.franchiseId,
+                         Status = ViewBag.Status,
+                         option = 3,
+                         print = 0,
+                         ShopName = ViewBag.ShopName,
+                         CatID = ViewBag.selectedCatID
+
+                     }, new { @class = "btn btn-brown" })
+                            @Html.ActionLink("Print", "Export", new
+                     {
+                         FranchiseList = ViewBag.franchiseId,
+                         Status = ViewBag.Status,
+                         option = 0,
+                         print = 1,
+                         ShopName = ViewBag.ShopName,
+                         CatID = ViewBag.selectedCatID
+
+                     }, new { @class = "btn btn-brown" })
+                            @*<input type="submit" onclick="printReport();" value="Print" id="btnPrint" class="btn btnSearch-f btn_ex btn-primary" />*@
+                            <span id="msg" style="color:red"></span>
+                        </div>
+                        <div class="span3">
+                        </div>
+                        <div class="span3">
+
+                        </div>
+                    </div>
+
+                </div>
+               
+            </div>
+        </div>
+    </div>
+</div>
+<div class="box-content" id="divToPrint" style="margin-top:10px;">
+    <div class="row">
+        <div class="span12" id="divtable" style="margin-top:12px;">
+            <div class="widget big-stats-container">
+                <div class="widget-content matchdivheight table scrollable container_tbl">
+                    <table class="table table-bordered table-hover table-responsive table-striped" style="margin-left:10px;">
+                        @if (Model.Count() == 0)
+                        {
+                            <tr>
+                                <td colspan="6" class="text-center"><h3>No Record Found...</h3></td>
+                            </tr>
+                        }
+                        else
+                        {
+                            int i = 1;
+                            <tr class="hed-tble header">
+                                <th>
+                                    @*Sr No*@
+                                    <div>Sr No</div>
+                                </th>
+                                <th>
+                                    @*ShopName*@
+                                    <div>Shop Name</div>
+                                </th>
+                                <th>
+                                    @*Merchant Name*@
+                                    <div>Merchant Name</div>
+                                </th>
+                                <th>
+                                    @*UserLogin ID*@
+                                    <div>User Login ID</div>
+                                </th>
+                                <th>
+                                    @*Login Email-ID*@
+                                    <div>Login Email-ID</div>
+                                </th>
+                                <th>
+                                    @*Login Mobile No*@
+                                    <div>Login Mob No</div>
+                                </th>
+                                <th>
+                                    @*Password*@
+                                    <div>Password</div>
+                                </th>
+                                <th>
+                                    @*IsLive*@
+                                    <div>Live</div>
+                                </th>
+                                <th>
+                                    @*Address*@
+                                    <div>Address</div>
+                                </th>
+                                <th>
+                                    @*Alternate Mobile*@
+                                    <div>Mobile</div>
+                                </th>
+                                <th>
+                                    @*Landline No*@
+                                    <div>Landline</div>
+                                </th>
+
+                            </tr>
+                            foreach (var item in Model)
+                            {
+
+                                <tr>
+                                    <td>@{int SrNo = ((ViewBag.PageNumber - 1) * ViewBag.PageSize) + i; i = i + 1; } @SrNo</td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.ShopName)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.MerchantName)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.UserLoginID)
+                                    </td>
+
+                                    @{string Email = "";}
+                                    <td>
+                                        @if (item.Email != null)
+                                        {
+                                            Email = item.Email;
+                                        }
+
+                                        @Email
+                                    </td>
+
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.Mobile)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.Password)
+                                    </td>
+                                    @if (item.IsLive == true)
+                                    {
+                                        <td>
+                                            Live
+                                        </td>
+                                    }
+                                    else
+                                    {
+                                        <td>
+                                            Not Live
+                                        </td>
+                                    }
+                                    @*@if (item.IsActive == true)
+                                        {
+                                            <td>
+                                                Active
+                                            </td>
+                                        }
+                                        else
+                                        {
+                                            <td>
+                                                InActive
+                                            </td>
+                                        }*@
+
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.Address)
+
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.AlternateMobile)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.LandLine)
+                                    </td>
+
+                                </tr>
+                            }
+                        }
+
+                    </table>
+
+                </div>
+            </div>
+            <div class="pager">
+                @Html.PagedListPager(Model, Page => Url.Action("GetReport", new
+                       {
+                           FranchiseList = ViewBag.franchiseId,
+                           page = Page,
+                           Status = ViewBag.Status,
+                           ShopName = ViewBag.ShopName,
+                           CatID = ViewBag.selectedCatID,
+                           print = 0,
+
+                       }),
+                                                                    new PagedListRenderOptions()
+                                                                    {
+                                                                        Display = PagedListDisplayMode.IfNeeded
+                                                                    })
+                <h4><span>Total Count:&nbsp;@ViewBag.TotalCount</span></h4>
+            </div>
+
+
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+        //$("input#btnExport").on('click', function () {
+
+        //    var print = 0;
+        //    var option = 0;
+        //    var FranchiseList = 0;
+        //    var Status = 0;
+
+        //    if ($("select#FranchiseList option:selected").val() > 0) {
+        //        FranchiseList = $("select#FranchiseList option:selected").val();
+        //    }
+        //    if (FranchiseList == 0) {
+        //        $("#msg").text('Please select Franchise')
+        //        return;
+        //    }
+        //    if ($("select#Status option:selected").val() > 0) {
+        //        Status = $("select#Status option:selected").val();
+        //    }
+        //    if ($("select#ExportOption option:selected").val() > 0) {
+        //        option = $("select#ExportOption option:selected").val();
+        //    }
+
+        //    window.location.href = "/ShopDetailReport/Export?&FranchiseList=" + FranchiseList + "&Status=" + Status + "&option=" + option + "&print=" + print;
+
+        //});
+
+
+        function printReport() {
+            //alert('in');
+            var print = 1;
+            var option = 0;
+            var FranchiseList = 0;
+            var Status = 0;
+
+            if ($("select#FranchiseList option:selected").val() > 0) {
+                FranchiseList = $("select#FranchiseList option:selected").val();
+            }
+            if (FranchiseList == 0) {
+                $("#msg").html('Please select Franchise')
+                return;
+            }
+            if ($("select#Status option:selected").val() > 0) {
+                Status = $("select#Status option:selected").val();
+            }
+            if ($("select#ExportOption option:selected").val() > 0) {
+                option = $("select#ExportOption option:selected").val();
+            }
+
+            var url = "/ShopDetailReport/Export?&FranchiseList=" + FranchiseList + "&Status=" + Status + "&option=" + option + "&print=" + print;
+            window.open(url, '_blank')
+
+
+        };
+</script>

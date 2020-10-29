@@ -1,0 +1,103 @@
+﻿@*//-----------------------------------------------------------------------
+        // <copyright file="Create.cshtml" company="Ezeelo Consumer Services Pvt. Ltd.">
+        //     Copyright (c) Ezeelo Consumer Services Pvt. Ltd. All rights reserved.
+        //
+    </copyright>
+        // <author>Snehal Shende</author>
+        //-----------------------------------------------------------------------*@
+
+@model ModelLayer.Models.OwnerPlanCategoryCharge
+
+@{
+    ViewBag.Title = "Create";
+}
+
+
+
+@using (Html.BeginForm("Create", "MerchantPlanCategoryCharge", Model, FormMethod.Post))
+{
+    @Html.AntiForgeryToken()
+    
+    <div class="span10" id="content">
+        <ul class="breadcrumb">
+            <li>
+                <i class="icon-group"></i>
+                <a href=""> Owner Plan Category Charge</a>
+            </li>
+        </ul>
+        <div class="row-fluid">
+            <div class="box span12">
+                <div class="box-header">
+                    <h2><i class="icon-edit"></i><span class="break"></span>Create</h2>
+
+                </div>
+                <div class="box-content">
+                    <form class="form-horizontal">
+                        <hr />
+                        @Html.ValidationMessage("CustomError")
+                        @Html.ValidationSummary(true)
+
+                        @*<div class="form-group">
+                    @Html.LabelFor(model => model.OwnerPlanID, "OwnerPlanID", new { @class = "control-label col-md-2" })
+                    <div class="col-md-10">
+                        @Html.LabelFor(model => model.OwnerPlanID, "OwnerPlanID")
+                        @Html.ValidationMessageFor(model => model.OwnerPlanID)
+                    </div>
+                </div>*@
+
+                        <div class="control-group">
+                            @Html.LabelFor(model => model.OwnerPlanID, "Plan Name", new { @class = "control-label span2" })
+                            <div class="controls">
+                                @Html.DropDownList("PlanID", "Select Plan")
+                                @*@Html.ValidationMessageFor(model => model.OwnerPlanID)*@
+                                @Html.HiddenFor(model => model.OwnerPlanID)
+                            </div>
+                        </div>
+
+                        <div class="control-group">
+                            @Html.LabelFor(model => model.CategoryID, "CategoryID", new { @class = "control-label span2" })
+                            <div class="controls">
+                                @Html.DropDownList("CategoryID", "Select Category")
+                                @Html.ValidationMessageFor(model => model.CategoryID)
+                            </div>
+                        </div>
+
+                        <div class="control-group">
+                            @Html.LabelFor(model => model.ChargeInPercent, new { @class = "control-label span2" })
+                            <div class="controls">
+                                @Html.EditorFor(model => model.ChargeInPercent)
+                                @Html.ValidationMessageFor(model => model.ChargeInPercent)
+                            </div>
+                        </div>
+
+                        <div class="control-group">
+                            @Html.LabelFor(model => model.ChargeInRupee, new { @class = "control-label span2" })
+                            <div class="controls">
+                                @Html.EditorFor(model => model.ChargeInRupee)
+                                @Html.ValidationMessageFor(model => model.ChargeInRupee)
+                            </div>
+                        </div>
+
+                        <div class="control-group">
+                            @Html.LabelFor(model => model.IsActive, new { @class = "control-label span2" })
+                            <div class="controls">
+                                @Html.EditorFor(model => model.IsActive)
+                                @Html.ValidationMessageFor(model => model.IsActive)
+                            </div>
+                        </div>
+
+
+                        <div class="form-actions">
+                            <div class="col-md-offset-2">
+                                <input type="submit" value="Create" class="btn btn-primary" />
+                                @Html.ActionLink("Back to List", "Index", "MerchantPendingApprovals", new { franchiseID = ViewBag.FranchiseID }, new { @class = "btn btn-small" })
+                            </div>
+                        </div>
+                    </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+}
+
+

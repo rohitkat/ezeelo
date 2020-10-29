@@ -1,0 +1,281 @@
+﻿@model IEnumerable<ModelLayer.Models.CustomerShippingAddress>
+@*<link rel="stylesheet" href="http://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.6.3/css/font-awesome.min.css">*@
+<link href="~/Content/css/font-awesome.css" rel="stylesheet" />
+<link href="~/Content/css/Site.css" rel="stylesheet" />
+@*yashaswi*@
+<link rel="stylesheet" href="~/Content/css/bootstrap.css">
+<style>
+    .addressdiv {
+        width: 265px;
+        padding: 10px;
+        float: left;
+        height: auto;
+        /*min-height: 170px;
+        max-height: 170px;
+        overflow-y: auto;*/
+        line-height: 18px;
+        margin: 5px;
+        border: 1px solid rgba(153, 153, 153, 0.33);
+        color: gray;
+        font-size: 12px;
+    }
+
+        .addressdiv:hover {
+            border: 1px solid #663399;
+        }
+
+    .addressdivSelected {
+        border: 2px solid #A8CF45;
+    }
+
+    .chkAddress {
+        width: 15px;
+        height: 15px;
+        border: 1px solid rgba(153, 153, 153, 0.33);
+        float: left;
+        margin-left: 28px;
+    }
+
+    .newcheckimage {
+        background: url(/Content/Images/tags/newarrow.png);
+        /*margin-top: -15px;*/
+        width: 20px;
+        /*margin-left: -10px;*/
+        height: 19px;
+        float: left;
+    }
+
+    .cratediv {
+        width: 100%;
+    }
+
+    .btnnew {
+        color: white !important;
+        margin-left: 5px;
+        /*border: 1px solid #ccc;*/
+        width: 160px;
+        margin: auto;
+    }
+
+    .image-button {
+        padding: 0px 1rem 0px 2.75rem;
+        height: 2.125rem;
+        text-align: center;
+        vertical-align: middle !important;
+        color: #262626 !important;
+        cursor: pointer;
+        display: inline-block;
+        outline: medium none;
+        font-size: 0.875rem;
+        line-height: 1;
+        margin: 0.15625rem 0px;
+        position: relative;
+        border: 0px none;
+        background-color: #EEE !important;
+        background: transparent url("../Content/Images/location.png") no-repeat scroll 91% 45%;
+    }
+
+    .leftalign {
+        float: right;
+        margin-right: 10px;
+    }
+
+    .newadd {
+        color: #777 !important;
+        background: #fff;
+        border: 1px solid #ccc;
+        padding: 10px;
+        font-weight: 900;
+        font-size: 14px;
+        margin-top: 10px;
+    }
+
+        .newadd:hover {
+            color: black !important;
+            background: #fff;
+            border: 1px solid #000;
+        }
+</style>
+@{
+    ViewBag.Title = "eZeelo: Nagpur's Largest Online Shopping store For All Types Of Products";
+    Layout = "~/Views/Shared/_LayoutPartial.cshtml";
+
+    TempData["ShippingAddress"] = Model;
+    @Html.Hidden("CurrentAddressID")
+}
+<br />
+
+<div class="col-md-12" style="text-align:center;margin:auto">
+    @Html.ActionLink("+ Add New Address", "Create", null, new { @class = "button newadd" })
+</div>
+<br />
+@*Yashaswi*@
+<div id="divShipAddres" class="modal" style="background: rgba(130, 129, 129, 0.77); ">
+    <div class="modal-dialog modal-sm" style="width:350px !important;">
+        <div class="modal-content" style="padding:10px;text-align:center">
+            <div class="row" style="padding: 10px;">
+                <div class="col-lg-12" style="text-align:left">
+                    <p>
+                        <span style="font-size:18px; color:#09a9f8"> <i class="fa fa-info-circle"></i> Alert </span>
+                        <hr style="margin-top:-8px;margin-bottom:5px" />
+                        Your order will be delivered to
+                        <span id="sp-PinArea" style="font-size:16px"> </span> location.
+                    </p>
+                    <div style="text-align:center">
+                        <input type="button" class="btn btn-success" style="font-size:10px !important; " value="Change Pincode" id="btnDivChange" />  &nbsp;&nbsp;&nbsp;
+                        <input type="button" class="btn btn-warning" style="font-size:10px !important" value="Continue" id="btnDivCon" />
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="col-md-12">
+    @foreach (var item in Model)
+    {
+        <div class="addressdiv" id="addressdiv">
+            <div class="" style="padding-top: 5px; padding-bottom: 5px; height: 30px; border-bottom: 1px solid rgba(153, 153, 153, 0.33); ">
+                @Html.Hidden("CheckedID", item.ID)
+                @*Yashaswi*@
+                @Html.Hidden("CityId", item.Pincode.City.ID)
+                @Html.Hidden("CityName", item.Pincode.City.Name)
+                @Html.Hidden("PincodeName", item.Pincode.Name)
+                @if (item.Area != null)
+                {
+                    @Html.Hidden("AreaId", item.Area.ID)
+                    @Html.Hidden("AreaName", item.Area.Name)
+                }
+                @*End Yashaswi*@
+                @if (Convert.ToInt32(ViewBag.CurrentAddressID) == item.ID)
+                {
+                    <div class="newcheckimage" id="divCheckHighlighted">
+
+                        <input type="checkbox" class="chkAddress" checked="checked" name="chkAddress">
+                    </div>
+                }
+                else
+                {
+                    <div class="" id="divCheckHighlighted">
+                        <input type="checkbox" class="chkAddress" name="chkAddress">
+                    </div>
+                }
+                @Html.ActionLink(" ", "Edit", new { id = item.ID }, new { @class = "fa fa-pencil fg-gray leftalign", @title = "Edit address" })
+
+                @Html.ActionLink(" ", "Delete", "ShippingAddress",
+                                    new { confirm = true, id = item.ID },
+                                      new { onclick = "return confirm('Do you really want to delete this Address?')", @class = "fa fa-trash fg-gray leftalign", @title = "Delete address" })
+            </div>
+            <div style="padding-top: 5px; padding-bottom: 5px; border-top: 1px solid rgba(153, 153, 153, 0.33); border-bottom: 1px solid rgba(153, 153, 153, 0.33);height:120px;">
+                @Html.DisplayFor(modelItem => item.ShippingAddress)<br />
+                @Html.DisplayFor(modelItem => item.Area.Name)<br />
+                @item.Pincode.City.Name, @item.Pincode.City.District.Name, @item.Pincode.City.District.State.Name<br />
+                Pincode : @Html.DisplayFor(modelItem => item.Pincode.Name)
+            </div>
+            <div style="padding-top: 5px; padding-bottom: 5px; border-bottom: 1px solid rgba(153, 153, 153, 0.33); ">
+                Mob : @Html.DisplayFor(modelItem => item.PrimaryMobile) ,
+                @Html.DisplayFor(modelItem => item.SecondaryMobile)
+            </div>
+        </div>
+
+    }
+</div>
+<script src="~/Scripts/jquery-1.10.2.min.js"></script>
+<script type="text/javascript">
+    ///New Yashaswi 20/6/2018
+    var selectedAddressId;
+    $(function () {
+       
+        //var modaldivShipAddress = document.getElementById('divShipAddres');
+        //End
+        $('input:checkbox[name=chkAddress]:checked').each(function () {
+            window.parent.$("[id*=SelectedAddress]").val($(this).parent().parent().find("#CheckedID").val());
+            ///New Yashaswi 20/6/2018
+            selectedAddressId = $(this).parent().parent().find("#CheckedID").val();
+            //End
+            //Yashaswi
+            window.parent.$("[id*=CityId_]").val($(this).parent().parent().find("#CityId").val());
+            window.parent.$("[id*=AreaId_]").val($(this).parent().parent().find("#AreaId").val());
+            window.parent.$("[id*=CityName_]").val($(this).parent().parent().find("#CityName").val());
+            window.parent.$("[id*=AreaName_]").val($(this).parent().parent().find("#AreaName").val());
+            window.parent.$("[id*=PincodeName_]").val($(this).parent().parent().find("#PincodeName").val());
+            //End
+        });
+
+        //window.parent.$("[id*=SelectedAddress]").val(@ViewBag.CurrentAddressID);
+        $('.chkAddress').on('click', function () {
+            $('.chkAddress').prop('checked', false);
+            $('[id*=divCheckHighlighted]').removeClass('newcheckimage');
+            $(this).prop('checked', true);
+
+            window.parent.$("[id*=SelectedAddress]").val($(this).parent().parent().find("#CheckedID").val());
+            $(this).parent().addClass("newcheckimage");
+            ///New Yashaswi 20/6/2018
+            selectedAddressId = $(this).parent().parent().find("#CheckedID").val();
+            //End
+            //Yashaswi
+            window.parent.$("[id*=CityId_]").val($(this).parent().parent().find("#CityId").val());
+            window.parent.$("[id*=AreaId_]").val($(this).parent().parent().find("#AreaId").val());
+            window.parent.$("[id*=CityName_]").val($(this).parent().parent().find("#CityName").val());
+            window.parent.$("[id*=AreaName_]").val($(this).parent().parent().find("#AreaName").val());
+            window.parent.$("[id*=PincodeName_]").val($(this).parent().parent().find("#PincodeName").val());
+            //End
+            //alert($(this).closest().find(".addressdiv").id);
+            //alert($(this).parent().parent().find(".addressdiv").id);
+            //$(this).closest().find(".addressdiv").addClass("addressdivSelected");
+        });
+
+        var id = $("#CheckedID").val();
+        if (id != "") {
+            window.parent.$("#NoAddressMessage").css("display", "none");
+        }
+    });
+
+    //Yashaswi
+    $(document).ready(function () {
+        ///New Yashaswi 20/6/2018
+        var modaldivShipAddress = document.getElementById('divShipAddres');
+        $("#sp-PinArea").text(localStorage.getItem("PinArea"));
+        window.onclick = function (event) {
+            if (event.target == modaldivShipAddress) {
+                modaldivShipAddress.style.display = "none";
+            }
+        }
+        if ('@ViewBag.IsSaved' == '1') {
+            modaldivShipAddress.style.display = "block";
+        }
+
+        $("#btnDivCon").click(function () {
+            modaldivShipAddress.style.display = "none";
+            window.parent.$("#btnShippingContinue").click();
+        });
+        $("#btnDivChange").click(function () {
+            ///New Yashaswi 20/6/2018
+            var dc = document.cookie;
+            var prefix = "CityCookie" + "=";
+            var begin = dc.indexOf("; " + prefix);
+            if (begin == -1) {
+                begin = dc.indexOf(prefix);
+                if (begin != 0) return null;
+            } else {
+                begin += 2;
+            }
+            var end = document.cookie.indexOf(";", begin);
+            if (end == -1) {
+                end = dc.length;
+            }
+            var str = unescape(dc.substring(begin + prefix.length, end));
+
+            var array = str.split('$');
+            var cityName = array[1];
+            var franchiseID = array[2];
+            modaldivShipAddress.style.display = "none";
+
+            var url = "/" + cityName + "/" + franchiseID + "/ShippingAddress/Edit/" + selectedAddressId;
+
+            window.location.href = url;
+            //End
+        });
+    });
+    //End
+</script>

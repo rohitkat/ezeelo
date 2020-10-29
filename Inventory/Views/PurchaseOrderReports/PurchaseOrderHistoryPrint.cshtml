@@ -1,0 +1,189 @@
+﻿@model ModelLayer.Models.ViewModel.PurchaseOrderViewModelList
+@{
+    Layout = null;
+}
+
+<div>
+
+
+    <div style="position:fixed; text-align:right; padding-left:20px">
+        <input class="btn btn-primary" type="button" value="Print" id="btnPrint" />
+    </div>
+    <div class="NameDescription">
+        <div id="divToPrint">
+            <table id="headerTable" class="ClaimAmtList" border="1" cellpadding="2" cellspacing="0">
+                <thead>
+                    <tr><td style="text-align:center" colspan="11"><h2>PURCHASE ORDER HISTORY (@Convert.ToDateTime(@Model.FromDate).ToString("dd MMM yyyy") To @Convert.ToDateTime(@Model.ToDate).ToString("dd MMM yyyy"))</h2></td></tr>
+                    <tr>
+                        <th style="min-width: 50px; max-width: 50px; word-break: break-all">Sr.No.</th>
+                        <th style="min-width: 120px; max-width: 120px; word-break: break-all">
+                            PO Code
+                        </th>
+                        <th>
+                            Create Date
+                        </th>
+                        <th>Expected Delivery Date</th>
+                        <th>Status</th>
+                        <th style="min-width: 120px; max-width: 120px; word-break: break-all">
+                            Supplier
+                        </th>
+                        <th style="min-width: 150px; max-width: 150px; word-break: break-all">Item</th>
+                        <th>MRP</th>
+                        <th>Unit Price</th>
+                        <th>Qty Ordered</th>
+
+                        <th style="text-align:right">
+                            Amount
+                        </th>
+                        @*<th>
+                                Is Sent
+                            </th>*@
+                    </tr>
+                </thead>
+                <tbody>
+                    @{
+                        var i = 1;
+                    }
+                    @foreach (var item in Model.lPurchaseOrderViewModel)
+                    {
+                        <tr>
+                            <td style="text-align: center; min-width: 50px; max-width: 50px; word-break: break-all">
+                                @i
+                                @{
+                        i = i + 1;
+                                }
+                            </td>
+                            <td style="color: #3C73DC; font-weight: bold; min-width: 120px; max-width: 120px; word-break: break-all;">
+                                @(item.PurchaseOrderCode == null ? "" : item.PurchaseOrderCode)
+                            </td>
+                            <td>
+                                @item.OrderDate.ToString("dd MMM yyyy")
+                            </td>
+
+                            <td>@item.ExpetedDeliveryDate.ToString("dd MMM yyyy")</td>
+
+                            <td style="text-align:center">
+                                @if (@item.IsAcceptedBySupplier == 1)
+                                {
+                                    if (@item.OrderedQuantity == @item.ReceivedQuantity)
+                                    {
+                                        <span style="color:green;"><b>Delivered</b></span>
+                                    }
+                                    else
+                                    {
+                                        <span style="color: violet;"><b>Accepted</b></span>
+                                    }
+                                }
+                                @*else if (@item.IsAcceptedBySupplier == 2)
+
+            {
+                <span style="color:Red;"><b>Rejected</b></span>
+            }
+            else
+            {
+                <span style="color:blue"><b>Pending</b></span>
+            }*@
+
+
+                                @*Addded by Priti 12/10/2018*@
+                                else if (@item.IsAcceptedBySupplier == 2)
+                                {
+                                    <span style="color:Red;"><b>Rejected</b></span>
+                                }
+                                else
+                                {
+                                    if (@item.OrderedQuantity == @item.ReceivedQuantity)
+                                    {
+                                        <span style="color:green;"><b>Delivered</b></span>
+                                    }
+                                    else
+                                    {
+                                        <span style="color:blue"><b>Pending</b></span>
+                                    }
+                                }
+                                @*end by Priti  on 12/10/2018*@
+
+                            </td>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                            @*<td style="text-align:center">
+                                @if (@item.IsAcceptedBySupplier == 1)
+                                {
+                                    if (@item.OrderedQuantity == @item.ReceivedQuantity)
+                                    {
+                                        <span style="color:green;"><b>Delivered</b></span>
+                                    }
+                                    else
+                                    {
+                                        <span style="color: violet;"><b>Accepted</b></span>
+                                    }
+                                }
+                                else if (@item.IsAcceptedBySupplier == 2)
+                                {
+                                    <span style="color:Red;"><b>Rejected</b></span>
+                                }
+                                else
+                                {
+                                    <span style="color:blue"><b>Pending</b></span>
+                                }
+                            </td>*@
+
+                            <td style="min-width: 120px; max-width: 120px; word-break: break-all;text-align:left">
+                                @(item.SupplierName == null ? "None" : item.SupplierName)
+                            </td>
+
+                            <td style="min-width: 150px; max-width: 150px; word-break: break-all; text-align: left">@item.ItemName</td>
+                            <td style="text-align:right">@item.EzeeloMRP</td>
+                            <td style="text-align:right">@item.UnitPrice</td>
+                            <td style="text-align:center">@item.Quantity</td>
+
+                            <td style="text-align:right"> @item.TotalAmount</td>
+                            @*<td style="text-align:center">
+                                    @if (@item.IsSent == true)
+                                    {
+                                        <span><i class="fa fa-check"></i></span>
+                                    }
+                                    else
+                                    {
+                                        <span><b>No</b></span>
+                                    }
+                                </td>*@
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+</div>
+
+<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
+<script type="text/javascript">
+    $("#btnPrint").live("click", function () {
+        var divContents = $("#divToPrint").html();
+        var printWindow = window.open('', '', 'height=400,width=800');
+        printWindow.document.write('<html><head><title>PURCHASE ORDER HISTORY</title>');
+        printWindow.document.write('<link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" />');
+        printWindow.document.write('</head><body>');
+        printWindow.document.write(divContents);
+        printWindow.document.write('</body></html>');
+        printWindow.document.close();
+        printWindow.print();
+    });
+
+</script>
+
+

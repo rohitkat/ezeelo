@@ -1,0 +1,69 @@
+﻿@model IEnumerable<ModelLayer.Models.ViewModel.ProductUploadViewModel>
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Index</h2>
+
+<p>
+    @Html.ActionLink("Create New", "Create")
+</p>
+<div>
+    @using (Html.BeginForm("Search", "ProductUploadViewModel"))
+    {
+        @Html.TextBox("SearchItem", null, new { id = "txtSearch" })
+        <input type="submit" value="Search" />
+    }
+
+</div>
+
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.ProductName)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.CategoryName)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.BrandName)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Qty)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.PackSize)
+        </th>
+
+        <th></th>
+    </tr>
+
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                @Html.ActionLink(item.ProductName, "Edit", new { id = item.ProductID })
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.CategoryName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.BrandName)
+            </td>
+           <td>
+                @Html.DisplayFor(modelItem => item.Qty)
+            </td>
+          
+            <td>
+                @Html.DisplayFor(modelItem => item.PackSize)
+            </td>
+            
+            <td>
+                @Html.ActionLink("Details", "Details", new { /* id=item.PrimaryKey */ }) |
+                @Html.ActionLink("Delete", "Delete", new { /* id=item.PrimaryKey */ })
+            </td>
+        </tr>
+    }
+
+</table>

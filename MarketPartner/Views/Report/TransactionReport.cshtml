@@ -1,0 +1,114 @@
+﻿@model ModelLayer.Models.ViewModel.TranasactionReportViewModel
+@{
+    ViewBag.Title = "TransactionReport";
+}
+<link href="~/plugins/datepicker/datepicker3.css" rel="stylesheet" />
+<script src="~/plugins/datepicker/bootstrap-datepicker.js"></script>
+<section class="content">
+    <div class="row">
+        <!-- left column -->
+        <div class="col-md-12">
+            <div class="box box-primary">
+                <div class="box-header">
+                    <h3 class="box-title">Transaction Report</h3>
+                </div><!-- /.box-header -->
+                <div class="box-body">
+                    @using (Html.BeginForm("TransactionReport", "Report", FormMethod.Post, new { id = "frm" }))
+                    {
+                        <div class="form-group">
+                            <table>
+                                <tr>
+                                    <td>
+                                        <div class="input-group">
+                                            <div class="input-group-addon">
+                                                <i class="fa fa-calendar"></i>
+                                            </div>
+                                            @Html.TextBoxFor(m => m.FromDate, "{0:MM/dd/yyyy}", new { @class = "form-control pull-right" })
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="input-group">
+                                            <div class="input-group-addon">
+                                                <i class="fa fa-calendar"></i>
+                                            </div>
+                                            @Html.TextBoxFor(m => m.ToDate, "{0:MM/dd/yyyy}", new { @class = "form-control pull-right" })
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <input type="submit" value="Go" class="form-control pull-right btn btn-sm btn-success" />
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+                    }
+                    <div class="table-responsive">
+                        <table id="tblrpt" class="table table-bordered">
+                            <thead>
+                                <tr>
+                                    <th>SrNo</th>
+                                    <th>Transaction Code</th>
+                                    <th>Transaction date</th>
+                                    <th>Customer Name</th>
+                                    <th>Mobile No</th>
+                                    <th>Bill Amount</th>
+                                    <th>Commission</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var item in Model.TransactionList)
+                                {
+                                    if (item.isPayable)
+                                    {
+                                        <tr>
+                                            <td>@item.SrNO</td>
+                                            <td>@item.TransactionCode</td>
+                                            <td>@item.TransactionDate</td>
+                                            <td>@item.UserName</td>
+                                            <td>@item.MobileNo</td>
+                                            <td>@item.BillAmount</td>
+                                            <td>@item.Commission</td>
+                                        </tr>
+                                    }
+                                    else
+                                    {
+                                        <tr class="bg-danger" title="Pending Distribution of @item.Commission Rs value">
+                                            <td>@item.SrNO</td>
+                                            <td>@item.TransactionCode</td>
+                                            <td>@item.TransactionDate</td>
+                                            <td>@item.UserName</td>
+                                            <td>@item.MobileNo</td>
+                                            <td>@item.BillAmount</td>
+                                            <td>@item.Commission</td>
+                                        </tr>
+                                    }
+                                }
+                            </tbody>
+
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<script src="~/plugins/Custom.js"></script>
+<script>
+    $(document).ready(function () {
+        $("#lnk-Report").addClass("active");
+        var fdate = new Date($("#FromDate").val());
+        $("#tblrpt").dataTable();
+        $("#FromDate").datepicker();
+        $("#ToDate").datepicker({
+            autoclose: 'true',
+        }).on('changeDate', function (ev) {
+            var tdate = new Date(ev.date.valueOf());
+            fdate = new Date($("#FromDate").val());
+            if (tdate < fdate) {
+                alert("Plaese select date greater than From date.");
+                $("#ToDate").val("").datepicker("update");;
+            }
+        });
+    })
+</script>
+

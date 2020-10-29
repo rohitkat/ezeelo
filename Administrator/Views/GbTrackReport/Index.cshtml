@@ -1,0 +1,389 @@
+﻿@using PagedList;
+@using PagedList.Mvc;
+
+@model IPagedList<ModelLayer.Models.ViewModel.GBTrackReportViewModel>
+
+@{
+    ViewBag.Title = "Index";
+}
+<style>
+    .btn_Print {
+        margin-bottom: 7px;
+        margin-top: 7px;
+        margin-left: 5px;
+    }
+
+    .section {
+        position: relative;
+        /*border: 1px solid #000;*/
+        padding-top: 33px;
+        margin-left: 5px;
+        /*background: #A4A5A7;*/
+        margin-top: 10px;
+    }
+
+    #myTable_wrapper {
+        min-height: 61px;
+        margin-top: 2px;
+        max-height: 516px;
+    }
+
+    .fg-toolbar {
+        margin-top: -89px;
+    }
+
+    #myTable_filter {
+        position: absolute;
+        margin-top: 13px !important;
+    }
+
+    .section.positioned {
+        position: absolute;
+        top: 100px;
+        left: 100px;
+        width: 800px;
+        box-shadow: 0 0 15px #333;
+    }
+
+    .container_tbl {
+        overflow-y: auto;
+        height: 300px; height: 420px;
+        overflow-x: hidden;
+    }
+
+    table {
+        border-spacing: 0;
+        width: 100%;
+    }
+
+    td + td {
+        border-left: 1px solid #eee;
+    }
+
+    td, th {
+        border-bottom: 1px solid #eee;
+        /*background: #ddd;*/
+        color: #000;
+        padding: 10px 25px;
+    }
+
+    #myTable thead tr th {
+        height: 0;
+        line-height: 0 !important;
+        padding-top: 0 !important;
+        padding-bottom: 0 !important;
+        color: transparent;
+        border: none;
+        white-space: nowrap;
+    }
+
+    th div {
+        position: absolute;
+        background: transparent;
+        color: black;
+        padding: 9px 10px;
+        top: 0;
+        margin-left: -8px;
+        line-height: normal;
+        border-left: 1px solid #DDD;
+    }
+
+    .ui-widget-header {
+        border: none;
+    }
+
+    #ExportOption {
+        margin-top: 10px;
+    }
+
+    th:first-child div {
+        border: none;
+    }
+
+    .wrap {
+        margin-top: 105px;
+    }
+
+    td:nth-of-type(1) {
+        width: 30px;
+    }
+
+    td:nth-of-type(2) {
+        width: 150px;
+        word-wrap: break-word;
+        word-break: break-all;
+    }
+
+    td:nth-of-type(3) {
+        width: 100px;
+    }
+
+    td:nth-of-type(4) {
+        width: 120px;
+    }
+
+    td:nth-of-type(5) {
+        width: 120px;
+    }
+
+    td:nth-of-type(6) {
+        width: 120px;
+    }
+
+    td:nth-of-type(7) {
+        width: 110px;
+    }
+
+    #myTable_wrapper, .scrollable #myTable {
+        overflow: hidden;
+    }
+    .margingnew {
+        margin-top: 10px;
+    }
+    input[type=text] {
+        width: 120px;
+    }
+    .btn-brown {
+        color: #ffffff;
+        background-color: #267196;
+        border-color: #8AA0B9;
+        background-image: none;
+        filter: none;
+        text-shadow: none;
+        width: 47px !important;
+        margin-left: 7px;
+        padding: 1px !important;
+    }
+</style>
+<script language="javascript" type="text/javascript">
+    function PrintDivContent(divId) {
+        var printContent = document.getElementById(divId);
+        var WinPrint = window.open('', '', 'left=0,top=0,toolbar=0,sta­tus=0');
+        WinPrint.document.write(printContent.innerHTML);
+        WinPrint.document.close();
+        WinPrint.focus();
+        WinPrint.print();
+    }
+</script>
+<div class="span10" id="content">
+    <div class="row-fluid">
+        <div class=" box span12 ">
+            <div class="box-header"><h2 style="font-weight:bold;"> GB Track Report</h2></div>
+            <div class="box bg-box">
+                <div class="row-fluid" @*style="padding-left:44px;"*@>
+                    <div class="span8" style="margin-left: 2.5%">
+                        @using (Html.BeginForm())
+                        { 
+                            <div class="span3">
+                                @Html.TextBox("StartDate", null, new { id = "StartDate", @class = "datepicker glyphicons-iconcalendar", @placeholder = "Start Date", @style = "margin-top:10px;", required = "requird" })
+                        </div>
+                             <div class="span3">
+                                 @Html.TextBox("EndDate", null, new { id = "EndDate", @class = "datepicker glyphicons-iconcalendar", @placeholder = "End Date", @style = "margin-top:10px;", required = "requird" })
+                        </div>
+                             <div class="span3">
+                                 @Html.TextBox("UserName", null, new { @class = "search_input margingnew", placeholder = "User Name" })
+                        </div>
+                             <div class="span3">
+                                 <input type="submit" value="Search" class="btn btn-primary btn-search" style="margin-left: 0px; margin-top: 10px; " onclick="return DateValidation()" />
+                                 <label id="lblMsg" style="color:red"></label>
+                        </div>
+                        }
+                    </div>
+                    <div class="span4" style="text-align: right; margin-left: 0px; margin-top: 10px; ">
+
+                        @using (Html.BeginForm("ExportPrint", "GbTrackReport", FormMethod.Post, null))
+                        {
+
+                            @*@Html.DropDownList("ExportOption", new List<SelectListItem>
+
+    {
+       new SelectListItem{ Text="Excel", Value = "1" },
+       new SelectListItem{ Text="Csv", Value = "2" },
+       new SelectListItem{ Text="Pdf", Value = "3" }
+
+    })
+
+                              @Html.ActionLink("Export", "ExportPrint", "GbTrackReport", new { ExportOption = 1, StartDate = (ViewBag.StartDate != null ? ViewBag.StartDate : "01/01/0001 "), EndDate = (ViewBag.EndDate != null ? ViewBag.EndDate : "01/01/0001 ") }, new { @class = "btn btn-small btn-success" })
+                            <input type="submit" value="Export" id="btnExport" class="btn btnSearch-f btn_ex" />*@
+                              @Html.ActionLink("EXCEL", "ExportPrint", new
+                         {
+                             ExportOption = 1,
+                             StartDate = ViewBag.StartDate,
+                             EndDate = ViewBag.EndDate,
+                                                 UserName = ViewBag.UserName }, new { @class = "btn btn-brown" })
+                              @Html.ActionLink("CSV", "ExportPrint", new
+                         {
+                             ExportOption = 2,
+                             StartDate = ViewBag.StartDate,
+                             EndDate = ViewBag.EndDate,
+                                                 UserName = ViewBag.UserName }, new { @class = "btn btn-brown" })
+                              @Html.ActionLink("PDF", "ExportPrint", new
+                         {
+                             ExportOption = 3,
+                             StartDate = ViewBag.StartDate,
+                             EndDate = ViewBag.EndDate,
+                                                 UserName = ViewBag.UserName }, new { @class = "btn btn-brown" })
+    @*<input type="submit" onclick="printReport();" value="Print" id="btnPrint" class="btn btn btn-brown" />*@
+                              <input value="PRINT" class="btn btn-brown" onclick="javascript:PrintDivContent('divToPrint');" />
+
+                        }
+                        @*<input type="submit" onclick="printReport();" value="Print" id="btnPrint" class="btn btnSearch-f btn_ex btn-primary" />*@
+                    </div>
+
+                </div>
+            </div>
+
+            <div class="section">
+                <div class="table scrollable container_tbl">
+                    <div id="divToPrint">
+                        <table class="table" id="myTable">
+
+                            @if (Model.Count() == 0)
+                            {
+                            <tr>
+                                <td colspan="6" class="text-center"><h3>No Record Found...</h3></td>
+                            </tr>
+                            }
+                            else
+                            {
+                                int i = 1;
+                            <thead>
+                                <tr class="hed-tble header">
+                                    <th>
+                                        <div>Sr No</div>
+                                    </th>
+                                    <th>
+                                        <div>@Html.DisplayNameFor(model => model.First().PageURL)</div>
+                                    </th>
+
+                                    <th>
+                                        <div>User Name</div>
+                                    </th>
+                                    <th>
+                                        <div>In Date/Time</div>
+                                    </th>
+                                    <th>
+                                        <div>In Out/Time</div>
+                                    </th>
+                                    <th>
+                                        <div>Network IP</div>
+                                    </th>
+                                    @*<th>
+                                        <div>Device Type</div>
+                                    </th>*@
+                                    @*<th>
+                            @Html.DisplayNameFor(model => model.DeviceID)
+                        </th>*@
+
+                                </tr>
+
+                            </thead>
+                                foreach (var item in Model)
+                                {
+                            <tr>
+                                <td>@{int SrNo = ((ViewBag.PageNumber - 1) * ViewBag.PageSize) + i; i = i + 1; } @SrNo</td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.PageURL)
+                                </td>
+                                @*<td>
+                        @Html.DisplayFor(modelItem => item.UserLoginId)
+                    </td>*@
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Name)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.InTime)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.OutTime)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.NetworkIP)
+                                </td>
+                                @*<td>
+                                    @Html.DisplayFor(modelItem => item.DeviceType)
+                                </td>*@
+                                @*<td>
+                        @Html.DisplayFor(modelItem => item.DeviceID)
+                    </td>*@
+
+                            </tr>
+                                }
+                            }
+
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div class="pager">
+                @Html.PagedListPager(Model, Page => Url.Action("Index", new
+                       {
+                           page = Page,
+                           StartDate = ViewBag.StartDate,
+                           EndDate = ViewBag.EndDate,
+                           UserName = ViewBag.UserName
+                       }),
+                                                                    new PagedListRenderOptions()
+                                                                    {
+                                                                        Display = PagedListDisplayMode.IfNeeded
+                                                                    })
+                <h4><span>Total Count:&nbsp;@ViewBag.TotalCount</span></h4>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    function printReport() {
+        var divContents = $("#divPrint").html();
+        var printWindow = window.open('', '', 'height=400,width=800');
+        printWindow.document.write('<html><head><title>Customer Registration Report</title>');
+        printWindow.document.write('</head><body >');
+        printWindow.document.write(divContents);
+        printWindow.document.write('</body></html>');
+        printWindow.document.close();
+        printWindow.print();
+    }
+</script>
+
+<script src="~/Content/js/jquery.1.8.3.min.js"></script>
+@*<script type="text/javascript">
+        $(document).ready(function () {
+            $("#myTable").DataTable({
+                "bDestroy": true,
+                //"sPaginationType": "full_numbers",
+                "bJQueryUI": true,
+                "bInfo": false,
+                "scrollY": 700,
+                "scrollCollapse": true,
+                "bPaginate": false,
+                "iDisplayLength": 20,
+                "bAutoWidth": false,
+
+            });
+
+        });
+    </script>*@
+<script>
+    function DateValidation() {
+        var FromDate = $('#StartDate').val();
+        var ToDate = $('#EndDate').val();
+        if (FromDate != null && ToDate != null) {
+            if (FromDate != '' && ToDate != '') {
+                FirstDate = FromDate.split('/');
+                SecondDate = ToDate.split('/');
+                var from = new Date(FirstDate[2], FirstDate[1], FirstDate[0]); //Year, Month, Date
+                var to = new Date(SecondDate[2], SecondDate[1], SecondDate[0]);
+                if (from > to) {
+                    $('[id*=lblMsg]').text('To Date must be greater than From Date.');
+                    return false;
+                }
+                else {
+                    $('[id*=lblMsg]').text('');
+                    return true;
+                }
+            }
+        }
+    }
+</script>

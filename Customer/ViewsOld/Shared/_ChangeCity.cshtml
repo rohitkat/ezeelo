@@ -1,0 +1,67 @@
+﻿
+<style>
+    .imagediv {
+        height: 105px;
+        opacity: 0.2;
+    }
+
+    .imagedivnew {
+        height: 105px;
+        opacity: 1;
+    }
+
+    .CityImage {
+        width: 150px;
+        height: 150px;
+        padding: 10px;
+    }
+
+    .ChangeCityTest {
+        text-align: justify;
+    }
+
+    .lidiv {
+        width: 25%;
+        float: left;
+        list-style-type: none;
+        padding: 10px;
+        text-align: center;
+        font-weight: 600;
+    }
+
+    ul li {
+        list-style-type: none;
+    }
+
+    #dialog9 {
+        border-radius: 15px !important;
+    }
+
+    .changecityimg {
+        width: 80%;
+        text-align: center;
+        margin: auto;
+    }
+</style>
+
+@{
+    string cityName = "";
+    int franchiseID = 0;////added
+    if (Request.Cookies["CityCookie"] != null && Request.Cookies["CityCookie"].Value != "")
+    {
+        cityName = Request.Cookies["CityCookie"].Value.Split('$')[1].ToLower();
+        franchiseID = Convert.ToInt32(Request.Cookies["CityCookie"].Value.Split('$')[2]);////added
+    }
+
+    <div class="ChangeCityTest" style="text-align:center;">
+        <h3><span class="mif-location mif-2x fg-red"></span>  Which city do you want to be in ?</h3><br />
+    </div>
+    <div class="changecityimg">
+        <ul>
+            <li class="lidiv"><a href="@Url.RouteUrl("ChangeCity", new { CityID = 4968, CityName = "Nagpur", city = "Nagpur",FranchiseID=2,HelpLineNumber= "9860890890" })"><img src="~/Images/City/nagpur.jpg" class="imagediv imagedivnew" /><br /><span>Nagpur</span></a></li>
+            <li class="lidiv"><a href="@Url.RouteUrl("ChangeCity", new { CityID = 10908, CityName = "Varanasi", city = "Varanasi", FranchiseID = 4, HelpLineNumber = "9519704040" })"><img src="~/Images/City/Varanasi.jpg" class="imagediv imagedivnew" /><br /><span>Varanasi</span></a></li>
+            <li class="lidiv"><a href="@Url.RouteUrl("ChangeCity", new { CityID = 10909, CityName = "Kanpur", city = "Kanpur", FranchiseID = 3, HelpLineNumber = "7706079421" })"><img src="~/Images/City/kanpur.jpg" class="imagediv imagedivnew" /><br /><span>Kanpur</span></a></li>
+            <li class="lidiv"><a href="@Url.RouteUrl("ChangeCity", new { CityID = 7536, CityName = "Wardha", city = "Wardha", FranchiseID = 8, HelpLineNumber = "9860890890" })"><img src="~/Images/City/wardha.jpg" class="imagediv imagedivnew" /><br /><span>Wardha</span></a></li>
+            <li class="lidiv"><a href="@Url.RouteUrl("ChangeCity", new { CityID = 11187, CityName = "Lucknow", city = "Lucknow", FranchiseID = 26, HelpLineNumber = "8090090890" })"><img src="~/Images/City/wardha.jpg" class="imagediv imagedivnew" /><br /><span>Lucknow</span></a></li>
+        </ul>
+    </div>

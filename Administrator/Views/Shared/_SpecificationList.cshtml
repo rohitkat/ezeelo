@@ -1,0 +1,86 @@
+﻿@model ModelLayer.Models.ViewModel.SpecificationList
+
+
+<style>
+    .btn-jequery {margin-left:21px;
+    }
+    </style>
+@*<p>*@
+    @*@Html.ActionLink("Create New", "Create")*@
+    @*LIST OF SPECIFICATION*@
+@*</p>*@
+@using (Html.BeginForm("Create","CategorySpecification"))
+{  @Html.AntiForgeryToken()
+    <div class="span10" id="content">
+        <ul class="breadcrumb">
+            <li>
+                <a href="index.html">LIST OF SPECIFICATION</a>
+            </li>
+   
+        </ul>
+        <div class="row-fluid">
+            <div class="box">
+                <div class="box-header">
+                    <h2><i class="icon-edit"></i><span class="break"></span>Category Specification</h2>
+
+                </div>
+                <table class="table table-striped table-bordered">
+                    <tr>
+                        <th> Id
+                            </th>
+                        <th>
+                            Name
+                        </th>
+                        <th>
+                            Level
+                        </th>
+                        <th>
+                            Select
+                        </th>
+                    </tr>
+                    @for (int i = 0; i < Model.pSpecificationViewModel.Count(); i++)
+                    {
+                        <tr>
+                            <td>
+                                @Html.DisplayFor(x => x.pSpecificationViewModel[i].ID)
+                                @Html.HiddenFor(x => x.pSpecificationViewModel[i].ID)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(x => x.pSpecificationViewModel[i].Name)
+                                @Html.HiddenFor(x => x.pSpecificationViewModel[i].Name)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(x => x.pSpecificationViewModel[i].level)
+                                @Html.HiddenFor(x => x.pSpecificationViewModel[i].level)
+                            </td>
+                            <td> @Html.EditorFor(x => x.pSpecificationViewModel[i].isSelected) </td>
+                        </tr>
+                    }
+                    <tr>
+                        <td>@Html.Hidden("ThreeLevelID", Model.ThreeLevelID)</td>
+
+                        <td>@Html.Hidden("TwoLevelID", Model.TwoLevelID)</td>
+
+                    </tr>
+                </table>
+                </div>
+            </div>
+        </div>
+    <input type="submit" id="submit" name="SUBMIT" class="btn btn-primary btn-jequery" />
+    <span id="message"></span>
+}
+
+<script src="~/Scripts/jquery-1.10.2.min.js"></script>
+<script>
+    $(document).ready(function () {
+        $("#submit").click(function () {
+            var levelTwo = $("#TwoLevelID").val();
+            var levelThree = $("#ThreeLevelID").val()
+            if (levelThree == 0)
+            {
+                $("#message").text("Please Select the Category and Regenerate Specification ");
+                return false;
+            }
+        });
+    });
+ </script>

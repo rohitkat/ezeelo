@@ -1,0 +1,424 @@
+﻿@{
+    ViewBag.Title = "Furniture & Interiors | Gandhibagh.com";
+}
+
+<link href="~/Content/Home-content/bootstrap/css/bootstrap-responsive.css" rel="stylesheet" />
+<style>
+    .margin-setTop {
+        margin-top: -33px;
+    }
+
+    .heart {
+        display: none !important;
+    }
+</style>
+<script src="~/Content/update(5-10)/js/jquery-1.11.2.min.js"></script>
+<script type="text/javascript">
+    function AddProduct(shopStockId, itemId) {
+        var _url = '@Url.Action("AddProductInShoppingCart", "Product")';
+        AddProductToShppingCartWithoutQuantity(shopStockId, itemId, _url);
+    }
+</script>
+<script type="text/javascript">
+    $(document).ready(function () {
+        var newClone1 = $("#cpy1").html();
+        var newClone2 = $("#cpy2").html();
+        var newClone3 = $("#cpy3").html();
+        var newClone4 = $("#cpy4").html();
+        var newClone5 = $("#cpy5").html();
+        if ($(window).width() < 750) {
+            // alert("1");
+            $(newClone1).clone().appendTo("#pst1");
+            $(newClone2).clone().appendTo("#pst2");
+            $(newClone3).clone().appendTo("#pst3");
+            $(newClone4).clone().appendTo("#pst4");
+            $(newClone5).clone().appendTo("#pst5");
+        } else {
+            $("#pst1").empty();
+            $("#pst2").empty();
+            $("#pst3").empty();
+            $("#pst4").empty();
+            $("#pst5").empty();
+
+        }
+    });
+</script>
+<script src="~/Scripts/Products.js"></script>
+@{
+    string cityName = "";
+    if (Request.Cookies["CityCookie"] != null && Request.Cookies["CityCookie"].Value != "")
+    {
+        cityName = Request.Cookies["CityCookie"].Value.Split('$')[1].ToLower();
+    }
+}
+<div class="container margin-setTop">
+    <div class="category-featured jewelry">
+        <nav class="navbar nav-menu show-brand">
+            <div class="container">
+                <!-- Brand and toggle get grouped for better mobile display -->
+                <div class="navbar-brand"><a href="#">@*<img alt="fashion" src="~/Content/update(5-10)/images/icon-jewelry.png">*@Chairs</a></div>
+                <span class="toggle-menu"></span>
+                <div class="collapse navbar-collapse">
+                    <ul class="nav navbar-nav" id="pst1"></ul>
+                </div>
+                <!-- Collect the nav links, forms, and other content for toggling -->
+                <!-- /.navbar-collapse -->
+            </div><!-- /.container-fluid -->
+            <div id="elevator-6" class="floor-elevator">
+                <a href="#" class="btn-elevator up fa fa-angle-up"></a>
+                <a href="#" class="btn-elevator disabled down fa fa-angle-down"></a>
+            </div>
+        </nav>
+        <div class="product-featured clearfix">
+            <div class="row">
+                <div class="col-sm-2 sub-category-wapper">
+                    <ul class="sub-category-list" id="cpy1">
+                        <li>
+                            @*<a href="~/Product/Products?parentCategoryId=1225">*@
+                        <a href="@Url.RouteUrl("ProductsByCategory", new { item = "executive-chair", parentCategoryId = 1225, city = cityName })">Executive Chair</a>
+                    </li>
+                    <li>
+                        @*<a href="~/Product/Products?parentCategoryId=1226">*@
+                    <a href="@Url.RouteUrl("ProductsByCategory", new { item = "visitor-chair", parentCategoryId = 1226, city = cityName })">Visitor Chair</a>
+                </li>
+                <li>
+                    @*<a href="~/Product/Products?parentCategoryId=1224">*@
+                <a href="@Url.RouteUrl("ProductsByCategory", new { item = "director-chair", parentCategoryId = 1224, city = cityName })">Director Chair</a>
+            </li>
+            <li>
+                @*<a href="~/Product/Products?parentCategoryId=1233">*@
+            <a href="@Url.RouteUrl("ProductsByCategory", new { item = "other-chairs-and-table", parentCategoryId = 1233, city = cityName })">Other Chairs & Table</a>
+        </li>
+    </ul>
+</div>
+<div class="col-sm-10 col-right-tab">
+    <div class="product-featured-tab-content">
+        <div class="tab-container">
+            <div class="tab-panel active" id="tab-14">
+                <div class="box-full clearfix">
+                    <ul class="product-list row">
+                        <li class="col-sm-4">
+                            <div class="right-block">
+                                @*<h5 class="product-name"><a href="~/PreviewItem?itemId=44408" title="Office Chair KF124">Office Chair KF124</a></h5>*@
+                                <h5 class="product-name">
+                                    <a href="@Url.RouteUrl("pre-prod-name", new { itemId = 44408, itemName = "Office Chair".ToLower().Replace(' ', '-'), city = cityName })"
+                                       title="Office Chair">Office Chair</a>
+                                </h5>
+                            </div>
+                            <div class="left-block">
+                                @*<a href="~/PreviewItem?itemId=44408">
+                                        <img class="img-responsive" alt="product" src="~/Content/update(5-10)/images/Kanpur-images/sub-cat/FIC1.jpg">
+                                    </a>*@
+                                <a href="@Url.RouteUrl("pre-prod-name", new { itemId = 44408, itemName = "Office Chair".ToLower().Replace(' ', '-'), city = cityName })">
+                                    <img class="img-responsive" alt="product" src="~/Content/update(5-10)/images/Kanpur-images/sub-cat/FIC1.jpg">
+                                </a>
+                                <div class="quick-view">
+                                    <a title="Add to my wishlist" class="heart" href="#"></a>
+                                    @*<a title="Add to compare" class="compare" href="#"></a>*@
+                                    <a title="Quick view" class="search" href="@Url.RouteUrl("pre-prod-name", new { itemId = 44408, itemName = "Office Chair".ToLower().Replace(' ', '-'), city = cityName })"></a>
+                                </div>
+                                <div class="add-to-cart">
+                                    @*<a title="Add to Cart" onclick="AddProductToShppingCartWithoutQuantity(60221, 44408)">Add to Cart</a>*@
+                                    <a title="Add to Cart" onclick="AddProduct(60221, 44408)">Add to Cart</a>
+                                </div>
+                            </div>
+                        </li>
+                        <li class="col-sm-4">
+                            <div class="right-block">
+                                @*<h5 class="product-name"><a href="~/PreviewItem?itemId=44402" title="Office Chair KF118">Office Chair KF118</a></h5>*@
+                                <h5 class="product-name">
+                                    <a href="@Url.RouteUrl("pre-prod-name", new { itemId = 44402, itemName = "Office Chair KF118".ToLower().Replace(' ', '-'), city = cityName })"
+                                       title="Office Chair KF118">Office Chair KF118</a>
+                                </h5>
+                            </div>
+                            <div class="left-block">
+                                @*<a href="~/PreviewItem?itemId=44402">
+                                        <img class="img-responsive" alt="product" src="~/Content/update(5-10)/images/Kanpur-images/sub-cat/FIC2.jpg">
+                                    </a>*@
+                                <a href="@Url.RouteUrl("pre-prod-name", new { itemId = 44402, itemName = "Office Chair KF118".ToLower().Replace(' ', '-'), city = cityName })">
+                                    <img class="img-responsive" alt="product" src="~/Content/update(5-10)/images/Kanpur-images/sub-cat/FIC2.jpg">
+                                </a>
+                                <div class="quick-view">
+                                    <a title="Add to my wishlist" class="heart" href="#"></a>
+                                    @*<a title="Add to compare" class="compare" href="#"></a>*@
+                                    <a title="Quick view" class="search" href="@Url.RouteUrl("pre-prod-name", new { itemId = 44402, itemName = "Office Chair KF118".ToLower().Replace(' ', '-'), city = cityName })"></a>
+                                </div>
+                                <div class="add-to-cart">
+                                    @*<a title="Add to Cart" onclick="AddProductToShppingCartWithoutQuantity(60212, 44402)">Add to Cart</a>*@
+                                    <a title="Add to Cart" onclick="AddProduct(60212, 44402)">Add to Cart</a>
+                                </div>
+                            </div>
+                        </li>
+                        <li class="col-sm-4">
+                            <div class="right-block">
+                                @*<h5 class="product-name"><a href="~/PreviewItem?itemId=44401" title="Office Chair KF117">Office Chair KF117</a></h5>*@
+                                <h5 class="product-name">
+                                    <a href="@Url.RouteUrl("pre-prod-name", new { itemId = 44401, itemName = "Office Chair KF117".ToLower().Replace(' ', '-'), city = cityName })"
+                                       title="Office Chair KF117">Office Chair KF117</a>
+                                </h5>
+                            </div>
+                            <div class="left-block">
+                                @*<a href="~/PreviewItem?itemId=44401">
+                                        <img class="img-responsive" alt="product" src="~/Content/update(5-10)/images/Kanpur-images/sub-cat/FIC3.jpg">
+                                    </a>*@
+                                <a href="@Url.RouteUrl("pre-prod-name", new { itemId = 44401, itemName = "Office Chair KF117".ToLower().Replace(' ', '-'), city = cityName })">
+                                    <img class="img-responsive" alt="product" src="~/Content/update(5-10)/images/Kanpur-images/sub-cat/FIC3.jpg">
+                                </a>
+                                <div class="quick-view">
+                                    <a title="Add to my wishlist" class="heart" href="#"></a>
+                                    @*<a title="Add to compare" class="compare" href="#"></a>*@
+                                    <a title="Quick view" class="search" href="@Url.RouteUrl("pre-prod-name", new { itemId = 44401, itemName = "Office Chair KF117".ToLower().Replace(' ', '-'), city = cityName })"></a>
+                                </div>
+                                <div class="add-to-cart">
+                                    @*<a title="Add to Cart" onclick="AddProductToShppingCartWithoutQuantity(60211, 44401)">Add to Cart</a>*@
+                                    <a title="Add to Cart" onclick="AddProduct(60211, 44401)">Add to Cart</a>
+                                </div>
+                            </div>
+                        </li>
+                        <li class="col-sm-4">
+                            <div class="right-block">
+                                @*<h5 class="product-name"><a href="~/PreviewItem?itemId=45058" title="REVOLVING CHAIR KF 008">REVOLVING CHAIR KF 008</a></h5>*@
+                                <h5 class="product-name">
+                                    <a href="@Url.RouteUrl("pre-prod-name", new { itemId = 45058, itemName = "REVOLVING CHAIR KF 008".ToLower().Replace(' ', '-'), city = cityName })"
+                                       title="REVOLVING CHAIR KF 008">REVOLVING CHAIR KF 008</a>
+                                </h5>
+                            </div>
+                            <div class="left-block">
+                                @*<a href="~/PreviewItem?itemId=45058">
+                                        <img class="img-responsive" alt="product" src="~/Content/update(5-10)/images/Kanpur-images/sub-cat/FIC4.jpg">
+                                    </a>*@
+                                <a href="@Url.RouteUrl("pre-prod-name", new { itemId = 45058, itemName = "REVOLVING CHAIR KF 008".ToLower().Replace(' ', '-'), city = cityName })">
+                                    <img class="img-responsive" alt="product" src="~/Content/update(5-10)/images/Kanpur-images/sub-cat/FIC4.jpg">
+                                </a>
+                                <div class="quick-view">
+                                    <a title="Add to my wishlist" class="heart" href="#"></a>
+                                    @*<a title="Add to compare" class="compare" href="#"></a>*@
+                                    <a title="Quick view" class="search" href="@Url.RouteUrl("pre-prod-name", new { itemId = 45058, itemName = "REVOLVING CHAIR KF 008".ToLower().Replace(' ', '-'), city = cityName })"></a>
+                                </div>
+                                <div class="add-to-cart">
+                                    @*<a title="Add to Cart" onclick="AddProductToShppingCartWithoutQuantity(61182, 45058)">Add to Cart</a>*@
+                                    <a title="Add to Cart" onclick="AddProduct(61182, 45058)">Add to Cart</a>
+                                </div>
+                            </div>
+                        </li>
+                        <li class="col-sm-4">
+                            <div class="right-block">
+                                @*<h5 class="product-name"><a href="~/PreviewItem?itemId=44602" title="Restaurants Chair KF138">Restaurants Chair KF138</a></h5>*@
+                                <h5 class="product-name">
+                                    <a href="@Url.RouteUrl("pre-prod-name", new { itemId = 44602, itemName = "Restaurants Chair KF138".ToLower().Replace(' ', '-'), city = cityName })"
+                                       title="Restaurants Chair KF138">Restaurants Chair KF138</a>
+                                </h5>
+                            </div>
+                            <div class="left-block">
+                                @*<a href="~/PreviewItem?itemId=44602">
+                                        <img class="img-responsive" alt="product" src="~/Content/update(5-10)/images/Kanpur-images/sub-cat/FIC5.jpg">
+                                    </a>*@
+                                <a href="@Url.RouteUrl("pre-prod-name", new { itemId = 44602, itemName = "Restaurants Chair KF138".ToLower().Replace(' ', '-'), city = cityName })">
+                                    <img class="img-responsive" alt="product" src="~/Content/update(5-10)/images/Kanpur-images/sub-cat/FIC5.jpg">
+                                </a>
+                                <div class="quick-view">
+                                    <a title="Add to my wishlist" class="heart" href="#"></a>
+                                    @*<a title="Add to compare" class="compare" href="#"></a>*@
+                                    <a title="Quick view" class="search" href="@Url.RouteUrl("pre-prod-name", new { itemId = 44602, itemName = "Restaurants Chair KF138".ToLower().Replace(' ', '-'), city = cityName })"></a>
+                                </div>
+                                <div class="add-to-cart">
+                                    @*<a title="Add to Cart" onclick="AddProductToShppingCartWithoutQuantity(60527, 44602)">Add to Cart</a>*@
+                                    <a title="Add to Cart" onclick="AddProduct(60527, 44602)">Add to Cart</a>
+                                </div>
+                            </div>
+                        </li>
+                        <li class="col-sm-4">
+                            <div class="right-block">
+                                @*<h5 class="product-name"><a href="~/PreviewItem?itemId=45179" title="Kids's Chair And Table KF242">Kids's Chair And Table KF242</a></h5>*@
+                                <h5 class="product-name">
+                                    <a href="@Url.RouteUrl("pre-prod-name", new { itemId = 45179, itemName = "Kids's Chair And Table KF242".ToLower().Replace(' ', '-'), city = cityName })"
+                                       title="Kids's Chair And Table KF242">Kids's Chair And Table KF242</a>
+                                </h5>
+                            </div>
+                            <div class="left-block">
+                                @*<a href="~/PreviewItem?itemId=45179">
+                                        <img class="img-responsive" alt="product" src="~/Content/update(5-10)/images/Kanpur-images/sub-cat/FIC6.jpg">
+                                    </a>*@
+                                <a href="@Url.RouteUrl("pre-prod-name", new { itemId = 45179, itemName = "Kids's Chair And Table KF242".ToLower().Replace(' ', '-'), city = cityName })">
+                                    <img class="img-responsive" alt="product" src="~/Content/update(5-10)/images/Kanpur-images/sub-cat/FIC6.jpg">
+                                </a>
+                                <div class="quick-view">
+                                    <a title="Add to my wishlist" class="heart" href="#"></a>
+                                    @*<a title="Add to compare" class="compare" href="#"></a>*@
+                                    <a title="Quick view" class="search" href="@Url.RouteUrl("pre-prod-name", new { itemId = 45179, itemName = "Kids's Chair And Table KF242".ToLower().Replace(' ', '-'), city = cityName })"></a>
+                                </div>
+                                <div class="add-to-cart">
+                                    @*<a title="Add to Cart" onclick="AddProductToShppingCartWithoutQuantity(61325, 45179)">Add to Cart</a>*@
+                                    <a title="Add to Cart" onclick="AddProduct(61325, 45179)">Add to Cart</a>
+                                </div>
+                            </div>
+                        </li>
+                        <li class="col-sm-4">
+                            <div class="right-block">
+                                @*<h5 class="product-name"><a href="~/PreviewItem?itemId=45209" title="Wooden Table KF280">Wooden Table KF280</a></h5>*@
+                                <h5 class="product-name">
+                                    <a href="@Url.RouteUrl("pre-prod-name", new { itemId = 45209, itemName = "Wooden Table KF280".ToLower().Replace(' ', '-'), city = cityName })"
+                                       title="Wooden Table KF280">Wooden Table KF280</a>
+                                </h5>
+                            </div>
+                            <div class="left-block">
+                                @*<a href="~/PreviewItem?itemId=45209">
+                                        <img class="img-responsive" alt="product" src="~/Content/update(5-10)/images/Kanpur-images/sub-cat/FIC7.jpg">
+                                    </a>*@
+                                <a href="@Url.RouteUrl("pre-prod-name", new { itemId = 45209, itemName = "Wooden Table KF280".ToLower().Replace(' ', '-'), city = cityName })">
+                                    <img class="img-responsive" alt="product" src="~/Content/update(5-10)/images/Kanpur-images/sub-cat/FIC7.jpg">
+                                </a>
+                                <div class="quick-view">
+                                    <a title="Add to my wishlist" class="heart" href="#"></a>
+                                    @*<a title="Add to compare" class="compare" href="#"></a>*@
+                                    <a title="Quick view" class="search" href="@Url.RouteUrl("pre-prod-name", new { itemId = 45209, itemName = "Wooden Table KF280".ToLower().Replace(' ', '-'), city = cityName })"></a>
+                                </div>
+                                <div class="add-to-cart">
+                                    @*<a title="Add to Cart" onclick="AddProductToShppingCartWithoutQuantity(61365, 45209)">Add to Cart</a>*@
+                                    <a title="Add to Cart" onclick="AddProduct(61365, 45209)">Add to Cart</a>
+                                </div>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+</div>
+</div>
+<div class="category-featured jewelry">
+    <nav class="navbar nav-menu show-brand">
+        <div class="container">
+            <!-- Brand and toggle get grouped for better mobile display -->
+            <div class="navbar-brand"><a href="#">@*<img alt="fashion" src="~/Content/update(5-10)/images/icon-jewelry.png">*@Furniture</a></div>
+            <span class="toggle-menu"></span>
+            <div class="collapse navbar-collapse">
+                <ul class="nav navbar-nav" id="pst1"></ul>
+            </div>
+            <!-- Collect the nav links, forms, and other content for toggling -->
+            <!-- /.navbar-collapse -->
+        </div><!-- /.container-fluid -->
+        <div id="elevator-6" class="floor-elevator">
+            <a href="#" class="btn-elevator up fa fa-angle-up"></a>
+            <a href="#" class="btn-elevator disabled down fa fa-angle-down"></a>
+        </div>
+    </nav>
+    <div class="product-featured clearfix">
+        <div class="row">
+            <div class="col-sm-2 sub-category-wapper">
+                <ul class="sub-category-list" id="cpy1">
+                    <li>
+                        @*<a href="~/Product/Products?parentCategoryId=1231">*@
+                    <a href="@Url.RouteUrl("ProductsByCategory", new { item = "study-table", parentCategoryId = 1231, city = cityName })">Study Table</a>
+                </li>
+            </ul>
+        </div>
+        <div class="col-sm-10 col-right-tab">
+            <div class="product-featured-tab-content">
+                <div class="tab-container">
+                    <div class="tab-panel active" id="tab-14">
+                        <div class="box-full clearfix">
+                            <ul class="product-list row">
+                                <li class="col-sm-4">
+                                    <div class="right-block">
+                                        @*<h5 class="product-name"><a href="~/PreviewItem?itemId=45047" title="Institutional Chair KF236">Institutional Chair KF236</a></h5>*@
+                                        <h5 class="product-name">
+                                            <a href="@Url.RouteUrl("pre-prod-name", new { itemId = 45047, itemName = "Institutional Chair KF236".ToLower().Replace(' ', '-'), city = cityName })"
+                                               title="Institutional Chair KF236">Institutional Chair KF236</a>
+                                        </h5>
+                                    </div>
+                                    <div class="left-block">
+                                        @*<a href="~/PreviewItem?itemId=45047">
+                                                <img class="img-responsive" alt="product" src="~/Content/update(5-10)/images/Kanpur-images/sub-cat/table1.jpg">
+                                            </a>*@
+                                        <a href="@Url.RouteUrl("pre-prod-name", new { itemId = 45047, itemName = "Institutional Chair KF236".ToLower().Replace(' ', '-'), city = cityName })">
+                                            <img class="img-responsive" alt="product" src="~/Content/update(5-10)/images/Kanpur-images/sub-cat/table1.jpg">
+                                        </a>
+                                        <div class="quick-view">
+                                            <a title="Add to my wishlist" class="heart" href="#"></a>
+                                            @*<a title="Add to compare" class="compare" href="#"></a>*@
+                                            <a title="Quick view" class="search" href="@Url.RouteUrl("pre-prod-name", new { itemId = 45047, itemName = "Institutional Chair KF236".ToLower().Replace(' ', '-'), city = cityName })"></a>
+                                        </div>
+                                        <div class="add-to-cart">
+                                            @*<a title="Add to Cart" onclick="AddProductToShppingCartWithoutQuantity(61171, 45047)">Add to Cart</a>*@
+                                            <a title="Add to Cart" onclick="AddProduct(61171, 45047)">Add to Cart</a>
+                                        </div>
+                                    </div>
+                                </li>
+                                <li class="col-sm-4">
+                                    <div class="right-block">
+                                        @*<h5 class="product-name"><a href="~/PreviewItem?itemId=45048" title="Institutional Chair KF235">Institutional Chair KF235</a></h5>*@
+                                        <h5 class="product-name">
+                                            <a href="@Url.RouteUrl("pre-prod-name", new { itemId = 45048, itemName = "Institutional Chair KF235".ToLower().Replace(' ', '-'), city = cityName })"
+                                               title="Institutional Chair KF235">Institutional Chair KF235</a>
+                                        </h5>
+                                    </div>
+                                    <div class="left-block">
+                                        @*<a href="~/PreviewItem?itemId=45048">
+                                                <img class="img-responsive" alt="product" src="~/Content/update(5-10)/images/Kanpur-images/sub-cat/table2.jpg">
+                                            </a>*@
+                                        <a href="@Url.RouteUrl("pre-prod-name", new { itemId = 45048, itemName = "Institutional Chair KF235".ToLower().Replace(' ', '-'), city = cityName })">
+                                            <img class="img-responsive" alt="product" src="~/Content/update(5-10)/images/Kanpur-images/sub-cat/table2.jpg">
+                                        </a>
+                                        <div class="quick-view">
+                                            <a title="Add to my wishlist" class="heart" href="#"></a>
+                                            @*<a title="Add to compare" class="compare" href="#"></a>*@
+                                            <a title="Quick view" class="search" href="@Url.RouteUrl("pre-prod-name", new { itemId = 45048, itemName = "Institutional Chair KF235".ToLower().Replace(' ', '-'), city = cityName })"></a>
+                                        </div>
+                                        <div class="add-to-cart">
+                                            @*<a title="Add to Cart" onclick="AddProductToShppingCartWithoutQuantity(61172, 45048)">Add to Cart</a>*@
+                                            <a title="Add to Cart" onclick="AddProduct(61172, 45048)">Add to Cart</a>
+                                        </div>
+                                    </div>
+                                </li>
+                                <li class="col-sm-4">
+                                    <div class="right-block">
+                                        @*<h5 class="product-name"><a href="~/PreviewItem?itemId=44936" title="Institutional Chair KF218">Institutional Chair KF218</a></h5>*@
+                                        <h5 class="product-name">
+                                            <a href="@Url.RouteUrl("pre-prod-name", new { itemId = 44936, itemName = "Institutional Chair KF218".ToLower().Replace(' ', '-'), city = cityName })"
+                                               title="Institutional Chair KF218">Institutional Chair KF218</a>
+                                        </h5>
+                                    </div>
+                                    <div class="left-block">
+                                        @*<a href="~/PreviewItem?itemId=44936">
+                                                <img class="img-responsive" alt="product" src="~/Content/update(5-10)/images/Kanpur-images/sub-cat/table3.jpg">
+                                            </a>*@
+                                        <a href="@Url.RouteUrl("pre-prod-name", new { itemId = 44936, itemName = "Institutional Chair KF218".ToLower().Replace(' ', '-'), city = cityName })">
+                                            <img class="img-responsive" alt="product" src="~/Content/update(5-10)/images/Kanpur-images/sub-cat/table3.jpg">
+                                        </a>
+                                        <div class="quick-view">
+                                            <a title="Add to my wishlist" class="heart" href="#"></a>
+                                            @*<a title="Add to compare" class="compare" href="#"></a>*@
+                                            <a title="Quick view" class="search" href="@Url.RouteUrl("pre-prod-name", new { itemId = 44936, itemName = "Institutional Chair KF218".ToLower().Replace(' ', '-'), city = cityName })"></a>
+                                        </div>
+                                        <div class="add-to-cart">
+                                            @*<a title="Add to Cart" onclick="AddProductToShppingCartWithoutQuantity(60979, 44936)">Add to Cart</a>*@
+                                            <a title="Add to Cart" onclick="AddProduct(60979, 44936)">Add to Cart</a>
+                                        </div>
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+
+</div>
+<div class="container containernew1 span12">
+    <div class="FootTextDiv">
+        <p class="indent-paragraph " style="text-align:justify;">
+            <span class="footerdetail">Home And Furnitures</span><br />
+            Gandhibagh.com is Central India's leading online store catering a wide range of Home and Furniture products online to a huge array of customers looking out for such merchandise online. It caters a huge amount of selection in the home and furniture merchandise giving you a smart shopping experience. With a customer friendly approach, the shopping portal is emerging out as an important shopping destination for a wide range of home and furnishing merchandise in central India, which comes with high quality and at reasonable price.
+            In a short span of years, the store has carved its niche in the e-commerce domain as a pioneer online store having its base in Central India. For furniture and home decor stuff, no one can beat Gandhibagh.com as it has a wide range of products that can give an edge to your home with merchandise having gorgeous designs and promising styles. To name a few, you can find quality tablets, wallpapers, chairs, vertical blinds, sofa sets, bed room furniture, wood decor, steel furniture, visitor chair, office partition and plywood stuff.
+            Gandhibagh.com is an honest and a real spice over the web landscape, which is truly Indian. The store is known to embrace skills, craftsmanship and a perfect business acumen that is easily showcased in our merchandise choice and our tradition to walk extra mile for our valued customers. Shopping at our portal is a hassle free experience for our customers visiting our portal far and wide. Today, we are proud to claim that are we are among the emerging online store, which cater a wide range of home and furnishing merchandise with high quality and best prices. This has made us the one stop store for customers who are looking out to spice up their homes with these products.
+            Our customer services leave no stone unturned to cater services to all our customers with greater delight by shuffling our products time and again. One of the vital elements, which make our store different from other, is the quick service with realistic price tags backed by quality after sales services. Let us help all our customers a home, which they can love to call theirs'
+            Happy Shopping!<br /><br />
+        </p>
+    </div>
+</div>

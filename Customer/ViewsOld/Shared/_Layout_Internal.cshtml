@@ -1,0 +1,2183 @@
+﻿@using System.Globalization;
+@{
+    string cname = Request.Url.ToString().Replace("http://www.ezeelo.com/", "");
+    //string cname = Request.Url.ToString().Replace("http://localhost:5555/", "");
+    string cityName;
+    string franchiseID = "2";
+    string contact;
+    if (cname != string.Empty)
+    {
+        cname = cname.Substring(0, cname.IndexOf('/'));
+        cityName = cname;
+    }
+    else
+    {
+        cityName = "nagpur";
+        franchiseID = "2";//added
+        contact = "9860890890";
+    }
+    if (Request.Cookies["CityCookie"] != null && Request.Cookies["CityCookie"].Value != "")
+    {
+        cityName = Request.Cookies["CityCookie"].Value.Split('$')[1].ToLower();
+        franchiseID = Request.Cookies["CityCookie"].Value.Split('$')[2].ToLower();//added franchiseId by Ashish for multiple frnachise in same city
+        contact = Request.Cookies["CityCookie"].Value.Split('$')[3].ToLower();//added franchiseId by Ashish for multiple frnachise in same city
+
+    }
+    //---- Added for new Landing Page by Ashish-----//
+    List<ModelLayer.Models.ViewModel.BlockViewModel> blocks = new List<ModelLayer.Models.ViewModel.BlockViewModel>();//added for new landing page
+}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="language" content="English">
+    <meta name="msvalidate.01" content="BFFCCA59F2D4A8C4EFCDCF27E21A70B9" />
+    <meta name="google-site-verification" content="v-ZejsAaIMSH_mK6m2t7Xodov4fNs53qF_tM02OAwio" />
+    <meta name="google-signin-scope" content="profile email">
+    <meta name="google-signin-client_id" content="603459852099-ks007ko6krf4tkmvgqogmgu71j8mcl02.apps.googleusercontent.com">
+    <link rel='shortcut icon' type='image/x-icon' href='~/Content/Images/logo.png' />
+    <link href="~/Content/css/font-awesome.css" rel="stylesheet" />
+    <link rel="stylesheet" href="~/Content/css/bootstrap.css">
+    <link rel="stylesheet" href="~/Content/css/styles.css">
+    <link rel="stylesheet" href="~/Content/css/mystyles.css">
+    <link rel="stylesheet" href="~/Content/css/switcher.css">
+    <script src="~/Scripts/jquery-1.10.2.js"></script>
+    <script src="~/Scripts/Cookie.js"></script>
+    @if (ViewData["MetaData"] != null)
+    {
+        @Html.Raw(ViewData["MetaData"])
+    }
+    <script>
+        $(document).ready(function () {
+            $(window).scroll(function () {
+                if ($(this).scrollTop() > 50) {
+                    $('#back-to-top').fadeIn();
+                } else {
+                    $('#back-to-top').fadeOut();
+                }
+            });
+            // scroll body to 0px on click
+            $('#back-to-top').click(function () {
+                $('#back-to-top').tooltip('hide');
+                $('body,html').animate({
+                    scrollTop: 0
+                }, 800);
+                return false;
+            });
+            $('#back-to-top').tooltip('show');
+            // Onclick menubutton code
+            $('.navbar-toggle').click(function () {
+                $('body,html').animate({
+                    scrollTop: 0
+                }, 800);
+            });
+        });
+    </script>
+    @*added by ajit -Remarking *@
+    <!-- Google Code for Remarketing Tag -->
+    @*added by ajit -Remarking *@
+    <!-- Google Code for Remarketing Tag -->
+    @*<script type="text/javascript">
+            /* <![CDATA[ */
+            var google_conversion_id = 950176197;
+            var google_custom_params = window.google_tag_params;
+            var google_remarketing_only = true;
+            /* ]]> */
+        </script>*@
+
+    <script type="text/javascript"
+            src="//www.googleadservices.com/pagead/conversion.js">
+    </script>
+    <noscript>
+        <div style="display:inline;">
+            <img height="1" width="1" style="border-style:none;" alt="" src="//googleads.g.doubleclick.net/pagead/viewthroughconversion/950176197/?value=0&amp;guid=ON&amp;script=0" />
+        </div>
+    </noscript>
+    @*added by ajit -Remarking *@
+
+
+    <script>
+        (function (i, s, o, g, r, a, m) {
+            i['GoogleAnalyticsObject'] = r; i[r] = i[r] || function () {
+                (i[r].q = i[r].q || []).push(arguments)
+            }, i[r].l = 1 * new Date(); a = s.createElement(o),
+            m = s.getElementsByTagName(o)[0]; a.async = 1; a.src = g; m.parentNode.insertBefore(a, m)
+        })(window, document, 'script', '//www.google-analytics.com/analytics.js', 'ga');
+
+        ga('create', 'UA-96173954-1', 'auto');
+        ga('send', 'pageview');
+
+    </script>
+    <!-- Facebook Conversion Code for Add To Cart -->
+
+    <script>
+        (function () {
+            var _fbq = window._fbq || (window._fbq = []);
+            if (!_fbq.loaded) {
+                var fbds = document.createElement('script');
+                fbds.async = true;
+                fbds.src = '//connect.facebook.net/en_US/fbds.js';
+                var s = document.getElementsByTagName('script')[0];
+                s.parentNode.insertBefore(fbds, s);
+                _fbq.loaded = true;
+            }
+        })();
+        window._fbq = window._fbq || [];
+        window._fbq.push(['track', '6027639901250', { 'value': '0.01', 'currency': 'INR' }]);
+    </script>
+    <noscript><img height="1" width="1" alt="" style="display:none" src="https://www.facebook.com/tr?ev=6027639901250&amp;cd[value]=0.01&amp;cd[currency]=INR&amp;noscript=1" /></noscript>
+    @if (ViewBag.Title != null && (string)ViewBag.Title != string.Empty)
+    {
+        if (Request.Cookies["CityCookie"] != null && Request.Cookies["CityCookie"].Value != string.Empty)
+        {
+            string city = Request.Cookies["CityCookie"].Value.Split('$')[1];
+            string franchise = Request.Cookies["CityCookie"].Value.Split('$')[2]; //added
+
+            <title>@ViewBag.Title - @city</title> //doubt
+            @*<title>@ViewBag.Title - @franchise</title> //added*@
+        }
+        else
+        {
+            <title>@ViewBag.Title</title>
+        }
+    }
+
+    <script>
+        (function ($) {
+            $.StartScreen = function () {
+                var plugin = this;
+                var width = (window.innerWidth > 0) ? window.innerWidth : screen.width;
+
+                plugin.init = function () {
+                    setTilesAreaSize();
+                    if (width > 640) addMouseWheel();
+                };
+
+                var setTilesAreaSize = function () {
+                    var groups = $(".tile-group");
+                    var tileAreaWidth = 80;
+                    $.each(groups, function (i, t) {
+                        if (width <= 640) {
+                            tileAreaWidth = width;
+                        } else {
+                            tileAreaWidth += $(t).outerWidth() + 80;
+                        }
+                    });
+                    $(".tile-area").css({
+                        width: tileAreaWidth
+                    });
+                };
+
+                var addMouseWheel = function () {
+                    $("body").mousewheel(function (event, delta, deltaX, deltaY) {
+                        var page = $(document);
+                        var scroll_value = delta * 50;
+                        page.scrollLeft(page.scrollLeft() - scroll_value);
+                        return false;
+                    });
+                };
+
+                plugin.init();
+            }
+        })(jQuery);
+
+        $(function () {
+            $.StartScreen();
+
+            var tiles = $(".tile, .tile-small, .tile-sqaure, .tile-wide, .tile-large, .tile-big, .tile-super");
+
+            $.each(tiles, function () {
+                var tile = $(this);
+                setTimeout(function () {
+                    tile.css({
+                        opacity: 1,
+                        "-webkit-transform": "scale(1)",
+                        "transform": "scale(1)",
+                        "-webkit-transition": ".3s",
+                        "transition": ".3s"
+                    });
+                }, Math.floor(Math.random() * 500));
+            });
+
+            $(".tile-group").animate({
+                left: 0
+            });
+        });
+
+        function setSearchPlace(el) {
+            var a = $(el);
+            var text = a.text();
+            var toggle = a.parents('label').children('.dropdown-toggle');
+
+            toggle.text(text);
+        }
+
+        $(function () {
+            var current_tile_area_scheme = localStorage.getItem('tile-area-scheme') || "tile-area-scheme-dark";
+            $(".tile-area").removeClass(function (index, css) {
+                return (css.match(/(^|\s)tile-area-scheme-\S+/g) || []).join(' ');
+            }).addClass(current_tile_area_scheme);
+
+            $(".schemeButtons .button").hover(
+                    function () {
+                        var b = $(this);
+                        var scheme = "tile-area-scheme-" + b.data('scheme');
+                        $(".tile-area").removeClass(function (index, css) {
+                            return (css.match(/(^|\s)tile-area-scheme-\S+/g) || []).join(' ');
+                        }).addClass(scheme);
+                    },
+                    function () {
+                        $(".tile-area").removeClass(function (index, css) {
+                            return (css.match(/(^|\s)tile-area-scheme-\S+/g) || []).join(' ');
+                        }).addClass(current_tile_area_scheme);
+                    }
+            );
+
+            $(".schemeButtons .button").on("click", function () {
+                var b = $(this);
+                var scheme = "tile-area-scheme-" + b.data('scheme');
+
+                $(".tile-area").removeClass(function (index, css) {
+                    return (css.match(/(^|\s)tile-area-scheme-\S+/g) || []).join(' ');
+                }).addClass(scheme);
+
+                current_tile_area_scheme = scheme;
+                localStorage.setItem('tile-area-scheme', scheme);
+
+                showSettings();
+            });
+        });
+    </script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('#cart > .heading a').click(function () {
+                $('#cart').addClass('active');
+                $('#cart').mouseleave(function () {
+                    $(this).removeClass('active');
+                });
+            });
+
+        });
+
+    </script>
+    <script>
+        function OpenChangeCityhide() {
+            $(".window").hide();
+            $("#mask").hide();
+        }
+    </script>
+
+    <style>
+        #myAlert {
+            display: none;
+            position: fixed;
+            top: 100px;
+            z-index: 100;
+            background: rgba(168, 207, 69, 0.83);
+            color: black;
+            border: 1px solid rgba(168, 207, 69, 0.83);
+            width: 100%;
+            text-align: center;
+        }
+
+        select {
+            border-radius: 0px 0px 0px 0px !important;
+            background: transparent;
+            padding: 0px 15px 0px 5px !important;
+            font-size: 14px;
+            border: 1px solid #673AB7;
+            height: 30px;
+            /*-webkit-appearance: none;*/
+            /*-moz-appearance: none;*/
+            appearance: none;
+            float: left;
+            /*background: url(/Content/Images/drop.gif) 96% / 10px no-repeat !important;*/
+        }
+
+        .back-to-top {
+            cursor: pointer;
+            position: fixed !important;
+            bottom: 20px;
+            right: 20px;
+            display: none;
+            z-index: 100000;
+        }
+
+        .City {
+            width: 280px !important;
+            min-height: 30px !important;
+            top: 245px !important;
+            overflow: auto !important;
+            max-height: 200px !important;
+            left: 39.4% !important;
+            margin-left: 19% !important;
+        }
+    </style>
+    @*<script src="~/Scripts/popup.js"></script>*@
+    @*<link href="~/Content/css/Site.css" rel="stylesheet" />*@
+    <link href="~/Content/css/Site.css" rel="stylesheet" />
+    <script>
+        function findOffset(element) {
+            var top = 0, left = 0;
+
+            do {
+                top += element.offsetTop || 0;
+                left += element.offsetLeft || 0;
+                element = element.offsetParent;
+            } while (element);
+
+            return {
+                top: top,
+                left: left
+            };
+        }
+
+        window.onload = function () {
+            var stickyHeader = document.getElementById('sticky');
+            var headerOffset = findOffset(stickyHeader);
+
+            window.onscroll = function () {
+                // body.scrollTop is deprecated and no longer available on Firefox
+                var bodyScrollTop = document.documentElement.scrollTop || document.body.scrollTop;
+
+                if (bodyScrollTop > headerOffset.top) {
+                    stickyHeader.classList.add('fixed');
+                    //  $('#logodiv').css('display', 'none');
+                    // $('#cat').css('display', 'none');
+                } else {
+                    stickyHeader.classList.remove('fixed');
+                    // $('#logodiv').css('display', 'block');
+                    // $('#cat').css('display', 'block');
+                }
+            };
+        };
+
+    </script>
+    <style>
+        body {
+            margin: 0;
+        }
+
+        .sticky {
+            width: 100%;
+        }
+
+        .fixed {
+            position: fixed !important;
+            top: 0;
+            box-shadow: 0px 2px 1px #663399;
+        }
+    </style>
+
+    @*<script src="~/Scripts/popup.js"></script>*@
+    <!-- Google Tag Manager -->
+    <script>
+        (function (w, d, s, l, i) {
+            w[l] = w[l] || []; w[l].push({
+                'gtm.start':
+
+                new Date().getTime(), event: 'gtm.js'
+            }); var f = d.getElementsByTagName(s)[0],
+
+            j = d.createElement(s), dl = l != 'dataLayer' ? '&l=' + l : ''; j.async = true; j.src =
+
+            '//www.googletagmanager.com/gtm.js?id=' + i + dl; f.parentNode.insertBefore(j, f);
+        })(window, document, 'script', 'dataLayer', 'GTM-TLD8V2');
+    </script>
+    <!-- End Google Tag Manager -->
+    <!-- Google Tag Manager (noscript) -->
+    <noscript>
+        <iframe src="https://www.googletagmanager.com/ns.html?id=GTM-TLD8V2"
+                height="0" width="0" style="display:none;visibility:hidden"></iframe>
+    </noscript>
+    <!-- End Google Tag Manager (noscript) -->
+    <!-- Facebook Pixel Code  (Added By harshada on 12/1/2017) -->
+    <script>
+        !function (f, b, e, v, n, t, s) {
+            if (f.fbq) return; n = f.fbq = function () {
+                n.callMethod ?
+                n.callMethod.apply(n, arguments) : n.queue.push(arguments)
+            }; if (!f._fbq) f._fbq = n;
+            n.push = n; n.loaded = !0; n.version = '2.0'; n.queue = []; t = b.createElement(e); t.async = !0;
+            t.src = v; s = b.getElementsByTagName(e)[0]; s.parentNode.insertBefore(t, s)
+        }(window,
+        document, 'script', 'https://connect.facebook.net/en_US/fbevents.js');
+        fbq('init', '836970266428365');
+        fbq('track', 'PageView');
+    </script>
+    <noscript>
+        <img height="1" width="1" style="display:none"
+             src="https://www.facebook.com/tr?id=836970266428365&ev=PageView&noscript=1" />
+    </noscript>
+    <!-- DO NOT MODIFY -->
+    <!-- End Facebook Pixel Code  (Added By harshada on 12/1/2017)-->
+
+
+</head>
+<body class="home option2" style="background: #ededed!important">
+
+    <noscript><img height="1" width="1" alt="" style="display:none" src="https://www.facebook.com/tr?ev=6027064444250&;cd[value]=0.01&cd[currency]=INR&noscript=1" /></noscript>
+    <noscript style="font-size: medium; font-weight: bold; padding-top: 10px; text-align: center; position: absolute; top: 72px; right: 20%; border: 2px solid red; background: rgba(255, 255, 255, 1); z-index: 12; padding: 8px; ">
+        JavaScript has been disabled on your Browser, to explore the full functionality of <a href="/Home/index" target="_blank">eZeelo</a> enable JavaScript. <br>
+        You can find help how to enable JavaScript by following <a href="http://www.enable-javascript.com/" target="_blank">this link (click here)</a>.
+    </noscript>
+
+    <div class="alert alert-success" id="myAlert">
+        <h3>Item added in cart successfully</h3>
+    </div>
+    <nav id="sticky" class="navbar navbar-default navbar-main-white navbar-pad-top navbar-first sticky">
+        <div class="container">
+            <div class="navbar-header" id="logodiv">
+                @*//---- Added for new Landing Page by Ashish-----//*@
+                @if (TempData["DynamicBlocks"] != null)
+                {
+                    blocks = (List<ModelLayer.Models.ViewModel.BlockViewModel>)TempData["DynamicBlocks"];
+
+                    ModelLayer.Models.ViewModel.BlockViewModel block = blocks.Where(x => x.Name.ToLower().Trim() == "logo").FirstOrDefault();
+
+                    if (block != null && block.blockItemsList != null)
+                    {
+                        int max = block.blockItemsList.Count;
+                        if (block.MaxLimit < block.blockItemsList.Count)
+                        {
+                            max = block.MaxLimit;
+                        }
+                        for (int i = 0; i < max; i++)
+                        {
+                            <a href="@block.blockItemsList[i].LinkUrl"><img alt="@block.blockItemsList[i].Tooltip" src="@block.blockItemsList[i].ImageName" id="gblogo" title="@block.blockItemsList[i].Tooltip" onerror="this.src = '/Content/Images/no_image.png'" style="float: left; height: 60px;"></a>
+                        }
+                    }
+                }
+                @*//---- End Added for new Landing Page by Ashish-----//*@
+            </div>
+            @Html.Partial("_SearchPartial")
+            <ul class="nav navbar-nav navbar-right navbar-mob-item-left">
+                <li id="mlmLink" title="Go To Ezeelo Leader's Site." class="dropdown">
+                    <a title="Go To Ezeelo Leader's Site." href='http://leaders.ezeelo.com/login/' target="_blank" style="height:90px !important">
+                        <img alt="Be A Leader" src="~/Content/Images/tags/mlm.png" title="Go To Ezeelo Leader's Site." style="float: left; width:50px" />
+                    </a>
+                </li>
+                <li id="ChangeCity1">
+                    @*Yashaswi 1/6/2018*@
+                    <a class="dropdown-toggle" id="myBtn" style="text-align: center; max-width: 110px; padding-left: 2px !important; padding-right: 3px !important; height: auto !important; "><span>Delivering At</span><i class="fa fa-map-marker"></i> @CultureInfo.CurrentCulture.TextInfo.ToTitleCase(cityName.ToLower()) <br /><span id="spPinArea" style="font-size: 14px !important; padding-bottom: 20px !important;"></span></a>
+                    @*<a class="dropdown-toggle" id="myBtn"><span>Select city</span><i class="fa fa-map-marker"></i> @CultureInfo.CurrentCulture.TextInfo.ToTitleCase(cityName.ToLower())</a>*@
+                    <div id="myModal" class="modal" style="background: rgba(130, 129, 129, 0.77); ">
+                        <div class="modal-dialog modal-sm">
+                            <!-- Modal content -->
+                            <div class="modal-content" style="padding:10px;text-align:center">
+                                <span class="close">×</span>
+                                <div class="row" style="padding: 10px;">
+                                    <div class="col-lg-12">
+                                        <div id="logodiv" style="width:100%;text-align:center;">
+                                            <img src="~/Content/Images/logo_1.png" style="height: 85px;" class="gblogopopup" />
+                                        </div>
+                                    </div>
+                                    @*<div class="col-md-4">
+                                            <h2 style="color: #663399;">45,000 +</h2>
+                                            <b style="color:#777">PRODUCTS TO CHOOSE FROM</b>
+                                        </div>*@
+                                    <div class="col-xs-12">
+                                        @*<h4 style="color: #663399; margin-bottom: 5px; ">CHOOSE YOUR LOCATION</h4>*@
+                                        <h4 style="color: #663399; margin-bottom: 5px; ">SELECT DELIVERY LOCATION</h4> @*Yashaswi 1/6/2018*@
+                                        <select class="select select1" id="ddlSelectCityI" name="SelectCity" style="width: 100%; margin-bottom: 5px; "></select>
+                                        <input id="txtSelectPincodeI" class="textpincode form-control ui-autocomplete-input" name="search" placeholder="Enter Pincode/Area" type="text" value="" autocomplete="off" role="textbox" aria-autocomplete="list" aria-haspopup="true" style="display: none; padding: 6px 5px; border-radius: 0px; ">
+                                        <select class="select select1" id="ddlSelectAreaI" name="SelectArea" style="width: 100%; display: none; margin-top: 5px; "></select>
+                                        <label id="lblareaI" style="color:red"></label>
+                                        @*<a href="#" id="startshoppingIDI" class="btn btn-warning startshpping" style="width: 100%;">Start Shopping</a>*@
+                                    </div>
+                                    <div class="col-xs-12" style="text-align: left; font-weight: 900;color:#777;">
+                                        <h5 style=" margin-bottom: 2px;"><i class="fa fa fa-gift fa-2x" aria-hidden="true" style="width: 25px; color: #663399; text-align: center;"></i> AMAZING DEALS, OFFERS AND COUPONS</h5>
+                                        <h5 style=" margin-bottom: 2px;"><i class="fa fa-truck  fa-2x" aria-hidden="true" style="width: 25px; color: #663399; text-align: center;"></i> FREE DELIVERY</h5>
+                                        <h5 style=" margin-bottom: 2px;"><i class="fa fa-fire fa-2x" aria-hidden="true" style="width: 25px; color: #663399; text-align: center;"></i> QUALITY YOU CAN TRUST</h5>
+                                        <h5 style=" margin-bottom: 2px;"><i class="fa fa-inr fa-2x" aria-hidden="true" style="width: 25px; color: #663399; text-align: center;"></i> EASY PAYMENT METHODS</h5>
+                                        <h5 style=" margin-bottom: 2px;"><i class="fa fa-mobile-phone fa-2x" aria-hidden="true" style="width: 25px; color: #663399; text-align: center;"></i> PAY BY CASH OR ONLINE</h5>
+                                        <h5 style=" margin-bottom: 2px;"><i class="fa fa-smile-o fa-2x" aria-hidden="true" style="width: 25px; color: #663399; text-align: center;"></i> 100% SECURE PAYMENTS</h5>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    @*Start Yashaswi 1/6/2018*@
+                    <div id="divPinArea" class="modal" style="background: rgba(130, 129, 129, 0.77); ">
+                        <div class="modal-dialog modal-sm" style="width:350px !important;">
+                            <div class="modal-content" style="padding:10px;text-align:center">
+                                <div class="row" style="padding: 10px;">
+                                    <div class="col-lg-12" style="text-align:left">
+                                        <p>
+                                            <span style="font-size:18px; color:#09a9f8"> <i class="fa fa-info-circle"></i> Alert </span>
+                                            <hr style="margin-top:-8px;margin-bottom:5px" />
+                                            You are viewing products which can only be delivered to
+                                            <span id="sp-PinArea" style="font-size:16px"> </span>
+                                        </p>
+                                        <div style="text-align:center">
+                                            <input type="button" class="btn btn-success" style="font-size:10px !important; " value="Change Location" onclick="LocPopupChange()" id="LocPopupChange" />  &nbsp;&nbsp;&nbsp;
+                                            <input type="button" class="btn btn-warning" style="font-size:10px !important" value="Continue" onclick="LocPopupContinue();" id="LocPopupContinue" />
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="divPinAreaChange" class="modal" style="background: rgba(130, 129, 129, 0.77); ">
+                        <div class="modal-dialog modal-sm" style="width:450px !important;">
+                            <div class="modal-content" style="padding:10px;text-align:center">
+                                <div class="row" style="padding: 10px;">
+                                    <div class="col-lg-12" style="text-align:left">
+                                        <p>
+                                            <span style="font-size:18px; color:orange"> <i class="fa  fa-exclamation-circle"></i> Warning </span>
+                                            <hr style="margin-top:-8px;margin-bottom:5px" />
+                                            <b style="color:#b01e1e"> Product Prices, Coupons and offers are “Area” specific and may change on changing your Selected Delivery Area.</b> <br />
+                                            <br />
+                                            CONFIRM if you wish to change your area to <span id="spnewArea"></span>  ,<br /> CANCEL if you wish to continue to shop from <span id="spoldArea"></span>.
+
+                                            <hr style="margin-top:10px;margin-bottom:5px" />
+
+                                            <b> Note: By clicking on confirm, all products will remove from your cart and products of new location needs to be added again.</b>
+                                        </p>
+                                        <div style="text-align:center">
+                                            <input type="button" class="btn btn-success" style="font-size:10px !important; " value="Cancel" onclick="CancelChangeAreaConfirmWindow()" id="btnCancelArea" />  &nbsp;&nbsp;&nbsp;
+                                            <input type="button" class="btn btn-warning" style="font-size:10px !important" value="Confirm" onclick="ContinueChangeAreaConfirmWindow()" id="btnContinueArea" />
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="divCheckLoc" class="modal" style="background: rgba(130, 129, 129, 0.77); ">
+                        <div class="modal-dialog modal-sm" style="width:450px !important;">
+                            <div class="modal-content" style="padding:10px;text-align:center">
+                                <div class="row" style="padding: 10px;">
+                                    <div class="col-lg-12" style="text-align:left">
+                                        <p>
+                                            <span style="font-size:18px; color:red"> <i class="fa  fa-exclamation-circle"></i> Sorry! This items can't be delivered at your location!!! </span>
+                                            <span>Note : Please change your Location. </span>
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="divPinAreaChangeFromPaymentProcess" class="modal" style="background: rgba(130, 129, 129, 0.77); ">
+                        <div class="modal-dialog modal-sm" style="width:450px !important;">
+                            <div class="modal-content" style="padding:10px;text-align:center">
+                                <div class="row" style="padding: 10px;">
+                                    <div class="col-lg-12" style="text-align:left">
+                                        <p>
+                                            <span style="font-size:18px; color:orange"> <i class="fa  fa-exclamation-circle"></i> Warning </span>
+                                            <hr style="margin-top:-8px;margin-bottom:5px" />
+                                            <b style="color:#b01e1e">Home Delivery NOT AVAILABLE to the PINCODE of Selected Address!!!</b> <br />
+                                            <br />
+                                            CONFIRM if you wish to change your area to  <span id="spnewAreaPayProc"></span>  ,<br /> CANCEL if you wish to edit address again.
+
+                                            <hr style="margin-top:10px;margin-bottom:5px" />
+
+                                            <b> Note: By clicking on confirm, all products will remove from your cart and products of new location needs to be added again.</b>
+                                        </p>
+                                        <div style="text-align:center">
+                                            <input type="button" class="btn btn-success" style="font-size:10px !important; " value="Cancel" id="cancelPayProcessWarning" />  &nbsp;&nbsp;&nbsp;
+                                            <input type="button" class="btn btn-warning" style="font-size:10px !important" value="Confirm" id="confirmPayProcessWarning" />
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    @*End Yashaswi 1/6/2018*@
+                    <script>
+                        ////start Yashaswi
+                        var UrlAfterConfirm;
+                        ///New Yashaswi
+                        var LocStorddlSelectCityI;
+                        var LocStorPinArea;
+                        var LocStorAreaId;
+                        var LocStorSelectedPincode;
+                        //End
+                        var modalPinAreaChange = document.getElementById('divPinAreaChange');
+                        var modalPinArea_ = document.getElementById('divPinArea');
+                        var modaldivCheckLoc = document.getElementById('divCheckLoc');
+                        var modalFromPaymentProcess = document.getElementById('divPinAreaChangeFromPaymentProcess');
+                        //End
+                        // Get the modal
+                        var modal = document.getElementById('myModal');
+
+                        // Get the button that opens the modal
+                        var btn = document.getElementById("myBtn");
+
+                        // Get the <span> element that closes the modal
+                        var span = document.getElementsByClassName("close")[0];
+
+                        // When the user clicks the button, open the modal
+                        btn.onclick = function () {
+                            modal.style.display = "block";
+                            //********* Multiple Franchise in same city By Ashish***********//
+                            if ($("#ddlSelectCityI").val() !== null) {
+                                $("#lblareaI").text('');
+                            }
+                            $("#ddlSelectCityI").val(0);
+                            $("#txtSelectPincodeI").hide();
+
+                            $("#ddlSelectAreaI").hide();
+                            $("#txtSelectPincodeI").val('');
+                            $("#ddlSelectAreaI").val('');
+                            //****************************
+
+                            //Yashaswi 1/6/2018 Show Selected City And PinCode and Area
+                            if (localStorage.getItem("CityID") != null) {
+                                $("#ddlSelectCityI").val(localStorage.getItem("CityID"));
+                                $("#ddlSelectCityI").change();
+                            }
+                            //End
+                        }
+
+                        // When the user clicks on <span> (x), close the modal
+                        span.onclick = function () {
+                            modal.style.display = "none";
+                        }
+
+                        // When the user clicks anywhere outside of the modal, close it
+                        window.onclick = function (event) {
+                            //if (event.target == modal) {
+                            //    modal.style.display = "none";
+                            //}
+                            //Yashaswi
+                            if (event.target == modalPinAreaChange) {
+                                modalPinAreaChange.style.display = "none";
+                            }
+                            if (event.target == modalPinArea_) {
+                                modalPinArea_.style.display = "none";
+                            }
+                            if (event.target == modaldivCheckLoc) {
+                                modaldivCheckLoc.style.display = "none";
+                            }
+
+                            //End
+                        }
+                        ////added by ashish
+                        var startshopIBtn = document.getElementById('startshoppingIDI');
+                        startshopIBtn.onclick = (function () {
+                            modal.style.display = "none";
+                        });
+                    </script>
+                <li>
+                <li class="dropdown" id="customerdiv">
+                    @Html.Hidden("hdnSessionID", Session["UID"])
+                    @if (Session["UID"] != null)
+                    {
+
+                        <a href="#" class="dropdown-toggle">
+                            <span>Hi, @(Session["FirstName"].ToString().Trim().Split(' ')[0].Substring(0, Math.Min(Session["FirstName"].ToString().Trim().Split(' ')[0].Length, 7)))</span><i class="fa fa-user"></i> Account
+                        </a>
+
+                    }
+                    else if (Request.Cookies["UserName"] != null && Request.Cookies["UserName"].Value != string.Empty)
+                    {
+                        <a href="#" class="dropdown-toggle"><span>Hi, @(Request.Cookies["UserName"].Value.Split('$')[0].ToString().Trim().Split(' ')[0].Substring(0, Math.Min(Request.Cookies["UserName"].Value.Split('$')[0].ToString().Trim().Split(' ')[0].Length, 7)))</span><i class="fa fa-user"></i> Account</a>
+                    }
+                    else
+                    {
+                        <a href="#" class="dropdown-toggle"><span>Hi, Sign in</span><i class="fa fa-user"></i> Account</a>
+                    }
+                    <ul class="dropdown-menu dropdown-menu-shipping-login" id="newdropdown">
+                        @if (Session["UID"] == null)
+                        {
+                            <li style="width:100%"><a href="/@cityName/@franchiseID/login"><i class="fa fa-sign-in"></i> SignIn</a></li>
+                        }
+                        else
+                        {
+                            <li style="width:100%"><a href="@Url.RouteUrl("my-profile", new { id = @Session["UID"], city = cityName, franchiseId = franchiseID })"><i class="fa fa-user"></i> My Profile</a></li>
+                            <li style="width:100%"><a href="@Url.RouteUrl("Logout", new { city = cityName, franchiseId = franchiseID })"><i class="fa fa-sign-out"></i> Logout</a></li>
+                            @*Add for GB Points new landing internal page*@
+                            <li style="width:100%"><a href="@Url.RouteUrl("ReferDetails", new { city = cityName, franchiseId = franchiseID })"><i class="fa fa-google-wallet"></i> Wallet Points <span class="fa fa-inr" id="gbWalletAmt" style="font-weight:900"></span></a></li>
+                            @*<li style="width:100%">@Html.RouteLink("My Profile", "my-profile", new { id = @Session["UID"], city = cityName, franchiseId = franchiseID })</li>
+                                <li style="width:100%">@Html.RouteLink("Logout", "Logout", new { city = cityName, franchiseId = franchiseID })</li>*@
+                            List<string> IDs = new List<string>();
+                            if (!string.IsNullOrEmpty(System.Configuration.ConfigurationManager.AppSettings["SITEMAP_ID"]))
+                            {
+                                IDs = System.Configuration.ConfigurationManager.AppSettings["SITEMAP_ID"].Trim().ToString().Split(',').ToList();
+                            }
+                            if (IDs.Contains(Session["UID"].ToString()))
+                            {
+                                <li style="width:100%"><a href="@Url.RouteUrl("SiteMapMaker", new { city = cityName, franchiseId = franchiseID })"><i class="fa fa-map"></i> Site Map</a></li>
+                                @*<li style="width:100%">@Html.RouteLink("SiteMap Generator", "SiteMapMaker", new { city = cityName, franchiseId = franchiseID })</li>*@
+                            }
+
+                        }
+                        @if (Session["UID"] == null)
+                        {
+                            @*<li style="width:100%"><a href="@Url.RouteUrl("cust-reg", new { city = cityName })" title="Register" style="color: #60A917; font-size: 14px;">Register</a></li>*@
+                        }
+                        <li style="width:100%"><a href="@Url.RouteUrl("CustomerOrder/myorders", new { trackorder = "true", city = cityName, franchiseId = franchiseID })"><i class="fa fa-map-o"></i> Track Order</a></li>
+                        <li style="width:100%"><a href="@Url.RouteUrl("AllShops", new { city = cityName, franchiseId = franchiseID })" class="all-shop-mobile"><i class="fa fa-university"></i> Top Stores</a></li>
+                        <li style="width:100%"><a href="https://play.google.com/store/apps/details?id=onlineshopping.ezeelo.shoppingapp&hl=en"><i class="fa fa-download"></i> Download App</a></li>
+                    </ul>
+
+                </li>
+                @*Hide for GB Wallet new landing page*@
+                @*<li>
+                        <a href="@Url.RouteUrl("ReferDetails", new { city = cityName, franchiseId = franchiseID })" title="GB Wallet">
+
+
+                            <span class="fa fa-inr" id="gbWalletAmt" style="font-weight:900"></span>
+                            <i class="fa fa-google-wallet"></i> GB Points
+
+                        </a>
+                    </li>*@
+                <li class="dropdown">
+                    <a href="@Url.RouteUrl("cart", new { city = cityName, franchiseId = franchiseID })" title="Cart" id="shoppingcart">
+                        @if (Request.Cookies["ShoppingCartCookie"] != null)
+                        {
+                            @Html.Hidden("ShoppingCartCookieValue", Request.Cookies["ShoppingCartCookie"].Value)
+
+                        }
+                        else
+                        {
+                            @Html.Hidden("ShoppingCartCookieValue", 0)
+                        }
+                        <span>Your Cart</span><i class="fa fa-shopping-basket"> <span id="spanShoppingCartCount" style=" color: #5cb85c; font-weight: 700;"> 0 </span> Items</i>
+                    </a>
+                    @*<ul class="dropdown-menu dropdown-menu-shipping-cart">
+                            <li>
+                                <a class="dropdown-menu-shipping-cart-img" href="#">
+                                    <img src="content/images/1.jpg" alt="Image Alternative text" title="Image Title">
+                                </a>
+                                <div class="dropdown-menu-shipping-cart-inner">
+                                    <p class="dropdown-menu-shipping-cart-price"><i class="fa fa-inr" aria-hidden="true"></i> 63</p>
+                                    <p class="dropdown-menu-shipping-cart-item">
+                                        <a href="#">Gucci Patent Leather Open Toe Platform</a>
+                                    </p>
+                                </div>
+                            </li>
+                            <li>
+                                <a class="dropdown-menu-shipping-cart-img" href="#">
+                                    <img src="content/images/2.jpg" alt="Image Alternative text" title="Image Title">
+                                </a>
+                                <div class="dropdown-menu-shipping-cart-inner">
+                                    <p class="dropdown-menu-shipping-cart-price"><i class="fa fa-inr" aria-hidden="true"></i> 82</p>
+                                    <p class="dropdown-menu-shipping-cart-item">
+                                        <a href="#">Nikon D5200 24.1 MP Digital SLR Camera</a>
+                                    </p>
+                                </div>
+                            </li>
+                            <li>
+                                <a class="dropdown-menu-shipping-cart-img" href="#">
+                                    <img src="content/images/3.jpg" alt="Image Alternative text" title="Image Title">
+                                </a>
+                                <div class="dropdown-menu-shipping-cart-inner">
+                                    <p class="dropdown-menu-shipping-cart-price"><i class="fa fa-inr" aria-hidden="true"></i> 70</p>
+                                    <p class="dropdown-menu-shipping-cart-item">
+                                        <a href="#">Apple 11.6" MacBook Air Notebook </a>
+                                    </p>
+                                </div>
+                            </li>
+                            <li>
+                                <a class="dropdown-menu-shipping-cart-img" href="#">
+                                    <img src="content/images/4.jpg" alt="Image Alternative text" title="Image Title">
+                                </a>
+                                <div class="dropdown-menu-shipping-cart-inner">
+                                    <p class="dropdown-menu-shipping-cart-price"><i class="fa fa-inr" aria-hidden="true"></i> 96</p>
+                                    <p class="dropdown-menu-shipping-cart-item">
+                                        <a href="#">Fossil Women's Original Boyfriend</a>
+                                    </p>
+                                </div>
+                            </li>
+                            <li>
+                                <p class="dropdown-menu-shipping-cart-total">Total: <i class="fa fa-inr" aria-hidden="true"></i> 150</p>
+                                <button class="dropdown-menu-shipping-cart-checkout btn btn-primary">Checkout</button>
+                            </li>
+                        </ul>*@
+                </li>
+                <div class="navbar-header">
+                    <button class="navbar-toggle" type="button" data-toggle="collapse" data-target="#main-nav-collapse" area_expanded="false" aria-expanded="true">
+                        <span class="sr-only">Main Menu</span><span class="icon-bar"></span><span class="icon-bar"></span><span class="icon-bar"></span>
+                    </button>
+                </div>
+            </ul>
+        </div>
+    </nav>
+    <nav class="navbar-default navbar-main-white yamm" id="cat" style="box-shadow: 0px 2px 1px #663399;">
+        <div class="container">
+            <div class="navbar-collapse navbar-collapse-no-pad collapse" id="main-nav-collapse" aria-expanded="true">
+                <ul class="nav navbar-nav" style="width: 100%;">
+                    <li class="dropdown" style=" background: #663399;">
+                        <a href="#" style=" padding-top: 6px; padding-bottom: 6px; color: #fff; font-weight: 700;">@*<span>Shop by</span>*@<i class="fa fa fa-bars"></i> CATEGORIES <i class="drop-caret" data-toggle="dropdown" aria-expanded="false"></i></a>
+                        <div class="dropdown-menu dropdown-menu-category">
+                            <div id="MenuListing">
+
+                            </div>
+                        </div>
+                    </li>
+                    <li class="dropdown" id="offerdiv" style="padding-top: 0px; float: left;min-width: 70%; max-width: 78%;">
+                        @*//---- Added for new Landing Page by Ashish-----//*@
+                        @{
+                            ModelLayer.Models.ViewModel.BlockViewModel offerBlock = blocks.Where(x => x.Name.ToLower().Trim() == "navigation bar").FirstOrDefault();
+
+                            if (offerBlock != null && offerBlock.blockItemsList != null)
+                            {
+                                int max = offerBlock.blockItemsList.Count;
+                                if (offerBlock.MaxLimit < offerBlock.blockItemsList.Count)
+                                {
+                                    max = offerBlock.MaxLimit;
+                                }
+                                for (int i = 0; i < max; i++)
+                                {
+                                    <div class="col-xs-4 col-sm-3 col-md-3 col-lg-3 ">
+                                        <a href="@offerBlock.blockItemsList[i].LinkUrl"><img alt="@offerBlock.blockItemsList[i].Tooltip" src="@offerBlock.blockItemsList[i].ImageName" id="gblogo" title="@offerBlock.blockItemsList[i].Tooltip" onerror="this.src = '/Content/Images/no_image.png'" style="width: 100%; height: 32px;"></a>
+                                    </div>
+                                }
+                            }
+                        }
+                        @*//---- End Added for new Landing Page by Ashish-----//*@
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+    @*Hide for shotlist new landing page*@
+    @*<div class="shotlistdiv">
+            <span style="color:white;font-size:16px;cursor:pointer" onclick="showDialog('dialog6'); LoadShortList(); OpenShortlist();"><span class="fa fa-star" style="margin-top: -5px; padding-right: 5px;"></span>Shortlist</span>
+            <span id="spanShortlistCount" class="textcircle"></span>
+        </div>
+        <div data-role="dialog" id="dialog6" class="padding20" data-close-button="true" data-type="info" style="display:none">
+            <span style="background: url(/Content/Images/tags/crossbutton.png); position: absolute; z-index: 1000000000000000000; width: 25px; height: 25px; top: 4px; right: 1%; cursor: pointer; background-color: white; " onclick="closeShortlist()"></span>
+            <div id="ShortListDiv" style="color:black;margin-bottom:50px;">
+                @Html.Partial("_ShortListItemPartial")
+            </div>
+        </div>*@
+    <div class="container body-content" id="body-content">
+        @RenderBody()
+        <div style="width:100%">
+            <table style="width:100%">
+                <tr></tr>
+            </table>
+        </div>
+    </div>
+    <!-- Footer -->
+    <a id="back-to-top" href="#" class="btn btn-primary back-to-top" role="button"><span class="fa fa-arrow-circle-up fa-2x"></span></a>
+    <div class="container-fluid" style="background: #717171; color: white; padding-top: 5px; padding-bottom: 5px;">
+        <div class="container" style="padding-left:0px;padding-right:0px;">
+            <div class="col-md-3 col-sm-6">
+                <i class="fa fa-truck fa-3x pull-left" aria-hidden="true"></i> <h4 style=" margin-top: 10px;">NO DELIVERY CHARGES</h4>
+            </div>
+            <div class="col-md-3 col-sm-6">
+                <i class="fa fa-clock-o fa-3x pull-left " aria-hidden="true"></i> <h4 style=" margin-top: 10px;">SAME DAY DELIVERY</h4>
+            </div>
+            <div class="col-md-3 col-sm-6">
+                <i class="fa fa-credit-card fa-3x pull-left" aria-hidden="true"></i> <h4 style=" margin-top: 10px;">ONLINE PAYMENT AVAILABLE </h4>
+            </div>
+            <div class="col-md-3 col-sm-6">
+                <i class="fa fa-inr fa-3x pull-left" aria-hidden="true"></i> <h4 style=" margin-top: 10px;">CASH ON DELIVERY</h4>
+            </div>
+        </div>
+
+    </div>
+    <footer id="footer" class="main-footer">
+        <div class="col-md-12 col-sm-12" style="padding-left:0px;padding-right:0px;">
+            @Html.Partial("_footer")
+        </div>
+        <div id="trademark-text-box" class="container" style=" padding: 5px;">
+
+        </div>
+        <div style="background: #663399;">
+            <div class="container">
+                <div class="col-md-5">
+                    <p class="copyright-text">Copyright © <a href="#">eZeelo</a> 2017. All rights reseved</p>
+                </div>
+                <div class="col-md-7">
+                    <a href="http://www.freecouponindia.in/ezeelo-coupons/" target="_blank" title="Free coupon india">
+                        <img src="~/Content/Images/tags/Freecoupon.png" style="width: 85px; height: 40px;" />
+                    </a>
+                    <a href="http://www.couponcenter.in/coupons/ezeelo" target="_blank" title="Coupon center">
+                        <img src="~/Content/Images/tags/Ccenter.png" style="width: 85px; " />
+                    </a>
+                    <a href="http://www.couponzguru.com/ezeelo-coupons/" target="_blank" title="Couponz guru">
+                        <img src="~/Content/Images/tags/Couponguru.png" style="width: 85px; " />
+                    </a>
+                    <a href="http://www.couponrani.com/ezeelo-coupons" target="_blank" title="Couponrani">
+                        <img src="~/Content/Images/tags/CRani.png" style="width: 85px; " />
+                    </a>
+                    <img src="/Content/Images/4-1.png" style="width: 40%;">
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    @*<a href="#" class="scroll_top" title="Scroll to Top" style="display: none;">Scroll</a>*@
+    <!-- Script-->
+    <!-- Script-->
+    @*@Scripts.Render("~/bundles/jquery")
+        @Scripts.Render("~/bundles/bootstrap")*@
+    @RenderSection("scripts", required: false)
+    @RenderSection("MyScripts", required: false)
+    @RenderSection("itemScripts", required: false)
+    @RenderSection("BotDetectStyles", required: false)
+    <script type="text/javascript">
+        //Start Yashaswi 1/6/2018 Show Selected City And PinCode and Area
+
+        $(document).ready(function () {
+            if (localStorage.getItem("PinArea") != null) {
+                $("#spPinArea").text(localStorage.getItem("PinArea"));
+                $("#sp-PinArea").text(localStorage.getItem("PinArea") + " ," + '@CultureInfo.CurrentCulture.TextInfo.ToTitleCase(cityName.ToLower())');
+            }
+
+        });
+
+        function CancelChangeAreaConfirmWindow() {
+            modalPinAreaChange.style.display = "none";
+
+        }
+        function ContinueChangeAreaConfirmWindow() {
+            localStorage.removeItem("IsLocConfirmed");
+            localStorage.setItem("CityID", LocStorddlSelectCityI);
+            localStorage.setItem("PinArea", LocStorPinArea);
+            localStorage.setItem("AreaId", LocStorAreaId);
+            localStorage.setItem("SelectedPincode", LocStorSelectedPincode);
+            window.location.href = UrlAfterConfirm;
+        }
+
+        //End
+
+        $(document).ready(function () {
+            //alert('aaaa');
+            $('#mask').hide();
+            var cname = window.location.href.replace('http://www.ezeelo.com/', '');
+            //var cname = window.location.href.replace('http://localhost:5555/', '');
+            var cfranchise = cname;//added
+            cname = cname.substring(0, cname.indexOf('/'));
+
+            var removecname = cname + '/';//added
+            cfranchise = cfranchise.replace(removecname, '');//added
+            cfranchise = cfranchise.substring(0, cfranchise.indexOf('/'));
+            $("#lblareaI").text('Please wait..');
+            $.ajax({
+                type: "POST",
+                //url: "/nagpur/Home/GetCities",//hide
+                url: "/" + cname + "/" + cfranchise + "/Home/GetCities",//added
+                dataType: "json",
+                async: true,
+                cache: false,
+                success: function (msg) {
+                    $('#Locations').empty();
+                    ////var changeUrl = '@(Html.Raw(Url.RouteUrl("ChangeCity", new { city = cityName, CityID = "_CityID_", CityName = "_CityName_" })))';//Hide old code
+                    //********* Multiple Franchise in same city By Ashish***********//
+                    var ddlCities = $("[id*=ddlSelectCityI]");
+                    ddlCities.empty().append('<option selected="selected" value="0">Select City</option>');
+                    //********* End Multiple Franchise in same city ***********//
+                    $.each(msg, function (index, item) {
+                        //********* Multiple Franchise in same city By Ashish ***********//
+                        ddlCities.append($("<option></option>").val(this['ID']).html(this['Name']));
+                        //********* End Multiple Franchise in same city ***********//
+                        //// var url = changeUrl.replace("_CityID_", item.ID).replace("_CityName_", item.Name);//Hide old code
+                        //// $('#Locations').append('<li style="width:44%;float:left;margin-right:10px;margin-bottom: 10px;"><a class="button popupsuccess" href="' + url + '" value=' + item.ID + '>' + item.Name + '</a></li>');//Hide old code
+                    });
+                    //$("#loader").hide();
+                    $("#lblareaI").text('');
+                },
+                error: function (x, e) {
+                    //alert("Sorry No Such Type of City Is available. ");
+                }
+            });
+            var cityId = 0;
+            //var FranchiseID = 0;
+            var cufranciseId = 0;//added
+            var cuContact = "";//added
+            var cucity = getCookie("CityCookie");
+            if (cucity != null && cucity != "" && cucity != undefined) {
+                var str = cucity.split('$');
+                cucity = str[1].toLowerCase();
+                cufranciseId = str[2];//added
+                cuContact = str[3];//added
+
+                //cufranciseId = 2;//test
+                // cucity = "p";//test
+                // cfranchise = 2;//test
+            }
+            // alert(cname + "==" + cucity);
+            if (cname == "") {
+                //$('#mask').css("display", "block");
+                cityId = 4968;
+                cucity = "nagpur";
+                cufranciseId = 2;//added
+                cuContact = "9860890890"
+                // createCookie("CityCookie", "4968$Nagpur", 30);//hide
+                createCookie("CityCookie", "4968$Nagpur$2$9860890890", 30);//added
+                $('#ChangeLocation').html("Nagpur");
+                //   $('#mask').css("display", "none");
+            }
+            else if (cname != "" && cucity != cname) {
+
+                $('#mask').toggle();
+                $.ajax({
+                    type: "POST",
+                    //url: "/" + cname + "/" + cfranchise + "/Home/GetCity",//hide
+                    url: "/" + cname + "/" + cfranchise + "/Home/GetCityFranchise",//added
+                    // data: "{city: " + cname + "}",//hide
+                    data: "{city: " + cname + ",franchiseid: " + cfranchise + "}",//added
+                    dataType: "json",
+                    async: true,
+                    cache: false,
+                    success: function (data) {
+                        if (data != 0) {
+                            cityId = data.cityId;
+                            cufranciseId = data.franchiseId;//added
+                            cuContact = data.contact;//added
+                            // alert(cityId + "==" + cufranciseId + "==" + cuContact);//testing
+                            //createCookie("CityCookie", cityId + "$" + cname, 30);//hide
+                            createCookie("CityCookie", cityId + "$" + cname + "$" + cufranciseId + "$" + cuContact, 30);//doubt
+                            cucity = cname;
+                            window.location.reload(true);
+
+                        }
+                        else if (cucity != null && cucity != "" && cucity != undefined) {
+                            $('#mask').hide();
+                            if (window.location.href.indexOf(cname) != -1) {
+                                // history.replaceState(null, document.title, window.location.href.replace(cname, cucity));//hide
+                                history.replaceState(null, document.title, window.location.href.replace(cname, cucity).replace(cfranchise, cufranciseId).replace(contact, cuContact));//added
+                            }
+                            cname = cucity;
+
+                        }
+                        else {
+                            cityId = 4968;
+                            cucity = "nagpur";
+                            cufranciseId = "2";//added
+                            cuContact = "9860890890";//added
+                            //createCookie("CityCookie", "4968$Nagpur", 30);//hide
+                            createCookie("CityCookie", "4968$Nagpur$2$9860890890", 30);//added
+                            $('#ChangeLocation').html("Nagpur");
+                            if (window.location.href.indexOf(cname) != -1) {
+                                //history.replaceState(null, document.title, window.location.href.replace(cname, cucity));//hide
+                                history.replaceState(null, document.title, window.location.href.replace(cname, cucity).replace(cfranchise, cufranciseId).replace(contact, cuContact));//added
+                            }
+                            window.location.reload(true);
+                        }
+
+                    },
+                    error: function (x, e) {
+                        cityId = 4968;
+                        cucity = "nagpur";
+                        cufranciseId = "2";//added
+                        cuContact = "9860890890";//added
+                        //createCookie("CityCookie", "4968$Nagpur", 30);//hide
+                        createCookie("CityCookie", "4968$Nagpur$2$9860890890", 30);//added
+                        $('#ChangeLocation').html("Nagpur");
+                        if (window.location.href.indexOf(cname) != -1) {
+                            //history.replaceState(null, document.title, window.location.href.replace(cname, cucity));//hide
+                            history.replaceState(null, document.title, window.location.href.replace(cname, cucity).replace(cfranchise, cufranciseId).replace(contact, cuContact));//added
+                        }
+                        //  setInterval($('#mask').css("display", "none"), 5000);
+                    }
+                });
+            }
+
+            // $.get('/' + cucity + '/Home/GetLayoutDynamicBlocks', function (data) {//hide
+            $.get('/' + cucity + '/' + cufranciseId + '/Home/GetLayoutDynamicBlocks', function (data) {//added
+                /* data is the pure html returned from action method, load it to your page */
+                var logohtml = '';
+                $(data).each(function (index, item) {
+                    if (item.Name.toLowerCase().trim() == "logo") {
+                        var max = item.blockItemsList.length;
+                        if (max >= 1) {
+                            logohtml = "<a href='" + item.blockItemsList[0].LinkUrl + "'><img alt='" + item.blockItemsList[0].Tooltip + "' src='" + item.blockItemsList[0].ImageName + "' id='gblogo' title='" + item.blockItemsList[0].Tooltip + "' onerror='this.src='/Content/Images/no_image.png'' style='float: left; height: 55px; padding-right: 7px;'></a>";
+                        }
+                    }
+                });
+
+                $('#logodiv').html(logohtml);
+            });
+
+            $("#ChangeCity1").removeClass("active-container");
+            $(".open").css("display", "none");
+
+            $("#smallHeader").css("background-color", "#FFF");
+            $("#smallHeader").css("box-shadow", "inset 0px -5px 5px #cacaca");
+            $(".home").css("background-color", "#FFF");
+            $("#shoppingcart").css("display", "block");
+            $("#body-content").css("pointer-events", "visible");
+            $("#footer").css("pointer-events", "visible");
+            $("#logodiv").css("pointer-events", "visible");
+            $("#searchdiv").css("pointer-events", "visible");
+            $(".shotlistdiv").css("pointer-events", "visible");
+            $("#category_menu").css("pointer-events", "visible");
+            $("#gb_wallet").css("pointer-events", "visible");
+
+
+            /* Request the partial view with .get request. */
+            // $.get('/' + cucity + '/Home/GetMenuListing', function (data) {//hide
+            $.get('/' + cucity + '/' + cufranciseId + '/Home/GetMenuListing', function (data) {//added
+                /* data is the pure html returned from action method, load it to your page */
+                $('#MenuListing').html(data);
+                /* little fade in effect */
+                $('#MenuListing').fadeIn('fast');
+
+            });
+        });
+
+        $("#ChangeCity1").click(function () {
+            $("#body-content").removeClass("body-contentblur");
+            $("#footer").removeClass("body-contentblur");
+            $("#logodiv").removeClass("logodivblur");
+            $("#searchdiv").removeClass("logodivblur");
+            $("#ChangeCity1").removeClass("active-container");
+            $(".shotlistdiv").removeClass("logodivblur");
+            $("#category_menu").removeClass("logodivblur");
+            $("#cart").removeClass("logodivblur");
+            $("#spanShoppingCartCount").removeClass("logodivblur");
+            $(".open").css("display", "block");
+            $("#smallHeader").css("background-color", "#FFF");
+            $("#smallHeader").css("box-shadow", "inset 0px -5px 5px #cacaca");
+            $(".home").css("background-color", "#FFF");
+            $("#shoppingcart").css("display", "block");
+            $("#body-content").css("pointer-events", "visible");
+            $("#footer").css("pointer-events", "visible");
+            $("#logodiv").css("pointer-events", "visible");
+            $("#searchdiv").css("pointer-events", "visible");
+            $(".shotlistdiv").css("pointer-events", "visible");
+            $("#category_menu").css("pointer-events", "visible");
+            $("#gb_wallet").css("pointer-events", "visible");
+        });
+
+
+
+
+        flagToggle = false;
+
+        function removeLightBox() {
+            $("#body-content").removeClass("body-contentblur");
+            $("#footer").removeClass("body-contentblur");
+            $("#logodiv").removeClass("logodivblur");
+            $("#searchdiv").removeClass("logodivblur");
+            $(".shotlistdiv").removeClass("logodivblur");
+            $("#category_menu").removeClass("logodivblur");
+            $('#ChangeCity1').removeClass("active-container");
+            $("#gb_wallet").removeClass("logodivblur");
+            $("#cart").removeClass("logodivblur");
+            $("#spanShoppingCartCount").removeClass("logodivblur");
+
+            $("#smallHeader").css("background-color", "#FFF");
+            $("#smallHeader").css("box-shadow", "inset 0px -5px 5px #cacaca");
+            $(".home").css("background-color", "#FFF");
+            $("#shoppingcart").css("display", "block");
+            $("#body-content").css("pointer-events", "visible");
+            $("#footer").css("pointer-events", "visible");
+            $("#logodiv").css("pointer-events", "visible");
+            $("#searchdiv").css("pointer-events", "visible");
+            $(".shotlistdiv").css("pointer-events", "visible");
+            $("#category_menu").css("pointer-events", "visible");
+            $("#gb_wallet").css("pointer-events", "visible");
+
+        }
+
+        function addLightBox() {
+            $("#body-content").addClass("body-contentblur");
+            $("#footer").addClass("body-contentblur");
+            $("#logodiv").addClass("logodivblur");
+            $("#searchdiv").addClass("logodivblur");
+            $(".shotlistdiv").addClass("logodivblur");
+            $("#category_menu").addClass("logodivblur");
+            $("#gb_wallet").addClass("logodivblur");
+            $("#cart").addClass("logodivblur");
+            $("#spanShoppingCartCount").addClass("logodivblur");
+
+
+            $("#smallHeader").css("background-color", "rgba(0, 0, 0, 0)");
+            $("#smallHeader").css("box-shadow", "none");
+            $("#shoppingcart").css("display", "block");
+            $(".home").css("background-color", "rgba(0, 0, 0, 0.80)");
+            $("#body-content").css("pointer-events", "none");
+            $("#footer").css("pointer-events", "none");
+            $("#logodiv").css("pointer-events", "none");
+            $("#searchdiv").css("pointer-events", "none");
+            $(".shotlistdiv").css("pointer-events", "none");
+            $("#category_menu").css("pointer-events", "none");
+            $("#gb_wallet").css("pointer-events", "none");
+        }
+
+        //- Toggle Lightbox for change city
+        $(document).click(function () {
+            removeLightBox();
+            flagToggle = false;
+        });
+
+        $(document).keyup(function (e) {
+            if (e.keyCode == 27) { // escape key maps to keycode `27`
+                // <DO YOUR WORK HERE>
+                removeLightBox();
+                flagToggle = false;
+            }
+        });
+        $("#customerdiv").click(function () {
+            //alert('12');
+            $("#newdropdown").toggle();
+            //alert($("#newdropdown").attr("style"));
+            //alert($("#newdropdown").css('display'));
+
+        });
+
+        $("#ChangeLocation").click(function () {
+            flagToggle = !flagToggle;
+            //alert(flagToggle);
+            if (flagToggle) {
+                addLightBox();
+            }
+            else {
+                removeLightBox();
+            }
+        });
+    </script>
+    <script type="text/javascript">
+        var _mfq = _mfq || [];
+        (function () {
+            var mf = document.createElement("script");
+            mf.type = "text/javascript"; mf.async = true;
+            mf.src = "//cdn.mouseflow.com/projects/721a946c-2c0d-4ecc-8c83-b9499ccd049c.js";
+            document.getElementsByTagName("head")[0].appendChild(mf);
+        })();
+    </script>
+    @*<link href="~/Content/css/docs.css" rel="stylesheet">*@
+    @*<script src="~/Scripts/jquery-2.1.3.min.js"></script>*@
+    @*<script src="~/Scripts/metro.js" defer="defer"></script>*@
+    @* Commented by Tejaswee-------- because of this file error occure on payment process page (21-05-2016) *@
+    @* <script src="~/Scripts/docs.js"></script>*@
+    @*<script src="~/Scripts/ga.js"></script>*@
+    @* Commented by Tejaswee-------- because of this file every action call two times *@
+    @*<script src="~/Scripts/run_prettify.js"></script>
+        <script src="~/Scripts/metro.min.js"></script>
+            <script type="text/javascript" src="~/Content/js/bootstrap.min.js"></script>
+            <script type="text/javascript" src="~/Content/js/select2.min.js"></script>
+
+            <script src="~/Content/js/theme-script.js"></script>
+            <script src="~/Scripts/jquery-2.1.3.min.js"></script>*@
+    @* <script src="~/Scripts/jquery-ui-1.8.20.min.js"></script>*@
+    @*<script src="~/Scripts/jquery-ui-1.8.7.min.js"></script>*@
+    @*<script src="~/Scripts/metro.js"></script>*@
+    <script src="~/Scripts/Cookie.js"></script>
+    <script type="text/javascript">
+
+        $(function () {
+            //alert("Hello");
+            var custSessionId = $("#hdnSessionID").val();
+            if (custSessionId != null && custSessionId != "") {
+                $.ajax({
+                    type: "POST",
+                    url: '@Url.Action("GetGBWalletAmt", "Home")',
+                    data: "{'userID':" + custSessionId + "}",
+                    contentType: "application/json; charset = utf-8",
+                    dataType: "json",
+                    success: function (response) {
+                        $("#gbWalletAmt").text(parseFloat(response).toFixed(2));
+                        // alert(response);
+                    },
+                    failure: function (response) {
+                    },
+                    error: function (response) {
+                    }
+                });
+            }
+            else {
+                $("#gbWalletAmt").text("0.00");
+            }
+
+
+
+            //********* Multiple Franchise in same city By Ashish***********//
+            var sourceI = [];
+            var jsonGlobleI = [];
+            $("#ddlSelectCityI").change(function () {
+                // alert('c');
+                //$("#loader").show();
+                $("#lblareaI").text('');
+                $("#lblareaI").text('Please wait..');
+                if ($("#ddlSelectCityI").val() == 0) {
+                    $("#txtSelectPincodeI").val('');
+                    $("#txtSelectPincodeI").hide();
+                    $("#ddlSelectAreaI").val('');
+                    $("#ddlSelectAreaI").hide();
+                    $("#lblareaI").text('');
+                }
+
+                $("#ddlSelectAreaI").val('');
+                $("#txtSelectPincodeI").val('');
+                $("#ddlSelectAreaI").hide();
+                //// $("#txtSelectPincodeI").show();//added
+                //******************** Call 1st API ****************//
+
+                var ID = $("#ddlSelectCityI").val();
+                var Name = $("#ddlSelectCityI option:selected").text();
+                var fLocation = "GetFranchiseAllottedLocation?cityid=" + ID;
+                var urlAPILocation = "http://api.ezeelo.com/api/" + fLocation;
+                //var urlAPILocation = "http://localhost:1600/api/" + fLocation;
+
+                $.getJSON(urlAPILocation, { format: "json" })
+               .done(function (json) {
+                   //// alert("Success");
+                   //  loading...
+                   if (json.HTTPStatusCode == "200") {
+                       jsonGlobleI = json.Data;
+                       $("#txtSelectPincodeI").show();
+                       //$("#loader").hide();
+                       $("#lblareaI").text('');
+                   }
+                   else if (json.HTTPStatusCode == "204") {
+                       ////alert("No Record found.");
+                   }
+                   else if (json.HTTPStatusCode == "400") {
+                       ////alert("Failed.");
+                   }
+
+               })
+                   .fail(function (jqXHR, textStatus, error) {
+                       var err = textStatus + ", " + error;
+                       ////alert('Unable to Connect to Server.\n Try again Later.\n Request Failed: ' + err);
+
+                   });
+
+                //******************** End Call 1st API ****************//
+            });
+            $("#ddlSelectAreaI").change(function () {
+                //$("#loader").show();
+                $("#lblareaI").text('Please wait..');
+                //////////////////////////////////////
+                //******************** Call 3rd API ****************//
+                var ID2 = $("#ddlSelectCityI").val();
+                var Name2 = $("#ddlSelectCityI option:selected").text();
+                var FranchiseID2 = $("#ddlSelectAreaI").val();
+                var HelpLineContact2 = "GetHelpLineNumber?franchiseid=" + FranchiseID2;
+                var urlAPIHelpLineNo2 = "http://api.ezeelo.com/api/" + HelpLineContact2;
+                //var urlAPIHelpLineNo2 = "http://localhost:1600/api/" + HelpLineContact2;
+                $.getJSON(urlAPIHelpLineNo2, { format: "json" })
+                   .done(function (jsonfcontact) {
+                       if (jsonfcontact.HTTPStatusCode == "200") {
+                           sourceI
+                           var countfc = jsonfcontact.Data.length;
+                           if (parseInt(countfc) > 0) {
+                               var HelpLineNumber2 = jsonfcontact.Data[0].HelpLineNumber;
+                               // alert("HelpNo: 200" + HelpLineNumber2 + "===" + FranchiseID2 + "===" + Name2);
+
+                               var changeUrl2 = '@(Html.Raw(Url.RouteUrl("ChangeCity", new { city = cityName, CityID = "_CityID_", CityName = "_CityName_", FranchiseID = "_FranchiseID_", HelpLineNumber = "_HelpLineNumber_" })))';
+                               if (url2 != undefined) {
+                                   window.location.href = url2;
+                               }
+                           }
+                           //$("#loader").hide();
+                           $("#lblareaI").text('');
+                       }
+                       else if (json.HTTPStatusCode == "204") {
+                           //// alert("No Record found.");
+
+                           var HelpLineNumber = "Contact not found.";
+                           //alert("HelpNo: 204" + HelpLineNumber2 + "===" + FranchiseID2 + "===" + Name2);
+
+                           var changeUrl2 = '@(Html.Raw(Url.RouteUrl("ChangeCity", new { city = cityName, CityID = "_CityID_", CityName = "_CityName_", FranchiseID = "_FranchiseID_", HelpLineNumber = "_HelpLineNumber_" })))';
+                           var url2 = changeUrl2.replace("_CityID_", ID2).replace("_CityName_", Name2).replace("_FranchiseID_", FranchiseID2).replace("_HelpLineNumber_", HelpLineNumber2);
+                           if (url2 != undefined) {
+                               window.location.href = url2;
+                           }
+                       }
+                       else if (json.HTTPStatusCode == "400") {
+                           //// alert("Failed.");
+                           // alert("aaa else 400:" + jsonfcontact.UserMessage);
+                       }
+                   })
+                   .fail(function (jqXHR, textStatus, error) {
+                       var err = textStatus + ", " + error;
+                   });
+
+                //******************** End Call 3rd API ****************//
+
+            });
+            var input = "";
+            $("#txtSelectPincodeI").keyup(function () {
+                var ID = $("#ddlSelectCityI").val();
+                var Name = $("#ddlSelectCityI option:selected").text();
+
+                input = document.getElementById('txtSelectPincodeI').value;
+                //alert(input.length);
+                if (input != '') {
+                    // var source = [];
+                    ////var input = $("#txtSelectPincode").val();
+                    // alert($("#txtSelectPincode").val());
+                    var integer_str = parseInt(input);
+                    if (input.length == 1) {
+                        $("#lblareaI").text('Please enter two character');
+                    }
+                    else if (input.length > 1 && input.length <= 6) {
+                        $("#lblareaI").text('');
+                    }
+                    if (isNaN(integer_str)) {
+                        // alert('string');
+                        //debugger;
+                        sourceI = [];
+                        sourceI = $.map(jsonGlobleI, function (item) {
+                            return {
+                                //Yashaswi 3/7/2018
+                                label: item.Pincode + " - " + item.Area,
+                                value: item.AreaID
+                            };
+                        });
+                        if (input.length == 0) {
+                            $("#lblareaI").text('');
+                        }
+                    }
+                    else if (!isNaN(integer_str)) {
+                        // alert('integer');
+                        //debugger;
+                        //alert(sourceI.length);
+                        //alert(jsonGlobleI.length);
+                        sourceI = [];
+                        sourceI = $.map(jsonGlobleI, function (item) {
+                            return {
+                                label: item.Pincode + " - " + item.Area,
+                                // If single pincode is distributed to multiple franchise. (Ref. By Rakesh sir)
+                                // then franchiseID will be selected based on selected area
+                                //Commented by Zubair on 31-05-2018
+                                //value: item.PincodeID
+                                value: item.AreaID   //assigned AreaId by Zubair on 31-05-2018
+                                //End by Zubair
+                            };
+                        });
+                        //if (input.length > 6 ) {
+                        //     $("#lblareaI").text('Invalid pincode...');
+                        // }
+                        // else {
+                        //     $("#lblareaI").text('');
+                        // }
+                        if (input.length == 0) {
+                            $("#lblareaI").text('');
+                        }
+                    }
+                }
+                else {
+                    $("#lblareaI").text('');
+                }
+
+
+                // alert("IIN");
+                //alert($("#txtSelectPincodeI").val());
+                /****   var ID = $("#ddlSelectCityI").val();
+                   var Name = $("#ddlSelectCityI option:selected").text();
+                   var fLocation = "GetFranchiseAllottedLocation?cityid=" + ID;
+                   var urlAPILocation = "http://localhost:1600/api/" + fLocation;****/
+
+
+                //  $("#lblareaI").val('tt');
+                // $("#lblareaI").val()='lll';
+                //******************** Call 1st API ****************//
+                //Call the REST program/method returns: JSONP
+                // alert($("#txtSelectPincodeI").val());
+                /**** $.getJSON(urlAPILocation, { format: "json" })
+                 .done(function (json) {
+                     //  loading...
+                     if (json.HTTPStatusCode == "200") {
+                         $("#txtSelectPincodeI").show();
+
+                         //////////////
+                         if ($("#txtSelectPincodeI").val() != '') {
+                             var input = $("#txtSelectPincodeI").val();
+                             var integer_str = parseInt(input);
+                             if (isNaN(integer_str)) {
+                                 //alert('string');
+                                 sourceI = [];
+                                 sourceI = $.map(json.Data, function (item) {
+                                     return {
+                                         label: item.Area,
+                                         value: item.AreaID
+                                     };
+                                 });
+                             }
+                             else if (!isNaN(integer_str)) {
+                                 // alert('integer');
+                                 sourceI = [];
+                                 sourceI = $.map(json.Data, function (item) {
+                                     return {
+                                         label: item.Pincode + " - " + item.Area,
+                                         value: item.PincodeID
+                                     };
+                                 });
+                                  //if (input.length > 6 ) {
+                                  //    $("#lblareaI").text('Invalid pincode...');
+                                  //}
+                                  //else {
+                                  //    $("#lblareaI").text('');
+                                  //}
+                             }
+                         }****/
+                //alert(input.length);
+                //alert(sourceI.length);
+                //////////////
+                var __response = $.ui.autocomplete.prototype._response;
+                $.ui.autocomplete.prototype._response = function (content) {
+                    __response.apply(this, [content]);
+                    this.element.trigger("autocompletesearchcomplete", [content]);
+                };
+                //////////////
+                //alert(sourceI.length);
+                //alert(sourceI[0].label);
+
+                $("#txtSelectPincodeI").autocomplete({
+                    source: sourceI,
+                    focus: function (event, ui) {
+                        $('#txtSelectPincodeI').val(ui.item.label);
+                        return false;
+                    },
+                    // appendTo: ee,
+                    // Once a value in the drop down list is selected, do the following:
+                    select: function (event, ui) {
+                        $("#lblareaI").text('');////
+                        //$("#loader").show();
+                        $("#lblareaI").text('Please wait..');
+                        // place the person.given_name value into the textfield called 'select_origin'...
+                        $('#txtSelectPincodeI').val(ui.item.label);
+                        // and place the person.id into the hidden textfield called 'link_origin_id'.
+                        //// $('#hdd_origin_id').val(ui.item.value);
+
+                        //******************** Call 2nd API ****************
+
+                        //Yashaswi 1/6/2018 Show Selected City And PinCode and Area
+                        var OldAreaId = localStorage.getItem("AreaId");
+                        var NewAreaId = ui.item.value;
+                        var PinArea = ui.item.label;
+                        var selectedPincode = PinArea.split('-')[0];
+                        $("#spnewArea").text(PinArea);
+                        $("#spoldArea").text(localStorage.getItem("PinArea"));
+                        var CartCount = $("#spanShoppingCartCount").text();
+                        PinArea = PinArea.replace(" - ", ", ");
+                        
+                        //End
+                        var AreaID = ui.item.value;
+                        var Area_Pin_ID = "GetFranchiseID?cityid=" + ID + "&" + "pincide_areaid=" + AreaID;
+                        var urlAPIFranciseID = "http://api.ezeelo.com/api/" + Area_Pin_ID;
+                        //var urlAPIFranciseID = "http://localhost:1600/api/" + Area_Pin_ID;
+                        // alert(urlAPIFranciseID);
+                        $.getJSON(urlAPIFranciseID, { format: "json" })
+
+                        .done(function (jsonfid) {
+                            //  loading...
+                            if (jsonfid.HTTPStatusCode == "200") {
+
+                                var count = jsonfid.Data.length;
+                                if (parseInt(count) > 1) {
+                                    //-- If Count is greather then 1 means city having multiple Franhies --//
+                                    var ddlArea = $("[id*=ddlSelectAreaI]");
+                                    ddlArea.empty().append('<option selected="selected" value="0">Select Area</option>');
+                                    $.each(jsonfid.Data, function (index, item) {
+                                        var City = this['CityName'] + " - " + this['FranchiseOfficePincode'];
+                                        ddlArea.append($("<option></option>").val(this['FranchiseIDs']).html(City));
+                                    });
+                                    $("#ddlSelectAreaI").show();
+                                    //$("#loader").hide();
+                                    $("#lblareaI").text('');
+                                }
+                                else {
+                                    var FranchiseID = jsonfid.Data[0].FranchiseIDs;
+                                    // alert("ID:" + FranchiseID);
+
+                                    //******************** Call 3rd API ****************
+                                    var HelpLineContact = "GetHelpLineNumber?franchiseid=" + FranchiseID;
+                                    var urlAPIHelpLineNo = "http://api.ezeelo.com/api/" + HelpLineContact;
+                                    //var urlAPIHelpLineNo = "http://localhost:1600/api/" + HelpLineContact;
+                                    $.getJSON(urlAPIHelpLineNo, { format: "json" })
+                                       .done(function (jsonfcontact) {
+                                           if (jsonfcontact.HTTPStatusCode == "200") {
+                                               var countfc = jsonfcontact.Data.length;
+                                               //alert("hhh:" + parseInt(countfc));
+                                               if (parseInt(countfc) > 0) {
+                                                   var HelpLineNumber = jsonfcontact.Data[0].HelpLineNumber;
+                                                   // alert("HelpNo...200" + HelpLineNumber + "===" + FranchiseID + "===" + Name+ "===" +ID);
+                                                   //Yashaswi change in changeUrl and url
+                                                   var changeUrl = '@(Html.Raw(Url.RouteUrl("ChangeCity", new { city = cityName, CityID = "_CityID_", CityName = "_CityName_", FranchiseID = "_FranchiseID_", HelpLineNumber = "_HelpLineNumber_", OldAreaId = "OldAreaId" })))';
+                                                   var url = changeUrl.replace("_CityID_", ID).replace("_CityName_", Name).replace("_FranchiseID_", FranchiseID).replace("_HelpLineNumber_", HelpLineNumber).replace("OldAreaId", OldAreaId);
+                                                   if (url != undefined) {
+                                                       // window.location.href = url;
+                                                       //Yashaswi 1/6/2018 Show Selected City And PinCode and Area
+                                                       if (OldAreaId != NewAreaId) {
+                                                           if (CartCount == "0") {
+                                                               localStorage.removeItem("IsLocConfirmed");
+                                                               localStorage.setItem("CityID", $("#ddlSelectCityI").val());
+                                                               localStorage.setItem("PinArea", PinArea);
+                                                               localStorage.setItem("AreaId", ui.item.value);
+                                                               localStorage.setItem("SelectedPincode", selectedPincode);
+                                                               window.location.href = url;
+                                                           }
+                                                           else {
+                                                               ///Yashaswi
+                                                               $.ajax({
+                                                                   type: "POST",
+                                                                   //url: "CheckSelectedPincode",
+                                                                   url: "@Url.Action("CheckSelectedAreaCode", "PaymentProcess")",
+                                                                   data: "{ NewAreaId: " + NewAreaId + ",OldAreaId:" + OldAreaId + "}",
+                                                                   contentType: "application/json; charset=utf-8",
+                                                                   dataType: "json",
+                                                                   async: true,
+                                                                   cache: false,
+                                                                   success: function (msg) {
+                                                                       $("#lblareaI").text('');
+                                                                       modal.style.display = "none";
+                                                                       if (msg == false) {
+                                                                           UrlAfterConfirm = url;
+                                                                           LocStorddlSelectCityI = $("#ddlSelectCityI").val();
+                                                                           LocStorPinArea = PinArea;
+                                                                           LocStorAreaId = ui.item.value;
+                                                                           LocStorSelectedPincode = selectedPincode;
+                                                                           modalPinAreaChange.style.display = "block";
+                                                                       }
+                                                                       else {
+                                                                           localStorage.setItem("CityID", $("#ddlSelectCityI").val());
+                                                                           localStorage.setItem("PinArea", PinArea);
+                                                                           localStorage.setItem("AreaId", ui.item.value);
+                                                                           localStorage.setItem("SelectedPincode", selectedPincode);
+                                                                           window.location.href = url;
+                                                                       }
+
+
+                                                                   },
+                                                                   error: function (x, e) {
+                                                                       // alert("unable to Retrive Mobile No ");
+                                                                   }
+                                                               });
+                                                           }
+                                                       } else {
+                                                           $("#lblareaI").text('');
+                                                           modal.style.display = "none";
+                                                       }
+                                                       //End
+                                                   }
+                                               }
+                                           }
+                                           else if (jsonfcontact.HTTPStatusCode == "204") {
+                                               //// alert("No Record found.");
+                                               var HelpLineNumber = "Contact not found.";
+                                               // alert("HelpNo...204" + HelpLineNumber + "===" + FranchiseID + "===" + Name);
+                                               //Yashaswi change in changeUrl and url
+                                               var changeUrl = '@(Html.Raw(Url.RouteUrl("ChangeCity", new { city = cityName, CityID = "_CityID_", CityName = "_CityName_", FranchiseID = "_FranchiseID_", HelpLineNumber = "_HelpLineNumber_" , OldAreaId = "OldAreaId" })))';
+                                               var url = changeUrl.replace("_CityID_", ID).replace("_CityName_", Name).replace("_FranchiseID_", FranchiseID).replace("_HelpLineNumber_", HelpLineNumber).replace("OldAreaId", OldAreaId);
+                                               if (url != undefined) {
+                                                   //window.location.href = url;
+                                                   //Yashaswi 1/6/2018 Show Selected City And PinCode and Area
+                                                   if (OldAreaId != NewAreaId) {
+                                                       if (CartCount == "0") {
+                                                           localStorage.removeItem("IsLocConfirmed");
+                                                           localStorage.setItem("CityID", $("#ddlSelectCityI").val());
+                                                           localStorage.setItem("PinArea", PinArea);
+                                                           localStorage.setItem("AreaId", ui.item.value);
+                                                           localStorage.setItem("SelectedPincode", selectedPincode);
+                                                           window.location.href = url;
+                                                       } else {
+                                                           ///Yashaswi
+                                                           $.ajax({
+                                                               type: "POST",
+                                                               //url: "CheckSelectedPincode",
+                                                               url: "@Url.Action("CheckSelectedAreaCode", "PaymentProcess")",
+                                                               data: "{ NewAreaId: " + NewAreaId + ",OldAreaId:" + OldAreaId + "}",
+                                                               contentType: "application/json; charset=utf-8",
+                                                               dataType: "json",
+                                                               async: true,
+                                                               cache: false,
+                                                               success: function (msg) {
+                                                                   $("#lblareaI").text('');
+                                                                   modal.style.display = "none";
+                                                                   if (msg == false) {
+                                                                       UrlAfterConfirm = url;
+                                                                       LocStorddlSelectCityI = $("#ddlSelectCityI").val();
+                                                                       LocStorPinArea = PinArea;
+                                                                       LocStorAreaId = ui.item.value;
+                                                                       LocStorSelectedPincode = selectedPincode;
+                                                                       modalPinAreaChange.style.display = "block";
+                                                                   }
+                                                                   else {
+                                                                       localStorage.setItem("CityID", $("#ddlSelectCityI").val());
+                                                                       localStorage.setItem("PinArea", PinArea);
+                                                                       localStorage.setItem("AreaId", ui.item.value);
+                                                                       localStorage.setItem("SelectedPincode", selectedPincode);
+                                                                       window.location.href = url;
+                                                                   }
+
+
+                                                               },
+                                                               error: function (x, e) {
+                                                                   // alert("unable to Retrive Mobile No ");
+                                                               }
+                                                           });
+                                                       }
+                                                   } else {
+                                                       $("#lblareaI").text('');
+                                                       modal.style.display = "none";
+                                                   }
+                                                   //End
+                                               }
+
+                                           }
+                                           else if (jsonfcontact.HTTPStatusCode == "400") {
+                                               //// alert("Failed.");
+                                               // alert("hhh else 400:" + jsonfcontact.UserMessage);
+
+                                           }
+                                       })
+                                        .fail(function (jqXHR, textStatus, error) {
+                                            var err = textStatus + ", " + error;
+                                        });
+
+                                    //******************** End Call 3rd API ****************
+                                    if (url != undefined) {
+                                        window.location.href = url;//urlglobal;
+                                    }
+                                }
+                            }
+                            else if (json.HTTPStatusCode == "204") {
+                                //// alert("No Record found.");
+                            }
+                            else if (json.HTTPStatusCode == "400") {
+                                //// alert("Failed.");
+                            }
+                        })
+                      .fail(function (jqXHR, textStatus, error) {
+                          var err = textStatus + ", " + error;
+                          //// alert('Unable to Connect to Server.\n Try again Later.\n Request Failed: ' + err);
+
+                      });
+
+                        //******************** End Call 2nd API ****************
+                        return false;
+                    }
+                }).autocomplete("widget").addClass("City");
+                $("#txtSelectPincodeI").bind("autocompletesearchcomplete", function (event, contents) {
+                    // alert("IN");
+                    // $("#lblareaI").html(contents.length);
+                    // alert($("#lblareaI").text());
+
+                    if ($("#txtSelectPincodeI").val() != '') {
+                        var input = $("#txtSelectPincodeI").val();
+                        var integer_str = parseInt(input);
+                        if (!isNaN(integer_str)) {
+                            if (contents.length == 0) {
+                                $("#lblarea").text('Pincode not found...');
+                                if (input.length > 6) {
+                                    $("#lblarea").text("");
+                                    $("#lblarea").text('Invalid pincode...');
+                                }
+                            }
+                                //if (input.length > 6) {
+                                //    $("#lblareaI").text('Invalid pincode...');
+                                //}
+                            else {
+                                $("#lblareaI").text('');
+                            }
+                        }
+                        else {
+                            if (contents.length == 0) {
+                                $("#lblareaI").text('Area not found...');
+                            }
+                            else if (input.length == 0) {
+                                $("#lblareaI").text("");
+                            }
+                        }
+                        //if (contents.length != 0) {
+                        //    $("#lblareaI").text('');
+                        //}
+                    }
+                    /*if (contents.length != 0) {
+                        $("#lblareaI").html('');
+                    }*/
+                    //else
+                    //{
+                    //    $("#lblareaI").text('');
+                    //}
+                    // alert(contents.length)
+                });
+
+                /* $("#txtSelectPincodeI").autocomplete("result", function (event, sourceI) {
+
+                     if (!sourceI) { alert('nothing found!'); }
+
+                 })*/
+
+                /****   }
+              else if (json.HTTPStatusCode == "204") {
+                  //// alert("No Record found.");
+              }
+              else if (json.HTTPStatusCode == "400") {
+                  //// alert("Failed.");
+              }
+
+          })
+              .fail(function (jqXHR, textStatus, error) {
+                  var err = textStatus + ", " + error;
+                  //// alert('Unable to Connect to Server.\n Try again Later.\n Request Failed: ' + err);
+
+              });*****/
+                //******************** End Call 1st API ****************//
+
+
+
+            });
+
+            //********* End Multiple Franchise in same city ***********//
+
+
+
+
+
+        });
+    </script>
+
+    <script>
+        $(function () {
+            // alert();
+            if ($("#ShoppingCartCookieValue").val() != 0) {
+                var cnt = $("#ShoppingCartCookieValue").val().split(",").length;
+                $("#spanShoppingCartCount").text(cnt);
+            }
+            else {
+                $("#spanShoppingCartCount").text(0);
+            }
+        });
+        function showDialog(id) {
+            var dialog = $("#" + id).data('dialog');
+            if (!dialog.element.data('opened')) {
+                dialog.open();
+            } else {
+                dialog.close();
+            }
+        }
+        $(function () {
+            if ($("#CityID").val() != 0) {
+                $("#SpanChangeCity").text($("#CityID").val().split("$")[1]);
+                $("#divCity").css("display", "none");
+            }
+            else {
+                $("#dialog9").css("display", "block");
+            }
+        });
+
+        //$(function () {
+        //    if ($("#ShoppingCartCookieValue").val() != 0) {
+        //        var cnt = $("#ShoppingCartCookieValue").val().split(",").length;
+        //        $("#spanShoppingCartCount").text(cnt);
+        //    }
+        //    else {
+        //        $("#spanShoppingCartCount").text(0);
+        //    }
+        //});
+
+
+        /* function OpenShortlist() {
+             $("#dialog6").css("display", "block");
+
+         }
+         function closeShortlist() {
+             $("#dialog6").css("display", "none");
+
+         }*/
+
+        function getCookie(name) {
+            var dc = document.cookie;
+            var prefix = name + "=";
+            var begin = dc.indexOf("; " + prefix);
+            if (begin == -1) {
+                begin = dc.indexOf(prefix);
+                if (begin != 0) return null;
+            } else {
+                begin += 2;
+            }
+            var end = document.cookie.indexOf(";", begin);
+            if (end == -1) {
+                end = dc.length;
+            }
+            return unescape(dc.substring(begin + prefix.length, end));
+        }
+        //function set shortlist item count on page load
+        /* $(function () {
+             var a = getCookie("ShortListCookie");
+             if (a != null) {
+                 $("[id*=spanShortlistCount]").text(a.split(',').length);
+             }
+             else {
+                 $("[id*=spanShortlistCount]").text(0);
+             }
+         });*/
+
+        @*function LoadShortList() {
+            $('#ShortListDiv').load('@Url.Action("ShortList", "Shortlist")');
+        }*@
+
+    </script>
+    <!-- SAFARI BROWSER JQUERY CREATE BY GOPAL-->
+    <script>
+        $(document).ready(function () {
+            if (navigator.userAgent.indexOf('Safari') != -1 && navigator.userAgent.indexOf('Chrome') == -1) {
+                $(".vertical-menu-content").removeAttr('style');
+                $('#nav-top-menu').find('.vertical-menu-content').hide();
+                $("#productGeneralSpecification iframe").css('height', '294px');
+                $("#productGeneralSpecification").css('background-color', '#fff');
+                $('h4.title').click(function () {
+
+                    if ($(".vertical-menu-content").is(':visible')) {
+                        $(".vertical-menu-content").hide();
+                        $(".vertical-menu-content").slideUp();
+                        $(".vertical-menu-content").css('display', 'none');
+                    } else {
+                        $(".vertical-menu-content").show();
+                        $(".vertical-menu-content").slideDown();
+                        $(".vertical-menu-content").css('display', 'block');
+                    }
+                });
+                (function ($) {
+                    "use strict"; // Start of use strict
+                    /* ---------------------------------------------
+                     Scripts initialization
+                     --------------------------------------------- */
+                    $(window).load(function () {
+                        // auto width megamenu
+                        auto_width_megamenu();
+                        resizeTopmenu();
+                    });
+                    /* ---------------------------------------------
+                     Scripts ready
+                     --------------------------------------------- */
+                    $(document).ready(function () {
+                        $('[data-toggle="tooltip"]').tooltip();
+                        /* Resize top menu*/
+                        resizeTopmenu();
+
+
+                        /* Open menu on mobile */
+                        $(document).on('click', '.btn-open-mobile', function () {
+                            var width = $(window).width();
+                            if (width > 1024) {
+                            }
+                            $(this).closest('.box-vertical-megamenus').find('.vertical-menu-content').slideToggle();
+                            $(this).closest('.title').toggleClass('active');
+                            return false;
+                        })
+                        $(document).on('click', 'h4.title', function () {
+
+                            var width = $(window).width();
+                            if (width > 1024) {
+                            }
+                            $(this).closest('.box-vertical-megamenus').find('.vertical-menu-content').slideToggle();
+                            $(this).closest('.title').toggleClass('active');
+                            return false;
+                        })
+                        /* Product qty */
+                        $(document).on('click', '.btn-plus-down', function () {
+                            var value = parseInt($('#option-product-qty').val());
+                            value = value - 1;
+                            if (value <= 0) return false;
+                            $('#option-product-qty').val(value);
+                            return false;
+                        })
+                        $(document).on('click', '.btn-plus-up', function () {
+                            var value = parseInt($('#option-product-qty').val());
+                            value = value + 1;
+                            if (value <= 0) return false;
+                            $('#option-product-qty').val(value);
+                            return false;
+                        })
+                        /* Close vertical */
+                        $(document).on('click', '*', function (e) {
+                            var container = $("#box-vertical-megamenus");
+                            if (!container.is(e.target) && container.has(e.target).length === 0) {
+                                if ($('body').hasClass('home')) {
+                                    if ($('#nav-top-menu').hasClass('nav-ontop')) {
+                                    } else {
+                                        return;
+                                    }
+                                }
+                                container.find('.vertical-menu-content').hide();
+                                container.find('.title').removeClass('active');
+                            }
+                        })
+                        /* Send conttact*/
+                        $(document).on('click', '#btn-send-contact', function () {
+                            var subject = $('#subject').val(),
+                                email = $('#email').val(),
+                                order_reference = $('#order_reference').val(),
+                                message = $('#message').val();
+                            var data = {
+                                subject: subject,
+                                email: email,
+                                order_reference: order_reference,
+                                message: message
+                            }
+                            $.post('ajax_contact.php', data, function (result) {
+                                if (result.trim() == "done") {
+                                    $('#email').val('');
+                                    $('#order_reference').val('');
+                                    $('#message').val('');
+                                    $('#message-box-conact').html('<div class="alert alert-info">Your message was sent successfully. Thanks</div>');
+                                } else {
+                                    $('#message-box-conact').html(result);
+                                }
+                            })
+                        })
+                    });
+                    /* ---------------------------------------------
+                     Scripts resize
+                     --------------------------------------------- */
+                    $(window).resize(function () {
+                        // auto width megamenu
+                        auto_width_megamenu();
+                        // Remove menu ontop
+                        remove_menu_ontop();
+                        // resize top menu
+                        resizeTopmenu();
+                    });
+                    /* ---------------------------------------------
+                     Scripts scroll
+                     --------------------------------------------- */
+                    $(window).scroll(function () {
+                        resizeTopmenu();
+                        /* Show hide scrolltop button */
+                        if ($(window).scrollTop() == 0) {
+                            $('.scroll_top').stop(false, true).fadeOut(600);
+                        } else {
+                            $('.scroll_top').stop(false, true).fadeIn(600);
+                        }
+                        /* Main menu on top */
+                        var h = $(window).scrollTop();
+                        var max_h = $('#header').height() + $('#top-banner').height();
+                        var width = $(window).width();
+                        if (width > 767) {
+                            if (h > 20) {
+                                $('#nav-top-menu').addClass('nav-ontop');
+                                $('#cart-block .cart-block').appendTo('#shopping-cart-box-ontop .shopping-cart-box-ontop-content');
+                                $('#shopping-cart-box-ontop').fadeIn();
+                                $('#user-info-top').appendTo('#user-info-opntop');
+                                $('#header .header-search-box form').appendTo('#form-search-opntop');
+                            } else {
+                                $('#nav-top-menu').removeClass('nav-ontop');
+                                if ($('body').hasClass('home')) {
+                                    $('#nav-top-menu').find('.vertical-menu-content').removeAttr('style');
+                                    if (width > 1024)
+                                        $('#nav-top-menu').find('.vertical-menu-content').hide();
+                                    else {
+                                        $('#nav-top-menu').find('.vertical-menu-content').hide();
+                                    }
+                                    $('#nav-top-menu').find('.vertical-menu-content').removeAttr('style');
+                                }
+                                ///
+                                $('#shopping-cart-box-ontop .cart-block').appendTo('#cart-block');
+                                $('#shopping-cart-box-ontop').fadeOut();
+                                $('#user-info-opntop #user-info-top').appendTo('.top-header .container');
+                                $('#form-search-opntop form').appendTo('#header .header-search-box');
+                            }
+                        }
+                    });
+                    var vertical_menu_height = $('#box-vertical-megamenus .box-vertical-megamenus').innerHeight();
+                    /**==============================
+                    ***  Auto width megamenu
+                    ===============================**/
+                    function auto_width_megamenu() {
+                        var full_width = parseInt($('.container').innerWidth());
+                        var menu_width = parseInt($('.vertical-menu-content').actual('width'));
+                        $('.vertical-menu-content').find('.vertical-dropdown-menu').each(function () {
+                            $(this).width((full_width - menu_width) - 2);
+                        });
+                    }
+                    /**==============================
+                    ***  Remove menu on top
+                    ===============================**/
+                    function remove_menu_ontop() {
+                        var width = parseInt($(window).width());
+                        if (width < 768) {
+                            $('#nav-top-menu').removeClass('nav-ontop');
+                            if ($('body').hasClass('home')) {
+                                if (width > 1024)
+                                    $('#nav-top-menu').find('.vertical-menu-content').hide();
+                                else {
+                                    $('#nav-top-menu').find('.vertical-menu-content').hide();
+                                }
+                            }
+                            ///
+                            $('#shopping-cart-box-ontop .cart-block').appendTo('#cart-block');
+                            $('#shopping-cart-box-ontop').fadeOut();
+                            $('#user-info-opntop #user-info-top').appendTo('.top-header .container');
+                            $('#form-search-opntop form').appendTo('#header .header-search-box');
+                        }
+                    }
+                    /* Top menu*/
+                    function scrollCompensate() {
+                        var inner = document.createElement('p');
+                        inner.style.width = "100%";
+                        inner.style.height = "200px";
+                        var outer = document.createElement('div');
+                        outer.style.position = "absolute";
+                        outer.style.top = "0px";
+                        outer.style.left = "0px";
+                        outer.style.visibility = "hidden";
+                        outer.style.width = "200px";
+                        outer.style.height = "150px";
+                        outer.style.overflow = "hidden";
+                        outer.appendChild(inner);
+                        document.body.appendChild(outer);
+                        var w1 = parseInt(inner.offsetWidth);
+                        outer.style.overflow = 'scroll';
+                        var w2 = parseInt(inner.offsetWidth);
+                        if (w1 == w2) w2 = outer.clientWidth;
+                        document.body.removeChild(outer);
+                        return (w1 - w2);
+                    }
+
+                    function resizeTopmenu() {
+                        if ($(window).width() + scrollCompensate() >= 768) {
+                            var main_menu_w = $('#main-menu .navbar').innerWidth();
+
+                            $("#main-menu ul.mega_dropdown").each(function () {
+                                var menu_width = $(this).innerWidth();
+                                var offset_left = $(this).position().left;
+                                if (menu_width > main_menu_w) {
+                                    $(this).css('width', main_menu_w + 'px');
+                                    $(this).css('left', '0');
+                                } else {
+                                    if ((menu_width + offset_left) > main_menu_w) {
+                                        var t = main_menu_w - menu_width;
+                                        var left = parseInt((t / 2));
+                                        $(this).css('left', left);
+                                    }
+                                }
+                            });
+                        }
+
+                        if ($(window).width() + scrollCompensate() < 1025) {
+                            $("#main-menu li.dropdown:not(.active) >a").attr('data-toggle', 'dropdown');
+                        } else {
+                            $("#main-menu li.dropdown >a").removeAttr('data-toggle');
+                        }
+                    }
+                })(jQuery); // End of use strict
+
+            }
+        });
+    </script>
+    <script type="text/javascript">
+
+        //-------------Code By Mohit To save GB Track for ----------------//
+        $(function () {
+            // alert("newgb");
+            // alert('layout: ' + window.location.href);
+
+            $.ajax({
+                url: '@Url.Action("InsertGBTrack", "GBTrack")?URL=' + window.location.href,
+                type: "GET",
+                success: function (result) {
+                },
+                error: function (data) {
+                }
+            });
+        });
+        //-------------End of Code By Mohit To save GB Track for ----------------//
+
+    </script>
+    <script src="~/Content/js/jquery.js"></script>
+    <script src="~/Content/js/bootstrap.js"></script>
+    @*<script src="~/Content/js/switcher.js"></script>*@
+    <script src="~/Scripts/jquery-ui-1.8.7.min.js"></script>
+
+</body>
+</html>

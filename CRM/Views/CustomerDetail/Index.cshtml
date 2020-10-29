@@ -1,0 +1,440 @@
+﻿@using PagedList;
+@using PagedList.Mvc;
+
+@model IPagedList<CRM.Models.ViewModel.CustomerViewModel>
+
+@{
+    ViewBag.Title = "List [Customer]";
+}
+<style>
+    input {
+        width: 80px;
+    }
+
+    select {
+        width: 80px;
+    }
+
+    .setwidth {
+        width: 120px;
+    }
+
+    #divtable h3 {
+    }
+
+    .btn-primary {
+        background-color: #643C24;
+        border-color: #643C24;
+    }
+
+    .btn-success {
+        background-color: #643C24 !important;
+        border-color: #643C24 !important;
+    }
+
+        .btn-success:hover {
+            background-color: #643C24 !important;
+            border-color: #643C24 !important;
+        }
+
+    .container {
+        margin-left: 80px !important;
+    }
+
+    .email_search {
+        width: 160px;
+    }
+
+    .excel-group {
+        float: right;
+        margin-bottom: 10px;
+    }
+
+    .btn-warning1 {
+        background-image: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, rgba(245, 167, 50, 0)), color-stop(100%, rgba(38, 24, 2, 0.1)));
+        background-image: -webkit-linear-gradient(rgba(245, 167, 50, 0), rgba(38, 24, 2, 0.1));
+        background-image: -moz-linear-gradient(rgba(245, 167, 50, 0), rgba(38, 24, 2, 0.1));
+        background-image: -o-linear-gradient(rgba(245, 167, 50, 0), rgba(38, 24, 2, 0.1));
+        background-image: linear-gradient(rgba(245, 167, 50, 0), rgba(38, 24, 2, 0.1));
+        background-color: #f5a732;
+        border-color: #f49a15 #f49a15 #b36f09;
+        border-color: rgba(0, 0, 0, 0.05) rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.15);
+        color: white;
+        text-shadow: 1px 1px 0 rgba(0, 0, 0, 0.15);
+    }
+
+    .btn-info1 {
+        background-image: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, rgba(78, 178, 213, 0)), color-stop(100%, rgba(7, 23, 29, 0.1)));
+        background-image: -webkit-linear-gradient(rgba(78, 178, 213, 0), rgba(7, 23, 29, 0.1));
+        background-image: -moz-linear-gradient(rgba(78, 178, 213, 0), rgba(7, 23, 29, 0.1));
+        background-image: -o-linear-gradient(rgba(78, 178, 213, 0), rgba(7, 23, 29, 0.1));
+        background-image: linear-gradient(rgba(78, 178, 213, 0), rgba(7, 23, 29, 0.1));
+        background-color: #4eb2d5;
+        border-color: #35a7cf #35a7cf #237795;
+        border-color: rgba(0, 0, 0, 0.05) rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.15);
+        color: white;
+        text-shadow: 1px 1px 0 rgba(0, 0, 0, 0.15);
+    }
+
+    .btn-warning1:hover, .btn-warning1:active, .btn-warning1.active, .btn-warning1.disabled, .btn-warning1[disabled] {
+        background-color: #f49a15;
+        color: white;
+    }
+
+    .btn-info1:hover, .btn-info1:active, .btn-info1.active, .btn-info1.disabled, .btn-info1[disabled] {
+        background-color: #35a7cf;
+        color: white;
+    }
+
+    .btn-btm {
+        color: #ffffff;
+        background-color: #DB9838;
+        border-color: #DB9838;
+        background-image: none;
+        filter: none;
+        text-shadow: none;
+    }
+
+        .btn-btm:hover, .btn:focus, .btn:active {
+            background-color: #db9838;
+            border-color: #db9838;
+            color: #fff;
+        }
+
+    .table-responsive tbody tr td a, .pagination-container ul li a {
+        color: #19bc9c;
+    }
+
+    .dropdown-menu {
+        /*left: 400px !important;*/
+        z-index: 1000 !important;
+    }
+</style>
+<div class="row">
+    <div class="loader" align="center" style="width:100%;height:100%;">
+        <img id="Page_loader" src="~/Content/Images/ajax_loader.gif" style="width:100px; height:100px;" />
+    </div>
+    <div class="span12" id="divtable" style="margin-top:12px;">
+        <div class="widget">
+            <div class="widget-header">
+                <h3><i class="icon-list-alt"></i> List [ Customer ]</h3>
+                <h3 class="pull-right" style="margin-top: 10px;">Total Customers : [ @ViewBag.NoOfCustomer ]</h3>
+            </div>
+            <!-- /widget-header -->
+            <div class="widget-content">
+                <div class="widget big-stats-container">
+                    <div class="widget-content matchdivheight">
+                        @using (Html.BeginForm("Index", "CustomerDetail", FormMethod.Post))
+                        {
+                            @Html.AntiForgeryToken()
+                            <div class="form-horizontal">
+                                <table class="table-responsive for_tbleFst">
+                                    <tr>
+                                        <td>
+                                            <div class="control-group mrg-left col-sm-3" style="margin-top: -30px;">
+                                                <label>Customer &nbsp;</label>
+                                                <div class="col-sm-12">
+                                                    @Html.TextBox("Customer", ViewBag.Customer as string, new { @class = "search", placeholder = "Customer" }) &nbsp;
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="control-group mrg-left col-sm-3">
+                                                <label>Total Order &nbsp;</label>
+                                                <div class="col-sm-12">
+                                                    @Html.TextBox("TotalOrderMin", (int)ViewBag.TotalOrderMin, new { @class = "search", placeholder = "Min", required = "required" }) &nbsp;
+                                                </div>
+                                                <div class="col-sm-12">
+                                                    @Html.TextBox("TotalOrderMax", (int)ViewBag.TotalOrderMax, new { @class = "search", placeholder = "Max", required = "required" }) &nbsp;
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="control-group mrg-left col-sm-3">
+                                                <label>Total Amount &nbsp;</label>
+                                                <div class="col-sm-12">
+                                                    @Html.TextBox("TotalAmountMin", (decimal)ViewBag.TotalAmountMin, new { @class = "search", placeholder = "Min", value = 0, required = "required" }) &nbsp;
+                                                </div><div class="col-sm-12">
+                                                    @Html.TextBox("TotalAmountMax", (decimal)ViewBag.TotalAmountMax, new { @class = "search", placeholder = "Max", value = 10000000, required = "required" }) &nbsp;
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="control-group mrg-left col-sm-3">
+                                                <label>Last Purchase Date &nbsp;</label>
+                                                <div class="col-sm-12">
+                                                    @Html.TextBox("LastPurchaseDateMin", null, new { @readonly = "readonly", @class = "search", placeholder = "From" }) &nbsp;
+                                                </div>
+                                                <div class="col-sm-12">
+                                                    @Html.TextBox("LastPurchaseDateMax", null, new { @readonly = "readonly", @class = "search", placeholder = "To" }) &nbsp;
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="control-group mrg-left col-sm-3" style="margin-top: -30px;">
+                                                <label>Mobile &nbsp;</label>
+                                                <div class="col-sm-12">
+                                                    @Html.TextBox("Mobile", ViewBag.Mobile as string, new { @class = "search", placeholder = "Mobile" }) &nbsp;
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="control-group mrg-left col-sm-3" style="margin-top: -30px;">
+                                                <label>Email &nbsp;</label>
+                                                <div class="col-sm-12">
+                                                    @Html.TextBox("Email", ViewBag.Email as string, new { @class = "search email_search", placeholder = "Email" }) &nbsp;
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="control-group mrg-left col-sm-3">
+                                                <label>Joining Date &nbsp;</label>
+                                                <div class="col-sm-12">
+                                                    @Html.TextBox("FromDate", null, new { @readonly = "readonly", @class = "search", placeholder = "From" }) &nbsp;
+                                                </div>
+                                                <div class="col-sm-12">
+                                                    @Html.TextBox("ToDate", null, new { @readonly = "readonly", @class = "search", placeholder = "To" }) &nbsp;
+                                                </div>
+                                            </div>
+                                        </td>
+
+                                        <td>
+                                            <div class="control-group mrg-left col-sm-3">
+                                                <label>Partner &nbsp;</label>
+                                                <div class="col-sm-12">
+                                                    @Html.DropDownList("Franchises", "Select Partner") &nbsp;
+                                                </div>
+                                                <div class="col-sm-12">
+                                                    &nbsp;
+                                                </div>
+                                            </div>
+                                        </td>
+
+                                        <td style=" white-space: nowrap;">
+                                            <button type="submit" name="submit" value="Search" class="btn btn-small btn-warning1" style="margin-top: -30px;">
+                                                <span class="glyphicon glyphicon-search"></span> Search
+                                            </button>
+                                            <button type="button" class="btn btn-small btn-info1" id="btnClear" style="margin-top: -30px;">Clear</button>
+                                        </td>
+
+                                    </tr>
+                                </table>
+
+                                <div class="excel-group">
+                                    <div style="float:left;">
+                                        <input type="radio" id="rbEXCEL" name="exportType" value="1" title="EXCEL" /> EXCEL &nbsp;
+                                        <input type="radio" id="rbCSV" name="exportType" value="2" title="CSV" /> CSV &nbsp;
+                                        <input type="radio" id="rbPDF" name="exportType" value="3" title="PDF" /> PDF &nbsp;
+                                    </div>
+                                    <div style="float:right;">
+                                        <button type="submit" value="Export" name="submit" id="btnExport" class="btn btnSearch-f btn-btm" onclick="return ValidateType();">Export</button>
+                                        <button type="button" value="Print" class="btn btn-brown btn-btm" onclick="javascript:PrintDivContent('divToPrint');">Print</button>
+                                    </div>
+                                </div>
+                            </div>
+                        }
+
+                        <div class="box-content" id="divToPrint" style="margin-top:29px;">
+                            <table class="table table-bordered table-hover table-responsive table-striped for_tbleFst">
+                                <tr>
+                                    <th style="width:20px;">Sr.No</th>
+                                    <th>
+                                        Customer
+                                    </th>
+                                    <th>
+                                        Total-Order
+                                    </th>
+                                    <th>
+                                        Total-Amount
+                                    </th>
+                                    <th>
+                                        Last-Purchased
+                                    </th>
+                                    <th style="width:80px;">
+                                        Mobile
+                                    </th>
+                                    <th>
+                                        Email
+                                    </th>
+                                    <th>
+                                        Joining Date
+                                    </th>
+                                </tr>
+
+                                @if (Model == null || Model.Count() == 0)
+                                {
+                                    <tr>
+                                        <td colspan="6" class="text-center"><h3>No Record Found...</h3></td>
+                                    </tr>
+                                }
+                                else
+                                {
+                                    int i = 1;
+                                    foreach (var item in Model)
+                                    {
+                                        <tr>
+                                            <td>@{int SrNo = ((ViewBag.PageNumber - 1) * ViewBag.PageSize) + i; i = i + 1; } @SrNo</td>
+                                            <td>
+                                                <a href="#" onclick="Details(@item.UserLoginID)" title="Click to view details..">
+                                                    @Html.DisplayFor(modelItem => item.FirstName)
+                                                </a>
+                                            </td>
+                                            <td>
+                                                @if (item.TotalOrder != null)
+                                                {
+                                                    @Html.DisplayFor(modelItem => item.TotalOrder)
+                                                }
+                                            </td>
+                                            <td>
+                                                @if (item.TotalAmount != null)
+                                                {
+                                                    @Html.DisplayFor(modelItem => item.TotalAmount)
+                                                }
+                                            </td>
+                                            <td>
+                                                @if (item.LastPurchasedDate != null)
+                                                {
+                                                    @Html.Raw(((DateTime)item.LastPurchasedDate).ToString("dd/MM/yyyy"))//ToString("dd/MM/yyyy hh:mm:ss tt"))
+                                                }
+                                            </td>
+                                            <td>
+                                                @Html.DisplayFor(modelItem => item.RegMobile)
+                                            </td>
+                                            <td>
+                                                @Html.DisplayFor(modelItem => item.RegEmail)
+                                            </td>
+                                            <td>
+                                                @Html.Raw(item.CreateDate.ToString("dd/MM/yyyy"))
+                                            </td>
+                                        </tr>
+                                    }
+                                }
+                            </table>
+                        </div>
+                        <div class="pager">
+                            @Html.PagedListPager(Model, Page => Url.Action("Index", new
+                       {
+                           page = Page,
+                           LastPurchaseDateMin = ViewBag.LastPurchaseDateMin,
+                           LastPurchaseDateMax = ViewBag.LastPurchaseDateMax,
+                           Customer = ViewBag.Customer,
+                           Mobile = ViewBag.Mobile,
+                           Email = ViewBag.Email,
+                           TotalOrderMin = ViewBag.TotalOrderMin,
+                           TotalOrderMax = ViewBag.TotalOrderMax,
+                           TotalAmountMin = ViewBag.TotalAmountMin,
+                           TotalAmountMax = ViewBag.TotalAmountMax,
+                           FromDate = ViewBag.FromDate,
+                           ToDate = ViewBag.ToDate
+                       }),
+                                                                new PagedListRenderOptions()
+                                                                {
+                                                                    Display = PagedListDisplayMode.IfNeeded
+                                                                })
+                        </div>
+                    </div>
+                    <!-- /widget-content -->
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- /span12 -->
+    <div class="span4 spanLeft" style="margin-top:12px;">
+        <div class="loader">
+            <img id="loader_img" src="~/Content/Images/ajax_loader.gif" style="display:none; width:100px; height:100px;" />
+        </div>
+        <div id="Details"></div>
+
+    </div>
+
+</div>
+
+<script src="~/Content/new-design-form/js/bootstrap-datepicker.js"></script>
+<link href="~/Content/css/datepicker.css" rel="stylesheet" />
+
+
+@section MyScripts{
+    <script>
+        //----------------------------------------------------------------------For datepicker---//
+        //<![CDATA[
+        $(window).load(function () {
+            $("#Page_loader").toggle();
+            $('#LastPurchaseDateMin').datepicker('getDate');
+            $('#LastPurchaseDateMax').datepicker('getDate');
+            $('#FromDate').datepicker('getDate');
+            $('#ToDate').datepicker('getDate');
+
+        });//]]>
+
+        function Details(id) {
+            $('#divtable').removeClass('span12');
+            $('#divtable').addClass('span7');
+            $('.control-group').addClass('setwidth');
+            window.parent.$("[id$=Details]").show();
+            $('#loader_img').show();
+            $.ajax({
+                url: '@Url.Action("Details", "CustomerDetail")?id=' + id,
+                type: "GET",
+                success: function (result) {
+                    $('#loader_img').hide();
+                    $('#Details').html(result);
+                },
+                error: function (data) {
+                    $('#Details').empty();
+                    $('#loader_img').hide();
+                }
+            });
+            if ($("#Details").length > 0) {
+                $("#divtable").css('width', '745px');
+
+                $(".spanLeft").css('width', '28%');
+                $(".search").css('width', '80px');
+                //$(".excel-group").after('float','left');
+            } else {
+                $("#divtable").css('width', '100%');
+            }
+        }
+
+        function PrintDivContent(divId) {
+            var printContent = document.getElementById(divId);
+            var WinPrint = window.open('', '', 'left=0,top=0,toolbar=0,sta­tus=0');
+            WinPrint.document.write(printContent.innerHTML);
+            WinPrint.document.close();
+            WinPrint.focus();
+            WinPrint.print();
+        }
+    </script>
+    <script type="text/javascript">
+        function Back() {
+            $("#divtable").css('width', '100%');
+        }
+
+        function ValidateType() {
+            var type = $('input[name=exportType]:radio:checked').val();
+            if (type == null || type == "") {
+                alert('Select format to Export !!');
+                return false;
+            }
+            return true;
+        }
+        $("#btnClear").click(function () {
+            0
+            $('form input').val("");
+            $('form select').val("");
+            $("#TotalOrderMin").val(0);
+            $("#TotalOrderMax").val(100);
+            $("#TotalAmountMin").val(0);
+            $("#TotalAmountMax").val(10000000);
+        });
+    </script>
+}
+
+
+
+
+
+
+
+
+
+

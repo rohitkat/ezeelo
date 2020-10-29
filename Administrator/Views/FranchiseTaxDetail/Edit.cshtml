@@ -1,0 +1,319 @@
+﻿@model ModelLayer.Models.FranchiseTaxDetail
+
+@{
+    ViewBag.Title = "Edit";
+}
+
+<style>
+    fieldset.scheduler-border {
+        border: 1px groove #ddd !important;
+        padding: 0 1.4em 1.4em 1.4em !important;
+        /*margin: 0 0 1.5em 0 !important;*/
+        -webkit-box-shadow: 0px 0px 0px 0px #000;
+        box-shadow: 0px 0px 0px 0px #000;
+        width: 260px;
+        height: 298px;
+    }
+
+    legend.scheduler-border {
+        font-size: 1.2em !important;
+        font-weight: bold !important;
+        text-align: left !important;
+        color: #0E489E;
+    }
+
+    .control-group label {
+        font-weight: bold;
+    }
+
+    .isAct {
+        margin-left: -105px;
+        margin-top: 28px;
+    }
+
+    .form-horizontal .controls {
+        margin-left: 0;
+    }
+
+    .control-group label {
+        font-weight: bold;
+    }
+
+    .control-label {
+        margin-right: 3px;
+    }
+
+    #LowerLimit {
+        width: 110px;
+    }
+
+    #UpperLimit {
+        width: 110px;
+    }
+</style>
+
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+
+
+    <div class="span10" id="content">
+        <ul class="breadcrumb">
+            <li>
+                <i class="icon-edit"></i>
+                @*<a href="index.cshtml">Home</a>*@
+                Edit
+            </li>
+        </ul>
+        <div class="row-fluid">
+            <div class="box span12">
+                <div class="box-header">
+                    <h2><i class="halflings-icon user"></i><span class="break"></span>FranchiseTaxDetail</h2>
+
+                </div>
+                @if (ViewBag.Message != null)
+                {
+                    <span style="font-weight:bold;color:red;">@ViewBag.Message</span>
+                }
+                <div class="box-content">
+                    <div class="form-horizontal">
+                        @Html.ValidationSummary(true)
+                        @Html.HiddenFor(model => model.ID)
+                        <div class="span12" style="margin-left:0px;">
+                            <div class="control-group span2">
+                                @Html.LabelFor(model => model.CityID, "CityID", new { @class = "" })
+                                <div class="controls">
+                                    @Html.Label("CityID", (string)ViewBag.CityID)
+                                    @Html.ValidationMessageFor(model => model.CityID)
+                                    @Html.HiddenFor(model => model.CityID)
+                                </div>
+                            </div>
+
+                            <div class="control-group span2">
+                                @Html.LabelFor(model => model.FranchiseID, "FranchiseID", new { @class = "" })
+                                <div class="controls">
+
+                                    @Html.Label("FranchiseID", (string)ViewBag.FranchiseID)
+                                    @Html.HiddenFor(model => model.FranchiseID)
+                                    @Html.ValidationMessageFor(model => model.FranchiseID)
+                                </div>
+                            </div>
+
+                            <div class="control-group span2">
+                                @Html.LabelFor(model => model.TaxationID, "TaxationID", new { @class = "" })
+                                <div class="controls">
+                                    @Html.Label("TaxationID", (string)ViewBag.TaxationID)
+                                    @Html.HiddenFor(model => model.TaxationID)
+                                    @Html.ValidationMessageFor(model => model.TaxationID)
+                                </div>
+                            </div>
+
+                            <div class="control-group span3">
+                                @Html.LabelFor(model => model.InPercentage, new { @class = "" })
+                                <div class="controls">
+                                    @Html.EditorFor(model => model.InPercentage)
+                                    @Html.HiddenFor(model => model.InPercentage)
+
+                                </div>
+                            </div>
+
+                            <div class="control-group span3">
+                                @Html.LabelFor(model => model.IsActive, new { @class = "control-label col-md-2 isAct" })
+                                <div class="controls" style="margin-top:30px;">
+                                    @Html.EditorFor(model => model.IsActive)
+                                    @Html.ValidationMessageFor(model => model.IsActive)
+                                </div>
+                            </div>
+
+                        </div>
+                        @*<div class="control-group">
+                                @Html.LabelFor(model => model.IsActive, new { @class = "control-label col-md-2" })
+                                <div class="col-md-10 controls">
+                                    @Html.EditorFor(model => model.IsActive)
+                                    @Html.ValidationMessageFor(model => model.IsActive)
+                                </div>
+                            </div>*@
+
+
+                        @*<div class="control-group">
+                                @Html.LabelFor(model => model.InRupees, new { @class = "control-label col-md-2" })
+                                <div class="col-md-10 controls">
+                                    @Html.LabelFor(model => model.InRupees)
+                                    @Html.ValidationMessageFor(model => model.InRupees)
+                                </div>
+                            </div>*@
+                        <div class="span12" style="margin-left:0px;">
+                            <fieldset class="scheduler-border span3">
+                                <legend class="scheduler-border">Other</legend>
+                                <div class="control-group">
+                                    @Html.LabelFor(model => model.IsDirect, new { @class = "control-label col-md-2" })
+                                    <div class="col-md-10 controls">
+                                        @Html.EditorFor(model => model.IsDirect)
+                                        @Html.HiddenFor(model => model.IsDirect)
+                                        @Html.ValidationMessageFor(model => model.IsDirect)
+                                    </div>
+                                </div>
+
+                                <div class="control-group">
+                                    @Html.LabelFor(model => model.IsCustomerSide, new { @class = "control-label col-md-2" })
+                                    <div class="col-md-10 controls">
+                                        @Html.EditorFor(model => model.IsCustomerSide)
+                                        @Html.ValidationMessageFor(model => model.IsCustomerSide)
+                                    </div>
+                                </div>
+                            </fieldset>
+
+                            <fieldset class="scheduler-border span4">
+                                <legend class="scheduler-border">Tax Limit</legend>
+                                <div class="control-group">
+                                    @*Limits in Percentage*@
+                                    @Html.LabelFor(model => model.IsPercentage, new { @class = "control-label col-md-2" })
+                                    <div class="col-md-10 controls">
+                                        @Html.EditorFor(model => model.IsPercentage)
+                                        @Html.ValidationMessageFor(model => model.IsPercentage)
+                                    </div>
+                                </div>
+                                <div class="control-group">
+                                    @Html.LabelFor(model => model.LowerLimit, new { @class = "control-label col-md-2" })
+                                    <div class="col-md-10 controls">
+                                        @Html.EditorFor(model => model.LowerLimit)
+                                        @Html.ValidationMessageFor(model => model.LowerLimit)
+                                    </div>
+                                </div>
+
+                                <div class="control-group">
+                                    @Html.LabelFor(model => model.UpperLimit, new { @class = "control-label col-md-2" })
+                                    <div class="col-md-10 controls">
+                                        @Html.EditorFor(model => model.UpperLimit)
+                                        @Html.ValidationMessageFor(model => model.UpperLimit)
+                                    </div>
+                                </div>
+                            </fieldset>
+
+
+                            <fieldset class="scheduler-border span3">
+                                <legend class="scheduler-border">Indirect Tax setting</legend>
+
+                                <div class="control-group">
+                                    @Html.LabelFor(model => model.IsOnTaxSum, new { @class = "control-label col-md-2" })
+                                    <div class="col-md-10 controls">
+                                        @Html.EditorFor(model => model.IsOnTaxSum)
+                                        @Html.ValidationMessageFor(model => model.IsOnTaxSum)
+                                    </div>
+                                </div>
+
+                                <div class="control-group">
+                                    @Html.LabelFor(model => model.IsMinusTaxs, new { @class = "control-label col-md-2" })
+                                    <div class="col-md-10 controls">
+                                        @Html.EditorFor(model => model.IsMinusTaxs)
+                                        @Html.ValidationMessageFor(model => model.IsMinusTaxs)
+                                    </div>
+                                </div>
+
+                                <div class="control-group">
+                                    @Html.LabelFor(model => model.IsIncludeSaleRate, new { @class = "control-label col-md-2" })
+                                    <div class="col-md-10 controls">
+                                        @Html.EditorFor(model => model.IsIncludeSaleRate)
+                                        @Html.ValidationMessageFor(model => model.IsIncludeSaleRate)
+                                    </div>
+                                </div>
+                            </fieldset>
+                        </div>
+                        @*<div class="control-group" style="margin-left:-87px;">
+                                @Html.LabelFor(model => model.IsActive, new { @class = "control-label col-md-2" })
+                                <div class="col-md-10 controls">
+                                    @Html.EditorFor(model => model.IsActive)
+                                    @Html.ValidationMessageFor(model => model.IsActive)
+                                </div>
+                            </div>*@
+
+
+                        <div class="span12" style="margin-left:0px;">
+                            <div class="form-actions">
+                                <div class="col-md-offset-2 col-md-10">
+                                    <input type="submit" value="Save" class="btn btn-success" />
+                                    @Html.ActionLink("Back to List", "Index", string.Empty, new { @class = "btn " })
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}
+
+
+<script src="~/Scripts/jquery-1.10.2.min.js"></script>
+<script>
+    $(document).ready(function () {
+
+        $("#IsCustomerSide").prop({ disabled: false, checked: true });
+        $("#IsActive").prop({ disabled: false, checked: true });
+        $("#IsPercentage").prop({ disabled: true, checked: true });
+
+        $("#IsDirect").click(function () {
+            var isChecked = $(this).is(':checked');
+            if ($('#IsDirect:checked').length) {
+                $("#IsOnTaxSum").prop({ disabled: true, checked: false });
+                $("#IsIncludeSaleRate").prop({ disabled: true, checked: false });
+                $("#IsMinusTaxs").prop({ disabled: true, checked: false });
+            }
+            else {
+                $("#IsOnTaxSum").prop({ disabled: false, checked: false });
+                $("#IsIncludeSaleRate").prop({ disabled: false, checked: false });
+                $("#IsMinusTaxs").prop({ disabled: false, checked: false });
+            }
+        });
+
+
+        $("#IsOnTaxSum").click(function () {
+            var isChecked = $(this).is(':checked');
+
+            if ($('#IsOnTaxSum:checked').length) {
+                $("#IsDirect").prop({ disabled: true, checked: false });
+                $("#IsMinusTaxs").prop({ disabled: true, checked: false });
+            }
+            else {
+                $("#IsDirect").prop({ disabled: false, checked: false });
+                $("#IsMinusTaxs").prop({ disabled: false, checked: false });
+            }
+        });
+
+        $("#IsMinusTaxs").click(function () {
+            var isChecked = $(this).is(':checked');
+
+            if ($('#IsMinusTaxs:checked').length) {
+                $("#IsDirect").prop({ disabled: true, checked: false });
+                $("#IsOnTaxSum").prop({ disabled: true, checked: false });
+                $("#IsIncludeSaleRate").prop({ disabled: true, checked: false });
+            }
+            else {
+                $("#IsDirect").prop({ disabled: false, checked: false });
+                $("#IsOnTaxSum").prop({ disabled: false, checked: false });
+                $("#IsIncludeSaleRate").prop({ disabled: false, checked: false });
+            }
+        });
+
+        $("#IsIncludeSaleRate").click(function () {
+            var isChecked = $(this).is(':checked');
+
+            if ($('#IsIncludeSaleRate:checked').length) {
+                $("#IsDirect").prop({ disabled: true, checked: false });
+                $("#IsOnTaxSum").prop({ disabled: true, checked: true });
+                $("#IsMinusTaxs").prop({ disabled: true, checked: false });
+            }
+            else {
+                $("#IsDirect").prop({ disabled: false, checked: false });
+                $("#IsMinusTaxs").prop({ disabled: false, checked: false });
+                $("#IsOnTaxSum").prop({ disabled: false, checked: false });
+            }
+        });
+
+    });
+</script>

@@ -1,0 +1,184 @@
+﻿@model IEnumerable<ModelLayer.Models.Weekly_Seasona_Festival_Message>
+
+@{
+    //  Layout = null;
+    ViewBag.Title = "Weekly Seasona Festival Message";
+    ModelLayer.Models.EzeeloDBContext db = new ModelLayer.Models.EzeeloDBContext();
+    List<ModelLayer.Models.MessageType> lMessageType = new List<ModelLayer.Models.MessageType>();
+    lMessageType = db.MessageTypes.ToList();
+}
+<style>
+    .pagination {
+        margin: 0px 40px;
+    }
+
+    .dataTables_length {
+        margin-left: 1px;
+        margin-top: 7px;
+    }
+
+    div.checker {
+        margin-top: -5px !important;
+    }
+</style>
+<div id="content" class="span10" style="min-height: 400px;">
+    <div class="row-fluid">
+        <div class="box span12">
+            <div class="box-header">
+                <h2><i class="icon-edit"></i><span class="break"></span>@Html.ActionLink("Create New", "Create")</h2>
+
+            </div>
+            <div class="box-content">
+                @*<div class="row-fluid">  
+                    <div class="span6">
+                        <span class="hed-owner">Select Messages Type</span>
+                        @Html.DropDownList("MessagesType", null, "Select", new { @style = "width:auto;" })
+                    </div>
+                </div>*@
+                <table class="table table-striped table-bordered bootstrap-datatable datatable dataTable" id="tableSimilarProduct">
+                    <thead>
+                        <tr style="font-weight:bold;">
+                            <th>
+                                <label>Message</label>
+                                @*@Html.DisplayNameFor(model => model.Message)*@
+                            </th>
+                            <th>
+                                <label> Message Type</label>
+                            </th>
+                            <th>
+                                <label>Min Order In Rupees</label>
+                            </th>
+                            <th>
+                                <label>Weekly Holiday</label>
+                                @*@Html.DisplayNameFor(model => model.WeeklyHoliday)*@
+                                @*Weekly Holiday*@
+                            </th>
+                            <th>
+                                <label>Seasonal Msg From Month</label>
+                                @*@Html.DisplayNameFor(model => model.SeasonalMsgFrmMonth)*@
+                                @*Seasonal Msg From Month*@
+                            </th>
+                            <th>
+                                <label>Seasonal Msg To Month</label>
+                                @*@Html.DisplayNameFor(model => model.SeasonalMsgToMonth)*@
+                                @*Seasonal Msg To Month*@
+                            </th>
+                            <th>
+                                <label>Festival Msg From Date</label>
+                                @*@Html.DisplayNameFor(model => model.FestivalMsgFrmDate)*@
+                                @*Festival Msg From Date*@
+                            </th>
+                            <th>
+                                <label>Festival Msg To Date</label>
+                                @*@Html.DisplayNameFor(model => model.FestivalMsgToDate)*@
+                                @*Festival Msg To Date*@
+                            </th>
+                            <th>
+                                <label>IsActive</label>
+                                @*@Html.DisplayNameFor(model => model.IsActive)*@
+                            </th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Message)
+                            </td>
+                            <td>
+                                @if(lMessageType.Any(x=>x.ID==item.MessageTypeID)){
+                                @*<span class="btn btn-small btn-info" style="word-break: break-word;">[@lMessageType.FirstOrDefault(x => x.ID == item.MessageTypeID).MessageType1]</span>*@
+                                    @lMessageType.FirstOrDefault(x => x.ID == item.MessageTypeID).MessageType1
+                                }
+                                
+                                @*@Html.DisplayFor(modelItem => item.MessageTypeID)*@
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.MinimumOrderInRupee)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.WeeklyHoliday)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.SeasonalMsgFrmMonth)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.SeasonalMsgToMonth)
+                            </td>
+                            <td>
+                                @Convert.ToString(string.Format("{0:MM/dd/yyyy}", item.FestivalMsgFrmDate))
+                                @*@Html.DisplayFor(modelItem => item.FestivalMsgFrmDate)*@
+                            </td>
+                            <td>
+                                @Convert.ToString(string.Format("{0:MM/dd/yyyy}", item.FestivalMsgToDate))
+                                @*@Html.DisplayFor(modelItem => item.FestivalMsgToDate)*@
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.IsActive)
+                            </td>
+                            <td class="center" style="width: 110px;">
+                                @Html.ActionLink("Edit", "Edit", new { id = item.ID }, new { @class = "btn btn-small btn-danger" })
+                                @Html.ActionLink("Details", "Details", new { id = item.ID }, new { @class = "btn btn-small btn-primary" })
+                                @*@Html.ActionLink("Delete", "Delete", new { id = item.UserLoginID })*@
+                            </td>
+                        </tr>
+                    }
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="~/Scripts/jquery-1.10.2.min.js"></script>
+<script>
+    
+    $(function () {
+        $('#MessagesType').change(function (e) {
+            var selectedVal = $('#MessagesType option:selected').val();
+            if (selectedVal == '') {
+                selectedVal = 0;
+            }
+            //var selectOwner = $('#BusinessType option:selected').val();
+            //alert(selectedVal);
+            //if (selectedVal > 0) {
+            $.ajax({
+                type: "POST",
+                url: "/WeeklySeasonalFestivalMessages/MessageTypeList",
+                data: "{MessageTypeID:" + selectedVal + "}",
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                async: true,
+                cache: false,
+                success: function (msg) {
+                    $('#tableSimilarProduct').children('tbody').empty();
+
+                    $.each(msg, function (index, item) {
+                        $("#tableSimilarProduct tbody").append("<tr>" +
+                            "<td>" + item.Message + "</td>" +
+                            "<td>" + item.MessageTypeID + "</td>" +
+                             "<td>" + item.WeeklyHoliday + "</td>" +
+                             "<td>" + item.SeasonalMsgFrmMonth + "</td>" +
+                             "<td>" + item.SeasonalMsgToMonth + "</td>" +
+                              "<td>" + item.FestivalMsgFrmDate + "</td>" +
+                               "<td>" + item.FestivalMsgToDate  + "</td>" +
+                            "<td><div class='checker'><input type='checkbox' class='check-box' disabled='disabled' id='IsActive'/></div></td>" +
+                            "<td>" +
+                            "<a class='btn btn-small btn-danger' href='@Url.Action("Edit", "EmployeeManagement")?id=" + item.LoginID + "'> Edit </a> " +
+                            "<a class='btn btn-small btn-primary' href='@Url.Action("Details", "EmployeeManagement")?id=" + item.LoginID + "'>Details </a> "
+                            @*"<a class='btn btn-danger'href='@Url.Action("Delete", "EmployeeManagement")?id=" + item.LoginID + "'>Delete </a>"*@
+                            + "</td> </tr>"
+                        );
+                        $("#tableSimilarProduct tr:last").find('#IsActive').prop('checked',item.IsActive);
+
+                    });
+                },
+                error: function (x, e) {
+                    alert("Sorry No Unable to Bind Data. ");
+                }
+            });
+            //}
+
+        });
+    });
+    </script>

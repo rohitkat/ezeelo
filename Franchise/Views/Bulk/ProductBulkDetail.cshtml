@@ -1,0 +1,259 @@
+﻿@model IEnumerable<ModelLayer.Models.ViewModel.BulkProductViewModel>
+
+@{
+    ViewBag.Title = "ProductBulkDetails";
+   
+}
+
+<h1>Product Bulk Detail</h1>
+@Html.ActionLink("Back to Upload History", "Index", "Bulk", new { ShopID = @HttpContext.Current.Session["BulkUploadShopID"], FranchiseID = @HttpContext.Current.Session["BulkUploadFranchiseID"] }, new { @class = "btn btn-primary" })
+@if (Request.QueryString["bulkLogID"] != null)
+{
+    BusinessLogicLayer.ReadConfig obj=new BusinessLogicLayer.ReadConfig(System.Web.HttpContext.Current.Server);
+    
+    @Html.Hidden("hdnPdfPath", obj.IMAGE_HTTP+"/BulkUploadTemplate/pdf-BulkLog-" + Request.QueryString["bulkLogID"] + "-DescriptionTemplate.pdf")
+}
+<h2>Upload Bulk ProductDescription Files</h2>
+<div>
+    <i>
+        <span style="color:blue">Note:</span> For uploading description files in bulk,  You can select multiple files by clicking on browse button. Please make sure, naming convention for file should be appropriate. To know correct name of description files,
+        <span style="color:blue"><a id="anchorPdf" class="link">Download Product Description Feed Template</a></span>
+    </i>
+     
+</div>
+@using (Html.BeginForm("DescriptionFiles", "Bulk", FormMethod.Post, new { enctype = "multipart/form-data", id = "frmID" }))
+{
+
+        if (Request.QueryString["bulkLogID"] != null)
+        { 
+        @Html.Hidden("BulkProductLogID", Request.QueryString["bulkLogID"].ToString())
+        }
+    <div id="uploaders">
+        <input type="file" id="fileUploadProductImages" name="fileUpload" multiple="multiple" style="float: left;" />
+        <br />
+        <span id="spnFile" style="float: left; color: #FF0000"></span>
+        @Html.ValidationMessage("File")
+        @Html.Hidden("hdnFileUpload")
+    </div>
+    <br />
+    <div class="col-lg-6">
+        <button class="btn btn-primary" id="btnUploadProductImages" type="submit">Start Bulk Description File Uploading</button>
+    </div>
+    <div id="ValidationMessage" class="validation-summary-errors">
+
+        @if (TempData["ProductDescFailureMsg"] != null)
+        {
+            @Html.Raw(TempData["ProductDescFailureMsg"])
+        }
+
+    </div>
+    <div id="SuccessMessage" style="color:green;">
+
+        @if (TempData["ProductDescSuccessMsg"] != null)
+        {
+            @Html.Raw(TempData["ProductDescSuccessMsg"])
+        }
+
+    </div>
+
+    <br />
+    <div class="control-section" style="padding: 0px;">
+        <div id="selectedFiles"></div>
+    </div>
+
+    //@Html.Hidden("RowID", (int)ViewData["RowID"])
+}
+
+
+<table class="table">
+    <tr>
+        <th>
+         Excel Sr.No.
+        </th>
+        <th>
+          ProductName
+        </th>
+        <th>
+           CategoryName
+        </th>
+        <th>
+          WeightInGram
+        </th>
+        <th>
+           LengthInCm
+        </th>
+        <th>
+           BreadthInCm
+        </th>
+        <th>
+            HeightInCm
+        </th>
+        <th>
+            BrandName
+        </th>   
+        <th>
+            Description
+            
+        <th>
+            SearchKeyword
+        </th> 
+        <th>
+            IsDescFile Uploaded
+        </th>
+        <th>
+            Result
+        </th>
+        <th>
+            Remark
+        </th>
+     
+       
+       
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.ExcelRowID)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.ExcelProductName)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.CategoryName)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.WeightInGram)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.LengthInCm)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.BreadthInCm)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.HeightInCm)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.BrandName)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Description)
+        </td>      
+        <td>
+            @Html.DisplayFor(modelItem => item.SearchKeyword)
+        </td>
+        <td class="center">@Html.CheckBoxFor(modelItem => item.isDescUploaded, new { @class = "chkBox" })</td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Result)
+        <td>
+            @Html.DisplayFor(modelItem => item.ResultDescription)
+        </td>
+      
+    </tr>
+}
+
+</table>
+
+<script src="~/Scripts/jquery-1.10.2.js"></script>
+<script type="text/javascript">
+
+    $(function () {
+        $('#fileUploadProductImages').change(function () {
+            var f = this.files[1]
+
+            $("#SuccessMessage").html("");
+            $("#ValidationMessage").html("");
+            Size = 0;
+            for (var i = 0; i < this.files.length; ++i) {
+
+                var filetype = this.files[i].type;
+                //alert(filetype);
+                var ValidImageTypes = ["text/htm", "text/html", "text/mhtml"];
+
+                if ($.inArray(filetype, ValidImageTypes) < 0) {
+                    $("#ValidationMessage").html("Invalid file Type. Please upload only html files.");
+                    break;
+                }
+                var f = this.files[i]               
+                Size += f.size;
+
+            }
+            //3MB= 3145728
+            if (Size > 3145728) {
+                $("#ValidationMessage").html("Total max Size allowed is 3 MB.");
+                // alert("Total max Size allowed is 3 MB.");
+            }
+
+        });
+
+    });
+    $(document).ready(function () {
+        $("#pageloaddiv").attr("display", "none");
+        $("#pageloaddiv").css("display", "none");
+
+        //if ($.trim($("#hdnStockImageUploadMessage").val() != "")) {
+
+        //    var res = $.trim($("#hdnStockImageUploadMessage").val()).split("$");
+        //    //It conatins value of type ExcelRowID$FailureCounter
+        //    if (res[1] > 0) {
+        //        //FailureCouter >0
+        //        //put errormessage in div with ID = StockImageErrorMessage_ExcelRowID present in shared/_UploadStockImages.cshtml
+        //        $("#StockImageErrorMessage_" + res[0]).html("Problem in Image Uploding on FTP.");
+        //        setTimeout(function () { $("#StockImageErrorMessage_" + res[0]).fadeOut(1500); }, 50000)
+        //    }
+
+        //}
+
+        $("#btnUploadProductImages").click(function () {
+
+            var has_selected_file = $('#fileUploadProductImages').val();
+            //alert(has_selected_file);
+
+            var isAnyValidatonError = $("#ValidationMessage").html();
+            if (isAnyValidatonError.trim().length > 0 || has_selected_file == "") {
+                $("#pageloaddiv").attr("display", "none");
+                $("#pageloaddiv").css("display", "none");
+
+                //setInterval(blinkerProduct, 1000);
+
+                return false;
+            }
+            else {
+
+
+                if (has_selected_file != "") {
+                    $("#pageloaddiv").attr("display", "block");
+                    $("#pageloaddiv").css("display", "block");
+                    return true;
+
+                }               
+
+                else {
+
+                    $("#ValidationMessage").html("Please select description files to be uploaded with naming convensions given in Description Feed Template. Total max Size allowed is 3 MB.")
+                    $("#pageloaddiv").attr("display", "none");
+                    $("#pageloaddiv").css("display", "none");
+
+                    return false;
+                }
+            }
+
+        });
+
+
+
+    });
+    function blinkerProduct() {
+
+        $('#ValidationMessage').fadeOut(800);
+        $('#ValidationMessage').fadeIn(800);
+    }
+
+</script>
+<script>
+    $(function () {
+        $("#anchorPdf").attr("href", $("#hdnPdfPath").val());
+    });
+
+</script>

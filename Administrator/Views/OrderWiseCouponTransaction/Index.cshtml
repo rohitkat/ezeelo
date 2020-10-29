@@ -1,0 +1,381 @@
+﻿@model IEnumerable<ModelLayer.Models.ViewModel.OrderWiseCouponTransactionViewModel>
+
+@{
+    ViewBag.Title = "Order Wise Coupon Transaction Report";
+}
+<style>
+    .btn_Print {
+        margin-bottom: 7px;
+        margin-top: 7px;
+        margin-left: 5px;
+    }
+    .table {
+        width: 100%;
+        margin-bottom: 0px;
+    }
+    .section {
+        position: relative;
+        /*border: 1px solid #000;*/
+        padding-top: 33px;
+        margin-left: 5px;
+        /*background: #A4A5A7;*/
+        margin-top: 10px;
+    }
+    select {
+        width: 160px;
+        background-color: #fff;
+        border: 1px solid #ccc;
+        text-transform: lowercase;
+    }
+    #myTable_wrapper {
+        min-height: 61px;
+        margin-top: 2px;
+        max-height: 516px;
+    }
+
+    .fg-toolbar {
+        margin-top: -89px;
+    }
+
+    #myTable_filter {
+        position: absolute;
+        margin-top: 13px !important;
+    }
+
+    .section.positioned {
+        position: absolute;
+        top: 100px;
+        left: 100px;
+        width: 800px;
+        box-shadow: 0 0 15px #333;
+    }
+
+    .container_tbl {
+        overflow-y: auto;
+        height: 300px;
+        height: 420px;
+        overflow-x: hidden;
+    }
+
+    table {
+        border-spacing: 0;
+        width: 100%;
+    }
+
+    td + td {
+        border-left: 1px solid #eee;
+    }
+
+    td, th {
+        border-bottom: 1px solid #eee;
+        /*background: #ddd;*/
+        color: #000;
+        padding: 10px 25px;
+    }
+
+    .ui-widget-header {
+        border: none;
+    }
+
+    #ExportOption {
+        margin-top: 10px;
+    }
+
+    th:first-child div {
+        border: none;
+    }
+
+    .wrap {
+        margin-top: 105px;
+    }
+
+    td:nth-of-type(1) {
+        width: 30px;
+    }
+
+    td:nth-of-type(2) {
+        width: 150px;
+        word-wrap: break-word;
+        word-break: break-all;
+    }
+
+    td:nth-of-type(3) {
+        width: 100px;
+    }
+
+    td:nth-of-type(4) {
+        width: 120px;
+    }
+
+    td:nth-of-type(5) {
+        width: 120px;
+    }
+
+    td:nth-of-type(6) {
+        width: 120px;
+    }
+
+    td:nth-of-type(7) {
+        width: 110px;
+    }
+
+    #myTable_wrapper, .scrollable #myTable {
+        overflow: hidden;
+    }
+
+    .margingnew {
+        margin-top: 10px;
+    }
+
+    input[type=text] {
+        width: 120px;
+    }
+    input[type=text] {
+        width: 150px;
+    }
+    .glyphicons-icon {
+        display: inline-block;
+        width: 34px;
+        height: 34px;
+        line-height: 48px;
+        vertical-align: text-top;
+        background-position: 0 0;
+        background-repeat: no-repeat;
+        vertical-align: top;
+    }
+    .btn-brown {
+        color: #ffffff;
+        background-color: #267196;
+        border-color: #8AA0B9;
+        background-image: none;
+        filter: none;
+        text-shadow: none;
+        width: 47px !important;
+        margin-left: 7px;
+        padding: 1px !important;
+    }
+</style>
+
+<!-- start: Content -->
+<div class="span10" id="content">
+    <div class="row-fluid">
+        <div class=" box span12 ">
+            <div class="box-header"><h2 style="font-weight:bold;">Order Wise Coupon Transaction</h2></div>
+            <div class="box bg-box">
+                <div class="row-fluid" @*style="padding-left:44px;"*@>
+                    <div class="span12" style="padding-top: 10px;padding-left: 10px;">
+                        <div class="span2">
+                            <input type="text" id="FromDate" name="FromDate" class="input-large datepicker" placeholder="From Date" />
+                            <label for="txtFromDate" class="dtPic"></label>
+                        </div>
+                        <div class="span2">
+                            <input type="text" id="ToDate" name="ToDate" class="input-large datepicker" placeholder="To Date" />
+                            <label for="txtToDate" class="dtPic"></label>
+                            <label id="lblMsg" style="color: red; margin-top: -10px; margin-left: 30px;"></label>
+                        </div>
+                        <div class="span2">
+                            @Html.DropDownList("FranchiseID", (List<SelectListItem>)ViewBag.FranchisesID, "--Select FranchiseID--")
+                        </div>
+                        <div class="span2">
+                            @Html.DropDownList("CouponScheme", (SelectList)ViewBag.SchemeID, "--Select Coupon Scheme--")
+                        </div>
+                        <div class="span4">
+                            <select id="CouponCode" name="CouponCode" />
+                            <input type="submit" value="Search" id="btnSearch" class="btn btn-primary " style="margin-left: 10px;margin-top: -10px;">
+                        </div>
+                    </div>
+                    <div class="span12" style="padding-top: 10px; padding-left: 10px; margin-left: 0px;">
+                        <div class="span2 ">
+                            @Html.DropDownList("ExportOption", new List<SelectListItem>
+
+    {
+
+       new SelectListItem{ Text="Excel", Value = "1" },
+       new SelectListItem{ Text="Csv", Value = "2" },
+       new SelectListItem{ Text="Pdf", Value = "3" }
+
+    })
+                        </div>
+                        <div class="span4 " style="margin-top: 12px;">
+                            <input type="submit" value="Export" id="btnExport" class="btn btn-brown btn-warning1" />
+                            <input type="submit" value="Print" id="btnPrint" class="btn btn-brown btn-warning1" onclick="PrintReport()" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+                        <table class="table" id="DataTables_Table_0" aria-describedby="DataTables_Table_0_info">
+                            <tr>
+                                <td>
+                                    <div id="divReport" style="width:100%; overflow:visible">
+                                    </div>
+                                </td>
+                            </tr>
+                        </table>
+        </div>
+    </div>
+</div>
+
+<div class="loader">
+    <img id="loader_img" src="~/Content/img/loader.gif" style="display: none" />
+</div>
+<script src="~/Content/js/jquery-1.9.1.min.js"></script>
+<script type="text/javascript">
+    $(function () {
+        $("input#btnSearch").on('click', function () {           
+            $('#loader_img').show();
+            var pagecount = 0;
+            var page = 1;
+            var toDate = $('#ToDate').val();
+            var fromDate = $('#FromDate').val();
+            var shopID = 0;
+            var print = 0;           
+            var couponScheme = null;
+            var couponCode = "";
+            var franchiseID = null;
+            franchiseID = $('#FranchiseID :selected').val();
+            var isValid = ValidateDate(fromDate, toDate, franchiseID);
+            couponScheme = $('#CouponScheme :selected').val();
+            couponCode = $('#CouponCode :selected').text();           
+            if (isValid == false) {
+                $('#loader_img').hide();
+                return;
+            }
+            $.ajax({
+                url: '@Url.Action("GetReport", "OrderWiseCouponTransaction")',
+                data: { 'page': page, 'pagecount': pagecount, 'fromDate': fromDate, 'toDate': toDate, 'franchiseID': franchiseID, 'couponScheme': couponScheme, 'couponCode': couponCode, 'print': print },
+                type: "Post",
+                cache: false,
+                success: function (data) {
+                    $('#loader_img').hide();
+                    $('#divReport').empty();
+                    $('#divReport').append(data);
+                },
+                error: function (data) {
+
+                }
+            });
+        });
+    });
+
+
+
+    $("select#CouponScheme").bind('change', function () {
+       // alert('enter');
+
+        var CouponScheme = $("select#CouponScheme option:selected").val();       
+        if (CouponScheme == 0) {
+            $('#CouponCode').empty();
+            return;
+        }
+        $.ajax({
+            type: "POST",
+            url: '@Url.Action("BindSchemeCodes", "OrderWiseCouponTransaction")',
+            data: { 'CouponScheme': CouponScheme },
+            cache: false,
+            success: function (msg) {
+                $('#CouponCode').empty();
+                $('#CouponCode').append('<option value="">Select Coupon Code</option>');
+                $.each(msg, function (index, item) {                  
+                    $('#CouponCode').append('<option value=' + item.CoupenCode + '>' + item.CoupenCode + '</option>');
+                });
+            },
+            error: function (x, e) {
+                alert('Failure');
+
+            }
+        });
+
+        //}
+    });
+
+
+    function ValidateDate(fromDate, toDate, franchiseID) {
+        if (fromDate == '' && toDate == '') {
+            $('[id*=lblMsg]').text('Please Select From Date and To Date.');
+            return false;
+        }
+        else if (fromDate == '') {
+            $('[id*=lblMsg]').text('Please Select From Date.');
+            return false;
+        }
+        else if (toDate == '') {
+            $('[id*=lblMsg]').text('Please Select To Date.');
+            return false;
+        }
+
+        if (fromDate != '' && toDate != '') {
+            dateFirst = fromDate.split('/');
+            dateSecond = toDate.split('/');
+            var from = new Date(dateFirst[2], dateFirst[1], dateFirst[0]); //Year, Month, Date
+            var to = new Date(dateSecond[2], dateSecond[1], dateSecond[0]);
+            if (from > to) {
+                $('[id*=lblMsg]').text('To Date must be greater than From Date.');
+                return false;
+            }
+            else {
+                $('[id*=lblMsg]').text('');
+            }
+        }
+        if (franchiseID == '') {
+            $('[id*=lblMsg]').text('Please Select Franchise ID.');
+            return false;
+        }
+    }
+
+
+
+    $("input#btnExport").on('click', function () {
+        var print = 0;
+        var option = 0;
+        var couponScheme = null;
+        var couponCode = "";
+        var franchiseID = null;
+        franchiseID = $('#FranchiseID :selected').val();
+        couponScheme = $('#CouponScheme :selected').val();
+        couponCode = $('#CouponCode :selected').text();
+        option = $('#ExportOption :selected').val();
+        var toDate = $('#ToDate').val();
+        var fromDate = $('#FromDate').val();
+        var isValid = ValidateDate(fromDate, toDate, franchiseID);
+        if (isValid == false) {
+            return;
+        }
+        window.location.href = "/OrderWiseCouponTransaction/Export?&fromDate=" + fromDate + "&toDate=" + toDate + "&franchiseID=" + franchiseID + "&couponCode=" + couponCode + "&couponScheme=" + couponScheme + "&option=" + option + "&print=" + print;
+
+    });
+
+
+    function PrintReport() {
+       
+        var print = 1;      
+        var option = 0;
+        var couponScheme = null;
+        var couponCode = "";
+        var franchiseID = null;
+        franchiseID = $('#FranchiseID :selected').val();
+        couponScheme = $('#CouponScheme :selected').val();
+        couponCode = $('#CouponCode :selected').text();
+        var toDate = $('#ToDate').val();
+        var fromDate = $('#FromDate').val();
+        var isValid = ValidateDate(fromDate, toDate, franchiseID);
+       
+        if (isValid == false) {
+            return;
+        }
+        var url = "/OrderWiseCouponTransaction/Export?&fromDate=" + fromDate + "&toDate=" + toDate + "&franchiseID=" + franchiseID + "&couponCode=" + couponCode + "&couponScheme=" + couponScheme + "&option=" + option + "&print=" + print;
+        window.open(url, '_blank')
+    }
+
+    //function BindCouponCode() {
+    //    //alert('in');
+    //    var couponScheme = null;
+    //    if ($("select#CouponScheme option:selected").val() > 0) {
+    //        couponScheme = $("select#CouponScheme option:selected").val();
+    //    }
+    //    alert(couponScheme);
+
+    //    window.location.href = "/OrderWiseCouponTransaction/BindSchemeCodes?&couponScheme=" + couponScheme;
+
+    //}
+
+</script>

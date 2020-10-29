@@ -1,0 +1,298 @@
+﻿@model IEnumerable<ModelLayer.Models.ViewModel.DynamicDesingViewModel>
+@*@model IEnumerable<ModelLayer.Models.Franchise>*@
+
+@{
+    ViewBag.Title = "Index";
+}
+
+
+
+<style>
+    margin10{
+        margin:5px;
+    }
+    a {
+        text-decoration: underline;
+    }
+
+    th div {
+        position: inherit !important;
+        background: transparent;
+        color: #222;
+        padding: 1px 10px;
+        top: 3px;
+        margin-left: -8px;
+        line-height: normal;
+        /* border-left: 1px solid #DDD; */
+        padding-top: 1px !important;
+    }
+
+    .container_tbl {
+        overflow-y: scroll;
+        height: 294px;
+        margin-top: 0px !important;
+    }
+
+    .section {
+        position: relative;
+        border: 1px solid #000;
+        padding-top: 0px !important;
+        margin-left: 5px;
+        margin-top: 2px;
+        background: #fff;
+    }
+
+    .CategoryDiv {
+        width: 233px;
+        float: left;
+        padding: 10px;
+    }
+
+        .CategoryDiv span {
+            display: block;
+            font-size: 15px;
+            font-weight: 600;
+        }
+
+        .CategoryDiv select {
+            display: block;
+        }
+
+    .textDiv {
+        margin-left: 10px;
+        width: 100%;
+        float: left;
+    }
+
+    #Content {
+    }
+</style>
+
+<div id="content" class="span10">
+    <ul class="breadcrumb">
+        <li>
+            <div>HomePageDynamicSectionPortal</div>
+        </li>
+    </ul>
+    @using (Html.BeginForm())
+    {
+        @*@Html.Hidden("BlockTypeID", (long)@ViewBag.BlockTypeID)*@
+        <div class="row-fluid">
+            <div class="box span12">
+                <div class="box-header">
+                    <h2><i class="icon-edit"></i><span class="break"></span>@Html.ActionLink("Create New Section", "HomePageDynamicSectionCreate")</h2>
+                    <div class="pull-right jumpBtn">
+                        @*@Html.ActionLink("Set Sequence", "SetSequence", null, new { @class = "btn  btn-primary btn-small" })*@
+                    </div>
+
+                </div>
+                <div class="box-content">
+                    <div style="width:100%;">
+                        @if (TempData["Message"] != null)
+                        {
+                            <br />
+                            <span style="font-weight:bold; color:red;"> @TempData["Message"]  </span>
+                        }
+                        @if (ViewBag.Message != null)
+                        {
+                            <div style="font-weight: bold; color: red; float: left; margin: 5px 5px;">@ViewBag.Message</div>
+                        }
+                    </div>
+                    <div class="CategoryDiv">
+                        <span>Select City</span>
+                        @Html.DropDownList("CityList","Select City")
+                        <span id="CityErro" style="font-weight:bold;color:red;"></span>
+                    </div>
+
+                  
+                    <div class="CategoryDiv">
+                        <span>Select Franchise</span>
+                        @Html.DropDownList("franchiseList", "Select Franchise")
+                        <span id="FranchiseListErro" style="font-weight:bold;color:red;"></span>
+                    </div>
+                  
+                    <div class="CategoryDiv">
+                        <input type="submit" value="Search" class="btn btn-success" style="margin-top: 19px" />
+                    </div>
+
+                  
+                    <div class="clr"></div>
+
+                    @if (Model != null)
+                    {
+                        <table class="table table-striped table-bordered">
+                            <thead>
+                                <tr>
+
+                                    <th>
+                                        Sequence Order
+                                    </th>
+                                    <th>
+                                        Section Header Name
+                                    </th>
+                                    <th>
+                                        Section Display Name
+                                    </th>
+                                    <th>
+                                       IsActive
+                                    </th>
+                                    <th>
+                                      IsBanner
+                                    </th>
+                                    <th>
+                                        IsProduct
+                                    </th>
+                                    <th>
+                                       IsCategoury
+                                    </th>
+                                    @*<th>
+                                        Items Count
+                                    </th>*@
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var item in Model)
+                                {
+                                    if (item.ItemCount > 0)
+                                    {
+                                <tr>
+                                    <td>@item.SequenceOrder</td>
+                                    <td>@item.SectionHeader</td>
+                                    <td>@item.SectionDisplayName</td>
+                                    <td> @Html.DisplayFor(modelItem => item.IsActive)</td>
+                                    <td> @Html.DisplayFor(modelItem => item.IsBanner)</td>
+                                    <td> @Html.DisplayFor(modelItem => item.IsProduct)</td>
+                                    <td> @Html.DisplayFor(modelItem => item.IsCategory)</td>
+                                    @*<td>@item.IsActive</td>*@
+                                    @*<td>@item.IsBanner</td>
+                                    <td>@item.IsProduct</td>
+                                    <td>@item.IsCategory</td>*@
+                                    @*<td><a onclick="GetItemListing(@item.ID);">@item.Section</a></td>
+        <td><a onclick="GetItemListing(@item.ID);">@item.SectionHeader</a></td>
+        <td><a onclick="GetItemListing(@item.ID);">@item.SectionDisplayName</a></td>*@
+                                    @*<td>@Html.DisplayFor(modelItem => item.ItemCount)</td>*@
+                                    <td>
+                                        @if (item.IsBanner == true || item.IsCategory == true)
+                                        {
+                                            @Html.ActionLink("Add Banner", "Addbanner", new { id = item.ID }, new { @class = "btn btn-small btn-success margin10", style = "margin:5px;" })
+                                        }
+                                        @*@Html.ActionLink("Details", "Details", new { id = item.ID }, new { @class = "btn btn-small btn-primary margin10", style = "margin:5px;" })*@
+                                        @Html.ActionLink("Set Sequence", "SetSequence", new { id = item.ID }, new { @class = "btn btn-small btn-danger margin10 ", style = "margin:5px;" })
+                                        @if (item.IsProduct == true)
+                                        {
+                                            @Html.ActionLink("Add Products", "AddProducts", new { id = item.ID }, new { @class = "btn btn-small btn-primary margin10", style = "margin:5px;" })
+
+                                        }
+                                        @Html.ActionLink("Edit", "Edit", new { id = item.ID }, new { @class = "btn btn-small btn-primary margin10 ", style = "margin:5px;" })
+                                        @if (item.IsBanner == true || item.IsCategory == true)
+                                        {
+                                            @Html.ActionLink("Update Banner", "Updatebanner", new { id = item.ID }, new { @class = "btn btn-small btn-primary margin10", style = "margin:5px;" })
+                                        }
+                                        @Html.ActionLink("Delete", "DeleteHomePageDynamicSection", new { id = item.ID }, new { @class = "btn btn-small btn-danger margin10", style = "margin:5px;" })
+                                    </td>
+                                </tr>
+                                        <tr>
+                                            <td colspan="2"><div id="@item.ID" style="display:none;"></div></td>
+                                        </tr>
+                                    }
+                                }
+                            </tbody>
+                        </table>
+                    }
+
+                </div>
+            </div>
+        </div>
+    }
+</div>
+
+
+<script src="~/Scripts/jquery-1.10.2.min.js"></script>
+<script>
+    $(".btn-success").click(function () { //remain validation for image
+        var ErrorCount = 0;
+        var franchise = $("#franchiseList option:selected").val();
+        var City = $("#CityList option:selected").val();
+     
+        if (franchise == 'Select Franchise' || franchise == '' || franchise == '0' || franchise == null) {
+            $('#FranchiseListErro').html('Please Select Franchise');
+            ErrorCount = ErrorCount + 1;
+        }
+        else {
+            $('#FranchiseListErro').html('');
+        }
+
+        if (City == '' || City == null) {
+            $('#CityErro').html('Please Select Section Header');
+            ErrorCount = ErrorCount + 1;
+        }
+        else {
+            $('#CityErro').html('');
+        }
+
+
+        if (ErrorCount > 0) {
+            return false;
+        }
+    });
+
+    $("#CityList").change(function () {
+        var selectedVal = $("#CityList option:selected").val();
+        if (selectedVal > 0) {
+
+            $.ajax({
+                type: "POST",
+                url: "/HomePageDynamicSectionPortal/getFranchise",
+                data: "{ CityID: '" + selectedVal + "'}",
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                async: true,
+                cache: false,
+                success: function (msg) {
+
+                    $('#franchiseList').empty();
+                    $('#franchiseList').append('<option value=0>Select Franchise</option>');
+                    $.each(msg, function (index, item) {
+                        $('#franchiseList').append('<option value=' + item.value + '>' + item.text + '</option>');
+                    });
+                },
+                error: function (x, e) {
+                    //alert("The call to the server side failed. " + x.responseText);
+                }
+            });
+
+        }
+    });
+  
+    $(document).ready(function () {
+        
+        var id = $("#franchiseList option:selected").val();
+        if (id == null || id == "") {
+            $('#franchiseList').empty();
+            $('#franchiseList').append('<option value=0>Select Franchise</option>');
+        }
+       
+    });
+
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,587 @@
+﻿@model ModelLayer.Models.ViewModel.LeadersProfileViewModel
+@{
+    ViewBag.Title = "Updates";
+    Layout = "~/Views/Shared/_LeaderUsersLayout.cshtml";
+}
+
+
+<link href="~/Templates/UsersTemplate/css/material-design.minfd53.css" rel="stylesheet" />
+
+<link rel="stylesheet" href="~/Templates/UsersTemplate/css/style3.css">
+<link rel="stylesheet" href="~/Templates/UsersTemplate/css/dropify.minfd53.css">
+<link rel="stylesheet" href="~/Templates/UsersTemplate/css/custom.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<title>leaders Ezeelo</title>
+
+<script src="~/Scripts/jquery-1.12.4.min.js"></script>
+<script src="~/Scripts/jquery.validate.min.js"></script>
+<script src="~/Scripts/jquery.validate.unobtrusive.min.js"></script>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+
+<section class="sideNavbar">
+    <div class="wrapper">
+
+        <input type="hidden" value="@ViewBag.TabValue" id="myTab" />
+        <!-- Sidebar  -->
+        <!-- Page Content  -->
+        
+       
+        <section class="mainProfileContent">
+            <div class="container-fluid">
+                <div class="ProfileMainInnerContent">
+                    @if (TempData["message"] != null)
+                    {
+                        <div class="alert alert-danger alert-dismissible">
+                            <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                             @TempData["message"]
+                        </div>
+                    }
+                    @if (TempData["Alert"] != null)
+                    {
+                        <div class="alert alert-success alert-dismissible">
+                            <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                            <strong>Success!</strong> @TempData["Alert"]
+                        </div>
+                    }
+                    <div class="profileLeft col-lg-3 col-md-3 col-sm-3 col-xs-12">
+                        <div class="card card-shadow text-center">
+                            <div class="card-block">
+                                <a class="avatar avatar-lg" href="javascript:void(0)" id="profile-pic">
+                                    <img src="https://www.amcorro.com/wp-content/uploads/2013/05/user-icon-1.png"
+                                         alt="...">
+                                </a>
+                                <h4 class="profile-user" id="name-head">@Html.DisplayFor(modelItem => Model.FullName) </h4>
+                                <p class="profile-job">@Html.DisplayFor(modelItem => Model.RefferelID)</p>
+
+                                <div class="profile-social">
+                                    <!-- <a class="icon bd-twitter" href="javascript:void(0)"></a>
+                    <a class="icon bd-facebook" href="javascript:void(0)"></a>
+                    <a class="icon bd-instagram" href="javascript:void(0)"></a> -->
+
+                                    <a class="icon bd-twitter" href="https://twitter.com/eZeeloCom" target="_blank">
+                                        <figure>
+                                            <img src="~/Templates/UsersTemplate/img/twitter.png" />
+                                        </figure>
+                                    </a>
+
+
+                                    <a class="icon bd-facebook" href="https://www.facebook.com/ezeelocom/" target="_blank">
+                                        <figure>
+                                            <img src="~/Templates/UsersTemplate/img/fb.png" />
+                                        </figure>
+                                    </a>
+
+
+                                    <a class="icon bd-instagram" href="https://www.instagram.com/ezeelocom/" target="_blank">
+                                        <figure>
+                                            <img src="~/Templates/UsersTemplate/img/insta.png" />
+                                        </figure>
+                                    </a>
+
+                                </div>
+                            </div>
+                            <div class="card-footer">
+                                <div class="row no-space">
+                                    <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4">
+                                        <strong class="profile-stat-count">@Html.DisplayFor(m => m.TotalMember)</strong>
+                                        <span>Members</span>
+                                    </div>
+                                    <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4">
+                                        <strong class="profile-stat-count">
+                                            <figure>
+                                                <img src="~/Templates/UsersTemplate/img/E.png" />
+                                            </figure>@Html.DisplayFor(m => m.ERP)
+                                        </strong>
+                                        <span>ERP</span>
+                                    </div>
+                                    <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4">
+                                        <strong class="profile-stat-count">
+                                            <figure>
+                                                <img src="~/Templates/UsersTemplate/img/E.png" />
+                                            </figure>0.0
+                                        </strong>
+                                        <span class="">Avg. Income</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+
+
+                    <div class="profileRight col-lg-9 col-md-9 col-sm-9 col-xs-12">
+                        <div class="tab">
+                            @*<button class="tablinks" onclick="openCity(event, 'London')">Personal Details</button>*@
+                            <button id="btnParis" class="tablinks" onclick="openCity(event, 'Paris')">Bank & KYC Details</button>
+
+
+                        </div>
+                        <div id="Paris" class="tabcontent Bank&KYC">
+                            <div class="tab-pane animation-slide-left active" id="E-Wallet" role="tabpanel">
+                                <div class="container-fluid">
+                                    @*<div class="edit-button">
+            <i class="fa fa-pencil-square"></i>update
+        </div>*@
+                                    @using (Html.BeginForm("UpdateBankDetails", "LeadersProfile", FormMethod.Post))
+                                    {
+                                        @Html.AntiForgeryToken()
+                                        @Html.ValidationSummary(true)
+                                        <div class="ezeelo-table table-responsive p-xs-0 pt-sm-50">
+                                            <table class="table">
+                                                <!-- <thead>
+                  <tr>
+                    <th>#</th>
+                    <th>First Name</th>
+                    <th>Last Name</th>
+                    <th>Username</th>
+                    <th>Role</th>
+                  </tr>
+                </thead> -->
+                                                <tbody class="form-group form-material">
+
+                                                    <tr>
+                                                        @*amit on 18-1-19*@
+                                                        <td class="heading" data-input="bankname">
+                                                            <i class="fa fa-building"></i>&nbsp;&nbsp;Benificiary Name:
+                                                        </td>
+                                                        <td class="details" data-filter="bankname" data-bank-id="-">@Html.EditorFor(modelItem => Model.BenificiaryName)</td>
+                                                        @Html.ValidationMessageFor(model => model.BenificiaryName, "", new { @class = "text-danger " })
+                                                        @*----end---*@
+                                                    </tr>
+                                                    <tr>
+                                                        <td class="heading" data-input="banknumber">
+                                                            <i class="fa fa-sort-numeric-asc"></i>&nbsp;&nbsp;Account Number:
+                                                        </td>
+                                                        <td class="details">
+                                                            @Html.EditorFor(EditorFor => Model.AccountNumber)
+                                                            @Html.ValidationMessageFor(model => model.AccountNumber, "", new { @class = "text-danger " })
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td class="heading" data-input="bankname">
+                                                            <i class="fa fa-building"></i>&nbsp;&nbsp;Bank:
+                                                        </td>
+                                                        <td class="details" data-filter="bankname" data-bank-id="-">@Html.DropDownListFor(x => x.BankID, new SelectList(ViewBag.BankName, "ID", "Name"), "-select-")</td>
+                                                        @Html.ValidationMessageFor(model => model.BankID)
+                                                    </tr>
+                                                    <tr>
+                                                        <td class="heading" data-input="bankname">
+                                                            <i class="fa fa-building"></i>&nbsp;&nbsp;Branch Name:
+                                                        </td>
+                                                        <td class="details" data-filter="bankname" data-bank-id="-">@Html.EditorFor(modelItem => Model.BranchName)</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td class="heading" data-input="bankifsc">
+                                                            <i class="fa fa-id-badge"></i>&nbsp;&nbsp;Bank IFSC:
+                                                        </td>
+                                                        <td class="details verification" id="ifsc_code">
+                                                            @Html.EditorFor(modelItem => Model.IFSC)
+                                                            @Html.ValidationMessageFor(m => m.IFSC, "", new { @class = "text-danger " })
+                                                        </td>
+
+                                                    </tr>
+                                                    <tr>
+                                                        <td class="heading" data-input="accounttype">
+                                                            <i class="fa fa-files-o"></i>&nbsp;&nbsp;Account Type:
+                                                        </td>
+                                                        <td class="details" data-filter="accounttype">
+                                                            @Html.DropDownList("AccountType", new List<SelectListItem>
+    {
+    new SelectListItem{ Text="Current", Value = "Current" },
+    new SelectListItem{ Text="Saving", Value = "Saving" },
+
+    })
+                                                        </td>
+
+                                                    </tr>
+                                                    <tr>
+                                                        <td class="heading" data-input="aadhar">
+                                                            <i class="fa fa-id-card"></i>&nbsp;&nbsp;Aadhar Card No:
+                                                        </td>
+                                                        <td class="details">
+                                                            @Html.EditorFor(modelItem => Model.AdharCardNo)
+                                                            @Html.ValidationMessageFor(m => m.AdharCardNo, "", new { @class = "text-danger " })
+                                                        </td>
+
+                                                    </tr>
+                                                    <tr>
+                                                        <td class="heading" data-input="pancard">
+                                                            <i class="fa fa-id-card"></i>&nbsp;&nbsp;Pan Card:
+                                                        </td>
+                                                        <td class="details">
+                                                            @Html.EditorFor(modelItem => Model.PAN)
+                                                            @Html.ValidationMessageFor(m => m.PAN, "", new { @class = "text-danger " })
+                                                        </td>
+
+                                                    </tr>
+                                                    @*----amit on 18-1-19---*@
+                                                    <tr>
+                                                        <td class="heading" data-input="bankname">
+                                                            <i class="fa fa-building"></i>&nbsp;&nbsp;Benificiary Email:
+                                                        </td>
+                                                        <td class="details" data-filter="bankname" data-bank-id="-">@Html.EditorFor(modelItem => Model.BenificiaryEmail)</td>
+                                                        @Html.ValidationMessageFor(m => m.BenificiaryEmail, "", new { @class = "text-danger " })
+                                                    </tr>
+                                                    @*----end----*@
+
+
+                                                    <!-- <tr>
+                      <td class="heading" data-input="branch"><i class="fa fa-building-o" ></i>&nbsp;&nbsp;Bank Branch:</td>
+                      <td class="details"></td>
+                    </tr> -->
+                                                    <!-- <tr>
+                      <td class="img">Aadhar Image:
+                        <div class="col-md-12 p-0">
+                          <input type="file" class="dropify" data-show-remove="false" />
+                        </div>
+                      </td>
+                      <td class="img">Aadhar Image:
+                        <div class="col-md-12 p-0">
+                          <input type="file" class="dropify" data-show-remove="false" />
+                        </div>
+                      </td>
+                    </tr> -->
+                                                    <!-- <tr>
+                      <td class="heading"><i class="fa fa-file-image-o" data-toggle="tooltip" data-placement="right" title="Tooltip on right"></i>&nbsp;&nbsp;Pan Image:</td>
+                    </tr> -->
+                                                    <!-- <tr>
+                      <td class="heading"><i class="fa fa-map-marker"></i>&nbsp;&nbsp;Address:</td>
+                      <td class="details">Teagan</td>
+                    </tr> -->
+
+                                                </tbody>
+                                            </table>
+                                            <input type="submit" value="UPDATE" class="btn btn-success" />
+
+                                        </div>
+                                    }
+
+                                    <label style="color:#e40808;font-size:small">Images accepted formats: png, jpg, jpeg, raw  & Maximum size: 250KB</label>
+
+                                    @using (Html.BeginForm("ImageUpload", "LeadersProfile", FormMethod.Post, new
+                                    {
+                                        enctype = "multipart/form-data"
+                                    }))
+                                    {
+
+                                        <div class="row mt-30">
+                                            <div class="col-xs-4 col-sm-4 col-md-4">
+                                                <p>Adhaar Card Image/ID Proof</p>
+                                                <div class="dropify-wrapper touch-fallback">
+                                                    <div class="dropify-message">
+                                                        <span class="file-icon">
+                                                            <figure>
+                                                                @if (Model.AdhaarImageUrl != null)
+                                                                {
+                                                                    <img id="imgAadhar" src="@Model.AdhaarImageUrl" onerror="this.src = '/Content/Images/no_image.png'" alt=" eZeelo ">
+                                                                }
+                                                                else
+                                                                {
+                                                                    <img id="imgAadhar" src="/Content/Images/no_image.png" alt=" eZeelo ">
+                                                                }
+                                                            </figure>
+                                                        </span>
+                                                        <p></p>
+                                                        <p class="dropify-error">Ooops, something wrong happended.</p>
+                                                    </div>
+                                                    <div class="dropify-loader"></div>
+                                                    <div class="dropify-errors-container">
+                                                        <ul></ul>
+                                                    </div>
+                                                    <input type="file" class="dropify KYCUploadinput" name="adhaar" data-show-remove="false" onchange="readfile2(this);">
+                                                    <div class="dropify-preview">
+                                                        <span class="dropify-render"></span>
+                                                        <div class="dropify-infos">
+                                                            <div class="dropify-infos-inner">
+                                                                <p class="dropify-filename">
+                                                                    <span class="file-icon"></span>
+                                                                    <span class="dropify-filename-inner"></span>
+                                                                </p>
+                                                                <p class="dropify-infos-message"></p>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-xs-4 col-sm-4 col-md-4">
+                                                <p>PAN Card Image</p>
+                                                <div class="dropify-wrapper touch-fallback">
+                                                    <div class="dropify-message">
+                                                        <span class="file-icon">
+                                                            <figure>
+                                                                @if (Model.PANImage != null)
+                                                                {
+
+                                                                    <img id="imgPAN" src="@Model.PANImage" onerror="this.src = '/Content/Images/no_image.png'" alt="eZeelo">
+                                                                }
+                                                                else
+                                                                {
+                                                                    <img id="imgPAN" src="/Content/Images/no_image.png" alt="eZeelo">
+                                                                }
+                                                            </figure>
+                                                        </span>
+                                                        <p></p>
+                                                        <p class="dropify-error">Ooops, something wrong happended.</p>
+                                                    </div>
+                                                    <div class="dropify-loader"></div>
+                                                    <div class="dropify-errors-container">
+                                                        <ul></ul>
+                                                    </div>
+                                                    <input type="file" class="dropify KYCUploadinput" name="pan" data-show-remove="false" onchange="readfile1(this);">
+                                                    <div class=" dropify-preview">
+                                                        <span class="dropify-render"></span>
+                                                        <div class="dropify-infos">
+                                                            <div class="dropify-infos-inner">
+                                                                <p class="dropify-filename">
+                                                                    <span class="file-icon"></span>
+                                                                    <span class="dropify-filename-inner"></span>
+                                                                </p>
+                                                                <p class="dropify-infos-message"></p>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-xs-4 col-sm-4 col-md-4">
+                                                <p>Passbook Image/Cancel Cheque</p>
+                                                <div class="dropify-wrapper touch-fallback">
+                                                    <div class="dropify-message">
+                                                        <span class="file-icon">
+                                                            <figure>
+
+                                                                @if (Model.PassbookImage != null)
+                                                                {
+
+                                                                    <img id="imgPassbook" src="@Model.PassbookImage" onerror="this.src = '/Content/Images/no_image.png'" alt="eZeelo">
+                                                                }
+                                                                else
+                                                                {
+                                                                    <img id="imgPassbook" src="/Content/Images/no_image.png" alt="eZeelo">
+                                                                }
+                                                            </figure>
+                                                        </span>
+                                                        <p></p>
+                                                        <p class="dropify-error">Ooops, something wrong happended.</p>
+                                                    </div>
+                                                    <div class="dropify-loader"></div>
+                                                    <div class="dropify-errors-container">
+                                                        <ul></ul>
+                                                    </div>
+                                                    <input type="file" class="dropify KYCUploadinput" name="passbook" data-show-remove="false" onchange="readfile4(this);">
+                                                    <div class="dropify-preview">
+                                                        <span class="dropify-render"></span>
+                                                        <div class="dropify-infos">
+                                                            <div class="dropify-infos-inner">
+                                                                <p class="dropify-filename">
+                                                                    <span class="file-icon"></span>
+                                                                    <span class="dropify-filename-inner"></span>
+                                                                </p>
+                                                                <p class="dropify-infos-message"></p>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="col-xs-4 col-sm-4 col-md-4">
+                                                <p>KYC Scan Image</p>
+                                                <div class="dropify-wrapper touch-fallback">
+                                                    <div class="dropify-message">
+                                                        <span class="file-icon">
+                                                            <figure>
+
+                                                                @if (Model.KYCForm != null)
+                                                                {
+
+                                                                    <img id="imgKYC" src="@Model.KYCForm" onerror="this.src = '/Content/Images/no_image.png'" alt="eZeelo">
+                                                                }
+                                                                else
+                                                                {
+                                                                    <img id="imgKYC" src="/Content/Images/no_image.png" alt="eZeelo">
+                                                                }
+                                                            </figure>
+                                                        </span>
+                                                        <p></p>
+                                                        <p class="dropify-error">Ooops, something wrong happended.</p>
+                                                    </div>
+                                                    <div class="dropify-loader"></div>
+                                                    <div class="dropify-errors-container">
+                                                        <ul></ul>
+                                                    </div>
+                                                    <input type="file" class="dropify KYCUploadinput" name="kyc" data-show-remove="false" onchange="readfile3(this);">
+                                                    <div class="dropify-preview">
+                                                        <span class="dropify-render"></span>
+                                                        <div class="dropify-infos">
+                                                            <div class="dropify-infos-inner">
+                                                                <p class="dropify-filename">
+                                                                    <span class="file-icon"></span>
+                                                                    <span class="dropify-filename-inner"></span>
+                                                                </p>
+                                                                <p class="dropify-infos-message"></p>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <br />
+
+                                            <div>
+                                                <input type="submit" value="Upload" class="btn btn-info" />
+                                                <input type="button" id="kycForm" value="Download KYC Form" class="btn btn-success" />
+                                            </div>
+                                        </div>
+                                    }
+
+
+                                </div>
+
+
+
+                            </div>
+
+
+                        </div>
+
+
+                    </div>
+
+
+                    <script>
+                        function openCity(evt, cityName) {
+                            var i, tabcontent, tablinks;
+                            tabcontent = document.getElementsByClassName("tabcontent");
+                            for (i = 0; i < tabcontent.length; i++) {
+                                tabcontent[i].style.display = "none";
+                            }
+                            tablinks = document.getElementsByClassName("tablinks");
+                            for (i = 0; i < tablinks.length; i++) {
+                                tablinks[i].className = tablinks[i].className.replace(" active", "");
+                            }
+                            document.getElementById(cityName).style.display = "block";
+                            if (evt == null) {
+                                $("#btnParis").addClass("tablinks active");
+                            } else {
+                                evt.currentTarget.className += " active";
+                            }
+                        }
+                    </script>
+
+
+                    @*<script>
+
+            tablinks = document.getElementsByClassName("tablinks");
+            for (i = 0; i < tablinks.length; i++) {
+                tablinks[i].className = tablinks[i].className.replace(" active", "");
+            }
+            document.getElementById(cityName).style.display = "block";
+            evt.currentTarget.className += " active";
+        </script>*@
+
+                </div>
+
+
+
+            </div>
+        </section>
+    </div>
+</section>
+
+<script>
+
+    if ($('#myTab').val() == "Update") {
+
+        openCity(event, 'Paris')
+
+        //$("#London").removeClass("active");
+        // $("#London").removeClass("current");
+        //$("#E-Wallet").addClass("active");
+        // $("#E-Wallet").addClass("current");
+
+        //  $("#Paris").show();
+
+
+        // $("#Paris").focus(); //You can add a class as active so on...
+    }
+
+
+    function readfile(input) {
+
+        if (input.files && input.files[0]) {
+            var reader = new FileReader();
+
+            reader.onload = function (e) {
+                $('#imgProfile').attr('src', e.target.result);
+            }
+
+            reader.readAsDataURL(input.files[0]);
+        }
+    }
+
+    function readfile1(input) {
+
+        if (input.files && input.files[0]) {
+            var reader = new FileReader();
+
+            reader.onload = function (e) {
+                $('#imgPAN').attr('src', e.target.result);
+            }
+
+            reader.readAsDataURL(input.files[0]);
+        }
+    }
+    function readfile2(input) {
+
+        if (input.files && input.files[0]) {
+            var reader = new FileReader();
+
+            reader.onload = function (e) {
+                $('#imgAadhar').attr('src', e.target.result);
+            }
+
+            reader.readAsDataURL(input.files[0]);
+        }
+    }
+
+    function readfile4(input) {
+
+        if (input.files && input.files[0]) {
+            var reader = new FileReader();
+
+            reader.onload = function (e) {
+                $('#imgPassbook').attr('src', e.target.result);
+            }
+
+            reader.readAsDataURL(input.files[0]);
+        }
+    }
+
+    function readfile3(input) {
+
+        if (input.files && input.files[0]) {
+            var reader = new FileReader();
+
+            reader.onload = function (e) {
+                $('#imgKYC').attr('src', e.target.result);
+            }
+
+            reader.readAsDataURL(input.files[0]);
+        }
+    }
+</script>
+
+
+<script>
+    $('#kycForm').click(function () {
+       
+
+        window.location.href = "/LeadersProfile/DownloadKYC"
+
+
+
+    })
+</script>
+
+
+
+

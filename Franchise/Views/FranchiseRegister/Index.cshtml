@@ -1,0 +1,506 @@
+﻿@model ModelLayer.Models.ViewModel.FranchiseRegisterViewModel
+
+@{
+    //Layout = null;
+    Layout = "~/Views/Shared/_Login_header.cshtml";
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title></title>
+
+</head>
+<body>
+
+    <style type="text/css">
+        .login-btn {
+            background-color: #fd8228 !important;
+            border: 1px solid#fd8228 !important;
+        }
+
+        .btn-block {
+            background-color: #fd8228 !important;
+            border: 1px solid#fd8228 !important;
+        }
+
+        .item h2 {
+            font-size: 28px !important;
+        }
+
+        option {
+            color: #000 !important;
+        }
+
+        .breadcrumbs1 {
+            color: rgb(26, 25, 25) !important;
+            font-size: 23px;
+            margin-top: 85px;
+            text-shadow: 1px 1px 1px rgba(110, 105, 105, 0.6);
+            text-align: center;
+        }
+
+        .breadcrumbs {
+            color: #ef2c35;
+        }
+    </style>
+
+
+    @using (Html.BeginForm())
+    {
+        @Html.AntiForgeryToken()
+    <!--/. PRELOADER END -->
+     
+
+    <!--./ NAV BAR END -->
+        <div id="home">
+            <div class="overlay">
+                <div class="container">
+                    <div class="row ">
+                        <div class="col-lg-8 col-md-7 col-sm-5 head-text">
+                            <div class=" clearfix"></div>
+                            @if (TempData["Msg"] != null)
+                            {
+                                <div class="breadcrumbs1 dark pull-left">
+                                    @TempData["Msg"]
+                                </div>
+                            }
+
+
+                        </div>
+                        <div class="col-lg-4 col-md-5 col-sm-7 col-xs-12">
+                            <div class="div-trans text-center">
+                                <h3 class="mrg-top">Join Us And Grow</h3>
+                                <div class="col-lg-12 col-md-12 col-sm-12">
+                                    @*@using (Html.BeginForm())
+                                        {
+                                            @Html.AntiForgeryToken()*@
+                                    @Html.ValidationMessage("CustomError")
+                                    <div class="form-group ">
+                                        @*<select size="1" name="tblData_length" class="form-control pull-left wdth-small mrg-leftSm">
+                                                <option selected="selected">Mr</option>
+                                                <option>Mrs</option>
+                                            </select>*@
+                                        @Html.DropDownListFor(model => model.SalutationID, null, new { @class = "form-control pull-left wdth-small mrg-leftSm" })
+                                        @Html.ValidationMessageFor(model => model.SalutationID)
+
+                                        @Html.TextBoxFor(model => model.personalDetail.FirstName, new { @placeholder = "First Name", @class = "form-control  pull-left wdth-mid mrg-leftSm", @onkeydown = "return ValidateName(event);", required = "required", maxlength = 50 })
+                                        @Html.ValidationMessageFor(model => model.personalDetail.FirstName)
+
+                                        @Html.TextBoxFor(model => model.personalDetail.LastName, new { @placeholder = "Last Name", @class = "form-control  pull-left wdth-mid mrg-leftSm", @onkeydown = "return ValidateName(event);", required = "required", maxlength = 50 })
+                                        @Html.ValidationMessageFor(model => model.personalDetail.LastName)
+
+                                        <div class="clearfix"></div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        @*<input type="text" class="form-control" required="required" placeholder="Mobile No">*@
+                                        @Html.TextBox("Mobile", null, new { @id = "Mobile", @class = "form-control-Widout-block form-control", @placeholder = "Enter Mobile", @onkeydown = "return ValidateNumber(event);", @onchange = "return ValidateMobile(this);", required = "required", maxlength = 10 })
+                                        <div id="divMobileError" style="width:400px; display: none; padding:5px" class="alert-danger focused">  </div>
+                                    </div>
+                                    <div class="form-group">
+                                        @*@Html.TextBoxFor(model => model.franchise.ServiceNumber, new { @placeholder = "Service Number", @class = "form-control-Widout-block form-control  pull-left wdth-large mrg-leftSm", @onkeydown = "return ValidateAlphaNumeric(event);", required = "required", maxlength = 15 })*@
+                                        @*Changes told by reena mam, dated:25/09/2015, Pan number is inserted instead of ServiceNumber  *@
+                                        @Html.TextBoxFor(model => model.franchise.ServiceNumber, new { @placeholder = "PAN", @class = "form-control-Widout-block form-control  pull-left wdth-large mrg-leftSm", @onkeydown = "return ValidateAlphaNumeric(event);", required = "required", maxlength = 15 })
+                                        @Html.ValidationMessageFor(model => model.franchise.ServiceNumber)
+                                        <div id="divServiceNumberError" style="width:400px; display: none; padding:5px" class="alert-danger focused">  </div>
+
+                                        @*<input type="text" class="form-control  pull-left wdth-large mrg-leftSm" required="required" placeholder="Pincode">*@
+                                        @Html.TextBox("MyPincode", null, new { @id = "Pincode", @class = "form-control-Widout-block form-control  pull-left wdth-large mrg-leftSm", @placeholder = "Enter Pincode", @onkeydown = "return ValidateNumber(event);", @onchange = "return ValidatePincode()", required = "required", maxlength = 6 })
+                                        <img id="Pincode_loading" src="~/Content/img/ajax_loader.gif" style="width: 30px; height: 30px; display: none" />
+                                        <div id="divPincodeError" style=" display: none;" class="alert-danger focused">  </div>
+                                        <div class="clearfix"></div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        @Html.TextBoxFor(model => model.userLogin.Email, new { @placeholder = "Email", @class = "form-control-Widout-block form-control", @onchange = "return ValidateEmail(this);", required = "required" })
+                                        @Html.ValidationMessageFor(model => model.userLogin.Email)
+                                        <div id="divEmailError" style="width:400px; display: none; padding:5px" class="alert-danger focused">  </div>
+                                    </div>
+                                    <div class="form-group">
+                                        @Html.TextBoxFor(model => model.userLogin.Password, new { @placeholder = "Password", @class = "form-control", required = "required", type = "password", minlength = 6, @onchange = "setFocus();" })
+                                        @Html.ValidationMessageFor(model => model.userLogin.Password)
+                                    </div>
+                                    <div class="form-group">
+                                        @Html.TextBoxFor(model => model.ConfirmPassword, new { @placeholder = "Confirm Password", @class = "form-control", required = "required", type = "password", @onchange = "return ValidateConfirmPassword(this);" })
+                                        @Html.ValidationMessageFor(model => model.ConfirmPassword)
+                                        <div id="divPwdError" style="width:400px; display: none; padding:5px" class="alert-danger focused">  </div>
+                                    </div>
+                                    <div class="form-group">
+                                        @Html.DropDownList("SecurityQuestionID", null, "Select Security Question?", new { @placeholder = "Select Secutity Question....", @class = "form-control", required = "required" })
+
+                                        @Html.ValidationMessageFor(model => model.SecurityQuestionID)
+
+                                    </div>
+                                    <div class="form-group">
+                                        @Html.TextBoxFor(model => model.loginSecurityAnswer.Answer, new { @placeholder = "Security Answer", @class = "form-control", required = "required", type = "password" })
+                                        @Html.ValidationMessageFor(model => model.loginSecurityAnswer.Answer)
+                                    </div>
+                                    <div class="form-group">
+                                        <input name="submit" type="submit" id="Save" value="Register Me" class="btn btn-success btn-block btn-lg" />
+                             
+                                    </div>
+                                    @*}*@
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+
+
+        </div>
+    }
+
+
+    <!--./ HOME SECTION END -->
+    <div id="about" class="about-img">
+        <div class="">
+
+        </div>
+    </div>
+
+    <div class="donars-section">
+        <div class="overlay">
+            <div class="container">
+                <div class="row ">
+                    <div class="col-lg-12 col-md-12 ">
+                        <div id="testimonials" class="carousel slide" data-ride="carousel">
+
+                            <ol class="carousel-indicators">
+                                <li data-target="#testimonials" data-slide-to="0" class=""></li>
+                                <li data-target="#testimonials" data-slide-to="1" class=""></li>
+                                <li data-target="#testimonials" data-slide-to="2" class="active"></li>
+                            </ol>
+
+                            <div class="carousel-inner">
+                                <div class="item">
+                                    <div class="container center">
+                                        <div class="col-lg-8 col-md-8 slide-custom">
+                                            <h2><i class="fa fa-quote-left"></i>JOIN eZeelo and grow in leaps & bounds.<i class="fa fa-quote-right"></i></h2>
+
+
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="item">
+                                    <div class="container center">
+                                        <div class="col-lg-8 col-md-8 slide-custom">
+                                            <h2><i class="fa fa-quote-left"></i>Give a competitive platform to the traditional retailers of your city with eZeelo<i class="fa fa-quote-right"></i></h2>
+
+
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="item active">
+                                    <div class="container center">
+                                        <div class="col-lg-8  col-md-8 slide-custom">
+                                            <h2><i class="fa fa-quote-left">Provide your city with transparent  trade practices, join eZeelo</i><i class="fa fa-quote-right"></i></h2>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!--./ ABOUT SECTION END -->
+    <!--/ DONARS TESTIMONIALS END -->
+    <div id="port-folio" class="pad-top-botm">
+        <div class="container">
+            <div class="row text-center ">
+                <div class="col-lg-12 col-md-12  col-sm-12 ">
+                    <div class="delivery-div">
+                        <div class="container center">
+                            <div class="row text-center">
+                                <div>
+                                    <div class="col-lg-8 col-lg-offset-2 col-md-8 col-md-offset-2 col-sm-12 sub-head">
+                                        <h2 data-wow-delay="0.3s" class="wow rollIn animated color-dark"><strong> Why become a Partner of eZeelo?</strong></h2>
+                                        <p class="sub-head">
+                                            Brick & mortar stores have become increasingly difficult to sustain in  today's world. Now we are in the online
+                                            phase, where everything is done using the internet.Obviously online stores have bloomed  everywhere.Grab this
+                                            opportunity and reap the fruits of the online boom by becoming a Partner of eZeelo and help the
+                                            traditional local retailer .
+
+                                        </p>
+                                    </div>
+                                    <div class="col-lg-4 col-md-4 col-sm-12">
+                                        <div class="media wow rotateIn animated" data-wow-delay="0.2s">
+                                            <div class="pull-left">
+                                                <i class="fa fa-recycle fa-4x  "></i>
+                                            </div>
+                                            <div class="media-body">
+                                                <h3 class="media-heading"> formation of chain of merchants</h3>
+                                                <p>
+                                                    The partner persuades the local retailers to  sell on eZeelo
+                                                </p>
+
+                                            </div>
+                                        </div>
+                                        <div class="media wow rotateIn animated" data-wow-delay="0.3s">
+                                            <div class="pull-left">
+                                                <i class="fa fa-history fa-4x  "></i>
+                                            </div>
+                                            <div class="media-body">
+                                                <h3 class="media-heading">Transparency</h3>
+                                                <p>
+                                                    Pricing, offers,delivery options are conducted in a transparent manner, hence will attract buyers.
+                                                </p>
+
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                    <div class="col-lg-4 col-md-4 col-sm-12  wow bounceInDown animated" style="padding: 10px;" data-wow-delay="0.6s">
+                                        <div id="carousel-slider" class="carousel slide" data-ride="carousel">
+
+                                            <div class="carousel-inner">
+                                                <div class="item">
+
+                                 
+                                                    <img src="~/Content/assets/img/img-first.png" class="img-thumbnail" alt="" />
+                                                </div>
+                                                <div class="item">
+                                                   
+                                                    <img src="~/Content/assets/img/img-second.png" />
+                                                </div>
+                                                <div class="item active">                                  
+                                                    <img src="~/Content/assets/img/img-third.png" />
+                                                </div>
+                                            </div>
+
+                                            <ol class="carousel-indicators">
+                                                <li data-target="#carousel-slider" data-slide-to="0" class=""></li>
+                                                <li data-target="#carousel-slider" data-slide-to="1" class=""></li>
+                                                <li data-target="#carousel-slider" data-slide-to="2" class="active"></li>
+                                            </ol>
+
+                                        </div>
+                                    </div>
+
+                                    <div class="col-lg-4 col-md-4 col-sm-12">
+
+                                        <div class="media wow rotateIn animated" data-wow-delay="0.4s">
+                                            <div class="pull-left">
+                                                <i class="fa fa-star-o fa-4x  "></i>
+                                            </div>
+                                            <div class="media-body">
+                                                <h3 class="media-heading"> Flexibility</h3>
+                                                <p>
+                                                    eZeelo assists in technological support to both partner & merchant.
+                                                </p>
+
+                                            </div>
+                                        </div>
+                                        <div class="media wow rotateIn animated" data-wow-delay="0.5s">
+                                            <div class="pull-left">
+                                                <i class="fa fa-life-ring fa-4x  "></i>
+                                            </div>
+                                            <div class="media-body">
+                                                <h3 class="media-heading">Benefits</h3>
+                                                <p>
+                                                    The Partner gets its revenue from eZeelo
+                                                </p>
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+
+
+
+        </div>
+    </div>
+    <!--./ GALLERY/PORTFOLIO SECTION END -->
+    <div id="help">
+        <div class="overlay">
+            <div class="container">
+                <div class="row text-center">
+                    <div class="col-lg-8 col-lg-offset-2 col-md-8 col-md-offset-2 col-sm-8 col-sm-offset-2">
+                        <h2 data-wow-delay="0.3s" class="wow rollIn animated"><strong>Why eZeelo</strong></h2>
+                        <p class="sub-head">
+                            eZeelo offers an irrestive praposition for partnership in new geography
+                        </p>
+                        <p class="sub-head">
+                            eZeelo not only enables the merchant to display his products & prices ,but also helps his brick & mortar
+                            shop in gaining visibility among the people of the city. eZeelo thus makes the traditional retailer famous.
+                        </p>
+                        <p class="sub-head">
+                            A  must if you   want to survive in today’s market.This can compensate fewer footfalls that affect traditional retailers. An added  <strong>VISIBILITY</strong>that only expensive ads can get you.
+                        </p>
+                    </div>
+                </div>
+
+
+
+            </div>
+        </div>
+
+    </div>
+    <!--./ HELP SECTION END -->
+    <div id="contact">
+        <div class="container">
+            <div class="row text-center">
+                <div class="col-lg-8 col-lg-offset-2 col-md-8 col-md-offset-2 col-sm-8 col-sm-offset-2">
+                    <h2 data-wow-delay="0.3s" class="wow rollIn animated getTouch"><strong>GET IN TOUCH </strong></h2>
+                    <p class="sub-head contUs">Feel Free To Contact Us</p>
+
+                    <p class="sub-head  wow rotateIn animated" data-wow-delay="0.4s">
+                        <strong>ADDRESS:</strong>eZeelo eMarketplace pvt.Ltd. 9-9A, 4th Floor, NMC Complex,
+                        J.B. Wing, Mangalwari Bazar, Sadar, Nagpur- 440001
+                    </p>
+                </div>
+            </div>
+            <div class="row  text-center wow rotateIn animated" data-wow-delay="0.4s" style="height:200px">
+                <div class="col-lg-8 col-lg-offset-2 col-md-8 col-md-offset-2 col-sm-8 col-sm-offset-2">
+                    @*<a href="https://www.facebook.com/ezeelo">  <img src="../../Content/assets/img/Social/facebook.png" alt="" /> </a>
+                    <a href="https://plus.google.com/+ezeelo/posts"> <img src="../../Content/assets/img/Social/google-plus.png" alt="" /></a>
+                    <a href="https://twitter.com/ezeelo"> <img src="../../Content/assets/img/Social/twitter.png" alt="" /></a>
+                    <a href="https://www.pinterest.com/ezeelo"> <img src="../../Content/assets/img/Social/pinterest.png" alt="" /></a>
+                    <a href="https://www.youtube.com/channel/UCzfy7xDV9nEbAGH4II9MW6w/videos"> <img src="../../Content/assets/img/Social/youtube.png" alt="" /></a>*@
+                    <a href="https://www.facebook.com/#">  <img src="../../Content/assets/img/Social/facebook.png" alt="" /> </a>
+                    <a href="https://plus.google.com/#"> <img src="../../Content/assets/img/Social/google-plus.png" alt="" /></a>
+                    <a href="https://twitter.com/#"> <img src="../../Content/assets/img/Social/twitter.png" alt="" /></a>
+                    <a href="https://www.pinterest.com/#"> <img src="../../Content/assets/img/Social/pinterest.png" alt="" /></a>
+                    <a href="https://www.youtube.com/#"> <img src="../../Content/assets/img/Social/youtube.png" alt="" /></a>
+
+                </div>
+            </div>
+            
+
+        </div>
+    </div>
+    <!--./ CONTACT SECTION END -->
+    <div id="footser-end">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12 col-md-12">
+                    @*| by*@ <a href="#" style="color:#fff;" target="_blank">© 2015 - eZeelo</a>
+                </div>
+            </div>
+
+        </div>
+    </div>
+    <!--./ FOOTER SECTION END -->
+
+</body>
+</html>
+
+<!--  Jquery Core Script -->
+<script src="~/Content/assets/js/wow.min.js"></script>
+<script src="~/Content/assets/js/bootstrap.js"></script>
+<script src="~/Content/assets/js/custom.js" defer="defer"></script>
+<script src="~/Content/assets/js/jquery-1.10.2.js"></script>
+<script src="~/Content/assets/js/jquery.easing.min.js"></script>
+<script src="~/Content/assets/js/jquery.prettyPhoto.js"></script>
+<script type="text/javascript">
+    $('#Pincode').bind('input propertychange', function () {
+        var lPincode = $('#Pincode').val()
+        $('#divPincodeError').hide();
+
+        if (lPincode.length == 6) {
+            $('#Pincode_loading').show();
+            $.ajax({
+                url: '@Url.Action("GetAddress", "FranchiseRegister")?Pincode=' + lPincode,
+                type: "GET",
+                success: function (result) {
+                    $('#Pincode_loading').hide();
+                    $('#divPincodeError').hide();
+                    if (result == "1") {
+                        $('#divPincodeError').show();
+                        $('#divPincodeError').html('Pincode [' + lPincode + '] dose not exist, please Contact to ADMIN');
+                        $('#Pincode').val('');
+                    }
+                },
+                error: function (data) {
+                    $('#divPincodeError').hide();
+                }
+            });
+        }
+    });
+
+</script>
+<script type="text/javascript">
+    $('#Mobile').bind('input propertychange', function () {
+        var lMobile = $('#Mobile').val();
+        $('#divMobileError').hide();
+        if (lMobile.length == 10) {
+            $.ajax({
+                url: '@Url.Action("IsMobileAvailable", "FranchiseRegister")?Mobile=' + lMobile,
+                type: "GET",
+                success: function (result) {
+                    $('#divlMobileError').hide();
+                    if (result == "1") {
+                        $('#divMobileError').show();
+                        $('#divMobileError').html('Mobile [' + lMobile + '] already exist');
+                        $('#Mobile').val('');
+                    }
+                },
+                error: function (data) {
+                    $('#divlMobileError').hide();
+                }
+            });
+        }
+    });
+</script>
+<script type="text/javascript">
+    $('#userLogin_Email').bind('input propertychange', function () {
+        var lEmail = $('#userLogin_Email').val();
+        $('#divEmailError').hide();
+        $.ajax({
+            url: '@Url.Action("IsEmailAvailable", "FranchiseRegister")?Email=' + lEmail,
+            type: "GET",
+            success: function (result) {
+                $('#divEmailError').hide();
+                if (result == "1") {
+                    $('#divEmailError').show();
+                    $('#divEmailError').html('Email [' + lEmail + '] already exist');
+                    $('#userLogin_Email').val('');
+                }
+            },
+            error: function (data) {
+                $('#divEmailError').hide();
+            }
+        });
+    });
+</script>
+
+<script type="text/javascript">
+    $('#franchise_ServiceNumber').bind('input propertychange', function () {
+        var lServiceNum = $('#franchise_ServiceNumber').val();
+        $('#divServiceNumberError').hide();
+        $.ajax({
+            url: '@Url.Action("IsServiceNumAvailable", "FranchiseRegister")?ServiceNum=' + lServiceNum,
+            type: "GET",
+            success: function (result) {
+                $('#divServiceNumberError').hide();
+                if (result == "1") {
+                    $('#divServiceNumberError').show();
+                    $('#divServiceNumberError').html('Service Number [' + lServiceNum + '] already exist');
+                    $('#franchise_ServiceNumber').val('');
+                }
+            },
+            error: function (data) {
+                $('#divEmailError').hide();
+            }
+        });
+    });
+</script>
+
+<script src="~/Content/js/Validation.js"></script>
+

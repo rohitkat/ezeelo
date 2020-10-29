@@ -1,0 +1,196 @@
+﻿@model IEnumerable<ModelLayer.Models.ViewModel.PurchaseOrderReplyViewModel>
+
+@{
+    ViewBag.Title = "Invoice List";
+}
+
+<style>
+    .pro_th thead tr th {
+        font-size: 12px;
+        border-bottom: 1px solid #EEE;
+        padding: 6px 0;
+        background-color: #26A69A;
+    }
+
+    .pro_th tbody td {
+        font-size: 12px;
+        text-align: center;
+        border: 1px solid #EEE;
+    }
+
+        .pro_th tbody td.btn-set {
+            white-space: nowrap;
+        }
+
+    .dataTables_length {
+        margin-left: 0px !important;
+        margin-top: 7px;
+    }
+
+    .pagination {
+        margin: 0 26px;
+    }
+
+    form {
+        margin: 0 0 -15px;
+    }
+</style>
+
+<link href="~/Content/assets/css/font-awesome.min.css" rel="stylesheet" />
+<script src="~/Content/js/jquery-2.1.3.min.js"></script>
+<link href="~/Content/css/jquery.dataTables.css" rel="stylesheet" />
+<script src="~/Content/js/jquery.dataTables.js" language="jascript"></script>
+
+<script type="text/javascript" class="init">
+    $(document).ready(function () {
+        $('#tblData').DataTable({
+            dom: 'T<"clear">lfrtip',
+            "processing": true,
+            "serverSide": true,
+        });
+        // alert("1");
+    });
+</script>
+
+
+<div id="content" class="span10" style="min-height: 403px;">
+    <div class="content">
+        <p>
+            <div>
+                @if (@ViewBag.IsPOCompleted != null && @ViewBag.IsPOCompleted == false)
+                { 
+                @Html.ActionLink("Create New Invoice", "Create", new { PurchaseOrderID = ViewBag.PurchaseOrderID }, new { @class = "btn btn-primary" })
+                }
+             </div>
+        </p>
+        <div class="row-fluid">
+            <div class="box span12">
+                <div class="box-header">
+                    <h2>
+                        <i class="icon-list-alt"></i>
+                        <span class="break"></span>
+                        Invoice List <span style="font-weight:bold"> [Order Code: @ViewBag.PurchaseOrderCode]</span>
+                    </h2>
+                </div>
+                <div class="box-content">
+
+                    <table class="table border-table display" id="tblData">
+                        <thead>
+                            <tr>
+                                <th>
+                                    Date
+                                </th>
+                                <th>
+                                    Invoice
+                                </th> 
+                                                              
+                                <th>
+                                    Amount
+                                </th>
+                                <th>
+                                    TotalDiscountAmount
+                                </th>
+                                <th>
+                                    ShippingCharge
+                                </th>
+                                @*<th>
+                    CustomDutyCharge
+                </th>
+                <th>
+                    OperatingCost
+                </th>
+                <th>
+                    AdditionalCost
+                </th>*@
+                                <th>
+                                    TotalAmount
+                                </th>
+                                <th>
+                                    TotalItems
+                                </th>
+                                <th>
+                                    IsSent
+                                </th>
+                                <th></th>
+                            </tr>
+                        </thead>
+
+                        @foreach (var item in Model)
+                        {
+                            <tr>                               
+                                <td>
+                                    @String.Format("{0:dd MMM yyyy}", item.CreateDate)
+                                </td>
+                                <td style="color: #DB4437; font-weight: bold">
+                                    @item.InvoiceCode
+                                </td>
+                                
+                                <td>
+                                    @String.Format("{0:F}", item.OrderAmount)
+                                </td>
+                                <td>
+                                    @String.Format("{0:F}", item.TotalDiscountAmount)
+                                </td>
+                                <td>
+                                    @String.Format("{0:F}", item.ShippingCharge)
+                                </td>
+                                @*<td>
+                        @String.Format("{0:F}", item.CustomDutyCharge)
+                    </td>
+                    <td>
+                        @String.Format("{0:F}", item.OperatingCost)
+                    </td>
+                    <td>
+                        @String.Format("{0:F}", item.AdditionalCost)
+                    </td>*@
+                                <td>
+                                    @String.Format("{0:F}", item.TotalAmount)
+                                </td>
+                                <td>
+                                    @item.TotalItems
+                                </td>
+                                <td>
+                                    @if (@item.IsReplied == true)
+                                    {
+                                        <span style="color:green">Sent</span>
+                                    }
+                                    else
+                                    {
+                                        <span>No</span>
+                                    }
+                                </td>
+                               
+
+                                 @*Added by Priti on 3-11-2018*@
+                                <td>
+                                    @if (@item.IsReplied == true)
+                                    {
+                                        @Html.ActionLink("Details", "Details", new { PurchaseOrderReplyID = item.PurchaseOrderReplyID }, new { @class = "btn btn-small btn-info" })
+                                        <a id="Print1" class="print btn btn-warning btn-small" href="@Url.Action("GetId1", "PurchaseOrderReply", new { id = item.PurchaseOrderReplyID })" target="_blank">Print1</a>
+                                    }
+                                    else
+                                    {
+                                        @Html.ActionLink("Confirm", "Approve", new { PurchaseOrderReplyID = item.PurchaseOrderReplyID }, new { @class = "btn btn-small btn-success", title = "Click here to approve" })<span>|</span>
+                                        @Html.ActionLink("Edit", "Edit", new { PurchaseOrderReplyID = item.PurchaseOrderReplyID }, new { @class = "btn btn-small btn-success" }) <span>|</span>
+                                        <a id="Print1" class="print btn btn-default btn-small" href="@Url.Action("GetId1", "PurchaseOrderReply", new { id = item.PurchaseOrderReplyID })" target="_blank">Print1</a><span>|</span>
+                                        @Html.ActionLink("Details", "Details", new { PurchaseOrderReplyID = item.PurchaseOrderReplyID }, new { @class = "btn btn-small btn-info" })
+                                        <span>|</span>@Html.ActionLink("Delete", "Delete", new { PurchaseOrderReplyID = item.PurchaseOrderReplyID, PurchaseOrderiD = ViewBag.PurchaseOrderID }, new { @class = "btn btn-small btn-danger", onclick = "return confirm('Are you sure you wish to delete this Invoice?');" })
+                                    }
+
+                                </td>
+
+
+                                @*End by Priti on 3-11-2018*@
+                                <td></td>
+                            </tr>
+                        }
+
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    <p>
+        @Html.ActionLink("Back to List", "Index", null, new { @class = "btn btn-default mrg-left mrg-top" })
+    </p>
+</div>

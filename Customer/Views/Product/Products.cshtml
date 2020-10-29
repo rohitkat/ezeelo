@@ -1,0 +1,574 @@
+﻿@model ModelLayer.Models.ViewModel.ProductViewModel
+@using System.Text.RegularExpressions;
+@{
+    Layout = "~/Views/Shared/_Layout_Internal.cshtml";
+    string cityName = string.Empty;
+    string SearchKeyWord = ViewBag.SearchKeyWord;
+    int franchiseID = 0;////added
+    if (Request.Cookies["CityCookie"] != null)
+    {
+        cityName = Request.Cookies["CityCookie"].Value.Split('$')[1].ToLower();
+        franchiseID = Convert.ToInt32(Request.Cookies["CityCookie"].Value.Split('$')[2]);////added
+    }
+
+
+}
+@if (ViewBag.NoProductsFoundMessage != null)
+{
+    <center>
+        <div id="NotFound" style="padding-top:60px;">
+            <span style="font-size:20px;"> Sorry! we are unable to find  </span> <span style="color: #004B91; font-size:23px;"> @ViewBag.NoProductsFoundMessage</span>  <br />
+            <span style="font-size:20px;"> You may also want to look at our top sellers, @Html.ActionLink("Click here", "Index", "Home", null, new { @class = "Link" }) </span>
+        </div>
+        <div>
+            @Html.Partial("_WhatYouAreLookinFor")
+        </div>
+
+    </center>
+}
+else
+{
+    <style type="text/css">
+        .container {
+            /*margin-top: 50px;*/
+        }
+
+        input[type="checkbox"] {
+            margin: 7px;
+            margin-top: 1px \9;
+            line-height: normal;
+        }
+
+        .panel-group {
+            margin-bottom: 0px !important;
+        }
+
+        .widget-title-sm {
+            font-size: 17px;
+            margin-bottom: 0px !important;
+        }
+
+        .tile {
+            opacity: 1;
+            width: 100%;
+            height: 300px;
+        }
+
+        .refine {
+            margin-left: 10px;
+            width: 190px;
+            float: left;
+            margin-right: 0px;
+            margin-top: 4px;
+        }
+
+        #ProductDescription {
+            width: 100%;
+            padding-left: 20px;
+            padding-bottom: 10px;
+            padding-right: 20px;
+            font-size: 10px;
+            line-height: 15px;
+            clear: both;
+        }
+
+        .filterdiv {
+            cursor: pointer;
+        }
+    </style>
+    @*<link href="~/Content/css/Site.css" rel="stylesheet" />*@
+    <link href="~/Content/css/Site.css" rel="stylesheet" />
+    <script src="~/Content/js/modernizr.js"></script>
+    <script src="~/Scripts/jquery-2.1.3.min.js"></script>
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+            var _url = '@(Html.Raw(Url.Action("GetProductOnScroll", "Product")))';
+             GetProducts(_url, 0, false);
+        });
+    </script>
+
+
+    <script>
+        (function ($) {
+            $.StartScreen = function () {
+                var plugin = this;
+                var width = (window.innerWidth > 0) ? window.innerWidth : screen.width;
+
+                plugin.init = function () {
+                    setTilesAreaSize();
+                    if (width > 640) addMouseWheel();
+                };
+
+                var setTilesAreaSize = function () {
+                    var groups = $(".tile-group");
+                    var tileAreaWidth = 80;
+                    $.each(groups, function (i, t) {
+                        if (width <= 640) {
+                            tileAreaWidth = width;
+                        } else {
+                            tileAreaWidth += $(t).outerWidth() + 80;
+                        }
+                    });
+                    $(".tile-area").css({
+                        width: tileAreaWidth
+                    });
+                };
+
+                var addMouseWheel = function () {
+                    $("body").mousewheel(function (event, delta, deltaX, deltaY) {
+                        var page = $(document);
+                        var scroll_value = delta * 50;
+                        page.scrollLeft(page.scrollLeft() - scroll_value);
+                        return false;
+                    });
+                };
+
+                plugin.init();
+            }
+        })(jQuery);
+
+        $(function () {
+            $.StartScreen();
+
+            var tiles = $(".tile, .tile-small, .tile-sqaure, .tile-wide, .tile-large, .tile-big, .tile-super");
+
+            $.each(tiles, function () {
+                var tile = $(this);
+                setTimeout(function () {
+                    tile.css({
+                        opacity: 1,
+                        "-webkit-transform": "scale(1)",
+                        "transform": "scale(1)",
+                        "-webkit-transition": ".3s",
+                        "transition": ".3s"
+                    });
+                }, Math.floor(Math.random() * 500));
+            });
+
+            $(".tile-group").animate({
+                left: 0
+            });
+        });
+
+
+        function setSearchPlace(el) {
+            var a = $(el);
+            var text = a.text();
+            var toggle = a.parents('label').children('.dropdown-toggle');
+
+            toggle.text(text);
+        }
+
+        $(function () {
+            var current_tile_area_scheme = localStorage.getItem('tile-area-scheme') || "tile-area-scheme-dark";
+            $(".tile-area").removeClass(function (index, css) {
+                return (css.match(/(^|\s)tile-area-scheme-\S+/g) || []).join(' ');
+            }).addClass(current_tile_area_scheme);
+
+            $(".schemeButtons .button").hover(
+                function () {
+                    var b = $(this);
+                    var scheme = "tile-area-scheme-" + b.data('scheme');
+                    $(".tile-area").removeClass(function (index, css) {
+                        return (css.match(/(^|\s)tile-area-scheme-\S+/g) || []).join(' ');
+                    }).addClass(scheme);
+                },
+                function () {
+                    $(".tile-area").removeClass(function (index, css) {
+                        return (css.match(/(^|\s)tile-area-scheme-\S+/g) || []).join(' ');
+                    }).addClass(current_tile_area_scheme);
+                }
+            );
+
+            $(".schemeButtons .button").on("click", function () {
+                var b = $(this);
+                var scheme = "tile-area-scheme-" + b.data('scheme');
+
+                $(".tile-area").removeClass(function (index, css) {
+                    return (css.match(/(^|\s)tile-area-scheme-\S+/g) || []).join(' ');
+                }).addClass(scheme);
+
+                current_tile_area_scheme = scheme;
+                localStorage.setItem('tile-area-scheme', scheme);
+
+                showSettings();
+            });
+        });
+
+    </script>
+    <br />
+    <ul class="breadcrumb page-breadcrumb">
+        @{
+            string bedcrumbValue = ViewBag.Bedcrumb;
+            if (bedcrumbValue != string.Empty && bedcrumbValue != null)
+            {
+                string[] bedcrumbDetail = bedcrumbValue.Split('$');
+
+                <li>
+                    <a href="@System.Configuration.ConfigurationManager.AppSettings["EZEELO_CUSTOMER_URL"]">Home</a>
+                </li>
+                string temp = "";
+                if (Request.Cookies["CityCookie"] != null && Request.Cookies["CityCookie"].Value != string.Empty)
+                {
+                    cityName = Request.Cookies["CityCookie"].Value.Split('$')[1].ToLower();
+                    franchiseID = Convert.ToInt32(Request.Cookies["CityCookie"].Value.Split('$')[2]);
+                }
+                if (cityName == "Nagpur")
+                {
+                    temp = bedcrumbDetail[5].Replace(" ", "-");
+                }
+                else
+                {
+                    temp = bedcrumbDetail[5].Replace(" ", "-") + cityName + franchiseID;
+                }
+                string a = temp.Replace("&", "And") + "/" + bedcrumbDetail[4];
+                @*<li><a href="@Url.RouteUrl("CategoryPages", new { city = cityName,franchiseId=franchiseID, catName = Regex.Replace(bedcrumbDetail[5].Substring(0, Math.Min(bedcrumbDetail[5].Length, 30)), @"[\/\\#,+()$~%.':*?<>{} ]", "-").Replace("&", "and").ToLower(), catID = bedcrumbDetail[4] })">@bedcrumbDetail[5]</a></li>
+                    <li><a href="@Url.RouteUrl("CategoryPages", new { city = cityName,franchiseId=franchiseID, catName = Regex.Replace(bedcrumbDetail[5].Substring(0, Math.Min(bedcrumbDetail[5].Length, 30)), @"[\/\\#,+()$~%.':*?<>{} ]", "-").Replace("&", "and").ToLower(), catID = bedcrumbDetail[4] })">@bedcrumbDetail[3]</a></li>*@
+                <li><a href="@Url.RouteUrl("CategoryPages", new { city = cityName, franchiseId = franchiseID, catName = Regex.Replace(bedcrumbDetail[5].Substring(0, Math.Min(bedcrumbDetail[5].Length, 30)), @"[\/\\#,+()$~%.':*?<>{} ]", "-").Replace("&", "and").Trim(new[] { '-' }).ToLower(), catID = bedcrumbDetail[4]})">@bedcrumbDetail[5]</a>@*////added  franchiseId=franchiseID AND SEO URL Structure *@</li>
+                @*<li><a href="@Url.RouteUrl("CategoryPages", new { city = cityName, franchiseId = franchiseID, catName = Regex.Replace(bedcrumbDetail[3].Substring(0, Math.Min(bedcrumbDetail[3].Length, 30)), @"[\/\\#,+()$~%.':*?<>{} ]", "-").Replace("&", "and").Trim(new[] { '-' }).ToLower(), catID = bedcrumbDetail[4], secLvlCatID = bedcrumbDetail[2] })">@bedcrumbDetail[3]</a>*@@*////added  franchiseId=franchiseID AND SEO URL Structure</li> *@
+                <li><a href="@Url.RouteUrl("SecondLevelCategoryPages", new { city = cityName, franchiseId = franchiseID, catName = Regex.Replace(bedcrumbDetail[3].Substring(0, Math.Min(bedcrumbDetail[3].Length, 30)), @"[\/\\#,+()$~%.':*?<>{} ]", "-").Replace("&", "and").ToLower(), FirstLvtName = Regex.Replace(bedcrumbDetail[5].Substring(0, Math.Min(bedcrumbDetail[5].Length, 30)), @"[\/\\#,+()$~%.':*?<>{} ]", "-").Replace("&", "and").ToLower(), catID = bedcrumbDetail[4], secLvlCatID = bedcrumbDetail[2] })">@bedcrumbDetail[3]</a></li>
+                <li class="active"><a href="">@bedcrumbDetail[1]</a></li>
+            }
+
+        }
+    </ul>
+    <br />
+    <div class="container" id="page">
+
+    </div>
+    <div class="product-wrapper grid">
+        <div class="row cells12" id="charmSearch">
+            @using (Html.BeginForm())
+            {
+
+                if (Model.productList != null)
+                {
+
+                }
+
+                @Html.Hidden("CityID")
+                @Html.Hidden("FranchiseID")////added
+                @Html.Hidden("ShopID")
+                @Html.Hidden("FilterOrder")
+                @Html.Hidden("ParentCategory")
+                @Html.Hidden("Keyword", TempData["keyword"])
+                @Html.Hidden("Brands")
+                @Html.Hidden("Colors")
+                @Html.Hidden("Sizes")
+                @Html.Hidden("Dimensions")
+                @Html.Hidden("SpecificationIDs")
+                @Html.Hidden("SpecificationValues")
+                @Html.Hidden("MinPrices")
+                @Html.Hidden("MaxPrices")
+                @Html.Hidden("PageCount")
+                @Html.Hidden("ProductCount")
+                @Html.Hidden("SearchKeyWord", (string)ViewBag.SearchKeyWord)
+
+                if (ViewBag.CompareCategoryID != null && ViewBag.CompareCategoryID == 7)
+                {
+                    <div id="compare" class="compareBox">
+                        <div class="heading">
+                            <div class="pav-cart-title pull-left">
+                                <a href="@Url.RouteUrl("cart", new { city = cityName, franchiseId = franchiseID })" title="Show Cart" class="compareImg">
+                                    @*////added  franchiseId=franchiseID*@
+
+                                    <h3>
+                                        @*<img id="cart" src="~/Images/compare2.gif" class="shopping-cart" width="60" height="50" />*@
+
+                                    </h3>
+                                </a>
+
+                                <div id="CompareProductListing">
+                                    <ul></ul>
+                                    <a href="#none" id="CompareProductButton" class="CompareProductAnchore btn-view btnView button" title="Compare Product"> Compare</a>
+                                    <div class="clr"></div>
+                                </div>
+                                <div class="clr"></div>
+                            </div>
+                        </div>
+
+                    </div>
+                }
+
+                <div class="col-md-3">
+                    <aside class="category-filters animated fadeInUp">
+                        <div class="">
+                            @if (TempData["Item"] != null && Request.QueryString["item"] != null)
+                            {
+                                @*Changes made by Avi Verma. Show Category List for search items.*@
+                                @*<h4 class="pro-heading">Show results for</h4>*@
+                                <div id="suggestion" class="category-filters-section panel-group">
+                                    <table id="suggestion_content" class="searchItemList content panel-collapse collapse in">
+                                        @{
+                                            string item = TempData["Item"].ToString();
+                                        }
+                                        @using System.Text.RegularExpressions;
+                                        @using System.Globalization;
+                                        <a data-toggle="collapse" href="#product_content">
+                                            <h4 class="widget-title-sm filterdiv"> @item <i class="fa fa-chevron-circle-down" style="float:right"></i></h4>
+                                        </a>
+                                        @foreach (var lst in Model.categoryList.OrderBy(x => x.Name))
+                                        {
+                                            <tr>
+                                                @{
+                                                    string lTitle = item + " in ";// +lst.Name;
+                                                    string itemName = Regex.Replace(lst.Name.Substring(0, Math.Min(lst.Name.Length, 30)), @"[\/\\#,+()$~%.':*?<>{} ]", "-").Replace("&", "and").ToLower();
+                                                }
+                                                @*@if (!item.Contains(" "))
+                                                    {
+                                                        item = item + " ";
+                                                    }*@
+                                                <td>
+                                                    <a href="@Url.RouteUrl("ProductsByCategory", new { item = item, parentCategoryId = lst.ID, city = cityName, franchiseId = franchiseID })">@*@CultureInfo.CurrentCulture.TextInfo.ToTitleCase(lTitle.ToLower())*@ @CultureInfo.CurrentCulture.TextInfo.ToTitleCase(lst.Name.ToLower())</a>@*////added  franchiseId=franchiseID*@
+                                                </td>
+                                            </tr>
+                                        }
+                                    </table>
+                                </div>
+                            }
+                            <div class="accordion" data-role="accordion" data-close-any="true">
+                                <div class="frame active panel-group">
+
+                                    @if (Model.brandList != null && Model.brandList.Count() > 0)
+                                    {
+                                        if (!(Model.brandList.Count() == 1 && Model.brandList[0].ID == 1))
+                                        {
+                                            <div class="category-filters-section">
+                                                <a data-toggle="collapse" href="#brand_content" style="color: #663399">
+                                                    <h3 class="widget-title-sm filterdiv" id="brand"> Brand <i class="fa fa-chevron-circle-down" style="float:right"></i></h3>
+                                                </a>
+                                                <div id="brand_content" class="content panel-collapse collapse in" style="min-height: 30px; overflow: auto; max-height: 210px;">
+                                                    @Html.Partial("_Brand", Model)
+                                                </div>
+                                            </div>
+                                        }
+                                    }
+                                </div>
+                                <div class="frame active panel-group">
+                                    @if (Model.colorList != null && Model.colorList.Count() > 0)
+                                    {
+                                        if (!(Model.colorList.Count() == 1 && Model.colorList[0].ID == 1))
+                                        {
+                                            <div class="category-filters-section">
+                                                <a data-toggle="collapse" href="#color_content">
+                                                    <h3 class="widget-title-sm filterdiv" id="color" style="color: #663399"> Color <i class="fa fa-chevron-circle-down" style="float:right"></i></h3>
+                                                </a>
+                                                <div id="color_content" class="content panel-collapse collapse in" style="min-height: 30px; overflow: auto; max-height: 210px;">
+                                                    @Html.Partial("_Color", Model)
+                                                </div>
+                                            </div>
+                                        }
+                                    }
+                                </div>
+                                <div class="frame active panel-group">
+                                    @if (Model.sizeList != null && Model.sizeList.Count() > 0)
+                                    {
+                                        if (!(Model.sizeList.Count() == 1 && Model.sizeList[0].ID == 1))
+                                        {
+                                            <div class="category-filters-section">
+                                                <a data-toggle="collapse" href="#size_content">
+                                                    <h3 class="widget-title-sm filterdiv" id="size" style="color: #663399"> Size <i class="fa fa-chevron-circle-down" style="float:right"></i></h3>
+                                                </a>
+                                                <div id="size_content" class="content panel-collapse collapse in" style="min-height: 30px; overflow: auto; max-height: 210px;">
+                                                    @Html.Partial("_Size", Model)
+                                                </div>
+                                            </div>
+                                        }
+                                    }
+                                </div>
+                                
+                                @*<div class="frame active panel-group">
+                                    @if (Model.detailHeadList != null && Model.detailHeadList.Count() > 0)
+                                    {
+                                        if (!(Model.detailHeadList.Count == 1 && Model.detailHeadList[0].SpecificationID == 0 && Model.detailHeadList[0].SpecificationName == ""))
+                                        {
+                                            <div class="category-filters-section">
+                                                <a data-toggle="collapse" href="#detail_head_content">
+                                                    <h3 class="widget-title-sm filterdiv" id="detail_head" style="color: #663399"> Detail Head <i class="fa fa-chevron-circle-down" style="float:right"></i></h3>
+                                                </a>
+                                                <div id="detail_head_content" class="content panel-collapse collapse in" style="min-height: 30px; overflow: auto; max-height: 210px;">
+                                                    @Html.Partial("_DetailHead", Model)
+                                                </div>
+                                            </div>
+                                        }
+                                    }
+                                </div>*@
+                                <div class="frame active panel-group">
+                                    @if (Model.priceList != null && Model.priceList.Count() > 0)
+                                    {
+                                        <div class="category-filters-section">
+                                            <a data-toggle="collapse" href="#price_content">
+                                                <h3 class="widget-title-sm filterdiv" id="price" style="color: #663399"> Price <i class="fa fa-chevron-circle-down" style="float:right"></i></h3>
+                                            </a>
+                                            <div id="price_content" class="content panel-collapse collapse in" style="min-height: 30px; overflow: auto; max-height: 210px;">
+                                                @Html.Partial("_Price", Model)
+                                            </div>
+                                        </div>
+                                    }
+                                </div>
+                            </div>
+                        </div>
+                    </aside>
+                </div>
+            }
+            @*@if (TempData["CatID"] != null && Convert.ToInt32(TempData["CatID"]) > 0)
+            {*@
+
+                <!--title strip -->
+                <!--add by paras-->
+                <section class="title_of-list">
+                    <div class="title_of-list_inner">
+                        @*Yashaswi 21-02-2019 For BUG 716 To display Heading at Category Page*@
+                        <h4 style="text-transform: capitalize;">@ViewBag.CategoryHeaderName</h4>
+                        @*Yashaswi 21-02-2019 For BUG 715 To display Total product count and current product display count*@
+                        <div class="total_number-of-products">
+                            <span>(Showing <span id="spCurrentPageCount"></span> products of <span id="spTotalPageCount"></span> products)</span>
+                        </div>
+                        <div class="sort-by_Relevance-list">
+                            <span style="float: left; padding-top: 6px;">Sort by :</span>
+                            <div id="divSort" style="background: white;">
+                                @Html.DropDownList("SortList", new List<SelectListItem>
+                            {
+                                new SelectListItem{ Text="Relevance", Value = "0" },
+                                new SelectListItem{ Text="Price - Low to High", Value = "1" },
+                                new SelectListItem{ Text="Price - High to Low", Value = "2" },
+                                new SelectListItem{ Text="Products - A to Z", Value = "3" },
+                                new SelectListItem{ Text="Products - Z to A", Value = "4" },
+                                //new SelectListItem{ Text="Datewise - Ascending", Value = "5" },
+                                new SelectListItem{ Text="Newest First", Value = "6" },
+                                  //new SelectListItem{ Text="RP - Low to High", Value = "7" },
+                                  //new SelectListItem{ Text="RP - High to Low", Value = "8" }
+                             })@*Added OfferType by Sonali 17-11-2018*@
+                        </div>
+                    </div>
+                    </div>
+            </section>
+            <!--add by paras-->
+
+        @*}*@
+            <div id="ProductListing" class="col-md-9">
+
+            </div>
+
+
+            @if (ViewBag.desc_msg != null)
+            {
+                <div id="ProductDescription">
+                    @Html.Raw(ViewBag.desc_msg)
+                </div>
+            }
+
+        </div>
+    </div>
+    <!--title strip -->
+
+
+
+    <script type="application/ld+json">
+        { "context" : "http://schema.org",
+        "type" : "Organization",
+        " name " : " eZeelo pvt ltd ",
+        "url" : " @System.Configuration.ConfigurationManager.AppSettings["EZEELO_CUSTOMER_URL"]/@System.Configuration.ConfigurationManager.AppSettings["DFLT_CITY_NAME"]/@System.Configuration.ConfigurationManager.AppSettings["DFLT_FRANCHISE_ID"] ",@*//Yashaswi 01/12/2018 Default City Change *@
+        "sameAs" : [ " https://www.facebook.com/ezeelo ",
+        " https://twitter.com/ezeelo ",
+        " https://plus.google.com/+ezeelo ",
+        " https://www.youtube.com/channel/UCzfy7xDV9nEbAGH4II9MW6w/videos ",
+        " https://www.instagram.com/ezeelo/",
+        " https://www.linkedin.com/company/ezeelo ",
+        " https://in.pinterest.com/ezeelo/ "]
+        }
+    </script>
+
+    <script>
+        $(document).ready(function () {
+            $("#brand").click(function () {
+                $("#brand_content").toggle(1000);
+            });
+            $("#color").click(function () {
+                $("#color_content").toggle(1000);
+            });
+            $("#size").click(function () {
+                $("#size_content").toggle(1000);
+            });
+            $("#dimensions").click(function () {
+                $("#dimensions_content").toggle(1000);
+            });
+            $("#detail_head").click(function () {
+                $("#detail_head_content").toggle(1000);
+            });
+            $("#price").click(function () {
+                $("#price_content").toggle(1000);
+            });
+            $("#suggestion").click(function () {
+                $("#suggestion_content").toggle(1000);
+            });
+        });
+    </script>
+    <script>
+        $(document).ready(function () {
+            if ($(window).width() <= 960) {
+                //alert('Less than 960');
+                $(".content").removeClass("in");
+            }
+            else {
+                //alert('More than 960');
+                $(".content").addClass("in");
+            }
+        });
+    </script>
+    <script type="application/ld+json">
+        {
+        "@@context": "http://schema.org",
+        "@@type": "WebSite",
+        "url": "@System.Configuration.ConfigurationManager.AppSettings["EZEELO_CUSTOMER_URL"]",
+        "potentialAction": {
+        "@@type": "SearchAction",
+        "target": "@System.Configuration.ConfigurationManager.AppSettings["EZEELO_CUSTOMER_URL"]/@cityName/@franchiseID/products?item=@SearchKeyWord", @*////added /@franchiseID*@
+        "query-input": "required name=search_term"
+        }
+        }
+    </script>
+
+
+    @*<script src="~/Scripts/jquery-1.10.2.min.js"></script>*@
+    <script src="~/Scripts/Products.js"></script>
+    @*<script src="~/Scripts/Flying.js"></script>*@
+    <script src="~/Scripts/jqCompareProduct.js"></script>
+
+    <style>
+        .lablehead {
+            color: black;
+        }
+    </style>
+
+
+}
+
+<script>
+    $(document).ready(function () {
+        if (navigator.userAgent.indexOf('Safari') != -1 && navigator.userAgent.indexOf('Chrome') == -1) {
+            $(".vertical-menu-content").removeAttr('style');
+            $('#nav-top-menu').find('.vertical-menu-content').hide();
+            $("#productGeneralSpecification iframe").css('height', '294px');
+            $("#productGeneralSpecification").css('background-color', '#fff');
+            $('h4.title').click(function () {
+
+                if ($(".vertical-menu-content").is(':visible')) {
+                    $(".vertical-menu-content").hide();
+                    $(".vertical-menu-content").slideUp();
+                    $(".vertical-menu-content").css('display', 'none');
+                }
+                else if ($(".vertical-dropdown-menu").is(':visible')) {
+                    //alert("1");
+                    $("#MenuListing").css('display', 'block');
+                }
+                else {
+                    $(".vertical-menu-content").show();
+                    $(".vertical-menu-content").slideDown();
+                    $(".vertical-menu-content").css('display', 'block');
+                }
+            });
+        }
+    });
+</script>

@@ -1,0 +1,188 @@
+@model ModelLayer.Models.ViewModel.PurchaseOrderReplyViewModel
+@using ModelLayer.Models.ViewModel
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<link href="~/Content/assets/css/font-awesome.min.css" rel="stylesheet" />
+
+<div id="content" class="span10">
+    <div class="row-fluid">
+        <div class="box span12">
+            <div class="box-header creatProduct clearfix" data-original-title="">
+                <h2>
+                    <i class="icon-exclamation-sign"></i>
+                    <span class="break"></span>
+                    INVOICE DETAIL <span style="font-weight:bold"> [@Model.InvoiceCode]</span>
+                </h2>
+            </div>
+            <div class="box-content">
+                <div class="form-horizontal">
+                    <div class="display-label">InvoiceCode: <b>@Model.InvoiceCode</b></div>
+
+                    <div class="display-label">Warehouse:<b> @Model.WarehouseName</b></div>
+
+                    <div class="display-label">Supplier: <b>@Model.SupplierName</b></div>
+
+                    <div class="display-label">Create Date: <b>@Model.CreateDate.ToString("dd MMM yyyy")</b></div>
+
+                    <div class="display-label">Delivery Date: <b>@Convert.ToDateTime(@Model.DeliveryDateTime).ToString("dd MMM yyyy")</b></div>
+                                      
+                    <div class="display-label">Dispatch Date: <b>@Convert.ToDateTime(@Model.DispatchDate).ToString("dd MMM yyyy")</b></div>
+                    <div class="display-label">Driver Name: <b>@Model.DriverName</b></div>
+                    <div class="display-label">Driver Mobile No.: <b>@Model.DriverMobileNumber</b></div>
+                    <div class="display-label">Driver Licence No.: <b>@Model.DriverLicenceNumber</b></div>
+                    <div class="display-label">Vehicle Number: <b>@Model.VehicleNumber</b></div>
+                    <div class="display-label">Vehicle Type: <b>@Model.VehicleType</b></div>
+                    <div class="display-label">Logistic Company Name: <b>@Model.LogisticCompanyName</b></div>
+                    <div class="display-label">Logistic Company Address: <b>@Model.LogisticCompanyAddress</b></div>
+                    <div class="display-label">Logistic Contact Person: <b>@Model.LogisticContactPerson</b></div>
+                    <div class="display-label">Logistic Contact Number: <b>@Model.LogisticContactNumber</b></div>
+                    <div class="display-label">E-Way Bill Number: <b>@Model.EWayBillNumber</b></div>
+                    <div class="display-label">Tracking No.: <b>@Model.TrackingNumber</b></div>
+                    <b>@ViewBag.SelectedDvName</b>
+
+                </div>
+            </div>
+        </div>
+
+        <div class="box">
+            <div class="box-header creatProduct clearfix" data-original-title="">
+                <h2>
+                    <i class="icon-exclamation-sign"></i>
+                    <span class="break"></span>
+                    ADDED ITEM(S)
+                </h2>
+            </div>
+            <div class="box-content nameDscrp">
+                <div class="NameDescription">
+                    <div class="box-content box-content1" style="padding-left:0px;width:99%;overflow-x:scroll;z-index:1;">
+                        @{
+                            decimal TotalGSTAmount = 0;
+                        }
+                        @if (Session["lPurchaseOrderReplyDetailViewModel"] != null)
+                        {
+                            
+                            List<PurchaseOrderReplyDetailViewModel> objList = (List<PurchaseOrderReplyDetailViewModel>)Session["lPurchaseOrderReplyDetailViewModel"];
+
+                            <table class="table table-striped table-bordered bootstrap-datatable datatable dataTable" width="100%">
+                                <tr>
+                                    <th>Product</th>
+                                    <th>Item Name</th>
+                                    <th>HSN Code</th>
+                                    <th>Nick Name</th>
+                                    <th>Quantity</th>
+                                    <th>Unit Price</th>
+                                    <th>CGST</th>
+                                    <th>SGST</th>
+                                    <th>Amount</th>
+                                </tr>
+                                
+                           
+                                
+                                @foreach (var item in objList)
+                                {
+                                    <tr>
+                                        <td class="table-shopping-cart-img" style="text-align: left;">
+                                            <img id=" imgproductimage" src="@item.StockThumbPath" onerror="this.src = '/Content/Images/no_image.png'" style="width: 70px; height:70px;" alt=" eZeelo " />
+                                        </td>
+                                        <td>@item.ItemName</td>
+                                        <td>@item.HSNCode</td>
+                                        <td>@item.ProductNickname</td>
+                                        <td>@item.Quantity</td>
+                                        <td> @item.BuyRatePerUnit</td>
+                                        <td> @item.CGSTAmount <span>(@Convert.ToDecimal(@item.GSTInPer / Convert.ToDecimal(2))%)</span></td>
+                                        <td> @item.SGSTAmount <span>(@Convert.ToDecimal(@item.GSTInPer / Convert.ToDecimal(2))%)</span></td>
+                                        <td>@item.ProductAmount</td>
+                                    </tr>
+                                    TotalGSTAmount = TotalGSTAmount + Convert.ToDecimal(@item.CGSTAmount) + Convert.ToDecimal(@item.SGSTAmount);
+                                }
+                            </table>
+                        }
+                    </div>
+                </div>
+
+
+                <div>
+                    <table width="100%">
+                        <tr>
+                            <td style="width:60%;" valign="top"><b>Remarks</b> <br />@Model.Remark</td>
+                            <td style="width:50%; text-align:right">
+                                <table width="100%">
+                                    <tr>
+                                        <td style="text-align:right">
+                                            SUBTOTAL
+                                        </td>
+                                        <td><b>: </b></td>
+                                        <td style="text-align: right; width: 30%;padding-right:20px">
+                                            @*<span> <b> <i class="fa fa-inr"></i> @Model.OrderAmount </b></span>*@
+                                            @*Yashaswi 7-7-2018*@
+                                            <span> <b> <i class="fa fa-inr"></i> @Convert.ToDecimal(@Model.OrderAmount - @TotalGSTAmount) </b></span>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td style="text-align:right">GST</td>
+                                        <td><b>: </b></td>
+                                        <td style="text-align: right; width: 30%; padding-right: 20px; "><span>  <b> <i class="fa fa-inr"></i> @TotalGSTAmount </b></span><br /></td>
+                                    </tr>
+                                    @if (@Model.ShippingCharge > 0)
+                                    {
+                                        <tr>
+                                            <td style="text-align:right">SHIPPING CHARGE</td>
+                                            <td><b>: </b></td>
+                                            <td style="text-align: right; width: 30%; padding-right: 20px; "><span>   <b><i class="fa fa-inr"></i> @Model.ShippingCharge </b></span><br /></td>
+                                        </tr>
+                                    }
+                                    @if (@Model.AdditionalCost > 0)
+                                    {
+                                        <tr>
+                                            <td style="text-align:right">ADDITIONAL COST</td>
+                                            <td><b>: </b></td>
+                                            <td style="text-align: right; width: 30%; padding-right: 20px; "><span>   <b><i class="fa fa-inr"></i> @Model.AdditionalCost</b> </span><br /></td>
+                                        </tr>
+                                    }
+                                    @if (@Model.CustomDutyCharge > 0)
+                                    {
+                                        <tr>
+                                            <td style="text-align:right">CUSTOM DUTY CHARGE</td>
+                                            <td><b>: </b></td>
+                                            <td style="text-align: right; width: 30%; padding-right: 20px; "><span>   <b><i class="fa fa-inr"></i> @Model.CustomDutyCharge</b> </span><br /></td>
+                                        </tr>
+                                    }
+                                    @if (@Model.OperatingCost > 0)
+                                    {
+                                        <tr>
+                                            <td style="text-align:right">OPERATING COST</td>
+                                            <td><b>: </b></td>
+                                            <td style="text-align: right; width: 30%; padding-right: 20px; "><span>   <b><i class="fa fa-inr"></i> @Model.OperatingCost</b> </span><br /></td>
+                                        </tr>
+                                    }
+                                    @if (@Model.TotalDiscountAmount > 0)
+                                    {
+                                        <tr>
+                                            <td style="text-align:right">TOTAL DISCOUNT AMOUNT</td>
+                                            <td><b>: </b></td>
+                                            <td style="text-align: right; width: 30%; padding-right: 20px; "><span>   <b><i class="fa fa-inr"></i> @Model.TotalDiscountAmount</b> </span><br /></td>
+                                        </tr>
+                                    }
+                                    <tr>
+                                        <td style="text-align:right"><b>TOTAL</b></td>
+                                        <td><b>: </b></td>
+                                        <td style="text-align: right; width: 30%; padding-right: 20px; "><span> <b>  <i class="fa fa-inr"></i> @Model.TotalAmount</b> </span></td>
+                                    </tr>
+                                </table>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <br />
+        <p>
+            @*@Html.ActionLink("Edit", "Edit", new { id = Model.PurchaseOrderID }, new { @class = "btn btn-success mrg-left mrg-top" })*@
+            @Html.ActionLink("Back to List", "CreateInvoice", new { PurchaseOrderID = Model.PurchaseOrderID }, new { @class = "btn btn-default mrg-left mrg-top" })
+        </p>
+
+    </div>
+</div>

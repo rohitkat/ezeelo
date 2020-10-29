@@ -1,0 +1,172 @@
+﻿@model ModelLayer.Models.ReceiveOrderOnCall
+@{
+    //Layout = "~/Views/Shared/_Layout_franchise2.cshtml";
+    Layout = "~/Views/Shared/_LayoutPartial.cshtml";
+}
+<div class="row">
+    <div class="span4 orderOnCall_Res">
+        <div class="widget">
+            <div class="widget-header">
+                <i class="icon-list-alt"></i>
+                <h3> Details Receive Order On Call [ @Model.Name.ToString() ]</h3>
+            </div>
+            <!-- /widget-header -->
+            <div class="widget-content">
+                <div class="widget big-stats-container">
+                    <div class="widget-content matchdivheight">
+                        <p>
+                            @Html.ActionLink("Edit", "Edit", new { ID = @Model.ID }, new { @class = "btn btn-small btn-danger" }) |
+                            <button class="btn btn-small btn-success" onclick="Back()">Back</button>
+                        </p>
+                        <dl class="dl-horizontal">
+                            <dt>
+                                Order Code
+                            </dt>
+
+                            <dd>
+                                &nbsp;@Html.DisplayFor(model => model.CustomerOrder.OrderCode)
+                            </dd>
+
+                            <dt>
+                                Ref. Order Code
+                            </dt>
+
+                            <dd>
+                                &nbsp;
+                                @if (Model.CustomerOrder != null)
+                                {
+                                    @Franchise.Common.Common.GetRefOrderCode(Model.CustomerOrder.ReferenceCustomerOrderID)
+                                }
+                            </dd>
+
+                            <dt>
+                                Customer Name
+                            </dt>
+
+                            <dd>
+                                &nbsp;@Html.DisplayFor(model => model.Name)
+                            </dd>
+
+                            <dt>
+                                Mobile
+                            </dt>
+
+                            <dd>
+                                &nbsp;@Html.DisplayFor(model => model.PrimaryMobile)
+                            </dd>
+
+                            <dt>
+                                Secondary Mobile
+                            </dt>
+
+                            <dd>
+                                &nbsp;@Html.DisplayFor(model => model.SecondaryMobile)
+                            </dd>
+
+                            <dt>
+                                Email
+                            </dt>
+
+                            <dd>
+                                &nbsp;@Html.DisplayFor(model => model.Email)
+                            </dd>
+
+                            <dt>
+                                Shipping Address
+                            </dt>
+
+                            <dd>
+                                &nbsp;@Html.DisplayFor(model => model.ShippingAddress)
+                            </dd>
+
+                            <dt>
+                                Description
+                            </dt>
+
+                            <dd>
+                                &nbsp;@Html.DisplayFor(model => model.Description)
+                            </dd>
+
+                            <hr />
+                            <dt>
+                                Received By
+                            </dt>
+
+                            <dd>
+                                &nbsp;@Html.DisplayFor(model => model.PersonalDetail.FirstName)
+                            </dd>
+
+                            <dt>
+                                Modified By
+                            </dt>
+
+                            <dd>
+                                &nbsp;@Html.DisplayFor(model => model.PersonalDetail1.FirstName)
+                            </dd>
+
+                            @*<dt>
+                                Created By
+                            </dt>
+
+                            <dd>
+                                &nbsp;@Html.DisplayFor(model => model.PersonalDetail2.FirstName)
+                            </dd>*@
+
+
+                            <dt>
+                                Create Date
+                            </dt>
+
+                            <dd>
+                                &nbsp;@Html.DisplayFor(model => model.CreateDate)
+                            </dd>
+
+                            <dt>
+                                Modify Date
+                            </dt>
+
+                            <dd>
+                                &nbsp;@Html.DisplayFor(model => model.ModifyDate)
+                            </dd>
+
+                            @*<dt>
+                                @Html.DisplayNameFor(model => model.NetworkIP)
+                            </dt>
+
+                            <dd>
+                                &nbsp;@Html.DisplayFor(model => model.NetworkIP)
+                            </dd>
+
+                            <dt>
+                                @Html.DisplayNameFor(model => model.DeviceType)
+                            </dt>
+
+                            <dd>
+                                &nbsp;@Html.DisplayFor(model => model.DeviceType)
+                            </dd>
+
+                            <dt>
+                                @Html.DisplayNameFor(model => model.DeviceID)
+                            </dt>
+
+                            <dd>
+                                &nbsp;@Html.DisplayFor(model => model.DeviceID)
+                            </dd>*@
+
+                        </dl>
+                    </div>
+                </div>
+                <!-- /widget-content -->
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    function Back() {
+        $('#divtable').removeClass('span8');
+        $('#divtable').addClass('span12');
+        window.parent.$("[id$=Details]").hide();
+        $('#loader_img').hide();
+        $("#divtable").css('width', '100%');
+    }
+</script>

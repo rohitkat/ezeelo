@@ -1,0 +1,1133 @@
+﻿@model ModelLayer.Models.ViewModel.PartialProductListParam
+@using System.Text.RegularExpressions;
+
+<script src="~/Scripts/ShortList.js"></script>
+<style>
+    select {
+        border-radius: 0px 0px 0px 0px !important;
+        background: transparent;
+        padding: 0px 15px 0px 5px !important;
+        font-size: 14px;
+        border: 1px solid #eaeaea;
+        height: 30px;
+        /*-webkit-appearance: none;*/
+        /*-moz-appearance: none;*/
+        appearance: none;
+        float: none;
+        /*background: url(/Content/Images/drop.gif) 96% / 10px no-repeat !important;*/
+    }
+
+    .product-img-wrap:hover {
+        -webkit-transform: scale(1.1);
+        transform: scale(1.1);
+    }
+
+    .add-shortLst {
+        display: none;
+        width: 30px;
+        height: 30px;
+        border: 0 solid #fe850e;
+        /* left: -32px; */
+        top: 46%;
+    }
+
+    .panel-group {
+        margin-bottom: 0px !important;
+    }
+
+    #ulProduct {
+        clear: both;
+        padding-left: 0;
+    }
+</style>
+@{
+    string cityName = "";
+    string shortListUrl = "";
+    long lCityID = -1;
+    int franchiseID = 0;////added
+    if (Request.Cookies["CityCookie"] != null && Request.Cookies["CityCookie"].Value != "")
+    {
+        cityName = Request.Cookies["CityCookie"].Value.Split('$')[1].ToLower();
+        shortListUrl = Url.Action("AddProductToShortList", "PreviewItem");
+
+        //- Added by Avi Verma. Date : 29-july-2016.
+        lCityID = Convert.ToInt64(Request.Cookies["CityCookie"].Value.Split('$')[0].ToLower());
+
+        franchiseID = Convert.ToInt32(Request.Cookies["CityCookie"].Value.Split('$')[2]);////added
+        @Html.Hidden("HFID", franchiseID)
+    }
+
+    if (Session["UID"] != null)
+    {
+        @Html.Hidden("hdnSessionValue", (Session["UID"]))
+    }
+    else
+    {
+        @Html.Hidden("hdnSessionValue", 0)
+    }
+}
+
+
+<div class="col-sm-12">
+    @if (ViewBag.selectedCategoryId == null)
+    {
+        @Html.Hidden("selectedCategoryId", "0")
+    }
+    else
+    {
+        @Html.Hidden("selectedCategoryId", (long)ViewBag.selectedCategoryId)
+    }
+
+    @if (TempData["ShopID"] != null)
+    {
+        ViewBag.ShopID = TempData["ShopID"];
+        TempData.Keep("ShopID");
+    }
+
+    @if (Model.productList != null && Model.productList.Count() > 0)
+    {
+
+        if (ViewBag.ShopID == null || ViewBag.ShopID == 0)
+        {
+            if (TempData["MetaData_Category"] != null)
+            {
+                <h4 class="pro-heading">@TempData["MetaData_Category"]</h4>
+            }
+            else
+            {
+                @*<h4 class="" style="margin-bottom: 5px !important;">List of products</h4>*@
+            }
+        }
+        else
+        {
+            @*<h4 class="" style="margin-bottom: 5px !important;">List of products</h4>*@
+        }
+
+
+        <ul id="ulProduct" class="row " style="list-style-type:none;">
+            @for (var i = 0; i < Model.productList.Count(); i++)
+            {
+
+                var StockList = Model.productList[i].ProductVarientViewModels.Where(x => x.StockQty > 0).OrderBy(x => x.SaleRate).ToList();@*//Added by rumana for arranging variants in dropdownlist by Instock product with order by salerate and out of stock product in last*@
+                var OutofStockList = Model.productList[i].ProductVarientViewModels.Where(x => x.StockQty <= 0).ToList(); @*//Added by rumana for arranging variants in dropdownlist by Instock product with order by salerate and out of stock product in last*@
+
+                <li class="col-xs-6 col-sm-4 col-md-4 col-lg-3" style="margin-bottom: 10px;">
+
+                    <div class="product animated fadeInUp">
+                        <div id="soldOutDiv" class="">
+                            @if (StockList.Count > 0)
+                            {
+                                if (StockList.FirstOrDefault().StockStatus == 1 && StockList.FirstOrDefault().StockQty > 0)
+                                {
+                                    <span id="spSoldOut_@StockList.FirstOrDefault().ProductID" class="soldOut soldout-div" style="display:none"> Sold<br /> Out  </span>
+                                }
+                                else
+                                {
+                                    <span id="spSoldOut_@StockList.FirstOrDefault().ProductID" class="soldOut soldout-div"> Sold<br /> Out </span>
+                                }
+                            }
+                            else
+                            {
+                                if (OutofStockList.FirstOrDefault().StockStatus == 1 && OutofStockList.FirstOrDefault().StockQty > 0)
+                                {
+                                    <span id="spSoldOut_@OutofStockList.FirstOrDefault().ProductID" class="soldOut soldout-div" style="display:none"> Sold<br /> Out  </span>
+                                }
+                                else
+                                {
+                                    <span id="spSoldOut_@OutofStockList.FirstOrDefault().ProductID" class="soldOut soldout-div"> Sold<br /> Out </span>
+                                }
+                            }
+                            @*@if (StockList.Count > 0)
+            {
+                <span id="spSoldOut_@StockList.FirstOrDefault().ProductID" class="soldOut soldout-div" style="display:none"> Sold<br /> Out  </span>
+            }
+            else
+            {
+                <span id="spSoldOut_@OutofStockList.FirstOrDefault().ProductID" class="soldOut soldout-div"> Sold<br /> Out </span>
+            }*@
+                            @*@if (Model.productList[i].StockStatus == 1 && Model.productList[i].StockQty > 0)
+            {
+                <span id="spSoldOut_@Model.productList[i].ProductID" class="soldOut soldout-div" style="display:none"> Sold<br /> Out  </span>
+            }
+            else
+            {
+                <span id="spSoldOut_@Model.productList[i].ProductID" class="soldOut soldout-div"> Sold<br /> Out </span>
+            }*@
+                        </div>
+                        @*Yashaswi 25-7-2018 Show Offer and RP on Varient Change*@
+                        @*Offer %*@
+                        @if (StockList.Count > 0)
+                        {
+                            //foreach (var item in StockList)
+                            //{
+                            decimal offerValue = ((StockList.FirstOrDefault().MRP - StockList.FirstOrDefault().SaleRate) / (StockList.FirstOrDefault().MRP)) * 100;
+                            decimal offerPercentage = Math.Floor(offerValue);
+
+                            if (offerPercentage > 0)
+                            {
+                                if (StockList.FirstOrDefault().StockStatus == 1 && StockList.FirstOrDefault().StockQty > 0)
+                                {<ul id="ulOffer_@StockList.FirstOrDefault().ProductID" class="product-labels" style="display:block">
+                                        <li><span id="spOffer_@StockList.FirstOrDefault().ProductID">@offerPercentage % OFF</span></li>
+                                    </ul>
+                                }
+                                else
+                                {
+                                    <ul id="ulOffer_@StockList.FirstOrDefault().ProductID" class="product-labels" style="display: none">
+                                        <li class="offerPercentage"><span id="spOffer_@StockList.FirstOrDefault().ProductID"></span></li>
+                                    </ul>
+                                }
+                            }
+                            else
+                            {
+                                <ul id="ulOffer_@StockList.FirstOrDefault().ProductID" class="product-labels" style="display: none">
+                                    <li class="offerPercentage"><span id="spOffer_@StockList.FirstOrDefault().ProductID"></span></li>
+                                </ul>
+                            }
+                            //}
+                        }
+                        else
+                        {
+
+                            <ul id="ulOffer_@OutofStockList.FirstOrDefault().ProductID" class="product-labels" style="display: none">
+                                <li class="offerPercentage"><span id="spOffer_@OutofStockList.FirstOrDefault().ProductID"></span></li>
+                            </ul>
+
+                        }
+                        @* End Offer %*@
+                        @*@if (Model.productList[i].MRP > Model.productList[i].SaleRate)
+        {
+            decimal offerValue = ((Model.productList[i].MRP - Model.productList[i].SaleRate) / (Model.productList[i].MRP)) * 100;
+            decimal offerPercentage = Math.Floor(offerValue);
+
+            if (offerPercentage > 0)
+            {
+                if (Model.productList[i].StockStatus == 1 && Model.productList[i].StockQty > 0)
+                {<ul id="ulOffer_@Model.productList[i].ProductID" class="product-labels" style="display:block">
+                        <li><span id="spOffer_@Model.productList[i].ProductID">@offerPercentage % OFF</span></li>
+                    </ul>
+                }
+                else
+                {
+                    <ul id="ulOffer_@Model.productList[i].ProductID" class="product-labels" style="display: none">
+                        <li class="offerPercentage"><span id="spOffer_@Model.productList[i].ProductID"></span></li>
+                    </ul>
+                }
+            }
+            else
+            {
+                <ul id="ulOffer_@Model.productList[i].ProductID" class="product-labels" style="display: none">
+                    <li class="offerPercentage"><span id="spOffer_@Model.productList[i].ProductID"></span></li>
+                </ul>
+            }
+        }
+        else
+        {
+            <ul id="ulOffer_@Model.productList[i].ProductID" class="product-labels" style="display: none">
+                <li class="offerPercentage"><span id="spOffer_@Model.productList[i].ProductID"></span></li>
+            </ul>
+        }*@
+                        @*Start RP Yashaswi 9-7-2018*@
+                        <ul class="product-labelsRP">
+                            @if (StockList.Count > 0)
+                            {
+
+                                <li id="spanPayable" style="font-weight:700;">
+                                    RP
+                                    @*Yashaswi 25-7-2018 Show Offer and RP on Varient Change*@
+                                    <span id="spRetailPoint_@StockList.FirstOrDefault().ProductID"> @Convert.ToInt64(StockList.FirstOrDefault().RetailPoint) </span>
+                                </li>
+
+                            }
+                            else
+                            {
+
+                                <li id="spanPayable" style="font-weight:700;">
+                                    RP
+                                    @*Yashaswi 25-7-2018 Show Offer and RP on Varient Change*@
+                                    <span id="spRetailPoint_@OutofStockList.FirstOrDefault().ProductID"> @Convert.ToInt64(OutofStockList.FirstOrDefault().RetailPoint) </span>
+                                </li>
+
+                            }
+                        </ul>
+                        @*End RP Yashaswi 9-7-2018*@
+                        <ul class="product-labelsCB">
+                            @if (StockList.Count > 0)
+                            {
+
+                                <li id="spanPayable" style="font-weight:700;">
+                                    CP
+                                    @*Yashaswi 25-7-2018 Show Offer and RP on Varient Change*@
+                                    <span id="spCashbackPoint_@StockList.FirstOrDefault().ProductID"> @Convert.ToInt64(StockList.FirstOrDefault().CashbackPoint) </span>
+                                </li>
+
+                            }
+                            else
+                            {
+
+                                <li id="spanPayable" style="font-weight:700;">
+                                    CP
+                                    @*Yashaswi 25-7-2018 Show Offer and RP on Varient Change*@
+                                    <span id="spCashbackPoint_@OutofStockList.FirstOrDefault().ProductID"> @Convert.ToInt64(OutofStockList.FirstOrDefault().CashbackPoint) </span>
+                                </li>
+
+                            }
+                        </ul>
+                        @if (StockList.Count > 0)
+                        {
+                            <div class="left-block">
+                                <div class="product-img-wrap">
+                                    @if (ViewBag.ShopID == null || ViewBag.ShopID == 0)
+                                    {
+                                        @*<a class="anchorRedirect" href="@Url.RouteUrl(" pre-prod-name", new { itemid=Model.productList[i].ProductID, itemname=Regex.Replace(Model.productList[i].Name.Substring(0, math.min(model.productlist[i].name.length, 30)), @"[\ />\\#,+()$~%.':*?<>{} ]", "-").Replace("&", "and").ToLower(), city = cityName, franchiseId = franchiseID })">  Cahnges made by Harshada on 12/12/16 *@
+                                        <a class="anchorRedirect" href="@Url.RouteUrl("pre-prod-name", new { itemid = StockList.FirstOrDefault().ProductID, itemname = Model.productList[i].URLStructureName.ToLower(), city = cityName, franchiseid = franchiseID })">
+
+                                            <img src="@Model.productList[i].ProductThumbPath" class="product-img" alt="@Model.productList[i].Name" onerror="this.src = '/Content/Images/no_image.png'" />
+                                            @*<img src="@Model.productList[i].ProductThumbPath" class="product-img-alt" alt="@Model.productList[i].Name" onerror="this.src = '/Content/Images/no_image.png'" />*@
+                                        </a>
+                                    }
+                                    else
+                                    {
+                                        @*<a class="anchorRedirect" href="@Url.RouteUrl(" preview-shop-product", new { itemid=Model.productList[i].ProductID, itemname=Regex.Replace(Model.productList[i].Name.Substring(0, math.min(model.productlist[i].name.length, 30)), @"[\ />\\#,+()$~%.':*?<>{} ]", "-").Replace("&", "and").ToLower(), shopID = ViewBag.ShopID, city = cityName, franchiseId = franchiseID })"> Changes by harshada*@
+                                        <a class="anchorRedirect" href="@Url.RouteUrl("preview-shop-product", new { itemid = StockList.FirstOrDefault().ProductID, itemname = Model.productList[i].URLStructureName.ToLower(), shopid = ViewBag.ShopID, city = cityName, franchiseid = franchiseID })">
+                                            <img src="@Model.productList[i].ProductThumbPath" class="product-img" alt="@Model.productList[i].Name" onerror="this.src = '/Content/Images/no_image.png'" />
+                                            @*<img src="@Model.productList[i].ProductThumbPath" class="product-img-alty" alt="@Model.productList[i].Name" onerror="this.src = '/Content/Images/no_image.png'" />*@
+                                        </a>
+                                    }
+                                </div>
+                            </div>
+
+
+                        }
+                        else
+                        {
+                            <div class="left-block">
+                                <div class="product-img-wrap">
+                                    @if (ViewBag.ShopID == null || ViewBag.ShopID == 0)
+                                    {
+                                        @*<a class="anchorRedirect" href="@Url.RouteUrl(" pre-prod-name", new { itemid=Model.productList[i].ProductID, itemname=Regex.Replace(Model.productList[i].Name.Substring(0, math.min(model.productlist[i].name.length, 30)), @"[\ />\\#,+()$~%.':*?<>{} ]", "-").Replace("&", "and").ToLower(), city = cityName, franchiseId = franchiseID })">  changes by harshada*@
+                                        <a class="anchorRedirect" href="@Url.RouteUrl("pre-prod-name", new { itemid = OutofStockList.FirstOrDefault().ProductID, itemname = Model.productList[i].URLStructureName.ToLower(), city = cityName, franchiseid = franchiseID })">
+                                            <img src="@Model.productList[i].ProductThumbPath" class="product-img" alt="@Model.productList[i].Name" onerror="this.src = '/Content/Images/no_image.png'" />
+                                        </a>
+                                    }
+                                    else
+                                    {
+                                        @*<a class="anchorRedirect" href="@Url.RouteUrl(" preview-shop-product", new { itemid=Model.productList[i].ProductID, itemname=Regex.Replace(Model.productList[i].Name.Substring(0, math.min(model.productlist[i].name.length, 30)), @"[\ />\\#,+()$~%.':*?<>{} ]", "-").Replace("&", "and").ToLower(), shopID = ViewBag.ShopID, city = cityName, franchiseId = franchiseID })">  changes by harshada*@
+                                        <a class="anchorRedirect" href="@Url.RouteUrl("preview-shop-product", new { itemid = OutofStockList.FirstOrDefault().ProductID, itemname = Model.productList[i].URLStructureName.ToLower(), shopid = ViewBag.ShopID, city = cityName, franchiseid = franchiseID })">
+                                            <img src="@Model.productList[i].ProductThumbPath" class="product-img" alt="@Model.productList[i].Name" onerror="this.src = '/Content/Images/no_image.png'" />
+                                        </a>
+                                    }
+                                </div>
+                            </div>
+                        }
+                        <div class="product-caption">
+                            @if (Model.productList[i].Name.Length > 60)
+                            {
+                                //string name = Model.productList[i].Name.Substring(0, 57).ToString() + "..."; old
+                                string name = Model.productList[i].Name.Substring(0, 57).ToString().Replace("+", " ") + "...";
+
+                                <h1 class="product-caption-title">@name</h1>
+                            }
+                            else
+                            {
+                                @*<h1 class="lablehead">@Html.DisplayFor(it => it.productList[i].Name)</h1>*@
+                                //***** SEO URL Structure RULE by Ashish 18/11/2016 ******//
+                                string name = Model.productList[i].Name.ToString().Replace("+", " ");
+                                <h1 class="product-caption-title">@name</h1>
+
+                            }
+                            <!-- Added by Avi Verma.  Date : 06-June-2016 For Dropdown list -->
+                            <div style=" height: 30px;">
+                                @if (Model.productList[i].ProductVarientViewModels != null && Model.productList[i].ProductVarientViewModels.Count > 0)
+                                {
+                                    if (StockList.Count > 0)
+                                    {
+                                        string lDdlVarient = "ddl_" + StockList.FirstOrDefault().ProductID;
+                                        <select class="select-varient" id="@lDdlVarient">
+
+                                            @if (lCityID == 10909 && franchiseID == 3) ////added
+                                            {
+                                                Model.productList[i].MRP = StockList.OrderByDescending(x => x.SaleRate).FirstOrDefault().MRP;
+                                                Model.productList[i].SaleRate = StockList.OrderByDescending(x => x.SaleRate).FirstOrDefault().SaleRate;
+                                                var cnt = 0;
+
+                                                foreach (var item in StockList)
+                                                {
+                                                    //Yashaswi 25-7-2018 Show Offer and RP on Varient Change
+                                                    decimal offerValue = ((item.MRP - item.SaleRate) / (item.MRP)) * 100;
+                                                    decimal offerPercentage = Math.Floor(offerValue);
+
+                                                    <option value="@item.ShopStockID/@item.MRP/@offerPercentage/@item.RetailPoint/@item.StockQty/@item.StockStatus/@item.CashbackPoint" class="@cnt">@item.SaleRate/@item.Size</option>
+                                                    cnt = cnt + 1;
+                                                }
+                                                foreach (var item in OutofStockList)
+                                                {
+                                                    //Yashaswi 25-7-2018 Show Offer and RP on Varient Change
+                                                    decimal offerValue = ((item.MRP - item.SaleRate) / (item.MRP)) * 100;
+                                                    decimal offerPercentage = Math.Floor(offerValue);
+
+                                                    <option value="@item.ShopStockID/@item.MRP/@offerPercentage/@item.RetailPoint/@item.StockQty/@item.StockStatus/@item.CashbackPoint" class="@cnt">@item.SaleRate/@item.Size</option>
+                                                    cnt = cnt + 1;
+                                                }
+                                                @*Model.productList[i].MRP = Model.productList[i].ProductVarientViewModels.OrderByDescending(x => x.SaleRate).FirstOrDefault().MRP;
+                                Model.productList[i].SaleRate = Model.productList[i].ProductVarientViewModels.OrderByDescending(x => x.SaleRate).FirstOrDefault().SaleRate;
+                                var cnt = 0;
+                                foreach (var item in Model.productList[i].ProductVarientViewModels.OrderByDescending(x => x.SaleRate).ToList())
+                                {
+
+                                    decimal offerValue = ((item.MRP - item.SaleRate) / (item.MRP)) * 100;
+                                    decimal offerPercentage = Math.Floor(offerValue);
+
+                                    <option value="@item.ShopStockID/@item.MRP/@offerPercentage/@item.RetailPoint/@item.StockQty/@item.StockStatus" class="@cnt">@item.SaleRate/@item.Size</option>
+                                    cnt = cnt + 1;
+                                }*@
+                                            }
+                                            else
+                                            {
+
+                                                foreach (var item in StockList)
+                                                {
+                                                    //Yashaswi 25-7-2018 Show Offer and RP on Varient Change
+                                                    decimal offerValue = ((item.MRP - item.SaleRate) / (item.MRP)) * 100;
+                                                    decimal offerPercentage = Math.Floor(offerValue);
+                                                    <option value="@item.ShopStockID/@item.MRP/@offerPercentage/@item.RetailPoint/@item.StockQty/@item.StockStatus/@item.CashbackPoint">@item.SaleRate/@item.Size</option>
+
+                                                }
+                                                foreach (var item in OutofStockList)
+                                                {
+                                                    //Yashaswi 25-7-2018 Show Offer and RP on Varient Change
+                                                    decimal offerValue = ((item.MRP - item.SaleRate) / (item.MRP)) * 100;
+                                                    decimal offerPercentage = Math.Floor(offerValue);
+                                                    <option value="@item.ShopStockID/@item.MRP/@offerPercentage/@item.RetailPoint/@item.StockQty/@item.StockStatus/@item.CashbackPoint">@item.SaleRate/@item.Size</option>
+
+                                                }
+                                            }
+                                        </select>
+                                    }
+                                    else
+                                    {
+                                        string lDdlVarient = "ddl_" + OutofStockList.FirstOrDefault().ProductID;
+                                        <select class="select-varient" id="@lDdlVarient">
+
+                                            @if (lCityID == 10909 && franchiseID == 3) ////added
+                                            {
+                                                Model.productList[i].MRP = OutofStockList.OrderByDescending(x => x.SaleRate).FirstOrDefault().MRP;
+                                                Model.productList[i].SaleRate = OutofStockList.OrderByDescending(x => x.SaleRate).FirstOrDefault().SaleRate;
+                                                var cnt = 0;
+
+
+                                                foreach (var item in OutofStockList)
+                                                {
+                                                    //Yashaswi 25-7-2018 Show Offer and RP on Varient Change
+                                                    decimal offerValue = ((item.MRP - item.SaleRate) / (item.MRP)) * 100;
+                                                    decimal offerPercentage = Math.Floor(offerValue);
+
+                                                    <option value="@item.ShopStockID/@item.MRP/@offerPercentage/@item.RetailPoint/@item.StockQty/@item.StockStatus/@item.CashbackPoint" class="@cnt">@item.SaleRate/@item.Size</option>
+                                                    cnt = cnt + 1;
+                                                }
+                                                @*Model.productList[i].MRP = Model.productList[i].ProductVarientViewModels.OrderByDescending(x => x.SaleRate).FirstOrDefault().MRP;
+                                Model.productList[i].SaleRate = Model.productList[i].ProductVarientViewModels.OrderByDescending(x => x.SaleRate).FirstOrDefault().SaleRate;
+                                var cnt = 0;
+                                foreach (var item in Model.productList[i].ProductVarientViewModels.OrderByDescending(x => x.SaleRate).ToList())
+                                {
+
+                                    decimal offerValue = ((item.MRP - item.SaleRate) / (item.MRP)) * 100;
+                                    decimal offerPercentage = Math.Floor(offerValue);
+
+                                    <option value="@item.ShopStockID/@item.MRP/@offerPercentage/@item.RetailPoint/@item.StockQty/@item.StockStatus" class="@cnt">@item.SaleRate/@item.Size</option>
+                                    cnt = cnt + 1;
+                                }*@
+                                            }
+                                            else
+                                            {
+                                                foreach (var item in OutofStockList)
+                                                {
+                                                    //Yashaswi 25-7-2018 Show Offer and RP on Varient Change
+                                                    decimal offerValue = ((item.MRP - item.SaleRate) / (item.MRP)) * 100;
+                                                    decimal offerPercentage = Math.Floor(offerValue);
+                                                    <option value="@item.ShopStockID/@item.MRP/@offerPercentage/@item.RetailPoint/@item.StockQty/@item.StockStatus/@item.CashbackPoint">@item.SaleRate/@item.Size</option>
+
+                                                }
+                                            }
+                                        </select>
+                                    }
+
+                                }
+                                else
+                                {
+                                    <div style="height: 23px;">&nbsp;</div>
+                                }
+                            </div>
+                            <div style="float: left; display: inline; height:32px;">
+                                @if (StockList.Count > 0)
+                                {
+                                    @* Show size *@
+                                    @*show size only for fruit & vegetables
+                    because of that hardcoded condition is checked*@
+
+                                    if (StockList.FirstOrDefault().Size != null && StockList.FirstOrDefault().Size != "N/A" && Model.productList[i].FirstLevelCatId == 15)
+                                    {
+                                        <span class="productSize" style="float: left; width: auto; margin-right: 10px; display:none;">@StockList.FirstOrDefault().Size</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="productSize" style="display:none;">&nbsp;</span>
+                                    }
+                                }
+                                else
+                                {
+                                    if (OutofStockList.FirstOrDefault().Size != null && OutofStockList.FirstOrDefault().Size != "N/A" && Model.productList[i].FirstLevelCatId == 15)
+                                    {
+                                        <span class="productSize" style="float: left; width: auto; margin-right: 10px; display:none;">@OutofStockList.FirstOrDefault().Size</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="productSize" style="display:none;">&nbsp;</span>
+                                    }
+                                }
+                            </div>
+                            <div class="product-caption-price">
+                                @*<span id="spMRPdel_@StockList[0].ProductID" class="product-caption-price-old "><del><i class="fa fa-inr " aria-hidden="true"></i> @((Convert.ToDecimal(StockList[0].MRP).ToString("0.00")))</del></span>*@
+
+                                @if (StockList.Count > 0)
+                                {
+                                    if (StockList[0].MRP > StockList[0].SaleRate)
+                                    {
+
+                                        <span id="spMRPdel_@StockList[0].ProductID" class="product-caption-price-old "><del><i class="fa fa-inr " aria-hidden="true"></i> @((Convert.ToDecimal(StockList[0].MRP).ToString("0.00")))</del></span>
+                                    }
+                                    else
+                                    {
+                                        <span id="spMRPdel_@StockList[0].ProductID" class="product-caption-price-old " style="display:none"><del><i class="fa fa-inr " aria-hidden="true"></i> @((Convert.ToDecimal(StockList[0].MRP).ToString("0.00")))</del></span>
+                                    }
+
+                                    <span class="product-caption-price-new " style="color:brown"><i class="fa fa-inr " aria-hidden="true"></i> @((Convert.ToDecimal(StockList[0].SaleRate)).ToString("0.00"))</span>
+                                }
+                                else
+                                {
+                                    if (OutofStockList[0].MRP > OutofStockList[0].SaleRate)
+                                    {
+
+                                        <span id="spMRPdel_@OutofStockList[0].ProductID" class="product-caption-price-old "><del><i class="fa fa-inr " aria-hidden="true"></i> @((Convert.ToDecimal(OutofStockList[0].MRP).ToString("0.00")))</del></span>
+                                    }
+                                    else
+                                    {
+                                        <span id="spMRPdel_@OutofStockList[0].ProductID" class="product-caption-price-old " style="display:none"><del><i class="fa fa-inr " aria-hidden="true"></i> @((Convert.ToDecimal(OutofStockList[0].MRP).ToString("0.00")))</del></span>
+                                    }
+
+                                    <span class="product-caption-price-new " style="color:brown"><i class="fa fa-inr " aria-hidden="true"></i> @((Convert.ToDecimal(OutofStockList[0].SaleRate)).ToString("0.00"))</span>
+                                }
+                            </div>
+                            <div class="product-caption-price">
+                                @* If condition added for corporate gifting *@
+                                @if (StockList.Count > 0)
+                                {
+                                    if (StockList.FirstOrDefault().CategoryID == 1368)
+                                    {
+                                        @*@Html.RouteLink("View", "pre-prod-name", new { itemId = Model.productList[i].ProductID, itemName = Regex.Replace(Model.productList[i].Name.Substring(0, Math.Min(Model.productList[i].Name.Length, 30)), @"[\/\\#,+()$~%.':*?<>{} ]", "-").Replace("&", "and").ToLower(), city = cityName, franchiseId = franchiseID }, new { @class = "btn btn-success" })*@ @*////added franchiseId=franchiseID*@
+                                        //***** SEO URL Structure RULE by Ashish 18/11/2016 ******//
+                                        @Html.RouteLink("View", "pre-prod-name", new { itemId = StockList.FirstOrDefault().ProductID, itemName = Model.productList[i].URLStructureName.ToLower(), shopStockID = StockList.FirstOrDefault().ShopStockID, city = cityName, franchiseId = franchiseID }, new { @class = "btn btn-success", id = "btnView_" + StockList.FirstOrDefault().ProductID }) @*////added franchiseId=franchiseID*@
+                                        @*<a class="button warning corporateGift" style="margin-left: 5px;float:left"
+                             href="@Url.RouteUrl(" preview-stock", new { itemid=Model.productList[i].ProductID, itemname=Regex.Replace(Model.productList[i].Name.Substring(0, math.min(model.productlist[i].name.length, 30)), @"[\ />\\#,+()$~%.':*?<>{} ]", "-").Replace("&", "and").ToLower(), shopStockID = Model.productList[i].ShopStockID, shopID = 0, city = cityName, franchiseId = franchiseID })">
+                        Gift Now
+                        </a>  changes by harshada*@
+
+                                        <a class="button warning corporateGift" style="margin-left: 5px;float:left"
+                                           href="@Url.RouteUrl("preview-stock", new { itemid = StockList.FirstOrDefault().ProductID, itemname = Model.productList[i].URLStructureName.ToLower(), shopstockid = StockList.FirstOrDefault().ShopStockID, shopid = 0, city = cityName, franchiseid = franchiseID })">
+                                            Gift Now
+                                        </a>
+                                        <input type="text" min="1" max="@StockList.FirstOrDefault().StockQty" step="1" value="1" name="productQuantity_@StockList.FirstOrDefault().ProductID" id="productQuantity" class="productQuantity" style="display: none; width: 40px; height: 31px; text-align: center; " />
+                                        <button id="@StockList.FirstOrDefault().ProductID" class="addToCartJquery btn btn-warning" type="button" style="display:none"
+                                                onclick="Show_PopUpForLocationAlert(@StockList.FirstOrDefault().ShopStockID,@StockList.FirstOrDefault().ProductID)">
+                                            Add<i class="fa fa-shopping-basket"></i>
+                                        </button>//Yashaswi AddProduct-> Show_PopUpForLocationAlert
+
+                                    }
+                                    else
+                                    {
+                                        @*<a class="button warning corporateGift" style="margin-left: 5px;float:left; display: none"
+                                href="@Url.RouteUrl(" preview-stock", new { itemid=Model.productList[i].ProductID, itemname=Regex.Replace(Model.productList[i].Name.Substring(0, math.min(model.productlist[i].name.length, 30)), @"[\ />\\#,+()$~%.':*?<>{} ]", "-").Replace("&", "and").ToLower(), shopstockId = Model.productList[i].ShopStockID, city = cityName, franchiseId = franchiseID })">
+                        Gift Now
+                        </a>  changes by harshada0*@
+
+                                        <a class="button warning corporateGift" style="margin-left: 5px;float:left; display: none"
+                                           href="@Url.RouteUrl("preview-stock", new { itemid = StockList.FirstOrDefault().ProductID, itemname = Model.productList[i].URLStructureName.ToLower(), shopstockid = StockList.FirstOrDefault().ShopStockID, city = cityName, franchiseid = franchiseID })">
+                                            Gift Now
+                                        </a>
+                                        if (ViewBag.ShopID == null || ViewBag.ShopID == 0)
+                                        {
+
+                                            //***** SEO URL Structure RULE by Ashish 18/11/2016 ******//
+
+                                            //***** END SEO URL Structure RULE ******//
+
+
+                                            @*@Html.RouteLink("View", "pre-prod-name", new { itemId = Model.productList[i].ProductID, itemName = Regex.Replace(Model.productList[i].Name.Substring(0, Math.Min(Model.productList[i].Name.Length, 30)), @"[\/\\#,+()$~%.':*?<>{} ]", "-").Replace("&", "and").ToLower(), city = cityName, franchiseId = franchiseID }, new { @class = "btn btn-success" }) *@ @*////added franchiseId=franchiseID*@
+                                            //***** SEO URL Structure RULE by Ashish 18/11/2016 ******//
+                                            @Html.RouteLink("View", "pre-prod-name", new { itemId = StockList.FirstOrDefault().ProductID, itemName = Model.productList[i].URLStructureName.ToLower(), shopstockid = StockList.FirstOrDefault().ShopStockID, city = cityName, franchiseId = franchiseID }, new { @class = "btn btn-success", id = "btnView_" + StockList.FirstOrDefault().ProductID }) @*////added franchiseId=franchiseID now change for URL Structure Rule*@
+                                            if (StockList.FirstOrDefault().StockStatus == 1 && StockList.FirstOrDefault().StockQty > 0)
+                                            {
+                                                <input type="text" min="1" max="@StockList.FirstOrDefault().StockQty" step="1" value="1" id="productQuantity" name="productQuantity_@StockList.FirstOrDefault().ProductID" class="productQuantity" onchange="checkMaxQty(this);" style="width: 40px; height: 31px; text-align: center;" />
+                                                <button id="@StockList.FirstOrDefault().ProductID" class="addToCartJquery btn btn-warning" type="button"
+                                                        onclick="Show_PopUpForLocationAlert(@StockList.FirstOrDefault().ShopStockID,@StockList.FirstOrDefault().ProductID)">
+                                                    Add<i class="fa fa-shopping-basket"></i>
+                                                </button>
+                                                //Yashaswi AddProduct-> Show_PopUpForLocationAlert
+                                            }
+                                            else
+                                            {
+                                                <input type="text" style="display: none; width: 40px; height: 31px; text-align: center;" min="1" max="@StockList.FirstOrDefault().StockQty" step="1" value="1" id="productQuantity" name="productQuantity_@StockList.FirstOrDefault().ProductID" class="productQuantity" onchange="checkMaxQty(this);" />
+                                                <button id="@StockList.FirstOrDefault().ProductID" class="addToCartJquery btn btn-warning" type="button" style="display:none"
+                                                        onclick="Show_PopUpForLocationAlert(@StockList.FirstOrDefault().ShopStockID,@StockList.FirstOrDefault().ProductID)">
+                                                    Add<i class="fa fa-shopping-basket"></i>
+                                                </button>
+                                                //Yashaswi AddProduct-> Show_PopUpForLocationAlert
+                                            }
+
+                                        }
+                                        else
+                                        {
+                                            @*@Html.RouteLink("View", "preview-shop-product", new { itemId = Model.productList[i].ProductID, itemName = Regex.Replace(Model.productList[i].Name.Substring(0, Math.Min(Model.productList[i].Name.Length, 30)), @"[\/\\#,+()$~%.':*?<>{} ]", "-").Replace("&", "and").ToLower(), shopID = ViewBag.ShopID, city = cityName, franchiseId = franchiseID }, new { @class = "btn btn-success" })*@ @*////added franchiseId=franchiseID*@
+                                            //***** SEO URL Structure RULE by Ashish 18/11/2016 ******//
+                                            @Html.RouteLink("View", "preview-shop-product", new { itemId = StockList.FirstOrDefault().ProductID, itemName = Model.productList[i].URLStructureName.ToLower(), shopID = ViewBag.ShopID, shopstockid = StockList.FirstOrDefault().ShopStockID, city = cityName, franchiseId = franchiseID }, new { @class = "btn btn-success", id = "btnView_" + StockList.FirstOrDefault().ProductID }) @*////added franchiseId=franchiseID*@
+                                            if (StockList.FirstOrDefault().StockStatus == 1 && StockList.FirstOrDefault().StockQty > 0)
+                                            {
+                                                <input type="text" min="1" max="@StockList.FirstOrDefault().StockQty" step="1" value="1" id="productQuantity" name="productQuantity_@StockList.FirstOrDefault().ProductID" class="productQuantity" style="width: 40px; height: 31px; text-align: center;" />
+                                                <button id="@StockList.FirstOrDefault().ProductID" class="addToCartJquery btn btn-warning" type="button"
+                                                        onclick="Show_PopUpForLocationAlert(@StockList.FirstOrDefault().ShopStockID,@StockList.FirstOrDefault().ProductID)">
+                                                    Add<i class="fa fa-shopping-basket"></i>
+                                                </button>//Yashaswi AddProduct-> Show_PopUpForLocationAlert
+                                                <input type="hidden" id="HitemId" value="@StockList.FirstOrDefault().ProductID" />
+                                            }
+                                            else
+                                            {
+                                                <input type="text" style="display: none; width: 40px; height: 31px; text-align: center;" min="1" max="@StockList.FirstOrDefault().StockQty" step="1" value="1" id="productQuantity" name="productQuantity_@StockList.FirstOrDefault().ProductID" class="productQuantity" />
+                                                <button id="@StockList.FirstOrDefault().ProductID" class="addToCartJquery btn btn-warning" type="button" style="display:none"
+                                                        onclick="Show_PopUpForLocationAlert(@StockList.FirstOrDefault().ShopStockID,@StockList.FirstOrDefault().ProductID)">
+                                                    Add<i class="fa fa-shopping-basket"></i>
+                                                </button>//Yashaswi AddProduct-> Show_PopUpForLocationAlert
+                                                <input type="hidden" id="HitemId" value="@StockList.FirstOrDefault().ProductID" />
+
+                                            }
+                                        }
+                                    }
+                                }
+                                else
+                                {
+                                    if (OutofStockList.FirstOrDefault().CategoryID == 1368)
+                                    {
+                                        @*@Html.RouteLink("View", "pre-prod-name", new { itemId = Model.productList[i].ProductID, itemName = Regex.Replace(Model.productList[i].Name.Substring(0, Math.Min(Model.productList[i].Name.Length, 30)), @"[\/\\#,+()$~%.':*?<>{} ]", "-").Replace("&", "and").ToLower(), city = cityName, franchiseId = franchiseID }, new { @class = "btn btn-success" })*@ @*////added franchiseId=franchiseID*@
+                                        //***** SEO URL Structure RULE by Ashish 18/11/2016 ******//
+                                        @Html.RouteLink("View", "pre-prod-name", new { itemId = OutofStockList.FirstOrDefault().ProductID, itemName = Model.productList[i].URLStructureName.ToLower(), shopStockID = OutofStockList.FirstOrDefault().ShopStockID, city = cityName, franchiseId = franchiseID }, new { @class = "btn btn-success", id = "btnView_" + OutofStockList.FirstOrDefault().ProductID }) @*////added franchiseId=franchiseID*@
+                                        @*<a class="button warning corporateGift" style="margin-left: 5px;float:left"
+                             href="@Url.RouteUrl(" preview-stock", new { itemid=OutofStockList.FirstOrDefault().ProductID, itemname=Regex.Replace(OutofStockList.FirstOrDefault().Name.Substring(0, math.min(OutofStockList.FirstOrDefault().name.length, 30)), @"[\ />\\#,+()$~%.':*?<>{} ]", "-").Replace("&", "and").ToLower(), shopStockID = OutofStockList.FirstOrDefault().ShopStockID, shopID = 0, city = cityName, franchiseId = franchiseID })">
+                        Gift Now
+                        </a>  changes by harshada*@
+
+                                        <a class="button warning corporateGift" style="margin-left: 5px;float:left"
+                                           href="@Url.RouteUrl("preview-stock", new { itemid = OutofStockList.FirstOrDefault().ProductID, itemname = Model.productList[i].URLStructureName.ToLower(), shopstockid = OutofStockList.FirstOrDefault().ShopStockID, shopid = 0, city = cityName, franchiseid = franchiseID })">
+                                            Gift Now
+                                        </a>
+                                        <input type="text" min="1" max="@OutofStockList.FirstOrDefault().StockQty" step="1" value="1" name="productQuantity_@OutofStockList.FirstOrDefault().ProductID" id="productQuantity" class="productQuantity" style="display: none; width: 40px; height: 31px; text-align: center; " />
+                                        <button id="@OutofStockList.FirstOrDefault().ProductID" class="addToCartJquery btn btn-warning" type="button" style="display:none"
+                                                onclick="Show_PopUpForLocationAlert(@OutofStockList.FirstOrDefault().ShopStockID,@OutofStockList.FirstOrDefault().ProductID)">
+                                            Add<i class="fa fa-shopping-basket"></i>
+                                        </button>//Yashaswi AddProduct-> Show_PopUpForLocationAlert
+
+                                    }
+                                    else
+                                    {
+                                        @*<a class="button warning corporateGift" style="margin-left: 5px;float:left; display: none"
+                             href="@Url.RouteUrl(" preview-stock", new { itemid=OutofStockList.FirstOrDefault().ProductID, itemname=Regex.Replace(OutofStockList.FirstOrDefault().Name.Substring(0, math.min(OutofStockList.FirstOrDefault().name.length, 30)), @"[\ />\\#,+()$~%.':*?<>{} ]", "-").Replace("&", "and").ToLower(), shopstockId = OutofStockList.FirstOrDefault().ShopStockID, city = cityName, franchiseId = franchiseID })">
+                        Gift Now
+                        </a>  changes by harshada0*@
+
+                                        <a class="button warning corporateGift" style="margin-left: 5px;float:left; display: none"
+                                           href="@Url.RouteUrl("preview-stock", new { itemid = OutofStockList.FirstOrDefault().ProductID, itemname = Model.productList[i].URLStructureName.ToLower(), shopstockid = OutofStockList.FirstOrDefault().ShopStockID, city = cityName, franchiseid = franchiseID })">
+                                            Gift Now
+                                        </a>
+                                        if (ViewBag.ShopID == null || ViewBag.ShopID == 0)
+                                        {
+
+                                            //***** SEO URL Structure RULE by Ashish 18/11/2016 ******//
+
+                                            //***** END SEO URL Structure RULE ******//
+
+
+                                            @*@Html.RouteLink("View", "pre-prod-name", new { itemId = OutofStockList.FirstOrDefault().ProductID, itemName = Regex.Replace(OutofStockList.FirstOrDefault().Name.Substring(0, Math.Min(OutofStockList.FirstOrDefault().Name.Length, 30)), @"[\/\\#,+()$~%.':*?<>{} ]", "-").Replace("&", "and").ToLower(), city = cityName, franchiseId = franchiseID }, new { @class = "btn btn-success" }) *@ @*////added franchiseId=franchiseID*@
+                                            //***** SEO URL Structure RULE by Ashish 18/11/2016 ******//
+                                            @Html.RouteLink("View", "pre-prod-name", new { itemId = OutofStockList.FirstOrDefault().ProductID, itemName = Model.productList[i].URLStructureName.ToLower(), shopstockid = OutofStockList.FirstOrDefault().ShopStockID, city = cityName, franchiseId = franchiseID }, new { @class = "btn btn-success", id = "btnView_" + OutofStockList.FirstOrDefault().ProductID }) @*////added franchiseId=franchiseID now change for URL Structure Rule*@
+                                            if (OutofStockList.FirstOrDefault().StockStatus == 1 && OutofStockList.FirstOrDefault().StockQty > 0)
+                                            {
+                                                <input type="text" min="1" max="@OutofStockList.FirstOrDefault().StockQty" step="1" value="1" id="productQuantity" name="productQuantity_@OutofStockList.FirstOrDefault().ProductID" class="productQuantity" onchange="checkMaxQty(this);" style="width: 40px; height: 31px; text-align: center;" />
+                                                <button id="@OutofStockList.FirstOrDefault().ProductID" class="addToCartJquery btn btn-warning" type="button"
+                                                        onclick="Show_PopUpForLocationAlert(@OutofStockList.FirstOrDefault().ShopStockID,@OutofStockList.FirstOrDefault().ProductID)">
+                                                    Add<i class="fa fa-shopping-basket"></i>
+                                                </button>
+                                                //Yashaswi AddProduct-> Show_PopUpForLocationAlert
+                                            }
+                                            else
+                                            {
+                                                <input type="text" style="display: none; width: 40px; height: 31px; text-align: center;" min="1" max="@OutofStockList.FirstOrDefault().StockQty" step="1" value="1" id="productQuantity" name="productQuantity_@OutofStockList.FirstOrDefault().ProductID" class="productQuantity" onchange="checkMaxQty(this);" />
+                                                <button id="@OutofStockList.FirstOrDefault().ProductID" class="addToCartJquery btn btn-warning" type="button" style="display:none"
+                                                        onclick="Show_PopUpForLocationAlert(@OutofStockList.FirstOrDefault().ShopStockID,@OutofStockList.FirstOrDefault().ProductID)">
+                                                    Add<i class="fa fa-shopping-basket"></i>
+                                                </button>
+                                                //Yashaswi AddProduct-> Show_PopUpForLocationAlert
+                                            }
+
+                                        }
+                                        else
+                                        {
+                                            @*@Html.RouteLink("View", "preview-shop-product", new { itemId = OutofStockList.FirstOrDefault().ProductID, itemName = Regex.Replace(OutofStockList.FirstOrDefault().Name.Substring(0, Math.Min(OutofStockList.FirstOrDefault().Name.Length, 30)), @"[\/\\#,+()$~%.':*?<>{} ]", "-").Replace("&", "and").ToLower(), shopID = ViewBag.ShopID, city = cityName, franchiseId = franchiseID }, new { @class = "btn btn-success" })*@ @*////added franchiseId=franchiseID*@
+                                            //***** SEO URL Structure RULE by Ashish 18/11/2016 ******//
+                                            @Html.RouteLink("View", "preview-shop-product", new { itemId = OutofStockList.FirstOrDefault().ProductID, itemName = Model.productList[i].URLStructureName.ToLower(), shopID = ViewBag.ShopID, shopstockid = OutofStockList.FirstOrDefault().ShopStockID, city = cityName, franchiseId = franchiseID }, new { @class = "btn btn-success", id = "btnView_" + OutofStockList.FirstOrDefault().ProductID }) @*////added franchiseId=franchiseID*@
+                                            if (OutofStockList.FirstOrDefault().StockStatus == 1 && OutofStockList.FirstOrDefault().StockQty > 0)
+                                            {
+                                                <input type="text" min="1" max="@OutofStockList.FirstOrDefault().StockQty" step="1" value="1" id="productQuantity" name="productQuantity_@OutofStockList.FirstOrDefault().ProductID" class="productQuantity" style="width: 40px; height: 31px; text-align: center;" />
+                                                <button id="@OutofStockList.FirstOrDefault().ProductID" class="addToCartJquery btn btn-warning" type="button"
+                                                        onclick="Show_PopUpForLocationAlert(@OutofStockList.FirstOrDefault().ShopStockID,@OutofStockList.FirstOrDefault().ProductID)">
+                                                    Add<i class="fa fa-shopping-basket"></i>
+                                                </button>//Yashaswi AddProduct-> Show_PopUpForLocationAlert
+                                                <input type="hidden" id="HitemId" value="@OutofStockList.FirstOrDefault().ProductID" />
+                                            }
+                                            else
+                                            {
+                                                <input type="text" style="display: none; width: 40px; height: 31px; text-align: center;" min="1" max="@OutofStockList.FirstOrDefault().StockQty" step="1" value="1" id="productQuantity" name="productQuantity_@OutofStockList.FirstOrDefault().ProductID" class="productQuantity" />
+                                                <button id="@OutofStockList.FirstOrDefault().ProductID" class="addToCartJquery btn btn-warning" type="button" style="display:none"
+                                                        onclick="Show_PopUpForLocationAlert(@OutofStockList.FirstOrDefault().ShopStockID,@OutofStockList.FirstOrDefault().ProductID)">
+                                                    Add<i class="fa fa-shopping-basket"></i>
+                                                </button>//Yashaswi AddProduct-> Show_PopUpForLocationAlert
+                                                <input type="hidden" id="HitemId" value="@OutofStockList.FirstOrDefault().ProductID" />
+
+                                            }
+                                        }
+                                    }
+                                }
+                            </div>
+                            <div class="clearfix"></div>
+                        </div>
+                        <div class="add-shortLst">
+                            @if (StockList.Count > 0)
+                            {
+                                @Html.Hidden("hdnProductName", Model.productList[i].Name)
+                                @Html.Hidden("hdnShopStockID", StockList.FirstOrDefault().ShopStockID)
+                            }
+                            else
+                            {
+                                @Html.Hidden("hdnProductName", Model.productList[i].Name)
+                                @Html.Hidden("hdnShopStockID", OutofStockList.FirstOrDefault().ShopStockID)
+                            }
+
+                            @*@if (Request.Cookies["ShortListCookie"] != null && Request.Cookies["ShortListCookie"].ToString() != string.Empty)
+            {
+            string cookRecView = Request.Cookies["ShortListCookie"].Value;
+            if (cookRecView.Contains(Model.productList[i].ProductID + "$" + Model.productList[i].ShopStockID + "$"))
+            {
+            <button id="shortlist_@Model.productList[i].ProductID" title="Added To Shortlist" class="fa fa-star activeListNew"></button>
+            }
+            else
+            {
+            <button id="shortlist_@Model.productList[i].ProductID" title="Add To Shortlist" class="fa fa-star" onclick="AddProductToShortList(this, '@shortListUrl');"></button>
+            }
+            }
+            else
+            {
+            <button id="shortlist_@Model.productList[i].ProductID" title="Add To Shortlist" class="fa fa-star" onclick="AddProductToShortList(this,'@shortListUrl');"></button>
+            }*@
+                        </div>
+                        @if (@Model.productList[i].FirstLevelCatId == 7)
+                        {
+                            @*<a id='compare_@Model.productList[i].ProductID' class="addToCompare-btn" style="display: block; cursor: pointer"
+                 onclick="AddProductCmp(@Model.productList[i].ProductID,'@Model.productList[i].ProductThumbPath','@Model.productList[i].Name',@Model.productList[i].ShopStockID)">
+                Add To Compare
+            </a>*@
+                        }
+                        else
+                        {
+                            if (StockList.Count > 0)
+                            {
+                                <a id='compare_@StockList.FirstOrDefault().ProductID' class="addToCompare-btn" style="display:none;cursor:pointer">
+                                    Add To Compare
+                                </a>
+                            }
+                            else
+                            {
+                                <a id='compare_@OutofStockList.FirstOrDefault().ProductID' class="addToCompare-btn" style="display:none;cursor:pointer">
+                                    Add To Compare
+                                </a>
+                            }
+                        }
+
+                    </div>
+
+
+
+                        </li>
+                       
+                    }
+                </ul>
+        @*<input type="text" id="HstockId" />*@
+        @Html.Hidden("HstockId")
+        <div class="row">
+            <div class="col-md-12">
+                <nav>
+                    @if (ViewBag.PageCntForPaging > 1)
+                    {
+                        int page = ViewBag.currentPageIndex;
+
+                        <ul class="pagination category-pagination pull-right">
+                            @if (page > 1)
+                            {
+                                <li class="active"><a id="@(page-1)" href="#" onclick="GetProducts1111(this)">Previous</a></li>
+                            }
+                            @for (int p = 1; p < ViewBag.PageCntForPaging + 1; p++)
+                            {
+                                var linkClass = (p == page) ? "disabled" : "active";
+                                if ((p >= page - 2 && p <= page + 2 || p <= 2 || p >= ViewBag.PageCntForPaging - 2)
+                                || ViewBag.PageCntForPaging <= 7)
+                                {
+
+                                    <li>
+                                        @if (@p == page)
+                                        {
+                                            <a id="@p" href="#" onclick="GetProducts1111(this)">@p</a>
+                                        }
+                                        else
+                                        {
+                                            <a id="@p" class="NextProductList" href="#" onclick="GetProducts1111(this)">@p</a>
+                                        }
+                                    </li>
+
+                                }
+                                else if ((p >= page - 3 && p <= page + 3 || p <= 3 || p >= ViewBag.PageCntForPaging - 3)
+                                || ViewBag.PageCntForPaging <= 7)
+                                {
+                                    <span>. .</span>
+                                }
+                            }
+
+                            @if (page < ViewBag.PageCntForPaging)
+                            {
+                                <li class="button_page"><a id="@(page+1)" class="NextProductList" href="#" onclick="GetProducts1111(this)">Next</a></li>
+                            }
+                        </ul>
+                    }
+                </nav>
+            </div>
+        </div>
+    }
+    else
+    {
+        if (ViewBag.ShopID == null || ViewBag.ShopID == 0)
+        {
+            <center>
+                <div id="NotFound" style="padding-top:60px;">
+                    <span style="font-size:20px;"> Sorry! we are unable to find  </span> <span style="color:#004B91; font-size:23px;"> @ViewBag.NoProductsFoundMessage</span>  <br />
+                    <span style="font-size:20px;"> You may also want to look at our top sellers, @Html.ActionLink("Click here", "Index", "Home", null, new { @class = "Link" }) </span>
+                </div>
+                <div>
+                    @Html.Partial("_WhatYouAreLookinFor")
+                </div>
+
+            </center>
+
+        }
+        else
+        {
+            <center>
+                <div id="NotFound" style="padding-top:60px;">
+                    <div id="NotFound" style="padding-top:60px;">
+                        <span style="font-size:20px;"> Sorry we are unable to find shop </span> <span style="color: #004B91; font-size:23px;">  @ViewBag.NoshopFoundMessage </span>  <br />
+                        <span style="font-size:20px;"> You may also want to look at our top selling categories @Html.ActionLink("Click here", "Index", "Allshops", null, new { @class = "Link" }) </span>
+                    </div>
+                </div>
+                <div>
+                    @Html.Partial("_WhatYouAreLookinFor")
+                </div>
+            </center>
+        }
+    }
+
+</div>
+
+<div align="center" id="ajax_loading_message" class="productloader" style="display:none">
+    <img src="~/Content/Images/ajax_loader.gif" style="width: 55px; margin-top: 20%" />
+</div>
+@*<div id="divLoadingImage">
+
+
+    </div>*@
+
+<script>
+    $(document).ready(function () {
+         @*Yashaswi 21-02-2019 For BUG 715 To display Total product count and current product display count*@
+        $(".total_number-of-products").css('display','block');
+        $("#spCurrentPageCount").text('@ViewBag.CurrentPageProductSize');
+        $("#spTotalPageCount").text('@ViewBag.TotalProductSize');
+
+        if ($(window).width() <= 960) {
+            //alert('Less than 960');
+            $(".content").removeClass("in");
+        }
+        else {
+            //alert('More than 960');
+            $(".content").addClass("in");
+        }
+    });
+</script>
+
+<script>
+    $(function () {
+        var a = getCookie("ProductID");
+        if (a != null) {
+            var _url = '@Url.RouteUrl("pre-prod-name", new { itemId = "_ProductID_", itemName = "_Name_", city = "_cucity_", franchiseId = "_franchiseId_" })';   ////added franchiseId="_franchiseId_"
+            var _cmpurl = '@Url.RouteUrl("CompareProduct", new { categoryID = "_categoryID_", categoryName = "_categoryName_", city = "_cucity_", franchiseId = "_franchiseId_" })';   ////added franchiseId="_franchiseId_"
+            SetCookiesToDiv(a, _url, _cmpurl);
+
+        }
+        else {
+            $("#CompareProductButton").css('display', 'none');
+            $(".CompareProductAnchore").attr('href', '#none')
+            $("#compare").hide();
+
+        }
+    });
+
+
+    function AddProduct(shopStockId, itemId) {
+        //- Changes made by Avi Verma. Date : 16-june-2016
+        //- Select the shopStockId from dropdwon list.
+
+        if ($('#ddl_' + itemId).parent().find('.select-varient').val() != null ||
+    $(typeof '#ddl_' + itemId).parent().find('.select-varient').val() === "undefined") {
+            //// var lSelectedValue = $('#' + itemId).parent().find('.select-varient').val();
+            var lSelectedValue = $("#ddl_" + itemId + " option:selected").val();//Code modified by avi sir on 10/1/2017
+            shopStockId = lSelectedValue.split('/')[0];
+            //shopStockId = $('#' + itemId).parent().find('.select-varient').val();
+        }
+
+        var _url = '@Url.Action("AddProductInShoppingCart", "Product")';
+        AddProductToShppingCart(shopStockId, itemId, _url);
+    }
+
+    function AddProductCmp(ProductID, ImgPath, Name, ShopStockID) {
+        var _url = '@Url.RouteUrl("pre-prod-name", new { itemId = "_ProductID_", itemName = "_Name_", city = "_cucity_", franchiseId="_franchiseId_" })';   ////added franchiseId="_franchiseId_"
+        var _cmpurl = '@Url.RouteUrl("CompareProduct", new { categoryID = "_categoryID_", categoryName = "_categoryName_", city = "_cucity_", franchiseId = "_franchiseId_" })';    ////added franchiseId="_franchiseId_"
+        AddProductToCompare(ProductID, ImgPath, Name, ShopStockID, _url, _cmpurl);
+    }
+
+    //Start Yashaswi 1/6/2018 Show Selected City And PinCode and Area
+    var _shopStockId_;
+    var _itemId_;
+
+    function Show_PopUpForLocationAlert(shopStockId, itemId) {
+        if (localStorage.getItem("IsLocConfirmed") != null) {
+            AddProduct(shopStockId, itemId);
+
+        }
+        else {
+            _shopStockId_ = shopStockId;
+            _itemId_ = itemId;
+            modalPinArea_.style.display = "block";
+        }
+
+        $("#LocPopupContinue").click(function () {
+            CheckDeliveryPincodeLoc();
+        });
+
+        $("#LocPopupChange").click(function () {
+            modalPinArea_.style.display = "none";
+            ShowMyModal();
+        });
+        function ShowMyModal() {
+            //var modal_ = document.getElementById('myModal');
+            //var span = document.getElementsByClassName("close")[0];
+            modal.style.display = "block";
+            if ($("#ddlSelectCityI").val() !== null) {
+                $("#lblareaI").text('');
+            }
+            $("#ddlSelectCityI").val(0);
+            $("#txtSelectPincodeI").hide();
+
+            $("#ddlSelectAreaI").hide();
+            $("#txtSelectPincodeI").val('');
+            $("#ddlSelectAreaI").val('');
+            if (localStorage.getItem("CityID") != null) {
+                $("#ddlSelectCityI").val(localStorage.getItem("CityID"));
+                $("#ddlSelectCityI").change();
+            }
+            span.onclick = function () {
+                modal.style.display = "none";
+            }
+
+        }
+
+        function CheckDeliveryPincodeLoc() {
+            var pincode = localStorage.getItem("SelectedPincode");
+
+            if (pincode != '') {
+                $.ajax({
+                    type: "POST",
+                    url: '@Url.Action("CheckDeliveryPincode", "PreviewItem", new { city = cityName, franchiseId = franchiseID })',////added franchiseId=franchiseID
+                    data: "{'pincode':" + pincode + "}",
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    success: function (response) {
+                        if (response == true) {
+                            localStorage.setItem("IsLocConfirmed", "Y");
+                            modalPinArea_.style.display = "none";
+                            AddProduct(_shopStockId_, _itemId_);
+                        }
+                        else {
+                            modaldivCheckLoc.style.display = "block";
+                        }
+                    },
+                    failure: function (response) {
+
+                    },
+                    error: function (response) {
+
+                    }
+                });
+            }
+        }
+    }
+</script>
+<!--Flying Images-->
+<script type="text/javascript">
+    $(document).ready(function () {
+
+        $(".productQuantity").keydown(function (e) {
+            if ($.inArray(e.keyCode, [46, 8, 9]) !== -1 ||
+                (e.keyCode == 65 && (e.ctrlKey === true || e.metaKey === true)) ||
+                (e.keyCode >= 35 && e.keyCode <= 40)) {
+                return;
+            }
+            if ((e.shiftKey || (e.keyCode < 48 || e.keyCode > 57)) && (e.keyCode < 96 || e.keyCode > 105)) {
+                e.preventDefault();
+            }
+        });
+    });
+
+
+
+    $(document).ready(function () {
+        $('#ulProduct li .addToCartJquery').on('click', function () {
+            var cart = $('.shopping-cart');
+            var imgtodrag = $(this).closest('li').find(".product-img img").eq(0);
+            if (imgtodrag) {
+                var imgclone = imgtodrag.clone()
+                    .offset({
+                        top: imgtodrag.offset().top,
+                        left: imgtodrag.offset().left
+                    })
+                    .css({
+                        'opacity': '0.5',
+                        'position': 'absolute',
+                        'height': '150px',
+                        'width': '150px',
+                        'z-index': '100'
+                    })
+                    .appendTo($('body'))
+                    .animate({
+                        'top': cart.offset().top + 10,
+                        'left': cart.offset().left + 10,
+                        'width': 75,
+                        'height': 75
+                    }, 1000, 'easeInOutExpo');
+
+                setTimeout(function () {
+                    cart.effect("shake", {
+                        times: 2
+                    }, 200);
+                }, 1500);
+
+                imgclone.animate({
+                    'width': 0,
+                    'height': 0
+                }, function () {
+                    $(this).detach()
+                });
+            }
+        });
+    });
+</script>
+
+<script type="text/javascript">
+    //- Changes made by Avi Verma. For Dropdown list.
+
+    $(document).ready(function () {
+        $('.select-varient').change(function () {
+            //Yashaswi 25-7-2018 Show Offer and RP on Varient Change
+            var lSelectedText = $('option:selected', this).text();
+            var lSelectedSaleRate = lSelectedText.split('/')[0];
+            var lSelectedSize = lSelectedText.split('/')[1];
+
+            var lSelectedValue = $('option:selected', this).val();
+            var lSelectedMRP = lSelectedValue.split('/')[1];
+            var lSelectedShopStockID = lSelectedValue.split('/')[0];
+            var lSelectedOffer = lSelectedValue.split('/')[2];
+            var lSelectedRP = lSelectedValue.split('/')[3];
+            var lSelectedStockStatus = lSelectedValue.split('/')[5];
+            var lSelectedStockQty = lSelectedValue.split('/')[4];
+            var lSelectedCashbackPoint = lSelectedValue.split('/')[6];
+            var id = $(this).attr("id");
+            var index = id.split('_')[1];
+
+            var btnViewLink = $("#btnView_" + index).attr("href");           
+            var newbtnViewLink = btnViewLink.substring(0, btnViewLink.indexOf('?'));
+            newbtnViewLink = newbtnViewLink + "?shopStockID=" + lSelectedShopStockID;
+            $("#btnView_" + index).attr("href", newbtnViewLink);
+          
+           
+            if (lSelectedOffer == 0) {
+                $("#ulOffer_" + index).hide();
+            } else {
+                $("#ulOffer_" + index).show();
+                $("#spOffer_" + index).text(lSelectedOffer + "% OFF");
+            }
+            $("#spRetailPoint_" + index).text(lSelectedRP);
+            $("#spCashbackPoint_" + index).text(lSelectedCashbackPoint);
+            var name = "productQuantity_" + index;
+
+            if (lSelectedStockStatus == 1 && lSelectedStockQty > 0) {
+                $("#spSoldOut_" + index).hide();
+                $("#" + index).show();
+                $("input[name='" + name + "'").show();
+            } else {
+                $("#spSoldOut_" + index).show();
+                $("#" + index).hide();
+                $("#ulOffer_" + index).hide();
+                $("input[name='" + name+"'").hide();
+            }
+            if (lSelectedMRP > lSelectedSaleRate) {
+                $("#spMRPdel_" + index).show();
+            } else {
+                $("#spMRPdel_" + index).hide();
+            }
+            
+            
+
+            $(this).parent().parent().find(".product-caption-price-old").html('<i class="fa fa-inr " aria-hidden="true"></i>' + lSelectedMRP);
+            $(this).parent().parent().find(".product-caption-price-new").html('<i class="fa fa-inr " aria-hidden="true"></i>' + lSelectedSaleRate);
+            $(this).parent().parent().find(".productSize").html(lSelectedSize);
+        });
+    });
+
+    function checkMaxQty(obj) {  
+        return true;
+        //if (parseInt(obj.value) >= parseInt(obj.max)) {
+        //    if ($("#CustCareNo").val() != "") {
+        //        alert("We're sorry! We are able to accommodate only " + obj.max + " units of this product.if more Qty required call to customer care " + $("#CustCareNo").val());
+        //    }
+        //    else {
+        //        alert("We're sorry! We are able to accommodate only " + obj.max + " units of this product.");
+        //    }
+        //    obj.value = obj.max;
+        //    return false;
+        //}
+        //else {
+        //    return true;
+        //}
+    }
+</script>

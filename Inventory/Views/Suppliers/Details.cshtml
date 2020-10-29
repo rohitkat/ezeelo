@@ -1,0 +1,60 @@
+@model ModelLayer.Models.Supplier
+
+@{
+    ViewBag.Title = "Details";
+}
+<section class="right_side_main_part">
+    <div id="content" class="span10">
+        <div class="row-fluid">
+            <div class="box span12 right_side_up_part">
+                <div class="box-header creatProduct clearfix" data-original-title="">
+                    <h2>
+                        <i class="icon-exclamation-sign"></i>
+                        <span class="break"></span>
+                        SUPPLIER DETAILS
+                    </h2>
+                </div>
+                <div class="box-content">
+                    <div class="form-horizontal">
+                        <div class="display-label">Name: <b>@Model.Name</b></div>
+
+                        <div class="display-label">Supplier Code:<b> @Model.SupplierCode</b></div>
+
+                        <div class="display-label">Contact Person: <b>@Model.ContactPerson</b></div>
+
+                        <div class="display-label">City Name: <b>@Model.CityName</b></div>   @*Added by Priti on 13-2-2019*@
+                        <div class="display-label">City Name: <b>@Model.StateName</b></div>   @*Added by Priti on 13-2-2019*@
+                        <div class="display-label">Address: <b>@Model.Address</b></div>
+
+                        <div class="display-label">Mobile: <b>@Model.Mobile</b></div>
+
+                        <div class="display-label">Landline: <b>@Model.Landline</b></div>
+
+                        <div class="display-label">Email: <b>@Model.Email</b></div>
+
+                        <div class="display-label">FAX: <b>@Model.FAX</b></div>
+
+                        <div class="display-label">GST Number: <b>@Model.GSTNumber</b></div>
+
+                        <div class="display-label">PAN: <b>@Model.PAN</b></div>
+
+                        <div class="display-label">Web-site: <b>@Model.Website</b></div>
+                        <div class="display-label">Payment In Terms: <b>@Model.PaymentInTermsID</b></div>
+                        <div class="display-label">CC: <b>@Model.CC</b></div>
+                        <div class="display-label">Warehouse act as Supplier: <b>@ViewBag.WarehouseNameAsSupplier</b></div>
+
+                        <div class="display-label">Is Active: @Html.CheckBoxFor(model => model.IsActive, new { @disabled = "disabled" })</div>
+                        <br />
+                        <p>
+                            @if (Session["BusinessTypeID"] != null && Convert.ToInt32(Session["BusinessTypeID"]) == 5)
+                            {
+                                @Html.ActionLink("Edit", "Edit", new { id = Model.ID }, new { @class = "btn btn-success mrg-left mrg-top" })
+                            }
+                            @Html.ActionLink("Back to List", "Index", null, new { @class = "btn btn-default mrg-left mrg-top" })
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

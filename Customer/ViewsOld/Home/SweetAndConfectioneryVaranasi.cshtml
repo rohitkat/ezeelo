@@ -1,0 +1,635 @@
+﻿@{
+    ViewBag.Title = "Sweet And Confectionery";
+    //Layout = "~/Views/Shared/_Layout1.cshtml";
+    string cityName = "";
+    if (Request.Cookies["CityCookie"] != null && Request.Cookies["CityCookie"].Value != "")
+    {
+        cityName = Request.Cookies["CityCookie"].Value.Split('$')[1].ToLower();
+    }
+}
+<link href="~/Content/Home-content/bootstrap/css/bootstrap-responsive.css" rel="stylesheet" />
+<script src="~/Content/js/Bedcrumbs.js"></script>
+
+<style>
+    .margin-setTop {
+        margin-top: -33px;
+    }
+
+    .heart {
+        display: none !important;
+    }
+</style>
+<script type="text/javascript">
+    function AddProduct(shopStockId, itemId) {
+        var _url = '@Url.Action("AddProductInShoppingCart", "Product")';
+        AddProductToShppingCartWithoutQuantity(shopStockId, itemId, _url);
+    }
+</script>
+<script src="~/Content/update(5-10)/js/jquery-1.11.2.min.js"></script>
+<script type="text/javascript">
+    $(document).ready(function () {
+        var newClone1 = $("#cpy1").html();
+
+        if ($(window).width() < 750) {
+            // alert("1");
+            $(newClone1).clone().appendTo("#pst1");
+
+        } else {
+            $("#pst1").empty();
+
+        }
+    });
+
+    function AddProduct(shopStockId, itemId) {
+        var _url = '@Url.Action("AddProductInShoppingCart", "Product")';
+        AddProductToShppingCartWithoutQuantity(shopStockId, itemId, _url);
+    }
+</script>
+<script src="~/Scripts/Products.js"></script>
+<div class="container margin-setTop">
+    <div class="category-featured jewelry">
+        <nav class="navbar nav-menu show-brand">
+            <div class="container">
+                <!-- Brand and toggle get grouped for better mobile display -->
+                <div class="navbar-brand"><a href="#">Sweets & Confectionery</a></div>
+                <span class="toggle-menu"></span>
+                <!-- Collect the nav links, forms, and other content for toggling -->
+                <div class="collapse navbar-collapse">
+                    <ul class="nav navbar-nav" id="pst1"></ul>
+                </div><!-- /.navbar-collapse -->
+            </div><!-- /.container-fluid -->
+            <div id="elevator-6" class="floor-elevator">
+                <a href="#" class="btn-elevator up fa fa-angle-up"></a>
+                <a href="#" class="btn-elevator disabled down fa fa-angle-down"></a>
+            </div>
+        </nav>
+        <div class="product-featured clearfix">
+            <div class="row">
+                <div class="col-sm-2 sub-category-wapper">
+                    <ul class="sub-category-list" id="cpy1">
+                        @*<li><a href="~/Product/Products?parentCategoryId=1449&item=Sweets">Kubeer Sweets</a></li>*@
+                        <li><a href="@Url.RouteUrl("ProductsByCategory", new { item = "Sweets", parentCategoryId = 1449, city = cityName })">Kubeer Sweets</a></li>
+                        @*<li><a href="~/Product/Products?shopID=10462&shopName=Om%20Sai%20Traders">Om Sai Traders</a></li>*@
+                        <li><a href="@Url.RouteUrl("ShopSearch2", new { city = cityName, shopName = "Om Sai Traders".ToLower().Replace(" ", "-"), shopID = 10462 })">Om Sai Traders </a></li>
+                    </ul>
+                </div>
+                <div class="col-sm-10 col-right-tab">
+                    <div class="product-featured-tab-content">
+                        <div class="tab-container">
+                            <div class="tab-panel active" id="tab-14">
+                                <div class="box-full clearfix">
+                                    <ul class="product-list row">
+                                        <li class="col-sm-4">
+                                            <div class="right-block">
+                                                @*<h5 class="product-name"><a href="~/PreviewItem?itemId=43317" title="Kaju Katli Sweet">Kaju Katli Sweet</a></h5>*@
+                                                <h5 class="product-name"><a href="@Url.RouteUrl("pre-prod-name", new { itemId = 43317, itemName = "Kaju Katli Sweet".ToLower().Replace(' ', '-'), city = cityName })" title="Kaju Katli Sweet">Kaju Katli Sweet</a></h5>
+                                                
+                                            </div>
+                                            <div class="left-block">
+                                                <a href="@Url.RouteUrl("pre-prod-name", new { itemId = 43317, itemName = "Kaju Katli Sweet".ToLower().Replace(' ', '-'), city = cityName })">
+                                                    <img class="img-responsive" alt="product" src="~/Content/update(5-10)/images/sub-cat/V_43317.jpg">
+                                                </a>
+                                                <div class="quick-view">
+                                                    <a title="Add to my wishlist" class="heart" href="#"></a>
+                                                    @*<a title="Add to compare" class=" star" href="#"></a>*@
+                                                    @*<a title="Quick view" class="search" href="~/PreviewItem?itemId=43317"></a>*@
+                                                    <a title="Quick view" class="search" href="@Url.RouteUrl("pre-prod-name", new { itemId = 43317, itemName = "Kaju Katli Sweet".ToLower().Replace(' ', '-'), city = cityName })"></a>
+                                                </div>
+                                                <div class="add-to-cart">
+                                                    <a title="Add to Cart" onclick="AddProduct(54634, 43317)">Add to Cart</a>
+                                                </div>
+                                            </div>
+                                        </li>
+                                        <li class="col-sm-4">
+                                            <div class="right-block">
+                                                @*<h5 class="product-name"><a href="~/PreviewItem?itemId=43306" title="Malai Roll">Malai Roll</a></h5>*@
+                                                <h5 class="product-name"><a href="@Url.RouteUrl("pre-prod-name", new { itemId = 43306, itemName = "Malai Roll".ToLower().Replace(' ', '-'), city = cityName })" title="Malai Roll">Malai Roll</a></h5>                                              
+                                            </div>
+                                            <div class="left-block">
+                                                @*<a href="~/PreviewItem?itemId=43306">*@
+                                                <a href="@Url.RouteUrl("pre-prod-name", new { itemId = 43306, itemName = "Malai Roll".ToLower().Replace(' ', '-'), city = cityName })">
+                                                    <img class="img-responsive" alt="product" src="~/Content/update(5-10)/images/sub-cat/Malai_Roll.jpg">
+                                                </a>
+                                                <div class="quick-view">
+                                                    <a title="Add to my wishlist" class="heart" href="#"></a>
+                                                    @*<a title="Add to compare" class=" star" href="#"></a>*@
+                                                    @*<a title="Quick view" class="search" href="~/PreviewItem?itemId=43306"></a>*@
+                                                    <a title="Quick view" class="search" href="@Url.RouteUrl("pre-prod-name", new { itemId = 43306, itemName = "Malai Roll".ToLower().Replace(' ', '-'), city = cityName })"></a>
+                                                </div>
+                                                <div class="add-to-cart">
+                                                    @*<a title="Add to Cart" onclick="AddProductToShppingCartWithoutQuantity(54584, 43306)">Add to Cart</a>*@
+                                                    <a title="Add to Cart" onclick="AddProduct(54584, 43306)">Add to Cart</a>
+                                                </div>
+                                            </div>
+                                        </li>
+                                        <li class="col-sm-4">
+                                            <div class="right-block">
+                                                @*<h5 class="product-name"><a href="~/PreviewItem?itemId=43316" title="Kheer kadam">Kheer kadam</a></h5>*@
+                                                <h5 class="product-name"><a href="@Url.RouteUrl("pre-prod-name", new { itemId = 43316, itemName = "Kheer kadam".ToLower().Replace(' ', '-'), city = cityName })" title="Kheer kadam">Kheer kadam</a></h5>
+                                              
+                                            </div>
+                                            <div class="left-block">
+                                                @*<a href="~/PreviewItem?itemId=43316">*@
+                                                <a href="@Url.RouteUrl("pre-prod-name", new { itemId = 43316, itemName = "Kheer kadam".ToLower().Replace(' ', '-'), city = cityName })">
+                                                    <img class="img-responsive" alt="product" src="~/Content/update(5-10)/images/sub-cat/Kheer_kadam.jpg">
+                                                </a>
+                                                <div class="quick-view">
+                                                    <a title="Add to my wishlist" class="heart" href="#"></a>
+                                                    @*<a title="Add to compare" class=" star" href="#"></a>*@
+                                                    @*<a title="Quick view" class="search" href="~/PreviewItem?itemId=43316"></a>*@
+                                                    <a title="Quick view" class="search" href="@Url.RouteUrl("pre-prod-name", new { itemId = 43316, itemName = "Kheer kadam".ToLower().Replace(' ', '-'), city = cityName })"></a>
+                                                </div>
+                                                <div class="add-to-cart">
+                                                    @*<a title="Add to Cart" onclick="AddProductToShppingCartWithoutQuantity(54632, 43316)">Add to Cart</a>*@
+                                                    <a title="Add to Cart" onclick="AddProduct(54632, 43316)">Add to Cart</a>
+                                                </div>
+                                            </div>
+                                        </li>
+                                        <li class="col-sm-4">
+                                            <div class="right-block">
+                                                @*<h5 class="product-name"><a href="~/PreviewItem?itemId=43321" title="Gond ke laddu">Gond ke laddu</a></h5>*@
+                                                <h5 class="product-name"><a href="@Url.RouteUrl("pre-prod-name", new { itemId = 43321, itemName = "Gond ke laddu".ToLower().Replace(' ', '-'), city = cityName })" title="Gond ke laddu">Gond ke laddu</a></h5>
+                                            </div>
+                                            <div class="left-block">
+                                                @*<a href="~/PreviewItem?itemId=43321">*@
+                                                <a href="@Url.RouteUrl("pre-prod-name", new { itemId = 43321, itemName = "Gond ke laddu".ToLower().Replace(' ', '-'), city = cityName })">
+                                                    <img class="img-responsive" alt="product" src="~/Content/update(5-10)/images/sub-cat/Gondladdu.jpg">
+                                                </a>
+                                                <div class="quick-view">
+                                                    <a title="Add to my wishlist" class="heart" href="#"></a>
+                                                    @*<a title="Add to compare" class=" star" href="#"></a>*@
+                                                    @*<a title="Quick view" class="search" href="~/PreviewItem?itemId=43321"></a>*@
+                                                    <a title="Quick view" class="search" href="@Url.RouteUrl("pre-prod-name", new { itemId = 43321, itemName = "Gond ke laddu".ToLower().Replace(' ', '-'), city = cityName })"></a>
+                                                </div>
+                                                <div class="add-to-cart">
+                                                    @*<a title="Add to Cart" onclick="AddProductToShppingCartWithoutQuantity(54640, 43321)">Add to Cart</a>*@
+                                                    <a title="Add to Cart" onclick="AddProduct(54640, 43321)">Add to Cart</a>
+                                                </div>
+                                            </div>
+                                        </li>
+                                        <li class="col-sm-4">
+                                            <div class="right-block">
+                                                @*<h5 class="product-name"><a href="~/PreviewItem?itemId=43320" title="Sonth ke Laddu">Sonth ke Laddu</a></h5>*@
+                                                <h5 class="product-name"><a href="@Url.RouteUrl("pre-prod-name", new { itemId = 43320, itemName = "Sonth ke Laddu".ToLower().Replace(' ', '-'), city = cityName })" title="Sonth ke Laddu">Sonth ke Laddu</a></h5>
+                                            </div>
+                                            <div class="left-block">
+                                                @*<a href="~/PreviewItem?itemId=43320">*@
+                                                <a href="@Url.RouteUrl("pre-prod-name", new { itemId = 43320, itemName = "Sonth ke Laddu".ToLower().Replace(' ', '-'), city = cityName })">
+                                                    <img class="img-responsive" alt="product" src="~/Content/update(5-10)/images/sub-cat/SonthLaddu.jpg">
+                                                </a>
+                                                <div class="quick-view">
+                                                    <a title="Add to my wishlist" class="heart" href="#"></a>
+                                                    @*<a title="Add to compare" class=" star" href="#"></a>*@
+                                                    @*<a title="Quick view" class="search" href="~/PreviewItem?itemId=43320"></a>*@
+                                                    <a title="Quick view" class="search" href="@Url.RouteUrl("pre-prod-name", new { itemId = 43320, itemName = "Sonth ke Laddu".ToLower().Replace(' ', '-'), city = cityName })"></a>
+                                                </div>
+                                                <div class="add-to-cart">
+                                                    @*<a title="Add to Cart" onclick="AddProductToShppingCartWithoutQuantity(54639, 43320)">Add to Cart</a>*@
+                                                    <a title="Add to Cart" onclick="AddProduct(54639, 43320)">Add to Cart</a>
+                                                </div>
+                                            </div>
+                                        </li>
+                                    </ul>
+                                    <ul class="product-list row">
+                                        <li class="col-sm-4">
+                                            <div class="right-block">
+                                                @*<h5 class="product-name"><a href="~/PreviewItem?itemId=44711" title="Shree Black Tilli Laddu">Shree Black Tilli Laddu</a></h5>*@
+                                                <h5 class="product-name"><a href="@Url.RouteUrl("pre-prod-name", new { itemId = 44711, itemName = "Shree Black Tilli Laddu".ToLower().Replace(' ', '-'), city = cityName })" title="Shree Black Tilli Laddu">Shree Black Tilli Laddu</a></h5>
+                                            </div>
+                                            <div class="left-block">
+                                                @*<a href="~/PreviewItem?itemId=44711">*@
+                                                <a href="@Url.RouteUrl("pre-prod-name", new { itemId = 44711, itemName = "Shree Black Tilli Laddu".ToLower().Replace(' ', '-'), city = cityName })">
+                                                    <img class="img-responsive" alt="product" src="~/Content/update(5-10)/images/sub-cat/V_44711.jpg">
+                                                </a>
+                                                <div class="quick-view">
+                                                    <a title="Add to my wishlist" class="heart" href="#"></a>
+                                                    @*<a title="Add to compare" class=" star" href="#"></a>*@
+                                                    @*<a title="Quick view" class="search" href="~/PreviewItem?itemId=44711"></a>*@
+                                                    <a title="Quick view" class="search" href="@Url.RouteUrl("pre-prod-name", new { itemId = 44711, itemName = "Shree Black Tilli Laddu".ToLower().Replace(' ', '-'), city = cityName })"></a>
+                                                </div>
+                                                <div class="add-to-cart">
+                                                    @*<a title="Add to Cart" onclick="AddProductToShppingCartWithoutQuantity(60661, 44711)">Add to Cart</a>*@
+                                                    <a title="Add to Cart" onclick="AddProduct(60661, 44711)">Add to Cart</a>
+                                                </div>
+                                            </div>
+                                        </li>
+                                        <li class="col-sm-4">
+                                            <div class="right-block">
+                                                @*<h5 class="product-name"><a href="~/PreviewItem?itemId=44710" title="Shree White Tilli Laddu">Shree White Tilli Laddu</a></h5>*@
+                                                <h5 class="product-name"><a href="@Url.RouteUrl("pre-prod-name", new { itemId = 44710, itemName = "Shree White Tilli Laddu".ToLower().Replace(' ', '-'), city = cityName })" title="Shree White Tilli Laddu">Shree White Tilli Laddu</a></h5>
+
+                                            </div>
+                                            <div class="left-block">
+                                                @*<a href="~/PreviewItem?itemId=44710">*@
+                                                <a href="@Url.RouteUrl("pre-prod-name", new { itemId = 44710, itemName = "Shree White Tilli Laddu".ToLower().Replace(' ', '-'), city = cityName })">
+                                                    <img class="img-responsive" alt="product" src="~/Content/update(5-10)/images/sub-cat/V_44710.jpg">
+                                                </a>
+                                                <div class="quick-view">
+                                                    <a title="Add to my wishlist" class="heart" href="#"></a>
+                                                    @*<a title="Add to compare" class=" star" href="#"></a>*@
+                                                    @*<a title="Quick view" class="search" href="~/PreviewItem?itemId=44710"></a>*@
+                                                    <a title="Quick view" class="search" href="@Url.RouteUrl("pre-prod-name", new { itemId = 44710, itemName = "Shree White Tilli Laddu".ToLower().Replace(' ', '-'), city = cityName })"></a>
+                                                </div>
+                                                <div class="add-to-cart">
+                                                    @*<a title="Add to Cart" onclick="AddProductToShppingCartWithoutQuantity(60660, 44710)">Add to Cart</a>*@
+                                                    <a title="Add to Cart" onclick="AddProduct(60660, 44710)">Add to Cart</a>
+                                                </div>
+                                            </div>
+                                        </li>
+                                        <li class="col-sm-4">
+                                            <div class="right-block">
+                                                @*<h5 class="product-name"><a href="~/PreviewItem?itemId=44709" title="Muskaan's Mix Chikki&Gazak 500gm">Muskaan's Mix Chikki&Gazak 500gm</a></h5>*@
+                                                <h5 class="product-name"><a href="@Url.RouteUrl("pre-prod-name", new { itemId = 44709, itemName = "Muskaan's Mix Chikki-Gazak 500gm".ToLower().Replace(' ', '-'), city = cityName })" title="Muskaan's Mix Chikki&Gazak 500gm">Muskaan's Mix Chikki&Gazak 500gm</a></h5>
+                                            </div>
+                                            <div class="left-block">
+                                                @*<a href="~/PreviewItem?itemId=44709">*@
+                                                <a href="@Url.RouteUrl("pre-prod-name", new { itemId = 44709, itemName = "Muskaan's Mix Chikki-Gazak 500gm".ToLower().Replace(' ', '-'), city = cityName })">
+                                                    <img class="img-responsive" alt="product" src="~/Content/update(5-10)/images/sub-cat/V_44709.jpg">
+                                                </a>
+                                                <div class="quick-view">
+                                                    <a title="Add to my wishlist" class="heart" href="#"></a>
+                                                    @*<a title="Add to compare" class=" star" href="#"></a>*@
+                                                    @*<a title="Quick view" class="search" href="~/PreviewItem?itemId=44709"></a>*@
+                                                    <a title="Quick view" class="search" href="@Url.RouteUrl("pre-prod-name", new { itemId = 44709, itemName = "Muskaan's Mix Chikki-Gazak 500gm".ToLower().Replace(' ', '-'), city = cityName })"></a>
+                                                </div>
+                                                <div class="add-to-cart">
+                                                    @*<a title="Add to Cart" onclick="AddProductToShppingCartWithoutQuantity(60659, 44709)">Add to Cart</a>*@
+                                                    <a title="Add to Cart" onclick="AddProduct(60659, 44709)">Add to Cart</a>
+                                                </div>
+                                            </div>
+                                        </li>
+                                        <li class="col-sm-4">
+                                            <div class="right-block">
+                                                @*<h5 class="product-name"><a href="~/PreviewItem?itemId=44707" title=" Muskaan's Chikki(Badam Patti)500gm"> Muskaan's Chikki(Badam Patti)500gm</a></h5>*@
+                                                <h5 class="product-name"><a href="@Url.RouteUrl("pre-prod-name", new { itemId = 44707, itemName = "Muskaan's Chikki(Badam Patti)500gm".ToLower().Replace(' ', '-'), city = cityName })" title=" Muskaan's Chikki(Badam Patti)500gm"> Muskaan's Chikki(Badam Patti)500gm</a></h5>
+
+                                            </div>
+                                            <div class="left-block">
+                                                @*<a href="~/PreviewItem?itemId=44707">*@
+                                                <a href="@Url.RouteUrl("pre-prod-name", new { itemId = 44707, itemName = "Muskaan's Chikki(Badam Patti)500gm".ToLower().Replace(' ', '-'), city = cityName })">
+                                                    <img class="img-responsive" alt="product" src="~/Content/update(5-10)/images/sub-cat/V_44707.jpg">
+                                                </a>
+                                                <div class="quick-view">
+                                                    <a title="Add to my wishlist" class="heart" href="#"></a>
+                                                    @*<a title="Add to compare" class=" star" href="#"></a>*@
+                                                    @*<a title="Quick view" class="search" href="~/PreviewItem?itemId=44707"></a>*@
+                                                    <a title="Quick view" class="search" href="@Url.RouteUrl("pre-prod-name", new { itemId = 44707, itemName = "Muskaan's Chikki(Badam Patti)500gm".ToLower().Replace(' ', '-'), city = cityName })"></a>
+                                                </div>
+                                                <div class="add-to-cart">
+                                                    @*<a title="Add to Cart" onclick="AddProductToShppingCartWithoutQuantity(60657, 44707)">Add to Cart</a>*@
+                                                    <a title="Add to Cart" onclick="AddProduct(60657, 44707)">Add to Cart</a>
+                                                </div>
+                                            </div>
+                                        </li>
+                                        
+                                    </ul>
+
+                                    <ul class="product-list row">
+                                        <li class="col-sm-4">
+                                            <div class="right-block">
+                                                <h5 class="product-name"><a href="@Url.RouteUrl("pre-prod-name", new { itemId = 45775, itemName = "Tirangi".ToLower().Replace(' ', '-'), city = cityName })" title="Tirangi">Tirangi</a></h5>
+                                            </div>
+                                            <div class="left-block">
+                                                <a href="@Url.RouteUrl("pre-prod-name", new { itemId = 45775, itemName = "Tirangi".ToLower().Replace(' ', '-'), city = cityName })">
+                                                    <img class="img-responsive" alt="product" src="~/Content/update(5-10)/images/sub-cat/V_45775.jpg">
+                                                </a>
+                                           
+                                                <div class="quick-view">
+                                                    <a title="Add to my wishlist" class="heart" href="#"></a>
+                                                    @*<a title="Add to compare" class=" star" href="#"></a>*@
+                                                    <a title="Quick view" class="search" href="@Url.RouteUrl("pre-prod-name", new { itemId = 45775, itemName = "Tirangi".ToLower().Replace(' ', '-'), city = cityName })"></a>
+                                                 </div>
+                                                <div class="add-to-cart">
+                                                    <a title="Add to Cart" onclick="AddProduct(62753, 45775)">Add to Cart</a>
+                                                </div>
+                                            </div>
+                                        </li>
+                                        <li class="col-sm-4">
+                                            <div class="right-block">
+                                                <h5 class="product-name"><a href="@Url.RouteUrl("pre-prod-name", new { itemId = 45768, itemName = "Kaju Gujiya".ToLower().Replace(' ', '-'), city = cityName })" title="Kaju Gujiya">Kaju Gujiya</a></h5>
+                                            </div>
+                                            <div class="left-block">
+                                                <a href="@Url.RouteUrl("pre-prod-name", new { itemId = 45768, itemName = "Kaju Gujiya".ToLower().Replace(' ', '-'), city = cityName })">
+                                                    <img class="img-responsive" alt="product" src="~/Content/update(5-10)/images/sub-cat/V_45768.jpg">
+                                                </a>
+                                                <div class="quick-view">
+                                                    <a title="Add to my wishlist" class="heart" href="#"></a>
+                                                    @*<a title="Add to compare" class=" star" href="#"></a>*@
+                                                    <a title="Quick view" class="search" href="@Url.RouteUrl("pre-prod-name", new { itemId = 45768, itemName = "Kaju Gujiya".ToLower().Replace(' ', '-'), city = cityName })"></a>
+                                                    </div>
+                                                <div class="add-to-cart">
+                                                    <a title="Add to Cart" onclick="AddProduct(62721, 45768)">Add to Cart</a>
+                                                </div>
+                                            </div>
+                                        </li>
+                                        <li class="col-sm-4">
+                                            <div class="right-block">
+                                                <h5 class="product-name"><a href="@Url.RouteUrl("pre-prod-name", new { itemId = 45764, itemName = "Chocolate Barfi".ToLower().Replace(' ', '-'), city = cityName })" title="Chocolate Barfi">Chocolate Barfi</a></h5>
+
+                                            </div>
+                                            <div class="left-block">
+                                                <a href="@Url.RouteUrl("pre-prod-name", new { itemId = 45764, itemName = "Chocolate Barfi".ToLower().Replace(' ', '-'), city = cityName })">
+                                                    <img class="img-responsive" alt="product" src="~/Content/update(5-10)/images/sub-cat/V_45764.jpg">
+                                                </a>
+                                                <div class="quick-view">
+                                                    <a title="Add to my wishlist" class="heart" href="#"></a>
+                                                    @*<a title="Add to compare" class=" star" href="#"></a>*@
+                                                    <a title="Quick view" class="search" href="@Url.RouteUrl("pre-prod-name", new { itemId = 45764, itemName = "Chocolate Barfi".ToLower().Replace(' ', '-'), city = cityName })"></a>
+                                                    </div>
+                                                <div class="add-to-cart">
+                                                    <a title="Add to Cart" onclick="AddProduct(62709, 45764)">Add to Cart</a>
+                                                </div>
+                                            </div>
+                                        </li>
+                                        <li class="col-sm-4">
+                                            <div class="right-block">
+                                                <h5 class="product-name"><a href="@Url.RouteUrl("pre-prod-name", new { itemId = 45760, itemName = "Kaju Jalebi".ToLower().Replace(' ', '-'), city = cityName })" title="Kaju Jalebi">Kaju Jalebi</a></h5>
+
+                                            </div>
+                                            <div class="left-block">
+                                                <a href="@Url.RouteUrl("pre-prod-name", new { itemId = 45760, itemName = "Kaju Jalebi".ToLower().Replace(' ', '-'), city = cityName })">
+                                                    <img class="img-responsive" alt="product" src="~/Content/update(5-10)/images/sub-cat/V_45760.jpg">
+                                                </a>
+                                                <div class="quick-view">
+                                                    <a title="Add to my wishlist" class="heart" href="#"></a>
+                                                    @*<a title="Add to compare" class=" star" href="#"></a>*@
+                                                    <a title="Quick view" class="search" href="@Url.RouteUrl("pre-prod-name", new { itemId = 45760, itemName = "Kaju Jalebi".ToLower().Replace(' ', '-'), city = cityName })"></a>
+                                                 </div>
+                                                <div class="add-to-cart">
+                                                    <a title="Add to Cart" onclick="AddProduct(62698, 45760)">Add to Cart</a>
+                                                </div>
+                                            </div>
+                                        </li>
+                                        <li class="col-sm-4">
+                                            <div class="right-block">
+                                                <h5 class="product-name"><a href="@Url.RouteUrl("pre-prod-name", new { itemId = 45750, itemName = "Kheer Kadam".ToLower().Replace(' ', '-'), city = cityName })" title="Kheer Kadam">Kheer Kadam</a></h5>
+
+                                            </div>
+                                            <div class="left-block">
+                                                <a href="@Url.RouteUrl("pre-prod-name", new { itemId = 45750, itemName = "Kheer Kadam".ToLower().Replace(' ', '-'), city = cityName })">
+                                                    <img class="img-responsive" alt="product" src="~/Content/update(5-10)/images/sub-cat/V_45750.jpg">
+                                                </a>
+                                                <div class="quick-view">
+                                                    <a title="Add to my wishlist" class="heart" href="#"></a>
+                                                    @*<a title="Add to compare" class=" star" href="#"></a>*@
+                                                    <a title="Quick view" class="search" href="@Url.RouteUrl("pre-prod-name", new { itemId = 45750, itemName = "Kheer Kadam".ToLower().Replace(' ', '-'), city = cityName })"></a>
+                                                   </div>
+                                                <div class="add-to-cart">
+                                                    <a title="Add to Cart" onclick="AddProduct(62666, 45750)">Add to Cart</a>
+                                                </div>
+                                            </div>
+                                        </li>
+                                    </ul>
+                                    <ul class="product-list row">
+                                        @*<li class="col-sm-4">
+                                            <div class="right-block">
+                                                <h5 class="product-name"><a href="@Url.RouteUrl("pre-prod-name", new { itemId = 45849, itemName = "Chestnuts Mini Pizza".ToLower().Replace(' ', '-'), city = cityName })" title="Chestnuts Mini Pizza (Cheeese + Onion + Black Pepper)">Chestnuts Mini Pizza (Cheeese + Onion + Black Pepper)</a></h5>
+
+                                            </div>
+                                            <div class="left-block">
+                                                <a href="@Url.RouteUrl("pre-prod-name", new { itemId = 45849, itemName = "Chestnuts Mini Pizza".ToLower().Replace(' ', '-'), city = cityName })">
+                                                    <img class="img-responsive" alt="product" src="~/Content/update(5-10)/images/sub-cat/V_45849.jpg">
+                                                </a>
+                                                <div class="quick-view">
+                                                    <a title="Add to my wishlist" class="heart" href="#"></a>
+                                                 
+                                                    <a title="Quick view" class="search" href="@Url.RouteUrl("pre-prod-name", new { itemId = 45849, itemName = "Chestnuts Mini Pizza".ToLower().Replace(' ', '-'), city = cityName })"></a>
+                                                    </div>
+                                                <div class="add-to-cart">
+                                                    <a title="Add to Cart" onclick="AddProduct(62986, 45849)">Add to Cart</a>
+                                                </div>
+                                            </div>
+                                        </li>*@
+                                        <li class="col-sm-4">
+                                            <div class="right-block">
+                                                <h5 class="product-name"><a href="" @Url.RouteUrl("pre-prod-name", new { itemId = 45848, itemName = "Chestnuts American Corn Roll".ToLower().Replace(' ', '-'), city = cityName })  title=" chestnuts american corn roll (sweet corn with spices)">Chestnuts American Corn Roll (Sweet Corn With Spices)</a></h5>
+
+                                            </div>
+                                            <div class="left-block">
+                                                <a href="@Url.RouteUrl("pre-prod-name", new { itemId = 45848, itemName = "Chestnuts American Corn Roll".ToLower().Replace(' ', '-'), city = cityName })">
+                                                    <img class="img-responsive" alt="product" src="~/Content/update(5-10)/images/sub-cat/V_45848.jpg">
+                                                </a>
+                                                <div class="quick-view">
+                                                    <a title="Add to my wishlist" class="heart" href="#"></a>
+                                                    @*<a title="Add to compare" class=" star" href="#"></a>*@
+                                                    <a title="Quick view" class="search" href="@Url.RouteUrl("pre-prod-name", new { itemId = 45848, itemName = "Chestnuts American Corn Roll".ToLower().Replace(' ', '-'), city = cityName })"></a>
+                                                     </div>
+                                                <div class="add-to-cart">
+                                                    <a title="Add to Cart" onclick="AddProduct(62985, 45848)">Add to Cart</a>
+                                                </div>
+                                            </div>
+                                        </li>
+                                        <li class="col-sm-4">
+                                            <div class="right-block">
+                                                <h5 class="product-name"><a href="@Url.RouteUrl("pre-prod-name", new { itemId = 45477, itemName = "Walnut Tart".ToLower().Replace(' ', '-'), city = cityName })" title="Walnut Tart">Walnut Tart</a></h5>
+
+                                            </div>
+                                            <div class="left-block">
+                                                <a href="@Url.RouteUrl("pre-prod-name", new { itemId = 45477, itemName = "Walnut Tart".ToLower().Replace(' ', '-'), city = cityName })">
+                                                    <img class="img-responsive" alt="product" src="~/Content/update(5-10)/images/sub-cat/V_45477.jpg">
+                                                </a>
+                                                <div class="quick-view">
+                                                    <a title="Add to my wishlist" class="heart" href="#"></a>
+                                                    @*<a title="Add to compare" class=" star" href="#"></a>*@
+                                                    <a title="Quick view" class="search" href="@Url.RouteUrl("pre-prod-name", new { itemId = 45477, itemName = "Walnut Tart".ToLower().Replace(' ', '-'), city = cityName })"></a>
+                                                   </div>
+                                                <div class="add-to-cart">
+                                                    <a title="Add to Cart" onclick="AddProduct(62136, 45477)">Add to Cart</a>
+                                                </div>
+                                            </div>
+                                        </li>
+                                        <li class="col-sm-4">
+                                            <div class="right-block">
+                                                <h5 class="product-name"><a href="@Url.RouteUrl("pre-prod-name", new { itemId = 45571, itemName = "Chestnuts Pineapple Pastry".ToLower().Replace(' ', '-'), city = cityName })" title="Chestnuts Pineapple Pastry (Vanilla Base With Cream Pineapple & Cherry Topping)">Chestnuts Pineapple Pastry (Vanilla Base With Cream Pineapple & Cherry Topping)</a></h5>
+
+                                            </div>
+                                            <div class="left-block">
+                                                <a href="@Url.RouteUrl("pre-prod-name", new { itemId = 45571, itemName = "Chestnuts Pineapple Pastry".ToLower().Replace(' ', '-'), city = cityName })">
+                                                    <img class="img-responsive" alt="product" src="~/Content/update(5-10)/images/sub-cat/V_45571.jpg">
+                                                </a>
+                                                <div class="quick-view">
+                                                    <a title="Add to my wishlist" class="heart" href="#"></a>
+                                                    @*<a title="Add to compare" class=" star" href="#"></a>*@
+                                                    <a title="Quick view" class="search" href="@Url.RouteUrl("pre-prod-name", new { itemId = 45571, itemName = "Chestnuts Pineapple Pastry".ToLower().Replace(' ', '-'), city = cityName })"></a>
+                                                     </div>
+                                                <div class="add-to-cart">
+                                                    <a title="Add to Cart" onclick="AddProduct(62367, 45571)">Add to Cart</a>
+                                                </div>
+                                            </div>
+                                        </li>
+                                        <li class="col-sm-4">
+                                            <div class="right-block">
+                                                <h5 class="product-name"><a href="@Url.RouteUrl("pre-prod-name", new { itemId = 45476, itemName = "Choco Lava Cup Cake".ToLower().Replace(' ', '-'), city = cityName })" title="Choco Lava Cup Cake">Choco Lava Cup Cake</a></h5>
+
+                                            </div>
+                                            <div class="left-block">
+                                                <a href="@Url.RouteUrl("pre-prod-name", new { itemId = 45476, itemName = "Choco Lava Cup Cake".ToLower().Replace(' ', '-'), city = cityName })">
+                                                    <img class="img-responsive" alt="product" src="~/Content/update(5-10)/images/sub-cat/V_45476.jpg">
+                                                </a>
+                                                <div class="quick-view">
+                                                    <a title="Add to my wishlist" class="heart" href="#"></a>
+                                                    @*<a title="Add to compare" class=" star" href="#"></a>*@
+                                                    <a title="Quick view" class="search" href="@Url.RouteUrl("pre-prod-name", new { itemId = 45476, itemName = "Choco Lava Cup Cake".ToLower().Replace(' ', '-'), city = cityName })"></a>
+                                                  </div>
+                                                <div class="add-to-cart">
+                                                    <a title="Add to Cart" onclick="AddProduct(62135, 45476)">Add to Cart</a>
+                                                </div>
+                                            </div>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="product-featured clearfix">
+            <div class="row">
+                <div class="col-sm-2 sub-category-wapper">
+                    <ul class="sub-category-list" id="cpy1">
+                        @*<li><a href="~/Product/Products?shopID=10418&shopName=Cake%20Parlour">Cake & Pastry</a></li>*@
+                        <li><a href="@Url.RouteUrl("ShopSearch2", new { city = cityName, shopName = "Cake Parlour".ToLower().Replace(" ", "-"), shopID = 10418 })">Cake & Pastry</a></li>
+
+                    </ul>
+                </div>
+                <div class="col-sm-10 col-right-tab">
+                    <div class="product-featured-tab-content">
+                        <div class="tab-container">
+                            <div class="tab-panel active" id="tab-14">
+                                <div class="box-full clearfix">
+                                    <ul class="product-list row">
+                                        <li class="col-sm-4">
+                                            <div class="right-block">
+                                                @*<h5 class="product-name"><a href="~/PreviewItem?itemId=43420" title="Black Forest">Black Forest</a></h5>*@
+                                                <h5 class="product-name"><a href="@Url.RouteUrl("pre-prod-name", new { itemId = 43420, itemName = "Black Forest".ToLower().Replace(' ', '-'), city = cityName })" title="Black Forest">Black Forest</a></h5>
+
+                                            </div>
+                                            <div class="left-block">
+                                                @*<a href="~/PreviewItem?itemId=43420">*@
+                                                <a href="@Url.RouteUrl("pre-prod-name", new { itemId = 43420, itemName = "Black Forest".ToLower().Replace(' ', '-'), city = cityName })">
+                                                    <img class="img-responsive" alt="product" src="~/Content/update(5-10)/images/sub-cat/Black_Pastry.jpg">
+                                                </a>
+                                                <div class="quick-view">
+                                                    <a title="Add to my wishlist" class="heart" href="#"></a>
+                                                    @*<a title="Add to compare" class=" star" href="#"></a>*@
+                                                    @*<a title="Quick view" class="search" href="~/PreviewItem?itemId=43420"></a>*@
+                                                    <a title="Quick view" class="search" href="@Url.RouteUrl("pre-prod-name", new { itemId = 43420, itemName = "Black Forest".ToLower().Replace(' ', '-'), city = cityName })"></a>
+                                                </div>
+                                                <div class="add-to-cart">
+                                                    @*<a title="Add to Cart" onclick="AddProductToShppingCartWithoutQuantity(54937, 43420)">Add to Cart</a>*@
+                                                    <a title="Add to Cart" onclick="AddProduct(54937, 43420)">Add to Cart</a>
+                                                </div>
+                                            </div>
+                                        </li>
+                                        <li class="col-sm-4">
+                                            <div class="right-block">
+                                                @*<h5 class="product-name"><a href="~/PreviewItem?itemId=43026" title="Choco Epic Eggless Cake">Choco Epic Eggless Cake</a></h5>*@
+                                                <h5 class="product-name"><a href="@Url.RouteUrl("pre-prod-name", new { itemId = 43026, itemName = "Choco Epic Eggless Cake".ToLower().Replace(' ', '-'), city = cityName })" title="Choco Epic Eggless Cake">Choco Epic Eggless Cake</a></h5>
+                                            </div>
+                                            <div class="left-block">
+                                                @*<a href="~/PreviewItem?itemId=43026">*@
+                                                <a href="@Url.RouteUrl("pre-prod-name", new { itemId = 43026, itemName = "Choco Epic Eggless Cake".ToLower().Replace(' ', '-'), city = cityName })">
+                                                    <img class="img-responsive" alt="product" src="~/Content/update(5-10)/images/sub-cat/Choco_Epic.jpg">
+                                                </a>
+                                                <div class="quick-view">
+                                                    <a title="Add to my wishlist" class="heart" href="#"></a>
+                                                    @*<a title="Add to compare" class=" star" href="#"></a>*@
+                                                    @*<a title="Quick view" class="search" href="~/PreviewItem?itemId=43026"></a>*@
+                                                    <a title="Quick view" class="search" href="@Url.RouteUrl("pre-prod-name", new { itemId = 43026, itemName = "Choco Epic Eggless Cake".ToLower().Replace(' ', '-'), city = cityName })"></a>
+                                                </div>
+                                                <div class="add-to-cart">
+                                                    @*<a title="Add to Cart" onclick="AddProductToShppingCartWithoutQuantity(53539, 43026)">Add to Cart</a>*@
+                                                    <a title="Add to Cart" onclick="AddProduct(53539, 43026)">Add to Cart</a>
+                                                </div>
+                                            </div>
+                                        </li>
+                                        <li class="col-sm-4">
+                                            <div class="right-block">
+                                                @*<h5 class="product-name"><a href="~/PreviewItem?itemId=43131" title="Fruit Fancy Egg Cake">Fruit Fancy Egg Cake</a></h5>*@
+                                                <h5 class="product-name"><a href="@Url.RouteUrl("pre-prod-name", new { itemId = 43131, itemName = "Fruit Fancy Egg Cake".ToLower().Replace(' ', '-'), city = cityName })" title="Fruit Fancy Egg Cake">Fruit Fancy Egg Cake</a></h5>
+
+                                            </div>
+                                            <div class="left-block">
+                                                @*<a href="~/PreviewItem?itemId=43131">*@
+                                                <a href="@Url.RouteUrl("pre-prod-name", new { itemId = 43131, itemName = "Fruit Fancy Egg Cake".ToLower().Replace(' ', '-'), city = cityName })">
+                                                    <img class="img-responsive" alt="product" src="~/Content/update(5-10)/images/sub-cat/Fruit_Fancy.jpg">
+                                                </a>
+                                                <div class="quick-view">
+                                                    <a title="Add to my wishlist" class="heart" href="#"></a>
+                                                    @*<a title="Add to compare" class=" star" href="#"></a>*@
+                                                    @*<a title="Quick view" class="search" href="~/PreviewItem?itemId=43131"></a>*@
+                                                    <a title="Quick view" class="search" href="@Url.RouteUrl("pre-prod-name", new { itemId = 43131, itemName = "Fruit Fancy Egg Cake".ToLower().Replace(' ', '-'), city = cityName })"></a>
+                                                </div>
+                                                <div class="add-to-cart">
+                                                    @*<a title="Add to Cart" onclick="AddProductToShppingCartWithoutQuantity(53812, 43131)">Add to Cart</a>*@
+                                                    <a title="Add to Cart" onclick="AddProduct(53812, 43131)">Add to Cart</a>
+                                                </div>
+                                            </div>
+                                        </li>
+                                        <li class="col-sm-4">
+                                            <div class="right-block">
+                                                @*<h5 class="product-name"><a href="~/PreviewItem?itemId=43109" title="Fancy Butter Scotch Eggleass Cake">Fancy Butter Scotch Eggleass Cake</a></h5>*@
+                                                <h5 class="product-name"><a href="@Url.RouteUrl("pre-prod-name", new { itemId = 43109, itemName = "Fancy Butter Scotch Eggleass Cake".ToLower().Replace(' ', '-'), city = cityName })" title="Fancy Butter Scotch Eggleass Cake">Fancy Butter Scotch Eggleass Cake</a></h5>
+
+                                            </div>
+                                            <div class="left-block">
+                                                @*<a href="~/PreviewItem?itemId=43109">*@
+                                                <a href="@Url.RouteUrl("pre-prod-name", new { itemId = 43109, itemName = "Fancy Butter Scotch Eggleass Cake".ToLower().Replace(' ', '-'), city = cityName })">
+                                                    <img class="img-responsive" alt="product" src="~/Content/update(5-10)/images/sub-cat/Fancy_Butter.jpg">
+                                                </a>
+                                                <div class="quick-view">
+                                                    <a title="Add to my wishlist" class="heart" href="#"></a>
+                                                    @*<a title="Add to compare" class=" star" href="#"></a>*@
+                                                    @*<a title="Quick view" class="search" href="~/PreviewItem?itemId=43109"></a>*@
+                                                    <a title="Quick view" class="search" href="@Url.RouteUrl("pre-prod-name", new { itemId = 43109, itemName = "Fancy Butter Scotch Eggleass Cake".ToLower().Replace(' ', '-'), city = cityName })"></a>
+                                                </div>
+                                                <div class="add-to-cart">
+                                                    <a title="Add to Cart" onclick="AddProduct(53774, 43109)">Add to Cart</a>
+                                                    @*<a title="Add to Cart" onclick="AddProductToShppingCartWithoutQuantity(53774, 43109)">Add to Cart</a>*@
+                                                </div>
+                                            </div>
+                                        </li>
+                                        <li class="col-sm-4">
+                                            <div class="right-block">
+                                                @*<h5 class="product-name"><a href="~/PreviewItem?itemId=42664" title="I Love You Egg Cake F7">I Love You Egg Cake F7</a></h5>*@
+                                                <h5 class="product-name"><a href="@Url.RouteUrl("pre-prod-name", new { itemId = 42664, itemName = "I Love You Egg Cake F7".ToLower().Replace(' ', '-'), city = cityName })" title="I Love You Egg Cake F7">I Love You Egg Cake F7</a></h5>
+
+                                            </div>
+                                            <div class="left-block">
+                                                @*<a href="~/PreviewItem?itemId=42664">*@
+                                                <a href="@Url.RouteUrl("pre-prod-name", new { itemId = 42664, itemName = "I Love You Egg Cake F7".ToLower().Replace(' ', '-'), city = cityName })">
+                                                    <img class="img-responsive" alt="product" src="~/Content/update(5-10)/images/sub-cat/ILoveEgg.jpg">
+                                                </a>
+                                                <div class="quick-view">
+                                                    <a title="Add to my wishlist" class="heart" href="#"></a>
+                                                    @*<a title="Add to compare" class=" star" href="#"></a>*@
+                                                    @*<a title="Quick view" class="search" href="~/PreviewItem?itemId=42664"></a>*@
+                                                    <a title="Quick view" class="search" href="@Url.RouteUrl("pre-prod-name", new { itemId = 42664, itemName = "I Love You Egg Cake F7".ToLower().Replace(' ', '-'), city = cityName })"></a>
+                                                </div>
+                                                <div class="add-to-cart">
+                                                    @*<a title="Add to Cart" onclick="AddProductToShppingCartWithoutQuantity(52745, 42664)">Add to Cart</a>*@
+                                                    <a title="Add to Cart" onclick="AddProduct(52745, 42664)">Add to Cart</a>
+                                                </div>
+                                            </div>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@*<div class="container containernew1 span12">
+    <div class="FootTextDiv">
+        <p class="indent-paragraph " style="text-align:justify;">
+            <span class="footerdetail">Books And Media Arcade</span><br />
+            Books are the best friends for man since ages. Unlike a number of products sold online, books are no exception. Gandhibagh.com has its space dedicated for the central India's learning population and address the exploding information and knowledge need of the book lovers. We have books of wide range of categories of high quality and at wholesale prices. The books ranging from the academics, to fiction, non fiction, kids, hobby books, CD's, DVD's and books on different media formats and the list goes on. A dynamic and young company, founded and managed by a team of skilled professionals promising quality books and media products for information and book lovers. We have books on wide range of subjects and categories, easily accessible to check and place order without any hassle.
+            Supported by unobtrusively supporting customer services department, who help our customers in finding out the right book and CDs for any category or subject. Apart from finding books on various issues and subjects, you can reap a number of benefits for shopping at Gandhibagh.com. These include getting the best discount deals, the customer friendly Book Return and Replacement policies together make the shopping experience enjoyable to shop at our online store. In the coming times, as we expand, our customers would enjoy a number of other benefits, which will end up adding values to their shopping experience. We keep updated our registered customers about the new arrivals and updates on deals on a range of products on different subjects and categories.
+            Gandhibagh.com has networked with all the leading book stores, suppliers and vendors of Central India (Nagpur) and cities and town in the vicinity to cover a range of subjects for the book lovers. The books and CDs you get at our place is authentic in terms of print and quality along with reasonable price tags. With benefits like same day delivery, better customer support and inexpensive deals, you can find a number of things, which together make your shopping experience at this online store memorable. This has therefore helped the store to build a database of loyal customers on the board, which is increasing with every passing day. Happy Shopping!<br /><br />
+        </p>
+    </div>
+</div>*@

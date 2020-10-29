@@ -1,0 +1,242 @@
+﻿@model CRM.Controllers.GCMMsgDetailViewModel
+<style>
+    textarea {
+        width: 80%;
+        height: 40px;
+    }
+</style>
+<link href="~/Content/css/datepicker.css" rel="stylesheet" />
+<script src="~/Scripts/jquery-2.1.4.min.js"></script>
+<script src="~/Scripts/bootstrap-datepicker.js"></script>
+<div class="row">
+    <div class="span12">
+        <div class="widget">
+            <div class="widget-header">
+                <i class="icon-list-alt"></i>
+                <h3> Create [ Push Notification ]</h3>
+            </div>
+            <!-- /widget-header -->
+            <div class="widget-content">
+                <div class="widget big-stats-container">
+                    <div class="widget-content">
+                        <table class="table table-bordered table-condensed table-hover table-responsive table-striped tablet table_tennis">
+                            @if (ViewBag.GBDatabaseNotification != null)
+                            {
+                                <tr>
+                                    <td>
+                                        <h3 style="background-color:#ff6a00; color:#ffffff;">
+                                            [GCM Notification sent : @ViewBag.GCMNotificationSend]
+                                            [App Notification sent : @ViewBag.GBDatabaseNotification]
+                                        </h3>
+                                    </td>
+                                </tr>
+                            }
+                            else
+                            {
+                                <tr>
+                                    <td>IMEINo : @ViewBag.IMEINo</td>
+                                    <td>Email : @ViewBag.Email</td>
+                                    <td>CityID : @ViewBag.CityID</td>
+                                </tr>
+                            }
+                        </table>
+                        @using (Html.BeginForm())
+                        {
+                            @Html.AntiForgeryToken()
+
+                            <div class="form-horizontal">
+                                @Html.ValidationSummary(true)
+
+                                <div class="control-group">
+                                    @Html.LabelFor(model => model.Title, new { @class = "control-label" })
+                                    <div class="controls">
+                                        @Html.TextAreaFor(model => model.Title, new { id = "Title" })
+                                        @Html.ValidationMessageFor(model => model.Title)
+                                    </div>
+                                </div>
+                                <div class="control-group">
+                                    @Html.LabelFor(model => model.Body, new { @class = "control-label" })
+                                    <div class="controls">
+                                        @Html.TextAreaFor(model => model.Body, new { id = "Body" })
+                                        @Html.ValidationMessageFor(model => model.Body)
+                                    </div>
+                                </div>
+
+                                <div class="control-group">
+                                    @Html.LabelFor(model => model.ImgUrl, new { @class = "control-label" })
+                                    <div class="controls">
+                                        @Html.TextAreaFor(model => model.ImgUrl, new { id = "ImgUrl" })
+                                        @Html.ValidationMessageFor(model => model.ImgUrl)
+                                    </div>
+                                </div>
+
+                                <div class="control-group">
+                                    @Html.LabelFor(model => model.Level, new { @class = "control-label" })
+                                    <div class="controls">
+                                        @Html.DropDownList("level", null, new { id = "level"})
+                                      
+                                    </div>
+                                </div>
+
+                                <div class="control-group">
+                                    <label class="control-label">CategoryID / ProductID</label>
+                                    <div class="controls">
+                                        @Html.EditorFor(model => model.LevelToID, new { id = "LevelToID" })
+                                        @Html.ValidationMessageFor(model => model.LevelToID)
+                                        <label id="lblMsglevel" style="color:red"></label>
+                                    </div>
+                                </div>
+                                <div class="control-group">
+                                    <label class="control-label">From Date</label>
+                                    <div class="controls">
+                                        @Html.TextBox("FDate", null, new { id = "FDate", @readonly = "readonly", required = "requird" })
+                                        @Html.DropDownList("FromTimeSlot")
+                                       
+                                    </div>
+                                </div>
+                                <div class="control-group">
+                                    <label class="control-label">To Date</label>
+                                    <div class="controls">
+                                        @Html.TextBox("TDate", null, new { id = "TDate", @readonly = "readonly", required = "requird" })
+                                        @Html.DropDownList("ToTimeSlot")
+                                        
+                                    </div>
+                                </div>
+                                <div class="control-group">
+                                    <label class="control-label">&nbsp;</label>
+                                    <div class="controls">
+                                        <label id="lblMsg" style="color:red"></label>
+                                    </div>
+                                </div>
+                              
+                                <div class="control-group">
+                                    <div style="float:right">
+                                        <input type="submit" value="Send"  id="btnSearch" class="btn btn-danger" />
+                                    </div>
+                                </div>
+                            </div>
+                        }
+
+                        <div>
+                            @Html.ActionLink("Back to List", "Index")
+                        </div>
+                    </div>
+                </div>
+                <!-- /widget-content -->
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    //----------------------------------------------------------------------For datepicker---//
+    //<![CDATA[
+    $(window).load(function () {
+        $('#FDate').datepicker('setDate', new Date());
+             
+         ///$('#FDate').datepicker('update');
+         $('#FDate').datepicker({ dateFormat: 'dd/MM/yyyy' });
+        //$('#TDate').datepicker('update');
+         $('#TDate').datepicker('setDate', new Date());
+        $('#TDate').datepicker({ dateFormat: 'dd/MM/yyyy' });
+    });//]]>
+</script>
+<script src="~/Content/js/jquery-1.9.1.min.js"></script>
+<script type="text/javascript">
+    $(document).ready(function () {
+        //alert("a");
+        $("input#btnSearch").on('click', function () {
+
+            var Title = $('#Title').val();
+            var Body = $('#Body').val();
+            var ImgUrl = $('#ImgUrl').val();
+            var CatPrdID = $('#LevelToID').val();
+            var fromDate = $('#FDate').val();
+            //alert(fromDate);
+            var toDate = $('#TDate').val();
+            //alert(toDate);
+          
+           var LevelID = $("select#level option:selected").val();
+            //alert(LevelID);
+           var isValid = ValidateDate(Title,Body,ImgUrl,CatPrdID, fromDate, toDate, LevelID);
+            if (isValid == false) {
+                return false;
+            }
+            //alert(fromDate);
+            //alert(toDate);
+        });
+    });
+
+    function ValidateDate(Title,Body,ImgUrl,CatPrdID,fromDate, toDate, LevelID) {
+        //alert(LevelID);
+       // alert(fromDate);
+        // alert(toDate);
+        if (Title == '' || Body == '' || ImgUrl == '')
+        {
+            $('[id*=lblMsg]').text('Please Enter Title,Body and ImgUrl');
+            $('[id*=lblMsglevel]').text('');
+            //$('[id*=lblMsgCategory]').text('');
+            //return;
+            return false;
+        }
+
+        if (fromDate == '' && toDate == '') {
+            $('[id*=lblMsg]').text('Please Select From Date and To Date.');
+            $('[id*=lblMsglevel]').text('');
+            //$('[id*=lblMsgCategory]').text('');
+            //return;
+            return false ;
+        }
+        else if (fromDate == '') {
+            $('[id*=lblMsg]').text('Please Select From Date.');
+            $('[id*=lblMsglevel]').text('');
+            // $('[id*=lblMsgCategory]').text('');
+           // return;
+            return false;
+        }
+        else if (toDate == '') {
+            $('[id*=lblMsg]').text('Please Select To Date.');
+            $('[id*=lblMsglevel]').text('');
+            //$('[id*=lblMsgCategory]').text('');
+            return false;
+        }
+       // alert(LevelID);
+        if (LevelID == 0 || LevelID== 1) {
+            //alert(LevelID);
+            if (CatPrdID== '')
+            {
+                $('[id*=lblMsg]').text('');
+                $('[id*=lblMsglevel]').text('Please Enter Second Level ID.');
+                //return;
+                return false;
+            }
+            
+        }
+        //alert(fromDate);
+        ///alert(toDate);
+        if (fromDate != '' && toDate != '') {
+            //alert(fromDate);
+           // alert(toDate);
+            dateFirst = fromDate.split('/');
+            dateSecond = toDate.split('/');
+            var from = new Date(dateFirst[2], dateFirst[1], dateFirst[0]); //Year, Month, Date
+            var to = new Date(dateSecond[2], dateSecond[1], dateSecond[0]);
+            //alert(from);
+            //alert(to);
+            if (from > to) {
+                $('[id*=lblMsg]').text('To Date must be greater than From Date.');
+                $('[id*=lblMsglevel]').text('');
+                //alert(fromDate);
+                //alert(toDate);
+                return false;
+            }
+            else {
+                $('[id*=lblMsg]').text('');
+            }
+        }
+       
+        
+    }
+
+    
+        
+</script>

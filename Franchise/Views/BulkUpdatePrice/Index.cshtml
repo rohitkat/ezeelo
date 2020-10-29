@@ -1,0 +1,165 @@
+﻿@model IEnumerable<ModelLayer.Models.ViewModel.StockManagementReportViewModel>
+
+
+
+@*<h4>Bulk Update Price</h4>
+<hr />*@
+
+<style>
+    .uploader {
+        width: 180px !important;
+    }
+
+    #ddlFranchiseID {
+        margin-right: 15px;
+    }
+
+    .btn-primary {
+        color: #fff;
+        text-shadow: 0 -1px 0 rgba(0,0,0,0.25);
+        background-color: #006dcc!important;
+        background-image: -moz-linear-gradient(top,#08c,#04c);
+        background-image: -webkit-gradient(linear,0 0,0 100%,from(#08c),to(#04c));
+        background-image: -webkit-linear-gradient(top,#08c,#04c);
+        background-image: -o-linear-gradient(top,#08c,#04c);
+        background-image: linear-gradient(to bottom,#08c,#04c);
+        background-repeat: repeat-x;
+        border-color: #04c #04c #002a80;
+        border-color: rgba(0,0,0,0.1) rgba(0,0,0,0.1) rgba(0,0,0,0.25)!important;
+        filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ff0088cc',endColorstr='#ff0044cc',GradientType=0);
+        filter: progid:DXImageTransform.Microsoft.gradient();
+</style>
+
+
+<div class="row-fluid" style="margin-top:20px;width:98%;margin-left:10px;">
+    <div class="box span12">
+        <div class="box-header">
+            <h2><span class="break"></span>Bulk Update Price</h2>
+        </div>
+        <div class="box-content">
+            @using (Html.BeginForm("GetExcelIndex", "BulkUpdatePrice", FormMethod.Post))
+            {
+                @Html.Hidden("hdnShopName");
+                @Html.DropDownList("ddlMerchant", "Select Shop")
+                <input type="submit" name="btnExportLicensing" style="width: 88px; height: 29px; margin-top: -9px;"
+                       value="Export" id="exportLicensing" class="button btn-primary" onclick="return validate();" />
+                <span class="msg" style="color:red"></span>
+            }
+            @using (Html.BeginForm("UploadExcel", "BulkUpdatePrice", FormMethod.Post, new { enctype = "multipart/form-data", id = "frmID" }))
+            {
+                @*<div id="divfileUpload" style="display:none">*@
+                @Html.Hidden("hdnShopID");
+                <input type="file" name="file" id="fileUploadExcel" />
+                <input type="submit" value="Upload Excel" class="btn btn-small btn-danger" id="btnUploadSheet" />
+                <div id="divValidationMsg" class="validation-summary-errors">
+                    <br /><br />
+                    @if (TempData["ExcelValidationFailed"] != null)
+                    {
+                        @Html.Raw(TempData["ExcelValidationFailed"])
+
+                    }
+                </div>
+                @*</div>*@
+            }
+        </div>
+    </div>
+    </div>
+    <div>
+        @Html.Partial("_ProductDetail", Model)
+    </div>
+   
+
+
+
+ <script src="~/Scripts/jquery-1.10.2.js"></script>
+    <script type="text/javascript">
+        $("select#ddlMerchant").bind('change', function () {
+            //alert('in');
+            var MerchantID = $("select#ddlMerchant option:selected").val();
+            var MerchantName = $("select#ddlMerchant option:selected").text();
+            //alert(MerchantName);
+            $("[id=hdnShopID]").val(MerchantID);
+            $("[id=hdnShopName]").val(MerchantName);
+            //alert($("[id=hdnShopID]").val());
+            //@ViewBag.ShopID = MerchantID;
+            //alert("@ViewBag.ShopID");
+        });
+        function validate() {
+            var shopID = $("select#ddlMerchant option:selected").val();
+            if (shopID == 0) {
+                $('.msg').text('Please Select Shop Name');
+                //$('#divfileUpload').css("display", "none");
+                return false;
+            }
+            else {
+                //$('#divfileUpload').css("display", "block");
+                return true;
+            }
+        }
+
+
+
+        $(function () {
+            $('#fileUploadExcel').change(function () {
+                var f = this.files[1]
+
+                $("#divValidationMsg").html("");
+
+                for (var i = 0; i < this.files.length; ++i) {
+
+
+                    var filetype = this.files[i].type;
+                    //     alert(filetype);
+                    var ValidImageTypes = ["application/vnd.ms-excel", "application/excel", "application/x-msexcel", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"];
+
+                    if ($.inArray(filetype, ValidImageTypes) < 0) {
+                        $("#divValidationMsg").html("Invalid File Type. Only .xls or.xlsx file is allowed.");
+                        break;
+                    }
+                }
+
+            });
+
+        });
+
+        function checkfilesize(fileObj) {
+
+            var iSize = ($(fileObj)[0].files[0].size);
+            return iSize;
+        }
+
+        $(document).ready(function () {
+            $("#btnUploadSheet").click(function () {
+                var shopID = $("select#ddlMerchant option:selected").val();
+                if (shopID == 0) {
+                    $('.msg').text('Please Select Shop Name');
+                    return false;
+                }
+                var has_selected_file = $('#fileUploadExcel').val();
+                //alert(has_selected_file);
+                if (has_selected_file != "") {
+
+                    fileObj = $("#fileUploadExcel"); //  document.getElementById('<%= fileUploadExcel.ClientID %>');
+                    var size = checkfilesize(fileObj);
+                    //1024 * 1024 * 3  = 3145728
+                    if (size > 3145728) {
+                        $("#divValidationMsg").html("Allowed file size exceeded. (Max. 3 MB).");
+                        return false;
+                    }
+                    var isAnyValidatonError = $("#divValidationMsg").html();
+                    if (isAnyValidatonError.trim().length > 0) {
+                        return false;
+                    }
+                    else {
+                        return true;
+                    }
+                }
+                else {
+                    $("#divValidationMsg").html("Please select Excel file to be uploaded. Max allowed file size is 3 MB.");
+                    return false;
+
+                }
+
+            });
+        });
+    </script>

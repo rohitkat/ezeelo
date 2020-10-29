@@ -1,0 +1,284 @@
+﻿@model ModelLayer.Models.ViewModel.ProductTaxIndexView
+@{
+    ViewBag.Title = "Create";
+}
+<style>
+    .spefication {
+        margin-left: 25px;
+    
+    }
+    </style>
+<h2>Create</h2>
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+
+    <div class="span10" id="content">
+        <div class="row-fluid">
+            <div class="box">
+                <div class="box-header">
+                    <h2><i class="icon-edit"></i><span class="break"></span> Apply Tax On Product</h2>
+
+                </div>
+                <form class="form-horizontal">
+
+                    <hr />
+                    @Html.ValidationSummary(true)
+                    <div id="pageloaddiv"></div>
+
+                    @if (ViewBag.Message != null)
+                    {
+                        <span style="color:red; font-weight:bold;"></span> @ViewBag.Message
+                    }
+                    <div class="span12" style="margin-top:10px;margin-left:10px;">
+                        <div class="control-group span3" style="margin-left:10px;">
+                            @*@Html.LabelFor(model => model.CategoryID, " categoryid", new { @class="control-label col-md-2" })*@
+                            <label>Select Franchise</label>
+                            <div class="controls">
+                                @Html.DropDownList("Franchise", "Select Franchise")
+
+                            </div>
+                        </div>
+                        <div class="control-group span3" style="margin-left:10px;">
+                            <label>Select Shop</label>
+                            @*@Html.LabelFor(model => model.CategoryID, "CategoryID", new { @class = "control-label col-md-2" })*@
+                            <div class="controls">
+                                @Html.DropDownList("Shop", "Select Shop")
+
+                            </div>
+                        </div>
+                        <div class="control-group span3" style="margin-left:10px;">
+                            <label>Select Category</label>
+                            @*@Html.LabelFor(model => model.CategoryID, "CategoryID", new { @class = "control-label col-md-2" })*@
+                            <div class="controls">
+                                @Html.DropDownList("ShopCategory", "ShopCategory")
+
+                            </div>
+                        </div>
+                        <div class="control-group span3" style="margin-left:10px;">
+                            @*@Html.LabelFor(model => model.SpecificationID, "SpecificationID", new { @class = "control-label col-md-2" })*@
+                            <label>Tax Head</label>
+                            <div class="controls">
+                                @Html.DropDownList("TaxMaster", String.Empty)
+
+                            </div>
+                        </div>
+                        <div class="control-group span5" style="margin-left:10px;">
+                            <div class="controls">
+                                <input id="chkShowBrandedProduct" type="checkbox" name="Test" onclick="SetAllCheckBoxes(this)" /><label>Show Only Branded Product</label>
+                            </div>
+                        </div>
+                    </div>
+
+
+                    
+
+                    <div id="divSpecification" style="display:block;"></div>
+
+                    <div class="form-actions">
+                        <div class="col-md-offset-2 col-md-10">
+                            @*<input type="submit" value="Create" class="btn btn-default" />*@
+                            @Html.ActionLink("Back to List", "Index", string.Empty, new { @class = "btn btn-brown" })
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+}
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}
+
+<script src="~/Scripts/jquery-1.10.2.min.js"></script>
+
+
+<style type="text/css">
+    #pageloaddiv {
+        position: fixed;
+        left: 0px;
+        top: 0px;
+        width: 100%;
+        height: 100%;
+        z-index: 1000;
+        background: url('../Content/Images/ajax_loader.gif') no-repeat center center;
+        background-size: 100px;
+        display: none;
+    }
+</style>
+
+<script>
+   
+    $(document).ready(function () {
+
+        $("#Franchise").change(function () {
+            var fId = $("#Franchise  option:selected").val();
+
+            $("#loaddiv").css('display', 'block');
+            $("#loaddiv").fadeOut(1000);
+
+
+            $.ajax({
+                type: "POST",
+                url: "/ProductTax/FranchiseShop",
+                data: "{ franchiseID: " + fId + "}",
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                async: true,
+                cache: false,
+                success: function (msg) {
+
+                    $('#Shop').empty();
+                    $('#Shop').append('<option value=0>Select shop</option>');
+
+                    $.each(msg, function (index, item) {
+                        $('#Shop').append('<option value=' + item.ID + '>' + item.Name + '</option>');
+                    });
+                },
+                error: function (x, e) {
+                    alert("unable to Retrive Data No ");
+                }
+            });
+
+        });
+
+        $("#Shop").change(function () {
+            var fId = $("#Shop  option:selected").val();
+
+            $("#loaddiv").css('display', 'block');
+            $("#loaddiv").fadeOut(1000);
+
+
+            $.ajax({
+                type: "POST",
+                url: "/ProductTax/ShopCategoryList",
+                data: "{ ShopID: " + fId + "}",
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                async: true,
+                cache: false,
+                success: function (msg) {
+
+                    $('#ShopCategory').empty();
+                    $('#ShopCategory').append('<option value=0>Select Category</option>');
+
+                    $.each(msg, function (index, item) {
+                        $('#ShopCategory').append('<option value=' + item.ID + '>' + item.Name + '</option>');
+                    });
+                },
+                error: function (x, e) {
+                    alert("unable to Retrive Data No ");
+                }
+            });
+
+        });
+
+        $('#ShopCategory').change(function (e) {
+            var checked = 0;
+            if ($('#chkShowBrandedProduct').is(":checked")) {
+                checked = 1;
+            }
+            else {
+                checked = 0;
+            }
+
+            var fId = $("#Shop  option:selected").val();
+            var sCatId = $("#ShopCategory  option:selected").val();
+            var sTaxMasterID = $("#TaxMaster  option:selected").val();
+            if (sTaxMasterID > 0) {
+                $("#pageloaddiv").css('display', 'block');
+                $("#pageloaddiv").fadeOut(1000);
+                /* Request the partial view with .get request. */
+                $.get('/ProductTax/ProductTaxCreateIndex?Shop=' + fId + '&ShopCategory=' + sCatId + '&TaxMasterID=' + sTaxMasterID + '&ShowOnlyBranded=' + checked, function (data) {
+                    /* data is the pure html returned from action method, load it to your page */
+                    $('#divSpecification').html(data);
+                    /* little fade in effect */
+                    $('#divSpecification').fadeIn('fast');
+                });
+
+                $("#pageloaddiv").css('display', 'none');
+                $("#pageloaddiv").fadeOut(1000);
+            }
+            else {
+                $('#divSpecification').html('');
+                $('#divSpecification').fadeIn('fast');
+            }
+
+        });
+
+        $('#TaxMaster').change(function (e) {
+
+           
+                var checked=0;
+                if ($('#chkShowBrandedProduct').is(":checked")) {
+                    checked = 1;
+                }
+                else {
+                    checked = 0;
+                }
+
+            var fId = $("#Shop  option:selected").val();
+            var sCatId = $("#ShopCategory  option:selected").val();
+            var sTaxMasterID = $("#TaxMaster  option:selected").val();
+            if (sCatId > 0) {
+                $("#pageloaddiv").css('display', 'block');
+                $("#pageloaddiv").fadeOut(1000);
+                /* Request the partial view with .get request. */
+                $.get('/ProductTax/ProductTaxCreateIndex?Shop=' + fId + '&ShopCategory=' + sCatId + '&TaxMasterID=' + sTaxMasterID + '&ShowOnlyBranded=' + checked, function (data) {
+                    /* data is the pure html returned from action method, load it to your page */
+                    $('#divSpecification').html(data);
+                    /* little fade in effect */
+                    $('#divSpecification').fadeIn('fast');
+                });
+
+                $("#pageloaddiv").css('display', 'none');
+                $("#pageloaddiv").fadeOut(1000);
+            }
+            else {
+                $('#divSpecification').html('');
+                $('#divSpecification').fadeIn('fast');
+            }
+
+        });
+
+
+
+        $('#chkShowBrandedProduct').change(function () {
+            var checked=0;
+            if ($(this).is(":checked")) {
+                checked = 1;
+            }
+            else {
+                checked = 0;
+            }
+
+            var fId = $("#Shop  option:selected").val();
+            var sCatId = $("#ShopCategory  option:selected").val();
+            var sTaxMasterID = $("#TaxMaster  option:selected").val();
+            if (sCatId > 0) {
+                $("#pageloaddiv").css('display', 'block');
+                $("#pageloaddiv").fadeOut(1000);
+                /* Request the partial view with .get request. */
+                $.get('/ProductTax/ProductTaxCreateIndex?Shop=' + fId + '&ShopCategory=' + sCatId + '&TaxMasterID=' + sTaxMasterID + '&ShowOnlyBranded=' + checked, function (data) {
+                    /* data is the pure html returned from action method, load it to your page */
+                    $('#divSpecification').html(data);
+                    /* little fade in effect */
+                    $('#divSpecification').fadeIn('fast');
+                });
+
+                $("#pageloaddiv").css('display', 'none');
+                $("#pageloaddiv").fadeOut(1000);
+            }
+            else {
+                $('#divSpecification').html('');
+                $('#divSpecification').fadeIn('fast');
+            }
+
+
+        });
+
+    });
+
+</script>

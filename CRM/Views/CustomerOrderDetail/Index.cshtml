@@ -1,0 +1,333 @@
+﻿@model IEnumerable<ModelLayer.Models.CustomerOrderDetail>
+@using CRM.Models.ViewModel;
+@using ModelLayer.Models;
+@{
+    Layout = "~/Views/Shared/_LayoutPartial.cshtml";
+}
+<style>
+    a {
+        color: yellow;
+        font-weight: bold;
+    }
+
+        a:hover {
+            color: white;
+        }
+
+    th {
+        background: #0B8E3E !important;
+        color: #ffffff !important;
+    }
+
+    td {
+        background: #727E5A !important;
+        /*background: #808080 !important;*/
+        color: #ffffff !important;
+    }
+</style>
+
+@{
+    List<DeliveryOrderDetailViewModel> DeliveryOrderDetailViewModels = ViewBag.DeliveryOrderDetails;
+    List<ProductByShopStockViewModel> ProductByShopStockViewModels = ViewBag.ProductByShopStockViewModels;
+    List<Unit> Units = ViewBag.Units;
+    string PaymentMode = @Request.QueryString["PaymentMode"];
+    string OrderCode = @Request.QueryString["OrderCode"];
+}
+<table class="table">
+    <tr>
+        @{
+            string lMobileNo = "";
+            if (Model.FirstOrDefault().CustomerOrder.UserLogin.Mobile != null)
+            {
+                lMobileNo = Model.FirstOrDefault().CustomerOrder.UserLogin.Mobile.Trim();
+            }
+            string lCustomerOrderCode = Model.FirstOrDefault().CustomerOrder.OrderCode.Trim();
+            string lRegEmail = "";
+            if (Model.FirstOrDefault().CustomerOrder.UserLogin.Email != null)
+            {
+                lRegEmail = Model.FirstOrDefault().CustomerOrder.UserLogin.Email.Trim();
+            }
+            string lCustomerOrderID = Model.FirstOrDefault().CustomerOrderID.ToString();
+        }
+        <th>Shipping Address <a href="#" style="float:right;" id="btnSendSMS" class="btn btn-danger" onclick="SendSMS(@lCustomerOrderID);">Send Delivery SMS</a></th>
+
+    </tr>
+    <tr>
+        @*Added by harshada to add area,city,pincode in shipping address*@
+        @{ string AreaName = ""; }
+
+        @if (Model.First().CustomerOrder.AreaID != null)
+        {
+            AreaName = "," + Model.First().CustomerOrder.Area.Name;
+        }
+
+        <td>@Model.First().CustomerOrder.ShippingAddress@AreaName,@Model.First().CustomerOrder.Pincode.City.Name,@Model.First().CustomerOrder.Pincode.Name</td>
+    </tr>
+    <tr>
+        <td>
+            Contact : @Model.FirstOrDefault().CustomerOrder.PrimaryMobile, @Model.FirstOrDefault().CustomerOrder.SecondoryMobile,
+            @{
+                if (Model.FirstOrDefault().CustomerOrder.UserLogin.Mobile != null)
+                {
+                    if (!Model.FirstOrDefault().CustomerOrder.UserLogin.Mobile.Equals(Model.FirstOrDefault().CustomerOrder.PrimaryMobile) && !Model.FirstOrDefault().CustomerOrder.UserLogin.Mobile.Equals(Model.FirstOrDefault().CustomerOrder.SecondoryMobile))
+                    {
+                        @Model.FirstOrDefault().CustomerOrder.UserLogin.Mobile
+                    }
+                }
+             }
+        </td>
+    </tr>
+</table>
+<table class="table table-bordered table-hover table-responsive table-striped">
+    <tr style="background-color:#00ff90">
+        <th style="width:20px;">Sr.No</th>
+        <th>
+            Shop Order Code
+        </th>
+        <th>
+            Shop
+        </th>
+        <th>
+            Delivery
+        </th>
+        <th>
+            Product
+        </th>
+        <th>
+            Qty
+        </th>
+
+        @*<th>
+                MRP
+            </th>*@
+        <th>
+            Sale Rate
+        </th>
+        <th>
+            Total Amount
+        </th>
+        @*<th>
+                Is Active
+            </th>*@
+        <th>
+            Create Date
+        </th>
+        <th>
+            Order Status
+        </th>
+        <th>
+            Device Type
+        </th>
+
+
+        <th style="width:20px;">Call</th>
+    </tr>
+
+    @if (Model.Count() == 0)
+    {
+        <tr>
+            <td colspan="6" class="text-center"><h3>No Record Found...</h3></td>
+        </tr>
+    }
+    else
+    {
+        int i = 0;
+        string lShopOrderCode = "";
+        foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @{i = i + 1; } @i
+                    @*<a href="#myModal" role="button" class="btn btn-small btn-primary" data-toggle="modal" onclick="Details(@item.CustomerOrderID)">Delivery Memo</a>*@
+                    @*<a href="@Url.Action("ForPrint", "CustomerOrderDetail", new { CustomerOrderID = item.CustomerOrderID })" target="_blank">Print</a>*@
+                </td>
+
+                <td>
+                    @*@Html.DisplayFor(modelItem => item.ShopOrderCode)*@
+                    <a href="@System.Configuration.ConfigurationManager.AppSettings["EZEELO_DELIVERY_URL"]/DeliveryOrderDetail/details?Shopordercode=@item.ShopOrderCode" target="_blank">@Html.DisplayFor(modelItem => item.ShopOrderCode)</a>
+                </td>
+                <td>
+                    <ul style="list-style:none;">
+                        <li class="dropdown">
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                                @Html.DisplayFor(modelItem => item.Shop.Name)
+                            </a>
+                            <ul class="dropdown-menu">
+                                <li><a target="_blank" href="@Url.Action("Index", "OrderTracking", new { Shop = item.Shop.Name })">Shop :@Html.DisplayFor(modelItem => item.Shop.Name)</a></li>
+                                <li><a href="#">Contact Person : @Html.DisplayFor(modelItem => item.Shop.ContactPerson)</a></li>
+                                <li><a href="#">Contact No : @Html.DisplayFor(modelItem => item.Shop.Mobile)</a></li>
+                            </ul>
+                        </li>
+                    </ul>
+                </td>
+                <td>
+                    @{
+                    int lDeliveryPartnerID = -1;
+                    string lDeliveryPartnerName = "";
+                    string lDeliveryPartnerContact = "";
+                    var DeliveryPartner = DeliveryOrderDetailViewModels.FirstOrDefault(x => x.ShopOrderCode == item.ShopOrderCode);
+                    if (DeliveryPartner != null)
+                    {
+                        lDeliveryPartnerID = DeliveryPartner.DeliveryPartnerID;
+                        lDeliveryPartnerName = DeliveryPartner.DeliveryPartnerName;
+                        lDeliveryPartnerContact = DeliveryPartner.DeliveryPartnerVM.Mobile;
+                    }
+                    }
+                    <ul style="list-style:none;">
+                        <li class="dropdown">
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                                @lDeliveryPartnerName
+                            </a>
+                            <ul class="dropdown-menu">
+                                <li><a target="_blank" href="@Url.Action("Index", "OrderTracking", new { Delivery = lDeliveryPartnerName })">Delivery Shop : @lDeliveryPartnerName</a></li>
+                                <li><a href="#">Contact Person : @lDeliveryPartnerName</a></li>
+                                <li><a href="#">Contact No : @lDeliveryPartnerContact</a></li>
+                            </ul>
+                        </li>
+                    </ul>
+                </td>
+                <td>
+                    @*@Html.DisplayFor(modelItem => item.ShopStock.ShopProduct.Product.Name)*@
+                    @{
+                    string ProductName = "";
+                    ProductByShopStockViewModel lProductByShopStockViewModel = ProductByShopStockViewModels.FirstOrDefault(x => x.ShopStockID == item.ShopStockID);
+                    if (lProductByShopStockViewModel != null)
+                    {
+                        ProductName = ProductByShopStockViewModels.FirstOrDefault(x => x.ShopStockID == item.ShopStockID).ProductName;
+                    }
+                    }
+                    @ProductName
+                    <br />
+                    @if (item.ShopStock.ProductVarient.ColorID != 1) // - N/A
+                    {
+                        @Html.DisplayFor(modelItem => item.ShopStock.ProductVarient.Color.Name) <span>,</span>
+                    }
+                    @if (item.ShopStock.ProductVarient.SizeID != 1) // - N/A
+                    {
+                        @Html.DisplayFor(modelItem => item.ShopStock.ProductVarient.Size.Name) <span>,</span>
+                    }
+                    @if (item.ShopStock.ProductVarient.DimensionID != 1) // - N/A
+                    {
+                        @Html.DisplayFor(modelItem => item.ShopStock.ProductVarient.Dimension.Name) <span>,</span>
+                    }
+                    @if (item.ShopStock.ProductVarient.MaterialID != 1) // - N/A
+                    {
+                        @Html.DisplayFor(modelItem => item.ShopStock.ProductVarient.Material.Name)
+                    }
+                </td>
+                <td>
+
+
+
+                    <br />
+                    @Html.DisplayFor(modelItem => item.Qty)
+                    @*@{
+                        string lUnitstr = "";
+                        Unit lunit = Units.FirstOrDefault(x => x.ID == item.ShopStock.PackUnitID);
+                        if (lunit != null)
+                        {
+                            lUnitstr = lunit.Name;
+                        }
+                        }
+                        @lUnitstr*@
+                </td>
+
+                @*<td>
+                        <span class="indian_currency"></span> @Html.DisplayFor(modelItem => item.MRP)
+                    </td>*@
+                <td>
+                    <span class="indian_currency"></span> @Html.DisplayFor(modelItem => item.SaleRate)
+                </td>
+                <td>
+                    <span class="indian_currency"></span> @Html.DisplayFor(modelItem => item.TotalAmount)
+                </td>
+                @*<td>
+                        @Html.DisplayFor(modelItem => item.IsActive)
+                    </td>*@
+                <td>
+                    @Html.DisplayFor(modelItem => item.CreateDate)
+                </td>
+                <td>
+                    @*@Html.DisplayFor(modelItem => item.OrderStatus)*@
+                    @{
+            if (lShopOrderCode != item.ShopOrderCode)
+            {
+                @CRM.Common.Common.GetDeliveryStatus(item.OrderStatus)
+            }
+                    }
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.DeviceType)
+                </td>
+
+
+                <td>
+                    @{
+            if (lShopOrderCode != item.ShopOrderCode)
+            {
+                <a href="@Url.Action("Index", "CustomerOrderDetailCall", new { ShopID = item.ShopID, DeliveryPartnerID = @lDeliveryPartnerID, OrderStatus = item.OrderStatus, ShopOrderCode = item.ShopOrderCode, PaymentMode = PaymentMode, OrderCode = OrderCode })" onclick="Logs()" target="frameLog" class="btn btn-small btn-success a_white">Logs</a>
+                lShopOrderCode = item.ShopOrderCode;
+            }
+                    }
+                </td>
+
+
+
+            </tr>
+        }
+    }
+</table>
+
+<div id="divLog">
+    <div class="loader">
+        <img id="loader_img" src="~/Content/Images/loader.gif" style="display: none" />
+    </div>
+    <div id="Details">
+        <iframe id="frameLog" name="frameLog" src='' width="100%" height="600px" frameborder="0" style="margin:0px; padding:0px;"></iframe>
+    </div>
+</div>
+
+
+<div id="diliveryMemo"></div>
+
+
+<script>
+    function Logs() {
+        $("#divLog").show();
+    }
+</script>
+<script>
+    @*function Details(id) {
+        $.ajax({
+            url: '@Url.Action("ForPrint", "CustomerOrderDetail")?CustomerOrderID=' + id,
+            type: "GET",
+            success: function (result) {
+                //$('#loader_img').hide();
+                $('#diliveryMemo').html(result);
+            },
+            error: function (data) {
+                $('#diliveryMemo').empty();
+                //$('#loader_img').hide();
+            }
+        });
+    }*@
+
+
+
+    function SendSMS(customerOrderID) {
+        $.ajax({
+            url: '@Url.Action("SendSMS", "CustomerOrderDetailCall")?CustomerOrderID=' + customerOrderID,
+            type: "GET",
+            success: function (result) {
+                //$('#loader_img').hide();
+                $('#btnSendSMS').html("SMS sent Successfully.");
+            },
+            error: function (data) {
+                $('#btnSendSMS').html("Error in SMS Sending.");
+                //$('#loader_img').hide();
+            }
+        });
+    }
+
+</script>
+

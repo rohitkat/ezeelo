@@ -1,0 +1,171 @@
+﻿@model IEnumerable<ModelLayer.Models.ViewModel.ProductComponentViewModel>
+
+@{
+    ViewBag.Title = "AddComponent";
+    Layout = null;
+}
+
+<h2>AddComponent</h2>
+<script src="~/Scripts/jquery-1.10.2.min.js"></script>
+<style>
+    .webGrid {
+        margin: 4px;
+        border-collapse: collapse;
+        width: 500px;
+        background-color: #FCFCFC;
+    }
+
+    .header {
+        background-color: #C1D4E6;
+        font-weight: bold;
+        color: #FFF;
+    }
+
+    .webGrid th, .webGrid td {
+        border: 1px solid #C0C0C0;
+        padding: 5px;
+    }
+
+    .alt {
+        background-color: #E4E9F5;
+        color: #000;
+    }
+
+    .gridHead a:hover {
+        text-decoration: underline;
+    }
+
+    .description {
+        width: auto;
+    }
+
+    .select {
+        background-color: #389DF5;
+    }
+</style>
+
+
+@{
+    ModelLayer.Models.ViewModel.ProductComponentViewModel component = new ModelLayer.Models.ViewModel.ProductComponentViewModel();
+}
+@{
+    var grid = new WebGrid(Model);
+    grid.Pager(WebGridPagerModes.All);
+}
+<div id="gridContent" style=" padding:20px; ">
+    @grid.GetHtml(
+    tableStyle: "webgrid-table",
+    headerStyle: "header",
+    footerStyle: "webgrid-footer",
+    alternatingRowStyle: "alt",
+    selectedRowStyle: "select",
+    rowStyle: "webgrid-row-style",
+    mode: WebGridPagerModes.All,
+    columns:
+        grid.Columns(
+                             grid.Column("", "", format:
+                            @<text>
+                                <input type="hidden" id="hdnComponentID" name="hdnComponentID" class="hdnComponentID" value="@item.ComponentID" />
+                            </text>),
+                            grid.Column("","",
+                                format: @<text> <input type="checkbox" value="@item.ComponentID" id="Chk$@item.ComponentID" name="ids" onclick="CheckComponent(this.id)" /> </text>),
+                              grid.Column("ComponentName", "Component Name"),
+                              grid.Column("PerUnitRateInRs", "Per Unit Rate In Rs",format:
+                            @<text>
+                                <span class="cmpRs" id="lblCmpRs">@item.PerUnitRateInRs</span>
+                            </text>
+                              ),
+                              grid.Column("PerUnitRateInPer", "Per Unit Rate In Percent",format:
+                            @<text>
+                                <span class="cmpPercent" id="lblCmpPercent">@item.PerUnitRateInPer</span>
+                            </text>
+                              ),
+                               grid.Column("ComponentWeight", "Component Weight", format:
+                            @<text>
+                                <input type="text" disabled="disabled" class="cmpWeight" id="ComponentWeight$@item.ComponentID" name="txtWeight" value="@item.ComponentWeight" size="2" onkeyup="CalculateTotal(this.id);" />
+                                @*<input type="hidden" name="ProductID" value="@item.ProductID" />*@
+                            </text>),
+
+                             grid.Column("unitID", "Component Unit Name", format: @<text>
+        @Html.DropDownList("unitID", null, "--Select Unit--", new { id = "ddlUnit", @class = "cmpUnit" })</text>),
+
+                            grid.Column("DependentComponentName", "Dependent Componen Name",format:
+                            @<text>
+                                <span class="cmpdepUnit" id="lbldepCmpUnit">@item.DependentComponentName</span>
+                                <input type="hidden" class="hdndepComponentUnitID" name="lbldepComponentUnitID" value="@item.DependentOnComponentID" />
+                            </text>
+                            ),
+                              grid.Column("Total", "Total(Rs.)",format:
+                            @<text>
+                                <span class="cmpTotal" id="ComponentTotal$@item.ComponentID">@item.Total</span>
+                            </text>
+                              ),
+            grid.Column("Action", format:
+            @<text>
+                <input id="btnSave#@item.ComponentID" type="button" value="Save" onclick="SaveComponent(this.id);" />
+            </text>, style: "col3Width", canSort: false)
+                                                                                                                 ))
+
+
+</div>
+<input type="hidden" id="hdnShopID" name="hdnShopID" value="@ViewBag.ShopID" />
+
+<script>
+
+
+    $(document).ready(function () {
+        $(".webgrid-table tr").each(function () {
+            var Id = $(this).closest('tr').find('.hdnComponentID').val();
+            alert(Id);
+        });
+    });
+    function CalculateTotal(id) {
+        var txtID = id;
+        var weight = $("[id*='" + id + "']").val();
+        var total;
+        if (weight == '' || weight == '.') {
+            $("[id*='" + id + "']").closest('tr').find('.cmpTotal').html('');
+        }
+        else {
+            total = parseFloat(weight) * parseFloat($("[id*='" + id + "']").closest('tr').find('.cmpRs').html());
+            $("[id*='" + id + "']").closest('tr').find(".cmpTotal").html(total.toFixed(2));
+        }
+    }
+
+    function SaveComponent(id) {
+        var shopID = "@ViewBag.ShopID";
+        var productID = "@ViewBag.ProductID";
+        var componentID = $("[id*='" + id + "']").closest('tr').find('#hdnComponentID').val();
+        var componentWeight = $("[id*='" + id + "']").closest('tr').find('.cmpWeight').val();
+        var componentUnitID = $("[id*='" + id + "']").closest('tr').find('.cmpUnit').val();
+        var total = $("[id*='" + id + "']").closest('tr').find('.cmpTotal').html();
+        var myData = {
+            ShopID: shopID,
+            ProductID: productID,
+            ComponentID: componentID,
+            ComponentWeight: componentWeight,
+            ComponentUnitID: componentUnitID,
+            Total: total
+        };
+        //alert(JSON.stringify(myData));
+        $.ajax({
+            url: '@Url.Action("SaveComponent", "ProductUploadTemp")',
+            data: myData,
+            type: "Post",
+            cache: false,
+            success: function (data) {
+                //alert(data);
+                //$('#divReport').empty();
+                //$('#divReport').append(data);
+            },
+            error: function (data) {
+
+            }
+        });
+    }
+
+    function CheckComponent(id) {
+
+        alert(id);
+    }
+</script>

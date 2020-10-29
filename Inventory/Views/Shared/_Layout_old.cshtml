@@ -1,0 +1,640 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+
+    <!-- start: Meta -->
+    <meta charset="utf-8">
+    <title>Inventory.eZeelo</title>
+    <link href="https://plus.google.com/+ezeelo/posts" />
+    <link rel="icon" href="~/Content/Logo/logo.png">
+    <meta name="description" content="Bootstrap Metro Dashboard">
+    <meta name="author" content="Dennis Ji">
+    <meta name="keyword" content="Metro, Metro UI, Dashboard, Bootstrap, Admin, Template, Theme, Responsive, Fluid, Retina">
+    <!-- end: Meta -->
+    <!-- start: Mobile Specific -->
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- end: Mobile Specific -->
+    <!-- start: CSS -->
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800&subset=latin,cyrillic-ext,latin-ext' rel='stylesheet' type='text/css'>
+    <!-- end: CSS -->
+    <!-- The HTML5 shim, for IE6-8 support of HTML5 elements -->
+    <!--[if lt IE 9]>
+        <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+        <link id="ie-style" href="css/ie.css" rel="stylesheet">
+    <![endif]-->
+    <!--[if IE 9]>
+        <link id="ie9style" href="css/ie9.css" rel="stylesheet">
+    <![endif]-->
+    @*Start Yashaswi For Meassage Box 30/3/2018*@
+    <link href="~/dist/css/lobibox.min.css" rel="stylesheet" />
+    <link href="~/css/animate.css" rel="stylesheet" />
+    <script src="~/lib/jquery.1.11.min.js"></script>
+    <script src="~/dist/js/lobibox.min.js"></script>
+    <script src="~/lib/demo.js"></script>
+    @*End Yashaswi For Meassage Box*@
+    @*Yashaswi 22-05-2018*@
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.17.0/jquery.validate.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validation-unobtrusive/3.2.9/jquery.validate.unobtrusive.min.js"></script>
+
+    <link href="~/Content/css/site.css" rel="stylesheet" />
+    <link href="~/Content/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="~/Content/css/bootstrap-responsive.min.css" rel="stylesheet" />
+    <link href="~/Content/css/style.css" rel="stylesheet" />
+    <link href="~/Content/css/style-responsive.css" rel="stylesheet" />
+    <link href="~/Content/css/halflings.css" rel="stylesheet" />
+    <link href="~/Content/css/jquery-ui-1.8.21.custom.css" rel="stylesheet" />
+    <link href="~/Content/css/jquery.cleditor.css" rel="stylesheet" />
+    <link href="~/Content/css/uniform.default.css" rel="stylesheet" />
+    <link href="~/Content/css/Animate.min.css" rel="stylesheet" />
+    <!-- start: Favicon -->
+    <!-- end: Favicon -->
+    <style>
+        /*body {
+            background: url(/Content/img/mer-bg.jpg) repeat 0px 0px;
+        }*/
+
+        .planExpry {
+            color: #ff000a;
+            font-size: 19px;
+            text-shadow: 1px 1px 2px rgb(255, 9, 9);
+            text-align: center;
+        }
+    </style>
+
+</head>
+<body>
+    <!-- start: Header -->
+    <div class="navbar" style="margin-bottom:0px;height:90px;">
+        @* Added style by Sonali_14-11-2018 *@
+        <div class="navbar-inner" style="height: 65px;">
+            @* Added style by Sonali_14-11-2018 *@
+            <div class="container-fluid">
+                <a class="btn btn-navbar" data-toggle="collapse" data-target=".top-nav.nav-collapse,.sidebar-nav.nav-collapse">
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </a>
+                <a class="brand logo span2" href="@Url.Action("Index","Home")">
+                    <img src="~/Content/Logo/logo1.png" />
+                </a>
+                <div class="span6">
+                    @if (Session["WarehouseName"] != null)
+                    {
+                        <h1 class="pull-right WarehouseName">@Session["WarehouseName"].ToString()</h1>
+                        //Addede by Priti 20-11-2018
+                        <br />
+                        <center>
+                            <span style="font-size:medium">Warehouse Code:@Session["WarehouseCode"].ToString() </span>
+                        </center>
+                        //End by Priti 20-11-2018
+                    }
+                </div>
+
+
+                <!-- start: Header Menu -->
+                <div class="nav-no-collapse header-nav sapn4">
+                    <ul>
+                        <li>
+                            @*<iframe src='@Url.Action("ShopLogoDisplay", "ProductUploadTemp")' frameborder="0" width="60px" height="70px" id="iframePersonalDetail" class="tab-pane active"></iframe>*@
+                        </li>
+                    </ul>
+                    <ul class="nav pull-right">
+                        <li class="dropdown set-list">
+                            <a class="btn dropdown-toggle" data-toggle="dropdown" href="#">
+                                @if (Session["USER_NAME"] != null)
+                                //Addede by Priti 20-11-2018
+                                {
+                                    <p style="margin-top:-10px">
+                                        <span> @Session["USER_NAME"].ToString() </span> <span class="caret"></span>
+                                        <br /><span>GST No. :@Session["GSTNo"].ToString()</span>
+                                        <br /><span>@Session["WarehouseAddress"].ToString()</span>
+                                    </p>
+
+                                }
+                                @*end by Priti 20-11-2018*@
+                                <span class="caret"></span>
+                            </a>
+                            <ul class="dropdown-menu">
+                                @if (Session["BusinessTypeID"].ToString() != "5")
+                                {
+                                    <li>
+                                        <a href="@Url.Action("Details", "Warehouses", new { id = Convert.ToInt64(Session["WarehouseID"]) })"><i class="icon-eye-open"></i>&nbsp;&nbsp;View Profile</a>
+                                    </li>
+                                }
+                                <li>
+                                    <a href="@Url.Action("LogOff", "Login")"><i class="halflings-icon off"></i>&nbsp;&nbsp;Logout</a>
+                                </li>
+                            </ul>
+                        </li>
+                        <!-- end: User Dropdown -->
+                    </ul>
+                </div>
+                <!-- end: Header Menu -->
+
+            </div>
+            <div class="planExpry">
+                <marquee direction="right" behavior="alternate">
+                    @if (Session["PlanExpDaysRem"] != null)
+                    {
+                        <p>Your plan will be expire after @Session["PlanExpDaysRem"].ToString() days. Please renew your plan</p>
+                    }
+                </marquee>
+            </div>
+
+
+        </div>
+    </div>
+    <!-- start: Container-->
+    <div class="container-fluid-full">
+        <div class="row-fluid">
+
+            <!-- start: Main Menu -->
+            <div id="sidebar-left" class="span2">
+                <div class="nav-collapse sidebar-nav">
+                    <ul class="nav nav-tabs nav-stacked main-menu">
+                        <li><a href=@Url.Action("Index", "Home")><i class="icon-bar-chart"></i><span class="hidden-tablet">Dashboard</span></a></li>
+
+                        <li>
+                            <a class="dropmenu" href=@Url.Action("","")><i class="icon-tags" title="Quotation"></i><span class="hidden-tablet"> MIS Reports</span></a>
+                            <ul>
+                                <li><a class="submenu" href=@Url.Action("PurchaseOrderHistory", "PurchaseOrderReports")><i class="icon-file-alt" title="Purchase Order History"></i><span class="hidden-tablet">Purchase Order History</span></a></li>
+                                <li><a class="submenu" href=@Url.Action("GoodReceiptNote", "GoodReceiptReports")><i class="icon-file-alt" title="Good Receipt Notes"></i><span class="hidden-tablet">Good Receipt Notes</span></a></li>
+
+                                <li><a class="submenu" href=@Url.Action("GetReorderLevel", "ReorderLevelReports")><i class="icon-file-alt" title="Reorder Level Reports"></i><span class="hidden-tablet">Reorder Level Reports</span></a></li>  @*Added by Priti*@
+                                <li><a class="submenu" href=@Url.Action("GetNearToExpiry", "NearToExpiryReport")><i class="icon-file-alt" title="Near To Expiry Report"></i><span class="hidden-tablet">Near To Expiry Report</span></a></li>  @*Added by Priti 22/8/2018*@
+                                <li><a class="submenu" href=@Url.Action("GetInvoicesReceivedReport", "InvoicesReceivedReport")><i class="icon-file-alt" title="Invoices Received Report"></i><span class="hidden-tablet">Invoices Generated Report</span></a></li>
+                                <li><a class="submenu" href=@Url.Action("GetInventoryItemReport", "InventoryReports")><i class="icon-file-alt" title="Inventory Reports"></i><span class="hidden-tablet">Inventory Reports</span></a></li>
+                                <li><a class="submenu" href=@Url.Action("GetWastageItemReport", "WastageReport")><i class="icon-file-alt" title="Wastage Reports"></i><span class="hidden-tablet">Wastage Reports</span></a></li>  @*Added by Priti*@
+                                <li><a class="submenu" href=@Url.Action("GetReturnItemReport", "ReturnReport")><i class="icon-file-alt" title=" Return Reports"></i><span class="hidden-tablet"> Return Reports</span></a></li>  @*Added by Priti*@
+                                <li><a class="submenu" href=@Url.Action("GetQuotationListReport", "QuotationListReport")><i class="icon-file-alt" title=" Quotation List Report "></i><span class="hidden-tablet"> Quotation List Report</span></a></li>  @*Added by Priti*@
+                                <li><a class="submenu" href=@Url.Action("GetPurchaseRequisitionList", "PurchaseRequisitionList")><i class="icon-file-alt" title="Purchase Requisition List "></i><span class="hidden-tablet">Purchase Requisition List</span></a></li>  @*Added by Priti*@
+                                <li><a class="submenu" href=@Url.Action("GetOutOfStockReport", "OutOfStockReport")><i class="icon-file-alt" title="Out Of Stock Report"></i><span class="hidden-tablet">Out Of Stock Report</span></a></li>
+                            </ul>
+                        </li>
+
+
+
+                        @*Start-- Yashaswi*@
+                        @if (Session["BusinessTypeID"].ToString() == "5" || Session["IsEzeeloLogin"].ToString() == "1")
+                        {
+                            <li>
+                                <a href=@Url.Action("", "") class="dropmenu"><i class="icon-book" title="Master Page"></i><span class="hidden-tablet"> Master</span></a>
+                                <ul>
+                                    @*Yashaswi 6/4/2018*@
+                                    <li><a class="submenu" href=@Url.Action("Index", "Warehouses", new { flag = true })><i class="icon-home" title="Fulfillment Center"></i><span class="hidden-tablet">Fulfillment Center</span></a></li>
+                                    <li><a class="submenu" href=@Url.Action("Index", "Warehouses", new { flag = false })><i class="icon-home" title="Distribution Center"></i><span class="hidden-tablet">Distribution Center</span></a></li>
+                                    <li><a class="submenu" href=@Url.Action("WarehouseList", "Warehouses")>&nbsp;&nbsp;<i class="fa fa-inr"></i>&nbsp;&nbsp;<span class="hidden-tablet">Warehouse Margin</span></a></li>
+                                    <li><a class="submenu" href=@Url.Action("Index", "WarehouseReason")><i class="icon-file" title="Reason Entry"></i><span class="hidden-tablet">Reason Entry</span></a></li>
+                                    <li><a class="submenu" href=@Url.Action("IndexSubReason", "WarehouseReason")><i class="icon-file" title="Sub Reason Entry"></i><span class="hidden-tablet">Sub Reason Entry </span></a></li>
+                                    <li><a class="submenu" href=@Url.Action("Index", "Suppliers")><i class="icon-user" title="Supplier"></i><span class="hidden-tablet">Supplier Master Entry </span></a></li>
+                                    <li><a class="submenu" href=@Url.Action("ProductList", "ProductRate") id="btnRate">&nbsp;&nbsp;<i class="fa fa-inr"></i>&nbsp;&nbsp;<span class="hidden-tablet">Product Rate Master</span></a></li> @*Yashaswi 20/4/2018*@
+                                    <li><a class="submenu" href=@Url.Action("MarginDivisionList", "Warehouses") id="btnRate">&nbsp;&nbsp;<i class="fa fa-inr"></i>&nbsp;&nbsp;<span class="hidden-tablet">Margin Division Master</span></a></li> @*Yashaswi 18/6/2018*@
+                                    @*<li><a class="submenu" href=@Url.Action("Index", "Suppliers")>&nbsp;&nbsp;<i class="fa fa-inr"></i>&nbsp;&nbsp;<span class="hidden-tablet">Product Rate Master</span></a></li>*@
+                                </ul>
+                            </li>
+                        }
+
+                        @*End-- Yashaswi*@
+
+                        <li>
+                            <a class="dropmenu" href=@Url.Action("","")><i class="icon-tags" title="Storage Location Management"></i><span class="hidden-tablet"> Storage Location Management</span></a>
+                            <ul>
+                                <li><a class="submenu" href=@Url.Action("Index", "WarehouseZones")><i class="icon-user" title="Warehouse Zone"></i><span class="hidden-tablet">Zone Master </span></a></li>
+                                <li><a class="submenu" href=@Url.Action("Index", "WarehouseBlocks")><i class="icon-file-alt" title="Block Master"></i><span class="hidden-tablet">Block/Section Master</span></a></li>
+                                <li><a class="submenu" href=@Url.Action("Index", "WarehouseBlocks")><i class="icon-file-alt" title="Block Master"></i><span class="hidden-tablet">Pallete Master</span></a></li>
+                            </ul>
+                        </li>
+
+                        <li>
+                            <a class="dropmenu" href=@Url.Action("","")><i class="icon-tags" title="Quotation"></i><span class="hidden-tablet"> Quotation</span></a>
+                            <ul>
+                                <li><a class="submenu" href=@Url.Action("Index","Quotation")><i class="icon-file-alt" title="Request for Price Quotation"></i><span class="hidden-tablet">Request for Price Quotation</span></a></li>
+                                <li><a class="submenu" href=@Url.Action("PrintList", "QuotationReply")><i class="icon-file-alt" title="Replied Price Quotation"></i><span class="hidden-tablet">Replied Price Quotation</span></a></li>
+                                @if (Session["BusinessTypeID"] != null && Session["IsSupplier"] != null)
+                                {
+                                    if (Session["BusinessTypeID"].ToString() == "5" || (bool)Session["IsSupplier"] == true)
+                                    {
+                                        <li><a class="submenu" href=@Url.Action("Index", "QuotationReply")><i class="icon-file" title="Generate Quotation"></i><span class="hidden-tablet">Generate Quotation</span></a></li>
+                                    }
+                                }
+                            </ul>
+                        </li>
+                        <li>
+                            <a class="dropmenu" href=@Url.Action("","")><i class="icon-tags" title="Stock"></i><span class="hidden-tablet"> Purchase Order</span></a>
+                            <ul>
+                                <li><a class="submenu" href=@Url.Action("Index","PurchaseOrders")><i class="icon-file-alt" title="Create Purchase Order"></i><span class="hidden-tablet">Create Purchase Order</span></a></li>
+                                @if (Session["BusinessTypeID"] != null && Session["IsSupplier"] != null)
+                                {
+                                    if (Session["BusinessTypeID"].ToString() == "5" || (bool)Session["IsSupplier"] == true)
+                                    {
+                                        <li><a class="submenu" href=@Url.Action("Index", "PurchaseOrderReply")><i class="icon-file-alt" title="Accept Purchase Order/Create Invoice"></i><span class="hidden-tablet">Accept Purchase Order/Create Invoice</span></a></li>
+                                        <li><a class="submenu" href=@Url.Action("InvoiceList", "PurchaseOrderReply")><i class="icon-file-alt" title="Outward Entry/Confirm Invoice"></i><span class="hidden-tablet">Outward Entry/Invoice Confirm</span></a></li>
+                                    }
+                                }
+                            </ul>
+                        </li>
+
+                        <li>
+                            <a class="dropmenu" href=@Url.Action("","")><i class="icon-tags" title="Stock"></i><span class="hidden-tablet"> Stock Management</span></a>
+                            <ul>
+                                <li><a class="submenu" href=@Url.Action("PurchaseOrderList", "Invoices")><i class="icon-file" title="Invoice Entry"></i><span class="hidden-tablet">Good Receipt/GRN</span></a></li>
+                                <li><a class="submenu" href=@Url.Action("Index", "WarehouseStocks")><i class="icon-file" title="Invoice Approval"></i><span class="hidden-tablet">Inward Entry/GRN Confirm</span></a></li>
+                                <li><a class="submenu" href=@Url.Action("Stock", "BatchAllotment")><i class="icon-file" title="Batch Allotment to Shop"></i><span class="hidden-tablet">Batch Allotment to Shop</span></a></li>
+                                <li><a class="submenu" href=@Url.Action("Stock", "WarehouseStocks")><i class="icon-file" title="Stock"></i><span class="hidden-tablet">Available Stock</span></a></li>
+                            </ul>
+                        </li>
+                        @*Start-- Yashaswi 17-3-2018*@
+                        <li>
+                            <a class="dropmenu" href=@Url.Action("","")><i class="icon-refresh" title="Return Management"></i><span class="hidden-tablet"> Return Management</span></a>
+                            <ul>
+                                <li><a class="submenu" href=@Url.Action("Invoice_SupplierList", "WarehouseReturnStock")><i class="icon-pencil" title="Create Waste Items Entry"></i><span class="hidden-tablet">Return Items Entry</span></a></li>
+                                <li><a class="submenu" href=@Url.Action("Index", "WarehouseReturnStock")><i class="icon-list" title="List Of Waste Items Entry"></i><span class="hidden-tablet">Return Items List</span></a></li>
+                                @*Start Yashaswi 27/3/2018*@
+                                @if (Session["BusinessTypeID"] != null && Session["IsSupplier"] != null)
+                                {
+                                    if (Session["BusinessTypeID"].ToString() == "5" || (bool)Session["IsSupplier"] == true)
+                                    {
+                                        <li><a class="submenu" href=@Url.Action("ReturnFromCustomerList", "WarehouseReturnStock")><i class="icon-refresh" title="List Of Return Items Entry From Customer"></i><span class="hidden-tablet">Return From Buyer</span></a></li> @*Yashaswi 16-11-2018 Rename menu*@
+                                    }
+                                }
+                                @*End-- Yashaswi*@
+                            </ul>
+                        </li>
+                        @*End-- Yashaswi*@
+                        @*Start-- Yashaswi*@
+                        <li>
+                            <a class="dropmenu" href=@Url.Action("","")><i class="icon-trash" title="Waste Management"></i><span class="hidden-tablet"> Waste Management</span></a>
+                            <ul>
+                                <li><a class="submenu" href=@Url.Action("AllItems", "WarehouseWastageStock")><i class="icon-pencil" title="Create Waste Items Entry"></i><span class="hidden-tablet">Waste Item Entry</span></a></li>
+                                <li><a class="submenu" href=@Url.Action("Index", "WarehouseWastageStock")><i class="icon-list" title="List Of Waste Items Entry"></i><span class="hidden-tablet">Waste Items List</span></a></li>
+                            </ul>
+                        </li>
+                        @*End-- Yashaswi*@
+
+                        <li>
+                            <a class="dropmenu" href=@Url.Action("","")><i class="icon-file-alt" title="MIS Report"></i><span class="hidden-tablet">Reports</span>@*<span class="label label-important">9</span>*@</a>
+                            <ul>
+
+                                @if (Session["WarehouseLevel"] != null)
+                                {
+
+                                    if (Convert.ToInt16(Session["WarehouseLevel"]) == 2) //DV
+                                    {
+                                        <li><a class="submenu" href=@Url.Action("ClaimAmountTowardsDV", "Report")><i class="icon-paste" title="Order Transaction"></i><span class="hidden-tablet">Claim Amount</span></a></li>
+                                        <li><a class="submenu" href=@Url.Action("OutputGSTReport", "Report", new { isFV = false })><i class="icon-ok-sign" title="Output GST Report For DV"></i><span class="hidden-tablet">Output GST Report</span></a></li>
+                                        <li><a class="submenu" href=@Url.Action("InputGSTReport", "Report", new { isFV = false })><i class="icon-ok-sign" title="Input GST Report For DV"></i><span class="hidden-tablet">Input GST Report</span></a></li>
+                                        <li><a class="submenu" href=@Url.Action("GSTReport", "Report", new { isFV = false })><i class="icon-ok-sign" title="GST Report For DV"></i><span class="hidden-tablet">GST Report</span></a></li>
+                                    }
+                                    else if (Convert.ToInt16(Session["WarehouseLevel"]) == 3) //FV
+                                    {
+                                        <li><a class="submenu" href=@Url.Action("ClaimAmountTowardsDV", "Report")><i class="icon-paste" title="Order Transaction"></i><span class="hidden-tablet">Claim Amount</span></a></li>
+                                        <li><a class="submenu" href=@Url.Action("OutputGSTReport", "Report", new { isFV = true })><i class="icon-ok-sign" title="Output GST Report For FV"></i><span class="hidden-tablet">Output GST Report</span></a></li>
+                                        <li><a class="submenu" href=@Url.Action("InputGSTReport", "Report", new { isFV = true })><i class="icon-ok-sign" title="Input GST Report For FV"></i><span class="hidden-tablet">Input GST Report</span></a></li>
+                                        <li><a class="submenu" href=@Url.Action("GSTReport", "Report", new { isFV = true })><i class="icon-ok-sign" title="GST Report For FV"></i><span class="hidden-tablet">GST Report</span></a></li>
+                                    }
+                                    else if (Convert.ToInt16(Session["WarehouseLevel"]) == 1)
+                                    {
+                                        <li><a class="submenu" href=@Url.Action("ClaimAmountTowardsDV", "Report", new { Month = DateTime.Now.Date.Month, WarehouseId_ = 0, Flag = 1 })><i class="icon-paste" title="Order Transaction"></i><span class="hidden-tablet">Claim Amount Towards DV</span></a></li>
+                                        <li><a class="submenu" href=@Url.Action("ClaimAmountTowardsDV", "Report", new { Month = DateTime.Now.Date.Month, WarehouseId_ = 0, Flag = 2 })><i class="icon-paste" title="Order Transaction"></i><span class="hidden-tablet">Claim Amount Towards FV</span></a></li>
+                                        <li>
+                                            <a class="dropmenu" href=@Url.Action("","")><i class="icon-file-alt" title="Output GST Report"></i><span class="hidden-tablet">Output GST Report</span></a>
+                                            <ul>
+                                                <li><a class="submenu" href=@Url.Action("OutputGSTReport", "Report")><i class="icon-ok-sign" title="Output GST Report For Ezeelo"></i><span class="hidden-tablet">For Ezeelo</span></a></li>
+                                                <li><a class="submenu" href=@Url.Action("OutputGSTReport", "Report", new { isFV = false })><i class="icon-ok-sign" title="Output GST Report For DV"></i><span class="hidden-tablet">For DV</span></a></li>
+                                                <li><a class="submenu" href=@Url.Action("OutputGSTReport", "Report", new { isFV = true })><i class="icon-ok-sign" title="Output GST Report For FV"></i><span class="hidden-tablet">For FV</span></a></li>
+                                            </ul>
+                                        </li>
+                                        <li>
+                                            <a class="dropmenu" href=@Url.Action("","")><i class="icon-file-alt" title="Input GST Report"></i><span class="hidden-tablet">Input GST Report</span></a>
+                                            <ul>
+                                                <li><a class="submenu" href=@Url.Action("InputGSTReport", "Report")><i class="icon-ok-sign" title="Input GST Report For Ezeelo"></i><span class="hidden-tablet">For Ezeelo</span></a></li>
+                                                <li><a class="submenu" href=@Url.Action("InputGSTReport", "Report", new { isFV = false })><i class="icon-ok-sign" title="Input GST Report For DV"></i><span class="hidden-tablet">For DV</span></a></li>
+                                                <li><a class="submenu" href=@Url.Action("InputGSTReport", "Report", new { isFV = true })><i class="icon-ok-sign" title="Input GST Report For FV"></i><span class="hidden-tablet">For FV</span></a></li>
+                                            </ul>
+                                        </li>
+                                        <li>
+                                            <a class="dropmenu" href=@Url.Action("","")><i class="icon-file-alt" title="GST Report"></i><span class="hidden-tablet">GST Report</span></a>
+                                            <ul>
+                                                <li><a class="submenu" href=@Url.Action("GSTReport", "Report")><i class="icon-ok-sign" title="GST Report For Ezeelo"></i><span class="hidden-tablet">For Ezeelo</span></a></li>
+                                                <li><a class="submenu" href=@Url.Action("GSTReport", "Report", new { isFV = false })><i class="icon-ok-sign" title="GST Report For DV"></i><span class="hidden-tablet">For DV</span></a></li>
+                                                <li><a class="submenu" href=@Url.Action("GSTReport", "Report", new { isFV = true })><i class="icon-ok-sign" title="GST Report For FV"></i><span class="hidden-tablet">For FV</span></a></li>
+                                            </ul>
+                                        </li>
+                                    }
+                                }
+                            </ul>
+                        </li>
+
+                    </ul>
+                </div>
+            </div>
+            <!-- end: Main Menu -->
+
+            <noscript>
+                <div class="alert alert-block span10">
+                    <h4 class="alert-heading">Warning!</h4>
+                    <p>You need to have <a href="#" target="_blank">JavaScript</a> enabled to use this site.</p>
+                </div>
+            </noscript>
+
+
+            <div class="container body-content">
+                @RenderBody()
+            </div>
+        </div><!--/#content.span10-->
+    </div><!--/fluid-row-->
+    <!-- start: Footer-->
+    @* Added by Priti on 22-11-2018*@
+    @*<footer>
+
+            <p>&copy; @DateTime.Now.Year - eZeelo</p>
+            <script type="text/javascript">
+                var width = $(window).width();
+                if (width < 480) {
+                    var url = window.location.href;
+                    document.write('<a href="whatsapp://send" data-text="' + url + '" data-href="" class="wa_btn wa_btn_s" style="display"><button class=""><img  src="~/Content/img/whatsapp.png" /></button></a>');
+                }
+            </script>
+
+        </footer>*@
+
+    <style type="text/css">
+        footer {
+            width: 100%;
+            background: #3A3A3A;
+            display: inline-block;
+            color: #fff;
+            padding: 10px;
+        }
+
+        .main_footer {
+            display: inline-block;
+            width: 100%;
+        }
+
+        .inner-content-footer {
+            display: inline-block;
+            width: 100%;
+        }
+
+        .inner-content-footer-leftSide {
+            float: left;
+        }
+
+        .inner-content-footer-rightSide {
+            float: right;
+        }
+
+        .inner-content-footer_cen {
+            display: inline-block;
+            width: 100%;
+        }
+
+        .inner-content-footer-rightSide h4 {
+            padding: 0;
+            margin: 0;
+        }
+
+        .inner-content-footer-leftSide h4 {
+            padding: 0;
+            margin: 0;
+        }
+
+        .inner-content-footer-leftSide span a {
+            color: #fff;
+            text-decoration: none;
+        }
+    </style>
+    <footer>
+        <div class="main_footer">
+            <div class="inner-content-footer">
+                <div class="inner-content-footer-leftSide">
+                    <h4>Ezeelo Consumer Services Private Limited </h4>
+                    <span><a href="">Website : WWW.ezeelo.com </a></span>
+                </div>
+                <div class="inner-content-footer-rightSide">
+                    <h4>Registered Office: 9A, 4th Floor ,JB Wing (Mangalwari Complex),</h4>
+                    <span>Mangalwari Bazar,Sadar, Nagpur, Maharashtra,440001,Phone : 9172221910</span>
+                </div>
+                <div class="inner-content-footer_cen"><center>@DateTime.Now.Year - eZeelo </center></div>
+
+            </div>
+        </div>
+    </footer>
+
+    @* end  by priti 22-11-2018*@
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/bootstrap")
+    @RenderSection("scripts", required: false)
+
+    <!-- start: JavaScript-->
+    <!-- start: JavaScript-->
+    <script src="~/Content/js/custom.js"></script>
+    <script src="~/Scripts/jquery-2.1.4.min.js"></script>
+    <script src="~/Content/js/jquery-2.1.3.min.js"></script>
+    <script src="~/Content/js/jquery-migrate-1.0.0.min.js"></script>
+
+    <script src="~/Content/js/jquery-ui-1.10.0.custom.min.js"></script>
+
+    <script src="~/Content/js/jquery.ui.touch-punch.js"></script>
+
+    <script src="~/Content/js/modernizr.js"></script>
+    <script src="~/Content/js/bootstrap.js"></script>
+    <script src="~/Content/js/bootstrap.min.js"></script>
+
+    <script src="~/Content/js/jquery.cookie.js"></script>
+
+    <script src='~/Content/js/fullcalendar.min.js'></script>
+
+    <script src='~/Content/js/jquery.dataTables.min.js'></script>
+
+    <script src="~/Content/js/excanvas.js"></script>
+    <script src="~/Content/js/jquery.flot.js"></script>
+    <script src="~/Content/js/jquery.flot.pie.js"></script>
+    <script src="~/Content/js/jquery.flot.stack.js"></script>
+    <script src="~/Content/js/jquery.flot.resize.min.js"></script>
+
+    <script src="~/Content/js/jquery.chosen.min.js"></script>
+
+    <script src="~/Content/js/jquery.uniform.min.js"></script>
+
+    <script src="~/Content/js/jquery.cleditor.min.js"></script>
+
+    <script src="~/Content/js/jquery.noty.js"></script>
+
+    <script src="~/Content/js/jquery.elfinder.min.js"></script>
+
+    <script src="~/Content/js/jquery.raty.min.js"></script>
+
+
+    <script src="~/Content/js/jquery.uploadify-3.1.min.js"></script>
+
+    <script src="~/Content/js/jquery.gritter.min.js"></script>
+
+    <script src="~/Content/js/jquery.imagesloaded.js"></script>
+
+    <script src="~/Content/js/jquery.masonry.min.js"></script>
+
+    <script src="~/Content/js/jquery.knob.modified.js"></script>
+
+    <script src="~/Content/js/jquery.sparkline.min.js"></script>
+
+    <script src="~/Content/js/counter.js"></script>
+
+    <script src="~/Content/js/retina.js"></script>
+
+    @*Start Yashaswi 30/3/2018*@
+    <script>
+        $(document).ready(function () {
+
+            //Message box For Success
+            var content_Success = '@Session["Success"]';
+            if (content_Success == null || content_Success != '') {
+
+                Lobibox.alert("success",
+                        {
+                            size: 'large',
+                            title: '<i class="icon-check" title="Generate Quotation"></i>',
+                            delayIndicator: false,
+                            msg: content_Success,
+                            showClass: 'rollIn',//'zoomInUp',                // Show animation class
+                            hideClass: 'rollOut',//'zoomOutDown',               // Hide animation class
+                        });
+                $.ajax({
+                    url: "/Common/Make_SuccessSessionNull",
+                    type: "POST",
+                    dataType: "json",
+                    traditional: true,
+                    contentType: "application/json; charset=utf-8",
+                    success: function (data) {
+
+                    },
+                    error: function () {
+
+                    }
+                });
+            }
+            //Message box For Warning
+            var content_Warning = '@Session["Warning"]';
+            if (content_Warning == null || content_Warning != '') {
+
+                Lobibox.alert("warning",
+                        {
+                            size: 'large',
+                            title: '<i class="icon-warning-sign" title="Generate Quotation"></i>',
+                            delayIndicator: false,
+                            msg: content_Warning,
+                            showClass: 'rollIn',//'zoomInUp',                // Show animation class
+                            hideClass: 'rollOut',//'zoomOutDown',               // Hide animation class
+                        });
+                $.ajax({
+                    url: "/Common/Make_WarningSessionNull",
+                    type: "POST",
+                    dataType: "json",
+                    traditional: true,
+                    contentType: "application/json; charset=utf-8",
+                    success: function (data) {
+
+                    },
+                    error: function () {
+
+                    }
+                });
+            }
+            //Message box For Information
+            var content_Info = '@Session["Info"]';
+            if (content_Info == null || content_Info != '') {
+
+                Lobibox.alert("info",
+                        {
+                            size: 'large',
+                            title: '<i class="icon-info-sign" title="Generate Quotation"></i>',
+                            delayIndicator: false,
+                            msg: content_Info,
+                            showClass: 'rollIn',//'zoomInUp',                // Show animation class
+                            hideClass: 'rollOut',//'zoomOutDown',               // Hide animation class
+                        });
+                $.ajax({
+                    url: "/Common/Make_InfoSessionNull",
+                    type: "POST",
+                    dataType: "json",
+                    traditional: true,
+                    contentType: "application/json; charset=utf-8",
+                    success: function (data) {
+
+                    },
+                    error: function () {
+
+                    }
+                });
+            }
+            //Message box For Error
+            var content_Error = '@Session["Error"]';
+            if (content_Error == null || content_Error != '') {
+
+                Lobibox.alert("error",
+                        {
+                            size: 'large',
+                            title: '<i class="icon-fire" title="Generate Quotation"></i>',
+                            delayIndicator: false,
+                            msg: content_Error,
+                            showClass: 'rollIn',//'zoomInUp',                // Show animation class
+                            hideClass: 'rollOut',//'zoomOutDown',               // Hide animation class
+                        });
+                $.ajax({
+                    url: "/Common/Make_ErrorSessionNull",
+                    type: "POST",
+                    dataType: "json",
+                    traditional: true,
+                    contentType: "application/json; charset=utf-8",
+                    success: function (data) {
+
+                    },
+                    error: function () {
+
+                    }
+                });
+            }
+            //progress bar
+            $("#Form_").on("submit", function () {
+                Lobibox.progress({
+                    title: 'Please wait',
+                    label: 'Saving Data..',
+                    onShow: function ($this) {
+                        var i = 0;
+                        var inter = setInterval(function () {
+                            window.console.log(i);
+                            if (i > 100) {
+                                inter = clearInterval(inter);
+                            }
+                            i = i + 0.8;
+                            $this.setProgress(i);
+                        }, 10);
+                    }
+                });
+            });
+            $("#Email_").on("click", function () {
+                Lobibox.progress({
+                    title: 'Please wait',
+                    label: 'Sending Email..',
+                    onShow: function ($this) {
+                        var i = 0;
+                        var inter = setInterval(function () {
+                            window.console.log(i);
+                            if (i > 100) {
+                                inter = clearInterval(inter);
+                            }
+                            i = i + 0.08;
+                            $this.setProgress(i);
+                        }, 10);
+                    }
+                });
+            });
+        });
+    </script>
+    @*End Yashaswi 30/3/2018*@
+
+    <!-- end: JavaScript-->
+
+</body>
+</html>

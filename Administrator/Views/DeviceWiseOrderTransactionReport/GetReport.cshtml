@@ -1,0 +1,196 @@
+﻿@model IEnumerable<ModelLayer.Models.ViewModel.OrderTransactionReportViewModel>
+@*<copyright file="GetReport.cshtml" company="Ezeelo Consumer Services Pvt. Ltd.">
+     Copyright (c) Ezeelo Consumer Services Pvt. Ltd. All rights reserved.
+    </copyright>
+    <author>Harshada Raghorte</author>*@
+@{
+    ViewBag.Title = "GetReport";
+    Layout = null;
+}
+<style>
+    .my_table {
+        height: 1073px;
+        overflow-y: scroll;
+    }
+</style>
+<link href="~/Content/css/Site.css" rel="stylesheet" />
+<script src="~/Content/js/bootstrap.js"></script>
+<script src="~/Content/js/jquery-1.9.1.min.js"></script>
+<script src="~/Content/js/jquery.dataTables.min.js"></script>
+<script src="~/Content/js/bootstrap.min.js"></script>
+<script type="text/javascript">
+    $(document).ready(function () {
+        $("#myTable").DataTable({
+            "bDestroy": true,
+            //"sPaginationType": "full_numbers",
+            "bJQueryUI": true,
+            "bInfo": false,
+            "scrollY": 700,
+            "scrollCollapse": true,
+            "bPaginate": false,
+            "iDisplayLength": 20,
+            "bAutoWidth": false,
+        });
+    });
+</script>
+
+<div class="box-content" id="divToPrint">
+    <div class="my_table">
+        <table class="table table-striped table-bordered ">
+            <thead>
+                <tr>
+                    <th>
+                        Order Code
+                    </th>
+
+                    <th>
+                        Customer Name
+                    </th>
+
+                    <th>
+                        Mobile
+                    </th>
+                    <th>
+                        Order Date
+                    </th>
+                    <th>
+                        Payable Amt
+                    </th>
+                    @*<th>
+                            Total Order Amt
+                        </th>*@
+                    <th>
+                        Device Type
+                    </th>
+                    <th>
+                        Payment Mode
+
+                    </th>
+                </tr>
+            </thead>
+
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.OrderCode)
+                    </td>
+
+
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Customer)
+                    </td>
+
+
+
+                    <td>
+                        @Html.DisplayFor(modelItem => item.RegMobile)
+                    </td>
+
+                    <td>
+                        @{string lDate = "";}
+                        @if (item.CreateDate != null)
+                        {
+                            lDate = item.CreateDate.ToString("dd/MM/yyyy");
+                        }
+                        @lDate
+                    </td>
+
+                    <td>
+                        @Html.DisplayFor(modelItem => item.PayableAmount)
+                    </td>
+                    @*<td>
+                            @Html.DisplayFor(modelItem => item.OrderAmount)
+                        </td>*@
+
+
+
+                    <td>
+                        @Html.DisplayFor(modelItem => item.DeviceType)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.PaymentMode)
+                    </td>
+
+
+                </tr>
+            }
+
+        </table>
+    </div>
+</div>
+<div class="pager">
+
+    </div>
+    <div id="Pager">
+        <div class="wrap">
+            <div id="slider1" class="slider">
+                <ul>
+                    @for (int c = 1; c <= @ViewBag.TotalPages; c++)
+                    {
+                        <li><a class="page-number" href="javascript:void();">@c</a></li>
+
+                    }
+
+                </ul>
+
+            </div>
+
+            <div class="controls" style="margin-top:-27px;">
+                <a href="#noname" class="prev-slide"><<</a>
+                <a href="#noname" class="next-slide" style="float: right; margin-right: 299px;">>></a>
+            </div>
+        </div>
+        <span class="totalcount"><b>Showing @ViewBag.PageSize of @ViewBag.TotalCount enteries</b></span>
+    </div>
+
+    <div class="loader">
+        <img id="loader_img" src="~/Content/img/loader.gif" style="display: none" />
+    </div>
+    <script>
+        $(document).ready(function () {
+            $("#Pager .page-number").click(function (e) {
+                //alert($(this).html());
+                $('#loader_img').show();
+                //alert($(this).html());
+                var pagecount = 0;
+                var page = parseInt($(this).html());
+                if (page > 1) {
+                    pagecount = 1;
+                }
+                var fromDate = "@ViewBag.fromDate";
+                var toDate = "@ViewBag.toDate";
+                var merchantID = "@ViewBag.merchantID";
+                var DeviceID = "@ViewBag.DeviceID";
+                $.ajax({
+                    url: '@Url.Action("GetReport", "DeviceWiseOrderTransactionReport")',
+                    data: { 'page': page, 'pagecount': pagecount, 'fromDate': fromDate, 'toDate': toDate, 'merchantID': merchantID, 'DeviceID': DeviceID },
+                    type: "POST",
+                    cache: false,
+                    success: function (data) {
+                        //alert(data);
+                        $('#loader_img').hide();
+                        $('#divReport').empty();
+                        $('#divReport').append(data);
+
+                    },
+                    error: function (data) {
+
+                    }
+                });
+            });
+        });
+
+    </script>
+    <script src="~/Content/js/lemmon-slider.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            //alert('OK');
+            // slider 1
+            $('#slider1').lemmonSlider({
+                infinite: false
+            });
+
+        });
+
+    </script>

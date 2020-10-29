@@ -1,0 +1,104 @@
+@model ModelLayer.Models.ViewModel.WarehouseViewModel
+
+@{
+    ViewBag.Title = "Details";
+}
+<section class="right_side_main_part">
+    <div id="content" class="span10">
+        <div class="row-fluid">
+            <div class="box span12 right_side_up_part">
+                <div class="box-header creatProduct clearfix" data-original-title="">
+                    <h2>
+                        <i class="icon-exclamation-sign"></i>
+                        <span class="break"></span>
+                        WAREHOUSE DETAILS
+                    </h2>
+                </div>
+                <div class="box-content">
+                    <div class="form-horizontal">
+
+                        <div class="display-label">Name: <b>@Model.lWarehouses.Name</b></div>
+
+                        <div class="display-label">Warehouse Code: <b>@Model.lWarehouses.WarehouseCode</b></div>
+
+                        <div class="display-label">
+                            Is Fulfillment Center: @if (Model.lWarehouses.IsFulfillmentCenter == true)
+                            {
+                                <b> Yes</b>
+                            }
+                            else
+                            {
+                                <b>  No</b>
+                            }
+                        </div>
+
+                        <div class="display-label">GST Number: <b>@Model.lWarehouses.GSTNumber</b></div>
+
+                        <div class="display-label">Service Number: <b>@Model.lWarehouses.ServiceNumber</b></div>
+
+                        <div class="display-label">Contact Person: <b>@Model.BusinessDetails.ContactPerson</b></div>
+
+                        <div class="display-label">Mobile: <b>@Model.BusinessDetails.Mobile</b></div>
+
+                        <div class="display-label">Nearby Transport: <b>@Model.lWarehouses.NearbyTransport</b></div>
+
+                        <div class="display-label">Measurements(m): <b>@Model.lWarehouses.Measurement</b></div>
+
+                        <div class="display-label">Floor Space(sqm): <b>@Model.lWarehouses.FloorSpace</b></div>
+
+                        <div class="display-label">Volume(vm): <b>@Model.lWarehouses.Volume</b></div>
+
+                        @*<div class="display-label">CustomEntry: <b>@Model.lWarehouses.CustomEntry</b></div>
+
+                            <div class="display-label">CustomExit: <b>@Model.lWarehouses.CustomExit</b></div>*@
+
+                        <div class="display-label">City: <b>@(Model.CityName == null ? "None" : Model.CityName.ToString())</b></div>
+
+                        <div class="display-label">Pincodes: <b>@(Model.Pincodes == null ? "None" : Model.Pincodes.ToString())</b></div>
+
+                        <div class="display-label">Address: <b>@Model.BusinessDetails.Address</b></div>
+
+                        <div class="display-label">Entity: <b>@Model.Entity</b></div> @*Yashaswi 4-12-2018 For EVW*@
+
+                        <div class="display-label">IsActive: @Html.CheckBoxFor(model => model.lWarehouses.IsActive, new { @disabled = "disabled" })</div>
+                        <br />
+                        @if (Model.Entity.Trim() == "DV" || Model.Entity.Trim() == "FV")//Yashaswi 4-12-2018 For EVW If condition add
+                        {
+                            <div class="control-group mrg-left">
+                                <b>Franchise under this Warehouse</b>
+
+                                <div class="">
+                                    @*@Html.ListBoxFor(model => model.FranchiseIds, Model.lFranchises, new { @class = "list" })*@
+                                    @*@Html.ListBoxFor(model => model.lFranchises, new SelectList(Model.lFranchises, "Value", "Text"), new {@class = "listbox", size = 5 })*@
+                                    <table>
+                                        @for (var i = 0; i < Model.franchiseList.Distinct().Count(); i++)
+                                        {
+                                            <tr>
+                                                <td>
+                                                    @Html.CheckBoxFor(it => it.franchiseList[i].IsSelected, new { Style = "vertical-align:3px}", disabled = "disabled", @class = "brandCheckBox" })
+                                                </td>
+                                                <td>
+                                                    @*@Html.HiddenFor(it => it.franchiseList[i].ID)
+                                                        @Html.HiddenFor(it => it.franchiseList[i].Name)*@
+                                                    @Html.DisplayFor(it => it.franchiseList[i].Name)
+                                                </td>
+                                            </tr>
+                                        }
+                                    </table>
+                                </div>
+                            </div>
+                        }
+                        <p>
+                            @if (Session["BusinessTypeID"] != null && Convert.ToInt32(Session["BusinessTypeID"]) == 5)
+                            {
+                                @Html.ActionLink("Edit", "Edit", new { id = Model.ID }, new { @class = "btn btn-success mrg-left mrg-top" })
+
+                                @Html.ActionLink("Back to List", "Index", new { flag = Model.IsFulfillmentCenter }, new { @class = "btn btn-default mrg-left mrg-top" })
+                            }
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

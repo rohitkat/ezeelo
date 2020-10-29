@@ -1,0 +1,125 @@
+﻿@model ModelLayer.Models.ViewModel.ShopRatingViewModel
+@{
+    ViewBag.Title = "Shop Review";
+}
+<style>
+    .shopnamespan {
+        font-size: 35px;
+        color: #575455;
+        float: left;
+        padding-left: 10px;
+    }
+
+    .shopnamediv {
+        width: 100%;
+        height: 120px;
+        margin-top: 40px;
+    }
+
+    .shopimg {
+        width: 100px;
+        height: 100px;
+        float: left;
+        border-radius: 15px;
+    }
+</style>
+@{
+    string cityName = "";
+    int itemID = 0;
+    string itemName = "";
+    int ShopId = 0;
+    int franchiseID = 0;////added
+    if (Request.Cookies["CityCookie"] != null && Request.Cookies["CityCookie"].Value != "")
+    {
+        cityName = Request.Cookies["CityCookie"].Value.Split('$')[1].ToLower();
+        franchiseID = Convert.ToInt32(Request.Cookies["CityCookie"].Value.Split('$')[2]);////added
+    }
+}
+@*feedback*@
+<div class="gap gap-small"></div>
+<div class="box-lg">
+    <article class="product-review">
+        <div class="product-review-author">
+            <img class="product-review-author-img" src="@Url.Content(@Model.ShopDetails.ShopLogoPath)" alt="@Model.ShopDetails.Name" />
+        </div>
+        <div class="product-review-content" style="width: 74%;border:0px;">
+            <h5 class="product-review-title">@Model.ShopDetails.Name</h5>
+            @Html.Hidden("hdnShopName", Model.ShopDetails.Name.ToLower().Substring(0, Math.Min(Model.ShopDetails.Name.ToLower().Length, 30)).Replace(' ', '-').Replace("&", "%20").Replace('.', '-'), new { id = "hdnShopName" })
+            <p>
+                Kindly spare a few movment please.
+            </p>
+            <p>
+                Your Feeback
+            </p>
+            @Html.Hidden("hdnOwnerID", Model.ShopDetails.ShopID)
+
+            @Html.Hidden("hdnShopRatingProdID", Model.productId)
+            @*star-reting*@
+
+            @for (int i = 0; i < Model.RatingList.Count(); i++)
+            {
+
+                <div id="@Model.RatingList[i].RatingID" class="cell">
+                    @Html.Hidden("RatingID", @Model.RatingList[i].RatingID)
+                    <h5>@Model.RatingList[i].RatingName</h5>
+                    <div id="ratingdiv$ + @Model.RatingList[i].RatingID" class="rating" data-role="rating" data-value="2" data-color-rate="true"></div>
+                </div>
+            }
+            @Html.Hidden("hdnRatings", "2:3$3:2")
+            <label>Comments, if any</label>
+            <div class="input-control text full-size">
+                <input id="txtComment" type="text" class="form-control">
+            </div>
+            <br />
+            <div>
+                <button onclick="Submit();" class="btn btn-success" style="float:left">Submit</button>
+                @using (Html.BeginForm("ContinueShopping", "ShoppingCart", new { }, FormMethod.Post))
+                {
+                    <button type="submit" value="Create" class="btn btn-warning" style="margin-left: 10px;"> Continue Shopping</button>
+                }
+            </div>
+            <span style="color:green" id="spnThank"></span>
+        </div>
+
+    </article>
+</div>
+<div class="gap gap-small"></div>
+<script>
+    function Submit() {
+        itemID = $("#hdnShopRatingProdID").val();
+        itemName = $("#hdnShopName").val();
+        ShopId = $("#hdnOwnerID").val();
+        $.ajax({
+            type: "POST",
+            url: '@(Html.Raw(Url.Action("SubmitRating", "Feedback")))',
+            //url: "/Feedback/SubmitRating",
+            data: "{ratings:'" + $("#hdnRatings").val() + "',comment:'" + $("#txtComment").val() + "',OwnerID: " + $("#hdnOwnerID").val() + "}",
+            contentType: "application/json; charset = utf-8",
+            dataType: "json",
+            success: function (response) {
+
+                $("#spnThank").text("Thanks for your feedback.");
+                var url = '@(Html.Raw(Url.RouteUrl("preview-shop-product", new { itemID = "_itemID_", shopID = "_shopID_", itemName = "_itemName_", city = cityName, franchiseId = franchiseID })))';@*////added franchiseId=franchiseID*@
+                var _url = (url.replace('_itemName_', itemName).replace('_itemID_', itemID).replace('_shopID_', ShopId)) + "#divShopRating";
+                window.location.href = _url;
+
+            },
+            //success: OnSuccess,
+            failure: function (response) {
+
+                $("#spnThank").text("Thanks for your feedback.");
+                var url = '@(Html.Raw(Url.RouteUrl("pre-prod-name", new { itemID = "_itemID_", itemName = "_itemName_", city = cityName, franchiseId = franchiseID })))';@*////added franchiseId=franchiseID*@
+                window.location.href = (url.replace('_itemName_', itemName).replace('_itemID_', itemID)) + "#divShopRating";
+            },
+            error: function (response) {
+
+                $("#spnThank").text("Thanks for your feedback.");
+                var url = '@(Html.Raw(Url.RouteUrl("pre-prod-name", new { itemID = "_itemID_", itemName = "_itemName_", city = cityName, franchiseId = franchiseID })))';@*////added franchiseId=franchiseID*@
+                window.location.href = (url.replace('_itemName_', itemName).replace('_itemID_', itemID)) + "#divShopRating";
+            }
+            //error: OnSuccess
+        });
+
+    }
+</script>
+

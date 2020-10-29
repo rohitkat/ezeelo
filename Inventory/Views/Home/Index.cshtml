@@ -1,0 +1,579 @@
+﻿@{
+    ViewBag.Title = "eZeelo:Merchant:Home";
+}
+<style>
+    .rednew {
+        background-color: #CC8181 !important;
+    }
+
+    .packed {
+        background-color: #11B344 !important;
+    }
+
+    .Dispach {
+        background-color: #0D9136 !important;
+    }
+
+    .Delivary {
+        background-color: #065F22 !important;
+    }
+
+    .Return {
+        background-color: #575454 !important;
+    }
+
+    .quick-button {
+        margin-bottom: 20px;
+        min-width: 14.893617021276595%;
+        width: auto !important;
+    }
+</style>
+
+<script>
+    $(document).ready(function () {
+        $('#txt_FrmDt').datepicker({ dateFormat: 'mm/dd/yy' });
+        $('#txt_ToDt').datepicker({ dateFormat: 'mm/dd/yy' });
+
+        if ('@ViewBag.FromDate' != null) {
+            $('#txt_FrmDt').val('@ViewBag.FromDate');
+            $('#txt_ToDt').val('@ViewBag.ToDate');
+            $("#filter").val('@ViewBag.Filter');
+            $("#f_hr").val('@ViewBag.f_hr');
+            $("#f_min").val('@ViewBag.f_min');
+            $("#t_hr").val('@ViewBag.t_hr');
+            $("#t_min").val('@ViewBag.t_min');
+            $("#f_tt").val('@ViewBag.f_tt');
+            $("#t_tt").val('@ViewBag.t_tt');
+        }
+
+        $("#btnGo").click(function () {
+            if (Number($("#f_hr").val()) > 12) {
+                $("#f_hr").focus();
+                return false;
+            } else if ($("#t_hr").val() > 12) {
+                $("#t_hr").focus();
+                return false;
+            } else if ($("#f_min").val() > 59) {
+                $("#f_min").focus();
+                return false;
+            } else if ($("#t_min").val() > 59) {
+                $("#t_min").focus();
+                return false;
+            } else {
+                var fromDate = $('#txt_FrmDt').val();
+                var ToDate = $('#txt_ToDt').val();
+                //alert(fromDate);
+                //alert(ToDate);
+                //debugger
+                window.location.href = "/Home/Index?FromDate=" + fromDate + "&ToDate=" + ToDate + "&filter=" + $("#filter").val() + "&f_hr=" + $("#f_hr").val() + "&f_min=" + $("#f_min").val() + "&f_tt=" + $("#f_tt").val() + "&t_hr=" + $("#t_hr").val() + "&t_min=" + $("#t_min").val() + "&t_tt=" + $("#t_tt").val();
+            }
+        });
+
+        $("#txt_FrmDt").change(function () {
+            $("#filter").val(0);
+        });
+        $("#txt_ToDt").change(function () {
+            $("#filter").val(0);
+        });
+
+        if ('@Session["WarehouseLevel"]' == 1) {
+            $("#divPO").hide();
+        }
+        else if ('@Session["WarehouseLevel"]' == 2) {
+
+        } else if ('@Session["WarehouseLevel"]' == 3) {
+            $("#divSO").hide();
+        }
+    });
+</script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+<link href="~/dist/css/dashboard.min.css" rel="stylesheet" />
+@*<link href="~/dist/css/metisMenu.min.css" rel="stylesheet" />*@
+<link href="~/dist/css/sb-admin-2.css" rel="stylesheet" />
+@*<link href="~/dist/css/morris.css" rel="stylesheet" />
+    <link href="~/dist/css/font-awesome.min.css" rel="stylesheet" />*@
+
+
+
+<div id="wrapper">
+    <div id="page-wrapper" style=" min-height: 680px !important;">
+        @*<div class="row">
+            <div class="col-lg-12">
+                <h1 class="page-header">Dashboard</h1>
+            </div>*@
+        <!-- /.col-lg-12 -->
+        @*</div>*@
+        <!-- /.row -->
+
+        <div id="row">
+            <section class="dashboard_heading">
+                <h1 style="margin:0 0 3% 0 ;">Dashboard</h1>
+                <div class="partnerButton_right_side">
+                    @*//Added by Priti on Partner direct login  from Inventory on button click on 6-12-2018*@
+                    @if (Convert.ToInt16(Session["WarehouseLevel"]) == 3) //FV
+                    {
+                        <ul>
+                            <li id="PartnerLink" title="Go To Ezeelo Partner's Site." class="hideme">
+                                <a href="javascript:void(0)" onclick="window.open('@Session["Partnerlink"]','_blank','toolbar=0,location=0,menubar=0')">
+
+                                    @*<a href=@Session["Partnerlink"] onmouseover="window.status='javascript:void(0)';" onmouseout="window.status='';">*@
+                                    @*<a title="Go To Ezeelo Partner's Site." href=@Session["Partnerlink"] target="_blank" style="height:90px !important ;">*@
+                                    <input type="button" value="Partner Button" />
+                                </a>
+                            </li>
+                            @*end by priti*@
+                            @*<iframe src='@Url.Action("ShopLogoDisplay", "ProductUploadTemp")' frameborder="0" width="60px" height="70px" id="iframePersonalDetail" class="tab-pane active"></iframe>*@
+
+                        </ul>
+                    }
+                    @*end by priti*@
+
+                </div>
+            </section>
+
+
+
+            <div class="Main_dashboard" style="background-color:#f0eeee;border-radius:10px">
+                <table class="table" style="border-collapse: separate; border-spacing: 15px;margin-top:-15px">
+                    <tr>
+                        <td>
+                            <label>From</label>
+                        </td>
+                        <td>
+                            <input type="text" placeholder="From Date" id="txt_FrmDt" style="width:80px" />
+                            <br />
+                            <input type="number" style="width:45px" min="0" max="12" id="f_hr" /> : <input type="number" style="width:45px" min="0" max="59" id="f_min" />
+                            <select id="f_tt" style="width: 54px; text-transform: capitalize; height: 21px; font-size: 11px; margin-top: -10px">
+                                <option value="AM">AM</option>
+                                <option value="PM">PM</option>
+                            </select>
+                        </td>
+                        <td>
+                            <label>To</label>
+                        </td>
+                        <td>
+                            <input type="text" placeholder="To Date" id="txt_ToDt" style="width:80px" />
+                            <br />
+                            <input type="number" style="width:45px" min="0" max="12" id="t_hr" /> : <input type="number" style="width:45px" min="0" max="59" id="t_min" />
+                            <select style="width:54px;text-transform:capitalize;height: 21px; font-size: 11px;margin-top:-10px" id="t_tt">
+                                <option value="AM">AM</option>
+                                <option value="PM">PM</option>
+                            </select>
+                        </td>
+                        <td>
+                            <select id="filter" style="text-transform: none; width: 150px">
+                                <option value=0>--SELECT--</option>
+                                <option value=1>Today</option>
+                                <option value=2>This week</option>
+                                <option value=3>Current Month</option>
+                                <option value=4>Quarter</option>
+                                <option value=5>Year</option>
+                                <option value=6>Till Date</option>
+                                <option value=7>Default</option>
+                            </select>
+                            <input id="btnGo" type="button" value="&nbsp; GO &nbsp;" style="" class="btn btn-small btn-success" />
+                        </td>
+
+                    </tr>
+                </table>
+            </div>
+            <br />
+            @*<div class="row-fluid">*@
+            <div class="col-lg-12">
+                @*<h2>Stock Status</h2>*@
+                <div class="col-lg-3 col-md-4">
+                    <div class="panel panel-primary">
+                        <div class="panel-heading">
+                            <div class="row">
+                                <div class="col-xs-3">
+                                    <i class="fa fa-inr fa-5x"></i>
+                                </div>
+                                <div class="col-xs-9 text-right">
+                                    <div class="huge">@ViewBag.CurrentStockValue</div>
+                                    <div>Current Stock</div>
+                                    <i style="float:right;margin-top:5px;cursor:pointer " class="fa fa-info-circle fa-1x"
+                                       title="Current Stock Value in Rs. It is sum of all product's availbale Qty * Purchase Rate within date Range."></i>
+                                </div>
+                            </div>
+                        </div>
+                        <a href="/WarehouseStocks/Stock">
+                            <div class="panel-footer">
+                                <span class="pull-left">View Details</span>
+                                <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
+                                <div class="clearfix"></div>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+
+                <div class="col-lg-3 col-md-4">
+                    <div class="panel panel-green">
+                        <div class="panel-heading">
+                            <div class="row">
+                                <div class="col-xs-3">
+                                    <i class="fa fa-asterisk fa-5x"></i>
+                                </div>
+                                <div class="col-xs-9 text-right">
+                                    <div class="huge">@ViewBag.ProductQty</div>
+                                    <div>Product</div>
+                                    <i style="float:right;margin-top:5px;cursor:pointer " class="fa fa-info-circle fa-1x"
+                                       title="Count of Product whose available Quantity greater than ZERO within date Range.. "></i>
+                                </div>
+                            </div>
+                        </div>
+                        <a href="/WarehouseStocks/Stock">
+                            <div class="panel-footer">
+                                <span class="pull-left">View Details</span>
+                                <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
+                                <div class="clearfix"></div>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-4">
+                    <div class="panel panel-green">
+                        <div class="panel-heading">
+                            <div class="row">
+                                <div class="col-xs-3">
+                                    <i class="fa fa-asterisk fa-5x"></i>
+                                </div>
+                                <div class="col-xs-9 text-right">
+                                    <div class="huge">@ViewBag.SKU</div>
+                                    <div>SKU</div>
+                                    <i style="float:right;margin-top:5px;cursor:pointer " class="fa fa-info-circle fa-1x"
+                                       title="Count of Product's SKU whose available Quantity greater than ZERO within date Range.. "></i>
+                                </div>
+                            </div>
+                        </div>
+                        <a href="/WarehouseStocks/Stock">
+                            <div class="panel-footer">
+                                <span class="pull-left">View Details</span>
+                                <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
+                                <div class="clearfix"></div>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-4">
+                    <div class="panel panel-red">
+                        <div class="panel-heading">
+                            <div class="row">
+                                <div class="col-xs-3">
+                                    <i class="fa fa-trash-o fa-5x"></i>
+                                </div>
+                                <div class="col-xs-9 text-right">
+                                    <div class="huge">&#8377;@ViewBag.WastageValue-@ViewBag.WastageSKU</div>
+                                    <div>Waste Amt - SKU</div>
+                                    <i style=" float: right; margin-top: 5px; cursor: pointer;" class="fa fa-info-circle fa-1x"
+                                       title="Sum of All Wastage Product's ( Qty * Purchase Rate) [/] (count of Waste SKU) within date Range."></i>
+                                </div>
+                            </div>
+                        </div>
+                        <a href="/WarehouseWastageStock/Index">
+                            <div class="panel-footer">
+                                <span class="pull-left">View Details</span>
+                                <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
+                                <div class="clearfix"></div>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-4">
+                    <div class="panel panel-yellow">
+                        <div class="panel-heading">
+                            <div class="row">
+                                <div class="col-xs-3">
+                                    <i class="fa fa-truck fa-5x"></i>
+                                </div>
+                                <div class="col-xs-9 text-right">
+                                    <div class="huge">&#8377;@ViewBag.ReturnValue</div>
+                                    <div>Return</div>
+                                    <i style="float:right;margin-top:5px;cursor:pointer " class="fa fa-info-circle fa-1x"
+                                       title="Sum of All Return Product's  Qty * Purchase Rate within date Range."></i>
+                                </div>
+                            </div>
+                        </div>
+                        <a href="/WarehouseReturnStock/Index">
+                            <div class="panel-footer">
+                                <span class="pull-left">View Details</span>
+                                <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
+                                <div class="clearfix"></div>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-4">
+                    <div class="panel panel-primary">
+                        <div class="panel-heading">
+                            <div class="row">
+                                <div class="col-xs-3">
+                                    <i class="fa fa-refresh fa-5x"></i>
+                                </div>
+                                <div class="col-xs-9 text-right">
+                                    <div class="huge">&#8377;@ViewBag.ReorderValue</div>
+                                    <div>Reorder Value</div>
+                                    <i style="float:right;margin-top:5px;cursor:pointer " class="fa fa-info-circle fa-1x"
+                                       title="Reorder Value in Rs. When available quantity <= Reorder level quantity then Reorder Quantity * Purchase Rate within date Range."></i>
+                                </div>
+                            </div>
+                        </div>
+                        <a href="/ReorderLevelReports/GetReorderLevel">
+                            <div class="panel-footer">
+                                <span class="pull-left">View Details</span>
+                                <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
+                                <div class="clearfix"></div>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-4">
+                    <div class="panel panel-primary">
+                        <div class="panel-heading">
+                            <div class="row">
+                                <div class="col-xs-3">
+                                    <i class="fa fa-search-plus fa-5x"></i>
+                                </div>
+                                <div class="col-xs-9 text-right">
+                                    <div class="huge">@ViewBag.Current_Rate </div>
+                                    <div>Current Rate</div>
+                                    <i style="float:right;margin-top:5px;cursor:pointer" class="fa fa-info-circle fa-1x"
+                                       title="Count of product whose Rate is added by Ezzelo "></i>
+                                </div>
+                            </div>
+                        </div>
+                        <a href="/RateMatrix/ProductList">
+                            <div class="panel-footer">
+                                <span class="pull-left">View Details</span>
+                                <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
+                                <div class="clearfix"></div>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+                @*</div>*@
+                @*</div>*@
+
+                @*<div class="row-fluid">*@
+                @*<div class="col-lg-12">*@
+                <div id="divSO">
+                    @*<h2>Sale Order Status</h2>*@
+                    <div class="col-lg-3 col-md-4">
+                        <div class="panel panel-green">
+                            <div class="panel-heading">
+                                <div class="row">
+                                    <div class="col-xs-3">
+                                        <i class="fa fa-shopping-cart fa-5x"></i>
+                                    </div>
+                                    <div class="col-xs-9 text-right">
+                                        <div class="huge">@ViewBag.OrderPlaced</div>
+                                        <div>Order Placed</div>
+                                        <i style="float:right;margin-top:5px;cursor:pointer" class="fa fa-info-circle fa-1x"
+                                           title="@ViewBag.msgOrdPlace"></i>
+                                    </div>
+                                </div>
+                            </div>
+                            <a href="/PurchaseOrderReply/Index">
+                                <div class="panel-footer">
+                                    <span class="pull-left">View Details</span>
+                                    <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
+                                    <div class="clearfix"></div>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+
+                    <div class="col-lg-3 col-md-4">
+                        <div class="panel panel-primary">
+                            <div class="panel-heading">
+                                <div class="row">
+                                    <div class="col-xs-3">
+                                        <i class="fa fa-thumbs-o-up fa-5x"></i>
+                                    </div>
+                                    <div class="col-xs-9 text-right">
+                                        <div class="huge">@ViewBag.OrderConfirmed</div>
+                                        <div>Order Confirmed</div>
+                                        <i style="float:right;margin-top:5px;cursor:pointer" class="fa fa-info-circle fa-1x"
+                                           title="@ViewBag.msgOrdConf"></i>
+                                    </div>
+                                </div>
+                            </div>
+                            <a href="/PurchaseOrderReply/Index">
+                                <div class="panel-footer">
+                                    <span class="pull-left">View Details</span>
+                                    <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
+                                    <div class="clearfix"></div>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+
+                    <div class="col-lg-3 col-md-4">
+                        <div class="panel panel-primary">
+                            <div class="panel-heading">
+                                <div class="row">
+                                    <div class="col-xs-3">
+                                        <i class="fa fa-gift fa-5x"></i>
+                                    </div>
+                                    <div class="col-xs-9 text-right">
+                                        <div class="huge">@ViewBag.OrderPacked</div>
+                                        <div>Order Packed</div>
+                                        <i style="float:right;margin-top:5px;cursor:pointer" class="fa fa-info-circle fa-1x"
+                                           title="@ViewBag.msgOrdPack"></i>
+                                    </div>
+                                </div>
+                            </div>
+                            <a href="/PurchaseOrderReply/Index">
+                                <div class="panel-footer">
+                                    <span class="pull-left">View Details</span>
+                                    <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
+                                    <div class="clearfix"></div>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+
+                    <div class="col-lg-3 col-md-4">
+                        <div class="panel panel-yellow">
+                            <div class="panel-heading">
+                                <div class="row">
+                                    <div class="col-xs-3">
+                                        <i class="fa fa-truck fa-5x"></i>
+                                    </div>
+                                    <div class="col-xs-9 text-right">
+                                        <div class="huge">@ViewBag.OrderDispacthed</div>
+                                        <div>Ord Dispatched</div>
+                                        <i style="float:right;margin-top:5px;cursor:pointer" class="fa fa-info-circle fa-1x"
+                                           title="@ViewBag.msgOrdDis"></i>
+                                    </div>
+                                </div>
+                            </div>
+                            <a href="/PurchaseOrderReply/InvoiceList">
+                                <div class="panel-footer">
+                                    <span class="pull-left">View Details</span>
+                                    <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
+                                    <div class="clearfix"></div>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+
+                    <div class="col-lg-3 col-md-4">
+                        <div class="panel panel-green">
+                            <div class="panel-heading">
+                                <div class="row">
+                                    <div class="col-xs-3">
+                                        <i class="fa fa-cart-arrow-down fa-5x"></i>
+                                    </div>
+                                    <div class="col-xs-9 text-right">
+                                        <div class="huge">@ViewBag.orderDelivered</div>
+                                        <div>Order Delivered</div>
+                                        <i style="float:right;margin-top:5px;cursor:pointer" class="fa fa-info-circle fa-1x"
+                                           title="@ViewBag.msgOrdDel"></i>
+                                    </div>
+                                </div>
+                            </div>
+                            @*19/6/2018*@
+                            <a href="/PurchaseOrderReply/InvoiceList">
+                                <div class=" panel-footer">
+                                    <span class="pull-left">View Details</span>
+                                    <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
+                                    <div class="clearfix"></div>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                @*</div>*@
+                @*</div>*@
+
+                @*<div class="row-fluid">*@
+                @*<div class="col-lg-12">*@
+                <div id="divPO">
+                    @*<h2>Purchase Order Status</h2>*@
+                    <div class="col-lg-3 col-md-4">
+                        <div class="panel panel-red">
+                            <div class="panel-heading">
+                                <div class="row">
+                                    <div class="col-xs-3">
+                                        <i class="fa fa-hourglass-half fa-5x"></i>
+                                    </div>
+                                    <div class="col-xs-9 text-right">
+                                        <div class="huge">@ViewBag.PendingPOApproval</div>
+                                        <div>Pending Approval</div>
+                                        <i style="float:right;margin-top:5px;cursor:pointer" class="fa fa-info-circle fa-1x"
+                                           title="@ViewBag.msgPOPenApr"></i>
+                                    </div>
+                                </div>
+                            </div>
+                            <a href="/PurchaseOrders/Index">
+                                <div class="panel-footer">
+                                    <span class="pull-left">View Details</span>
+                                    <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
+                                    <div class="clearfix"></div>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+
+                    <div class="col-lg-3 col-md-4">
+                        <div class="panel panel-yellow">
+                            <div class="panel-heading">
+                                <div class="row">
+                                    <div class="col-xs-3">
+                                        <i class="fa fa-truck fa-5x"></i>
+                                    </div>
+                                    <div class="col-xs-9 text-right">
+                                        <div class="huge">@ViewBag.PODispacthed</div>
+                                        <div>PO Dispatch</div>
+                                        <i style="float:right;margin-top:5px;cursor:pointer" class="fa fa-info-circle fa-1x"
+                                           title="@ViewBag.msgPoDis"></i>
+                                    </div>
+                                </div>
+                            </div>
+                            <a href="/Invoices/PurchaseOrderList">
+                                <div class="panel-footer">
+                                    <span class="pull-left">View Details</span>
+                                    <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
+                                    <div class="clearfix"></div>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+
+                    <div class="col-lg-3 col-md-4">
+                        <div class="panel panel-green">
+                            <div class="panel-heading">
+                                <div class="row">
+                                    <div class="col-xs-3">
+                                        <i class="fa fa-cart-arrow-down fa-5x"></i>
+                                    </div>
+                                    <div class="col-xs-9 text-right">
+                                        <div class="huge">@ViewBag.POReceived</div>
+                                        <div>PO Received</div>
+                                        <i style="float:right;margin-top:5px;cursor:pointer" class="fa fa-info-circle fa-1x"
+                                           title="@ViewBag.msgPoRec"></i>
+                                    </div>
+                                </div>
+                            </div>
+                            <a href="/Invoices/PurchaseOrderList">
+                                <div class="panel-footer">
+                                    <span class="pull-left">View Details</span>
+                                    <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
+                                    <div class="clearfix"></div>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            @*</div>*@
+
+        </div>
+
+
+
+    </div>
+</div>
+
+

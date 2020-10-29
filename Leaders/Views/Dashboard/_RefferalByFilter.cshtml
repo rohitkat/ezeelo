@@ -1,0 +1,24 @@
+﻿@model ModelLayer.Models.ViewModel.RefferalByFilter
+
+@using (Ajax.BeginForm("GetRefferalCountByFilter", "Dashboard", new AjaxOptions { LoadingElementId = "progress", UpdateTargetId = "ReffCount" }))
+{
+    <input id="btnsubmitReff" style="display:none" type="submit" value="show" class="btn btn-primary mt-20 col-lg-12 waves-effect waves-classic">
+    <div class="NumberOne Referralsleft third-box ">
+        <i class="fa fa-user" aria-hidden="true"></i>
+        <h5> Referrals</h5>
+        <div class="Referralsright SpanOne_" id="ReffCount">
+            @{ Html.RenderPartial("~/Views/Dashboard/_GetRefCount.cshtml", Model); }
+           
+        </div>
+        <div class="ReferralsDownContent">
+            <div style="width: 100%; border-bottom: 1px solid #cfcdcf;" class="pr-40 pl-40 pt-20 pb-20">
+                <div class="dropdown vertical-align-bottom font-size-14 dropdown-menu-toggle">
+                    @Html.DropDownListFor(model => model.searchId, Model.SearchParameter, new { @class = "dropdown-toggle toggle-head", onchange = "$('#btnsubmitReff').click();" })
+                </div>
+            </div>
+            <figure>
+                <img src="~/Templates/UsersTemplate/img/graph.png">
+            </figure>           
+        </div>
+    </div>
+}

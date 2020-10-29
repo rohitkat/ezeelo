@@ -1,0 +1,35 @@
+﻿@model ModelLayer.Models.ViewModel.AllShops
+<style>
+    .product-sm-left .product-caption-title {
+        font-size: 11px;
+        font-weight: 700;
+        height: 45px;
+    }
+</style>
+<div>
+    @if (Model.ShopList != null)
+    {
+        string cityName = "";
+        int franchiseID = 0;
+        if (Request.Cookies["CityCookie"] != null && Request.Cookies["CityCookie"].Value != "")
+        {
+            cityName = Request.Cookies["CityCookie"].Value.Split('$')[1].ToLower();
+            franchiseID = Convert.ToInt32(Request.Cookies["CityCookie"].Value.Split('$')[2]);
+        }
+        foreach (var item1 in Model.ShopList)
+        {
+            var sName = System.Text.RegularExpressions.Regex.Replace(item1.ShopName.Substring(0, Math.Min(item1.ShopName.Length, 30)), @"[\/\\#,+()$~%.':*?<>{} ]", "-").Replace("&", "and").ToLower();
+            <div class="col-xs-6 col-sm-3 col-md-2">
+                <a href="@Url.RouteUrl("ShopSearch2", new { shopID = item1.ShopID, shopName = sName, city = cityName, franchiseId = franchiseID })">
+                    <div class="product product-sm-left " style="margin-bottom: 10px;">
+                        <div class="product-img-wrap" style="width: 100%; cursor: pointer;">
+                            <img style="width: 100%; height: 100px; " src="@item1.ShopLogoPath" alt="@item1.ShopName" data-role="fitImage" onerror="this.src = '/Content/Images/no_image.png'">
+                            <h5 class="product-caption-title">@item1.ShopName</h5>
+                        </div>
+                    </div>
+                </a>
+            </div>
+        }
+    }
+</div>
+

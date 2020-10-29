@@ -1,0 +1,159 @@
+﻿@model ModelLayer.Models.ViewModel.CustomerPersonalDetailViewModel
+
+@{
+    ViewBag.Title = "eZeelo: Online Jewellery, Home Appliances, Electronics & Fashion Store Nagpur";
+    string cityName = "";
+    int franchiseID = 0;////added
+    if (Request.Cookies["CityCookie"] != null)
+    {
+        cityName = Request.Cookies["CityCookie"].Value.Split('$')[1];
+        franchiseID = Convert.ToInt32(Request.Cookies["CityCookie"].Value.Split('$')[2]);////added
+
+    }
+    Layout = "~/Views/Shared/_Layout_Internal.cshtml";
+
+}
+
+<div id="navbar">
+    <ol class="breadcrumb page-breadcrumb">
+        <li>
+            @Html.RouteLink("Home ", "Home", new { city = cityName.ToLower(), franchiseId = franchiseID })
+        </li>
+        <li>
+            @Html.RouteLink("My Account ", "CustomerOrder/myorders", new { city = cityName.ToLower(), franchiseId = franchiseID })
+
+        </li>
+        <li class="active">My Profile</li>
+    </ol>
+    @*<ul class="nav navbar-nav">
+            <li>@Html.RouteLink("Home  >> ", "Home", new { city = cityName.ToLower() }, new { @class = "ahomelink" })</li>
+            <li>@Html.RouteLink("My Account  >> ", "CustomerOrder/myorders", new { city = cityName.ToLower() }, new { @class = "ahomelink" })</li>
+            <li><a class="ahomelink">My Profile</a></li>
+        </ul>*@
+</div>
+@Html.Partial("_CustomerDashboardMenu")
+<div class="gap"></div>
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+    <div class="row box animated fadeInUp" data-gutter="15">
+        @Html.ValidationSummary(true)
+        @Html.HiddenFor(model => model.ID)
+        <h3>My Profile <a><input type="button" class="btn btn-primary" value="Skip & Continue" onclick="SkipPage();" style="float:right" /></a></h3>
+
+        @if (ViewBag.Message != null)
+        {
+            <h5 style="text-align:center;" class="breadcrumbs dark">
+                @ViewBag.Message
+            </h5>
+        }
+        @Html.HiddenFor(model => model.UserLoginID)
+        <div class="col-md-12" data-gutter="60" style="padding: 0px;">
+            <div class="col-md-6">
+                <div class="form-group">
+                    @Html.TextBoxFor(model => model.FirstName, new { placeholder = "First Name", maxlength = 50, autocomplete = "off", required = "required", @class = "form-control" })
+                    @Html.ValidationMessageFor(model => model.FirstName)
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group">
+                    @Html.TextBoxFor(model => model.EmailId, new { placeholder = "Email Id", maxlength = 150, autocomplete = "off", @class = "form-control", @onchange = "return ValidateEmail();", required = "required" })
+                    @Html.ValidationMessageFor(model => model.EmailId)
+                    <span class="spanMessage"></span>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group">
+                    @Html.TextBoxFor(model => model.Mobile, new { placeholder = "Mobile", maxlength = 10, autocomplete = "off", required = "required", @class = "form-control" })
+                    @Html.ValidationMessageFor(model => model.Mobile)
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group">
+                    @Html.TextBoxFor(model => model.DOB, "{0:dd MMM yyyy}", new { placeholder = "Date Of Birth(dd-MMM-yyyy)", @class = "form-control" })@* modified by harshada 9/1/17 ,Remove @readonly=true & add Format*@
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group">
+                    @Html.TextBoxFor(model => model.Address, new { placeholder = "Address", maxlength = 150, autocomplete = "off", required = "required", @class = "form-control" })
+                    @Html.ValidationMessageFor(model => model.Address)
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group">
+                    @Html.TextBoxFor(model => model.PincodeID, new { placeholder = "Pin Code", maxlength = 6, autocomplete = "off", required = "required", @class = "form-control" })
+                    @Html.ValidationMessageFor(model => model.PincodeID)
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group">
+                    @Html.DropDownList("SecurityQuestionID", (SelectList)ViewBag.SecurityQuestion, "--Select Security Question--", new { @class = "form-control", required = "required" })
+                    @Html.ValidationMessageFor(model => model.SecurityQuestionID)
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group">
+                    @Html.TextBoxFor(model => model.SecurityAnswer, new { placeholder = "Answer", required = "required", @class = "form-control" })
+                    @Html.ValidationMessageFor(model => model.SecurityAnswer)
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group">
+                    @{
+        bool isMail = false, isFemale = false;
+
+        if (Model != null)
+        {
+            if (Model.Gender == "Male")
+            {
+                isMail = true;
+            }
+            else if (Model.Gender == "Female")
+            {
+                isFemale = true;
+            }
+        }
+        @Html.RadioButton("Gender", "Male", isChecked: isMail)@Html.Label("Male")
+                        @Html.RadioButton("Gender", "Female", isChecked: isFemale)@Html.Label("Female")
+                        @Html.ValidationMessageFor(model => model.Gender)
+                    }
+                </div>
+            </div>
+            <div class="col-md-12">
+                <button type="submit" value="Save" class="btn btn-success" onclick="return ValidateEmail();">Save</button>
+            </div>
+        </div>
+
+    </div>
+}
+<div class="gap"></div>
+
+<script type="text/javascript">
+    $(".datePicker").datepicker({
+        changeMonth: true,
+        changeYear: true
+    });
+
+
+    function ValidateEmail() {
+        var email = $(".txtEmail").val();
+        var filter = /^([\w-\.]+@@([\w-]+\.)+[\w-]{2,4})?$/;
+        if (email.length > 0) {
+            if (filter.test(email)) {
+                return true;
+            }
+            else {
+                $(".spanMessage").text("Please! Enter proper Email Id");
+                return false;
+            }
+        }
+        return true;
+    }
+
+
+    function SkipPage() {
+        window.location.href = "@Url.RouteUrl("Home", new { city = cityName.ToLower(), franchiseId = franchiseID })";@*////added  franchiseId=franchiseID*@
+    }
+
+</script>
+@*}*@

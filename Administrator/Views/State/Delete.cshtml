@@ -1,0 +1,156 @@
+﻿@model ModelLayer.Models.State
+
+@{
+    ViewBag.Title = "Delete";
+}
+<div id="content" class="span10">
+    <ul class="breadcrumb">
+        <li>
+            <a href="#">Create State</a>
+        </li>
+    </ul><div class="row-fluid">
+        <div class="box span12">
+            <div class="box-header">
+                <h2><i class="icon-trash"></i><span class="break"></span>State/Delete</h2>
+            </div>
+            <div class="box-content">
+                <div class="form-horizontal">
+                    <p class="deleteMsg">Are you sure you want to delete this?</p>
+                    <fieldset>
+                        <div class="control-group">
+                            <label class="control-label" for="focusedInput">State Name</label>
+                            <div class="controls">
+                                @*<input class="input-xlarge focused" id="focusedInput" type="text" value="This is focused…">*@
+                                @Html.DisplayFor(model => model.Name)
+                            </div>
+                        </div>
+
+                        <div class="control-group">
+                            <label class="control-label" for="optionsCheckbox2">Is Active</label>
+                            <div class="controls">
+                                <label class="checkbox">
+                                    @Html.DisplayFor(model => model.IsActive)
+                                </label>
+                            </div>
+                        </div>
+                        @using (Html.BeginForm())
+                        {
+                            @Html.AntiForgeryToken()
+
+                            <div class="form-actions">
+                                <input type="submit" value="Delete" class="btn btn-danger" onclick="return confirm('Are You Sure you want to delete @Model.Name ?')" />
+                                @Html.ActionLink("Back to List", "Index", null, new { @class="btn"})
+
+                                @if (ViewBag.Messaage != null)
+                                {
+                                    @Html.Label("Messaage", (string)ViewBag.Messaage, new { @class = "deleteMsg" })
+                                }
+                                else
+                                {
+                                    @Html.Label("Messaage", "", new { @class = "deleteMsg" })
+                                }
+                            </div>
+                        }
+                    </fieldset>
+                </div>
+
+            </div>
+        </div><!--/span-->
+
+    </div>
+
+
+
+
+
+
+
+    @*<h3>Are you sure you want to delete this?</h3>
+        <div>
+            <h4>State</h4>
+            <hr />
+            <dl class="dl-horizontal">
+                <dt>
+                    @Html.DisplayNameFor(model => model.Name)
+                </dt>
+
+                <dd>
+                    @Html.DisplayFor(model => model.Name)
+                </dd>
+
+                <dt>
+                    @Html.DisplayNameFor(model => model.IsActive)
+                </dt>
+
+                <dd>
+                    @Html.DisplayFor(model => model.IsActive)
+                </dd>
+
+                <dt>
+                    @Html.DisplayNameFor(model => model.CreateDate)
+                </dt>
+
+                <dd>
+                    @Html.DisplayFor(model => model.CreateDate)
+                </dd>
+
+                <dt>
+                    @Html.DisplayNameFor(model => model.CreateBy)
+                </dt>
+
+                <dd>
+                    @Html.DisplayFor(model => model.CreateBy)
+                </dd>
+
+                <dt>
+                    @Html.DisplayNameFor(model => model.ModifyDate)
+                </dt>
+
+                <dd>
+                    @Html.DisplayFor(model => model.ModifyDate)
+                </dd>
+
+                <dt>
+                    @Html.DisplayNameFor(model => model.ModifyBy)
+                </dt>
+
+                <dd>
+                    @Html.DisplayFor(model => model.ModifyBy)
+                </dd>
+
+                <dt>
+                    @Html.DisplayNameFor(model => model.NetworkIP)
+                </dt>
+
+                <dd>
+                    @Html.DisplayFor(model => model.NetworkIP)
+                </dd>
+
+                <dt>
+                    @Html.DisplayNameFor(model => model.DeviceType)
+                </dt>
+
+                <dd>
+                    @Html.DisplayFor(model => model.DeviceType)
+                </dd>
+
+                <dt>
+                    @Html.DisplayNameFor(model => model.DeviceID)
+                </dt>
+
+                <dd>
+                    @Html.DisplayFor(model => model.DeviceID)
+                </dd>
+
+            </dl>
+
+            @using (Html.BeginForm())
+            {
+                @Html.AntiForgeryToken()
+
+                <div class="form-actions no-color">
+                    <input type="submit" value="Delete" class="btn btn-default" onclick="return confirm('Are You Sure you want to delete @Model.Name ?')" /> |
+                    @Html.ActionLink("Back to List", "Index")
+                </div>
+            }
+        </div>*@

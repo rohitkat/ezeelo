@@ -1,0 +1,282 @@
+﻿@model ModelLayer.Models.ViewModel.EarnAndReferDetailReportViewModel
+
+@{
+    ViewBag.Title = "Refer And Earn Transaction Report";
+}
+<style>
+    .input-large {
+        width: 206px;
+    }
+    .table .table td {
+        border: 1px solid #CCC;
+    }
+</style>
+<div class="row-fluid" style="margin-top:20px;margin-left:15px;">
+    <div class="box span12">
+        <div class="box-header">
+            <h2><i class="icon-edit"></i><span class="break"></span>Refer And Earn Transaction Report</h2>
+        </div>
+        <div class="box-content">
+            <table style="width:100%">
+                            <tr>
+                                <td>
+                                    <input type="text" id="FromDate" name="FromDate" class="input-large datepicker" placeholder="From Date" />
+                                    <label for="txtFromDate" class="dtPic"></label>
+                                </td>
+                                <td>
+                                    <input type="text" id="ToDate" name="ToDate" class="input-large datepicker" placeholder="To Date" />
+                        @*@Html.TextBox("ToDate", null, new { @class = "input-large datepicker", placeholder = "To Date" })*@
+                                    <label for="txtToDate" class="dtPic"></label>
+                                    <label id="lblMsg" style="color: red; margin-top: -10px; margin-left: 30px;"></label>
+                                </td>
+                                <td>
+                        @Html.DropDownList("CityID", "--Select City--")
+                                </td>
+                                <td>
+                                    <select id="FranchiseID" name="FranchiseID" />
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                        @Html.TextBox("SearchUserName", null, new { @class = "search_input margingnew input-large", placeholder = "Referrer Name" })
+                    </td>
+                    <td>
+                        @Html.TextBox("SearchSchemeName", null, new { @class = "search_input margingnew input-large", placeholder = "Scheme Name" })
+                                </td>
+                                <td>
+                        @Html.TextBox("SearchEmail", null, new { @class = "search_input input-large", placeholder = "Email Referee" })
+                                </td>
+                                <td>
+                        @Html.TextBox("SearchMobile", null, new { @class = "search_input input-large", placeholder = "Mobile Referee" })
+
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="2">
+                        @Html.RadioButton("Mode", "1", new { @checked = true }) All
+                        @Html.RadioButton("Mode", "2") Registered
+                        @Html.RadioButton("Mode", "3") Not Registered
+                    </td>
+                    <td colspan="2">
+                        <input type="submit" id="btnSearch" value="Search" class="btn btn-primary btn-search" />
+                                </td>
+                </tr>
+            </table>
+            <table style="width:100%">
+                <tr>
+                                <td>
+                        @Html.DropDownList("ExportOption", new List<SelectListItem>
+
+    {
+
+       new SelectListItem{ Text="Excel", Value = "1" },
+       new SelectListItem{ Text="Csv", Value = "2" },
+       new SelectListItem{ Text="Pdf", Value = "3" }
+
+    })
+                        <input type="submit" value="Export" id="btnExport" class="btn btn-brown btn-warning1" style="margin-top: -10px;" />
+                        <input type="submit" value="Print" id="btnPrint" class="btn btn-brown btn-warning1" onclick="PrintReport()" style="margin-top: -10px;" />
+                                </td>
+
+                </tr>
+            </table>
+            <div class="loader">
+                <img id="loader_img" src="~/Content/img/loader.gif" style="display: none" />
+            </div>
+            <table class="" id="DataTables_Table_0" aria-describedby="DataTables_Table_0_info">
+                <tr>
+                                <td>
+                        <div id="divReport" style="width:100%; overflow:visible">
+                        </div>
+                                </td>
+
+                            </tr>
+
+                        </table>
+            
+        </div>
+                    </div>
+            </div>
+
+
+
+
+@*<div class="span3" style="margin-top:10px; text-align:right;">
+                @Html.ActionLink("EXCEL", "Index", new { option = 1, SearchMobile = ViewBag.SearchMobile, SearchEmail = ViewBag.SearchEmail, SearchUserName = ViewBag.SearchUserName, SearchSchemeName = ViewBag.SearchSchemeName }, new { @class = "btn btn-default btn-brown" })
+                @Html.ActionLink("CSV", "Index", new { option = 2, SearchMobile = ViewBag.SearchMobile, SearchEmail = ViewBag.SearchEmail, SearchUserName = ViewBag.SearchUserName, SearchSchemeName = ViewBag.SearchSchemeName }, new { @class = "btn btn-brown" })
+                @Html.ActionLink("PDF", "Index", new { option = 3, SearchMobile = ViewBag.SearchMobile, SearchEmail = ViewBag.SearchEmail, SearchUserName = ViewBag.SearchUserName, SearchSchemeName = ViewBag.SearchSchemeName }, new { @class = "btn btn-brown" })
+                <input value="PRINT" class="btn btn-brown" onclick="javascript:PrintDivContent('divToPrint');" />
+
+
+    </div>*@
+
+    <script src="~/Content/js/jquery-1.9.1.min.js"></script>
+    <script type="text/javascript">
+        $(function () {
+            $("input#btnSearch").on('click', function () {               
+                var pagecount = 0;
+                var page = 1;
+                var print = 0;
+                var ToDate = $('#ToDate').val();
+                var FromDate = $('#FromDate').val();
+                var CityId = $('#CityID :selected').val();
+                var FranchiseID = null;
+                FranchiseID = $('#FranchiseID :selected').val();
+                var SearchUserName = null;
+                var SearchUserName = $('#SearchUserName').val();
+                var SearchEmail = null;
+                var SearchEmail = $('#SearchEmail').val();
+                var SearchMobile = null;
+                var SearchMobile = $('#SearchMobile').val();
+                var SearchSchemeName = null;
+                var SearchSchemeName = $('#SearchSchemeName').val();
+                var Mode = $('#Mode:checked').val();
+                var option = 0;
+
+                var isValid = ValidateDate(FromDate, ToDate);
+                if (isValid == false) {
+                    $('#loader_img').hide();
+                    return;
+                }
+                $.ajax({
+                    url: '@Url.Action("GetReport", "ReferAndEarnTransactionReport")',
+                    data: { 'page': page, 'option': option, 'SearchUserName': SearchUserName, 'SearchEmail': SearchEmail, 'SearchMobile': SearchMobile, 'SearchSchemeName': SearchSchemeName, 'Mode': Mode, 'FromDate': FromDate, 'FranchiseID': FranchiseID, 'CityID': CityId, 'ToDate': $('#ToDate').val(), 'print': print },
+                    type: "Post",
+                    cache: false,
+                    success: function (data) {
+                        $('#loader_img').hide();
+                        $('#divReport').empty();
+                        $('#divReport').append(data);
+                    },
+                    error: function (data) {
+                        alert(data);
+
+                    }
+                });
+            });
+        });
+
+
+
+    $("select#CityID").bind('change', function () {
+
+        var CityID = $("select#CityID option:selected").val();
+        if (CityID == 0) {
+            $('#FranchiseID').empty();
+            return;
+        }
+        $.ajax({
+            type: "POST",
+            url: '@Url.Action("GetFranchiseID", "ReferAndEarnTransactionReport")',
+            data: { 'CityID': CityID },
+            cache: false,
+            success: function (msg) {
+                $('#FranchiseID').empty();
+                $('#FranchiseID').append('<option value="">Select FranchiseID</option>');
+                $.each(msg, function (index, item) {
+                    $('#FranchiseID').append('<option value=' + item.Value + '>' + item.Text + '</option>');
+                });
+            },
+            error: function (x, e) {
+                alert('Failure');
+
+            }
+        });
+
+           
+    });
+        function ValidateDate(FromDate, ToDate) {
+
+            if (FromDate == '' && ToDate == '') {
+            $('[id*=lblMsg]').text('Please Select From Date and To Date.');
+            return false;
+        }
+            else if (FromDate == '') {
+            $('[id*=lblMsg]').text('Please Select From Date.');
+            return false;
+        }
+            else if (ToDate == '') {
+            $('[id*=lblMsg]').text('Please Select To Date.');
+            return false;
+        }
+
+            if (FromDate != '' && ToDate != '') {
+                dateFirst = FromDate.split('/');
+                dateSecond = ToDate.split('/');
+            var from = new Date(dateFirst[2], dateFirst[1], dateFirst[0]); //Year, Month, Date
+            var to = new Date(dateSecond[2], dateSecond[1], dateSecond[0]);
+            if (from > to) {
+                $('[id*=lblMsg]').text('To Date must be greater than From Date.');
+                return false;
+            }
+            else {
+                $('[id*=lblMsg]').text('');
+            }
+            }
+
+        }
+
+
+        $("input#btnExport").on('click', function () {
+            var pagecount = 0;
+            var page = 1;
+            var option = 0;
+            var ToDate = $('#ToDate').val();
+            var FromDate = $('#FromDate').val();
+            var CityId = $('#CityID :selected').val();
+            var FranchiseID = null;
+            FranchiseID = $('#FranchiseID :selected').val();
+            var SearchUserName = null;
+            var SearchUserName = $('#SearchUserName').val();
+            var SearchEmail = null;
+            var SearchEmail = $('#SearchEmail').val();
+            var SearchMobile = null;
+            var SearchMobile = $('#SearchMobile').val();
+            var SearchSchemeName = null;
+            var SearchSchemeName = $('#SearchSchemeName').val();
+            var Mode = $('#Mode:checked').val();
+            option = $('#ExportOption :selected').val();
+
+            var isValid = ValidateDate(FromDate, ToDate);
+            if (isValid == false) {
+                $('#loader_img').hide();
+                return;
+            }
+
+            window.location.href = "/ReferAndEarnTransactionReport/Export?page=" + page + "&option=" + option + "&SearchUserName=" + SearchUserName + "&SearchEmail=" + SearchEmail + "&SearchMobile=" + SearchMobile + "&SearchSchemeName=" + SearchSchemeName + "&Mode=" + Mode + "&FromDate=" + FromDate + "&FranchiseID=" + FranchiseID + "&CityID=" + CityId + "&ToDate=" + ToDate;
+
+        });
+
+
+        function PrintReport() {
+            var pagecount = 0;
+            var page = 1;
+            var print = 1;
+            var option = 0;
+            var ToDate = $('#ToDate').val();
+            var FromDate = $('#FromDate').val();
+            var CityId = $('#CityID :selected').val();
+            var FranchiseID = null;
+            FranchiseID = $('#FranchiseID :selected').val();
+            var SearchUserName = null;
+            var SearchUserName = $('#SearchUserName').val();
+            var SearchEmail = null;
+            var SearchEmail = $('#SearchEmail').val();
+            var SearchMobile = null;
+            var SearchMobile = $('#SearchMobile').val();
+            var SearchSchemeName = null;
+            var SearchSchemeName = $('#SearchSchemeName').val();
+            var Mode = $('#Mode:checked').val();
+            var isValid = ValidateDate(FromDate, ToDate);
+
+            if (isValid == false) {
+                return;
+        }
+            var url = "/ReferAndEarnTransactionReport/GetReport?&page=" + page + "&option=" + option + "&SearchUserName=" + SearchUserName + "&SearchEmail=" + SearchEmail + "&SearchMobile=" + SearchMobile + "&SearchSchemeName=" + SearchSchemeName + "&Mode=" + Mode + "&FromDate=" + FromDate + "&FranchiseID=" + FranchiseID + "&CityID=" + CityId + "&ToDate=" + ToDate + "&print=" + print;
+            window.open(url, '_blank')
+
+    }
+
+
+</script>
+

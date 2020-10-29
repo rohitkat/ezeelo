@@ -1,0 +1,91 @@
+﻿@model List<ModelLayer.Models.ViewModel.EmailListViewModel>
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<style>
+    .dataTables_length {
+        margin-left: 0px;
+        margin-top: 7px;
+    }
+
+    .pagination {
+        padding: 0px 40px;
+    }
+</style>
+<script src="@System.Configuration.ConfigurationManager.AppSettings["EZEELO_CUSTOMER_URL"]/Scripts/jquery-1.10.2.min.js"></script>
+<script>
+    $(document).ready(function () {
+        if ('@Session["Message"]' != '') {
+            alert('@Session["Message"]');
+        }
+    });
+</script>
+
+<div id="content" class="span10">
+    <ul class="breadcrumb">
+        <li>
+            <i class="icon-home"></i>
+            @Html.ActionLink("Back To List", "Index", "PartnerRequest")
+        </li>
+    </ul>
+    @using (Html.BeginForm())
+    {
+
+        @Html.AntiForgeryToken()
+        <div class="row-fluid">
+            <div class="box span12">
+                <div class="box-header">
+                    <h2 style="color:#062a5c">List of Email Receiver</h2>
+                    <input type="submit" value="Send Email" class="btn btn-small btn-success" style="float:right;margin-top:-7px;padding-left:10px;padding-right:10px;" />
+                </div>
+                <div class="box-content">
+                    <table class="table table-striped table-bordered bootstrap-datatable datatable">
+                        <thead>
+                            <tr>
+                                <th>
+                                    Sr No.
+                                </th>
+                                <th>
+                                    EmailId
+                                </th>
+                                <th>
+                                    Send
+                                </th>
+
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if (Model != null)
+                            {
+                                for (var i = 0; i < Model.Count(); i++)
+                                {
+                                    <tr>
+                                        <td>
+                                            @{
+                                    var j = i;
+                                    j = j + 1;
+                                            }
+                                            @j
+                                        </td>
+                                        <td>
+                                            @Html.HiddenFor(modelItem => Model[i].ID)
+                                            @Html.HiddenFor(modelItem => Model[i].EmailID)
+                                            @Model[i].EmailID
+                                        </td>
+                                        <td>
+                                            @Html.CheckBoxFor(modelItem => Model[i].Send)
+                                        </td>
+
+                                    </tr>
+                                }
+                            }
+
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    }
+</div>

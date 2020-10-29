@@ -1,0 +1,302 @@
+﻿@model ModelLayer.Models.ViewModel.HomePageDynamicBannerSetSequence
+
+<style>
+    .img_cat img {
+        width: 50px;
+        height: 50px;
+    }
+
+    .box-header h3 {
+        line-height: 0px;
+    }
+
+    .fixed_headers {
+        table-layout: fixed;
+        border-collapse: collapse;
+    }
+
+    /*td:nth-child(1), th:nth-child(1) {
+        max-width: 60px;
+        word-wrap: break-word;
+    }*/
+    td:nth-child(1), th:nth-child(1) {
+        min-width: 60px;
+        word-wrap: break-word;
+    }
+
+    td:nth-child(2), th:nth-child(2) {
+        min-width: 100px;
+        /*width: auto;*/
+        word-wrap: break-word;
+    }
+    td:nth-child(3) {
+        width: 215px;
+        word-wrap: break-word;
+    }
+
+    th:nth-child(3) {
+        width: 215px;
+        
+        word-wrap: break-word;
+    }
+
+    td:nth-child(4) {
+       width: 120px;
+        word-wrap: break-word;
+    }
+
+    th:nth-child(4) {
+       width: 120px;
+        word-wrap: break-word;
+    }
+
+    td:nth-child(5), th:nth-child(5) {
+       width: 40px;
+        word-wrap: break-word;
+    }
+
+    
+
+    thead {
+        background-color: #ccc;
+        color: #fff;
+    }
+
+    tr {
+        display: block;
+        position: relative;
+    }
+
+
+    tbody {
+        display: block;
+        overflow: auto;
+        width: 100%;
+        max-height: 500px;
+    }
+
+    .old_ie_wrapper {
+        height: 200px;
+        width: 100%;
+        overflow-x: hidden;
+        overflow-y: auto;
+    }
+</style>
+
+
+@using (Html.BeginForm("UpdateBannerSequence", "HomePageDynamicSectionPortal"))
+{
+    <div>
+        <div class="form-actions" style="clear:both;">
+            <input type="submit" name="submit" id="btnSubmit" class="btn btn-success" />
+            @Html.ActionLink("Back to List", "Index", string.Empty, new { @class = "btn btn-brown" })
+        </div>
+        <div style="color:red; font-weight:bold;">
+            <marquee behavior="alternate">Note:-  UP/DOWN Priority Will only Affected After Submit</marquee>
+        </div>
+      
+        @if (ViewBag.Franchise != null)
+        {
+            @Html.Hidden("Franchise", (int)ViewBag.Franchise)
+        }
+        <div style="width:100%; margin-top:10px;"></div>
+        <div class="my_table">
+            <table class="table table-bordered ">
+                <thead>
+                    <tr id="toptr">
+
+                        <th>
+                            <div>Sequence</div>
+                        </th>
+                        <th>
+                            <div>Image </div>
+                        </th>
+                        <th>
+                            <div>URL</div>
+                        </th>
+                        <th>
+                            <div>ToolTip</div>
+                        </th>
+                        <th><div>Is Active</div></th>
+
+                        <th><div>Up</div></th>
+                        <th><div>Down</div></th>
+
+                      
+                        <th></th>
+
+                    </tr>
+                </thead>
+                @*@for (int i=0;i<Model.HomeDynamicBannersetsequence.Count();)*@
+                @for (int i = 0; i < Model.HomeDynamicBannersetsequence.Count(); i++)
+                {
+                    <tr>
+                        <td class="shopPriority">
+
+                            @Html.HiddenFor(x => x.HomeDynamicBannersetsequence[i].ID)
+                            @Html.HiddenFor(x => x.HomeDynamicBannersetsequence[i].SequenceOrder)
+                            @Html.DisplayFor(x => x.HomeDynamicBannersetsequence[i].SequenceOrder)
+
+                        </td>
+                        <td class="img_cat">
+                            <img src="@Model.HomeDynamicBannersetsequence[i].Imagename" onerror="this.src = '../../Content/Images/No_thumbnail.png'" />
+                        </td>
+                        <td class="shop">
+                            @Html.DisplayFor(x => x.HomeDynamicBannersetsequence[i].LinkUrl)
+                        </td>
+                        <td class="shop">
+                            @Html.DisplayFor(x => x.HomeDynamicBannersetsequence[i].Tooltip)
+                        </td>
+                        <td>
+                            @*@Html.CheckBoxFor(x => x.HomeDynamicBannersetsequence[i].IsActive)*@
+                            @Html.DisplayFor(x => x.HomeDynamicBannersetsequence[i].IsActive)
+                        </td>
+                        <td> <a href="#noname" class='up'>Up</a></td>
+                        <td> <a href="#noname" class='down'>Down</a></td>
+
+                        @*<td>
+                                @Html.ActionLink("Details", "Details", new { id = Model.OfferItemList[i].Id }, new { @class = "btn btn-small btn-primary" })
+                            </td>*@
+                    </tr>
+                    @*<tr>
+                        <td class="shopPriority">
+
+                            @Html.HiddenFor(x => x.HomeDynamicBannersetsequence[i].ID)
+                            @Html.HiddenFor(x => x.HomeDynamicBannersetsequence[i].SequenceOrder)
+                            @Html.DisplayFor(x => x.HomeDynamicBannersetsequence[i].SequenceOrder)*@
+                    @*@Html.HiddenFor(x => x.HomeDynamicBannersetsequence[i].ProductID)*@
+
+                    @*</td>
+                        <td class="shop">
+                            @Html.DisplayFor(x => x.HomeDynamicBannersetsequence[i].Imagename)
+                        </td>
+                        <td class="shop">
+                            @Html.DisplayFor(x => x.HomeDynamicBannersetsequence[i].StartDate)
+                        </td>
+                        <td class="shop">
+                            @Html.DisplayFor(x => x.HomeDynamicBannersetsequence[i].EndDate)
+                        </td>
+                        <td class="shop">
+                            @Html.DisplayFor(x => x.HomeDynamicBannersetsequence[i].Tooltip)
+                        </td>
+                        <td class="shop">
+                            @Html.DisplayFor(x => x.HomeDynamicBannersetsequence[i].IsActive)
+                        </td>
+                        <td > <a href="#noname" class='up'>Up</a></td>
+                        <td> <a href="#noname" class='down'>Down</a></td>*@
+
+                    @*<td>
+                            @Html.ActionLink("Edit", "Edit", new { id = Model.franchiseMenuList[i].ID }, new { @class = "btn btn-small btn-success" })
+                            @Html.ActionLink("Details", "Details", new { id = Model.franchiseMenuList[i].ID }, new { @class = "btn btn-small btn-primary" })
+                            @Html.ActionLink("Delete", "Delete", new { id = Model.franchiseMenuList[i].ID }, new { @class = "btn btn-small btn-danger" })
+                        </td>*@
+                    @*</tr>*@
+                }
+
+            </table>
+        </div>
+    </div>
+}
+
+    <div class="form-actions" style="clear:both;">
+        @*<input type="submit" name="submit" id="btnSubmit" class="btn btn-success" />
+        @Html.ActionLink("Back to List", "Index", string.Empty, new { @class = "btn btn-brown" })*@
+
+    </div>
+
+
+<script src="~/Scripts/jquery-1.10.2.min.js"></script>
+<script>
+    $(document).ready(function () {
+
+        $(".up,.down").click(function () {
+            debugger;
+            var $element = this;
+            var row = $($element).parents("tr:first");
+            var val = $($element).parents("tr:first").children("td:first").text();
+
+            if ($(this).is('.up')) {
+                $('.table').find('tr').removeAttr('style');
+
+                if (row.prev('tr').html() != undefined) {
+
+                    var ID = row.children("td:nth-child(1)").find("[id*=ID]").val();
+                    var ImageName = row.children("td:nth-child(2)").html();
+                    var Actions = row.children("td:nth-child(8)").html();
+                    var LinkUrl = row.children("td:nth-child(3)").html();
+                    var ToolTip = row.children("td:nth-child(4)").html();
+                    var IsActive = row.children("td:nth-child(5)").find(".check-box").prop('checked');
+
+                    var prevID = row.prev().children("td:nth-child(1)").find("[id*=ID]").val();
+                    var prevImageName = row.prev().children("td:nth-child(2)").html();
+                    var prevActions = row.prev().children("td:nth-child(8)").html();
+                    var prevLinkUrl = row.prev().children("td:nth-child(3)").html();
+                    var prevToolTip = row.prev().children("td:nth-child(4)").html();
+                    var prevIsActive = row.prev().children("td:nth-child(5)").find(".check-box").prop('checked');
+
+                    row.children("td:nth-child(1)").find("[id*=ID]").val(prevID);
+                    row.children("td:nth-child(2)").html(prevImageName);
+                    row.children("td:nth-child(8)").html(prevActions);
+                    row.children("td:nth-child(3)").html(prevLinkUrl);
+                    row.children("td:nth-child(4)").html(prevToolTip);
+                    row.children("td:nth-child(5)").find(".check-box").prop('checked', prevIsActive);
+
+                    row.prev().children("td:nth-child(1)").find("[id*=ID]").val(ID);
+                    row.prev().children("td:nth-child(2)").html(ImageName);
+                    row.prev().children("td:nth-child(8)").html(Actions);
+                    row.prev().children("td:nth-child(3)").html(LinkUrl);
+                    row.prev().children("td:nth-child(4)").html(ToolTip);
+                    row.prev().children("td:nth-child(5)").find(".check-box").prop('checked', IsActive);
+                    row.prev('tr').css('background-color', '#ace8a9');
+                }
+            }
+            else {
+
+                $('.table').find('tr').removeAttr('style');
+                if ($(this).parents().not("tr:last")) {
+                    if (row.next('tr').html() != undefined) {
+
+                        var ID = row.children("td:nth-child(1)").find("[id*=ID]").val();
+                        var ImageName = row.children("td:nth-child(2)").html();
+                        var Actions = row.children("td:nth-child(8)").html();
+                        var LinkUrl = row.children("td:nth-child(3)").html();
+                        var ToolTip = row.children("td:nth-child(4)").html();
+                        var IsActive = row.children("td:nth-child(5)").find(".check-box").prop('checked');
+
+                        var nextID = row.next().children("td:nth-child(1)").find("[id*=ID]").val();
+                        var nextImageName = row.next().children("td:nth-child(2)").html();
+                        var nextActions = row.next().children("td:nth-child(8)").html();
+                        var nextLinkUrl = row.next().children("td:nth-child(3)").html();
+                        var nextToolTip = row.next().children("td:nth-child(4)").html();
+                        var nextIsActive = row.next().children("td:nth-child(5)").find(".check-box").prop('checked');
+
+                        row.children("td:nth-child(1)").find("[id*=ID]").val(nextID);
+                        row.children("td:nth-child(2)").html(nextImageName);
+                        row.children("td:nth-child(8)").html(nextActions);
+                        row.children("td:nth-child(3)").html(nextLinkUrl);
+                        row.children("td:nth-child(4)").html(nextToolTip);
+                        row.children("td:nth-child(5)").find(".check-box").prop('checked', nextIsActive);
+
+                        row.next().children("td:nth-child(1)").find("[id*=ID]").val(ID);
+                        row.next().children("td:nth-child(2)").html(ImageName);
+                        row.next().children("td:nth-child(8)").html(Actions);
+                        row.next().children("td:nth-child(3)").html(LinkUrl);
+                        row.next().children("td:nth-child(4)").html(ToolTip);
+                        row.next().children("td:nth-child(5)").find(".check-box").prop('checked', IsActive);
+                        row.next('tr').css('background-color', '#ace8a9');
+
+                    }
+                }
+            }
+        });
+
+    });
+
+</script>
+
+<script src="~/Content/js/custom.js"></script>
+<script src="~/Content/js/jquery.dataTables.min.js"></script>
+
+
+
+

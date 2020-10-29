@@ -1,0 +1,239 @@
+﻿@model List<ModelLayer.Models.ViewModel.ClaimAmountTowardsDVViewModel>
+
+
+<style>
+    section.right_side_main_part .row-fluid .box.span12.right_side_up_part .box-content center table tbody tr td div select#ddlmonth {
+        border-radius: 5px !important;
+        margin-bottom: 0;
+    }
+
+    section.right_side_main_part .row-fluid .box.span12.right_side_up_part .box-content center table tbody tr td div select#WarehouseId {
+        border-radius: 5px !important;
+        margin-bottom: 0;
+    }
+
+    .box.span12.right_side_up_part .box-content center table.table.table-bordered.table-striped.table-condensed.display tbody tr td {
+        white-space: nowrap;
+    }
+</style>
+<script>
+    $(document).ready(function () {
+        //$("#ddlmonth").val(@ViewBag.SelectedMonth);
+        $("#WarehouseId").val(@ViewBag.SelectedWarehouse);
+        @*$("#FromDate").val('@ViewBag.SelectedFromDate');*@ @* Added by Rumana 02 / 04 / 2019 *@
+        @*$("#ToDate").val('@ViewBag.SelectedToDate');*@ @* Added by Rumana 02 / 04 / 2019 *@
+
+        $("#btnSearch").click(function () {
+            @*window.location = "/Report/ClaimAmountTowardsDV?Month=" + $("#ddlmonth").val() + "&WarehouseId_=" + $("#WarehouseId").val() + "&Flag="+@ViewBag.Flag*@
+            window.location = "/Report/ClaimAmountTowardsDV?FromDate=" + $("#FromDate").val() + "&ToDate=" + $("#ToDate").val() + "&WarehouseId_=" + $("#WarehouseId").val() + "&Flag=" +@ViewBag.Flag @* Added by Rumana 02 / 04 / 2019 *@
+        })
+    });
+</script>
+@*Script of DataTable  for Pagination*@
+<script src="~/Scripts/jquery-1.12.4.js"></script>
+
+<link href="//cdn.datatables.net/1.10.19/css/jquery.dataTables.min.css" rel="stylesheet" />
+<script src="//cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
+
+@*End Of Script of DataTable for Pagination*@
+
+<section class="right_side_main_part">
+
+    <div class="row-fluid">
+        <div class="box span12 right_side_up_part">
+            <div class="box-header">
+                <h2>
+                    <i class="icon-list-alt"></i>
+                    <span class="break"></span>
+                    Claim Amount Report
+                </h2>
+            </div>
+            <div class="box-content">
+                @if (@ViewBag.DV == "0")
+                {
+                    <center>
+                        <table>
+                            <tr>
+                                @*Added by Rumana 02/04/2019*@
+                                <td style="padding:15px">
+                                    <div>
+                                        @*<label> Select Month</label>
+                                            <select id="ddlmonth" style="text-transform:uppercase;width:130px">
+                                                <option value="1">january</option>
+                                                <option value="2">february</option>
+                                                <option value="3">march</option>
+                                                <option value="4">april</option>
+                                                <option value="5">may</option>
+                                                <option value="6">jun</option>
+                                                <option value="7">july</option>
+                                                <option value="8">augest</option>
+                                                <option value="9">september</option>
+                                                <option value="10">october</option>
+                                                <option value="11">november</option>
+                                                <option value="12">december</option>
+                                            </select>*@
+                                        <label>From Date</label>
+                                        @Html.TextBox("FromDate")
+                                        @Html.Hidden("HiddFromDate")
+
+
+                                    </div>
+                                </td>
+                                <td style="padding:15px">
+                                    <div>
+                                        <label> To Date</label>
+                                        @Html.TextBox("ToDate")
+                                        @Html.Hidden("HiddToDate")
+
+
+                                    </div>
+                                </td>
+                                @*Ended by Rumana 02/04/2019*@
+                                <td style="padding:15px">
+                                    <div>
+                                        <label>Select Warehouse</label>
+                                        @Html.DropDownList("WarehouseId", ((IEnumerable<ModelLayer.Models.Warehouse>)ViewBag.PossibleWarehouse).Select(option => new SelectListItem
+                                           {
+                                               Text = (option == null ? "None" : option.Name),
+                                               Value = option.ID.ToString(),
+                                               Selected = (Model != null) && (option.ID == @ViewBag.SelectedWarehouse)
+                                           }), "--All Suppliers--")
+                                    </div>
+                                </td>
+                                <td style="padding:15px">
+                                    <input type="button" value="Search" class="btn-success btn btn-warning btn-small" id="btnSearch" />
+                                </td>
+                            </tr>
+                        </table>
+                    </center>
+                }
+                else
+                {
+                    <center>
+                        <table>
+                            <tr>
+                                @*Added by Rumana 02/04/2019*@
+                                <td style="padding:15px">
+                                    <div>
+                                        @*<label> Select Month</label>
+                                            <select id="ddlmonth" style="text-transform:uppercase;width:130px">
+                                                <option value="1">january</option>
+                                                <option value="2">february</option>
+                                                <option value="3">march</option>
+                                                <option value="4">april</option>
+                                                <option value="5">may</option>
+                                                <option value="6">jun</option>
+                                                <option value="7">july</option>
+                                                <option value="8">augest</option>
+                                                <option value="9">september</option>
+                                                <option value="10">october</option>
+                                                <option value="11">november</option>
+                                                <option value="12">december</option>
+                                            </select>*@
+                                        <label>From Date</label>
+
+                                        @Html.TextBox("FromDate")
+                                        @Html.Hidden("HiddFromDate")
+
+
+                                    </div>
+                                </td>
+                                <td style="padding:15px">
+                                    <div>
+                                        <label> To Date</label>
+
+                                        @Html.TextBox("ToDate")
+                                        @Html.Hidden("HiddToDate")
+
+
+                                    </div>
+                                </td>
+                                @*Ended by Rumana 02/04/2019*@
+
+                                <td style="padding:15px">
+                                    <input type="button" value="Search" class="btn-success btn btn-warning btn-small" id="btnSearch" />
+                                </td>
+                            </tr>
+                        </table>
+                    </center>
+                }
+
+                @{
+                    var j = 0;
+                    var Total = (decimal)0;
+                }
+                <center>
+                    <table class="table table-bordered table-striped table-condensed display">
+                        <thead>
+                            <tr>
+                                <th>Sr.No</th>
+                                @if (@ViewBag.DV == "0")
+                                {
+                                    <th style="min-width:150px;max-width:150px;word-break:break-all">Warehouse Name</th>
+                                }
+                                <th>Order Code</th>
+                                <th>Product Name</th>
+                                <th>Varient Name</th>
+                                <th>Batch Code</th>
+                                <th>Decided Sale Price</th>
+                                <th>Diversion In Sale Price</th>
+                                <th>Qty</th>
+                                <th>Claim Amount</th>
+                                <th>POR Date</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+
+                            @for (var i = 0; i < Model.Count(); i++)
+                            {
+                                <tr>
+                                    <td>
+                                        @{
+                                            j = i;
+                                            j = j + 1;
+                                        }
+                                        @j
+                                    </td>
+                                    @if (@ViewBag.DV == "0")
+                                    {
+                                        <td>@Model[i].WarehouseName</td>
+                                    }
+                                    <td>@Model[i].OrderCode</td>
+                                    <td>@Model[i].ProductName</td>
+                                    <td>@Model[i].VarientName</td>
+                                    <td>@Model[i].Batch</td>
+                                    <td>@Model[i].DecidedSalePrice</td>
+                                    <td>@Model[i].DiversionInSalePrice</td>
+                                    <td>@Model[i].Qty</td>
+                                    <td>
+                                        @Model[i].ClaimAmount
+                                        @{
+                                            Total = (decimal)(Total + Model[i].ClaimAmount);
+                                        }
+                                    </td>
+                                    <td>@Model[i].POReplyDate.ToString("MM/dd/yyyy")</td>
+                                </tr>
+                            }
+                        </tbody>
+                        <tfoot>
+                            <tr>
+                                <td colspan="8" style="@( (@ViewBag.DV == "0") ? "min-width: 1048px; max-width: 1048px;word-break: break-all" : "min-width: 887px; max-width: 887px;word-break: break-all") ">
+                                    <label style="float: right; color: #b40404">Total&nbsp;&nbsp;&nbsp;</label>
+                                </td>
+                                <td style="min-width: 80px; max-width: 80px; word-break: break-all"><label style="color:#b40404">@Total</label></td>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </center>
+            </div>
+        </div>
+    </div>
+</section>
+@*Added by Rumana 02/04/2019*@
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('#FromDate').datepicker({ dateFormat: 'mm/dd/yy', maxDate: 'now' });
+        $('#ToDate').datepicker({ dateFormat: 'mm/dd/yy', maxDate: 'now' });
+    });
+</script>
+@*Ended by Rumana 02/04/2019*@

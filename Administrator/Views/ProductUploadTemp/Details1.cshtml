@@ -1,0 +1,400 @@
+﻿@model ModelLayer.Models.ViewModel.ProductUploadTempViewModel
+
+@{
+    ViewBag.Title = "Detail1";
+}
+
+@*@{
+        Layout = "";
+    }*@
+
+<script>
+    //$(document).ready(function () {
+    //    $.cookie('Varient', '', { expires: -1 });
+    //});
+</script>
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+
+    <div class="span10 " id="content" style="min-height: 407px;">
+
+        <div class="box-header creatProduct clearfix" data-original-title="">
+            <h2><i class="icon-exclamation-sign"></i><span class="break"></span>Product Details</h2>
+
+
+        </div>
+        <div class="row-fluid sortable">
+            <div class="box span12">
+                <div class="box-content ">
+                    <form class="form-horizontal">
+                        <fieldset>
+                            @Html.ValidationSummary(true)
+
+
+                            @*<table class="table table-striped table-bordered bootstrap-datatable datatable dataTable">
+                                <tr>
+                                    <td>File</td>
+                                    <td><input type="file" name="Files" id="Files" multiple="multiple" /></td>
+                                    @*<td><input type="file" name="logo" id="logo" /></td>
+                                </tr>*@
+                            @*<tr>
+                                    <td>&nbsp;</td>
+                                    <td><input type="submit" name="submit" value="Upload" id="Upload" /> </td>
+                                </tr>
+                                </table>*@
+
+                            <div class="span12">
+                                <div class="span8">
+                                    <div class="nameDscrp">
+
+                                        <div class="control-group">
+                                            @Html.LabelFor(model => model.Name, "Product Name")
+                                            <div class="">
+                                                @Html.TextBoxFor(model => model.Name, new { @class = "span12 disabled", disabled = "" })
+                                                @Html.ValidationMessageFor(model => model.Name)
+                                            </div>
+                                        </div>
+                                        <div class="control-group">
+                                            @Html.LabelFor(model => model.Description)
+                                            <div class="">
+                                                @Html.TextAreaFor(model => model.Description, new { @class = "discrip_box span12 disabled", disabled = "" })
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="upload-ChooseFile ">
+
+                                        <table class="table ">
+                                            <tr>
+                                                <td>Images</td>
+                                            </tr>
+                                            <tr>
+                                                <td>
+                                                    @*<input type="file" name="Files" id="Files" multiple="multiple" style="display:none;" />*@
+                                                    <div class="span12" style="text-align:left">
+                                                        @foreach (var srcr in ViewBag.ImageURL)
+                                                        {
+                                                            <img src="@srcr" style="width:150px; height:150px" />
+                                                        }
+                                                    </div>
+                                                </td>
+                                                @*<td class="pull-right span4"><input type="file" name="Files" id="Files" multiple="multiple" class="pull-right" /></td>*@
+                                            </tr>
+                                            <tr>
+                                                <td colspan="2" class="uploag_iconCntr disabled">
+                                                    @*<i class="glyphicons-icon sort large"></i>*@
+                                                    @*<img src="~/Content/Logo/upload_file.PNG" />*@
+                                                </td>
+                                            </tr>
+
+                                        </table>
+                                    </div>
+
+
+
+                                    <div class="clearfix"></div>
+                                    <div class="control-group nameDscrp margin-top">
+
+
+                                        <div class="control-group  span2 DivSmall1">
+                                            @Html.LabelFor(model => model.WeightInGram, "Weight In Gram")
+                                            <div>
+                                                @Html.TextBoxFor(model => model.WeightInGram, new { @class = "disabled txt-adjWidth1", disabled = "" })
+                                                @Html.ValidationMessageFor(model => model.WeightInGram)
+                                            </div>
+                                        </div>
+                                        <div class="control-group span2 DivSmall1">
+                                            @Html.LabelFor(model => model.LengthInCm, "Length In Cm")
+                                            <div>
+                                                @Html.TextBoxFor(model => model.LengthInCm, new { @class = "disabled txt-adjWidth1", disabled = "" })
+                                                @Html.ValidationMessageFor(model => model.LengthInCm)
+                                            </div>
+                                        </div>
+
+
+
+                                        <div class="control-group span2 DivSmall1">
+                                            @Html.LabelFor(model => model.BreadthInCm, "Breadth In Cm")
+                                            <div>
+                                                @Html.TextBoxFor(model => model.BreadthInCm, new { @class = "txt-adjWidth1 disabled", disabled = "" })
+                                                @Html.ValidationMessageFor(model => model.BreadthInCm)
+                                            </div>
+                                        </div>
+                                        <div class="control-group span2 DivSmall1">
+                                            @Html.LabelFor(model => model.HeightInCm, "Height In Cm")
+                                            <div>
+                                                @Html.TextBoxFor(model => model.HeightInCm, new { @class = "txt-adjWidth1 disabled", disabled = "" })
+                                                @Html.ValidationMessageFor(model => model.HeightInCm)
+
+                                            </div>
+                                        </div>
+                                        <label class="checkbox inline">
+                                            <div id="uniform-inlineCheckbox1" class="checker">
+                                                <span>
+                                                    @Html.EditorFor(model => model.IsActive, new { @class = "txt-adjWidth1 disabled", disabled = "" })
+                                                    @Html.ValidationMessageFor(model => model.IsActive)
+                                                </span>
+                                            </div>@Html.LabelFor(model => model.IsActive, new { @class = "control-label col-md-2" ,@Style="margin-top: -19px;"})
+                                        </label>
+
+
+                                        @*<div class="">
+                                                <label class="checkbox inline">
+                                                    <div id="uniform-inlineCheckbox1" class="checker">
+                                                        <span>
+                                                            @Html.EditorFor(model => model.IsInclusiveOfTax, new { @class = "txt-adjWidth1 disabled", disabled = "" })
+                                                            @Html.ValidationMessageFor(model => model.IsInclusiveOfTax)
+                                                        </span>
+                                                    </div>@Html.LabelFor(model => model.IsInclusiveOfTax, new { @class = "control-label col-md-2" })
+                                                </label>
+
+                                            </div>*@
+
+
+
+                                        @*col-md-6-end*@
+
+
+                                    </div>
+
+                                </div>
+
+                                <div class="span4 scndBox">
+
+                                    <div class="right-brnd">
+                                        <div class="control-group">
+
+                                            @Html.LabelFor(model => model.CategoryL_0, "Root Category", new { @class = "" })
+                                            <div class="">
+                                                @Html.DropDownList("CategoryL_0", null, String.Empty, new { @class = "disabled", disabled = "" })
+                                                @Html.ValidationMessageFor(model => model.CategoryL_0)
+                                            </div>
+
+                                        </div>
+                                        <div class="control-group">
+
+                                            @Html.LabelFor(model => model.CategoryL_1, "Category", new { @class = "" })
+                                            <div class="">
+                                                @Html.DropDownList("CategoryL_1", null, String.Empty, new { @class = "disabled", disabled = "" })
+                                                @Html.ValidationMessageFor(model => model.CategoryL_1)
+                                            </div>
+
+                                        </div>
+                                        <div class="control-group">
+
+                                            @Html.LabelFor(model => model.CategoryL_2, "Sub Category", new { @class = "" })
+                                            <div class="">
+                                                @Html.DropDownList("CategoryL_2", null, String.Empty, new { @class = "disabled", disabled = "" })
+                                                @Html.ValidationMessageFor(model => model.CategoryL_2)
+                                            </div>
+
+                                        </div>
+                                        <div class="control-group">
+                                            @Html.LabelFor(model => model.BrandID, "Brand")
+                                            <div class="">
+
+                                                @Html.ValidationMessageFor(model => model.BrandID)
+                                                @*@Html.TextBoxFor(model => model.BrandName, new { @class = "disabled", disabled = "" })
+                                                    @Html.DropDownList("BrandID", String.Empty)*@
+                                                @Html.DropDownList("BrandID", null, String.Empty, new { @class = "disabled", disabled = "" })
+                                            </div>
+                                        </div>
+
+
+                                    </div>
+                                    <div class="right-display">
+                                        <div class="control-group">
+                                            @Html.LabelFor(model => model.DisplayProductFromDate, "Display Product From Date")
+                                            <div class="">
+
+                                                @Html.TextBoxFor(model => model.DisplayProductFromDate, new { id = "txtFromDate", @class = "input-large datepicker span9", disabled = "" })
+
+                                                <i class="glyphicons-icon calendar"></i>
+                                            </div>
+                                        </div>
+
+                                        <div class="mrg_top">
+                                            @Html.LabelFor(model => model.SearchKeyword, "Search Keyword")
+                                            <div class="">
+                                                @Html.TextBoxFor(model => model.SearchKeyword, new { @class = "span9", disabled = "" })
+
+                                                <i class="glyphicons-icon search"></i>
+                                            </div>
+                                        </div>
+                                    </div>
+
+
+
+
+
+
+                                </div>
+
+                            </div>
+                        </fieldset>
+                    </form>
+                    @*<div class="clearfix"></div>*@
+                    <div class="row-fluid sortable down-box">
+                        <div class="box span12">
+                            <div class="box-content ">
+                                <div class=" control-group clearfix">
+                                    <div id="varient  control-group" class="ui-widget">
+                                        @*<div class=" span12 box-content">
+                                                @Html.Action("ProductVarientList", Model.ID)
+                                            </div>*@
+
+                                        <table id="dataTable" class="pro-scrol" border="0" cellpadding="0" cellspacing="0">
+                                            <thead>
+                                                <tr class="ui-widget-header ">
+                                                    <th></th>
+                                                    <th width="9%">Color</th>
+                                                    <th width="9%">Size</th>
+                                                    <th width="9%">Dimention</th>
+                                                    <th width="9%">Material</th>
+                                                    <th width="9%">Qty</th>
+                                                    <th width="9%">Reorder Level</th>
+                                                    <th width="9%">Pack Size</th>
+                                                    <th width="9%">Unit</th>
+                                                    <th width="9%">MRP</th>
+                                                    <th width="9%">Sale Rate</th>
+                                                    <th width="9%">Is Inclusive of tax</th>
+                                                    <th></th>
+                                                </tr>
+
+
+                                                @if (Model.NewProductVarientS != null && Model.NewProductVarientS.Count > 0)
+                                                {
+                                                    int j = 0;
+                                                    foreach (var i in Model.NewProductVarientS)
+                                                    {
+
+                                                        <tr style="">
+                                                            <td>@Html.HiddenFor(a => a.NewProductVarientS[j].ProductVarientID)</td>
+
+                                                            @*<td>@Html.DropDownListFor(model => model.NewProductVarientS[j].ColorID, (SelectList)ViewBag.ColorID)</td>*@
+                                                            @*<td>@Html.DropDownList("ColorID", (SelectList)ViewBag.list)</td>*@
+
+                                                            @*<td>
+                                                                  @Html.DropDownList("ColorID", ViewBag.Roles as SelectList)
+
+                                                                </td>*@
+                                                            @{
+                                                        List<SelectList> ColorID = (List<SelectList>)ViewBag.ColorID;
+                                                        List<SelectList> SizeID = (List<SelectList>)ViewBag.SizeID;
+                                                        List<SelectList> DimensionID = (List<SelectList>)ViewBag.DimensionID;
+                                                        List<SelectList> MaterialID = (List<SelectList>)ViewBag.MaterialID;
+                                                        List<SelectList> PackUnitID = (List<SelectList>)ViewBag.PackUnitID;
+                                                            }
+                                                            <td>@Html.DropDownListFor(model => model.NewProductVarientS[j].ColorID, ColorID[j], new { @class = "disabled", disabled = " " }) </td>
+                                                            <td>@Html.DropDownListFor(model => model.NewProductVarientS[j].SizeID, SizeID[j], new { @class = "disabled", disabled = " " })</td>
+                                                            <td>@Html.DropDownListFor(model => model.NewProductVarientS[j].DimensionID, DimensionID[j], new { @class = "disabled", disabled = " " })</td>
+                                                            <td>@Html.DropDownListFor(model => model.NewProductVarientS[j].MaterialID, MaterialID[j], new { @class = "disabled", disabled = " " })</td>
+                                                            @*<td>@Html.TextBoxFor(a => a.NewProductVarientS[j].ColorID)</td>
+                                                                <td>@Html.TextBoxFor(a => a.NewProductVarientS[j].SizeID)</td>
+                                                                <td>@Html.TextBoxFor(a => a.NewProductVarientS[j].DimensionID)</td>
+                                                                <td>@Html.TextBoxFor(a => a.NewProductVarientS[j].MaterialID)</td>*@
+                                                            <td>@Html.TextBoxFor(a => a.NewProductVarientS[j].Qty, new { @class = "disabled", disabled = " " })</td>
+                                                            <td>@Html.TextBoxFor(a => a.NewProductVarientS[j].ReorderLevel, new { @class = "disabled", disabled = " " })</td>
+                                                            <td>@Html.TextBoxFor(a => a.NewProductVarientS[j].PackSize, new { @class = "disabled", disabled = " " })</td>
+                                                            @*<td>@Html.TextBoxFor(a => a.NewProductVarientS[j].PackUnitID)</td>*@
+                                                            <td>@Html.DropDownListFor(model => model.NewProductVarientS[j].PackUnitID, PackUnitID[j], new { @class = "disabled", disabled = " " })</td>
+                                                            <td>@Html.TextBoxFor(a => a.NewProductVarientS[j].MRP, new { @class = "disabled", disabled = " " })</td>
+                                                            <td>@Html.TextBoxFor(a => a.NewProductVarientS[j].RetailerRate, new { @class = "disabled", disabled = " " })</td>
+                                                            <td>@Html.CheckBoxFor(a => a.NewProductVarientS[j].IsInclusiveOfTax, new { @class = "disabled", disabled = " " })</td>
+                                                            <td>@Html.HiddenFor(a => a.NewProductVarientS[j].ShopStockID, new { @class = "disabled", disabled = " " })</td>
+                                                            <td>
+                                                                @if (j > 0)
+                                                                {
+                                                                    @*<a href="#" class="remove">Remove</a>*@
+                                                                }
+                                                            </td>
+                                                        </tr>
+                                                                j++;
+                                                    }
+                                                }
+
+                                            </thead>
+
+                                        </table>
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+
+
+                    <div class="form-actions ">
+
+                        <div class="pull-right">
+                            @Html.ActionLink("Back to List", "Index", string.Empty, new { @class = "btn btn-primary" })
+                        </div>
+                    </div>
+
+
+
+                </div>
+
+
+                @* ========================================Partial view ProductVarient============================================= *@
+
+
+                @* ========================================Partial view ProductShopStock============================================= *@
+
+
+            </div>
+        </div>
+    </div>
+
+    @Scripts.Render("~/bundles/jqueryval")
+    <script language="javascript">
+        $(document).ready(function () {
+            //1. Add new row
+            $("#addNew").click(function (e) {
+
+                e.preventDefault();
+                var $tableBody = $("#dataTable");
+                var $trLast = $tableBody.find("tr:last");
+                var $trNew = $trLast.clone();
+
+                var suffix = $trNew.find(':input:first').attr('name').match(/\d+/);
+
+                $trNew.find("td:last").html('<a href="#" class="remove">Remove</a>');
+                $.each($trNew.find(':input'), function (i, val) {
+                    // Replaced Name
+                    var oldN = $(this).attr('name');
+                    var newN = oldN.replace('[' + suffix + ']', '[' + (parseInt(suffix) + 1) + ']');
+                    $(this).attr('name', newN);
+                    //    //Replaced value
+
+                    //var type = $(this).attr('type');
+                    // if (type.toLowerCase() == "text") {
+                    //    $(this).attr('value', '');
+                    //}
+                    //else if{
+                    $(this).attr('value', '');
+                });
+                $trLast.after($trNew);
+
+                // Re-assign Validation
+                var form = $("form")
+                    .removeData("validator")
+                    .removeData("unobtrusiveValidation");
+                $.validator.unobtrusive.parse(form);
+            });
+
+            // 2. Remove
+            $('a.remove').live("click", function (e) {
+                e.preventDefault();
+                $(this).parent().parent().remove();
+            });
+
+        });
+    </script>
+
+
+
+}

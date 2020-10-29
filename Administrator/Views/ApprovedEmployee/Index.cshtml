@@ -1,0 +1,224 @@
+﻿@model IEnumerable<ModelLayer.Models.Employee>
+@using ModelLayer.Models;
+@{
+    ViewBag.Title = "Index";
+
+}
+
+@*<h2>Index</h2>*@
+
+@*<p>
+        @Html.ActionLink("Create New", "Create")
+    </p>*@
+<div id="content" class="span10" style="min-height: 400px;">
+    <ul class="breadcrumb">
+        <li>
+            <i class="icon-home"></i>
+            <a href="">Employee Management</a>
+
+        </li>
+        @*<li><a href="#">Tables</a></li>*@
+    </ul>
+    <div class="row-fluid">
+        <div class="box span12">
+            <div class="box-header">
+                <h2><i class="icon-edit"></i><span class="break"></span>@Html.ActionLink("Create New", "Create")</h2>
+
+            </div>
+            <div class="box-content">
+                <div class="row-fluid">
+                    <div class="span6">
+                        <span class="hed-owner">Select Owner Type</span>
+                        @Html.DropDownList("BusinessType", "Select Business Type")
+                    </div>
+                    <div class="span6">
+                        <span class="hed-owner">Select Owner</span>
+                        @Html.DropDownList("BusinessOwner")
+                    </div>
+
+                </div>
+                <div id="pageloaddiv"></div>
+                <div class="div_class">
+                    <table class="table table-striped table-bordered" id="tableSimilarProduct">
+                        <tr>
+
+                            <th>
+                                @Html.DisplayNameFor(model => model.EmployeeCode)
+                            </th>
+                            <th>
+                                Employee Name
+                            </th>
+                            <th>
+                                Email
+                            </th>
+                            <th>
+                                Mobile
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.OwnerID)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.IsActive)
+                            </th>
+                            <th></th>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="~/Scripts/jquery-1.10.2.min.js"></script>
+<style type="text/css">
+    #pageloaddiv {
+        position: fixed;
+        left: 0px;
+        top: 0px;
+        width: 100%;
+        height: 100%;
+        z-index: 1000;
+        background: url('../Content/Images/ajax_loader.gif') no-repeat center center;
+        background-size: 100px;
+        display: none;
+    }
+</style>
+
+<script>
+    $(function () {
+
+        $.ajax({
+            type: "POST",
+            url: "/ApprovedEmployee/EmployeeList",
+            data: "{ businessTypeID: " + 0 + ",OwnerID:" + 0 + "}",
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            async: true,
+            cache: false,
+            success: function (msg) {
+
+                $.each(msg, function (index, item) {
+                    var Checked_status = item.IsActive;
+
+                    $("#tableSimilarProduct ").append("<tr>" +
+                        "<td>" + item.EmployeeCode + "</td>" +
+                        "<td>" + item.EmpName + "</td>" +
+                        "<td>" + item.Email + "</td>" +
+                        "<td>" + item.Mobile + "</td>" +
+                        "<td>" + item.OwnerID + "</td>" +
+                       "<td id='isActive'>" + item.IsActive + "</td>" +
+                         "<td>" +
+                        "<a class='btn btn-small btn-success' href='@Url.Action("Edit", "EmployeeManagement")?id=" + item.LoginID + "'> Edit </a> " +
+                        "<a class='btn btn-small btn-primary' href='@Url.Action("Disapprove", "ApprovedEmployee")?id=" + item.LoginID + "'>Disapprove </a> "
+                        @*+ "<a class='btn btn-danger' href='@Url.Action("Delete", "EmployeeManagement")?id=" + item.LoginID + "'>Delete </a>"*@
+                        + "</td> </tr>"
+                    );
+                });
+                $("#pageloaddiv").css('display', 'none');
+                $("#pageloaddiv").fadeOut(1000);
+
+            },
+            error: function (x, e) {
+                alert("Sorry  Unable to Bind Data. ");
+                $("#pageloaddiv").css('display', 'none');
+                $("#pageloaddiv").fadeOut(1000);
+            }
+
+        });
+    });
+
+
+
+
+    $(function () {
+        $('#BusinessOwner').change(function (e) {
+            var selectedVal = $('#BusinessOwner option:selected').val();
+            var selectOwner = $('#BusinessType option:selected').val();
+            if (selectedVal > 0) {
+                $("#pageloaddiv").attr("display", "block");
+                $("#pageloaddiv").css("display", "block");
+                $.ajax({
+                    type: "POST",
+                    url: "/ApprovedEmployee/EmployeeList",
+                    data: "{ businessTypeID: " + selectOwner + ",OwnerID:" + selectedVal + "}",
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    async: true,
+                    cache: false,
+                    success: function (msg) {
+                        $('#tableSimilarProduct').empty();
+                        $("#tableSimilarProduct ").append("<tr>" +
+                               "<th>EmployeeCode</th>" +
+                               "<th>Employee Name</th>" +
+                               "<th>Email</th>" +
+                               "<th>Mobile</th>" +
+                               "<th>OwnerID </th>" +
+                               "<th>IsActive </th>" +
+                               "<th></th> </tr>"
+                            );
+                        $.each(msg, function (index, item) {
+                            $("#tableSimilarProduct ").append("<tr>" +
+                                "<td>" + item.EmployeeCode + "</td>" +
+                                "<td>" + item.EmpName + "</td>" +
+                                "<td>" + item.Email + "</td>" +
+                                "<td>" + item.Mobile + "</td>" +
+                                "<td>" + item.OwnerID + "</td>" +
+                                "<td>" + item.IsActive + "</td>" +
+                                "<td>" +
+                              "<a class='btn btn-success' href='@Url.Action("Edit", "EmployeeManagement")?id=" + item.LoginID + "' style='margin-right:5px;'> Edit </a>" +
+                              "<a class='btn btn-primary' href='@Url.Action("Disapprove", "ApprovedEmployee")?id=" + item.LoginID + "'>Disapprove </a> "
+                               + "</td> </tr>"
+                            );
+                        });
+                        $("#pageloaddiv").css('display', 'none');
+                        $("#pageloaddiv").fadeOut(1000);
+                    },
+                    error: function (x, e) {
+                        alert("Sorry No Unable to Bind Data. ");
+                        $("#pageloaddiv").css('display', 'none');
+                        $("#pageloaddiv").fadeOut(1000);
+                    }
+                });
+            }
+
+        });
+    });
+
+
+
+    $(function () {
+        $('#BusinessType').change(function (e) {
+            var selectedVal = $("#BusinessType option:selected").val();
+            if (selectedVal > 0) {
+                $("#pageloaddiv").attr("display", "block");
+                $("#pageloaddiv").css("display", "block");
+
+                $.ajax({
+                    type: "POST",
+                    url: "/ApprovedEmployee/getOwnerID",
+                    data: "{ businessTypeID: '" + selectedVal + "'}",
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    async: true,
+                    cache: false,
+                    success: function (msg) {
+                        $('#BusinessOwner').empty();
+                        $('#BusinessOwner').append('<option value=0>Select Owner</option>');
+                        $.each(msg, function (index, item) {
+                            $('#BusinessOwner').append('<option value=' + item.ID + '>' + item.Name + '</option>');
+
+                        });
+                        $("#pageloaddiv").css('display', 'none');
+                        $("#pageloaddiv").fadeOut(1000);
+                    },
+                    error: function (x, e) {
+                        alert("Sorry No Such Type of Owner Is available. ");
+                        $("#pageloaddiv").css('display', 'none');
+                        $("#pageloaddiv").fadeOut(1000);
+                    }
+                });
+            }
+        });
+    });
+
+</script>

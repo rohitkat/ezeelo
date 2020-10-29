@@ -1,0 +1,312 @@
+﻿@model ModelLayer.Models.ViewModel.PurchaseOrderViewModelList
+
+@{
+    ViewBag.Title = "Purchase Order History";
+    if (Session["Category"] != null)
+    {
+        if (Session["Category"].ToString() == "IsCategory")
+        {
+            Layout = "~/Views/Shared/_CategoryLayout.cshtml";
+        }
+    }
+}
+
+
+@*Script of DataTable  for Pagination*@
+@*<script src="~/Scripts/jquery-1.12.4.js"></script>
+
+<link href="//cdn.datatables.net/1.10.19/css/jquery.dataTables.min.css" rel="stylesheet" />
+<script src="//cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>*@
+
+@*End Of Script of DataTable for Pagination*@
+
+<link href="~/Content/css/bootstrap-datetimepicker.min.css" rel="stylesheet" />
+<link href="~/Content/css/bootstrap-datetimepicker.css" rel="stylesheet" />
+<link href="~/Content/assets/css/font-awesome.min.css" rel="stylesheet" />
+<link href="~/Content/assets/css/form-design.css" rel="stylesheet" />
+
+
+<section class="right_side_main_part">
+    <div class="row-fluid">
+        @using (Html.BeginForm("PurchaseOrderHistory", "PurchaseOrderReports", new { enctype = "multipart/form-data" }, FormMethod.Post, new { id = "Form_" }))
+        {
+            @Html.ValidationSummary(true)
+
+            <div class="box span12 right_side_up_part">
+                @*right side up part*@
+                <div class="box-header creatProduct clearfix">
+                    <h2>
+                        <i class="icon-list-alt"></i>
+                        <span class="break"></span>
+                        Purchase Order History
+                    </h2>
+                </div>
+                <div class="box-content nameDscrp">
+                    <div class="form-horizontal">
+                        <div class="NameDescription">
+
+
+                            <div class="control-group mrg-left">
+                                <div class="col-sm-3">
+                                    Filter by Supplier
+                                </div>
+                                <div class="col-sm-6">
+                                    @if (ViewBag.PossibleSuppliers != null)
+                                    {
+                                        @Html.DropDownListFor(model => model.SupplierID, ((IEnumerable<ModelLayer.Models.Supplier>)ViewBag.PossibleSuppliers).Select(option => new SelectListItem
+                       {
+                           Text = (option == null ? "None" : option.Name),
+                           Value = option.ID.ToString(),
+                           //Value =Convert.ToString(0),
+                           Selected = (Model != null) && (option.ID == Model.SupplierID)
+                       }))
+                                    }
+
+                                </div>
+                            </div>
+
+
+
+                            <div class="control-group mrg-left">
+                                <div class="col-sm-3">
+                                    From Date
+                                </div>
+                                <div class="col-sm-6">
+                                    @*@Html.TextBox("FromDate", null, new { @readonly = "readonly", @class = "search", placeholder = "From" })*@
+                                    @Html.TextBoxFor(model => model.FromDate, "{0:dd/MM/yyyy}")
+                                    @Html.HiddenFor(model => model.FromDate)
+                                </div>
+                            </div>
+                            <div class="control-group mrg-left">
+                                <div class="col-sm-3">
+                                    To Date
+                                </div>
+                                <div class="col-sm-6">
+                                    @*@Html.TextBox("ToDate", null, new { @readonly = "readonly", @class = "search", placeholder = "To" })*@
+                                    @Html.TextBoxFor(model => model.ToDate, "{0:MM/dd/yyyy}")
+                                    @Html.HiddenFor(model => model.ToDate)
+                                </div>
+                            </div>
+                            <div class="clr"></div>
+                            <div class="control-group mrg-left">
+                                <div class="col-sm-3">
+                                </div>
+                                <div class="col-sm-6">
+                                    <button value="Search" type="submit" class="btnRemove btn btn-warning">Search</button>
+                                    @*<button id="btnPrint" class="btnPrint btn btn-success">Print</button>*@
+                                    @*<a id="Print" class="print btn btn-default" href="@Url.Action("PurchaseOrderHistoryPrint", "PurchaseOrderReports")" target="_blank">Print</a>*@
+                                    <a id="Print" class="print btn btn-default" href="@Url.Action("PurchaseOrderHistoryPrint", "PurchaseOrderReports", new {ToDate=Model.ToDate,FromDate=Model.FromDate})" target="_blank">Print</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        }
+        <iframe id="txtArea1" style="display:none"></iframe>
+
+        <button id="btnExport" onclick="fnExcelReport();" class="btnPrint btn btn-success btn-small">EXPORT TO EXCEL</button>
+        <div class="box right_side_down_part">
+            @*right side down part*@
+            <div class="box-content">
+                <div class="NameDescription">
+                    <div id="divToPrint">
+                        <table id="headerTable" class=" table table-bordered table-striped table-condensed" border="1" cellpadding="2" cellspacing="0">
+                            <thead>
+                                <tr><td class="TD_Heading" style="text-align:center" colspan="11"><h2>PURCHASE ORDER HISTORY (@Convert.ToDateTime(@Model.FromDate).ToString("dd MMM yyyy") To @Convert.ToDateTime(@Model.ToDate).ToString("dd MMM yyyy"))</h2></td></tr>
+                                <tr>
+                                    <th>Sr.No.</th>
+                                    <th>PO Code</th>
+                                    <th>Create Date</th>
+                                    <th>Expected Delivery Date</th>
+                                    <th>Status</th>
+                                    <th>Supplier</th>
+                                    <th>Item</th>
+                                    <th>MRP</th>
+                                    <th>Unit Price</th>
+                                    <th>Qty Ordered</th>
+                                    <th> Amount</th>
+                                    @*<th>
+                                            Is Sent
+                                        </th>*@
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @{
+                                    var i = 1;
+                                }
+                                @foreach (var item in Model.lPurchaseOrderViewModel)
+                                {
+                                    <tr>
+                                        <td style="text-align: center;">
+                                            @i
+                                            @{
+                                                i = i + 1;
+                                            }
+                                        </td>
+                                        <td>
+                                            @*@(item.PurchaseOrderCode == null ? "" : item.PurchaseOrderCode)*@
+                                            <a id="Print" style="color: #3C73DC; font-weight: bold; " href="@Url.Action("PrintOrder1", "PurchaseOrders", new { id = @item.PurchaseOrderID })" target="_blank">@(item == null ? "" : item.PurchaseOrderCode)</a>
+                                        </td>
+                                        <td>
+                                            @item.OrderDate.ToString("dd MMM yyyy")
+                                        </td>
+
+                                        <td>@item.ExpetedDeliveryDate.ToString("dd MMM yyyy")</td>
+                                        <td style="text-align:center">
+                                            @if (@item.IsAcceptedBySupplier == 1)
+                                            {
+                                                if (@item.OrderedQuantity == @item.ReceivedQuantity)
+                                                {
+                                                    <span style="color:green;"><b>Delivered</b></span>
+                                                }
+                                                else
+                                                {
+                                                    <span style="color: violet;"><b>Accepted</b></span>
+                                                }
+                                            }
+                                            @*else if (@item.IsAcceptedBySupplier == 2)
+
+                                                {
+                                                    <span style="color:Red;"><b>Rejected</b></span>
+                                                }
+                                                else
+                                                {
+                                                    <span style="color:blue"><b>Pending</b></span>
+                                                }*@
+
+
+                                            @*Addded by Priti 12/10/2018*@
+                                            else if (@item.IsAcceptedBySupplier == 2)
+                                            {
+                                                <span style="color:Red;"><b>Rejected</b></span>
+                                            }
+                                            else
+                                            {
+                                                if (@item.OrderedQuantity == @item.ReceivedQuantity)
+                                                {
+                                                    <span style="color:green;"><b>Delivered</b></span>
+                                                }
+                                                else
+                                                {
+                                                    <span style="color:blue"><b>Pending</b></span>
+                                                }
+                                            }
+                                            @*end by Priti  on 12/10/2018*@
+
+                                        </td>
+
+                                        <td nowrap="nowrap">
+                                            @(item.SupplierName == null ? "None" : item.SupplierName)
+                                        </td>
+
+                                        <td nowrap="nowrap">@item.ItemName</td>
+                                        <td style="text-align:right">@item.EzeeloMRP</td>
+                                        <td style="text-align:right">@item.UnitPrice</td>
+                                        <td style="text-align:center">@item.Quantity</td>
+
+                                        <td style="text-align:right"> @item.TotalAmount</td>
+                                        @*<td style="text-align:center">
+                                                @if (@item.IsSent == true)
+                                                {
+                                                    <span><i class="fa fa-check"></i></span>
+                                                }
+                                                else
+                                                {
+                                                    <span><b>No</b></span>
+                                                }
+                                            </td>*@
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</section>
+
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('#ToDate').datepicker({ dateFormat: 'mm/dd/yy', maxDate: 'now' });
+        $('#FromDate').datepicker({ dateFormat: 'mm/dd/yy' });
+
+    });
+</script>
+
+
+
+<script type="text/javascript">
+    function fnExcelReport() {
+        var tab_text = '<table border="1px" style="font-size:20px" ">';
+        var textRange;
+        var j = 0;
+        var tab = document.getElementById('headerTable'); // id of table
+        var lines = tab.rows.length;
+
+        // the first headline of the table
+        if (lines > 0) {
+            tab_text = tab_text + '<tr bgcolor="#DFDFDF">' + tab.rows[0].innerHTML + '</tr>';
+        }
+
+        // table data lines, loop starting from 1
+        for (j = 1; j < lines; j++) {
+            tab_text = tab_text + "<tr>" + tab.rows[j].innerHTML + "</tr>";
+        }
+        
+        var fileName = 'Test file.xls';
+        var blob = new Blob([tab_text], {
+            type: "application/xls;charset=utf-8;"
+        });
+
+        if (window.navigator.msSaveBlob) {
+            // FOR IE BROWSER
+            navigator.msSaveBlob(blob, fileName);
+        } else {
+            // FOR OTHER BROWSERS
+            var csvUrl = URL.createObjectURL(blob);
+
+
+
+            //new added by Priti
+            let a = $("<a />", {
+                //href: 'data:application/vnd.ms-excel,' + encodeURIComponent(blob),
+                href: csvUrl,
+                download: "PurchaseOrderR.xls"
+            })
+                .appendTo("body")
+                .get(0)
+                .click();
+            //$('#exportbutton').attr({
+            //    'download': fileName,
+            //    'href': csvUrl
+            //});
+        }
+        
+    }
+</script>
+
+@*Add for Pagination*@
+@*<script type="text/javascript">
+    $(document).ready(function () {
+        $('#headerTable').DataTable();
+
+
+    });
+</script>*@
+@*End Of Pagination*@
+
+
+<script type="text/javascript">
+    $(function () {
+        $("#Search").click(function () {
+            var SupplierID = $("select#SupplierID option:selected").val();
+            window.location = "/PurchaseOrders/Search?SupplierID=" + SupplierID;
+        });
+    });
+
+</script>

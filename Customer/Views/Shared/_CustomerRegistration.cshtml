@@ -1,0 +1,381 @@
+﻿@model ModelLayer.Models.ViewModel.CustomerRegistrationViewModel
+
+@{
+    string cityName = string.Empty;
+    int franchiseID = 0;////added
+    if (Request.Cookies["CityCookie"] != null)
+    {
+        cityName = Request.Cookies["CityCookie"].Value.Split('$')[1].ToLower();
+        franchiseID = Convert.ToInt32(Request.Cookies["CityCookie"].Value.Split('$')[2]);////added
+
+    }
+}
+<style>
+    .breadcrumbs.dark {
+        color: red;
+        font-size: 16px;
+        padding: 5px 0px 0px 0px;
+        line-height: 17px;
+        font-weight: 700;
+    }
+</style>
+
+@*<!-- Facebook Pixel Code (Added By harshada on 12/1/2017)-->
+    <script>
+        $(document).ready(function () {
+            $('#submit').on('click', function () {
+                var fn = $("[id*=FirstName]").val();
+                var mob = $("[id*=Mobile]").val();
+                var email = $("[id*=Email]").val();
+
+                !function (f, b, e, v, n, t, s) {
+                    if (f.fbq) return; n = f.fbq = function () {
+                        n.callMethod ?
+                        n.callMethod.apply(n, arguments) : n.queue.push(arguments)
+                    }; if (!f._fbq) f._fbq = n;
+                    n.push = n; n.loaded = !0; n.version = '2.0'; n.queue = []; t = b.createElement(e); t.async = !0;
+                    t.src = v; s = b.getElementsByTagName(e)[0]; s.parentNode.insertBefore(t, s)
+                }(window,
+                document, 'script', 'https://connect.facebook.net/en_US/fbevents.js');
+                fbq('init', '836970266428365', {
+                    fn: fn,
+                    ph: mob,
+                    em: email
+                });
+                fbq('track', 'PageView');
+            });
+        });
+
+    </script>
+    <noscript>
+        <img height="1" width="1" style="display:none"
+             src="https://www.facebook.com/tr?id=836970266428365&ev=PageView&noscript=1" />
+    </noscript>
+    <!-- DO NOT MODIFY -->
+    <!-- End Facebook Pixel Code  (Added By harshada on 12/1/2017)-->*@
+@using (Html.BeginForm("CreateFromPartial", "Customer"))
+{
+    @Html.AntiForgeryToken()
+    <div class="row" style="text-align: center;">
+        <span id="errorMessage" class="breadcrumbs dark" style="width:100%;text-align:center"></span>
+    </div>
+    <div class="">
+        <div class="grid RegFrm">
+            <h3 class="widget-title">Not a user yet?</h3>
+            @if (ViewBag.Message != null)
+            {
+                <div class="breadcrumbs dark">
+                    @ViewBag.Message
+                    <a href="@Url.Action("login", "Login")" style="text-decoration:underline;margin-left:5px;" title="login">
+                        Login to continue
+                    </a>
+                </div>
+            }
+            <div class="form-group">
+                @Html.TextBoxFor(model => model.FirstName, new { id = "FirstName", maxlength = 50, autocomplete = "off", placeholder = "Name", @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.FirstName)
+            </div>
+            <div class="form-group">
+                @Html.TextBoxFor(model => model.MobileNo, new { id = "Mobile", maxlength = 10, autocomplete = "off", placeholder = "Mobile No", @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.MobileNo)
+            </div>
+            <div class="form-group">
+                @Html.TextBoxFor(model => model.EmailId, new { id = "Email", maxlength = 150, autocomplete = "off", onchange = "ValidateEmail(this)", placeholder = "Email Id", @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.EmailId)
+            </div>
+            <div class="form-group">
+                @Html.PasswordFor(model => model.Password, new { maxlength = 100, autocomplete = "off", placeholder = "Password", @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.Password)
+            </div>
+            <div class="form-group">
+                @Html.PasswordFor(model => model.ConfirmPassword, new { maxlength = 100, autocomplete = "off", placeholder = "Confirm Password", @class = "form-control" })
+                <span class="informer">@Html.ValidationMessageFor(model => model.ConfirmPassword)</span>
+            </div>
+            <div class="form-group">
+                @Html.TextBoxFor(model => model.ReferralId, new { autocomplete = "off", placeholder = "Referral Id", @class = "form-control refId", style = "font-family: Consolas" })
+                @Html.ValidationMessageFor(model => model.ReferralId)
+            </div>
+            <div class="cell">
+                <button type="button" value="Create" onclick="SendOTP()" class="btn btn-success" id="btnReg" >Register</button><br />
+                <button type="submit" style="display:none" id="formsubmit" class="btn btn-success">Register</button>
+                <span>By registering, you agree to our </span><b><a style=" text-decoration: underline;" href="@Url.RouteUrl("terms", new { city = cityName, franchiseId = franchiseID })">Terms of use</a></b>.
+                @*<input type="submit" value="Create" class="btn btn-default" />
+                    <a class="anchorRedirect" href="@Url.RouteUrl("pre-prod-name", new { itemId = Model.productList[i].ProductID, itemName = Regex.Replace(Model.productList[i].Name.Substring(0, Math.Min(Model.productList[i].Name.Length, 30)), @"[\/\\#,+()$~%.':*?<>{} ]", "-").Replace("&", "and").ToLower(), city = cityName })">
+                     </a>*@
+                <br />
+            </div>
+
+        </div>
+
+    </div>
+}
+
+<div class="modal fade" id="overlay" data-backdrop="static" data-keyboard="false">
+    <div class="modal-dialog" style="width:400px;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+
+            </div>
+            <div class="modal-body" style="min-height:250px;width:350px;">
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="row" style="text-align: center;">
+                            <span id="errorMessageOTP" class="breadcrumbs dark" style="padding-left:24px;"></span>
+                        </div>
+                        <div class="form-group" style="padding-left: 35px;">
+                            <label>Enter Email OTP:</label>
+                            <input type="text" class="form-control" id="EmailOTP" maxlength="6">
+                        </div>
+                        <div class="form-group" style="padding-left: 35px;">
+                            <label>Enter Mobile OTP:</label>
+                            <input type="text" class="form-control" id="MobileOTP" maxlength="6">
+                        </div>
+                        <div style="margin-top: 15px;padding-left: 35px;" id="divRegenerateOTP">
+                            <a href="#" onclick="SendOTP()" class="btn btn-success">Regenerate OTP</a><br />
+                        </div>
+                        <div style="margin-top: 15px;padding-left: 35px;">
+                            <button type="button" onclick="SubmitForm()" class="btn btn-primary">Submit</button>
+                            <button type="button" onclick="CancelForm()" class="btn btn-default">Cancel</button>
+                        </div>
+
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+    @if (TempData["URLReferalCode"] != null)
+    {
+    <script>
+        $(document).ready(function () {
+            $("html, body").delay(1000).animate({ scrollTop: $('.RegFrm').offset().top }, 2000);
+            $(".RegFrm #ReferralId").val('@TempData["URLReferalCode"]');
+            $("#FirstName").focus();
+        })
+    </script>
+    }
+    <script>
+    function ValidateEmail(obj) {
+        var email = $(obj).val();
+        var filter = /^([\w-\.]+@@([\w-]+\.)+[\w-]{2,4})?$/;
+        $('#divEmailError').hide();
+        if (filter.test(email)) {
+            $("#btnReg").removeAttr("disabled");
+            return true;
+        }
+        else {
+            $('#divEmailError').show();
+            $('#divEmailError').html('Invalid Email [' + email + ']');
+            $('#userLogin_Email').val('');
+            $('#userLogin_Email').focus();
+            $("#mask").hide();
+            $("#btnReg").attr("disabled", "disabled");
+            return false;
+        }
+    }
+    function SubmitForm() {
+        var EmailOTp = $("#EmailOTP").val().trim();
+        var MobileOTp = $("#MobileOTP").val().trim();
+        var EmailId = $("#Email").val().trim();
+
+        var MobileNo = $("#Mobile").val().trim();
+        if (EmailOTp == '' || MobileOTp == '') {
+            $("#errorMessageOTP").html('Please Enter OTP.');
+
+            return false;
+        }
+        else {
+            $("#errorMessageOTP").html('');
+
+        }
+            $.ajax({
+               contentType: 'application/json; charset=utf-8',
+               dataType: 'json',
+                url: '@Url.Action("IsOtpValid", "Customer")' + '?EmailId=' + EmailId + '&MobileNo=' + MobileNo+'&EmailOTP=' + EmailOTp + '&MobileOTP=' + MobileOTp,
+               type: "POST",
+                success: function (result) {
+                    if (result.Edata == 1 && result.Mdata == 1) {
+                        CancelForm();
+                        $('#formsubmit').click();
+                    }
+                    else if (result.Edata == -1 && result.Mdata == -1) {
+                        $("#errorMessageOTP").html("OTP expired. Please regenerate.");
+                        //$("#divRegenerateOTP").show();
+                    }
+                    else {
+                        $("#errorMessageOTP").html("Please enter correct OTP.");
+                        //$("#divRegenerateOTP").hide();
+                    }
+                }
+                    });
+        }
+
+        function CancelForm() {
+            $("#overlay").modal("hide");
+        }
+
+
+    var IsMsgShow = 0;
+    $(".refId").blur(function () {
+        IsMsgShow = 0;
+    });
+
+    function SendOTP() {
+        var EmailIds = $("#Email").val().trim();
+        var MobileNos = $("#Mobile").val().trim();
+        var Name = $("#FirstName").val().trim();
+        var pwd = $(".RegFrm #Password").val().trim();
+        var cnfrmPwd = $("#ConfirmPassword").val().trim();
+        var ReferralId = $(".RegFrm #ReferralId").val().trim();
+
+            var Emailfilter = /^([\w-\.]+@@([\w-]+\.)+[\w-]{2,4})?$/;
+            var MobileFilter = /^([6-9]{1}[0-9]{9})$/;
+
+        if (EmailIds == '' && MobileNos == '' && pwd == '' && cnfrmPwd == '' && Name=='') {
+            $("#errorMessage").html('Please provide your name, email, mobile no and passwords!!');
+                $("#mask").hide();
+                return false;
+        }
+        if (Name == '') {
+            $("#errorMessage").html('Please enter name!!');
+            $("#mask").hide();
+            return false;
+        }
+        if (EmailIds == '') {
+            $("#errorMessage").html('Please enter email!!');
+            $("#mask").hide();
+            return false;
+        }
+        if (MobileNos == '') {
+            $("#errorMessage").html('Please enter mobile no!!');
+            $("#mask").hide();
+            return false;
+        }
+        if ((pwd == '' && cnfrmPwd == '') || cnfrmPwd == '') {
+            $("#errorMessage").html('Please enter password and confirm password!!');
+            $("#mask").hide();
+            return false;
+        }
+        if (pwd != cnfrmPwd) {
+            $("#errorMessage").html('ConfirmPassword and Password do not match.!!');
+            $("#mask").hide();
+            return false;
+        }
+        if (ReferralId == '') {
+            $("#errorMessage").html('Please enter Referral Id!!');
+            return false;
+        }
+        else if (!Emailfilter.test(EmailIds) || !MobileFilter.test(MobileNos) || (pwd != cnfrmPwd)) {
+                $("#mask").hide();
+            }
+            else {
+                $("#mask").show();
+            }
+            $.ajax({
+                type: "POST",
+                url: '@Url.Action("SendOtpToValidUser", "Customer")' + '?EmailId=' + EmailIds + '&MobileNo=' + MobileNos + '&Name=' + Name + '&ReferralId=' + ReferralId,
+                success: function (result) {
+                    $("#errorMessageOTP").html("");
+                  $("#EmailOTP").val("");
+                    $("#MobileOTP").val("");
+                   // $("#divRegenerateOTP").hide();
+                    if (result.data == -1) {
+                        $("#errorMessage").html(result.PartialString);
+                        CancelForm();
+                    }
+                    else if (result.data == -2) {
+                        $("#errorMessage").html(result.PartialString);
+                        CancelForm();
+                    }
+                    else if (result.data == 0) {
+                        $("#errorMessage").html("OTP Not Sent");
+                        CancelForm();
+                    }
+                    else if (result.data == -3) {
+                        $("#errorMessageOTP").html(result.PartialString);
+                         $("#divRegenerateOTP").hide();
+                        $("#overlay").modal("show");
+                    }
+                    else {
+                        $("#divRegenerateOTP").show();
+                        $("#errorMessage").html(result.PartialString);
+                        $("#overlay").modal("show");
+                    }
+                }
+                    });
+    }
+
+
+    $(document).ready(function () {
+
+        $('#formsubmit').click(function (e) {
+            var EmailId = $("#Email").val();
+            var MobileNo = $("#Mobile").val();
+            var pwd = $("#Password").val();
+            var cnfrmPwd = $("#ConfirmPassword").val();
+
+            var Emailfilter = /^([\w-\.]+@@([\w-]+\.)+[\w-]{2,4})?$/;
+            var MobileFilter = /^([6-9]{1}[0-9]{9})$/;
+
+            if (EmailId == '' && MobileNo == '') {
+                $("#errorMessage").html('Please Provide your Email or Mobile No...!!');
+                $("#mask").hide();
+                return false;
+            }
+            else if (!Emailfilter.test(EmailId) || !MobileFilter.test(MobileNo) || (pwd != cnfrmPwd)) {
+                $("#mask").hide();
+            }
+            else {
+                $("#mask").show();
+            }
+    
+            //Yashaswi Leader SIgnUp
+            var obj = $(".input-validation-error");
+            if (obj.attr("id") == "ReferralId" && $(".refId").val() != "") {
+                modalFromValidReferalId.style.display = "block";
+                $("#spInputRefId").text($(".refId").val());
+                return false;
+            }
+            else {
+                var Ref_Id = $(".refId").val();
+                if (Ref_Id.trim() != "" && IsMsgShow == 0) {
+                    e.preventDefault();
+                    $.ajax({
+                        contentType: 'application/json; charset=utf-8',
+                        dataType: 'json',
+                        url: '@Url.Action("GetParentNameForRegistration", "Login")' + '?ReferralId=' + Ref_Id + '&Email=' + $("#EmailId").val() + '&Mobile=' + $("#MobileNo").val(),
+                        type: "GET",
+                        success: function (result) {
+                            if (result != "1") {
+                                $("#sp_LeadersRegMsg").text("You are going to join Ezeelo under ");
+                                $("#sp_parentname").text(result);
+                                IsMsgShow = 1;
+                                modalFromValidReferalIdMsg.style.display = "block";
+                                return false;
+                            }
+                            else {
+                                modalFromValidReferalIdMsg.style.display = "none";
+                                return true;
+                            }
+                        },
+                        error: function (data) {
+                            modalFromValidReferalIdMsg.style.display = "none";
+                            return true;
+                        }
+                    });
+                }
+            }
+
+
+        });
+
+    });
+    </script>
+
+
+    @section Scripts{
+        @Scripts.Render("~/bundles/jqueryval")
+    }
+
+

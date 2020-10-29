@@ -1,0 +1,280 @@
+﻿@using PagedList;
+@using PagedList.Mvc;
+
+@model IPagedList<ModelLayer.Models.ReceiveOrderOnCall>
+
+@{
+    ViewBag.Title = "List [ ReceiveOrderOnCall]";
+    Layout = "~/Views/Shared/_Layout_franchise2.cshtml";
+}
+<style>
+    input {
+        width: 80px;
+    }
+
+    select {
+        width: 80px;
+    }
+    /*.for_tbleFst {
+        margin-left: -24px;
+    }*/
+    #divtable h3 {
+        /*background-color: #ac864f;
+        background-image: linear-gradient(hsla(0,0%,100%,.05), hsla(0,0%,0%,.05)), linear-gradient(-72deg, hsla(0,0%,100%,.05) 50%, transparent 50%);
+        box-shadow: inset 0 0 .25em hsla(0,0%,0%,.1), inset 0 0 1.5em hsla(0,0%,0%,.25);
+        border-bottom: 1px solid #d6d6d6;
+        color: #FAFAFA;
+        padding: 11px;*/
+    }
+    .btn-primary {
+        background-color: #643C24;
+        border-color: #643C24;
+    }
+    .btn-success {
+        background-color: #643C24!important;
+        border-color: #643C24!important;
+    }
+    .btn-success:hover {
+        background-color: #643C24!important;
+        border-color: #643C24!important;
+    }
+    .container {
+  margin-left:80px!important;
+    }
+
+</style>
+<div class="row">
+    <div class="span12" id="divtable" style="margin-top:12px;">
+        <div class="widget">
+            <div class="widget-header">
+                
+                <h3><i class="icon-list-alt"></i> List [ Receive Order On Call ]</h3>
+            </div>
+            <!-- /widget-header -->
+            <div class="widget-content">
+                <div class="widget big-stats-container">
+                    <div class="widget-content matchdivheight">
+                        <p>
+                            @Html.ActionLink("Create New", "Create", null, new { @class = "btn btn-sm btn-primary" })
+                        </p>
+
+                        @using (Html.BeginForm("Index", "ReceiveOrderOnCall", FormMethod.Post))
+                        {   @Html.AntiForgeryToken()
+                            <div class="form-horizontal">
+                                <table>
+                                    <tr>
+                                        <td style="white-space:nowrap; display:block;">From Date &nbsp;</td>
+                                        <td>@Html.TextBox("FromDate", null, new { @readonly = "readonly" }) &nbsp;</td>
+                                        <td style="white-space:nowrap; display:block;">To Date &nbsp;</td>
+                                        <td>@Html.TextBox("ToDate", null, new { @readonly = "readonly" }) &nbsp;</td>
+                                        <td>Mobile &nbsp;</td>
+                                        <td>@Html.TextBox("Mobile", ViewBag.Mobile as string, new { @class = "search" }) &nbsp;</td>
+                                        <td style="white-space:nowrap; display:block;">Order Code &nbsp;</td>
+                                        <td>@Html.TextBox("OrderCode", ViewBag.OrderCode as string, new { @class = "search" }) &nbsp;</td>
+                                        <td style="white-space:nowrap; display:block;">Full Fill &nbsp;</td>
+                                        <td>@Html.DropDownList("OrderCodeStatus", "All") &nbsp;</td>
+                                        <td>
+                                            <button type="submit" value="Search" class="btn btn-small btn-warning1">
+                                                <span class="glyphicon glyphicon-search"></span> Search
+                                            </button>
+                                            <button type="button" class="btn btn-small btn-info1" id="btn_clear">Clear</button>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+                        }
+
+                        <table class="table table-bordered table-hover table-responsive table-striped for_tbleFst">
+                            <tr>
+                                <th style="width:20px;">Sr.No</th>
+                                <th>
+                                    Order Code
+                                </th>
+                                <th>
+                                    Reference Order Code
+                                </th>
+                                <th>
+                                    @*@Html.DisplayNameFor(model => model.First().PersonalDetail.FirstName)*@
+                                    Received By
+                                </th>
+                                @*<th>
+                                        @Html.DisplayNameFor(model => model.First().PersonalDetail1.FirstName)
+                                        Modified By
+                                    </th>
+                                    <th>
+                                        @Html.DisplayNameFor(model => model.First().PersonalDetail2.FirstName)
+                                        Created By
+                                    </th>*@
+                                <th>
+                                    Customer Name
+                                </th>
+                                <th style="width:80px;">
+                                    Mobile
+                                </th>
+                                @*<th>
+                                        @Html.DisplayNameFor(model => model.First().SecondaryMobile)
+                                    </th>*@
+                                <th>
+                                    Email
+                                </th>
+                                @*<th>
+                                        @Html.DisplayNameFor(model => model.First().ShippingAddress)
+                                    </th>
+                                    <th>
+                                        @Html.DisplayNameFor(model => model.First().Description)
+                                    </th>*@
+                                <th style="width:160px;">
+                                    Create Date
+                                </th>
+                                @*<th>
+                                        @Html.DisplayNameFor(model => model.First().ModifyDate)
+                                    </th>*@
+                                <th style="width:20px;">Actions</th>
+                            </tr>
+
+                            @if (Model.Count() == 0)
+                            {
+                                <tr>
+                                    <td colspan="6" class="text-center"><h3>No Record Found...</h3></td>
+                                </tr>
+                            }
+                            else
+                            {
+                                int i = 1;
+                                foreach (var item in Model)
+                                {
+                                    <tr>
+                                        <td>@{int SrNo = ((ViewBag.PageNumber - 1) * ViewBag.PageSize) + i; i = i + 1; } @SrNo</td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.CustomerOrder.OrderCode)
+                                        </td>
+                                        <td>
+                                            @if (item.CustomerOrder != null)
+                                            {
+                                                @Franchise.Common.Common.GetRefOrderCode(item.CustomerOrder.ReferenceCustomerOrderID)
+                                            }
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.PersonalDetail.FirstName)
+                                        </td>
+                                        @*<td>
+                                                @Html.DisplayFor(modelItem => item.PersonalDetail1.FirstName)
+                                            </td>
+                                            <td>
+                                                @Html.DisplayFor(modelItem => item.PersonalDetail2.FirstName)
+                                            </td>*@
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.Name)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.PrimaryMobile)
+                                        </td>
+                                        @*<td>
+                                                @Html.DisplayFor(modelItem => item.SecondaryMobile)
+                                            </td>*@
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.Email)
+                                        </td>
+                                        @*<td>
+                                                @Html.DisplayFor(modelItem => item.ShippingAddress)
+                                            </td>
+                                            <td>
+                                                @Html.DisplayFor(modelItem => item.Description)
+                                            </td>*@
+                                        <td>
+                                            @*@Html.DisplayFor(modelItem => item.CreateDate)*@
+                                            @item.CreateDate.ToString("dd/MM/yyyy hh:mm:ss tt")
+                                        </td>
+                                        @*<td>
+                                                @Html.DisplayFor(modelItem => item.ModifyDate)
+                                            </td>*@
+                                        <td>
+                                            @*@Html.ActionLink(" Edit", "Edit", new { id = item.ID }, new { @class = "btn btn-small btn-danger" })*@
+                                            @*@Html.ActionLink(" Details", "Details", new { id = item.ID }, new { @class = "btn btn-small btn-success" })*@
+                                            <button class="btn btn-small btn-success" onclick="Details(@item.ID)">Details</button>
+                                    </tr>
+                                }
+                            }
+                        </table>
+
+                        <div class="pager">
+                            @Html.PagedListPager(Model, Page => Url.Action("Index", new
+                       {
+                           page = Page,
+                           SearchString = ViewBag.SearchString,
+                           OrderStatus = Request.QueryString["OrderStatus"],
+                           FromDate = ViewBag.FromDate,
+                           ToDate = ViewBag.ToDate,
+                           Mobile = ViewBag.Mobile,
+                           OrderCodeStatus = ViewBag.OrderCodeStatus1
+                       }),
+                                                                new PagedListRenderOptions()
+                                                                {
+                                                                    Display = PagedListDisplayMode.IfNeeded
+                                                                })
+                        </div>
+                    </div>
+                    <!-- /widget-content -->
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- /span12 -->
+    <div class="span4 spanLeft" style="margin-top:12px;">
+        <div class="loader">
+            <img id="loader_img" src="~/Content/img/ajax_loader.gif" style="display:none; width:100px; height:100px;" />
+        </div>
+        <div id="Details"></div>
+       
+    </div>
+
+</div>
+
+<script src="~/Content/new-design-form/js/bootstrap-datepicker.js"></script>
+<link href="~/Content/css/datepicker.css" rel="stylesheet" />
+
+
+@section MyScripts{
+    <script>
+        //----------------------------------------------------------------------For datepicker---//
+        //<![CDATA[
+        $(window).load(function () {
+            //$('#DOB').datepicker('setDate', new Date());
+            //alert();
+            $('#FromDate').datepicker('update');
+            $('#ToDate').datepicker('update');
+        });//]]>
+
+        function Details(id) {            
+            $('#divtable').removeClass('span12');
+            $('#divtable').addClass('span7');
+            window.parent.$("[id$=Details]").show();
+            $('#loader_img').show();
+            $.ajax({
+                url: '@Url.Action("Details", "ReceiveOrderOnCall")?ID=' + id,
+                type: "GET",
+                success: function (result) {
+                    $('#loader_img').hide();
+                    $('#Details').html(result);
+                },
+                error: function (data) {
+                    $('#Details').empty();
+                    $('#loader_img').hide();
+                }
+            });
+            if ($("#Details").length > 0) {
+                $("#divtable").css('width', '745px');
+                $(".spanLeft").css('width', '28%');
+            } else {
+                $("#divtable").css('width', '100%');
+            }
+        }
+    </script>
+    <script type="text/javascript">
+        function Back() {
+            $("#divtable").css('width', '100%');
+        }
+    </script>
+    
+}
+

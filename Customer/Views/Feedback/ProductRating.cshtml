@@ -1,0 +1,209 @@
+﻿@model ModelLayer.Models.ViewModel.ProductRatingViewModel
+@{
+    ViewBag.Title = "Product Review";
+}
+
+@*feedback*@
+<style>
+    .rating.poor .star.on {
+        color: #ce352c;
+    }
+
+    .rating:not(.static):hover > .star, .rating:not(.static):hover > .star:after {
+        color: gold !important;
+    }
+
+    .rating .star.on {
+        color: gold;
+    }
+    .rating:before {
+        display: table;
+        content: "";
+    }
+    .rating .star:after, .rating .star:before {
+        position: absolute;
+        content: '\2605';
+        display: block;
+        z-index: 2;
+        top: 0 !important;
+        left: 0;
+        vertical-align: middle;
+    }
+    .rating .star {
+        display: block;
+        float: left;
+        color: #555;
+        font-size: 20px;
+        z-index: 1;
+        position: relative;
+        width: 20px;
+        height: 24px;
+        vertical-align: middle;
+        line-height: 22px;
+    }
+    .rating {
+        display: inline-block;
+    }
+</style>
+@{
+    string cityName = "";
+    int itemID = 0;
+    string itemName = "";
+    int franchiseID = 0;////added
+    if (Request.Cookies["CityCookie"] != null && Request.Cookies["CityCookie"].Value != "")
+    {
+        cityName = Request.Cookies["CityCookie"].Value.Split('$')[1].ToLower();
+        franchiseID = Convert.ToInt32(Request.Cookies["CityCookie"].Value.Split('$')[2]);////added
+    }
+}
+<div class="gap gap-small"></div>
+<div class="box-lg">
+    <article class="product-review">
+        <div class="product-review-author">
+            <img class="product-review-author-img" src="@Url.Content(@Model.ProductDetails.ThumbPath)" alt="@Model.ProductDetails.ProductName">
+        </div>
+        <div class="product-review-content" style="width: 84%;border:0px;">
+            <h5 class="product-review-title"><span class="shopnamespan">@Model.ProductDetails.ProductName</span></h5>
+            @Html.Hidden("hdnProdName", Model.ProductDetails.ProductName.ToLower().Substring(0, Math.Min(Model.ProductDetails.ProductName.ToLower().Length, 30)).Replace(' ', '-').Replace("&", "%20").Replace('.', '-'), new { id = "hdnProdName" })
+            <p>
+                Kindly write a review.
+            </p>
+
+            @Html.Hidden("hdnOwnerID", Model.ProductDetails.ProductID)
+           @for (int i = 0; i < Model.RatingList.Count(); i++) //modified by harshada on 30/12/16
+            {
+              <div id="@Model.RatingList[i].RatingID">
+                    @Html.Hidden("RatingID", @Model.RatingList[i].RatingID)
+              </div>
+            }
+
+            @********Added by harshada on 30/12/16 for product rating  ********@
+            <div>
+                <p>Your Rating </p>
+                @Html.RadioButton("rdbRating", "1") 1 Star
+                @Html.RadioButton("rdbRating", "2") 2 Star
+                @Html.RadioButton("rdbRating", "3") 3 Star
+                @Html.RadioButton("rdbRating", "4") 4 Star
+                @Html.RadioButton("rdbRating", "5") 5 Star
+            </div>
+            @********End Added by harshada on 30/12/16 for product rating  ********@
+
+                    @*<div id="ratingdiv" class="rating" data-role="rating" data-value="2" data-color-rate="true" onmouseover="DisplayMeaning(this);" onmouseout="ResetText();"></div>*@
+               
+            <label for="recom">Would you recommend this product?</label>
+            <div>
+                <span><input id="recommend_yes" name="recommend" type="radio" value="YES"><label for="recommend_yes">Yes</label></span>
+                <span><input id="recommend_no" name="recommend" type="radio" value="NO"><label for="recommend_no">No</label></span>
+            </div>
+
+            <div class="cell">
+                <label>Review</label>
+                <div class="input-control text full-size">
+                    <input id="txtComment" class="form-control" type="text">
+                    <div class="review_rcomment" style="float: right;">(10 - 100 characters)</div>
+                </div>
+                <br />
+                <div>
+                    <button onclick="Submit();" class="btn btn-success" style="float:left">Submit</button>
+                    @using (Html.BeginForm("ContinueShopping", "ShoppingCart", new { }, FormMethod.Post))
+                    {
+                        <button type="submit" value="Create" class="btn btn-warning" style="margin-left:10px;"> Continue Shopping</button>
+                    }
+                </div>
+
+                @*<div>
+                        @using (Html.BeginForm("ContinueShopping", "ShoppingCart", new { }, FormMethod.Post))
+                        {
+                            <button type="submit" value="Create" class="button success" style=" word-wrap: normal; word-break: normal;"> Continue Shopping</button>
+                        }
+                    </div>*@
+
+                <span id="spnThank"></span>
+            </div>
+
+        </div>
+
+    </article>
+</div>
+
+<div class="gap gap-small"></div>
+<script>
+
+    $(function () {
+        $('#ratingdiv span.star.on').live('click', function (e) {
+            var className = $('#ratingdiv').attr('class');
+
+        });
+
+    });
+    function Submit() {
+        itemName = $("#hdnProdName").val();
+        //var CurrentScore = $('#ratingdiv span.score').text(); //commented by harshada on 30/12/2016
+        var ratingID = $('#RatingID').val();
+        var CurrentScore = $('#rdbRating:checked').val();//Added by harshada on 30/12/2016
+     
+        //var _url = '@(Html.Raw(Url.Action("SubmitRating", "Feedback")))';
+        $.ajax({
+            type: "POST",
+            url: '@(Html.Raw(Url.Action("SubmitRating", "Feedback")))',
+            //data: "{ratings:'" + ratingID.toString() + ':' + CurrentScore.split(': ')[1] + "',comment:'" + $("#txtComment").val() + "',OwnerID: " + $("#hdnOwnerID").val() + "}",  //commented by harshada
+            data: "{ratings:'" + ratingID+ ':' + CurrentScore + "',comment:'" + $("#txtComment").val() + "',OwnerID: " + $("#hdnOwnerID").val() + "}", //added by harshada 30/12/2016 for product rating
+            contentType: "application/json; charset = utf-8",
+            dataType: "json",
+            success: function (response) {
+                itemID = $("#hdnOwnerID").val();
+                $("#spnThank").text("Thanks for your feedback.");
+                var url = '@(Html.Raw(Url.RouteUrl("pre-prod-name", new { itemID = "_itemID_", itemName = "_itemName_", city = cityName, franchiseId = franchiseID })))';@*////added franchiseId=franchiseID*@
+                var _url = (url.replace('_itemName_', itemName).replace('_itemID_', itemID)) + "#divProductRating";
+                window.location.href = _url;
+            },
+            //success: OnSuccess,
+            failure: function (response) {
+
+                $("#spnThank").text("Thanks for your feedback.");
+                var url = '@(Html.Raw(Url.RouteUrl("pre-prod-name", new { itemID = "_itemID_", itemName = "_itemName_", city = cityName, franchiseId = franchiseID })))';@*////added franchiseId=franchiseID*@
+                var _url = (url.replace('_itemName_', itemName).replace('_itemID_', itemID)) + "#divProductRating";
+                window.location.href = _url;
+            },
+            error: function (response) {
+
+                $("#spnThank").text("Thanks for your feedback.");
+                var url = '@(Html.Raw(Url.RouteUrl("pre-prod-name", new { itemID = "_itemID_", itemName = "_itemName_", city = cityName, franchiseId = franchiseID })))';@*////added franchiseId=franchiseID*@
+                var _url = (url.replace('_itemName_', itemName).replace('_itemID_', itemID)) + "#divProductRating";
+                window.location.href = _url;
+
+            }
+            //error: OnSuccess
+        });
+
+    }
+
+
+</script>
+
+<script>
+    function DisplayMeaning(ctrl) {
+        if (ctrl.id == 1) {
+            $(".StarPointMeaning").text("Disappointing");
+        }
+        else if (ctrl.id == 2) {
+            $(".StarPointMeaning").text("Bad");
+        }
+        else if (ctrl.id == 3) {
+            $(".StarPointMeaning").text("Average");
+        }
+        else if (ctrl.id == 4) {
+            $(".StarPointMeaning").text("Good");
+        }
+        else if (ctrl.id == 5) {
+            $(".StarPointMeaning").text("Perfect");
+        }
+        else {
+            $(".StarPointMeaning").text("Rate it!");
+        }
+    }
+    function ResetText() {
+
+        $(".StarPointMeaning").text("Rate it!");
+    }
+</script>

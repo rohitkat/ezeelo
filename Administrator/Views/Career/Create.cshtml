@@ -1,0 +1,163 @@
+﻿@model ModelLayer.Models.Career
+
+@{
+    ViewBag.Title = "Create";
+}
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+    <div class="span10" id="content">
+        <ul class="breadcrumb">
+            <li>
+                <a href="">Career/Create</a>
+            </li>
+        </ul>
+        <div class="row-fluid">
+            <div class="box span12">
+                <div class="box-header">
+                    <h2><i class="icon-edit"></i><span class="break"></span>@Html.ActionLink("Create New", "Create")</h2>
+
+                </div>
+                <div class="box-content">
+                    <div class="form-horizontal">
+                        @if (ViewBag.Messaage != null)
+                        {
+                            @Html.Label("Messaage", (string)ViewBag.Messaage, new { @class = "deleteMsg" })
+                        }
+                        else
+                        {
+                            @Html.Label("Messaage", "", new { @class = "deleteMsg" })
+                        }
+                        @Html.ValidationSummary(true)
+
+                        <div class="control-group">
+                            @Html.LabelFor(model => model.Jobtitle, new { @class = "control-label span2" })
+                            <div class="controls">
+                                @Html.EditorFor(model => model.Jobtitle)
+                                @Html.ValidationMessageFor(model => model.Jobtitle)
+                            </div>
+                        </div>
+
+                        <div class="control-group">
+                            @Html.LabelFor(model => model.Education, new { @class = "control-label span2" })
+                            <div class="controls">
+                                @Html.EditorFor(model => model.Education)
+                                @Html.ValidationMessageFor(model => model.Education)
+                            </div>
+                        </div>
+
+                        <div class="control-group">
+                            @Html.LabelFor(model => model.ExperienceRequired, new { @class = "control-label span2" })
+                            <div class="controls">
+                                @Html.EditorFor(model => model.ExperienceRequired)
+                                @Html.ValidationMessageFor(model => model.ExperienceRequired)
+                            </div>
+                        </div>
+
+                        <div class="control-group">
+                            @Html.LabelFor(model => model.SkillRequired, new { @class = "control-label span2" })
+                            <div class="controls">
+                                @Html.EditorFor(model => model.SkillRequired)
+                                @Html.ValidationMessageFor(model => model.SkillRequired)
+                            </div>
+                        </div>
+
+                        <div class="control-group">
+                            @Html.LabelFor(model => model.NoOfOpening, new { @class = "control-label span2" })
+                            <div class="controls">
+                                @Html.EditorFor(model => model.NoOfOpening)
+                                @Html.ValidationMessageFor(model => model.NoOfOpening)
+                            </div>
+                        </div>
+
+                        <div class="control-group">
+                            @Html.LabelFor(model => model.Location, new { @class = "control-label span2" })
+                            <div class="controls">
+                                @Html.EditorFor(model => model.Location)
+                                @Html.ValidationMessageFor(model => model.Location)
+                            </div>
+                        </div>
+
+                        <div class="control-group">
+                            @Html.LabelFor(model => model.Domain, new { @class = "control-label span2" })
+                            <div class="controls">
+                                @Html.EditorFor(model => model.Domain)
+                                @Html.ValidationMessageFor(model => model.Domain)
+                            </div>
+                        </div>
+
+                        <div class="control-group">
+                            @Html.LabelFor(model => model.PostDate, new { @class = "control-label span2" })
+                            <div class="controls">
+                                @*@Html.EditorFor(model => model.PostDate)
+                                    @Html.ValidationMessageFor(model => model.PostDate)*@
+                                @Html.TextBox("txtPostDate", null, new { id = "txtPostDate", @class = "datepicker glyphicons-iconcalendar", @placeholder = "Post Date", @style = "margin-top:-2px;", required = "requird" })
+                            </div>
+                        </div>
+
+                        <div class="control-group">
+                            @Html.LabelFor(model => model.ExpiryDate, new { @class = "control-label span2" })
+                            <div class="controls">
+                                @Html.TextBox("txtExpiryDate", null, new { id = "txtExpiryDate", @class = "datepicker glyphicons-iconcalendar", @placeholder = "End Date", @style = "margin-top:-2px;", required = "requird" })
+                            </div>
+                        </div>
+
+                        <div class="control-group">
+                            @Html.LabelFor(model => model.Description, new { @class = "control-label span2" })
+                            <div class="controls">
+                                @Html.TextAreaFor(model => model.Description)
+                                @Html.ValidationMessageFor(model => model.Description)
+                            </div>
+                        </div>
+
+                        <div class="control-group">
+                            @Html.LabelFor(model => model.IsActive, new { @class = "control-label span2" })
+                            <div class="controls">
+                                @Html.EditorFor(model => model.IsActive)
+                                @Html.ValidationMessageFor(model => model.IsActive)
+                            </div>
+                        </div>
+                        <div class="control-group">
+
+                            @if (ViewBag.lblError != null)
+                            {
+                                @Html.Label("lblError", (string)ViewBag.lblError)
+                            }
+                        </div>
+                    </div>
+                    <div class="form-actions" style="padding-left:180px">
+                        <input type="submit" value="Create" class="btn btn-success" />
+                        @Html.ActionLink("Back to List", "Index", null, new { @class = "btn" })
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}
+<script src="~/Content/js/jquery.1.8.3.min.js"></script>
+<script type="text/javascript">
+    $(function () {
+
+
+        function ValidateDate(fromDate, toDate) {
+
+            if (fromDate != '' && toDate != '') {
+                dateFirst = fromDate.split('/');
+                dateSecond = toDate.split('/');
+                var from = new Date(dateFirst[2], dateFirst[1], dateFirst[0]); //Year, Month, Date
+                var to = new Date(dateSecond[2], dateSecond[1], dateSecond[0]);
+                if (from > to) {
+                    $('[id*=lblMsg]').text('To Date must be greater than From Date.');
+                    return false;
+                }
+                else {
+                    $('[id*=lblMsg]').text('');
+                }
+            }
+        }
+
+    });
+</script>

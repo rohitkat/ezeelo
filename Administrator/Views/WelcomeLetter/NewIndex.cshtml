@@ -1,0 +1,130 @@
+﻿
+@{
+    ViewBag.Title = "NewIndex";
+}
+
+<div class="outerDiv">
+    <h2>Welcome Letter</h2>
+
+    <div class="MainDiv">
+        <div class="innerDiv">
+            <span style="font-weight:bold;">Select Franchise </span>
+            <div>
+                @Html.DropDownList("franchiseID", (SelectList)ViewData["Franchise"], "Select Franchise", new { @class = "select" })
+            </div>
+        </div>
+
+        <div class="innerDiv">
+            <span style="font-weight:bold;">Select Merchant </span>
+            <div>
+                @Html.DropDownList("MerchantID", (SelectList)ViewData["MerchantID"], "Select Merchant", new { @class = "select" })
+            </div>
+        </div>
+    </div>
+    <div style="clear:both;"></div>   
+    <div id="pageloaddiv"></div>
+</div>
+<div id="divSpecification">
+</div>
+<script src="~/Scripts/jquery-1.10.2.js"></script>
+<script>
+
+    $(function () {
+        $('#franchiseID').change(function (e) {
+            var selectedVal = $("#franchiseID option:selected").val();
+            if (selectedVal > 0) {
+
+                $.ajax({
+                    type: "POST",
+                    url: "MerchantList",
+                    data: "{ franchiseID: '" + selectedVal + "'}",
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    async: true,
+                    cache: false,
+                    success: function (msg) {
+                        $('#MerchantID').empty();
+                        $('#MerchantID').append('<option value=0>Select Owner</option>');
+                        $.each(msg, function (index, item) {
+                            $('#MerchantID').append('<option value=' + item.MerchantID + '>' + item.MerchantName + '</option>');
+                        });
+                    },
+                    error: function (x, e) {
+                        alert("Sorry No Such Type of Owner Is available. ");
+                    }
+                });
+            }
+        });
+
+        $('#MerchantID').change(function (e) {
+        
+            var franchiseID = $("#franchiseID option:selected").val();
+            var MerchantID = $("#MerchantID option:selected").val();
+            /*Processing Image*/
+            $("#pageloaddiv").css('display', 'block');
+            $("#pageloaddiv").fadeOut(1000);
+          
+            $.get('/WelcomeLetter/WelcomeLetter_Containt/?franchiseID=' + franchiseID + '&MerchantID=' + MerchantID, function (data) {
+                /* data is the pure html returned from action method, load it to your page */
+                $('#divSpecification').html(data);
+
+                /* little fade in effect */
+                $('#divSpecification').fadeIn('fast');
+            });
+
+            $("#pageloaddiv").css('display', 'none');
+            $("#pageloaddiv").fadeOut(1000);
+        });
+
+
+    });
+</script>
+<style>
+    .select {
+        width: 220px;
+        background-color: #fff;
+        border: 1px solid #ccc;
+    }
+    .outerDiv {
+        background-color: #fff;
+        border: 1px solid #ccc;
+        margin: 35px;
+        margin-bottom:1px;
+    }
+    #divSpecification {
+        background-color: #fff;
+        border: 1px solid #ccc;
+        margin: 35px;
+        margin-top:1px;
+    }
+    
+     .outerDiv h2 {
+        font-size: 19px;
+        line-height: 20px;
+        margin-left: 27px;
+        color: #646A72;
+    }
+        
+         .MainDiv {
+            background-color: #fff;
+            border: 1px solid #ccc;
+        }
+    .innerDiv {
+        float: left;
+        margin-left: 63px;
+        margin-top: 14px;
+        margin-bottom: 14px;
+    }
+
+    #pageloaddiv {
+        position: fixed;
+        left: 0px;
+        top: 0px;
+        width: 100%;
+        height: 100%;
+        z-index: 1000;
+        background: url('../Content/Images/ajax_loader.gif') no-repeat center center;
+        background-size: 100px;
+        display: none;
+    }
+</style>

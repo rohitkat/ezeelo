@@ -1,0 +1,195 @@
+﻿@model ModelLayer.Models.ViewModel.EzeeMoneyPayoutViewModel
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_LeadersLayout.cshtml";
+}
+<script type="text/javascript">
+    $(document).ready(function () {
+
+        if ('@TempData["ErrorMsg"]' != '') {
+            alert('@TempData["ErrorMsg"]');
+        }
+        if ('@Model.isFrzDtDisable' == 'True') {
+            $('#btnFrzDt').attr('disabled', 'disabled');
+        } else {
+            $('#btnFrzDt').removeAttr('disabled');
+        }
+        if ('@Model.isGoDisable' == 'True') {
+            $('#btnGo').attr('disabled', 'disabled');
+        } else {
+            $('#btnGo').removeAttr('disabled');
+        }
+        if ('@Model.isPayEzMnyDisable' == 'True') {
+            $('#btnPayEzMny').attr('disabled', 'disabled');
+        } else {
+            $('#btnPayEzMny').removeAttr('disabled');
+        }
+
+
+        $("html, body").delay(1000).animate({ scrollTop: $('#maindiv').offset().top }, 2000);
+        $("#FromDate").datepicker({
+            dateFormat: 'mm/dd/yy',
+            onSelect: function (dateText) {
+                var fdate = new Date(dateText);
+                var ldate = new Date('@Model.LastToPayoutDate');
+                if (ldate > fdate) {
+                    alert("You Cant select this Date, Please Select date greater than Last Payout To date");
+                    $('#btnGo').attr('disabled', 'disabled');
+                }
+                else {
+                    $('#btnGo').removeAttr('disabled');
+                }
+
+            }
+        });
+        $("#ToDate").datepicker({
+            dateFormat: 'mm/dd/yy',
+            onSelect: function (dateText) {
+                var tdate = new Date(dateText);
+                var fdate = new Date($("#FromDate").val());
+                if (tdate < fdate) {
+                    alert("You Cant select this Date, Please Select To date greater than From date");
+                    $('#btnGo').attr('disabled', 'disabled');
+                }
+                else {
+                    $('#btnGo').removeAttr('disabled');
+                }
+
+                var ldate = new Date('@Model.LastToPayoutDate');
+                if (ldate > tdate) {
+                    alert("You Cant select this Date, Please Select date greater than Last Payout To date");
+                    $('#btnGo').attr('disabled', 'disabled');
+                }
+                else {
+                    $('#btnGo').removeAttr('disabled');
+                }
+
+
+            }
+        });
+
+        $("#btnFrzDt").click(function () {
+            if ('@Model.ActiveUserCount' == '0') {
+                alert("No Data To Freeze");
+            }
+            else {
+                $("#progress").show();
+                var fdate = $("#FromDate").val();
+                var tdate = $("#ToDate").val();
+                $.ajax({
+                    type: "POST",
+                    dataType: "text",
+                    url: '/EzeeMoneyPayout/FreezeData?FromDate=' + fdate + '&ToDate=' + tdate,
+                    contentType: "application/json; charset=utf-8",
+                    success: function (data) {
+                        $("#progress").hide();
+                        if ($.isNumeric(data)) {
+                            alert("Data from " + fdate + " to " + tdate + " Freeze Successfully!");
+                            $("#EzeeMoneyPayoutId").val(data);
+                            $('#btnPayEzMny').removeAttr('disabled');
+                            $('#btnFrzDt').attr('disabled', 'disabled');
+                            $('#btnGo').attr('disabled', 'disabled');
+                        }
+                        else {
+                            alert(data);
+                        }
+                    },
+                    error: function (xhr) {
+                        $("#progress").hide();
+                    }
+                });
+            }
+        });
+
+        $("#btnPayEzMny").click(function () {
+            var EzeeMoneyPayoutId = $("#EzeeMoneyPayoutId").val()
+            if (EzeeMoneyPayoutId == '0') {
+                alert("No Data For Payout");
+            }
+            else {
+                $("#progress").show();
+                $.ajax({
+                    type: "POST",
+                    dataType: "text",
+                    url: '/EzeeMoneyPayout/PayOut_EzeeMoney?EzeeMoneyPayoutId=' + EzeeMoneyPayoutId,
+                    contentType: "application/json; charset=utf-8",
+                    success: function (data) {
+                        $("#progress").hide();
+                        if (data == "1") {
+                            alert("Ezee Money Payout Done Successfully!");
+                            window.location.href = "/Admin/EzeeMoneyPayout/Index";
+                        }
+                        else {
+                            alert(data);
+                        }
+                    },
+                    error: function (xhr) {
+                        $("#progress").hide();
+                    }
+                });
+            }
+        });
+
+
+    });
+</script>
+<style>
+    table {
+        border-collapse: separate;
+        border-spacing: 15px;
+    }
+</style>
+<div class="container">
+    <div id="progress" class="modal">
+        <div class="center">
+            <img src="~/img/ajax-loading-gif-transparent-background-8.gif" />
+        </div>
+    </div>
+    <div class="card" id="maindiv">
+        <div class="card-header"><strong>Order Wise ERP </strong></div>
+        <div class="card-body card-block">
+            @using (Html.BeginForm("GetOrderWiseERP", "EzeeMoneyPayout"))
+            {
+                @Html.TextBoxFor(model => model.EzeeMoneyPayoutId, new { style = "display:none" })
+                @Html.AntiForgeryToken()
+                <table>
+                    <tr>
+                        <td>
+                            @Html.TextBoxFor(model => model.FromDate, Model.FromDate.ToString("MM/dd/yyyy"), new { @class = "control-label", style = "width:90px" })
+                            @Html.HiddenFor(model => model.FromDate)
+                        </td>
+                        <td>
+                            @Html.TextBoxFor(model => model.ToDate, Model.ToDate.ToString("MM/dd/yyyy"), new { @class = "control-label", style = "width:90px" })
+                            @Html.HiddenFor(model => model.ToDate)
+                        </td>
+                        <td>
+                            <input id="btnGo" type="submit" value="View" class="btn btn-info" />
+                        </td>
+                    </tr>
+                </table>
+            }
+            <center>
+                @Html.Partial("~/Areas/Admin/Views/EzeeMoneyPayout/_OrderWiseErpGrid.cshtml")
+            </center>
+        </div>
+    </div>
+</div>
+
+
+<script src="~/Scripts/jquery-1.12.4.js"></script>
+
+<link href="//cdn.datatables.net/1.10.19/css/jquery.dataTables.min.css" rel="stylesheet" />
+<script src="//cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
+
+<script src="~/Scripts/jquery-ui-1.12.1.min.js"></script>
+<link href="~/Content/css/datepicker.css" rel="stylesheet" />
+<link href="~/Content/css/jquery-ui-1.8.21.custom.css" rel="stylesheet" />
+
+<script type="text/javascript">
+    $(document).ready(function () {
+
+        $('#myTable').DataTable(
+
+        );
+    });
+</script>

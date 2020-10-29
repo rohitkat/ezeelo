@@ -1,0 +1,1210 @@
+﻿@model ModelLayer.Models.HomePageDynamicSectionBanner
+
+@{
+    ViewBag.Title = "Addbanner";
+}
+@*<script src="http://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>*@
+<style>
+
+    select {
+        width: 219px;
+    }
+
+    .uploader input {
+        right: 95px !important;
+    }
+
+    div.uploader span.action {
+        display: inline;
+        padding: 8px 19px;
+        background: #08c;
+        overflow: hidden;
+        cursor: pointer;
+        color: #fff;
+        text-shadow: none;
+        font-size: 14px;
+        line-height: 28px;
+    }
+
+    .CategoryDiv {
+        width: 233px;
+        float: left;
+        padding: 10px;
+    }
+
+        .CategoryDiv span {
+            display: block;
+            font-size: 15px;
+            font-weight: 600;
+        }
+
+        .CategoryDiv label {
+            display: block;
+            font-size: 15px;
+            font-weight: 600;
+            text-align: left !important;
+        }
+
+        .CategoryDiv select {
+            display: block;
+        }
+
+    div.uploader span.filename {
+        border-right: none;
+    }
+
+    #dvPreview {
+        /*float: left;*/
+        width: 120px;
+    }
+
+    .uploader {
+        margin-top: 35px;
+    }
+
+    #dvPreview img {
+        border: 3px solid#CEC4C4;
+        margin-bottom: 10px;
+        height: 124px;
+    }
+
+    div.uploader {
+        left: -12px;
+        top: 121px;
+    }
+
+    .top_cat {
+        margin-top: 2px; /*margin-bottom:45px;*/
+        border: 1px solid #ccc;
+        width: 173px;
+        height: 135px;
+    }
+
+    #dvPreview {
+        margin-top: -60px;
+        width: 164px;
+        padding: 0px 1px;
+    }
+</style>
+<div id="content" class="span10">
+    <ul class="breadcrumb">
+        <li>
+            <div> HomePageDynamicSectionMobile </div>
+        </li>
+    </ul>
+    @using (Html.BeginForm("Addbanner", "HomePageDynamicSectionMobile", FormMethod.Post, new { enctype = "multipart/form-data" }))
+    {
+        @Html.AntiForgeryToken()
+        @Html.Hidden("HomepageDynamicSectionID")
+        @Html.Hidden("franchiseId")
+
+        <div class="row-fluid">
+            <div class="box span12">
+                <div class="box-header">
+                    <h2><i class="icon-edit"></i><span class="break"></span>Offer Section</h2>
+                </div>
+                @if (TempData["Messaage"] != null)
+                {
+                    <div style="font-weight:bold; color:red;">@TempData["Messaage"]</div>
+                }
+                <div class="box-content">
+
+                    <div class="span8">
+                        <div class="">
+                            <div class="form-horizontal">
+                                <br />
+                                @Html.ValidationSummary(true)
+
+                                <div class="control-group">
+                                    <span id="DateErro" style="font-weight:bold;color:red;"></span>
+                                    <label class="control-label col-md-2">Select Start Date</label>
+                                    <div class="col-md-10 controls">
+                                        <input type="text" id="SDate" name="SDate" value="@ViewBag.SDate" class="datepicker" />
+                                        <br /><span id="SDateErro" style="font-weight:bold;color:red;"></span>
+                                    </div>
+                                </div>
+
+                                <div class="control-group">
+                                    <label class="control-label col-md-2">Select End Date</label>
+                                    <div class="col-md-10 controls">
+                                        <input type="text" id="EDate" name="EDate" value="@ViewBag.EDate" class="datepicker" />
+                                        <br /><span id="EDateErro" style="font-weight:bold;color:red;"></span>
+                                    </div>
+                                </div>
+
+                                <div class="clr"></div>
+
+                                <div class="control-group">
+                                    <label class="control-label col-md-2"> Franchise :</label>
+                                    <div class="col-md-10 controls">
+                                        @ViewBag.FranchiseName
+
+                                        <span id="SectionHeaderErro" style="font-weight:bold;color:red;"></span>
+                                    </div>
+                                </div>
+
+                                <div class="control-group">
+                                    <label class="control-label col-md-2"> Section Name :</label>
+                                    <div class="col-md-10 controls">
+                                        @ViewBag.SectionDisplayName
+
+                                        <span id="SectionHeaderErro" style="font-weight:bold;color:red;"></span>
+                                    </div>
+                                </div>
+
+                                <div class="control-group">
+                                    <label class="control-label col-md-2"> Section Style :</label>
+                                    <div class="col-md-10 controls">
+                                        @ViewBag.SectionStyle
+
+                                        <br /><span id="SectionHeaderErro" style="font-weight:bold;color:red;"></span>
+                                    </div>
+                                </div>
+
+                                <div class="control-group">
+                                    <label class="control-label col-md-2">Select List</label>
+                                    @*@Html.LabelFor(model => model.IsActive, new { @class = "control-label col-md-2" })*@
+                                    <div class="col-md-10 controls">
+
+                                        @Html.DropDownList("Category", "Select Category")
+                                        @Html.ValidationMessageFor(model => model.IsActive)
+                                        <br /><span id="IsCategoryErro" style="font-weight:bold;color:red;"></span>
+                                    </div>
+                                </div>
+                                <div class="control-group">
+                                    @Html.LabelFor(model => model.SequenceOrder, new { @class = "control-label col-md-2" })
+                                    <div class="col-md-10 controls">
+                                        <input type="number" id="SequenceOrder" name="SequenceOrder" min="0" />
+
+                                        @*@Html.EditorFor(model => model.SequenceOrder ,new {@min="1" })*@
+                                        @Html.ValidationMessageFor(model => model.SequenceOrder)
+                                        <br /> <span id="SequenceOrderErro" style="font-weight:bold;color:red;"></span>
+                                    </div>
+                                </div>
+
+
+
+                                <div class="control-group">
+                                    @Html.LabelFor(model => model.IsActive, new { @class = "control-label col-md-2" })
+                                    <div class="col-md-10 controls">
+                                        @*<input type="checkbox" id="IsActive " name="IsActive " />*@
+                                        @Html.CheckBoxFor(model => model.IsActive_)
+                                        @Html.ValidationMessageFor(model => model.IsActive_)
+                                        <br /> <span id="IsActiveErro" style="font-weight:bold;color:red;"></span>
+                                    </div>
+                                </div>
+
+                                <div class="control-group" id="isban" style="display:block">
+                                    @*@Html.LabelFor(model => model.IsBanner, new { @class = "control-label col-md-2" })*@
+                                    <label class="control-label col-md-2">Banner</label>
+                                    <div class="col-md-10 controls">
+                                        @*<input type="checkbox" id="IsBanner " name="IsBanner " />*@
+                                        @Html.CheckBoxFor(model => model.IsBanner_)
+
+                                        @Html.ValidationMessageFor(model => model.IsBanner_)
+                                        <br /><span id="IsActiveErro" style="font-weight:bold;color:red;"></span>
+                                    </div>
+                                </div>
+
+                                <div class="control-group" id="iscat" style="display:block">
+                                    @*@Html.LabelFor(model => model.IsCategory, new { @class = "control-label col-md-2" })*@
+                                    <label class="control-label col-md-2">Sub Banner</label>
+                                    <div class="col-md-10 controls">
+                                        @Html.CheckBoxFor(model => model.IsCategory)
+                                        @Html.ValidationMessageFor(model => model.IsCategory)
+                                        <span id="IsBannerErro" style="font-weight:bold;color:red;"></span>
+                                    </div>
+                                </div>
+                                <div class="control-group">
+                                    <div class="control-label col-md-2" style="margin-left: 75px;">
+                                        <span id="checkErro" style="font-weight:bold;color:red;"></span>
+                                    </div>
+                                </div>
+
+                                <div class="control-group" id="categorylevel" style="display:none">
+
+                                    <label class="control-label col-md-2">Category List (select level one or two)</label>
+                                    <div class="col-md-10 controls">
+                                        @*<input type="checkbox" id="IsBanner " name="IsBanner " />*@
+                                        <input type="checkbox" id="Iscategourylist" onclick="OnCheckFunction()">
+
+                                        <span id="IsActiveErro" style="font-weight:bold;color:red;"></span>
+                                    </div>
+                                </div>
+
+
+
+                                <div class="pull-left" id="levelonemenu" style="display: none;">
+                                    <label class="control-label col-md-2">select Level One Category</label>
+                                    <div class="col-md-10 controls">
+                                        @Html.DropDownList("leveloneId", null, "Select category", new { @Id = "leveloneId", onchange = "$('#ediFilesForm').submit()", name = "action:Index1", style = "width:auto;" })
+
+                                        <span id="field" style="font-weight:bold;color:red;"></span>
+                                    </div>
+
+                                    <br /><span id="droperror" style="color: #777;"></span>
+                                    <div id="dvPreviewdrop">
+                                    </div>
+                                    <div class="clr"></div>
+                                    <span id="dropErro" style="font-weight:bold;color:red;"></span>
+                                </div>
+                                <div class="pull-left" id="leveltwomenu" style="display: none;">
+                                    <label class="control-label col-md-2">select Level Two Category</label>
+                                    <div class="col-md-10 controls">
+                                        @Html.DropDownList("leveltwoId", null, "Select category", new { @Id = "leveltwoId", onchange = "$('#ediFilesForm').submit()", name = "action:Index1", style = "width:auto;" })
+
+                                        <span id="fieldl" style="font-weight:bold;color:red;"></span>
+                                    </div>
+
+                                    <br /><span id="droperror" style="color: #777;"></span>
+                                    <div id="dvPreviewdrop">
+                                    </div>
+                                    <div class="clr"></div>
+                                    <span id="dropErro" style="font-weight:bold;color:red;"></span>
+                                </div>
+
+
+                                <div class="col-md-6">
+
+                                    <div class="pull-left" id="Keywordshow" style="display: none;margin-bottom:20px;">
+                                        <label class="control-label col-md-2">Search Keyword</label>
+                                        <div class="col-md-10 controls">
+                                            @*<input type="text" id="Keyword" name="Keyword" onclick="Keyword()">*@
+                                            @*@Html.EditorFor(model => model.Keyword)*@
+                                            <input type="text" id="Keyword" name="Keyword" onclick="KeywordFunction()">
+
+                                            @Html.ValidationMessageFor(model => model.Keyword)
+                                            <span id="fieldk" style="font-weight:bold;color:red;"></span>
+                                        </div>
+
+                                        <div class="clr"></div>
+                                        <span id="textErro" style="font-weight:bold;color:red;"></span>
+                                    </div>
+
+                                    <div class="pull-left" id="Shopdropmenu" style="display: none;">
+                                        <label class="control-label col-md-2">select Shop</label>
+                                        <div class="col-md-10 controls">
+                                            @Html.DropDownList("ShopName", null, "Select category", new { @Id = "ShopId", onchange = "$('#ediFilesForm').submit()", name = "action:Index1", style = "width:auto;" })
+
+                                            <span id="fields" style="font-weight:bold;color:red;"></span>
+                                        </div>
+
+                                        <br /><span id="droperror" style="color: #777;"></span>
+                                        <div id="dvPreviewdrop">
+                                        </div>
+                                        <div class="clr"></div>
+                                        <span id="dropErro" style="font-weight:bold;color:red;"></span>
+                                    </div>
+                                    <div class="pull-left" id="Categorydropmenu" style="display: none;">
+                                        <label class="control-label col-md-2">Select Level Three  Category</label>
+                                        <div class="col-md-10 controls">
+                                            @Html.DropDownList("LevelThree", null, "Select category", new { @Id = "LevelThreeId", onchange = "$('#ediFilesForm').submit()", name = "action:Index1", style = "width:auto;" })
+
+                                            <span id="fieldlt" style="font-weight:bold;color:red;"></span>
+                                        </div>
+
+                                        <br /><span id="droperror" style="color: #777;"></span>
+                                        <div id="dvPreviewdrop">
+                                        </div>
+                                        <div class="clr"></div>
+                                        <span id="dropErro" style="font-weight:bold;color:red;"></span>
+                                    </div>
+                                    <div class="pull-left" id="Branddropmenu" style="display: none;">
+                                        <label class="control-label col-md-2">select Brand</label>
+                                        <div class="col-md-10 controls">
+                                            @Html.DropDownList("brandname", null, "Select category", new { @Id = "brandnameId", onchange = "$('#ediFilesForm').submit()", name = "action:Index1", style = "width:auto;" })
+
+                                            <span id="fieldb" style="font-weight:bold;color:red;"></span>
+                                        </div>
+
+                                        <br /><span id="droperror" style="color: #777;"></span>
+                                        <div id="dvPreviewdrop">
+                                        </div>
+                                        <div class="clr"></div>
+                                        <span id="dropErro" style="font-weight:bold;color:red;"></span>
+                                    </div>
+                                    <div class="pull-left" id="Offerdropmenu" style="display: none;">
+                                        <label class="control-label col-md-2">select Offer</label>
+                                        <div class="col-md-10 controls">
+                                            @Html.DropDownList("Offername", null, "Select category", new { @Id = "OffernameId", onchange = "$('#ediFilesForm').submit()", name = "action:Index1", style = "width:auto;" })
+
+                                            <br /> <span id="fieldo" style="font-weight:bold;color:red;"></span>
+                                        </div>
+
+                                        <br /><span id="droperror" style="color: #777;"></span>
+                                        <div id="dvPreviewdrop">
+                                        </div>
+                                        <div class="clr"></div>
+                                        <span id="dropErro" style="font-weight:bold;color:red;"></span>
+                                    </div>
+
+                                </div>
+                                <div class="col-md-4" id="butnid" style="display:none">
+                                    <input type="button" value="Choose Category" onclick="butnidFunction()" style="margin-left:10px; margin-top:2px">
+                                </div>
+
+
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="span4" id="imid" style="display:none">
+                        <span id="ImageErro" style="font-weight:bold;color:red;"></span>
+                        <br /><span id="imgSize" style="color: #777;"></span>
+                        <div class="top_cat pull-left">
+                            <span id="ImageErro" style="font-weight:bold;color:red;"></span>
+                            <div class=" categorydiv">
+                                @*<img src="@Model.ImageName" width="100px" height="100px" onerror="this.src = '../../Content/Images/No_thumbnail.png'" style="border: 2px solid#CEC4C4; margin-left: 10px; padding: 5px; margin-top: 20px;" />*@
+                                <input type="file" name="File" id="File" class="pull-right" />
+
+                                <div id="dvPreview">
+
+                                </div><div class="clr"></div>
+
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="form-actions no-color">
+            <div class=" col-md-offset-2 col-md-10" style="text-align:center;">
+                <input type="submit" value="Create" class="btn btn-primary" />
+
+                @Html.ActionLink("Back to List", "Index", null, new { @class = "btn btn-default" })
+            </div>
+        </div>
+    }
+</div>
+<div class="span4 spanLeft" style="margin-top:12px;">
+    <div id="divAddNew"></div>
+</div>
+
+
+@*<script src="~/Scripts/jquery-2.1.4.min.js"></script>*@
+
+<script src="~/Scripts/jquery-1.10.2.min.js"></script>
+
+<script>
+
+    //$.noConflict();
+    var height = 0;
+    var width = 0;
+    var size = 0;
+
+    function butnidFunction() {
+        $("#butnid").css('display', 'none');
+        var cat = $("#Category").val();
+        var FranchiseId = $('#franchiseId').val();
+
+
+        $.ajax({
+            type: "POST",
+            url: "/HomePageDynamicSectionMobile/GetDropDetails?EnumList=" + cat + "&franchiseId=" + FranchiseId,
+            dataType: "json",
+            async: true,
+            cache: false,
+            success: function (data) {
+
+                if (cat == "OfferProductList") {
+
+
+                    $("#Keywordshow").css('display', 'block');
+                    $("#Shopdropmenu").css('display', 'block');
+                    $("#Branddropmenu").css('display', 'block');
+                    $("#Offerdropmenu").css('display', 'block');
+                    $("#Categorydropmenu").css('display', 'block');
+                    $('#LevelThreeId').empty();
+                    $('#LevelThreeId').append('<option value=0>Select category</option>');
+                    $.each(data.LevelThreeListing, function (index, item) {
+                        $('#LevelThreeId').append('<option value=' + item.ID + '>' + item.CategoryName + '</option>');
+                    });
+                    $('#ShopId').empty();
+                    $('#ShopId').append('<option value=0>Select Shop</option>');
+                    $.each(data.ShopList, function (index, item) {
+                        $('#ShopId').append('<option value=' + item.Name + '>' + item.Name + '</option>');
+                    });
+                    $('#brandnameId').empty();
+                    $('#brandnameId').append('<option value=0>Select Brand</option>');
+                    $.each(data.BrandList, function (index, item) {
+                        $('#brandnameId').append('<option value=' + item.Id + '>' + item.Name + '</option>');
+                    });
+                    $('#OffernameId').empty();
+                    $('#OffernameId').append('<option value=0>Select Offer</option>');
+                    if (data.offerLists == 0) {
+                        $('#OffernameId').append('<option value=0>No Offer is Found</option>');
+                    }
+                    else {
+                        $.each(data.offerLists, function (index, item) {
+
+                            $('#OffernameId').append('<option value=' + item.Id + '>' + item.Name + '</option>');
+
+                        });
+                    }
+
+                    
+                }
+
+            },
+            error: function (x, e) {
+
+                $("#dropmenu").css('display', 'none');
+                $("#pageload").css('display', 'none');
+                $("#pageload").fadeOut(1000);
+            }
+        });
+    }
+
+
+
+
+    $(document).ready(function () {
+       
+
+      
+
+         var sectionsty =  "@Html.Raw(@ViewBag.SectionStyle)"; 
+           // var ID = $("#HomepageDynamicSectionID").val();
+            if (sectionsty != null || sectionsty != "") {
+                /*Processing Image*/
+                $("#pageloaddiv").css('display', 'block');
+                $("#pageloaddiv").fadeOut(1000);
+
+                $.ajax({
+                    type: "POST",
+                    url: "/HomePageDynamicSectionMobile/GetBlocksizecategory?sectionsty=" + sectionsty,
+                    dataType: "json",
+                    async: true,
+                    cache: false,
+                    success: function (data) {
+                        if (data.Mobile_Category_Height != null && data.Mobile_Category_Width != null) {
+                            $("#iscat").css('display', 'block');
+                        }
+                        else {
+                            $("#iscat").css('display', 'none');
+                        }
+                    },
+                    error: function (x, e) {
+                        // alert("Sorry No Such Type of Block Type Is available. ");
+                        $("#imgDiv").css('display', 'none');
+                        $("#pageloaddiv").css('display', 'none');
+                        $("#pageloaddiv").fadeOut(1000);
+                    }
+                });
+            }
+
+
+
+        $(".btn-primary").click(function () { //remain validation for image
+
+            var ErrorCount = 0;
+            var Ajaxerro = 0;
+            var checkError = 0;
+            var startDate = $("#SDate").val();
+            var endDate = $("#EDate").val();
+            var PriorityLevel = $("#SequenceOrder").val();
+            var cat = $("#Category").val();
+            var tooltip = $("#ToolTip").val();
+            var isActive = $("#IsActive option:selected").text();
+
+
+            var LeveloneId = $("#leveloneId").val();
+            var LeveltwoId = $("#leveltwoId").val();
+            var Keywd = $("#Keyword").val();
+            var Shopname = $("#ShopName").val();
+            var Levelthree = $("#LevelThree").val();
+            var Brandname = $("#brandname").val();
+            var OfferName = $("#Offername").val();
+
+
+            var Count = 0;
+
+            if (LeveloneId == null || LeveloneId == "0") {
+                Count = Count + 1;
+            }
+            else {
+                Count;
+            }
+
+            if (LeveltwoId == null || LeveltwoId == "0") {
+                Count = Count + 1;
+            }
+            else {
+                Count;
+            }
+
+            if (Keywd == '') {
+                Count = Count + 1;
+            }
+            else {
+                Count;
+            }
+
+            if (Shopname == '' || Shopname == undefined) {
+                Count = Count + 1;
+            }
+            else {
+                Count;
+            }
+
+            if (Levelthree == '' || Levelthree == undefined) {
+                Count = Count + 1;
+            }
+            else {
+                Count;
+            }
+
+            if (Brandname == '' || Brandname == undefined) {
+                Count = Count + 1;
+            }
+            else {
+                Count;
+            }
+
+            if (OfferName == '' || OfferName == undefined) {
+                Count = Count + 1;
+            }
+            else {
+                Count;
+            }
+
+
+
+
+            //if (Count == 7) {
+            //    $('#field').html('Please Select the Field');
+            //    $('#fieldk').html('Please Select the Field');
+            //    $('#fieldo').html('Please Select the Field');
+            //    $('#fieldl').html('Please Select the Field');
+            //    $('#fieldlt').html('Please Select the Field');
+            //    $('#fields').html('Please Select the Field');
+            //    $('#fieldb').html('Please Select the Field');
+            //    ErrorCount = ErrorCount + 1;
+            //}
+            //else {
+            //    $('#field').html('');
+            //}
+
+            if (isActive == 'Not Set') {
+                $('#IsActiveErro').html('Please Select the IsActive');
+                ErrorCount = ErrorCount + 1;
+            }
+            else {
+                $('#IsActiveErro').html('');
+            }
+
+
+            if (startDate == '') {
+                $('#SDateErro').html('Please Select Start Date');
+                ErrorCount = ErrorCount + 1;
+            }
+            else {
+                $('#SDateErro').html('');
+            }
+            if (endDate == '') {
+                $("#EDateErro").html('Please Select End Date');
+                ErrorCount = ErrorCount + 1;
+            }
+            else {
+                $("#EDateErro").html('');
+            }
+            if (PriorityLevel == '') {
+                $('#SequenceOrderErro').html('Please Select Sequence Order or Set to Zero (0)');
+                ErrorCount = ErrorCount + 1;
+            }
+            else {
+              
+                $('#SequenceOrderErro').html('');
+            }
+
+            if (PriorityLevel != '')
+            {
+                debugger
+                var Hpid = $("#HomepageDynamicSectionID").val();
+                $.ajax({
+                    type: "POST",
+                    url: "/HomePageDynamicSectionMobile/getsequencedeatail?id=" + Hpid + "&sequenceOrder=" + PriorityLevel,
+                    dataType: "json",
+                    async: false,
+                    cache: false,
+                    success: function (data) {
+                       
+                        if (data != "") {
+                            Ajaxerro = 1;
+
+                            $('#SequenceOrderErro').html(data);
+                            return false;
+                        }
+                        else {
+                            $('#SequenceOrderErro').html('');
+                        }
+                        
+                    }
+
+                });
+            }
+           
+
+
+            if (cat == '') {
+                $('#IsCategoryErro').html('Please Enter ');
+                ErrorCount = ErrorCount + 1;
+            }
+            else {
+                $('#IsCategoryErro').html('');
+            }
+            if (tooltip == '') {
+                $('#ToolTipErro').html('Please Enter Tooltip');
+                ErrorCount = ErrorCount + 1;
+            }
+            else {
+                $('#ToolTipErro').html('');
+            }
+
+
+            if (startDate != '' && endDate != '') {
+                debugger
+                var sdate = startDate.split("/");   //date present in dd/MM/yyyy format
+                var edate = endDate.split("/");    //date present in dd/MM/yyyy format
+
+                if (new Date(sdate[2], sdate[1], sdate[0]) > new Date(edate[2], edate[1], edate[0])) {     //date in yyyy mm dd format
+                    $("#DateErro").html('Please Select Start Date Less than End Date');
+                    ErrorCount = ErrorCount + 1;
+                }
+                else {
+                    $("#DateErro").html('');
+                }
+            }
+
+
+
+            var filename = $('input[type=file]').val();
+            //var filename = document.getElementById("File").val();
+            if (filename == '') {
+                //Show error message or alert('please choose file');
+                $("#ImageErro").html('Please choose Image');
+                ErrorCount = ErrorCount + 1;
+            }
+
+          if ($("#IsCategory").prop("checked") == true) {
+
+              
+                checkError = 0;
+            }
+            else
+            {
+               
+                checkError = checkError + 1;
+
+            }
+
+
+            if ($("#IsBanner_").prop("checked") == true) {
+
+                
+                checkError = 0;
+              
+            }
+            else {
+                checkError = checkError + 1;
+
+            }
+
+            if (checkError == 2) {
+                $("#checkErro").html('Please choose Banner or Sub Category');
+                return false;
+            }
+            else
+            {
+                $("#checkErro").html('');
+            }
+            if (Ajaxerro > 0) {
+                return false;
+            }
+            if (ErrorCount > 0) {
+
+                return false;
+            }
+        });
+
+    });
+
+
+
+</script>
+<script language="javascript" type="text/javascript">
+    window.onload = function () {
+
+        var Files = document.getElementById("File");
+        Files.onchange = function () {
+            if (typeof (FileReader) != "undefined") {
+                var dvPreview = document.getElementById("dvPreview");
+                dvPreview.innerHTML = "";
+                var regex = /^([a-zA-Z0-9\s_\\.\-:])+(.jpg|.jpeg|.gif|.png|.bmp|.JPG|.JPEG|.GIF|.PNG|.BMP)$/;
+                for (var i = 0; i < Files.files.length; i++) {
+                    var file = Files.files[i];
+
+                    if (file.size / 1024 <= size) {
+
+                        if (regex.test(file.name.toLowerCase())) {
+                            var reader = new FileReader();
+                            reader.onload = function (e) {
+                                var img = document.createElement("IMG");
+                                img.height = height;
+                                img.width = width;
+                                img.src = e.target.result;
+                                dvPreview.appendChild(img);
+                                //$('#img_upload'.hide());
+                            }
+                            reader.readAsDataURL(file);
+                        } else {
+                            alert(file.name + " is not a valid image file.");
+                            dvPreview.innerHTML = "";
+                            return false;
+                        }
+                    }
+                    else {
+                        alert(file.name + " is too large image to upload Max size of image is " + size + "kb.");
+                        dvPreview.innerHTML = "";
+                        return false;
+                    }
+                }
+            } else {
+                alert("This browser does not support HTML5 FileReader.");
+            }
+        }
+    }
+
+    $("#Category").change(function () {
+        debugger
+
+        /* Get the selected value of dropdownlist */
+        $("#dropmenu").css('display', 'block');
+        var selectedID = $(this).val();
+
+        /*Processing Image*/
+        $("#pageload").css('display', 'block');
+        $("#pageload").fadeOut(1000);
+
+        var FranchiseId = $('#franchiseId').val();
+
+
+        $.ajax({
+            type: "POST",
+            url: "/HomePageDynamicSectionMobile/GetDropDetails?EnumList=" + selectedID + "&franchiseId=" + FranchiseId,
+            dataType: "json",
+            async: true,
+            cache: false,
+            success: function (data) {
+
+                //if (selectedID == "OfferProductList") {
+
+
+                //    $("#Keywordshow").css('display', 'block');
+                //    $("#Shopdropmenu").css('display', 'block');
+                //    $("#Branddropmenu").css('display', 'block');
+                //    $("#Offerdropmenu").css('display', 'block');
+                //    $("#Categorydropmenu").css('display', 'block');
+                //    $('#LevelThreeId').empty();
+                //    $('#LevelThreeId').append('<option value=0>Select category</option>');
+                //    $.each(data.LevelThreeListing, function (index, item) {
+                //        $('#LevelThreeId').append('<option value=' + item.ID + '>' + item.CategoryName + '</option>');
+                //    });
+                //    $('#ShopId').empty();
+                //    $('#ShopId').append('<option value=0>Select Shop</option>');
+                //    $.each(data.ShopList, function (index, item) {
+                //        $('#ShopId').append('<option value=' + item.Id + '>' + item.Name + '</option>');
+                //    });
+                //    $('#brandnameId').empty();
+                //    $('#brandnameId').append('<option value=0>Select Brand</option>');
+                //    $.each(data.BrandList, function (index, item) {
+                //        $('#brandnameId').append('<option value=' + item.Id + '>' + item.Name + '</option>');
+                //    });
+                //    $('#OffernameId').empty();
+                //    $('#OffernameId').append('<option value=0>Select Offer</option>');
+                //    if (data.offerLists == 0) {
+                //        $('#OffernameId').append('<option value=0>No Offer is Found</option>');
+                //    }
+                //    else {
+                //        $.each(data.offerLists, function (index, item) {
+
+                //            $('#OffernameId').append('<option value=' + item.Id + '>' + item.Name + '</option>');
+
+                //        });
+                //    }
+
+                //    $("#ShopId").change(function () {
+                //        $("#butnid").css('display', 'block');
+
+                //        $("#Keywordshow").css('display', 'none');
+
+                //        $("#Branddropmenu").css('display', 'none');
+                //        $('#brandnameId').empty();
+                //        $("#Categorydropmenu").css('display', 'none');
+                //        $('#LevelThreeId').empty();
+                //        $("#Offerdropmenu").css('display', 'none');
+                //        $('#OffernameId').empty();
+
+                //    });
+                //    $("#brandnameId").change(function () {
+                //        $("#butnid").css('display', 'block');
+                //        $("#Keywordshow").css('display', 'none');
+                //        $("#Shopdropmenu").css('display', 'none');
+                //        $('#ShopId').empty();
+                //        $("#Categorydropmenu").css('display', 'none');
+                //        $('#LevelThreeId').empty();
+                //        $("#Offerdropmenu").css('display', 'none');
+                //        $('#OffernameId').empty();
+
+                //    });
+                //    $("#LevelThreeId").change(function () {
+                //        $("#butnid").css('display', 'block');
+                //        $("#Keywordshow").css('display', 'none');
+                //        $("#Shopdropmenu").css('display', 'none');
+                //        $('#ShopId').empty();
+                //        $("#Branddropmenu").css('display', 'none');
+                //        $('#brandnameId').empty();
+                //        $("#Offerdropmenu").css('display', 'none');
+                //        $('#OffernameId').empty();
+
+                //    });
+                //    $("#OffernameId").change(function () {
+                //        $("#butnid").css('display', 'block');
+                //        $("#Keywordshow").css('display', 'none');
+                //        $("#Shopdropmenu").css('display', 'none');
+                //        $('#ShopId').empty();
+                //        $("#Branddropmenu").css('display', 'none');
+                //        $('#brandnameId').empty();
+                //        $("#Categorydropmenu").css('display', 'none');
+                //        $('#LevelThreeId').empty();
+
+                //    });
+                //}
+                //else {
+                //    $("#Keywordshow").css('display', 'none');
+                //    $("#Shopdropmenu").css('display', 'none');
+                //    $("#Branddropmenu").css('display', 'none');
+                //    $("#Categorydropmenu").css('display', 'none');
+
+                //    $("#Offerdropmenu").css('display', 'none');
+
+                //    $('#brandnameId').empty();
+                //    $('#ShopId').empty();
+                //    $('#LevelThreeId').empty();
+                //    $('#OffernameId').empty();
+                //}
+
+
+
+
+                if (selectedID == "lvl1categorylist" || selectedID == "lvl2Categorylist" || selectedID == "OfferProductList") {
+
+                    if (selectedID == "lvl1categorylist" || selectedID == "lvl2Categorylist") {
+
+                        if (selectedID == "lvl1categorylist") {
+                            $("#levelonemenu").css('display', 'block');
+                            $('#leveloneId').empty();
+                            $('#leveloneId').append('<option value=0>Select category</option>');
+                            $.each(data.levelOneMenu, function (index, item) {
+                                $('#leveloneId').append('<option value=' + item.ID + '>' + item.CategoryName + '</option>');
+
+                            });
+                            $("#leveltwomenu").css('display', 'none');
+                            $('#leveltwoId').empty();
+
+                        }
+                        else
+                        {
+                            $("#leveltwomenu").css('display', 'block');
+                            $('#leveltwoId').empty();
+                            $('#leveltwoId').append('<option value=0>Select category</option>');
+                            $.each(data.LevelTwoListing, function (index, item) {
+                                $('#leveltwoId').append('<option value=' + item.ID + '>' + item.CategoryName + '</option>');
+                            });
+                            $("#levelonemenu").css('display', 'none');
+                            $('#leveloneId').empty();
+
+                        }
+
+
+                        $("#Keywordshow").css('display', 'none');
+                        $("#Shopdropmenu").css('display', 'none');
+                        $("#Branddropmenu").css('display', 'none');
+                        $("#Categorydropmenu").css('display', 'none');
+                        $("#Offerdropmenu").css('display', 'none');
+                        $('#ShopId').empty();
+
+                        $('#brandnameId').empty();
+                        $('#LevelThreeId').empty();
+                        $('#OffernameId').empty();
+
+                        $('#Keyword').val('');
+                        //document.getElementById("Keyword").empty();
+                    }
+                    else {
+
+                        $("#levelonemenu").css('display', 'none');
+                        $("#leveltwomenu").css('display', 'none');
+                        $('#leveloneId').empty();
+                        $('#leveltwoId').empty();
+
+                        $("#Keywordshow").css('display', 'block');
+                        $("#Shopdropmenu").css('display', 'block');
+                        $("#Branddropmenu").css('display', 'block');
+                        $("#Offerdropmenu").css('display', 'block');
+                        $("#Categorydropmenu").css('display', 'block');
+                        $('#LevelThreeId').empty();
+                        $('#LevelThreeId').append('<option value=0>Select category</option>');
+                        $.each(data.LevelThreeListing, function (index, item) {
+                            $('#LevelThreeId').append('<option value=' + item.ID + '>' + item.CategoryName + '</option>');
+                        });
+                        $('#ShopId').empty();
+                        $('#ShopId').append('<option value=0>Select Shop</option>');
+                        $.each(data.ShopList, function (index, item) {
+                            $('#ShopId').append('<option value=' + item.Name + '>' + item.Name + '</option>');
+                        });
+                        $('#brandnameId').empty();
+                        $('#brandnameId').append('<option value=0>Select Brand</option>');
+                        $.each(data.BrandList, function (index, item) {
+                            $('#brandnameId').append('<option value=' + item.Id + '>' + item.Name + '</option>');
+                        });
+                        $('#OffernameId').empty();
+                        $('#OffernameId').append('<option value=0>Select Offer</option>');
+                        if (data.offerLists == 0) {
+                            $('#OffernameId').append('<option value=0>No Offer is Found</option>');
+                        }
+                        else {
+                            $.each(data.offerLists, function (index, item) {
+
+                                $('#OffernameId').append('<option value=' + item.Id + '>' + item.Name + '</option>');
+
+                            });
+                        }
+
+    
+
+                        $("#ShopId").change(function () {
+
+                            debugger
+                            $("#butnid").css('display', 'block');
+                            $("#Keywordshow").css('display', 'none');
+
+                            $("#Branddropmenu").css('display', 'none');
+                            $('#brandnameId').empty();
+                            $("#Categorydropmenu").css('display', 'none');
+                            $('#LevelThreeId').empty();
+                            $("#Offerdropmenu").css('display', 'none');
+                            $('#OffernameId').empty();
+
+                        });
+                        $("#brandnameId").change(function () {
+                            $("#butnid").css('display', 'block');
+                            $("#Keywordshow").css('display', 'none');   
+                            $("#Shopdropmenu").css('display', 'none');
+                            $('#ShopId').empty();
+                            $("#Categorydropmenu").css('display', 'none');
+                            $('#LevelThreeId').empty();
+                            $("#Offerdropmenu").css('display', 'none');
+                            $('#OffernameId').empty();
+
+
+
+                        });
+                        $("#LevelThreeId").change(function () {
+                            $("#butnid").css('display', 'block');
+                            $("#Keywordshow").css('display', 'none');
+                            $("#Shopdropmenu").css('display', 'none');
+                            $('#ShopId').empty();
+                            $("#Branddropmenu").css('display', 'none');
+                            $('#brandnameId').empty();
+                            $("#Offerdropmenu").css('display', 'none');
+                            $('#OffernameId').empty();
+
+                        });
+                        $("#OffernameId").change(function () {
+                            $("#butnid").css('display', 'block');
+                            $("#Keywordshow").css('display', 'none');
+                            $("#Shopdropmenu").css('display', 'none');
+                            $('#ShopId').empty();
+                            $("#Branddropmenu").css('display', 'none');
+                            $('#brandnameId').empty();
+                            $("#Categorydropmenu").css('display', 'none');
+                            $('#LevelThreeId').empty();
+
+                        });
+
+                    }
+                }
+                else {
+                    $("#butnid").css('display', 'none');
+                    $("#Keywordshow").css('display', 'none');
+                    $("#Shopdropmenu").css('display', 'none');
+                    $("#Branddropmenu").css('display', 'none');
+                    $("#Categorydropmenu").css('display', 'none');
+                    $("#levelonemenu").css('display', 'none');
+                    $("#leveltwomenu").css('display', 'none');
+                    $("#Offerdropmenu").css('display', 'none');
+                    $('#leveloneId').empty();
+                    $('#leveltwoId').empty();
+                    $('#brandnameId').empty();
+                    $('#ShopId').empty();
+                    $('#LevelThreeId').empty();
+                    $('#OffernameId').empty();
+                }
+
+                $("#pageload").css('display', 'none');
+                $("#pageload").fadeOut(1000);
+            },
+            error: function (x, e) {
+
+                $("#dropmenu").css('display', 'none');
+                $("#pageload").css('display', 'none');
+                $("#pageload").fadeOut(1000);
+            }
+        });
+    })
+
+
+    function KeywordFunction() {
+        $("#butnid").css('display', 'block');
+        $("#Branddropmenu").css('display', 'none');
+        $('#brandnameId').empty();
+        $("#Categorydropmenu").css('display', 'none');
+        $('#LevelThreeId').empty();
+        $("#Shopdropmenu").css('display', 'none');
+        $('#ShopId').empty();
+        $("#Offerdropmenu").css('display', 'none');
+        $('#OffernameId').empty();
+    }
+
+
+   $("#IsBanner_").change(function () {
+        if (this.checked) {
+
+            $("#imid").css('display', 'block');
+            $("#iscat").css('display', 'none');
+
+            var sectionsty = "@ViewBag.SectionStyle";
+            var sectionsty = "@Html.Raw(@ViewBag.SectionStyle)";
+            var ID = $("#HomepageDynamicSectionID").val();
+            if (sectionsty != null || sectionsty != "") {
+                /*Processing Image*/
+                $("#pageloaddiv").css('display', 'block');
+                $("#pageloaddiv").fadeOut(1000);
+
+                $.ajax({
+                    type: "POST",
+                    url: "/HomePageDynamicSectionMobile/GetBlocksize?sectionsty=" + sectionsty,
+                    dataType: "json",
+                    async: true,
+                    cache: false,
+                    success: function (data) {
+                        
+                        height = data.Mobile_Banner_Height;
+                        width = data.Mobile_Banner_Width;
+                        size = data.Mobile_Banner_Size;
+                        //size = 400;
+                        $("#imgSize").html("Please Select Image with Size " + width + "x" + height + " px size of image" + size + "kb");
+                        $("#dvPreview").css("height", 300);
+                        $("#dvPreview").css("width", 173);
+                        $("#imgDiv").css('display', 'block');
+                        $("#pageloaddiv").css('display', 'none');
+                        $("#pageloaddiv").fadeOut(1000);
+                    },
+                    error: function (x, e) {
+                        // alert("Sorry No Such Type of Block Type Is available. ");
+                        $("#imgDiv").css('display', 'none');
+                        $("#pageloaddiv").css('display', 'none');
+                        $("#pageloaddiv").fadeOut(1000);
+                    }
+                });
+            }
+        }
+        else
+        {
+            $("#imid").css('display', 'none');
+           
+         var sectionsty =  "@Html.Raw(@ViewBag.SectionStyle)"; 
+            var ID = $("#HomepageDynamicSectionID").val();
+            if (sectionsty != null || sectionsty != "") {
+                /*Processing Image*/
+                $("#pageloaddiv").css('display', 'block');
+                $("#pageloaddiv").fadeOut(1000);
+
+                $.ajax({
+                    type: "POST",
+                    url: "/HomePageDynamicSectionMobile/GetBlocksizecategory?sectionsty=" + sectionsty,
+                    dataType: "json",
+                    async: true,
+                    cache: false,
+                    success: function (data) {
+                        if (data.Mobile_Category_Height != null && data.Mobile_Category_Width!= null) {
+                            $("#iscat").css('display', 'block');
+                        }
+                        else {
+                            $("#iscat").css('display', 'none');
+                        }
+                    },
+                    error: function (x, e) {
+                        // alert("Sorry No Such Type of Block Type Is available. ");
+                        $("#imgDiv").css('display', 'none');
+                        $("#pageloaddiv").css('display', 'none');
+                        $("#pageloaddiv").fadeOut(1000);
+                    }
+                });
+            }
+        }
+    });
+
+
+     $("#IsCategory").change(function () {
+        if (this.checked) {
+
+            $("#imid").css('display', 'block');
+            $("#isban").css('display', 'none');
+
+
+            var sectionsty = "@Html.Raw(@ViewBag.SectionStyle)";
+            var ID = $("#HomepageDynamicSectionID").val();
+            if (sectionsty != null || sectionsty != "") {
+                /*Processing Image*/
+                $("#pageloaddiv").css('display', 'block');
+                $("#pageloaddiv").fadeOut(1000);
+
+                $.ajax({
+                    type: "POST",
+                    url: "/HomePageDynamicSectionPortal/GetBlocksizecategory?sectionsty=" + sectionsty,
+                    dataType: "json",
+                    async: true,
+                    cache: false,
+                    success: function (data) {
+
+                        height = data.Portal_Category_Height;
+                        width = data.Portal_Category_Width;
+                        //size = data.Portal_Category_Size;
+                        size = 400;
+                        $("#imgSize").html("Please Select Image with Size " + width + "x" + height + " px size of image" + size + "kb");
+                        $("#dvPreview").css("height", 300);
+                        $("#dvPreview").css("width", 173);
+                        $("#imgDiv").css('display', 'block');
+                        $("#pageloaddiv").css('display', 'none');
+                        $("#pageloaddiv").fadeOut(1000);
+                    },
+                    error: function (x, e) {
+                        // alert("Sorry No Such Type of Block Type Is available. ");
+                        $("#imgDiv").css('display', 'none');
+                        $("#pageloaddiv").css('display', 'none');
+                        $("#pageloaddiv").fadeOut(1000);
+                    }
+                });
+            }
+        }
+        else
+        {
+            $("#imid").css('display', 'none');
+            $("#isban").css('display', 'block');
+        }
+    });
+
+</script>

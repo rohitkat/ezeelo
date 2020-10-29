@@ -1,0 +1,125 @@
+﻿@model IEnumerable<ModelLayer.Models.PartnerRequest>
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<style>
+    .dataTables_length {
+        margin-left: 0px;
+        margin-top: 7px;
+    }
+
+    .pagination {
+        padding: 0px 40px;
+    }
+    input[type=text] {
+        border: groove !important;
+        border-width: 1px !important;
+        border-color: black !important;
+    }
+
+    select {
+        border: groove !important;
+        border-width: 1px !important;
+        border-color: black !important;
+    }
+</style>
+<script src="~/Scripts/jquery-1.10.2.min.js"></script>
+<script>
+    $(document).ready(function () {
+        if ('@ViewBag.StartDate' != null) {
+            $('#StartDate').val('@ViewBag.StartDate');
+        }
+        if ('@ViewBag.EndDate' != null) {
+            $('#EndDate').val('@ViewBag.EndDate');
+        }
+        $('#StartDate').datepicker({ dateFormat: 'mm/dd/yy' });
+        $('#EndDate').datepicker({ dateFormat: 'mm/dd/yy' });
+        $("#btnExport").click(function () {
+            window.location.href = "/PartnerRequest/ExportToExcel?ext=xls&StartDate=" + $("#StartDate").val() + "&EndDate=" + $("#EndDate").val();
+        });
+        $("#btnSearch").click(function () {
+            window.location.href = "/PartnerRequest/Index?StartDate=" + $("#StartDate").val() + "&EndDate=" + $("#EndDate").val();
+        });
+    });
+</script>
+<div id="content" class="span10">
+    <ul class="breadcrumb">
+        <li>
+            <a href="#">Partner Request</a>
+        </li>
+    </ul>
+    <div class="row-fluid">
+        <div class="box span12">
+            <div class="box-header">
+                <h2 style="color:#062a5c">List of Partner Request</h2>
+            </div>
+            <div class="box-content">
+                <center>
+                    <input type="text" id="StartDate" placeholder="Enter From Date" name="StartDate" />
+                    <input type="text" id="EndDate" placeholder="Enter To Date" name="EndDate" />
+                    <input type="submit" id="btnExport" value="ExportToExcel" class="btn btn-small btn-success" />
+                    <input type="submit" id="btnSearch" value="Search" class="btn btn-small btn-success" />
+                    @*@Html.ActionLink("Export To Execel", "ExportToExcel", new { ext = "xls", }, new { @class = "btn btn-small btn-success" })
+                        @Html.ActionLink("Export To Execel", "ExportToExcel", new { ext = "xls", }, new { @class = "btn btn-small btn-success" })*@
+                    @*@Html.ActionLink("Export To PDF", "ExportToExcel", new { ext = "pdf" }, new { @class = "btn btn-small btn-success" })
+                        @Html.ActionLink("Export To CSV", "ExportToExcel", new { ext = "csv" }, new { @class = "btn btn-small btn-success" })*@
+                </center>
+                <table class="table table-striped table-bordered bootstrap-datatable datatable">
+                    <thead>
+                        <tr>
+                            <th>
+                                @Html.DisplayNameFor(model => model.PartnerCode)
+                            </th>
+                            <th id="Regdate">
+                                @Html.DisplayNameFor(model => model.RegistrationDateTime)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.Name)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.EmailId)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.ContactNo)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.CityName)
+                            </th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model.OrderByDescending(p => p.RegistrationDateTime))
+                        {
+                            <tr>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.PartnerCode)
+                                </td>
+                                <td>
+                                    @item.RegistrationDateTime.ToString("dd/MM/yyyy HH:mm")
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Name)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.EmailId)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.ContactNo)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.CityName)
+                                </td>
+                                <td>
+                                    @Html.ActionLink("Details", "Details", new { Id = item.ID }, new { @class = "btn btn-small btn-primary" })
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>

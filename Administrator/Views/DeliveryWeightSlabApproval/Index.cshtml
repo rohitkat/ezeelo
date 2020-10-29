@@ -1,0 +1,154 @@
+﻿
+@using PagedList;
+@using PagedList.Mvc;
+
+@model IPagedList<ModelLayer.Models.DeliveryWeightSlab>
+
+@{
+    ViewBag.Title = "List [ Weight Slab ]";
+}
+<style>
+    .dataTables_length {
+        margin-left: 0px;
+        margin-top: 7px;
+    }
+
+    .pagination {
+        margin: 0 40px;
+    }
+</style>
+<div class="row-fluid" style="margin-left:15px;margin-top:28px;">
+    <div class="box span12" id="divtable">
+        <div class="box-header">
+            <h2>
+                <i class="icon-list-alt"></i><span class="break"></span>
+                List [ Weight Slab ]
+            </h2>
+        </div>
+        <!-- /widget-header -->
+        <div class="box-content">
+            <div class="big-stats-container">
+                <div class="widget-content matchdivheight">
+                    <table class="table table-bordered table-hover table-responsive table-striped">
+                        <tr>
+                            <th style="width:20px;" rowspan="2">Sr.No</th>
+                            <th rowspan="2">Delivery Partner</th>
+                            <th rowspan="2">
+                                MaxWeight
+                            </th>
+                            <th colspan="2">
+                                In Region Charge
+                            </th>
+                            <th colspan="2">
+                                <span>Out Region Charge</span>
+                            </th>
+                            <th rowspan="2">Active</th>
+                            <th style="width:20px;" rowspan="2">Actions</th>
+                        </tr>
+                        <tr>
+                            <th>
+                                Normal
+                            </th>
+                            <th>
+                                Express
+                            </th>
+                            <th>
+                                Normal
+                            </th>
+                            <th>
+                                Express
+                            </th>
+                        </tr>
+
+                        @if (Model.Count() == 0)
+                        {
+                            <tr>
+                                <td colspan="6" class="text-center"><h3>No Record Found...</h3></td>
+                            </tr>
+                        }
+                        else
+                        {
+                            int i = 1;
+                            foreach (var item in Model)
+                            {
+                                <tr>
+                                    <td>@{int SrNo = ((ViewBag.PageNumber - 1) * ViewBag.PageSize) + i; i = i + 1; } @SrNo</td>
+                                    <td>@Html.DisplayFor(modelItem => item.DeliveryPartner.ContactPerson)</td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.MaxWeight)
+                                    </td>
+                                    <td>
+                                        <span class="indian_currency"></span> @Html.DisplayFor(modelItem => item.NormalRateWithinPincodeList)
+                                    </td>
+                                    <td>
+                                        <span class="indian_currency"></span> @Html.DisplayFor(modelItem => item.ExpressRateWithinPincodeList)
+                                    </td>
+                                    <td>
+                                        <span class="indian_currency"></span> @Html.DisplayFor(modelItem => item.NormalRateOutOfPincodeList)
+                                    <td>
+                                        <span class="indian_currency"></span> @Html.DisplayFor(modelItem => item.ExpressRateOutOfPincodeList)
+                                    </td>
+                                    <td>@Html.DisplayFor(modelItem => item.IsActive)</td>
+                                    <td>
+                                        @*@Html.ActionLink(" Edit", "Edit", new { id = item.ID }, new { @class = "btn btn-small btn-danger" })*@
+                                        @*@Html.ActionLink(" Details", "Details", new { id = item.ID }, new { @class = "btn btn-small btn-success" })*@
+                                        @Html.ActionLink("Approve", "Details", new { id = item.ID, uid = ViewBag.UID }, new { @class = "btn btn-small btn-success" })
+                                </tr>
+                            }
+                        }
+                    </table>
+
+                    <div class="pager">
+                        @Html.PagedListPager(Model, Page => Url.Action("Index", new { page = Page, SearchString = ViewBag.SearchString }),
+                                                                new PagedListRenderOptions()
+                                                                {
+                                                                    Display = PagedListDisplayMode.IfNeeded
+                                                                })
+                    </div>
+                </div>
+                <!-- /widget-content -->
+                <div class="control-actions">
+                    <div class="col-md-offset-2 col-md-10">
+                        @Html.ActionLink("Back to Delivery Partner List", "DPList", "DeliveryWeightSlabApproval", new { @class = "btn" })
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- /span12 -->
+    <div class="span4">
+        <div class="loader">
+            <img id="loader_img" src="~/Content/Images/loader.gif" style="display: none" />
+        </div>
+        <div id="Details"></div>
+    </div>
+
+</div>
+
+
+
+
+
+
+
+<script>
+    function Details(id,uid) {
+
+        $('#divtable').removeClass('span12');
+        $('#divtable').addClass('span8');
+        window.parent.$("[id$=Details]").show();
+        $('#loader_img').show();
+        $.ajax({
+            url: '@Url.Action("Details", "DeliveryWeightSlabApproval")?ID=' + id + '&UID='+uid,
+            type: "GET",
+            success: function (result) {
+                $('#loader_img').hide();
+                $('#Details').html(result);
+            },
+            error: function (data) {
+                $('#Details').empty();
+                $('#loader_img').hide();
+            }
+        });
+    }
+</script>

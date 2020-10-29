@@ -1,0 +1,191 @@
+﻿@model ModelLayer.Models.CustomerRatingAndFeedback
+
+@{
+    Layout = "~/Views/Shared/_LayoutPartial.cshtml";
+}
+
+
+
+<style>
+    body {
+        background-color: #fff !important;
+        background-image: none !important;
+    }
+    .control-label {
+        float: left;
+        width: 140px;
+        padding-top: 5px;
+        text-align: left !important;
+    }
+    .widget {
+        margin-top: -9px;
+    }
+    .widget-header {
+        position: relative;
+        height: 40px;
+        line-height: 40px;
+        background-color: #794F2B;
+        background-image: linear-gradient(hsla(0,0%,100%,.05), hsla(0,0%,0%,.05)), linear-gradient(-72deg, hsla(0,0%,100%,.05) 50%, transparent 50%);
+        box-shadow: inset 0 0 .25em hsla(0,0%,0%,.1), inset 0 0 1.5em hsla(0,0%,0%,.25);
+        border-bottom: 1px solid #d6d6d6;
+        color: #FAFAFA;
+        -webkit-background-clip: padding-box;
+    }
+        .widget-header h3 {
+            position: relative;
+            top: 2px;
+            left: 10px;
+            display: inline-block;
+            margin-right: 3em;
+            font-size: 14px;
+            font-weight: 800;
+            color: #FAFAFA;
+            line-height: 18px;
+        }
+    .btn-success {
+        background-color: #643C24 !important;
+        border-color: #643C24 !important;
+    }
+    .widget {
+        position: relative;
+        clear: both;
+        width: auto;
+        margin-bottom: 2em;
+        overflow: hidden;
+        overflow-x: auto;
+    }
+    .img_clos {
+        width: 25px;
+        cursor: pointer;
+        float: right;
+        margin-top: 8px;
+        margin-right: 5px;
+    }
+    .widget-header + .widget-content {
+        border-top: none;
+        -webkit-border-top-left-radius: 0;
+        -webkit-border-top-right-radius: 0;
+        -moz-border-radius-topleft: 0;
+        -moz-border-radius-topright: 0;
+        border-top-left-radius: 0;
+        border-top-right-radius: 0;
+    }
+
+    .widget-content {
+        zoom: 1;
+    }
+
+    .widget-content {
+        /*padding: 20px 15px 15px;*/
+        background: #FFF;
+        border: 1px solid #D5D5D5;
+        -moz-border-radius: 5px;
+        -webkit-border-radius: 5px;
+        border-radius: 5px;
+    }
+
+    .widget-header [class^="icon-"], .widget-header [class*=" icon-"] {
+        display: inline-block;
+        margin-left: 13px;
+        margin-right: -2px;
+        font-size: 16px;
+        color: #FAFAFA;
+        vertical-align: middle;
+    }
+
+    .big-stats-container .widget-content {
+        border: 0;
+    }
+</style>
+
+  
+
+
+<div class="row">
+    <div class="span4">
+        <div class="widget">
+            <div class="widget-header">
+                <i class="icon-list-alt"></i>
+                <h3> Edit Review </h3>
+                <img src="~/Content/Images/close1.png" onclick="Back();" class="img_clos" />
+            </div>
+            <!-- /widget-header -->
+            <div class="widget-content">
+                <div class="widget big-stats-container">
+                    <div class="widget-content matchdivheight">
+                    
+                        @using (Html.BeginForm())
+                        {
+                            @Html.AntiForgeryToken()
+
+                            <div class="form-horizontal">
+                                @Html.ValidationSummary(true)
+                                @Html.HiddenFor(model => model.ID)
+
+                                <div class="control-group">
+                                    <span class="control-label">Product</span>
+                                    <div>
+                                        @Html.TextBox("Product", null, new { disabled = "disabled" })
+                                    </div>
+                                </div>
+
+                                <div class="control-group">
+                                    <span class="control-label">Points</span>
+                                    <div>
+                                        @Html.TextBoxFor(model => model.Point, new { disabled = "disabled" })
+                                        @Html.ValidationMessageFor(model => model.Point)
+                                    </div>
+                                </div>
+
+                                <div class="control-group">
+                                    <span class="control-label">Comment</span>
+                                    <div>
+                                        @Html.TextBoxFor(model => model.Feedback, new { disabled = "disabled" })
+                                        @Html.ValidationMessageFor(model => model.Feedback)
+                                    </div>
+                                </div>
+
+                                <div class="control-group">
+                                    <span class="control-label">Date</span>
+                                    <div>
+                                        @Html.TextBox("CreateDate", Model.CreateDate.ToString("dd/MM/yyyy hh:mm:ss tt"), new { disabled = "disabled" })
+                                        @Html.ValidationMessageFor(model => model.CreateDate)
+                                    </div>
+                                </div>
+
+                                <div class="control-group">
+                                    @Html.LabelFor(model => model.IsApproved, new { @class = "control-label col-md-2" })
+                                    <div>
+                                        @Html.EditorFor(model => model.IsApproved)
+                                        @Html.ValidationMessageFor(model => model.IsApproved)
+                                    </div>
+                                </div>
+
+                                <div class="control-group">
+                                    <div style="float:right">
+                                        @*<input type="button" id="btnSave" class="btn btn-danger btn-small" value="create" />*@
+                                        <button id="btnSave" class="btn btn-danger btn-small">Save</button> |
+                                        <button class="btn btn-small btn-success" onclick="Back()">Back</button>
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                    </div>
+                </div>
+                <!-- /widget-content -->
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script>
+    function Back() {
+       
+        window.parent.$('#divtable').removeClass('span7');
+        window.parent.$('#divtable').addClass('span12');
+        window.parent.$("[id$=Details]").hide();
+        $('#loader_img').hide();
+        window.parent.$("#divtable").css('width', '100%');
+    }
+</script>

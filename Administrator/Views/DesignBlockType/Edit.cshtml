@@ -1,0 +1,121 @@
+﻿@model ModelLayer.Models.DesignBlockType
+
+@{
+    ViewBag.Title = "Edit";
+}
+<style>
+    .box-header h3 {
+        line-height: 0px;
+    }
+</style>
+<div id="content" class="span10">
+    <ul class="breadcrumb">
+        <li>
+            <a href="#">Design Block Type/Edit</a>
+        </li>
+    </ul>
+    <span class="eror-msg">@ViewBag.lblError</span>
+    <div class="row-fluid">
+
+        <div class="box span12">
+            <div class="box-header">
+                <h3>Edit</h3>
+            </div>
+            <div class="box-content">
+                @using (Html.BeginForm())
+                {
+                    @Html.AntiForgeryToken()
+
+                    <div class="form-horizontal">
+                        @Html.ValidationSummary(true)
+                        @Html.HiddenFor(model => model.ID)
+
+                        <div class="control-group">
+                            @Html.LabelFor(model => model.Name, new { @class = "control-label col-md-2" })
+                            <div class="col-md-10 controls">
+                                @if (Model.ID <= 7)
+                                {
+                                    @Html.TextBoxFor(model => model.Name, new { @readonly = "readonly", style = "pointer-events:none;" })
+                                }
+                                else
+                                {
+                                    @Html.EditorFor(model => model.Name)
+                                }
+                                @Html.ValidationMessageFor(model => model.Name)
+                            </div>
+                        </div>
+
+                        @*<div class="control-group">
+                                @Html.LabelFor(model => model.ImageExtension, new { @class = "control-label col-md-2" })
+                                <div class="col-md-10 controls">
+                                    @Html.DropDownList("ImageExtension", new List<SelectListItem> {
+                               new SelectListItem{ Text="jpg", Value = "jpg" },
+                               new SelectListItem{ Text="png", Value = "png" },
+                               new SelectListItem{ Text="gif", Value = "gif" } })
+
+                                </div>
+                            </div>*@
+
+                        <div class="control-group">
+                            @Html.LabelFor(model => model.ImageWidth, "Image Width (px)", new { @class = "control-label col-md-2" })
+                            <div class="col-md-10 controls">
+                                @Html.EditorFor(model => model.ImageWidth)
+                                @Html.ValidationMessageFor(model => model.ImageWidth)
+                            </div>
+                        </div>
+
+                        <div class="control-group">
+                            @Html.LabelFor(model => model.ImageHeight, "Image Height (px)", new { @class = "control-label col-md-2" })
+                            <div class="col-md-10 controls">
+                                @Html.EditorFor(model => model.ImageHeight)
+                                @Html.ValidationMessageFor(model => model.ImageHeight)
+                            </div>
+                        </div>
+
+                        @*<div class="control-group">
+                                @Html.LabelFor(model => model.MinLimit, new { @class = "control-label col-md-2" })
+                                <div class="col-md-10 controls">
+                                    @Html.EditorFor(model => model.MinLimit)
+                                    @Html.ValidationMessageFor(model => model.MinLimit)
+                                </div>
+                            </div>*@
+
+                        <div class="control-group">
+                            @Html.LabelFor(model => model.MaxLimit, new { @class = "control-label col-md-2" })
+                            <div class="col-md-10 controls">
+                                @if (Model.ID <= 7)
+                                {
+                                    @Html.TextBoxFor(model => model.MaxLimit, new { @readonly = "readonly", style = "pointer-events:none;" })
+                                }
+                                else
+                                {
+                                    @Html.EditorFor(model => model.MaxLimit)
+                                }
+                                @Html.ValidationMessageFor(model => model.MaxLimit)
+                            </div>
+                        </div>
+
+                        <div class="control-group">
+                            @Html.LabelFor(model => model.IsActive, new { @class = "control-label col-md-2" })
+                            <div class="col-md-10 controls">
+                                @if (Model.ID <= 7)
+                                {
+                                    @Html.TextBoxFor(model => model.IsActive, new { @readonly = "readonly", style = "pointer-events:none;" })
+                                }
+                                else
+                                {
+                                    @Html.EditorFor(model => model.IsActive)
+                                }
+                                @Html.ValidationMessageFor(model => model.IsActive)
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-actions no-color">
+                        <input type="submit" value="Save" class="btn btn-primary" />
+                        @Html.ActionLink("Back to List", "Index", string.Empty, new { @class = "btn btn-default" })
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>

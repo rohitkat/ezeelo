@@ -1,0 +1,214 @@
+﻿@model ModelLayer.Models.CustomerShippingAddress
+@{
+    ViewBag.Title = "eZeelo: Nagpur's Largest Online Shopping store For All Types Of Products";
+    Layout = "~/Views/Shared/_LayoutPartial.cshtml";
+}
+<link href="~/Content/css/bootstrap.css" rel="stylesheet" />
+<style type="text/css">
+    .back {
+        color: white !important;
+    }
+
+    .newselect {
+        border: none;
+        border-radius: 0px 0px 0px 0px !important;
+        background: transparent;
+        width: 150px;
+        padding: 5px 35px 5px 5px;
+        font-size: .875rem;
+        border: 1px solid #eaeaea;
+        height: 34px;
+        /*-webkit-appearance: none;*/
+        /*-moz-appearance: none;*/
+        appearance: none;
+        /*background: url(/Content/Images/drop.gif) 98% / 3% no-repeat #fff !important;*/
+    }
+
+    .field-validation-error {
+        color: red;
+        font-size: 12px;
+    }
+
+    .grid .row {
+        width: 100%;
+        display: block;
+        margin: 0 0 0;
+    }
+
+    .field-validation-error {
+        margin-top: 5px;
+        display: block;
+        font-weight: bold;
+    }
+
+    .button {
+        margin-top: 20px;
+    }
+
+    #divPincodeError {
+        font-weight: bold;
+        color: red;
+    }
+
+    .grid .row > .cell {
+        display: block;
+        float: left;
+        width: 100%;
+        min-height: 10px;
+        margin: 5px 0 0 .62765%;
+    }
+</style>
+
+
+
+<div style="padding-top:5px;padding-bottom:5px;">
+    @*<span style="color:red;font-size:12px;">@ViewBag.Message</span>*@
+    @using (Html.BeginForm())
+    {
+        @Html.AntiForgeryToken()
+        @Html.ValidationSummary(true)
+        <div id="divAddressFirst">
+        <div class="col-md-12">
+            <div class="box-lg">
+                <div class="row" data-gutter="60">
+                        @if (ViewBag.errorMsg == null) //** condition added by harshada on 28/12/2016 for error page display on wrong pincode
+                        {
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            @Html.TextBoxFor(model => model.ShippingAddress, new { placeholder = "Address", @class = "form-control" })
+                            @Html.ValidationMessageFor(model => model.ShippingAddress)
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            @Html.TextBoxFor(model => model.PrimaryMobile, new { placeholder = "Primary Mobile No", @class = "form-control" })
+                            @Html.ValidationMessageFor(model => model.PrimaryMobile)
+                        </div>
+                        @*<div class="form-group" style="display:none">
+                                @Html.EditorFor(model => model.SecondaryMobile, new { placeholder = "Secondary Mobile No", @class = "form-control" })
+                                @Html.ValidationMessageFor(model => model.SecondaryMobile)
+                            </div>*@
+
+                    </div>
+                        }
+                        <div>
+                    <div id="divAddress">
+
+                    </div>
+                            <div>
+                                <span style="color:red;font-size:12px; font-weight:bold;">@ViewBag.errorMsg</span>
+                            </div>
+                        </div>
+
+                        @if (ViewBag.errorMsg == null)//** condition added by harshada on 28/12/2016 for error page display on wrong pincode
+                        {
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            @Html.TextBox("Pincode", null, new { @id = "Pincode", @class = "form-control", @placeholder = "Enter Pincode", @onkeypress = "return isValidPincode(event)", @readonly = "readonly" }) @*Yashaswi*@
+                            <div id="divPincodeError" style="width:430px; display: none; padding:5px;color:red;font-size:12px" class="alert-danger focused">  </div>
+                                    <span style="color:red;font-size:12px; font-weight:bold;">@ViewBag.errorMsg</span>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                    </div>
+                        }
+
+
+
+                </div>
+            </div>
+        </div>
+            @if (ViewBag.errorMsg == null) //** condition added by harshada on 28/12/2016 for error page display on wrong pincode
+            {
+        <button type="submit" value="Save" class="btn btn-success">Save</button> @Html.ActionLink("Go To Address List", "Index", null, new { @class = "btn btn-primary" })
+            }
+        </div>
+
+    }
+</div>
+
+@section Scripts{
+    @Scripts.Render("~/bundles/jqueryval")
+}
+
+<script src="~/Scripts/jquery-1.10.2.min.js"></script>
+<script type="text/javascript">
+    var lPincode = $('#Pincode').val();
+    $('#Pincode').bind('input propertychange', function () {
+        var lPincode = $('#Pincode').val()
+        $('#divPincodeError').hide();
+        if (lPincode.length == 6) {
+            $('#Pincode_loading').show();
+            $.ajax({
+                url: '@Url.Action("GetAddress", "ShippingAddress")?Pincode=' + lPincode,
+                type: "GET",
+                success: function (result) {
+                    //$('#divAddress').html(result);
+                    $('#divAddress').empty();//Added by harshada on 30/12/2016 for error page display on wrong pincode
+                    $('#divAddress').append(result);//Added by harshada on 28/12/2016 for error page display on wrong pincode
+                    $('#Pincode_loading').hide();
+                    $('#divPincodeError').hide();
+                },
+                error: function (result) {
+                    $('#divAddress').empty();
+                    $('#Pincode_loading').hide();
+                    $('#divPincodeError').show();
+                    $('#divPincodeError').html('Products can not be delivered on entered pincode');
+                    $('#Pincode').val('');
+
+                }
+            });
+        }
+    });
+</script>
+<script type="text/javascript">
+    //Start Yashaswi
+    var lPincode = $('#Pincode').val();
+    $('#Pincode').bind('input propertychange', function () {
+        PincodePropertyChange();
+    });
+
+    $(document).ready(function () {
+
+        function PincodePropertyChange() {
+            var lPincode = $('#Pincode').val();
+            var areaId = "";
+            if (localStorage.getItem("AreaId") != null) {
+                areaId = localStorage.getItem("AreaId");
+            }
+
+            $('#divPincodeError').hide();
+            if (lPincode.length == 6) {
+                $('#Pincode_loading').show();
+                $.ajax({
+                    url: '@Url.Action("GetAddress", "ShippingAddress")?Pincode=' + lPincode + '&AreaId=' + areaId,
+                    type: "GET",
+                    success: function (result) {
+                        //$('#divAddress').html(result);
+                        $('#divAddress').empty();//Added by harshada on 30/12/2016 for error page display on wrong pincode
+                        $('#divAddress').append(result);//Added by harshada on 28/12/2016 for error page display on wrong pincode
+                        $('#Pincode_loading').hide();
+                        $('#divPincodeError').hide();
+                    },
+                    error: function (result) {
+                        $('#divAddress').empty();
+                        $('#Pincode_loading').hide();
+                        $('#divPincodeError').show();
+                        $('#divPincodeError').html('Products can not be delivered on entered pincode');
+                        $('#Pincode').val('');
+
+                    }
+                });
+            }
+        }
+
+        if (localStorage.getItem("SelectedPincode") != null) {
+            if ('@ViewBag.errorMsg' == null || '@ViewBag.errorMsg' == "") {
+                var selPincode = localStorage.getItem("SelectedPincode").trim();
+                $('#Pincode').val(selPincode);
+                PincodePropertyChange();
+            }
+        }
+    })
+    //End yashaswi
+</script>

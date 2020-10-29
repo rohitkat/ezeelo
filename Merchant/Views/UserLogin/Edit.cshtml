@@ -1,0 +1,116 @@
+﻿@model ModelLayer.Models.ViewModel.ChangePasswordViewModel
+
+@{
+    //Layout = "~/Views/Shared/Login_header.cshtml";
+    Layout = "~/Views/Shared/_LayoutLogin.cshtml";
+    //ViewBag.Title = "Gandhibagh: Buy Online Electronics, Jewellaries, cloths, collectibles";
+    //string cityName = "";
+    //if (Request.Cookies["CityCookie"] != null && Request.Cookies["CityCookie"].Value != "")
+    //{
+    //    cityName = Request.Cookies["CityCookie"].Value.Split('$')[1].ToLower();
+    //}
+}
+<style>
+    .streamer {
+        position: relative;
+        display: block;
+        width: 16%;
+        overflow: hidden;
+        float: left;
+    }
+
+    .neweditdiv {
+        width: 82%;
+        float: left;
+        min-height: 450px !important;
+    }
+
+    .btncolor {
+        background-color: #60a917 !important;
+        color: white !important;
+    }
+
+    .atagelink {
+        position: fixed !important;
+        margin-top: -38px;
+        z-index: 10;
+        background-color: #EFEFEF;
+        color: white !important;
+    }
+
+    .ahomelink {
+        background-image: url(/Content/Images/arrowright.png) !important;
+        padding-bottom: 0px;
+        float: left;
+        background-position: right center;
+        background-repeat: no-repeat;
+        padding-right: 24px;
+        padding-top: 0px;
+        padding-left: 2px;
+        color: #000 !important;
+    }
+
+    #navbar {
+        left: 350px;
+    }
+</style>
+@*<div id="navbar" class="navbar-collapse collapse">
+    <ul class="nav navbar-nav">
+        <li>@Html.RouteLink("Home", "Home", new { city = cityName }, new { @class = "ahomelink" }) </li>
+        <li>@Html.RouteLink("My Account", "CustomerOrder/myorders", new { city = cityName }, new { @class = "ahomelink" })</li>
+        <li><a class="ahomelink">Change Password</a></li>
+    </ul>
+</div>*@
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+
+    if (TempData["Title"] != null)
+    {
+        <div class="breadcrumbs dark">
+            @TempData["Title"]
+        </div>
+    }
+    <div class="form-horizontal neweditdiv">
+        <div class="example " data-text="">
+            <div class="grid example320 grid768">
+                <h4>Change Password</h4>
+                @Html.HiddenFor(model => model.ID)
+                @if (Request.QueryString["pUserLoginID"] == null)
+                {
+                    <div class="row cells2">
+                        <div class="cell">
+                            <label>Old Password</label>
+                            <div class="input-control text full-size">
+                                @Html.PasswordFor(model => model.OldPassword)
+                                @Html.ValidationMessageFor(model => model.OldPassword)
+                            </div>
+                        </div>
+                    </div>
+                }
+                <div class="row cells2">
+                    <div class="cell">
+                        <label>New Password</label>
+                        <div class="input-control text full-size">
+                            @Html.PasswordFor(model => model.NewPassword)
+                            @Html.ValidationMessageFor(model => model.NewPassword)
+                        </div>
+                    </div>
+                </div>
+                <div class="row cells2">
+                    <div class="cell">
+                        <label>Re Type Password</label>
+                        <div class="input-control text full-size">
+                            @Html.PasswordFor(model => model.ReTypeNewPassword)
+                            @Html.ValidationMessageFor(model => model.ReTypeNewPassword)
+                        </div>
+                    </div>
+                </div>
+                <div class="row cells2">
+                    <input type="submit" value="Save" class="button success btncolor" />
+                </div>
+            </div>
+        </div>
+    </div>
+}

@@ -1,0 +1,57 @@
+﻿@{
+    ViewBag.Title = "Index";
+}
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js" type="text/javascript"></script>
+<script src="~/Script/jquery-ui-1.8.20.js"></script>
+<h2>Index</h2>
+@Html.Label("Enter Your name")
+@Html.TextBox("PassId")
+
+
+<script type="text/javascript">
+    $("#PassId").autocomplete({
+        source: function (request, response) {
+            alert("1kmjlkm");
+            var customer = new Array();
+            $.ajax({
+                async: false,
+                cache: false,
+                type: "POST",
+                url: "@(Url.Action("Autocomplete", "CheckOut"))",
+                data: { "term": request.term },
+                success: function (data) {
+                    for (var i = 0; i < data.length ; i++) {
+                        customer[i] = { label: data[i].Value, Id: data[i].Key };
+                    }
+                }
+            });
+            response(customer);
+        },
+        select: function (event, ui) {
+            //fill selected customer details on form
+            $.ajax({
+                cache: false,
+                async: false,
+                type: "POST",
+                url: "@(Url.Action("GetPatientDetail", "CheckOut"))",
+                data: { "id": ui.item.Id },
+
+                success: function (data) {
+                    $('#VisitorDetail').show();
+                    $("#Name").html(data.VisitorName)
+                    $("#PatientName").html(data.PatientName)
+                    $("#VisitorId").val(data.VisitorId)
+                    $("#Date").html(data.Date)
+                    $("#ArrivingTime").html(data.ArrivingTime)
+                    $("#OverTime").html(data.OverTime)
+
+                    action = data.Action;
+                },
+                error: function (xhr, ajaxOptions, thrownError) {
+                    alert('Failed to retrieve states.');
+                }
+            });
+        }
+    });
+
+</script>

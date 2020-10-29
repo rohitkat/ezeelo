@@ -1,0 +1,421 @@
+﻿@model ModelLayer.Models.ViewModel.MarketPlaceDashboardViewModel
+@{
+    ViewBag.Title = "Dashboard";
+}
+
+<script src='@Url.Content("~/plugins/fastclick/fastclick.min.js")'></script>
+<script src="@Url.Content("~/plugins/sparkline/jquery.sparkline.min.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/plugins/jvectormap/jquery-jvectormap-1.2.2.min.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/plugins/jvectormap/jquery-jvectormap-world-mill-en.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/plugins/daterangepicker/daterangepicker.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/plugins/datepicker/bootstrap-datepicker.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/plugins/iCheck/icheck.min.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/plugins/slimScroll/jquery.slimscroll.min.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/plugins/chartjs/Chart.min.js")" type="text/javascript"></script>
+<script src="http://cdnjs.cloudflare.com/ajax/libs/raphael/2.1.0/raphael-min.js"></script>
+<script src="@Url.Content("~/plugins/morris/morris.min.js")" type="text/javascript"></script>
+@*<script src="@Url.Content("~/dist/js/demo.js")" type="text/javascript"></script>*@
+
+<section class="content-header">
+    <h1>
+        Dashboard
+    </h1>
+</section>
+<!-- Main content -->
+<section class="content">
+    @if (ViewBag.IsKYCCompleted == 0)
+    {
+        <div class="callout callout-warning">
+            @{
+                string ezeelolink = System.Configuration.ConfigurationManager.AppSettings["EZEELO_CUSTOMER_URL"];
+                ezeelolink = ezeelolink + "nagpur/1060/merchant/KYC?id=" + Model.MerchantId;
+            }
+            <h4>Note!!!</h4>
+            <p>Shop will be Live when you complete your KYC registration process and approved by Ezeelo Admin. Please click the following link for KYC Registrtion form &nbsp;<b> <a href="@ezeelolink" target="_blank" style="color:blue;font-size:15px"> Click Me!!!</a> </b></p>
+        </div>
+    }
+    @Html.HiddenFor(m => m.MerchantId)
+    <!-- Info boxes -->
+    <div class="row">
+        <div class="col-lg-3 col-xs-6">
+            <!-- small box -->
+            <div class="small-box bg-aqua">
+                <div class="inner">
+                    <h3>@Model.TotalTransaction</h3>
+                    <p>Total Transaction</p>
+                </div>
+                <div class="icon">
+                    <i class="ion ion-bag"></i>
+                </div>
+                <a href="@Url.Action("TransactionReport", "Report")" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>
+            </div>
+        </div><!-- ./col -->
+        <div class="col-lg-3 col-xs-6">
+            <!-- small box -->
+            <div class="small-box bg-green">
+                <div class="inner">
+                    <h3>@Model.BillAmount</h3>
+                    <p>Total Service Value</p>
+                </div>
+                <div class="icon">
+                    <i class="ion ion-stats-bars"></i>
+                </div>
+                <a href="@Url.Action("TransactionReport", "Report")" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>
+            </div>
+        </div><!-- ./col -->
+        <div class="col-lg-3 col-xs-6">
+            <!-- small box -->
+            <div class="small-box bg-yellow">
+                <div class="inner">
+                    <h3>@Model.Commission</h3>
+                    <p>Total Commission</p>
+                </div>
+                <div class="icon">
+                    <i class="ion ion-person-add"></i>
+                </div>
+                <a href="@Url.Action("TransactionReport", "Report")" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>
+            </div>
+        </div><!-- ./col -->
+        <div class="col-lg-3 col-xs-6">
+            <!-- small box -->
+            <div class="small-box bg-red">
+                <div class="inner">
+                    <h3>@Model.TotalUser</h3>
+                    <p>Visitors</p>
+                </div>
+                <div class="icon">
+                    <i class="ion ion-pie-graph"></i>
+                </div>
+                <a href="@Url.Action("TransactionReport", "Report")" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>
+            </div>
+        </div><!-- ./col -->
+    </div><!-- /.row -->
+    <div class="row">
+        <div class="col-md-12">
+            <div class="box box-primary">
+                <div class="box-header">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <h3 class="box-title"><span id="spMonth" style="text-transform:capitalize"></span> Transaction Report</h3>
+                        </div>
+                        <div class="col-md-6 ">
+                            <div class="pull-right">
+                                <select id="month" class="btn btn-box-tool" style="text-transform:uppercase;">
+                                    <option value="1">january</option>
+                                    <option value="2">february</option>
+                                    <option value="3">march</option>
+                                    <option value="4">april</option>
+                                    <option value="5">may</option>
+                                    <option value="6">jun</option>
+                                    <option value="7">july</option>
+                                    <option value="8">augest</option>
+                                    <option value="9">september</option>
+                                    <option value="10">october</option>
+                                    <option value="11">november</option>
+                                    <option value="12">december</option>
+                                </select>
+                                <select id="year" class="btn btn-box-tool" style="text-transform:uppercase;">
+                                    @for (int i = 2019; i <= 2030; i++)
+                                    {
+                                        if (i <= Model.year)
+                                        {
+                                            <option value="@i">@i</option>
+                                        }
+                                    }
+                                </select>
+                                <input type="button" id="btnBarChartGo" value="GO" class="btn btn-sm btn-success" />
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="box-body chart-responsive">
+                    <span style="font-weight:bold;position:absolute;margin-left:80%"> X - Days <br /> Y - Service Value</span>
+                    <div class="chart" id="trans-chart" style="height: 300px;">
+                        <center>
+                            <img src="~/plugins/loader.gif" />
+                        </center>
+                    </div>
+                </div><!-- /.box-body -->
+            </div><!-- /.box -->
+        </div><!-- /.col -->
+
+    </div><!-- /.row -->
+    <!-- Main row -->
+    <div class="row">
+        <!-- Left col -->
+        <div class='col-md-8'>
+            <!-- DONUT CHART -->
+            <div class="box box-primary">
+                <div class="box-header">
+                    <h3 class="box-title">Visitors Chart</h3>
+                </div>
+                <div class="box-body chart-responsive">
+                    <div class="chart" id="vistors-chart" style="height: 344px; position: relative;"></div>
+                </div><!-- /.box-body -->
+            </div><!-- /.box --><!-- /.box -->
+        </div><!-- /.col -->
+        <div class="col-md-4">
+            <!-- Info Boxes Style 2 -->
+            <div class="info-box bg-green">
+                <span class="info-box-icon"><i class="fa fa-inr"></i></span>
+                <div class="info-box-content">
+                    <span class="info-box-text">Remaining Recharge</span>
+                    <span class="info-box-number">@Model.Recharge</span>
+                    <div class="progress">
+                        <div class="progress-bar" style="width: 100%"></div>
+                    </div>
+                    <span class="progress-description">
+                        @Model.RechargeRemark
+                    </span>
+                </div><!-- /.info-box-content -->
+            </div><!-- /.info-box -->
+            <div class="info-box bg-red">
+                <span class="info-box-icon"><i class="fa fa-inr"></i></span>
+                <div class="info-box-content">
+                    <span class="info-box-text">Pending Recharge</span>
+                    <span class="info-box-number">@Model.PendingRecharge</span>
+                </div><!-- /.info-box-content -->
+            </div><!-- /.info-box -->
+            @if (Model.PendingTransactionValue != 0)
+            {
+                <div class="info-box bg-orange">
+                    <span class="info-box-icon"><i class="fa fa-inr"></i></span>
+                    <div class="info-box-content">
+                        <span class="info-box-text">Pending Transaction Comission value</span>
+                        <span class="info-box-number">@Model.PendingTransactionValue</span>
+                    </div><!-- /.info-box-content -->
+                </div><!-- /.info-box -->
+            }
+            else
+            {
+                <div class="info-box bg-orange">
+                    <span class="info-box-icon"><i class="fa fa-calendar"></i></span>
+                    <div class="info-box-content">
+                        <span class="info-box-text">Remaining Days</span>
+                        <span class="info-box-number">@Model.DaysLeft</span>
+                        <div class="progress">
+                            <div class="progress-bar" style="width: 100%"></div>
+                        </div>
+                        <span class="progress-description">
+                            @Model.DaysLeftRemark
+                        </span>
+                    </div><!-- /.info-box-content -->
+                </div><!-- /.info-box -->
+            }
+            <div class="info-box bg-aqua">
+                <span class="info-box-icon"><i class="fa fa-star"></i></span>
+                <div class="info-box-content">
+                    <span class="info-box-text">Rating</span>
+                    <span class="info-box-number">@Model.Rating</span>
+                    <div class="progress">
+                        <div class="progress-bar" style="width: 100%"></div>
+                    </div>
+                    <span class="progress-description">
+                        @Model.RatingRemark
+                    </span>
+                </div><!-- /.info-box-content -->
+            </div><!-- /.info-box -->
+        </div><!-- /.col -->
+    </div><!-- /.row -->
+    <!-- /.row -->
+    <div class="row">
+        <div class="col-md-8">
+            <!-- TABLE: LATEST ORDERS -->
+            <div class="box box-primary">
+                <div class="box-header with-border">
+                    <h3 class="box-title">Latest Transaction</h3>
+                    <div class="box-tools pull-right">
+                        <button class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
+                        <button class="btn btn-box-tool" data-widget="remove"><i class="fa fa-times"></i></button>
+                    </div>
+                </div><!-- /.box-header -->
+                <div class="box-body">
+                    <div class="table-responsive">
+                        <table class="table no-margin">
+                            <thead>
+                                <tr>
+                                    <th>Transaction Code</th>
+                                    <th>Transaction Date</th>
+                                    <th>Customer Name</th>
+                                    <th>Mobile No</th>
+                                    <th>Bill Amount</th>
+                                    <th>Commission</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @if (Model.TransactionList.Count == 0)
+                                {
+                                    <tr>
+                                        <td colspan="6">
+                                            No Transaction found...
+                                        </td>
+                                    </tr>
+                                }
+                                else
+                                {
+                                    foreach (var item in Model.TransactionList)
+                                    {
+                                        if (item.isPayable)
+                                        {
+                                            <tr>
+                                                <td>@item.TransactionCode</td>
+                                                <td>@item.TransactionDate.ToString("dd/MM/yyyy")</td>
+                                                <td>@item.UserName</td>
+                                                <td>@item.MobileNo</td>
+                                                <td>@item.BillAmount</td>
+                                                <td>@item.Commission</td>
+                                            </tr>
+                                        }
+                                        else
+                                        {
+                                            <tr class="bg-danger" title="Pending Distribution of @item.Commission Rs value">
+                                                <td>@item.TransactionCode</td>
+                                                <td>@item.TransactionDate.ToString("dd/MM/yyyy")</td>
+                                                <td>@item.UserName</td>
+                                                <td>@item.MobileNo</td>
+                                                <td>@item.BillAmount</td>
+                                                <td>@item.Commission</td>
+                                            </tr>
+                                        }
+                                    }
+                                }
+                            </tbody>
+                        </table>
+                    </div><!-- /.table-responsive -->
+                </div><!-- /.box-body -->
+                <div class="box-footer clearfix">
+                    <a href="@Url.Action("AddNew", "MerchantTransaction")" class="btn btn-sm btn-success btn-flat pull-left">Add New Transaction</a>
+                    <a href="@Url.Action("TransactionReport", "Report")" class="btn btn-sm btn-info btn-flat pull-right">View All Transaction</a>
+                </div><!-- /.box-footer -->
+            </div><!-- /.box -->
+        </div><!-- /.col -->
+        <div class="col-md-4">
+            <!-- PRODUCT LIST -->
+            <div class="box box-primary">
+                <div class="box-header with-border">
+                    <h3 class="box-title">Rating and Reviews</h3>
+                    <div class="box-tools pull-right">
+                        <button class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
+                        <button class="btn btn-box-tool" data-widget="remove"><i class="fa fa-times"></i></button>
+                    </div>
+                </div><!-- /.box-header -->
+                <div class="box-body">
+                    <ul class="products-list product-list-in-box">
+                        @if (Model.RatingList.Count == 0)
+                        {
+                            <li class="item">
+                                <div class="product-info">
+                                    <span class="product-description">
+                                        No Review found...
+                                    </span>
+                                </div>
+                            </li>
+                        }
+                        else
+                        {
+                            foreach (var item in Model.RatingList)
+                            {
+                                <li class="item">
+                                    <div class="product-info">
+                                        <a style="cursor:auto" href="javascript::;" class="product-title">
+                                            @item.Name
+                                            @if (item.Rating < 3)
+                                            {
+                                                <span class="label label-danger pull-right"><i class="fa fa-star"></i> @item.Rating</span>
+                                            }
+                                            else if (item.Rating == 3)
+                                            {
+                                                <span class="label label-waring pull-right"><i class="fa fa-star"></i> @item.Rating</span>
+                                            }
+                                            else
+                                            {
+                                                <span class="label label-success pull-right"><i class="fa fa-star"></i> @item.Rating</span>
+                                            }
+                                        </a>
+                                        <span class="product-description">
+                                            @item.Review
+                                        </span>
+                                    </div>
+                                </li>
+                            }
+                        }
+                    </ul>
+                </div><!-- /.box-body -->
+                <div class="box-footer text-center">
+                    <a href="@Url.Action("RatingReviewReport", "Report")" class="uppercase">View All</a>
+                </div><!-- /.box-footer -->
+            </div><!-- /.box -->
+        </div><!-- /.col -->
+    </div><!-- /.row -->
+</section><!-- /.content -->
+<script src="~/plugins/Custom.js"></script>
+<script type="text/javascript">
+    $(document).ready(function () {
+        $("#lnk-Dashboard").addClass("active");
+        $("#month").val(@Model.month);
+        $("#spMonth").text($("#month option:selected").text());
+        $("#year").val(@Model.year);
+    })
+    $(function () {
+        "use strict";
+        //BAR CHART
+        BarChart();
+        PieChart();
+        $("#btnBarChartGo").click(function () {
+            BarChart();
+        })
+
+        function BarChart() {
+            $("#trans-chart").html("<center><img src='/plugins/loader.gif'/></center>");
+            $.ajax({
+                type: "POST",
+                url: "@Url.Action("GetTrasactionBarChartData", "Home")",
+                data: "{'MerchantId':" + $("#MerchantId").val() + ",'Month':" + $("#month").val() + ", 'Year': " + $("#year").val() + "}",
+                contentType: "application/json; charset = utf-8",
+                dataType: "json",
+                cache: false,
+                success: function (data) {
+                    $("#spMonth").text($("#month option:selected").text());
+                    var bar = new Morris.Bar({
+                        element: 'trans-chart',
+                        resize: true,
+                        data: data,
+                        barColors: ['#00a65a', '#f39c12'],
+                        xkey: 'y',
+                        ykeys: ['a', 'b'],
+                        labels: ['Service Value', 'Ezeelo Comission'],
+                        hideHover: 'auto'
+                    });
+                },
+                error: function (x, e) {
+                }
+            });
+        }
+        function PieChart() {
+            $("#vistors-chart").html("<center><img src='/plugins/loader.gif'/></center>");
+            $.ajax({
+                type: "POST",
+                url: "@Url.Action("GetUsetPieChartData", "Home")",
+                data: "{'MerchantId':" + $("#MerchantId").val() + "}",
+                contentType: "application/json; charset = utf-8",
+                dataType: "json",
+                cache: false,
+                success: function (data) {
+                    //DONUT CHART
+                    var donut = new Morris.Donut({
+                        element: 'vistors-chart',
+                        resize: true,
+                        colors: ["#3c8dbc", "#f56954", "#00a65a"],
+                        data: data,
+                        hideHover: 'auto'
+                    });
+                },
+                error: function (x, e) {
+                }
+            });
+        }
+
+
+    });
+</script>

@@ -1,0 +1,351 @@
+﻿@*@model IPagedList<ModelLayer.Models.ViewModel.ProductVarientViewModel>*@
+@model IEnumerable<ModelLayer.Models.ViewModel.ProductVarientViewModel>
+
+
+@{
+    Layout = null;
+}
+<style>
+    th, td {
+        padding: 5px;
+    }
+
+    th {
+        background-color: rgb(248, 248, 248);
+    }
+
+    #gridT, #gridT tr {
+        border: 1px solid #0D857B;
+    }
+
+    #subT, #subT tr {
+        border: 1px solid #f3f3f3;
+    }
+
+    #subT {
+        margin: 0px 0px 0px 10px;
+        padding: 5px;
+        width: 95%;
+    }
+
+        #subT th {
+            font-size: 12px;
+        }
+
+    .hoverEff {
+        cursor: pointer;
+    }
+
+        .hoverEff:hover {
+            background-color: rgb(248, 242, 242);
+        }
+
+    .expand {
+        background-image: url(/Content/img/quicklook-bg.png);
+        background-position-x: -22px;
+        background-repeat: no-repeat;
+    }
+
+    .collapse {
+        background-image: url(/Images/pm.png);
+        background-position-x: -2px;
+        background-repeat: no-repeat;
+    }
+    
+    .tablesubth {
+        text-align: center;
+        font-size: 11px;
+    }
+
+    tr.menheding th {
+        text-align: center;
+        color: #F0EDEB;
+        background-color: #CF9547;
+        /*width: 507px;*/
+    }
+
+        tr.menheding th:nth-of-type(1) {
+            width: 450px;
+        }
+
+        tr.menheding th:nth-of-type(2) {
+            width: 663px;
+        }
+        tr.menheding th:nth-of-type(1) {
+            width: 1202px;
+        }
+
+    tr.menheding {
+        position: absolute;
+        top: 2px;
+        z-index: 72;
+    }
+
+    td.successnew {
+        text-align: center;
+    }
+
+        td.successnew b {
+            color: #79621A;
+        }
+
+    #report-div {
+        height: 408px;
+        overflow-y: scroll;
+        margin-top: 38px;
+    }
+
+    #content {
+        margin: 8px 0 0 10px !important;
+        padding: 0 !important;
+        min-height: 0 !important;
+    }
+
+    .breadcrumb {
+        margin: 0 0 20px 0 !important;
+    }
+
+    tr.subHed td {
+        background-color: #ECE6DE !important;
+    }
+
+    tr.colorHeding th {
+        background-color: #F7E1C2;
+        text-align: center;
+    }
+
+    .value-prodct {
+    }
+
+        .value-prodct ul {
+            float: left;
+            position: relative;
+            padding-right: 10px;
+        }
+
+            .value-prodct ul:last-child > li:last-child {
+                display: none;
+            }
+
+    .thirdLi {
+        position: absolute;
+        right: -12px;
+        top: 28%;
+    }
+
+    .value-prodct ul li span {
+    }
+
+    .plus {
+        font-size: 16px;
+    }
+    .wrap {background:none;
+    }
+    #divPartialView {
+        background: #fff!important;
+        margin-top:-20px
+    }
+</style>
+
+<table class="table table-striped table-bordered bootstrap-datatable datatable dataTable" id="DataTables_Table_0" aria-describedby="DataTables_Table_0_info">
+    <tr>
+        <td>
+    <div id="report-div">
+        <table class="table table-striped table-bordered bootstrap-datatable datatable ">
+
+            <thead>
+                <tr class="menheding">
+                    <th colspan="4">Image</th>
+                    <th colspan="3">Product Name</th>
+                </tr>
+            </thead>
+            @{
+
+
+                if (Model != null)
+                {
+                    System.Text.StringBuilder sb = new System.Text.StringBuilder();
+                    //List<long> VarientId = new List<long>();
+                    List<long> ProdId = Model.Select(p => p.ProductID).Distinct().ToList();
+                    string ProdName = "";
+                    string ProdImage = "";
+
+                    for (int i = 0; i < ProdId.Count; i++)
+                    {
+                        //VarientId = Model.Where(x => x.ProductID == ProdId[i]).Select(x => x.ProductVarientID).Distinct().ToList();
+                        ProdName = Model.Where(x => x.ProductID == ProdId[i]).Select(x => x.ProductName).FirstOrDefault();
+                        ProdImage = Model.Where(x => x.ProductID == ProdId[i]).Select(x => x.ShopImage).FirstOrDefault();
+                        var varient = Model.Where(p => p.ProductID == ProdId[i]).Select(p => new
+                        {
+                            p.ProductVarientID,
+                            p.ProductName,
+                            p.SizeName,
+                            p.ColorName,
+                            p.MaterialName,
+                            p.DimensionName,
+                            p.Total,
+                            p.TotalSaleRate
+
+
+                        }).Distinct().ToList();
+                     
+                        <tr class="subHed">
+                          <td colspan="6" style=" text-align: center;">
+                               <img id="imgProductImage" src="@Url.Content(string.IsNullOrEmpty(ProdImage) ? "/Content/no_image.png" : ProdImage)" style="width: 30px; height:30px;" alt= "eZeelo" />
+                            </td>
+                            <td colspan="3" class="successnew"><b>@ProdName</b></td>
+                        </tr>
+
+
+                        <tr class="colorHeding">
+
+                            <th class="tablesubth">Color</th>
+                            <th class="tablesubth">Size</th>
+                            <th class="tablesubth">Dimension</th>
+                            <th class="tablesubth">Material</th>
+                            <th class="tablesubth">Old Sale Rate</th>
+                            <th class="tablesubth">Today's Rate</th>
+                            <th class="tablesubth">Component Distribution</th>
+                        </tr>
+                     
+                        for (int k = 0; k < varient.Count; k++)
+                        {
+
+                            var component = Model.Where(p => p.ProductVarientID == varient[k].ProductVarientID).Select(p => p.shopProductComponentList).ToList();
+                            string CompName = "";
+                            decimal CompTotal = 0;
+                            string ComponentTotal = "";
+                            var str = (HtmlString)null;
+                            foreach (var cmp in component)
+                            {
+                                sb.Clear();
+                                sb.Append("<div class='value-prodct'>");
+                                foreach (var c in cmp)
+                                {
+                                    if (c.ComponentName == "VAT")
+                                    {
+                                        CompName = c.ComponentName + "(" + c.PerUnitRateInPer + " %" + ")";
+                                    }
+                                    else if (c.DependentOnComponentID > 0)
+                                    {
+                                        if (c.PerUnitRateInPer > 0)
+                                        {
+                                            CompName = c.ComponentName + "(" + c.PerUnitRateInPer + " %" + ")";
+                                        }
+                                        else if (c.PerUnitRateInRs > 0)
+                                        {
+                                            CompName = c.ComponentName + "(Rs. " + c.PerUnitRateInRs + ")";
+                                        }
+                                    }
+                                    else
+                                    {
+                                        CompName = c.ComponentName + "(" + c.ComponentWeight + " " + c.ComponentUnitName + ")";
+                                    }
+                                    //ComponentName = ComponentName + CompName;
+                                    CompTotal = Math.Round(c.ComponentRate, 2);
+                                    sb.Append("<ul>");
+                                    sb.Append("<li style='border-bottom:1px solid#ccc'>");
+                                    sb.Append(CompName);
+
+                                    sb.Append("</li>");
+                                    sb.Append("<li>");
+                                    sb.Append("Rs." + CompTotal.ToString());
+                                    sb.Append("</li>");
+                                    sb.Append("<li class='thirdLi'><div class='plus'>+</div></li>");
+                                    //sb.Append("+");
+                                    sb.Append("</ul>");
+
+                                    ComponentTotal = ComponentTotal + " +" + CompTotal;
+
+                                }
+                                //ComponentName = ComponentName.TrimEnd(ComponentName[ComponentName.Length - 1]);
+                                sb.Remove(sb.ToString().Length - 1, 1);
+                                sb.Append("</div>");
+                                str = new HtmlString(sb.ToString());
+
+                                ComponentTotal = ComponentTotal.Remove(0, 1);
+
+                            }
+                            <tr>
+                                <td class="tablesubth">@varient[k].ColorName</td>
+                                <td class="tablesubth">@varient[k].SizeName</td>
+                                <td class="tablesubth">@varient[k].DimensionName</td>
+                                <td class="tablesubth">@varient[k].MaterialName</td>
+                                <td class="tablesubth">@varient[k].Total</td>
+                                <td class="tablesubth">@varient[k].TotalSaleRate</td>
+                                <td class="tablesubth">@Html.Raw(str)</td>
+
+                            </tr>
+                        }
+
+                    }
+                }
+            }
+
+
+        </table>
+
+    </div>
+            </td>
+        </tr>
+    </table>
+    <div id="Pager">
+        <div class="wrap">
+            <div id="slider1" class="slider">
+                <ul>
+                    @for (int c = 1; c <= @ViewBag.TotalPages; c++)
+                    {
+                        <li> <a class="page-number" href="javascript:void();">@c</a></li>
+                    }
+
+                </ul>
+
+            </div>
+
+            <div class="controls" style="margin-top:-27px;">
+                <a href="#noname" class="prev-slide"><<</a>
+                <a href="#noname" class="next-slide" style="float: right; margin-right: 299px;">>></a>
+            </div>
+        </div>
+        <span class="totalcount"><b>Showing @ViewBag.PageSize of @ViewBag.TotalCount enteries</b></span>
+    </div>
+    <div class="loader">
+        <img id="loader_img" src="~/Content/img/loader.gif" style="display: none" />
+    </div>
+    <script src="~/Content/js/jquery-1.9.1.min.js"></script>
+    <script type="text/javascript">
+        //$(function () {
+        $("#Pager .page-number").click(function (e) {
+            $('#loader_img').show();
+            $('#Pager').empty();
+            var componentID = "@ViewBag.CompID";
+            var page = parseInt($(this).html());
+            var PageSize = 20;
+            $.ajax({
+                url: '@Url.Action("LoadProducts", "ShopComponentPrice")',
+                data: { 'componentID': componentID, 'PageIndex': page, 'PageSize': PageSize },
+                type: "Post",
+                cache: false,
+                success: function (data) {
+                    $('#divPartialView').html(data);
+                    $('#loader_img').hide();
+                },
+                error: function (data) {
+
+                }
+            });
+        });
+        //});
+    </script>
+
+    <script src="~/Content/js/lemmon-slider.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+         // slider 1
+            $('#slider1').lemmonSlider({
+                infinite: false
+            });
+
+        });
+
+    </script>

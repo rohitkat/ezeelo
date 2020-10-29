@@ -1,0 +1,97 @@
+﻿@model ModelLayer.Models.ViewModel.CategoryWiseOffersViewModel
+@using System.Text.RegularExpressions;
+<script src="~/Scripts/Products.js"></script>
+
+@{int offerCatID = 0;
+if (TempData["offerCatID"] != null)
+{
+    offerCatID = Convert.ToInt32(TempData["offerCatID"]);
+}
+string cityName = "";
+int franchiseID = 0;////added
+if (Request.Cookies["CityCookie"] != null && Request.Cookies["CityCookie"].Value != "")
+{
+    cityName = Request.Cookies["CityCookie"].Value.Split('$')[1].ToLower();
+    franchiseID = Convert.ToInt32(Request.Cookies["CityCookie"].Value.Split('$')[2]);////added
+}
+}
+<div class="row">
+    <h3>Deals By Category</h3>
+    @if (Model.prodList != null && Model.prodList.Count() > 0)
+    {
+
+        for (var i = 0; i < Model.prodList.Count(); i++)
+        {
+            <div class="col-xs-6 col-sm-4 col-md-3 col-lg-2">
+                @if (Model.prodList[i].StockQty > 0 && Model.prodList[i].StockStatus == 1)
+                {
+                <div class="product " style="margin-bottom: 10px;">
+                    <ul class="product-labels">
+                        <li> (@Model.prodList[i].OfferName)</li>
+                    </ul>
+                    @*Start Retail Point Yashaswi 9-7-2018*@
+                    <ul class="product-labelsRP">
+                        <li>
+                            RP
+                            <span> @Convert.ToInt64(@Model.prodList[i].RetailPoint) </span>
+                        </li>
+                    </ul>
+                    @*End Retail Point Yashaswi 9-7-2018*@
+                    <ul class="product-labelsCB">
+                        <li>
+                            CP
+                            <span> @Convert.ToInt64(@Model.prodList[i].CashbackPoints) </span>
+                        </li>
+                    </ul>
+                    <div class="product-img-wrap">
+                        @*<a class="anchorRedirect" href="@Url.RouteUrl("pre-prod-name", new { itemId = block.blockItemsList[i].ProductID, itemName = productName, city = cityName, franchiseId = franchiseID })">*@
+                        <img class="product-img" src="@Url.Content(string.IsNullOrEmpty(Model.prodList[i].StockThumbPath) ? "/Content/Images/no_image.png" : @Model.prodList[i].StockThumbPath)" onerror="this.src = '../../Content/Images/no_image.png'" />
+                        @*</a>*@
+                    </div>
+                    <div class="product-caption">
+                        <div class="product-caption">
+                            <h1 class="product-caption-title" style="height:15px;">@Html.DisplayFor(it => it.prodList[i].SizeName)</h1>
+                            <h1 class="product-caption-title" style="height:30px;">@Html.DisplayFor(it => it.prodList[i].ProductName)</h1>
+                        </div>
+                        <div class="product-caption-price" style="margin-top:0px;">
+                            @if (Model.prodList[i].MRP > Model.prodList[i].SaleRate)
+                            {
+                                <span class="product-caption-price-old"><del><i class="fa fa-inr" aria-hidden="true"></i> @Model.prodList[i].MRP </del></span>
+
+                            }
+                            else
+                            {
+                                <strong>
+                                    <span>&nbsp;</span>
+                                    <span>&nbsp;</span>
+                                </strong>
+                            }
+                            <span class="product-caption-price-new" style="color:brown;">  <i class="fa fa-inr" aria-hidden="true"></i> @Model.prodList[i].SaleRate</span>
+                        </div>
+                        <div class="product-caption-price">
+                            @if (ViewBag.offerStatus != null && (ViewBag.offerStatus == 0 || ViewBag.offerStatus == 2))
+                            { }
+                            else
+                            {
+                                <a class="btn btn-success" href="@Url.RouteUrl("preview-stock", new { itemId = Model.prodList[i].ProductID, shopStockID = Model.prodList[i].ShopStockID, shopID = Model.prodList[i].ShopID, itemName = Regex.Replace(Model.prodList[i].ProductName.Substring(0, Math.Min(Model.prodList[i].ProductName.Length, 30)), @"[\/\\#,+()$~%.':*?<>{} ]", "-").Replace("&", "and").ToLower(), city = cityName, franchiseId = franchiseID })" style="width:auto;">view</a>
+                                <button class="btn btn-warning " type="button" onclick="AddProduct(@Model.prodList[i].ShopStockID,@Model.prodList[i].ProductID)">Add<i class="fa fa-shopping-basket"></i></button>
+                                @*<input type="button" class="btn btn-block btn-warning" value="Add To Cart" onclick="AddProduct(@Model.prodList[i].ShopStockID,@Model.prodList[i].ProductID)" style="float: left;border-radius:0px; width: 100% !IMPORTANT;" />*@
+                            }
+                        </div>
+                    </div>
+                </div>
+                }
+            </div>
+        }
+
+    }
+</div>
+
+
+<script type="text/javascript">
+    function AddProduct(shopStockId, itemId) {
+        var _url = '@Url.Action("AddProductInShoppingCart", "Product")';
+        AddProductToShppingCartWithoutQuantity(shopStockId, itemId, _url);
+    }
+</script>
+

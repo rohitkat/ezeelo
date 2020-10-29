@@ -1,0 +1,145 @@
+﻿@model ModelLayer.Models.ViewModel.PurchaseOrderReplyViewModel
+@{
+    ViewBag.Title = "Accept";
+}
+
+<style type="text/css">
+    #msform1 fieldset:not(:first-of-type) {
+        display: none;
+    }
+
+    .field-validation-error {
+        color: #000000 !important;
+    }
+
+    .succes-msg {
+        color: #31A012;
+        font-size: 20px;
+    }
+
+    .beatpicker-clearButton button {
+        display: none;
+    }
+
+    .input-parent button {
+        display: none;
+    }
+
+    .textarea-adjust {
+        width: 85%;
+    }
+    /*Beatpicker Css*/
+    .beatpicker-clearButton button {
+        display: none;
+    }
+
+    .input-parent button {
+        display: none;
+    }
+
+    .header-navbar-button {
+        position: absolute !important;
+    }
+
+    .beatpicker .main-nav .current-indicator {
+        text-align: center !important;
+    }
+
+    .beatpicker .main-nav .prev1 {
+        left: 0 !important;
+        width: 14%;
+        padding: 0px 10px;
+        color: #fff;
+        font-size: 16px;
+    }
+
+    .beatpicker .main-nav .next1 {
+        right: 0 !important;
+        width: 9%;
+        color: #fff;
+        font-size: 16px;
+    }
+
+    .beatpicker .main-nav .prev1:hover {
+        left: 0 !important;
+        width: 14%;
+        padding: 0px 10px;
+        color: #fff;
+        font-size: 20px;
+        cursor: pointer !important;
+    }
+
+    .beatpicker .main-nav .next1:hover {
+        right: 0 !important;
+        width: 9%;
+        color: #fff;
+        font-size: 20px;
+        cursor: pointer !important;
+    }
+
+    #divImages .remove {
+        background: url(/Content/img/remove-icon.png) no-repeat 0px 0px #fff;
+        float: left;
+        font-size: 0 !important;
+        width: 23px !important;
+        padding: 2px 4px;
+    }
+    /*Beatpicker Css End*/
+
+    #Remark {
+        width: 99%;
+    }
+</style>
+
+
+<div id="content" class="span10">
+   @using (Html.BeginForm("Reject", "PurchaseOrderReply", null, FormMethod.Post, new { id = "Form_" }))
+    {
+        @Html.AntiForgeryToken()
+        @Html.ValidationSummary(true)
+        <div class="row-fluid">
+            <div class="box span12">
+                <div class="box-header creatProduct clearfix" data-original-title="">
+                    <h2>
+                        <i class="icon-exclamation-sign"></i>
+                        <span class="break"></span>
+                      REJECT PURCHASE ORDER [@Model.PurchaseOrderCode]
+                    </h2>
+                </div>
+
+                <div class="box-content nameDscrp">
+                    <div class="form-group">
+                     
+                        <div class="control-group mrg-left">
+                            <div class="col-sm-3">
+                               Expected Delivery Date: <b>@Model.ExpetedDeliveryDate.ToString("dd/MM/yyyy") </b>
+                                @Html.HiddenFor(model=>model.PurchaseOrderID)
+                                @Html.HiddenFor(model => model.DispatchDate)
+                                @Html.HiddenFor(model => model.DeliveryDateTime)
+                            </div>
+                            <div class="col-sm-6">                               
+                                                       
+                            </div>
+                        </div>
+
+                        <div class="control-group mrg-left">
+                            <div class="col-sm-3">
+                                Remark/Reason
+                            </div>
+                            <div class="col-sm-9">
+                                @Html.TextAreaFor(model => model.SupplierRemark, new { placeholder = "Remark"})
+                                @Html.ValidationMessageFor(model => model.SupplierRemark)
+                            </div>
+                        </div>
+                        <div class="clr"></div>          
+                    </div>
+                    <br />
+                    <p>
+                        <input type="submit" value="Reject" class="btn btn-danger mrg-left mrg-top" />
+                        @Html.ActionLink("Back to List", "Index", null, new { @class = "btn btn-default mrg-left mrg-top" })
+                    </p>
+                </div>
+            </div>
+        </div>
+    }
+</div>

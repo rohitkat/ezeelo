@@ -1,0 +1,24 @@
+﻿@{
+    ViewBag.Title = "SomethingWrong";
+}
+@{
+    Layout = "~/Views/Shared/_Layout_Internal.cshtml";
+    string cityName = "";
+    int franchiseID = 0;////added
+    if (Request.Cookies["CityCookie"] != null && Request.Cookies["CityCookie"].Value != string.Empty)
+    {
+        cityName = Request.Cookies["CityCookie"].Value.Split('$')[1].ToLower();
+        franchiseID = Convert.ToInt32(Request.Cookies["CityCookie"].Value.Split('$')[2]);////added
+    }
+}
+<div class="gap"></div>
+<div align="center" class="row box">
+    <h3>This product is unavailable in this city.
+            Please Continue Browsing.</h3>
+    <img src="~/Content/Images/ProductMissing.png"/>
+    <div class="gap"></div>
+    <div align="center">
+        @Html.RouteLink("Go To Home Page", "Home", new { city = cityName, franchiseId = franchiseID }, new { @class = "btn btn-warning" })
+    </div>
+</div>
+<div class="gap"></div>

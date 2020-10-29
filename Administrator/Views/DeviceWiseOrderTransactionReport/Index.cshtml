@@ -1,0 +1,350 @@
+﻿@model ModelLayer.Models.State
+@*<copyright file="Index.cshtml" company="Ezeelo Consumer Services Pvt. Ltd.">
+     Copyright (c) Ezeelo Consumer Services Pvt. Ltd. All rights reserved.
+    </copyright>
+    <author>Harshada Raghorte</author>*@
+@{
+    ViewBag.Title = "Index";
+
+}
+<style>
+    .fg-toolbar {
+        width: 91% !important;
+    }
+
+    .ui-widget-header {
+        border: 0px !important;
+    }
+
+    .uneditable-input, input, textarea {
+        width: 145px;
+    }
+
+    select {
+        width: 159px;
+        background-color: #fff;
+        border: 1px solid #ccc;
+        text-transform: lowercase;
+    }
+
+    .hed-owner {
+        vertical-align: top;
+    }
+</style>
+<div id="content" class="span10">
+    <ul class="breadcrumb">
+        <li>
+            <a href="index.html">Order Transaction</a>
+        </li>
+    </ul>
+    <div class="row-fluid sortable">
+        <div class="box span12">
+            <div data-original-title="" class="box-header">
+                <h2><i class="halflings-icon user"></i><span class="break"></span>Web/App Order Transaction Report</h2>
+
+            </div>
+            <div class="box-content viewCont">
+                @*<div style="width:95%">
+                        @Html.Partial("_MISReportPartial")
+                    </div>*@
+
+                <div class="span12" style="width:100%">
+                    @*<div class="span5 control-group">
+                            @Html.Label("From Date:", new { @class = "control-label span3" })
+                            <input type="text" id="txtFromDate" class="input-large datepicker" />
+                            <label for="txtFromDate" class="dtPic"><i class="glyphicons-icon calendar"></i></label>
+                        </div>
+                        <div class="span5 control-group">
+                            @Html.Label("To Date:", new { @class = "control-label span2 toDate" })
+                            <input type="text" id="txtToDate" class="input-large datepicker" />
+                            <label for="txtToDate" class="dtPic"><i class="glyphicons-icon calendar"></i></label>
+                        </div>*@
+                    <div class="span2">@Html.TextBox("txtFromDate", null, new { id = "txtFromDate", @class = "datepicker glyphicons-iconcalendar", @placeholder = "Start Date", @style = "margin-top:0px;", required = "requird" })</div>
+                    <div class="span2">@Html.TextBox("txtToDate", null, new { id = "txtToDate", @class = "datepicker glyphicons-iconcalendar", @placeholder = "End Date", @style = "", required = "requird" })</div>
+                    <div class="span2">
+                        <table class="table" style="margin-bottom: 0px;">
+                            <tr>
+                                @*<td style="padding-top: 0px;">@Html.DropDownList("ShopID", "--Select Device--")</td>*@
+                                <td style="padding:0px;">
+                                    @Html.DropDownList("DeviceID", new List<SelectListItem>
+                                                   {
+                                                       new SelectListItem { Text = "Web", Value = "1"},
+                                                       new SelectListItem { Text = "Mobile", Value = "2"}
+
+                                                    }, "Select Device")
+                                </td>
+                                @*<td style="padding-top: 0px;"></td>*@
+                            </tr>
+                        </table>
+
+                        @*<select id="ddlDistrict" name="ddlDistrict" style="width: 200px"/>*@
+                        @*@Html.ValidationMessageFor(model => model.ID)*@
+
+                    </div>
+                    <div class="span6">
+                        @Html.DropDownList("FranchisesID", "--Select Franchise--")
+                        <input type="submit" value="Search" id="btnSearch" class="btn btnSearch-f" style="margin-top: -10px;">
+                        <label id="lblMsg" style="color:red"></label>
+                        @Html.ValidationMessageFor(model => model.ID)
+                    </div>
+                </div>
+
+
+                <div class="span12" style="margin-left:0px;">
+
+                    <div class="span12" style="padding-top: 8px;">
+                        @*<span class="hed-owner">Export To</span>*@
+                        @Html.DropDownList("ExportOption", new List<SelectListItem>
+
+    {
+
+       new SelectListItem{ Text="Excel", Value = "1" },
+       new SelectListItem{ Text="Csv", Value = "2" },
+       new SelectListItem{ Text="Pdf", Value = "3" }
+
+    })
+
+                        <input type="submit" value="Export" id="btnExport" class="btn btnSearch-f mrg_top" />
+                        <input type="submit" value="Print" id="btnPrint" class="btn btnSearch-f btn-primary mrg_top" onclick="PrintReport()" />
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row-fluid">
+        <div class="box span12">
+            <div class="body-content">
+                <table class="table table-border" id="DataTables_Table_0" aria-describedby="DataTables_Table_0_info">
+                    <tr>
+                        <td>
+                            <div id="divReport" style="width:100%; overflow:hidden;">
+                            </div>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+
+    </div>
+
+</div>
+<div class="loader">
+    <img id="loader_img" src="~/Content/img/loader.gif" style="display: none" />
+</div>
+<script src="~/Content/js/jquery.1.8.3.min.js"></script>
+<script type="text/javascript">
+    $(function () {
+        $("input#btnSearch").on('click', function () {
+            $('#loader_img').show();
+            var pagecount = 0;
+            var page = 1;
+            var toDate = $('#txtToDate').val();
+            var fromDate = $('#txtFromDate').val();
+
+            var FranchisesID = 0;
+            if ($("select#FranchisesID option:selected").val() > 0) {
+                FranchisesID = $("select#FranchisesID option:selected").val();
+            }
+            var DeviceID = 0;
+            if ($("select#DeviceID option:selected").val() > 0) {
+                DeviceID = $("select#DeviceID option:selected").val();
+            }
+            var isValid = ValidateDate(fromDate, toDate);
+            if (isValid == false) {
+                $('#loader_img').hide();
+                return;
+            }
+            $.ajax({
+                url: '@Url.Action("GetReport", "DeviceWiseOrderTransactionReport")',
+                data: { 'page': page, 'pagecount': pagecount, 'fromDate': fromDate, 'toDate': toDate, 'FranchisesID': FranchisesID, 'DeviceID': DeviceID },
+                type: "Post",
+                cache: false,
+                success: function (data) {
+                    //alert(data);
+                    $('#loader_img').hide();
+                    $('#divReport').empty();
+                    $('#divReport').append(data);
+                },
+                error: function (data) {
+
+                }
+            });
+        });
+    });
+
+    $("select#stateID").bind('change', function () {
+
+        var stateid = $("select#stateID option:selected").val();
+        if (stateid == 0) {
+            $('#ddlCity').empty();
+            $('#ddlfranchise').empty();
+            $('#ddlMerchant').empty();
+            return;
+        }
+        $.ajax({
+            type: "POST",
+            url: '@Url.Action("GetCityByStateId", "DeviceWiseOrderTransactionReport")',
+            data: { 'stateID': stateid },
+            //dataType: "json",
+            cache: false,
+            success: function (msg) {
+                $('#ddlCity').empty();
+                $('#ddlCity').append('<option value=0>Select City</option>');
+                $.each(msg, function (index, item) {
+                    $('#ddlCity').append('<option value=' + item.CityID + '>' + item.CityName + '</option>');
+                });
+            },
+            error: function (x, e) {
+                alert('Failure');
+
+            }
+        });
+
+        //}
+    });
+
+
+    $("select#ddlCity").bind('change', function () {
+
+        var cityID = $("select#ddlCity option:selected").val();
+        if (cityID == 0) {
+            $('#ddlfranchise').empty();
+            $('#ddlMerchant').empty();
+            return;
+        }
+
+        $.ajax({
+            type: "POST",
+            url: '@Url.Action("GetFranchiseByCityId", "DeviceWiseOrderTransactionReport")',
+            data: { 'cityID': cityID },
+            //dataType: "json",
+            cache: false,
+            success: function (msg) {
+                $('#ddlfranchise').empty();
+                $('#ddlfranchise').append('<option value=0>Select Franchise</option>');
+                $.each(msg, function (index, item) {
+                    $('#ddlfranchise').append('<option value=' + item.FranchiseID + '>' + item.FranchiseName + '</option>');
+                });
+            },
+            error: function (x, e) {
+                alert('Failure');
+
+            }
+        });
+
+        //}
+    });
+
+    $("select#ddlfranchise").bind('change', function () {
+        var franchiseID = $("select#ddlfranchise option:selected").val();
+        if (franchiseID == 0) {
+            $('#ddlMerchant').empty();
+            return;
+        }
+        $.ajax({
+            type: "POST",
+            url: '@Url.Action("GetMerchantByFranchiseId", "DeviceWiseOrderTransactionReport")',
+            data: { 'franchiseID': franchiseID },
+            //dataType: "json",
+            cache: false,
+            success: function (msg) {
+                $('#ddlMerchant').empty();
+                $('#ddlMerchant').append('<option value=0>Select Merchant</option>');
+                $.each(msg, function (index, item) {
+                    $('#ddlMerchant').append('<option value=' + item.MerchantID + '>' + item.MerchantName + '</option>');
+                });
+            },
+            error: function (x, e) {
+                alert('Failure');
+
+            }
+        });
+
+        //}
+    });
+    function ValidateDate(fromDate, toDate) {
+        if (fromDate == '' && toDate == '') {
+            $('[id*=lblMsg]').text('Please Select From Date and To Date.');
+            return false;
+        }
+        else if (fromDate == '') {
+            $('[id*=lblMsg]').text('Please Select From Date.');
+            return false;
+        }
+        else if (toDate == '') {
+            $('[id*=lblMsg]').text('Please Select To Date.');
+            return false;
+        }
+
+        if (fromDate != '' && toDate != '') {
+            dateFirst = fromDate.split('/');
+            dateSecond = toDate.split('/');
+            var from = new Date(dateFirst[2], dateFirst[1], dateFirst[0]); //Year, Month, Date
+            var to = new Date(dateSecond[2], dateSecond[1], dateSecond[0]);
+            if (from > to) {
+                $('[id*=lblMsg]').text('To Date must be greater than From Date.');
+                return false;
+            }
+            else {
+                $('[id*=lblMsg]').text('');
+            }
+        }
+    }
+
+    $("input#btnExport").on('click', function () {
+
+        var print = 0;
+        var option = 0;
+        var MerchantID = 0;
+        if ($("select#FranchisesID option:selected").val() > 0) {
+            FranchisesID = $("select#FranchisesID option:selected").val();
+        }
+
+        if ($("select#ExportOption option:selected").val() > 0) {
+            option = $("select#ExportOption option:selected").val();
+        }
+
+        var DeviceID = 0;
+        if ($("select#DeviceID option:selected").val() > 0) {
+            DeviceID = $("select#DeviceID option:selected").val();
+        }
+        var toDate = $('#txtToDate').val();
+        var fromDate = $('#txtFromDate').val();
+        var isValid = ValidateDate(fromDate, toDate);
+        if (isValid == false) {
+            return;
+        }
+        window.location.href = "/DeviceWiseOrderTransactionReport/Export?&fromDate=" + fromDate + "&toDate=" + toDate + "&option=" + option + "&print=" + print + "&FranchisesID=" + FranchisesID + "&DeviceID=" + DeviceID;
+
+    });
+
+
+    function PrintReport() {
+        //alert('in');
+        var print = 1;
+        var option = 0;
+        var MerchantID = 0;
+        if ($("select#ddlMerchant option:selected").val() > 0) {
+            MerchantID = $("select#ddlMerchant option:selected").val();
+        }
+
+        var DeviceID = 0;
+        if ($("select#DeviceID option:selected").val() > 0) {
+            DeviceID = $("select#DeviceID option:selected").val();
+        }
+        if ($("select#ExportOption option:selected").val() > 0) {
+            option = $("select#ExportOption option:selected").val();
+        }
+        var toDate = $('#txtToDate').val();
+        var fromDate = $('#txtFromDate').val();
+        var isValid = ValidateDate(fromDate, toDate);
+        if (isValid == false) {
+            return;
+        }
+
+        var url = "/DeviceWiseOrderTransactionReport/Export?&fromDate=" + fromDate + "&toDate=" + toDate + "&option=" + option + "&print=" + print + "&merchantID=" + MerchantID + "&DeviceID=" + DeviceID;
+        window.open(url, '_blank')
+    }
+</script>
+
+

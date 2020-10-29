@@ -1,0 +1,150 @@
+@model IEnumerable<ModelLayer.Models.ViewModel.WarehouseBlockViewModel>
+
+@{
+    ViewBag.Title = "Index";
+}
+
+
+<style>
+    .pro_th thead tr th {
+        font-size: 12px;
+        border-bottom: 1px solid #EEE;
+        padding: 6px 0;
+        background-color: #26A69A;
+    }
+
+    .pro_th tbody td {
+        font-size: 12px;
+        text-align: center;
+        border: 1px solid #EEE;
+    }
+
+        .pro_th tbody td.btn-set {
+            white-space: nowrap;
+        }
+
+    .dataTables_length {
+        margin-left: 0px !important;
+        margin-top: 7px;
+    }
+
+    .pagination {
+        margin: 0 26px;
+    }
+
+    form {
+        margin: 0 0 -15px;
+    }
+</style>
+
+<script src="~/Content/js/jquery-2.1.3.min.js"></script>
+<link href="~/Content/css/jquery.dataTables.css" rel="stylesheet" />
+<script src="~/Content/js/jquery.dataTables.js" language="jascript"></script>
+
+<script type="text/javascript" class="init">
+    $(document).ready(function () {
+        $('#tblData').DataTable({
+            dom: 'T<"clear">lfrtip',
+            "processing": true,
+            "serverSide": true,
+            "aaSorting": []
+        });
+        // alert("1");
+    });
+</script>
+<section class="right_side_main_part">
+<div id="content" class="span10" style="min-height: 403px;">
+    <div class="content">
+        <p>
+            <div>               
+                    @Html.ActionLink("Add New Block/Section", "Create", null, new { @class = "btn btn-primary" })               
+            </div>
+
+        </p>
+        <div class="row-fluid">
+                <div class="box span12 right_side_up_part">
+                <div class="box-header">
+                    <h2>
+                        <i class="icon-list-alt"></i>
+                        <span class="break"></span>
+                      ALL BLOCK LIST
+                    </h2>
+
+                </div>
+                <div class="box-content">
+                    <table class="table border-table display" id="tblData">
+                        <thead>
+                            <tr>
+                                <th>Sr.No.</th>
+                                <th style="text-align:center">
+                                    Block Name
+                                </th>
+                                <th style="text-align:left">Zone Name</th>
+                                <th style="text-align:center">
+                                    Rows/Levels
+                                </th>                                
+                                <th style="text-align:center">
+                                    height</th>
+                                <th style="text-align:center">
+                                    Length
+                                </th>
+                                <th style="text-align:center">
+                                    Width
+                                </th>
+                                <th style="text-align:center">
+                                    Weight
+                                </th>
+                                <th>Action</th>                                
+                            </tr>
+                        </thead>
+                        @{
+                            var i = 1;
+                        }
+                        @foreach (var item in Model)
+                        {
+                            <tr>      
+                                <td style="text-align:center">
+                                    @i
+                                    @{
+                            i = i + 1;
+                                    }
+                                </td>                        
+                                <td style="text-align:center">
+                                    @item.Name
+                                </td>
+                                <td style="text-align:left">
+                                    @item.ZoneName
+                                </td>
+                                <td style="text-align:center">
+                                    @item.Rows
+                                </td>
+                                
+                                <td style="text-align:center">
+                                    @String.Format("{0:F}", item.Height)
+                                </td>
+                                <td style="text-align:center">
+                                    @String.Format("{0:F}", item.Length)
+                                </td>
+                                <td style="text-align:center">
+                                    @String.Format("{0:F}", item.Width)
+                                </td>
+                                <td style="text-align:center">
+                                    @String.Format("{0:F}", item.Weight)
+                                </td>
+                                <td>
+                                    @Html.ActionLink("Edit", "Edit", new { id = item.ID }, new { @class = "btn btn-small btn-success" }) |
+                                    @Html.ActionLink("Details", "Details", new { id = item.ID }, new { @class = "btn btn-small btn-info" }) 
+                                  
+                                </td>
+                            </tr>
+                        }
+
+                    </table>
+
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+    </section>

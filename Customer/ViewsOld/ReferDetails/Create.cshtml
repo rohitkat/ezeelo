@@ -1,0 +1,413 @@
+﻿@model ModelLayer.Models.ViewModel.ReferDetailViewModel
+
+@{
+    ViewBag.Title = "Refer And Earn";
+}
+@{
+    ViewBag.Title = "eZeelo: Buy Online Electronics, Jewellaries, cloths, collectibles";
+    string cityName = "";
+    if (Request.Cookies["CityCookie"] != null && Request.Cookies["CityCookie"].Value != "")
+    {
+        cityName = Request.Cookies["CityCookie"].Value.Split('$')[1].ToLower();
+    }
+}
+<style>
+    .headearn {
+        font-size: 35px;
+        text-shadow: 4px 2px 0px #efc574;
+    }
+
+    .headearn1 {
+        font-size: 30px;
+        text-shadow: 4px 2px 0px #ccc;
+    }
+
+    .newselect {
+        padding-right: 30px;
+        border: none;
+        border-radius: 0px 0px 0px 0px !important;
+        background: transparent;
+        width: 150px;
+        padding: 5px 35px 5px 5px;
+        font-size: 13px;
+        border: 1px solid #eaeaea;
+        height: 34px;
+        /*-webkit-appearance: none;*/
+        /*-moz-appearance: none;*/
+        appearance: none;
+        /*background: url(/Content/Images/drop.gif) 98% / 6% no-repeat #fff !important;*/
+    }
+
+    .addmore {
+        color: blue;
+        text-decoration: underline;
+        cursor: pointer;
+        vertical-align: -webkit-baseline-middle;
+    }
+
+    .grid .row {
+        width: 100%;
+        display: block;
+        margin: 0 0 0 !important;
+    }
+
+    .input-control.modern .informer, .input-control.modern .label {
+        position: absolute;
+        display: block;
+        z-index: 1;
+        color: #ff8831 !important;
+    }
+
+    .input-control input, .input-control select, .input-control textarea {
+        border: 1px solid #777;
+    }
+
+    .input-control.modern input:focus {
+        border-bottom-color: #ff8831;
+    }
+
+    .input-control.modern input {
+        border-bottom: 1px solid rgba(119, 119, 119, 0.43);
+        background-color: transparent;
+        font-size: 12px;
+        width: 96%;
+    }
+
+    .input-control.modern .placeholder {
+        color: #333;
+        font-size: 14px !important;
+    }
+
+    .valMsg {
+        color: red;
+        padding-left: 10px;
+        font-size: 14px;
+        display: none;
+    }
+
+    .input-control input, .input-control select, .input-control textarea {
+        border: 1px solid #ccc;
+    }
+
+    #addedRows {
+        padding: 0px 0px;
+    }
+
+    .userRow {
+        padding: 0px 0px;
+        border: 1px solid rgba(204, 204, 204, 0.33);
+        background: rgba(250, 104, 0, 0.08);
+        min-height: 105px;
+        max-height: 200px;
+    }
+
+    .input-control.modern {
+        width: 0rem;
+        height: 2rem;
+    }
+
+    .referlink {
+        padding: 5px;
+        color: #0066c0;
+        /*background-color: #656464;
+        color: white !important;*/
+        /*font-weight: 700;*/
+        /*border-radius: 20px 0px 20px 0px;*/
+    }
+
+        .referlink:hover {
+            padding: 5px;
+            color: #0f84eb;
+            /*background-color: #A8CF45 !important;
+            color: white !important;
+            font-weight: 700;
+            border-radius: 20px 0px 20px 0px;*/
+            cursor: pointer;
+            text-decoration: underline;
+        }
+
+    #Termfirst ul li {
+        list-style-type: disc !important;
+        text-align: justify;
+        margin-left: 30px;
+        margin-top: 5px;
+    }
+
+    #introduction ul li {
+        list-style-type: disc !important;
+        text-align: justify;
+        margin-left: 30px;
+        margin-top: 5px;
+    }
+
+    .Noearn {
+        text-align: center;
+        min-height: 400px;
+        padding-top: 100px;
+    }
+
+        .Noearn h2 {
+            font-size: 35px;
+            text-shadow: 4px 2px 0px #efc574;
+            font-weight: 700;
+        }
+
+    .newul {
+        width: 50%;
+        margin: auto;
+    }
+</style>
+<script>
+    $(function () {
+        $('a[href*="#"]:not([href="#"])').click(function () {
+            if (location.pathname.replace(/^\//, '') == this.pathname.replace(/^\//, '') && location.hostname == this.hostname) {
+                var target = $(this.hash);
+                target = target.length ? target : $('[name=' + this.hash.slice(1) + ']');
+                if (target.length) {
+                    $('html, body').animate({
+                        scrollTop: target.offset().top - 90
+                    }, 3000);
+                    return false;
+                }
+            }
+        });
+    });
+</script>
+<div id="navbar">
+    <ol class="breadcrumb page-breadcrumb">
+        <li>
+            @Html.RouteLink("Home", "Home", new { city = cityName })
+        </li>
+        <li>@Html.RouteLink("My Account", "CustomerOrder/myorders", new { city = cityName })</li>
+        <li class="active">Refer And Earn</li>
+    </ol>
+</div>
+<div class="row box animated fadeInUp" data-gutter="15">
+    <div style=" text-align: center;">
+        <h2 style=" font-weight: 700; text-align: center;">Refer And Earn Money</h2>
+    </div>
+    @if (ViewBag.SchemeNotAvailMsg != null)
+    {
+        <div class="Noearn">
+            <h2>@ViewBag.SchemeNotAvailMsg</h2>
+        </div>
+    }
+    else
+    {
+        <div class="form-horizontal" style="padding: 5px; border: 1px solid #ccc; border-radius: 12px; box-shadow: 0px 2px 17px #ccc;">
+            <div class="">
+                <div class="">
+                    @using (Html.BeginForm())
+                    {
+                        @Html.AntiForgeryToken()
+
+                        <div class="form-horizontal">
+                            <span style="color:red;"> @ViewBag.message</span>
+                            @Html.ValidationSummary(true)
+
+                            <h3 id="ReferAndEarnSchemaID" style="    text-align: center;"><b>@ViewBag.ReferAndEarnSchemaName</b></h3>
+                            @Html.Hidden("ReferAndEarnSchemaID", (object)ViewBag.ReferAndEarnSchemaID)
+                            @if (Model.lSubReferDetail != null && Model.lSubReferDetail.Count > 0)
+                            {
+                                int j = 0;
+                                foreach (var item in Model.lSubReferDetail)
+                                {
+                                    <div id="addedRows" class="col-md-12">
+                                        <div id="rowCount_@j">
+                                            <div class="col-md-4">
+                                                @Html.TextBoxFor(model => model.lSubReferDetail[j].Email, new { id = "Email_" + j, @onchange = "return ValidateEmail(this);", @class = "emailval form-control", required = "required", placeholder = "Email ID", style = "margin: 4px 5px 0 0px;" })
+                                            </div>
+                                            <div class="col-md-4">
+                                                @Html.TextBoxFor(model => model.lSubReferDetail[j].Mobile, new { id = "Mobile_" + j, @onkeydown = "return ValidateNumber(event);", @onchange = "return ValidateMobile(this);", maxlength = 10, @class = "mobileVal form-control", required = "required", placeholder = "Mobile No", style = "margin: 4px 5px 0 0px;" })
+                                            </div>
+                                            <div class="col-md-4">
+                                                @if (j > 0)
+                                                {
+                                                    <a href="javascript:void(0);" id="@j" onclick="removeRow(this.id)" class="btn btn-danger"> Delete </a>
+                                                    <span style="float: left; text-align: left; width: 100%; font-size: 12px;color:red;">@item.Message</span>
+                                                    <span id="lblMsg_@j" class="valMsg" style="float: left; text-align: left; width: 100%; font-size: 12px;"></span>
+                                                }
+                                                else
+                                                {
+                                                    <span style="color: white; cursor: pointer; margin: 4px 5px 0 0px; " class="btn btn-success btn-sm" onclick="addMoreRows(this.form);">
+                                                        Add More
+                                                    </span>
+                                                    <span style="float: left; text-align: left; width: 100%; font-size: 12px; color: red;">@item.Message</span>
+                                                    <span id="lblMsg_@j" class="valMsg" style="float: left; text-align: left; width: 100%; font-size: 12px;"></span>
+                                                }
+                                            </div>
+                                        </div>
+                                    </div>
+                                    @*<div id="addedRows">*@
+
+                                    @*</div>*@
+                                                j++;
+                                }
+                            }
+                            <div class="col-md-12" style="margin-top: 10px;">
+                                @if (@ViewBag.ExpiryDate != null && @ViewBag.RemBudgetAmt > 0)
+                                {
+                                    <input type="submit" value="Refer" class="btn btn-warning" id="btnSubmit" />
+                                }
+                                else
+                                {
+                                    <span class="btn btn-warning">Scheme Temporarily Unavailable</span>
+                                }
+                            </div>
+
+                            <div class="gap"></div>
+
+
+                        </div>
+                        <div class="col-md-12" id="introduction">
+                            <div class="gap"></div>
+                            <div style="text-align: center;">
+                                @if (@ViewBag.ExpiryDate != null && @ViewBag.RemBudgetAmt > 0)
+                                {
+                                    <h3><b>Earn Upto <i class="fa fa-inr" aria-hidden="true"></i> @ViewBag.RemBudgetAmt</b></h3>
+                                    <span> first come first serve.</span><br />
+                                    <span>Hurry up only <b>@ViewBag.ExpiryDate</b> days are remaining for<a class="referlink" href="#referfirst">more details.</a> See the full <a class="referlink" href="#Termfirst">terms and conditions.</a></span>
+                                }
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+        <div class="col-md-12 animated fadeInUp" id="referfirst">
+            <div style="text-align: center;">
+                <img src="~/Content/Images/refer-n-earn.png" style="width:100%" />
+            </div>
+        </div>
+
+        <div class="col-md-12" id="Termfirst">
+            <h3 style="padding: 5px; background: #e5e5e5;">Terms and conditions :</h3>
+            <ul style=" padding-left: 0px;">
+                <li>For each friend who signs up at eZeelo and makes a purchase of minimum cart value. You will receive cashback in your eZeelo Wallet.</li>
+                <li>Please note that your friend should sign up with eZeelo using same email id or mobile number or both mentioned by referrer to get this benefit.</li>
+                <li>Your friend cannot be an existing user of eZeelo. Only applicable to new users.</li>
+                <li>Your friend will have to place an order of minimum cart value amount to get this benefit.</li>
+                <li>Once order is delivered (No Returns) and order status gets updated to Deliver. Cashback will be credited in your eZeelo wallet maximum within 24 hours.</li>
+                @*<li>The referred customer needs to purchase _______(amount order)(excluding delivery charges).</li>*@
+                <li>To check reflection of cash-back kindly login to your eZeelo account as no specific notification will be sent to customer.</li>
+                <li>Offer applicable till scheme is valid.</li>
+                <li>Multiple friends can be referred, no limitation in reference count per user.</li>
+                <li>eZeelo reserves the right to end any or all offers at its sole discretion without any prior notice or intimation. General T&Cs apply.</li>
+            </ul>
+        </div>
+
+        <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
+        <script type="text/javascript">
+            var rowCount = 0;
+            function addMoreRows(frm) {
+                rowCount++;
+                var recRow = '<div id="addedRows1" class="col-md-12" style="padding: 0px;"><div id="rowCount_' + rowCount + '"  style="margin-bottom: 5px!important;"><div class="col-md-4"><input name="lSubReferDetail[' + rowCount + '].Email" type="text" maxlength="120" required = "required" style="margin: 4px 5px 0 0px;" id="Email_' + rowCount + '" onchange = "return ValidateEmail(this);" class="emailval form-control"  placeholder="Email ID"/></div>'
+                    + '<div class="col-md-4"><input name="lSubReferDetail[' + rowCount + '].Mobile" type="text"  style="margin: 4px 10px 0 0px;" id="Mobile_' + rowCount + '" maxlength="10" required = "required" onkeydown = "return ValidateNumber(event);", onchange = "return ValidateMobile(this);" class="mobileVal form-control" placeholder="Mobile No"/></div>'
+                    + ' <div class="col-md-4"><a href="javascript:void(0);" style="margin-right: -10px;margin-top: 5px;" class="btn btn-danger" onclick="removeRow(' + rowCount + ');">Delete</a></div>'
+                    + ' <span id="lblMsg_' + rowCount + '" class="valMsg valMsg1"></span></div>';
+                jQuery('#addedRows').append(recRow);
+            }
+
+            function removeRow(removeNum) {
+                jQuery('#rowCount_' + removeNum).remove();
+            }
+
+        </script>
+
+        <script type="text/javascript">
+
+            var emailFlag = true;
+            var mobileFlag = true;
+
+            function ValidateNumber(e) {
+                //alert("1");
+                var evt = (e) ? e : window.event;
+                var charCode = (evt.keyCode) ? evt.keyCode : evt.which;
+                if ((charCode > 45 && charCode < 58) || (charCode > 95 && charCode < 106) || charCode == 8 || charCode == 127 || charCode == 37 || charCode == 39) { // (charCode > 31 && (charCode < 48 || charCode > 57)) {
+                    return true;
+                }
+                else if (charCode == 9) {
+                    SendKeys("{tab}");
+                    return true;
+                }
+                return false;
+            };
+
+
+            function ValidateEmail(obj) {
+                //alert("2");
+                var email = $(obj).val();
+                var filter = /^([\w-\.]+@@([\w-]+\.)+[\w-]{2,4})?$/;
+                //$('#divEmailError').hide();
+                if (filter.test(email)) {
+                    emailFlag = true;
+                    $("#" + obj.id.replace("Email", "lblMsg")).text("");
+                    return true;
+                }
+                else {
+                    //$('#divEmailError').show();
+                    //$('#divEmailError').html('Invalid Email [' + email + ']');
+                    $('#userLogin_Email').val('');
+                    $('#userLogin_Email').focus();
+                    $("#" + obj.id.replace("Email", "lblMsg")).text("enter valid Email");
+                    emailFlag = false;
+                    return false;
+                }
+            }
+
+
+            function ValidateMobile(obj) {
+
+                var mobile = $(obj).val();
+                //alert(mobile);
+                var filter = /^[7-9]{1}[0-9]{9}$/;
+                //$('#divMobileError').hide();
+                if (filter.test(mobile)) {
+                    mobileFlag = true;
+                    $("#" + obj.id.replace("Mobile", "lblMsg")).text("");
+                    return true;
+                }
+                else {
+                    //$('#divMobileError').show();
+                    //$('#divMobileError').html('Invalid Mobile [' + mobile + ']');
+                    $('#Mobile').val('');
+                    $('#Mobile').focus();
+                    //alert(obj.id.replace("Mobile", "lblMsg"));
+                    $("#" + obj.id.replace("Mobile", "lblMsg")).text("Enter valid no");
+                    mobileFlag = false;
+                    return false;
+                }
+            }
+
+
+
+            //$(document).ready(function () {
+
+            //    $('#btnSubmit').click(function (e) {
+            //        $("div.userRow").each(function () {
+            //            if ($(this).find(".emailval").val() == "" && $(this).find(".mobileVal").val() == "") {
+            //                $(this).find(".valMsg").text("Please Fill atleast one field.");
+            //                e.preventDefault();
+            //            }
+
+            //        });
+
+            //        if (emailFlag == false || mobileFlag == false) {
+            //           // alert("Please Fill Valid Details");
+            //            e.preventDefault();
+            //        }
+            //        else {
+            //        }
+            //    });
+
+            //});
+
+        </script>
+    }
+
+</div>
+<div class="gap"></div>
+
+
+
+

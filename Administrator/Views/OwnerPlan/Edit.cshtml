@@ -1,0 +1,144 @@
+﻿@*//-----------------------------------------------------------------------
+        // <copyright file="Edit.cshtml" company="Ezeelo Consumer Services Pvt. Ltd.">
+        //     Copyright (c) Ezeelo Consumer Services Pvt. Ltd. All rights reserved.
+        //
+    </copyright>
+        // <author>Snehal Shende</author>
+        //-----------------------------------------------------------------------*@
+
+@model ModelLayer.Models.OwnerPlan
+
+@{
+    ViewBag.Title = "Edit";
+}
+<script src="~/Content/js/jquery-1.9.1.min.js"></script>
+<link href="~/Content/css/Site.css" rel="stylesheet" />
+<script src="~/Content/js/BeatPicker.js"></script>
+<script>
+    $('.show-picker').click(function (e) {
+        e.stopPropagation();
+        myPicker.show();
+    });
+    $('.hide-picker').click(function (e) {
+        e.stopPropagation();
+        myPicker.hide();
+    })
+</script>
+
+<style>
+    .beatpicker-clear {
+        display: none;
+    }
+</style>
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+      <div class="span10" id="content">
+          <ul class="breadcrumb">
+              <li>
+                  <i class="icon-edit"></i>
+                  <a href="#">Franchise Plan</a>
+                  @*<i class="icon-angle-right"></i>*@
+              </li>
+              @*<li><a href="#">Tables</a></li>*@
+          </ul>
+          <div class="row-fluid">
+              <div class="box span12">
+                  <div class="box-header">
+                      <h2><i class="icon-edit"></i><span class="break"></span>Edit</h2>
+
+                  </div>
+                  <div class="box-content">
+                      <form class="form-horizontal">
+                          @*<h4>Franchise Plan</h4>*@
+                          @Html.ValidationMessage("CustomError")
+                          @Html.ValidationSummary(true)
+                          @Html.HiddenFor(model => model.ID)
+
+                          <div class="control-group">
+                              @Html.LabelFor(model => model.PlanID, "Plan", new { @class = "control-label col-md-2" })
+                              <div class="col-md-10 controls">
+                                  @Html.DropDownList("PlanID", null, "Select Plan", new { @readonly = "readonly" })
+                                  @Html.ValidationMessageFor(model => model.PlanID)
+                              </div>
+                          </div>
+
+                          <div class="control-group">
+                              @Html.LabelFor(model => model.OwnerID, "Owner", new { @class = "control-label col-md-2" })
+                              <div class="col-md-10 controls">
+                                  @Html.DropDownList("OwnerID", null, "Select Franchise", new { @readonly = "readonly" })
+                                  @Html.ValidationMessageFor(model => model.OwnerID)
+                              </div>
+                          </div>
+
+                          <div class="control-group">
+                              @Html.LabelFor(model => model.StartDate,"Start Date", new { @class = "control-label col-md-2" })
+                              <div class="col-md-10 controls">
+                                 @*@Html.TextBox("StartDate1", null, new { id = "StartDate1", @class = "datepicker", @readonly = "readonly" })*@
+                                  <input type="text" id="StartDate1" name="StartDate1" value="@ViewBag.StartDate1" readonly="readonly" />
+                                  @Html.ValidationMessageFor(model => model.StartDate)
+                              </div>
+                          </div>
+
+                          <div class="control-group">
+                              @Html.LabelFor(model => model.EndDate, "End Date", new { @class = "control-label col-md-2" })
+                              <div class="col-md-10 controls">
+                                  @*@Html.TextBox("EndDate1", null, new { id = "EndDate1", @class = "datepicker" })*@
+                                  <input type="text" id="EndDate1" name="EndDate1" value="@ViewBag.EndDate1" data-beatpicker="true" data-beatpicker-position="['*','*']" />
+                                  @Html.ValidationMessageFor(model => model.EndDate)
+                              </div>
+                          </div>
+
+                          @*<div class="control-group">
+                              @Html.LabelFor(model => model.IsActive, "Is Active", new { @class = "control-label col-md-2" })
+                              <div class="col-md-10 controls">
+                                  @Html.EditorFor(model => model.IsActive)
+                                  @Html.ValidationMessageFor(model => model.IsActive)
+                              </div>
+                          </div>*@
+
+                          <div class="control-actions">
+                              <div class="col-md-offset-2 col-md-10">
+                                  @*<input type="submit" value="Save" class="btn btn-primary" />*@
+                                  <input type="submit" value="Deactivate" class="btn btn-danger" />
+                                  @Html.ActionLink("Back to List", "Index", "FranchisePendingApprovals", string.Empty, new { @class = "btn" })
+                                  @*@Html.ActionLink("Back to List", "Index", string.Empty, new { @class = "btn" })*@
+                              </div>
+                          </div>
+                      </form>
+                  </div>
+                  </div>
+                  </div>
+              </div>
+    }
+
+    <div>
+        @*@Html.ActionLink("Back to List", "Index")*@
+</div>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        var statusGenerator = function (text) {
+            var statusElem = $(".status-box");
+            var child = $("<span style='display: block'></span>").text(text);
+            statusElem.append(child);
+        };
+        myDatePicker.on("select", function (data) {
+            statusGenerator(data.string + " selected")
+        });
+        myDatePicker.on("change", function (data) {
+            statusGenerator("Date picker changed current date: " + data.string);
+        });
+        myDatePicker.on("show", function () {
+            statusGenerator("Date picker show")
+        });
+        myDatePicker.on("clear", function (data) {
+            statusGenerator("Date picker cleared. cleared date: " + data.string)
+        });
+        myDatePicker.on("hide", function () {
+            statusGenerator("Date picker hide")
+        });
+    })
+
+</script>

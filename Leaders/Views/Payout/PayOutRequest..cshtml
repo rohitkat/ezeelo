@@ -1,0 +1,531 @@
+﻿@model ModelLayer.Models.ViewModel.LeadersPayoutRequestViewModel
+@{
+    ViewBag.Title = "PayOutRequest";
+    Layout = "~/Views/Shared/_LeaderUsersLayout.cshtml";
+}
+
+@*<script src="~/Scripts/jquery-1.12.4.min.js"></script>*@
+
+<link rel="stylesheet" href="~/Templates/UsersTemplate/css/material-design.minfd53.css">
+<link rel="stylesheet" href="~/Templates/UsersTemplate/css/style3.css">
+<link rel="stylesheet" href="~/Templates/UsersTemplate/css/dropify.minfd53.css">
+<link rel="stylesheet" href="~/Templates/UsersTemplate/css/custom.css">
+<link rel="stylesheet" href="~/Templates/UsersTemplate/css/tablesaw.css">
+<link rel="stylesheet" href="~/Templates/UsersTemplate/css/site.minfd53.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<title>leaders Ezeelo</title>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+
+
+            @*<div id="content">
+                @ViewBag.Message
+            </div>
+          
+            <!-- main body content -->
+
+          
+                @*<div class="container-fluid">*@
+
+                    @*<div class="page" style="touch-action: pan-y; user-select: none; -webkit-user-drag: none; -webkit-tap-highlight-color: rgba(0, 0, 0, 0);">*@
+                        
+                        <div class="page-content container-fluid">
+                        <div class="page-header">
+                            <h1 class="page-title">PayOut Request</h1>
+                            <div class="page-header-actions rightSideOfwallet">
+                                <a class="btn btn-sm btn-primary btn-round waves-effect waves-classic" href="#" target="_blank">
+                                    <figure><img src="/Templates/UsersTemplate/img/wallet-white.png"></figure>
+                                    
+                                    <span class="hidden-sm-down">Wallet Summary</span>
+                                </a>
+                            </div>
+                        </div>
+                            <div class="row">
+                                <div class="col-lg-6 col-md-6 col-sm-6 col-12 payRQSTFORM-left">
+                                    <!-- Panel Wizard Form -->
+                                    <div class="panel" id="payoutwizard">
+                                        <div class="panel-heading">
+                                            <h3 class="panel-title">Payout Request Form</h3>
+                                        </div>
+                                        <div class="panel-body">
+                                            <!-- Steps -->
+                                            <div class="steps steps-sm row" data-plugin="matchHeight" data-by-row="true" role="tablist">
+                                                <div class="step col-lg-4 current active" data-target="#userauthform" role="tab" aria-expanded="true" id="userAuthDiv">
+                                                    <span class="step-number">1</span>
+                                                    <div class="step-desc">
+                                                        <span class="step-title">Amount</span>
+                                                        <!-- <p>Enter payout request amount</p> -->
+                                                    </div>
+                                                </div>
+
+                                                <div class="step col-lg-4 disabled" data-target="#BankValidation" role="tab" aria-expanded="false" id="bankDetailsDiv">
+                                                    <span class="step-number">2</span>
+                                                    <div class="step-desc">
+                                                        <span class="step-title">Bank Details</span>
+                                                        <!-- <p>Pay for the bill</p> -->
+                                                    </div>
+                                                </div>
+
+                                                <div class="step col-lg-4 disabled" data-target="#summary" role="tab" aria-expanded="false" id="summaryDiv">
+                                                    <span class="step-number">3</span>
+                                                    <div class="step-desc">
+                                                        <span class="step-title">Summary</span>
+                                                        <!-- <p>Waiting for the goods</p> -->
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <!-- End Steps -->
+                                            <!-- Wizard Content -->
+                                            <div class="wizard-content">
+                                                <div class="wizard-pane active" id="userauthform" role="tabpanel" aria-expanded="true">
+                                                    <form id="">
+                                                        <div class="form-group form-material mt-50 floating" data-plugin="formMaterial">
+                                                            <div class="input-group">
+                                                                <span class="input-group-addon"><i class="fa fa-inr"></i></span>
+                                                                <div class="form-control-wrap">
+                                                                    <input type="text" class="form-control" readonly="" onfocus="this.removeAttribute('readonly');" id="amount" autocomplete="off"
+                                                                           name="Amount">
+                                                                    <label class="floating-label" for="amount">
+                                                                        Enter
+                                                                        Amount
+                                                                    </label>
+                                                                    <p class="field-text"> </p>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="form-group form-material mt-50 mb-50 floating" data-plugin="formMaterial">
+                                                            <div class="input-group">
+                                                                <span class="input-group-addon"><i class="fa fa-key"></i></span>
+                                                                <div class="form-control-wrap">
+                                                                    <input type="password" class="form-control" id="password" name="password">
+                                                                    <label class="floating-label" for="password">
+                                                                        Enter
+                                                                        your password
+                                                                    </label>
+                                                                    <p class="field-text"> </p>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </form>
+                                                </div>
+
+                                                @if (Model != null)
+                                                {
+                                                    <div class="wizard-pane" id="BankValidation" role="tabpanel" aria-expanded="false">
+
+                                                        <form id="BankValidationForm">
+                                                            <div class="row">
+                                                                <div class="form-group form-material mt-20 floating col-6" data-plugin="formMaterial">
+                                                                    <div class="input-group">
+                                                                        <span class="input-group-addon"><i class="fa fa-university"></i></span>
+                                                                        <div class="form-control-wrap">
+                                                                            <label class="floating-label" for="bank">
+                                                                                Bank
+                                                                                Name
+                                                                            </label>
+                                                                        </div>
+                                                                        <br />
+                                                                        <div class="form-control-wrap">
+                                                                            @Model.BankName
+                                                                            @*<select class="form-control" required="required" id="bank">
+                                                                                    <option>HDFC Bank</option>
+                                                                                    <option>ICIC Bank</option>
+                                                                                    <option>PNB Bank</option>
+                                                                                    <option>SBI Bank</option>
+                                                                                    <option>Axis Bank</option>
+                                                                                    <option>BOI Bank</option>
+                                                                                </select>*@
+                                                                        </div>
+
+
+                                                                    </div>
+                                                                </div>
+                                                                <div class="form-group form-material mt-20 floating col-6" data-plugin="formMaterial">
+                                                                    <div class="input-group">
+                                                                        <span class="input-group-addon"><i class="fa fa-align-justify"></i></span>
+                                                                        <div class="form-control-wrap">
+                                                                            <label class="floating-label" for="ifsc">
+                                                                                IFSC
+                                                                                Code
+                                                                            </label>
+                                                                        </div>
+                                                                        <br />
+                                                                        <div class="form-control-wrap">
+                                                                            @Html.DisplayFor(modelItem => Model.BankIFSC, new { @class = "form-control" })
+                                                                            @*<input type="text" class="form-control" id="ifsc" name="password">*@
+
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="form-group form-material mt-20 floating col-6" data-plugin="formMaterial">
+                                                                    <div class="input-group">
+                                                                        <span class="input-group-addon"><i class="fa fa-key"></i></span>
+                                                                        <div class="form-control-wrap">
+                                                                            <label class="floating-label" for="account_number">
+                                                                                Account
+                                                                                Number
+                                                                            </label>
+                                                                        </div>
+                                                                        <br />
+                                                                        <div class="form-control-wrap">
+                                                                            @Model.AccountNo
+                                                                            @*<input type="text" class="form-control" id="account_number" name="Amount">*@
+
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="form-group form-material mt-20 mb-20 floating col-6" data-plugin="formMaterial">
+                                                                    <div class="input-group">
+                                                                        <span class="input-group-addon"><i class="fa fa-user-o"></i></span>
+                                                                        <div class="form-control-wrap">
+                                                                            <label class="floating-label" for="account_holder">
+                                                                                Account
+                                                                                Holder's Name
+                                                                            </label>
+                                                                        </div>
+                                                                        <br />
+                                                                        <div class="form-control-wrap">
+                                                                            @Model.AccountHolderName
+                                                                            @*<input type="text" class="form-control" id="account_holder" name="password">*@
+
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                                <div>
+                                                                    <input type="button" value="Change Bank Details" onclick="window.location.href = '/LeadersProfile/UpdateBankDetails/' " class="btn btn-success">
+                                                                </div>
+                                                            </div>
+                                                        </form>
+
+                                                    </div>
+                                                }
+
+                                                    <div class="wizard-pane" id="summary" role="tabpanel" aria-expanded="false">
+                                                        <div class="text-left my-20">
+                                                            <!-- <i class="icon md-check font-size-40" aria-hidden="true"></i>
+                                                            <h4>We got your order. Your product will be shipping soon.</h4> -->
+                                                            <p style="font-weight: 600; font-size: 18px;">Payout Summary</p>
+
+
+                                                            <div class="summary table-responsive mt-20">
+
+                                                                <table class="table">
+                                                                    <!-- <thead>
+                                                                      <tr>
+                                                                        <th>First Name</th>
+                                                                        <th>Last Name</th>
+                                                                        <th>Username</th>
+                                                                        <th>Role</th>
+                                                                      </tr>
+                                                                    </thead> -->
+
+                                                                    <tbody>
+                                                                        <tr>
+                                                                            <td>Requested Amount</td>
+
+                                                                            <td><i class="fa fa-inr"></i>@Html.Label("r", new { id = "reqAmount" })</td>
+
+                                                                        </tr>
+                                                                        <tr>
+                                                                            <td>GST (18%)</td>
+
+                                                                            <td>-<i class="fa fa-inr">@Html.Label("a", new { id = "GSTAmount" })</i></td>
+
+                                                                        </tr>
+                                                                        <tr>
+                                                                            <td>TDS(%)</td>
+
+                                                                            <td>-<i class="fa fa-inr">@Html.Label("b", new { id = "TDSAmount" })</i></td>
+
+                                                                        </tr>
+                                                                        <tr>
+                                                                            <td>Processing Fees</td>
+
+                                                                            <td>-<i class="fa fa-inr">@Html.Label("b", new { id = "ProcessingAmount" })</i></td>
+
+                                                                        </tr>
+                                                                        <tr class="border-top">
+                                                                            <td>Total</td>
+
+                                                                            <td><i class="fa fa-inr"></i>@Html.Label("c", new { id = "totalAmnt" })</td>
+
+                                                                        </tr>
+                                                                    </tbody>
+                                                                </table>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <!-- End Wizard Content -->
+                                                    <br />
+                                                    <div class="wizard-buttons">
+                                                        @*<a class="btn btn-default btn-outline disabled waves-effect waves-classic"
+                                                           href="#payoutwizard" data-wizard="back" role="button">Back</a>*@
+                                                        <a class="btn btn-primary btn-outline float-right waves-effect waves-classic"
+                                                                                                                            id="nextSummery" data-wizard="next" role="button">Next</a><a class="btn btn-success btn-outline float-right hidden-xs-up waves-effect waves-classic"
+                                                                                                                                                                                         href="#summary" data-wizard="finish" role="button">Submit Request</a>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        <!-- End Panel Wizard One Form -->
+                                                </div>
+
+                                                    <div class="col-lg-6 col-md-6 col-sm-6 col-12 payRQSTFORM-right">
+                                                      
+                                                         
+
+                                                        <div class="row">
+
+                                                            <div class="col-6 col-lg-6 col-md-6 col-sm-6 col-xs-6 EZEELO-WALLET-CASH payRQSTFORM-BG">
+
+                                                                <div class="card card-block p-30">
+                                                                    <div class="counter counter-lg">
+                                                                        <div class="counter-label text-uppercase">Ezeelo Wallet Cash</div>
+                                                                        <div class="counter-number-group">
+                                                                            <span class="counter-icon mr-10 green-600">
+                                                                                <i class="fa fa-inr" style=""></i>
+                                                                            </span>
+                                                                            <span class="counter-number">@Model.EzeeloWalletCash</span>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+
+                                                            </div>
+                                                                
+
+                                                                <div class="col-6 col-lg-6 col-md-6 col-sm-6 col-xs-6 card card-block p-30 CASH-REDEAMABLE payRQSTFORM-BG">
+                                                                    <div class="card card-block p-30 counter counter-lg">
+                                                                        <div class="counter-label text-uppercase">Cash Redeamable</div>
+                                                                        <div class="counter-number-group">
+                                                                            <span class="counter-icon mr-10 green-600">
+                                                                                <i class="fa fa-inr" style=""></i>
+                                                                            </span>
+                                                                            <span class="counter-number" id="lblRedeamable">@Model.RedeamableCash</span>
+                                                                            <span class="counter-number-related"
+                                                                                <="" span="">
+                                                                            </span>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+
+                                                            </div>
+                                                            
+
+                                                
+                                            </div>
+                                                        
+                                                
+                                            <div class="col-12 WelcomeEzeelopayoutPortal">
+                                                <p style="font-size: 18px; font-weight: 200; text-align: justify;">
+                                                    Welcome to Ezeelo Payout Portal!
+                                                </p>
+                                                <ul>
+                                                    <li>
+                                                        You can only withdraw amount after the monthly payout.
+                                                    </li>
+                                                    <li>
+                                                        Withdrawable amount should be less than your Ezee-Wallet Amount.
+                                                    </li>
+                                                    <li>
+                                                        You can't Withdraw Amount More than the Redeamable Amount.
+                                                    </li>
+                                                    <li>
+                                                        Ezeelo Cash wallet updates after the monthly Payout Process.
+                                                    </li>
+                                                    <li>
+                                                        For Any other Query Contact us at - +91-9860890890 or mail us your query at - support@ezeelo.com
+                                                    </li>
+                                                </ul>
+                                                <p></p>
+                                            </div>
+                                                      
+                                        </div>
+                                
+                                
+
+                                    </div>
+
+                                @*</div>
+                            </div>*@
+
+                    <!-- main body content -->
+
+               
+                @*<div class="overlay"></div>*@
+        
+
+
+
+       
+        <script type="text/javascript">
+
+            //$("#nextSummery").click(function () {
+
+            //    alert("button"); // Remove this line if it worked
+            //   // $("#tblMain").hide();
+            //    $("#BankValidation").show();
+            //});
+
+
+
+            // When the user clicks on div, open the popup (div#tablesaw-2523-popup)
+            //function myFunction() {
+            //    var popup = document.getElementById("myPopup");
+            //    popup.classList.toggle("show");
+            //}
+
+
+        </script>
+        <script>
+            $(document).ready(function () {
+                $(function () {
+                    
+                    $('#nextSummery').click(function (event) {
+
+
+                        event.preventDefault();
+                        var amount = $("#amount").val();
+
+
+                        if ($('#BankValidation').is(':visible')) {
+                            debugger
+
+                            var bankName = $("#BankName").val();
+                            var accountNo = $("#AccountNo").val();
+
+
+                            if (bankName != "" && accountNo!="") {
+
+                                $.ajax({
+
+                                    type: "GET",
+
+                                    data: { amount: $("#amount").val(), password: $("#password").val() },
+                                    dataType: "json",
+                                    url: "@Url.Action("Summary", "Payout")",
+                                    contentType: 'application/json; charset=utf-8',
+                                    success: function (data) {
+
+
+                                        $("#GSTAmount").text(data.GSTAmount);
+                                        $("#reqAmount").text(data.RequestedAmount);
+                                        $("#TDSAmount").text(data.TDSAmount);
+                                        $("#totalAmnt").text(data.TotalAmount);
+
+                                        $("#ProcessingAmount").text(data.ProcessingFees);
+
+                                        $("#userAuthDiv").removeClass("active");
+                                        $("#userAuthDiv").removeClass("current");
+                                        $("#bankDetailsDiv").removeClass("active");
+                                        $("#bankDetailsDiv").removeClass("current");
+                                        $("#summaryDiv").addClass("active");
+                                        $("#summaryDiv").addClass("current");
+                                        // $("#BankValidation").toggle().show();
+                                        // step.active, .step.current
+                                        $("#userauthform").hide();
+                                        $("#BankValidation").hide();
+                                        $("#summary").toggle().show();
+
+
+
+                                        //$("#totakAmnt").html(total);
+
+                                    },
+                                    error: function () {
+                                        alert("Error occured!!")
+                                    }
+                                });
+                            }
+                            else {
+
+                                alert("Please Enter Your Bank Details First!!!")
+
+                            }
+
+
+                        }
+
+                        else if ($('#summary').is(':visible')) {
+                            debugger
+                            var gstAmnt = $("#GSTAmount").text();
+                            var reqAmnt = $("#reqAmount").text();
+                            var tdsAmnt = $("#TDSAmount").text();
+                            var totalAmnt = $("#totalAmnt").text();
+                            // var amount = $("#amount").val();
+
+                            $.post('@Url.Action("PayOutRequest", "Payout")', { gstAmount: gstAmnt, requestedAmount: reqAmnt, tdsAmount: tdsAmnt, totalAmount: totalAmnt }, function (data) {
+                                // do something with the return event
+                                alert("Your Request Is Send Succesfuly");
+                            });
+
+
+
+                        }
+                        else {
+                          
+
+                            $.ajax({
+
+                                type: "GET",
+
+                                data: { redeamableAmount: $("#lblRedeamable").text(), password: $("#password").val(), requestAmount: $("#amount").val() },
+                                dataType: "json",
+                                url: "@Url.Action("CheckPassword", "Payout")",
+                                contentType: 'application/json; charset=utf-8',
+                                success: function (data) {
+
+                                    if (data.result != "SecondRequest") {
+
+
+                                        if (data.result != "NotGreater") {
+
+
+                                            if (data.result == 'NotEligible') {
+                                                alert("Sorry You are not Eligible!!")
+                                            }
+                                            else if (data.result == 'matched') {
+                                                $("#userAuthDiv").removeClass("active");
+                                                $("#userAuthDiv").removeClass("current");
+                                                $("#bankDetailsDiv").addClass("active");
+                                                $("#bankDetailsDiv").addClass("current");
+                                                // $("#BankValidation").toggle().show();
+                                                // step.active, .step.current
+                                                $("#userauthform").hide();
+                                                $("#BankValidation").toggle().show();
+
+                                            }
+                                            else {
+                                                alert("Password not passed");
+                                            }
+                                        }
+                                        else {
+                                            alert("Requested Amount Should Be Small Than Redeamable Amount!!");
+                                        }
+                                    }
+                                    else {
+                                        alert("Your Previous Request Is Under Process, Please Try after Previous Request is Completed!!");
+                                    }
+                                    
+                                    
+                                    //if (data =='matched') {
+                                    //    $("#BankValidation").toggle.show();
+
+                                    //}
+                                    //else {
+                                    //    alert("Password not passed");
+                                    //}
+
+                                },
+                                error: function () {
+                                    alert("Error occured!!")
+
+
+                                },
+                                error: function () {
+                                    alert("Error occured!!")
+                                }
+                            });
+                        }
+                    });
+                });
+            });
+        </script>

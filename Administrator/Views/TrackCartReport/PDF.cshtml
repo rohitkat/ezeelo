@@ -1,0 +1,157 @@
+﻿@model IEnumerable<ModelLayer.Models.ViewModel.TrackCartReportViewModel>
+@{
+    ViewBag.Title = "Index";
+}
+
+
+<link href="~/Content/css/Site.css" rel="stylesheet" />
+<script src="~/Content/js/jquery-1.9.1.min.js"></script>
+<script src="~/Content/js/jquery.dataTables.min.js"></script>
+<script src="~/Content/js/bootstrap.min.js"></script>
+<style>
+    .matchdivheight {
+        overflow: scroll;
+        height: 450px;
+    }
+
+    .widget {
+        margin-left: 37px;
+    }
+
+    .widget-content {
+        margin-top: -8px;
+        margin-left: -23px;
+    }
+
+    .btn_print {
+        float: right;
+        margin-top: -56px;
+        margin-right: 395px;
+    }
+
+    .widget-content h4 span {
+        float: right;
+        margin-top: -42px;
+        margin-right: 160px;
+    }
+
+    .dataTables_info {
+        display: none;
+    }
+
+    .dataTables_paginate {
+        display: none;
+    }
+
+    .dataTables_length {
+        display: none;
+    }
+
+    .box-content {
+        z-index: 1 !important;
+    }
+
+    .export a {
+        border: 1px solid #ccc;
+        padding: 4px 12px;
+        background: #486086;
+        color: #fff;
+    }
+
+        .export a:hover {
+            background: #486056;
+            color: #fff;
+            text-decoration: none !important;
+        }
+
+    .bg-box {
+        background: #F5F5F5 !important;
+    }
+
+    .dataTables_filter {
+        float: right;
+    }
+</style>
+<script language="javascript" type="text/javascript">
+    function PrintDivContent(divId) {
+        var printContent = document.getElementById(divId);
+        var WinPrint = window.open('', '', 'left=0,top=0,toolbar=0,sta­tus=0');
+        WinPrint.document.write(printContent.innerHTML);
+        WinPrint.document.close();
+        WinPrint.focus();
+        WinPrint.print();
+    }
+</script>
+
+@{
+    <input value="Print" class="btn btn-primary btn-small" onclick="javascript:PrintDivContent('divToPrint');" />
+    <div class="span10" id="content">
+        <div class="row-fluid">
+            <div class=" box span12 ">
+
+
+                <div class="box-content" id="divToPrint">
+                    <table class="table table-striped table-bordered ">
+                        <thead>
+                            <tr>
+                                <th>
+                                    Sr.No.
+                                </th>
+                                <th>
+                                    Customer Name
+                                </th>
+                                <th>
+                                    @Html.DisplayNameFor(model => model.ProductName)
+                                </th>
+                                <th>
+                                    @Html.DisplayNameFor(model => model.Mobile)
+                                </th>
+                                <th>
+                                    @Html.DisplayNameFor(model => model.Stage)
+                                </th>
+                                <th>
+                                    @Html.DisplayNameFor(model => model.Date)
+                                </th>
+                                <th>
+                                    @Html.DisplayNameFor(model => model.City)
+                                </th>
+
+                            </tr>
+                        </thead>
+                        @{int i = 0;}
+                        @foreach (var item in Model)
+                        {
+                            i++;
+                            <tr>
+                                <td>@i</td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.CustomerName)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.ProductName)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Mobile)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Stage)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Date)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.City)
+                                </td>
+                            </tr>
+                           
+                        }
+                       
+
+                    </table>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+}

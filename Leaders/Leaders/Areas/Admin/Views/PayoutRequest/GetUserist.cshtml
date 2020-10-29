@@ -1,0 +1,85 @@
+﻿@model IEnumerable<ModelLayer.Models.ViewModel.LeadersPayoutRequestViewModel>
+@{
+    ViewBag.Title = "PayoutRequestUserList";
+    Layout = "~/Views/Shared/_LeadersLayout.cshtml";
+}
+
+<div class="container">
+    <div id="progress" class="modal">
+        <div class="center">
+            <img src="~/img/ajax-loading-gif-transparent-background-8.gif" />
+        </div>
+    </div>
+    <div class="card" id="maindiv">
+        <div class="card-header"><strong>User List For Payout Request </strong></div>
+        <div class="card-body card-block">
+
+            @using (Html.BeginForm("", "PayoutRequest"))
+            {
+                <table>
+                    <tr>
+                        <td>
+                            <input type="checkbox" id="chkShowAll" checked /> Show All Users
+                        </td>
+                        <td>
+                            &nbsp;&nbsp;&nbsp;
+                            <input id="btnGo" type="button" value="Go" class="btn btn-info" />
+                        </td>
+                        <td>
+                            &nbsp;&nbsp;&nbsp;
+                            <input id="btnExport" type="button" value="Export" class="btn btn-warning" />
+                        </td>
+                        <td>
+                            &nbsp;&nbsp;&nbsp;
+                            <input id="btnPayout" type="button" value="Send Payout Request" class="btn btn-success" />
+                        </td>
+                    </tr>
+                </table>
+                <div id="PayoutRequestDiv" style="width:1000px;overflow:auto">
+
+                </div>
+            }
+
+        </div>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function () {
+        var AllData = $("#chkShowAll").is(":checked");
+        $("#btnPayout").show();
+        $("#PayoutRequestDiv").load("/Admin/PayoutRequest/GetReport?AllData=" + AllData);
+        $("#btnPayout").hide();
+        $("#btnGo").click(function () {
+            var AllData = $("#chkShowAll").is(":checked");
+            $("#btnPayout").show();
+            $("#PayoutRequestDiv").load("/Admin/PayoutRequest/GetReport?AllData=" + AllData);
+        });
+
+        $("#btnExport").click(function () {
+            var AllData = $("#chkShowAll").is(":checked");
+            window.location = "/admin/PayoutRequest/ExportToExcel?AllData=" + AllData;
+        });
+
+        $("#btnPayout").click(function () {
+            var AllData = $("#chkShowAll").is(":checked");
+            var r = confirm("Coutinue to send Payout request.");
+            if (r == true) {
+                $.ajax({
+                    type: "POST",
+                    dataType: "text",
+                    url: '/PayoutRequest/SendPayoutRequest?AllData=' + AllData,
+                    contentType: "application/json; charset=utf-8",
+                    success: function (data) {
+                        alert(data);
+                        $("#btnPayout").hide();
+                        //window.location.reload();
+                    },
+                    error: function (xhr) {
+
+                    }
+                });
+            }
+        });
+    });
+</script>

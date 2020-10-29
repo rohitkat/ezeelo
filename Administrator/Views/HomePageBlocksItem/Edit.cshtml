@@ -1,0 +1,331 @@
+﻿@model ModelLayer.Models.BlockItemsList
+
+@{
+    ViewBag.Title = "Edit";
+}
+<style>
+    #dvPreview {
+        border: 3px solid#CEC4C4;
+        margin-bottom: 10px;
+    }
+
+    select {
+        width: 221px;
+    }
+    .uploader input {
+        right: 95px !important;
+    }
+    div.uploader span.action {
+        display: inline;
+        padding: 8px 19px;
+        background: #08c;
+        overflow: hidden;
+        cursor: pointer;
+        color: #fff;
+        text-shadow: none;
+        font-size: 14px;
+        line-height: 28px;
+    }
+    .image_span7 {
+        border-left: 2px dashed rgba(0, 136, 204, 0.15);
+        padding-left: 42px;
+        overflow: auto;
+    } 
+</style>
+<div id="content" class="span10">
+    <ul class="breadcrumb">
+        <li>
+            <a href="#">Edit</a>
+        </li>
+    </ul>
+    @using (Html.BeginForm("Edit", "HomePageBlocksItem", FormMethod.Post, new { enctype = "multipart/form-data" }))
+    {
+        @Html.AntiForgeryToken()
+        if (TempData["Messaage"] != null)
+        {
+            <div style="font-weight:bold; color:red;">@TempData["Messaage"]</div>
+        }
+        <div class="row-fluid">
+            <div class="box span12">
+                <div class="box-header">
+                    <h2><i class="icon-edit"></i><span class="break"></span>Home Page Block Item</h2>
+                </div>
+                <div class="box-content">
+                    <div class="span12">
+                    <div class="span5">
+                            <div class="form-horizontal">
+                                
+                                <br />
+                                @Html.ValidationSummary(true)
+                                @Html.HiddenFor(model => model.ID)
+                                <div class="control-group">
+                                    <label class="control-label col-md-2">Select Franchise</label>
+                                    <div class="col-md-10 controls">
+                                        @Html.DropDownList("FranchiseID", null, "Select Franchise", new { @readonly = "readonly", style = "pointer-events:none;" })
+                                        <span id="FranchiseListErro" style="font-weight:bold;color:red;"></span>
+                                    </div>
+                                </div>
+                                <div class="control-group">
+                                    <label class="control-label col-md-2">Select Block Type</label>
+                                    <div class="col-md-10 controls">
+                                        @Html.DropDownList("BlockTypeID", null, "Select Block Type", new { @readonly = "readonly", style = "pointer-events:none;" })
+                                        <span id="BlockTypeErro" style="font-weight:bold;color:red;"></span>
+                                    </div>
+                                </div>
+                                <div class="control-group">
+                                    <label class="control-label col-md-2">Select Start Date</label>
+                                    <div class="col-md-10 controls">
+                                        <input type="text" id="SDate" name="SDate" value="@ViewBag.SDate" class="datepicker" />
+                                        @Html.ValidationMessageFor(model => model.StartDate)
+                                        <span id="SDateErro" style="font-weight:bold;color:red;"></span>
+                                    </div>
+                                </div>
+                                <div class="control-group">
+                                    <label class="control-label col-md-2">Select End Date</label>
+                                    <div class="col-md-10 controls">
+                                        <input type="text" id="EDate" name="EDate" value="@ViewBag.EDate" class="datepicker" />
+                                        @Html.ValidationMessageFor(model => model.EndDate)
+                                        <span id="EDateErro" style="font-weight:bold;color:red;"></span>
+                                    </div>
+                                </div>
+
+                                <span id="DateErro" style="font-weight:bold;color:red;"></span>
+                                <div class="clr"></div>
+
+                                <div class="control-group">
+                                    @Html.LabelFor(model => model.SequenceOrder, new { @class = "control-label col-md-2" })
+                                    <div class="col-md-10 controls">
+                                        @Html.EditorFor(model => model.SequenceOrder)
+                                        @Html.ValidationMessageFor(model => model.SequenceOrder)
+                                        <span id="SequenceOrderErro" style="font-weight:bold;color:red;"></span>
+                                    </div>
+                                </div>
+
+                                <div class="control-group">
+                                    @Html.LabelFor(model => model.LinkUrl, new { @class = "control-label col-md-2" })
+                                    <div class="col-md-10 controls">
+                                        @Html.EditorFor(model => model.LinkUrl)
+                                        @Html.ValidationMessageFor(model => model.LinkUrl)
+                                        <span id="LinkUrlErro" style="font-weight:bold;color:red;"></span>
+                                    </div>
+                                </div>
+                                <div class="control-group">
+                                    @Html.LabelFor(model => model.Tooltip, new { @class = "control-label col-md-2" })
+                                    <div class="col-md-10 controls">
+                                        @Html.EditorFor(model => model.Tooltip)
+                                        <span id="TooltipErro" style="font-weight:bold;color:red;"></span>
+                                    </div>
+                                </div>
+                                <div class="control-group">
+                                    @Html.LabelFor(model => model.IsActive, new { @class = "control-label col-md-2" })
+                                    <div class="col-md-10 controls">
+                                        @Html.EditorFor(model => model.IsActive)
+                                        @Html.ValidationMessageFor(model => model.IsActive)
+                                        <span id="IsActiveErro" style="font-weight:bold;color:red;"></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="span7 image_span7" id="imgDiv" style="height: 450px;">
+                            <input type="file" name="File" id="File" class="pull-right" />
+                            <br /><br /><span id="imgSize" style="color: #777;"></span>
+                            @{string w = @Model.DesignBlockType.ImageWidth.ToString().Trim() + "px";
+                            string h = @Model.DesignBlockType.ImageHeight.ToString().Trim() + "px";}
+                            <div id="dvPreview" style="width:@w; height:@h;">
+                                <img src="@Model.ImageName" onerror="this.src = '../../Content/Images/No_thumbnail.png'" style="width:100%;height:100%;" />
+                            </div>
+                            <div class="clr"></div>
+                        </div>
+
+
+
+                    </div>
+                </div>
+            </div>
+       </div>
+        <div class="form-actions">
+            <div class=" col-md-offset-2 col-md-10" style="text-align:center;">
+                <input type="submit" value="Save" class="btn btn-primary" />
+                @Html.ActionLink("Back to List", "Index", new { FranchiseList = Model.FranchiseID, BlockTypeID=Model.DesignBlockTypeID }, new { @class = "btn btn-default" })
+            </div>
+        </div>
+
+    }
+</div>
+
+<script src="~/Scripts/jquery-1.10.2.min.js"></script>
+<script>
+    var height = 0;
+    var width = 0;
+    $(document).ready(function () {
+
+        $(".btn-primary").click(function () {           //remain validation for image
+            var ErrorCount = 0;
+            var franchise = $("#FranchiseID option:selected").text();
+            var BlockType = $("#BlockTypeID option:selected").text();
+            var startDate = $("#SDate").val();
+            var endDate = $("#EDate").val();
+            var PriorityLevel = $("#SequenceOrder").val();
+            var url = $("#LinkUrl").val();
+            var tooltip = $("#Tooltip").val();
+            var isActive = $("#IsActive option:selected").text();
+
+            if (isActive == 'Not Set') {
+                $('#IsActiveErro').html('Please Select the IsActive');
+                ErrorCount = ErrorCount + 1;
+            }
+            else {
+                $('#IsActiveErro').html('');
+            }
+
+            if (franchise == 'Select Franchise') {
+                $('#FranchiseListErro').html('Please Select Franchise');
+                ErrorCount = ErrorCount + 1;
+            }
+            else {
+                $('#FranchiseListErro').html('');
+            }
+
+            if (BlockType == 'Select Block Type') {
+                $('#BlockTypeErro').html('Please Select Block Type');
+                ErrorCount = ErrorCount + 1;
+            }
+            else {
+                $('#BlockTypeErro').html('');
+            }
+            if (startDate == '') {
+                $('#SDateErro').html('Please Select Start Date');
+                ErrorCount = ErrorCount + 1;
+            }
+            else {
+                $('#SDateErro').html('');
+            }
+            if (endDate == '') {
+                $("#EDateErro").html('Please Select End Date');
+                ErrorCount = ErrorCount + 1;
+            }
+            else {
+                $("#EDateErro").html('');
+            }
+            if (PriorityLevel == '') {
+                $('#SequenceOrderErro').html('Please Select Sequence Order or Set to Zero (0)');
+                ErrorCount = ErrorCount + 1;
+            }
+            else {
+                $('#SequenceOrderErro').html('');
+            }
+            if (url == '') {
+                $('#LinkUrlErro').html('Please Enter Link Url or Set to #');
+                ErrorCount = ErrorCount + 1;
+            }
+            else {
+                $('#LinkUrlErro').html('');
+            }
+            if (tooltip == '') {
+                $('#TooltipErro').html('Please Enter Tooltip');
+                ErrorCount = ErrorCount + 1;
+            }
+            else {
+                $('#TooltipErro').html('');
+            }
+
+
+            if (startDate != '' && endDate != '') {
+
+                var sdate = startDate.split("/");   //date present in dd/MM/yyyy format
+                var edate = endDate.split("/");    //date present in dd/MM/yyyy format
+
+                if (new Date(sdate[2], sdate[1], sdate[0]) > new Date(edate[2], edate[1], edate[0])) {     //date in yyyy mm dd format
+                    $("#DateErro").html('Please Select Start Date Less than End Date');
+                    ErrorCount = ErrorCount + 1;
+                }
+                else {
+                    $("#DateErro").html('');
+                }
+            }
+
+            if (ErrorCount > 0) {
+                return false;
+            }
+        });
+
+
+        $("#BlockTypeID").change(function () {
+            /* Get the selected value of dropdownlist */
+            var selectedID = $(this).val();
+            /*Processing Image*/
+            $("#pageloaddiv").css('display', 'block');
+            $("#pageloaddiv").fadeOut(1000);
+
+            $.ajax({
+                type: "POST",
+                url: "/HomePageBlocksItem/GetBlockDetails?BlockTypeID=" + selectedID,
+                dataType: "json",
+                async: true,
+                cache: false,
+                success: function (data) {
+
+                    height = data.ImageHeight;
+                    width = data.ImageWidth;
+                    $("#imgSize").html("Please Select Image with Size " + width + "x" + height + " px");
+                    $("#dvPreview").css("height", height);
+                    $("#dvPreview").css("width", width);
+                    $("#imgDiv").css('display', 'block');
+                    $("#pageloaddiv").css('display', 'none');
+                    $("#pageloaddiv").fadeOut(1000);
+                },
+                error: function (x, e) {
+                    // alert("Sorry No Such Type of Block Type Is available. ");
+                    $("#imgDiv").css('display', 'none');
+                    $("#pageloaddiv").css('display', 'none');
+                    $("#pageloaddiv").fadeOut(1000);
+                }
+            });
+        });
+
+    });
+
+
+
+    window.onload = function () {
+
+        var Files = document.getElementById("File");
+        Files.onchange = function () {
+            if (typeof (FileReader) != "undefined") {
+                var dvPreview = document.getElementById("dvPreview");
+                dvPreview.innerHTML = "";
+                var regex = /^([a-zA-Z0-9\s_\\.\-:])+(.jpg|.jpeg|.gif|.png|.JPG|.JPEG|.GIF|.PNG)$/;
+                for (var i = 0; i < Files.files.length; i++) {
+                    var file = Files.files[i];
+
+                    if (file.size / 1024 <= 100) {
+
+                        if (regex.test(file.name.toLowerCase())) {
+                            var reader = new FileReader();
+                            reader.onload = function (e) {
+                                var img = document.createElement("IMG");
+                                $(img).css("height", "100%");
+                                $(img).css("width", "100%");
+                                img.src = e.target.result;
+                                dvPreview.appendChild(img);
+                                //$('#img_upload'.hide());
+                            }
+                            reader.readAsDataURL(file);
+                        } else {
+                            alert(file.name + " is not a valid image file.");
+                            dvPreview.innerHTML = "";
+                            return false;
+                        }
+                    }
+                    else {
+                        alert(file.name + " is too large image to upload.");
+                        dvPreview.innerHTML = "";
+                        return false;
+                    }
+                }
+            } else {
+                alert("This browser does not support HTML5 FileReader.");
+            }
+        }
+    };
+</script>

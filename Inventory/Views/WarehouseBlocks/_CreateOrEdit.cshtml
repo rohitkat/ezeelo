@@ -1,0 +1,373 @@
+@model ModelLayer.Models.ViewModel.WarehouseBlockViewModel
+ @using ModelLayer.Models.ViewModel;
+
+@* This partial view defines form fields that will appear when creating and editing entities *@
+<style>
+    #msform1 fieldset:not(:first-of-type) {
+        display: none;
+    }
+
+    .field-validation-error {
+        color: #000000 !important;
+    }
+
+    .succes-msg {
+        color: #31A012;
+        font-size: 20px;
+    }
+
+    .beatpicker-clearButton button {
+        display: none;
+    }
+
+    .input-parent button {
+        display: none;
+    }
+
+    .textarea-adjust {
+        width: 85%;
+    }
+    /*Beatpicker Css*/
+    .beatpicker-clearButton button {
+        display: none;
+    }
+
+    .input-parent button {
+        display: none;
+    }
+
+    .header-navbar-button {
+        position: absolute !important;
+    }
+
+    .beatpicker .main-nav .current-indicator {
+        text-align: center !important;
+    }
+
+    .beatpicker .main-nav .prev1 {
+        left: 0 !important;
+        width: 14%;
+        padding: 0px 10px;
+        color: #fff;
+        font-size: 16px;
+    }
+
+    .beatpicker .main-nav .next1 {
+        right: 0 !important;
+        width: 9%;
+        color: #fff;
+        font-size: 16px;
+    }
+
+    .beatpicker .main-nav .prev1:hover {
+        left: 0 !important;
+        width: 14%;
+        padding: 0px 10px;
+        color: #fff;
+        font-size: 20px;
+        cursor: pointer !important;
+    }
+
+    .beatpicker .main-nav .next1:hover {
+        right: 0 !important;
+        width: 9%;
+        color: #fff;
+        font-size: 20px;
+        cursor: pointer !important;
+    }
+    /*Beatpicker Css End*/
+</style>
+<link href="~/Content/css/BeatPicker.min.css" rel="stylesheet" />
+<script src="~/Content/js/jquery-1.11.0.min.js"></script>
+<script src="~/Content/js/BeatPicker.js"></script>
+<link href="~/Content/assets/css/style.css" rel="stylesheet" />
+<script src="~/Content/js/jquery-1.9.1.min.js"></script>
+@*<script src="~/Content/js/jquery.easing.min.js"></script>*@
+<link href="http://www.jqueryscript.net/css/jquerysctipttop.css" rel="stylesheet" type="text/css">
+<link href="~/Content/assets/css/form-design.css" rel="stylesheet" />
+
+<div class="row-fluid">
+    <div class="box span12">
+        <div class="box-header creatProduct clearfix" data-original-title="">
+            <h2>
+                <i class="icon-exclamation-sign"></i>
+                <span class="break"></span>
+                BLOCK/SECTION CREATION
+            </h2>
+        </div>
+        <div class="box-content nameDscrp">
+            <div class="form-horizontal">
+                <div class="control-group mrg-btm">
+                    <div class="NameDescription">
+                        <div class="control-group mrg-left">
+                            <div class="editor-label">
+                                Warehouse Zone <span style="color:red">*</span>
+                            </div>
+                            <div class="editor-field">
+                                @Html.DropDownListFor(model => model.WarehouseZoneID, ((IEnumerable<ModelLayer.Models.WarehouseZone>)ViewBag.PossibleWarehouseZones).Select(option => new SelectListItem
+{
+    Text = (option == null ? "None" : option.Name),
+    Value = option.ID.ToString(),
+    Selected = (Model != null) && (option.ID == Model.WarehouseZoneID)
+}), "Select Zone")
+                                @Html.ValidationMessageFor(model => model.WarehouseZoneID)
+                            </div>
+                        </div>
+
+                        <div class="control-group mrg-left">
+                            <div class="editor-label">
+                                Block Name <span style="color:red">*</span>
+                            </div>
+                            <div class="editor-field">
+                                @Html.TextBoxFor(model => model.Name, new { id = "Name", disabled = "disabled" })
+                                @Html.HiddenFor(model => model.Name, new { id = "hdnName" })
+                                @Html.ValidationMessageFor(model => model.Name)
+                            </div>
+                        </div>
+
+                        <div class="control-group mrg-left">
+                            <div class="editor-label">
+                                Height (ft)
+                            </div>
+                            <div class="editor-field">
+                                @Html.TextBoxFor(model => model.Height, new { placeholder = "Enter Height" })
+                                @Html.ValidationMessageFor(model => model.Height)
+                            </div>
+                        </div>
+
+                        <div class="control-group mrg-left">
+                            <div class="editor-label">
+                                Length (ft)
+                            </div>
+                            <div class="editor-field">
+                                @Html.TextBoxFor(model => model.Length, new { placeholder = "Enter Length" })
+                                @Html.ValidationMessageFor(model => model.Length)
+                            </div>
+                        </div>
+
+                        <div class="control-group mrg-left">
+                            <div class="editor-label">
+                                Width (ft)
+                            </div>
+                            <div class="editor-field">
+                                @Html.TextBoxFor(model => model.Width, new { placeholder = "Enter Width" })
+                                @Html.ValidationMessageFor(model => model.Width)
+                            </div>
+                        </div>
+
+                        <div class="control-group mrg-left">
+                            <div class="editor-label">
+                                Weight (kg)
+                            </div>
+                            <div class="editor-field">
+                                @Html.TextBoxFor(model => model.Weight, new { placeholder = "Enter Weight" })
+                                @Html.ValidationMessageFor(model => model.Weight)
+                            </div>
+                        </div>
+
+                        <div class="control-group mrg-left" style="display:none">
+                            <div class="editor-label">
+                                Rows/Levels (1 to 40)
+                            </div>
+                            <div class="editor-field">
+                                @Html.TextBoxFor(model => model.Rows, @Model.Rows.ToString(), new { id = "Row", onkeyup = "myFunction()" })
+                                @Html.ValidationMessageFor(model => model.Rows)
+                            </div>
+                        </div>
+
+                        <div class="clr"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="box">
+        <div class="box-header creatProduct clearfix" data-original-title="">
+            <h2>
+                <i class="icon-file-alt"></i>
+                <span class="break"></span>
+                LEVEL ENTRY
+            </h2>
+        </div>
+        <div class="box-content nameDscrp">
+            <div class="NameDescription">
+                <div class="control-group mrg-left">
+                    <div class="editor-label">
+                        Row/Level <span style="color:red">*</span>
+                    </div>
+                    <div class="editor-field">
+                        @Html.TextBoxFor(model => model.LevelName, new { disabled = "disabled" })
+                        @Html.HiddenFor(model => model.LevelName)
+                        @Html.HiddenFor(model => model.AlphabeteID)
+                    </div>
+                </div>
+
+                <div class="control-group mrg-left">
+                    <div class="editor-label">
+                      Enter Columns <span style="color:red">*</span>
+                    </div>
+                    <div class="editor-field">
+                        @Html.TextBoxFor(model => model.Columns)                       
+                    </div>
+                </div>
+
+                <div class="control-group mrg-left">
+                    <div class="editor-label">
+
+                    </div>
+                    <div class="editor-field">
+                        <input type="button" class="itemList btn btn-info" value="Add Row/Level" />
+                    </div>
+                </div>
+                <div class="clr"></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="box">
+        
+        <div class="box-content nameDscrp">
+            <div class="NameDescription">
+                <div class="box-content box-content1" style="padding-left:0px;width:99%;overflow-x:scroll;z-index:1;">
+                    <div id="BlockLevels">
+                        @if (Session["BlockLevels"] != null)
+                        {
+                            List<WarehouseBlockLevelViewModel> objList = (List<WarehouseBlockLevelViewModel>)Session["BlockLevels"];
+                            @Html.Partial("BlockLevels", objList);
+                        }
+                        else
+                        {
+                            @Html.Partial("BlockLevels", new List<WarehouseBlockLevelViewModel>());
+                        }
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+        <script type="text/javascript">
+
+            $(document).ready(function () {
+                //Disable zone selection when any level has added
+                var table = document.getElementById('tbl');
+                var rowLength = table.rows.length;
+               
+                if (rowLength > 1) {
+                    $("#WarehouseZoneID").attr("disabled", true);
+                } else {
+                    $("#WarehouseZoneID").attr("disabled", false);
+                }
+            });
+
+
+            //To Get next Block number
+            $("#WarehouseZoneID").bind('change', function () {
+                var WarehouseZoneID = $("#WarehouseZoneID option:selected").val();
+                $.ajax({
+                    type: "POST",
+                    url: '@Url.Action("GetNextBlock", "WarehouseBlocks")',
+                    data: { 'WarehouseZoneID': WarehouseZoneID },
+                    cache: false,
+                    success: function (data, status) {
+                        $("#Name").val(data);
+                        $("#hdnName").val(data);
+                        $("#Row").focus();
+                    },
+                    error: function (x, e) {
+                        alet('error')
+                    }
+                });
+            });
+        </script>
+
+<script type="text/javascript">
+    $(".itemList").click(function (evt) {
+
+        var AlphabeteID = $("#AlphabeteID").val();       
+        var LevelName = $("#LevelName").val();
+        var Columns = $("#Columns").val();
+        var WarehouseZoneId = $("#WarehouseZoneID option:selected").val();
+        var BlockName = $("#Name").val();
+
+        if (WarehouseZoneId == 0 || BlockName == "")
+        {
+            alert("Please select Zone.")
+            return;
+        }
+       
+        if (Columns === undefined || Columns <= 0) {
+            alert('Column can not be 0')
+            $("#Columns").val(1);
+            return;
+        }                
+
+        $.ajax({
+            type: "POST",
+            url: '@Url.Action("AddLevel", "WarehouseBlocks")',
+            data: { 'AlphabeteID': AlphabeteID, 'LevelName': LevelName, 'Columns': Columns, "WarehouseZoneId": WarehouseZoneId, "BlockName": BlockName },
+            //dataType: "json",
+            cache: false,
+            success: function (data) {
+                $("#BlockLevels").html(data);
+                $.ajax({
+                    type: "POST",
+                    url: '@Url.Action("GetNextAlphabete", "WarehouseBlocks")',
+                    data: { 'AlphabeteID': AlphabeteID },
+                    //dataType: "json",
+                    cache: false,
+                    success: function (data) {
+                        $("#AlphabeteID").val(data.AlphabeteID);
+                        $("#LevelName").val(data.LevelName);
+                        $("#Columns").val(data.Columns);
+
+                        //Disable zone selection when any level has added
+                        var table = document.getElementById('tbl');
+                        var rowLength = table.rows.length;
+                      
+                        if (rowLength > 1) {
+                            $("#WarehouseZoneID").attr("disabled", true);
+                        } else {
+                            $("#WarehouseZoneID").attr("disabled", false);
+                        }
+                    },
+                    error: function (x, e) {
+
+                    }
+                });
+            },
+            error: function (x, e) {
+
+            }
+        });
+
+        //$("#BlockLevels").load("/WarehouseBlocks/AddLevel", { 'AlphabeteID': AlphabeteID, 'LevelName': LevelName, 'Columns': Columns });
+    
+       
+        
+
+        });
+</script>
+
+        <script>
+            function myFunction() {
+                var x, text;
+                // Get the value of the input field with id="numb"
+                x = document.getElementById("Row").value;
+
+                // If x is Not a Number or less than one or greater than 10
+                if (isNaN(x)) {
+                    alert('Invalid Number ' + x)
+                    document.getElementById("Row").value = 1;
+                }
+                else {
+                    if (x < 1 || x > 100) {
+                        alert('Level is out of range ' + x)
+                        document.getElementById("Row").value = 1;
+                    }
+                }
+            }
+        </script>

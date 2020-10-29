@@ -1,0 +1,80 @@
+﻿@model ModelLayer.Models.ViewModel.CategoryWiseOffersViewModel
+
+
+<script src="~/Scripts/Offers.js"></script>
+<script src="~/Scripts/Offers.js"></script>
+<style>
+    .imgcatdeco {
+        box-shadow: 0 3px 14px 0 rgb(168, 207, 69),0 5px 24px 0 rgba(168, 207, 69, 0.41);
+        border: 3px solid #81A030;
+    }
+
+    .imgcat1 {
+        width: 100%;
+        height: 100px;
+        padding-top: 10px;
+        cursor: pointer;
+    }
+
+    .divli {
+        padding: 5px;
+    }
+
+    .newhr {
+        margin-top: 10px;
+        margin-bottom: 15px;
+        background-color: #eaeaea !important;
+        width: 70%;
+        margin: auto;
+    }
+
+    .newhr_active {
+        margin-top: 10px;
+        margin-bottom: 15px;
+        background-color: #A8CF45 !important;
+        width: 60%;
+        margin: auto;
+    }
+
+    #category ul li {
+        margin-left: 0;
+    }
+
+        #category ul li:hover {
+            border: 1px solid #ccc;
+        }
+</style>
+<div class="row" id="divMain">
+    <div>
+        <ul id="ulProduct1" style="list-style-type:none;margin-left:0px;">
+
+            @for (var i = 0; i < Model.CatList.Count(); i++)
+            {
+                <li class="col-xs-6 col-sm-3 col-md-2">
+                    <a onclick="GetOfferProductsByCategory('1',@Model.CatList[i].FirstLevelCatID)">
+                        <div class="product product-sm-left ">
+                            <div class="product-img-wrap" style="width: 100%; cursor: pointer;">
+                                <img src="@Url.Content(string.IsNullOrEmpty(Model.CatList[i].ImagePath) ? "/Content/Images/no_image.png" : @Model.CatList[i].ImagePath)" class="" />
+                                <h5 class="product-caption-title">@Html.DisplayFor(it => it.CatList[i].FirstLevelCatName)</h5>
+                                @*<img class="" src="img/test_product/woman_running_shoes/2.jpg" alt="Image Alternative text" title="Image Title">*@
+                            </div>
+                        </div>
+                    </a>
+                </li>
+            }
+        </ul>
+    </div>
+    <div class="gap"></div>
+</div>
+<script>
+    $(window).load(function () {
+        $(".imgcat1:first").addClass('imgcatdeco');
+    });
+</script>
+<script>
+    var addclass = 'imgcatdeco';
+    var $cols = $('.imgcat1').click(function (e) {
+        $cols.removeClass(addclass);
+        $(this).addClass(addclass);
+    });
+</script>

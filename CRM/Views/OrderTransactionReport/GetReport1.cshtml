@@ -1,0 +1,359 @@
+﻿@model IEnumerable<ModelLayer.Models.ViewModel.OrderTransactionReportViewModel>
+
+@{
+    ViewBag.Title = "GetReport";
+}
+<script src="~/Content/js/jquery-1.9.1.min.js"></script>
+
+
+@*<script src="~/Scripts/jquery-1.10.2.min.js"></script>
+    <link href="~/Content/css/datepicker.css" rel="stylesheet" />
+    <script src="~/Content/js/jquery-ui-1.10.0.custom.min.js"></script>
+    <link href="~/Content/css/jquery-ui-1.8.21.custom.css" rel="stylesheet" />*@
+
+<style>
+    .ClaimAmtList table {
+        border-collapse: separate;
+        width: 800px;
+        max-width: 800px;
+        overflow-x: scroll;
+        display: block;
+    }
+
+    .ClaimAmtList thead, .ClaimAmtList tfoot {
+        background-color: #EFEFEF;
+    }
+
+    .ClaimAmtList thead, .ClaimAmtList tbody, .ClaimAmtList tfoot {
+        display: block;
+    }
+
+    .ClaimAmtList tbody {
+        overflow-y: scroll;
+        overflow-x: auto;
+        max-height: 350px;
+    }
+
+    .ClaimAmtList td, .ClaimAmtList th {
+        padding: 5px;
+        min-width: 80px;
+        height: 25px;
+        border: inset 1px lightblue;
+        /*overflow: hidden;*/
+        text-overflow: ellipsis;
+        max-width: 80px;
+        /*word-break: break-all;*/
+        text-align: center;
+    }
+</style>
+
+<script src="~/Content/js/jquery-ui-1.10.0.custom.min.js"></script>
+<script src="~/Content/js/priti.js"></script>
+<link href="~/Content/css/datepicker.css" rel="stylesheet" />
+<link href="~/Content/css/jquery-ui-1.8.21.custom.css" rel="stylesheet" />
+
+
+
+
+@*<link href="~/Content/css/bootstrap-datetimepicker.min.css" rel="stylesheet" />
+    <link href="~/Content/css/bootstrap-datetimepicker.css" rel="stylesheet" />
+    <link href="~/Content/assets/css/font-awesome.min.css" rel="stylesheet" />
+    <link href="~/Content/assets/css/form-design.css" rel="stylesheet" />*@
+
+
+
+
+
+<div class="row-fluid">
+    @using (Html.BeginForm("Index", "OrderTransactionReport", new { enctype = "multipart/form-data" }, FormMethod.Post, new { id = "Form_" }))
+    {
+        @Html.ValidationSummary(true)
+
+        <div class="box span12">
+            <div class="box-header creatProduct clearfix">
+                <h2>
+                    <i class="icon-list-alt"></i>
+                    <span class="break"></span>
+                    FV Account Report
+                </h2>
+            </div>
+            <div class="box-content nameDscrp">
+                <div class="form-horizontal">
+                    <div class="NameDescription">
+                        <div class="control-group mrg-left">
+
+
+                        </div>
+
+                        @*<div class="control-group mrg-left">
+                                <div class="col-sm-3">
+                                    From Date
+                                </div>
+                                <div class="col-sm-6">
+
+                                    @Html.TextBoxFor(model => model.FromDate, new { @readonly = "readonly", @required = "required" })
+                                    @Html.HiddenFor(model => model.FromDate)
+                                </div>
+                            </div>
+                            <div class="control-group mrg-left">
+                                <div class="col-sm-3">
+                                    To Date
+                                </div>
+                                <div class="col-sm-6">
+
+                                    @Html.TextBoxFor(model => model.ToDate, new { @readonly = "readonly", @required = "required" })
+                                    @Html.HiddenFor(model => model.ToDate)
+                                </div>
+                            </div>*@
+
+                        <div class="control-group mrg-left">
+                            <div class="col-sm-3">
+                                Export In
+                            </div>
+                            <div class="col-sm-6">
+                                @Html.DropDownList("ExportOption", new List<SelectListItem>
+                         {
+                                 new SelectListItem{ Text="Excel", Value = "1" },
+                                 new SelectListItem{ Text="Csv", Value = "2" },
+                                 new SelectListItem{ Text="Pdf", Value = "3" }
+                        })
+                            </div>
+                        </div>
+                        <div class="clr"></div>
+                        <button value="Search" type="submit" class="btnRemove btn btn-warning">Search</button>
+                        <a id="Print" class="print btn btn-default" href="@Url.Action("Index", "FVPatnerAccounts")" target="_blank">Print</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+
+    <center>  <button id="Export" value="Export" type="submit" class="btn btn-success">Export</button>  </center>
+
+
+
+
+
+    <div class="box">
+        <div class="box-content">
+            <div class="NameDescription">
+                <div style="overflow-x: scroll; overflow-y: scroll; width:1150px; height: 500px; background: #ffffff; " id="divToPrint">
+                    <table id="headerTable" class="ClaimAmtList" border="1" cellpadding="2" cellspacing="0">
+                        <thead>
+                            <tr><td style="text-align:center" colspan="12"><h2>FV Account Report </h2></td></tr>
+                        <thead>
+                            <tr>
+                                <th>
+                                    Order Code
+                                </th>
+                                <th>
+                                    Shop Name
+                                </th>
+                                <th>
+                                    Order Amt
+                                </th>
+                                <th>
+                                    Name
+                                </th>
+                                <th>
+                                    Email
+                                </th>
+                                <th>
+                                    Primary Mobile
+                                </th>
+
+                                <th>
+                                    Pincode
+                                </th>
+                                <th>
+                                    Shipping Add
+                                </th>
+                                <th>
+                                    City
+                                </th>
+
+
+                                <th>
+                                    Order Placed Dt
+                                </th>
+
+                            </tr>
+                        </thead>
+                        </tr>
+
+                        <tbody>
+                            @{
+                                var i = 1;
+                            }
+                            @*@foreach (var item in Model)*@
+
+                            @foreach (var item in Model)
+                            {
+                                <tr>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.OrderCode)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.ShopName)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.OrderAmount)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.Customer)
+                                    </td>
+
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.RegEmail)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.RegMobile)
+                                    </td>
+
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.Pincode)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.ShippingAddress)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.City)
+                                    </td>
+
+                                    <td width="9%">
+                                        @{string lDate = "";}
+                                        @if (item.CreateDate != null)
+                                        {
+                                            lDate = item.CreateDate.ToString("dd/MM/yyyy");
+                                        }
+                                        @lDate
+                                    </td>
+
+                                </tr>
+
+
+
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        $(document).ready(function () {
+            $("#ToDate").datepicker({
+                dateFormat: 'dd/mm/yy',//check change
+                changeMonth: true,
+                changeYear: true
+            });
+            $("#FromDate").datepicker({
+                dateFormat: 'dd/mm/yy',//check change
+                changeMonth: true,
+                changeYear: true
+            });
+
+            //$("#FromDate").val(twoDigitDate + "/" + twoDigitMonth + "/" + (fullDate.getFullYear() - 1) + ", " + hour + ":" + minute + " " + ampm);
+            //$("#ToDate").val(twoDigitDate + "/" + twoDigitMonth + "/" + fullDate.getFullYear() + ", " + hour + ":" + minute + " " + ampm);
+
+            //var toDate = $('#txtToDate').val();
+            //var fromDate = $('#txtFromDate').val();
+
+            $("#Export").on('click', function () {
+
+                var print = 0;
+                var option = 0;
+                var supplierID = 0
+
+                //if ($("select#SupplierID option:selected").val() > 0) {
+                //    supplierID = $("select#SupplierID option:selected").val();
+                //}
+
+                //if ($("select#ExportOption option:selected").val() > 0) {
+                //    option = $("select#ExportOption option:selected").val();
+                //}
+                var toDate = $('#ToDate').val();
+                var fromDate = $('#FromDate').val();
+
+                window.location.href = "/OrderTransactionReport/Export?&FromDate=" + fromDate + "&ToDate=" + toDate + "&option=" + option;
+
+            });
+        });
+
+    </script>
+    <div id="Pager" style="margin-top:-65px;">
+        <div class="wrap">
+            <div id="slider1" class="slider">
+                <ul>
+                    @for (int c = 1; c <= @ViewBag.TotalPages; c++)
+                    {
+                        <li><a class="page-number" href="javascript:void();">@c</a></li>
+
+                    }
+
+                </ul>
+
+            </div>
+
+            <div class="controls" style="margin-top:-27px;">
+                <a href="#noname" class="prev-slide"><<</a>
+                <a href="#noname" class="next-slide" style="float: right; margin-right: 299px;">>></a>
+            </div>
+        </div>
+        <span class="totalcount"><b>Showing @ViewBag.PageSize of @ViewBag.TotalCount enteries</b></span>
+    </div>
+
+    <div class="loader">
+        <img id="loader_img" src="~/Content/img/loader.gif" style="display: none" />
+    </div>
+    <script>
+    $(document).ready(function () {
+        $("#Pager .page-number").click(function (e) {
+            //alert($(this).html());
+            $('#loader_img').show();
+            //alert($(this).html());
+            var pagecount = 0;
+            var page = parseInt($(this).html());
+            if (page > 1) {
+                pagecount = 1;
+            }
+            var fromDate = "@ViewBag.fromDate";
+            var toDate = "@ViewBag.toDate";
+            var merchantID = "@ViewBag.merchantID";
+
+            var shopID = "@ViewBag.CityID";
+            var CityID=
+           // alert(shopID).value;
+            alert(shopID);
+            $.ajax({
+                url: '@Url.Action("GetReport1", "OrderTransactionReport")',
+                data: { 'page': page, 'pagecount': pagecount, 'fromDate': fromDate, 'toDate': toDate, 'shopID': shopID },
+                type: "POST",
+                cache: false,
+                success: function (data) {
+                    //alert(data);
+                    $('#loader_img').hide();
+                    $('#divReport').empty();
+                    $('#divReport').append(data);
+
+                },
+                error: function (data) {
+
+                }
+            });
+        });
+    });
+
+    </script>
+    <script src="~/Content/js/lemmon-slider.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            //alert('OK');
+            // slider 1
+            $('#slider1').lemmonSlider({
+                infinite: false
+            });
+
+        });
+
+    </script>

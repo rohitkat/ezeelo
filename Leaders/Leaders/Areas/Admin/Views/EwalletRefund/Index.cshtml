@@ -1,0 +1,363 @@
+﻿@model ModelLayer.Models.ViewModel.EwalletRefundvm
+
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_LeadersLayout.cshtml";
+}
+
+@*<h2>Index</h2>*@
+
+@*<p>
+        @Html.ActionLink("Create New", "Create")
+    </p>*@
+
+<style>
+    #divSpecification {
+        background: #EEE;
+        border: 1px solid #E4E5E6;
+        padding: 5px 3px;
+        min-height: 145px;
+    }
+
+    .ui-widget-header {
+        border: 0px !important;
+        background: #fff;
+    }
+
+    #myTable_filter {
+        margin-top: 20px !important;
+    }
+
+    th, td {
+        white-space: nowrap;
+    }
+
+    div.dataTables_wrapper {
+        width: 1200px;
+        margin: 0 auto;
+    }
+
+    .DTFC_LeftBodyLiner {
+        background-color: antiquewhite;
+        height: auto !important;
+    }
+    .dataTables_scrollBody{
+        height:auto !important;
+    }
+    /*table tr th {
+            background: rgba(0,0,0,.3) !important;
+        }*/
+</style>
+<script src="~/Content/js/jquery-1.9.1.min.js"></script>
+<script src="~/Content/js/jquery.dataTables.min.js"></script>
+<script src="~/Content/js/bootstrap.min.js"></script>
+
+
+<link href="//cdn.datatables.net/1.10.19/css/jquery.dataTables.min.css" rel="stylesheet" />
+<link href="//cdn.datatables.net/fixedcolumns/3.2.6/css/fixedColumns.dataTables.min.css" rel="stylesheet" />
+<script src="//cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
+<script src="//cdn.datatables.net/fixedcolumns/3.2.6/js/dataTables.fixedColumns.min.js"></script>
+
+
+<script type="text/javascript">
+    $(document).ready(function () {
+
+        $("#myTable").DataTable({
+            //"order": [[16, "desc"]],
+            scrollY: 300,
+            scrollX: true,
+            scrollCollapse: false,
+            paging: true,
+            //fixedColumns: true
+            fixedColumns: {
+                leftColumns: 3
+            }
+        });
+
+        // $("#myTable").DataTable();
+    });
+</script>
+<span id="ProdErro" style="font-weight:bold;color:red;"></span>
+<table class="table table-striped table-bordered dt-responsive nowrap" id="myTable" cellspacing="0">
+    <thead>
+        <tr>
+            <th>
+                Name
+            </th>
+            <th>
+                Email
+            </th>
+            <th>
+                Mobile
+            </th>
+            <th>
+                Order No
+            </th>
+            @*<th>
+                UserLoginId
+            </th>
+            <th>
+                CustomerOrderId
+            </th>*@
+            <th>
+                RequsetAmt
+            </th>
+            <th>
+                RefundAmt
+            </th>
+
+            <th>
+                Date
+            </th>
+
+            <th>
+                Status
+            </th>
+
+            <th>
+                Comment
+            </th>
+            <th>
+                Accept/Decline
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+
+        @for (int i = 0; i < Model.ewallets.Count(); i++)
+        {
+
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => modelItem.ewallets[i].Name)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => modelItem.ewallets[i].Email)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => modelItem.ewallets[i].Mobile)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => modelItem.ewallets[i].OrderCode)
+                </td>
+                @*<td>
+                    @Html.DisplayFor(modelItem => modelItem.ewallets[i].UserLoginId)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => modelItem.ewallets[i].CustomerOrderId)
+                </td>*@
+                <td>
+                    @Html.DisplayFor(modelItem => modelItem.ewallets[i].RequsetAmt)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => modelItem.ewallets[i].RefundAmt)
+                </td>
+
+                <td>
+                    @Html.DisplayFor(modelItem => modelItem.ewallets[i].Date)
+                </td>
+
+                <td>
+                    @Html.DisplayFor(modelItem => modelItem.ewallets[i].ReturnStatus)
+                </td>
+
+                <td>
+                    @Html.DisplayFor(modelItem => modelItem.ewallets[i].Comment)
+                </td>
+                <td>
+                    @*@Html.ActionLink("Accept", "Approval", new { id = Model.ewallets[i].UserLoginId, status = 1, Rid = Model.ewallets[i].ID, Refundamount = Model.ewallets[i].RefundAmt, comment = Model.ewallets[i].Comment }, new { @class = "btn " }) |
+        @Html.ActionLink("Cancel", "Approval", new { id = Model.ewallets[i].UserLoginId, status = 2, Rid = Model.ewallets[i].ID }, new { @class = "btn " })*@
+                    @Html.ActionLink("Accept", "Approval", new { id = Model.ewallets[i].ID }) |
+                    @Html.ActionLink("Cancel", "Decline", new { id = Model.ewallets[i].ID })
+
+                </td>
+            </tr>
+
+        }
+    </tbody>
+</table>
+
+
+
+@*<table class="table table-striped table-bordered dt-responsive nowrap" id="myTable" cellspacing="0">
+    <tr>
+        <th>
+            Name
+        </th>
+        <th>
+            Email
+        </th>
+        <th>
+            Mobile
+        </th>
+        <th>
+            Order No
+        </th>
+        <th>
+            UserLoginId
+        </th>
+        <th>
+            CustomerOrderId
+        </th>
+        <th>
+            RequsetAmt
+        </th>
+        <th>
+            RefundAmt
+        </th>
+
+        <th>
+            Date
+        </th>
+
+        <th>
+            Status
+        </th>
+
+        <th>
+            Comment
+        </th>
+        <th>
+            Accept/Decline
+        </th>
+    </tr>
+
+
+
+    @for (int i = 0; i < Model.ewallets.Count(); i++)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => modelItem.ewallets[i].Name)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => modelItem.ewallets[i].Email)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => modelItem.ewallets[i].Mobile)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => modelItem.ewallets[i].OrderCode)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => modelItem.ewallets[i].UserLoginId)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => modelItem.ewallets[i].CustomerOrderId)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => modelItem.ewallets[i].RequsetAmt)
+            </td>
+            <td>
+                @Html.EditorFor(modelItem => modelItem.ewallets[i].RefundAmt, new { onblur = "myFunc()" })
+            </td>
+
+            <td>
+                @Html.DisplayFor(modelItem => modelItem.ewallets[i].Date)
+            </td>
+
+            <td>
+                @Html.DisplayFor(modelItem => modelItem.ewallets[i].ReturnStatus)
+            </td>
+
+            <td>
+                @Html.EditorFor(modelItem => modelItem.ewallets[i].Comment, new { @class = "date" })
+            </td>
+            <td>
+                @Html.ActionLink("Accept", "Approval", new { id = Model.ewallets[i].UserLoginId, status = 1, Rid = Model.ewallets[i].ID, Refundamount = Model.ewallets[i].RefundAmt, comment = Model.ewallets[i].Comment }, new { @class = "btn " }) |
+                @Html.ActionLink("Cancel", "Approval", new { id = Model.ewallets[i].UserLoginId, status = 2, Rid = Model.ewallets[i].ID }, new { @class = "btn " })
+
+            </td>
+        </tr>
+    }
+
+</table>*@
+
+
+
+
+
+@*<script>
+
+        //function myFunc() {
+        //    debugger
+        //    var txt;
+        //    var person = prompt();
+        //    if (person == null || person == "") {
+        //        txt = "";
+        //    } else {
+        //        txt = person;
+        //    }
+        //    //$("#item.ID").innerHTML = txt;
+        //}
+
+        //$(".poptextbox").blur(function () {
+        //    var txt;
+        //    var person = prompt("Please enter your name:", "Harry Potter");
+        //    if (person == null || person == "") {
+        //        txt = "User cancelled the prompt.";
+        //    } else {
+        //        txt = "Hello " + person + "! How are you today?";
+        //    }
+        //    document.getElementById("demo").innerHTML = txt;
+        //})
+
+
+
+        //$(".text-box").blur(function () {
+        //    debugger
+        //    var $element = this;
+        //    var row = $($element).parents("tr:first");
+        //    var val = $($element).parents("tr:first").children("td:first").text();
+
+        //    //$('.table').find('tr').removeAttr('style');
+        //    if ($(this).parents().not("tr:last")) {
+        //        if (row.next('tr').html() != undefined) {
+
+        //            //var ID = row.children("td:nth-child(1)").find("[id*=ID]").val();
+        //            var refund = row.children("td:nth-child(2)").html();
+        //            //var Actions = row.children("td:nth-child(8)").html();
+        //            var request = row.children("td:nth-child(3)").html();
+        //            var refd = row.children("td:nth-child(4)").val();
+        //            var Tool = row.children("td:nth-child(5)").html();
+        //            var IsActive = row.children("td:nth-child(6)").html();
+        //            var comment = row.children("td:nth-child(7)").val();
+
+
+
+        //            row.children("td:nth-child(1)").html(refd);
+
+
+        //        }
+        //    }
+        //});
+
+        //$(".textrfd").blur(function () {
+        //    debugger
+        //    var $element = this;
+        //    var row = $($element).parents("tr:first");
+        //    var val = $($element).parents("tr:first").children("td:first").text();
+
+        //    //$('.table').find('tr').removeAttr('style');
+        //    if ($(this).parents().not("tr:last")) {
+        //        if (row.next('tr').html() != undefined) {
+
+        //            //var ID = row.children("td:nth-child(1)").find("[id*=ID]").val();
+        //            var refund = row.children("td:nth-child(2)").html();
+        //            //var Actions = row.children("td:nth-child(8)").html();
+        //            var request = row.children("td:nth-child(3)").html();
+        //            var refd = row.children("td:nth-child(4)").val();
+        //            var Tool = row.children("td:nth-child(5)").html();
+        //            var IsActive = row.children("td:nth-child(6)").html();
+        //            var comment = row.children("td:nth-child(7)").val();
+
+
+
+        //            row.children("td:nth-child(1)").html(refd);
+
+
+        //        }
+        //    }
+        //});
+</script>*@
+

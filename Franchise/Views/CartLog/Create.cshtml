@@ -1,0 +1,36 @@
+﻿@model ModelLayer.Models.CartLog
+@{
+    Layout = "~/Views/Shared/_LayoutPartial.cshtml";
+}
+@using (Html.BeginForm()) 
+{
+    @Html.AntiForgeryToken()
+    
+    <div class="form-horizontal">
+        @Html.ValidationSummary(true)
+
+        <table class="table table-striped table-bordered">
+            <tr>
+                <td colspan="2">
+                    <span id="serverMsg" style="color:#ff6a00;"></span>
+                </td>
+            </tr>
+            <tr>
+                <td style="width:80px;">
+                    Add Note :
+                </td>
+                <td>
+                    <textarea name="Description" id="Description"></textarea>
+                    @Html.ValidationMessageFor(model => model.Description)
+                </td>
+            </tr>
+            <tr>
+                <td colspan="2" style="text-align:right;">
+                    @Html.DropDownList("Status", null, new { id = "ddlStatus"})
+                    <input type="text" placeholder="GBOD" id="txtGBOD" class="hidden" />
+                    <input type="button" value="Create" class="btn btn-danger btn-small" id="createCartLog" />
+                </td>
+            </tr>
+        </table>
+    </div>
+}

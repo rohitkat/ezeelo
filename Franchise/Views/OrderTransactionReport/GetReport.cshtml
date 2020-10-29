@@ -1,0 +1,545 @@
+﻿@*<copyright file="GetReport.cshtml" company="Ezeelo Consumer Services Pvt. Ltd.">
+     Copyright (c) Ezeelo Consumer Services Pvt. Ltd. All rights reserved.
+    </copyright>
+    <author>Harshada Raghorte</author>*@
+@{
+    ViewBag.Title = "GetReport";
+    Layout = null;
+}
+@model IEnumerable<ModelLayer.Models.ViewModel.OrderTransactionReportViewModel>
+<link href="~/Content/css/Site.css" rel="stylesheet" />
+<script src="~/Content/js/bootstrap.js"></script>
+<script src="~/Content/js/jquery-1.9.1.min.js"></script>
+<script src="~/Content/js/jquery.dataTables.min.js"></script>
+<script src="~/Content/js/bootstrap.min.js"></script>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $("#myTable").DataTable({
+            "bDestroy": true,
+            //"sPaginationType": "full_numbers",
+            "bJQueryUI": true,
+            "bInfo": false,
+            "scrollY": 700,
+            "scrollCollapse": true,
+            "bPaginate": false,
+            "iDisplayLength": 20,
+            "bAutoWidth": false,
+
+        });
+
+    });
+</script>
+<style>
+    .btn_Print {
+        margin-bottom: 7px;
+        margin-top: 7px;
+        margin-left: 5px;
+    }
+
+    .section {
+        position: relative;
+        border: 1px solid #FFF;
+        padding-top: 33px;
+        margin-left: 5px;
+        /* background: #500; */
+        background: rgb(179, 159, 128);
+        margin-top: 39px;
+        width: 100%;
+        overflow-x: scroll;
+        overflow-y: hidden;
+    }
+
+    #myTable_wrapper {
+        min-height: 61px;
+        margin-top: 59px;
+        /*margin-top: 12px;*/
+        max-height: 516px;
+        background: #FFF;
+        width: 1800px !important;
+        /*Yashaswi 21-01-2019*/
+    }
+
+    .fg-toolbar {
+        margin-top: -95px;
+    }
+
+    #myTable_filter {
+        margin-left: 0px;
+        position: absolute;
+        margin-top: 12px !important;
+    }
+
+    .section.positioned {
+        position: absolute;
+        top: 100px;
+        left: 100px;
+        width: 800px;
+        box-shadow: 0 0 15px #333;
+    }
+
+    .container_tbl {
+        height: 451px;
+    }
+
+    table {
+        border-spacing: 0;
+        width: 100%;
+    }
+
+    td + td {
+        border-left: 1px solid #eee;
+    }
+
+    td, th {
+        border-bottom: 1px solid #eee;
+        color: #000;
+        padding: 10px 25px;
+    }
+
+    #myTable thead tr th {
+        height: 0;
+        line-height: 0 !important;
+        padding-top: 0 !important;
+        padding-bottom: 0 !important;
+        color: transparent;
+    }
+
+    th div {
+        position: absolute;
+        background: transparent;
+        color: #fff;
+        padding: 1px 2px;
+        top: 0;
+        margin-left: -8px;
+        line-height: 15px;
+        word-wrap: break-word;
+        width: 100px;
+        /*border-left: 1px solid #800;*/ border-left: 1px solid #DDD;
+    }
+
+    .DataTables_sort_wrapper {
+        width: 56px !important;
+        word-wrap: break-word !important;
+        /*font-size: 13px;*/
+        font-weight: 900;
+        height: 44px;
+        margin-top: 45px;
+    }
+
+    table.dataTable tbody th, table.dataTable tbody td {
+        padding: 8px 7px;
+    }
+
+    th:first-child div {
+        border: none;
+    }
+
+    .wrap {
+        margin-top: 105px;
+    }
+
+    td:nth-child(1) {
+        max-width: 45px;
+        word-wrap: break-word;
+        padding-left: 2px;
+    }
+
+    td:nth-child(2) {
+        max-width: 45px;
+        word-wrap: break-word;
+    }
+
+    td:nth-child(3) {
+        max-width: 45px;
+        word-wrap: break-word;
+    }
+
+    td:nth-child(4) {
+        max-width: 45px;
+        word-wrap: break-word;
+    }
+
+    td:nth-child(5) {
+        max-width: 80px;
+        word-wrap: break-word;
+    }
+
+    td:nth-child(6) {
+        max-width: 45px;
+        word-wrap: break-word;
+    }
+
+    td:nth-child(7) {
+        max-width: 45px;
+        word-wrap: break-word;
+    }
+
+    td:nth-child(8) {
+        max-width: 80px;
+        word-wrap: break-word;
+    }
+
+    td:nth-child(9) {
+        max-width: 80px;
+        word-wrap: break-word;
+    }
+
+    td:nth-child(10) {
+        max-width: 45px;
+        word-wrap: break-word;
+    }
+
+    td:nth-child(11) {
+        max-width: 20px;
+        word-wrap: break-word;
+    }
+
+    td:nth-child(12) {
+        max-width: 30px;
+        word-wrap: break-word;
+    }
+
+    td:nth-child(13) {
+        max-width: 90px;
+        word-wrap: break-word;
+    }
+
+    td:nth-child(14) {
+        max-width: 35px;
+        word-wrap: break-word;
+    }
+
+    td:nth-child(15) {
+        max-width: 60px;
+        word-wrap: break-word;
+    }
+
+    td:nth-child(16) {
+        max-width: 45px;
+        word-wrap: break-word;
+    }
+
+    td:nth-child(17) {
+        max-width: 45px;
+        word-wrap: break-word;
+    }
+
+    td:nth-child(18) {
+        max-width: 50px;
+        word-wrap: break-word;
+    }
+
+    td:nth-child(19) {
+        max-width: 50px;
+        word-wrap: break-word;
+    }
+
+    td:nth-child(20) {
+        max-width: 50px;
+        word-wrap: break-word;
+    }
+
+    .ui-widget-header {
+        border: 0px solid #ccc !important;
+    }
+</style>
+<div class="section">
+    <div class="table container_tbl">
+        <table class="table" id="myTable">
+            <thead>
+                <tr>
+                    <th>
+                        Order Code
+                    </th>
+
+
+
+                    <th>
+                        Batch Code       @*Added by Priti*@
+                    </th>
+                    <th>
+                        Shop Order Code
+                    </th>
+
+                    <th>
+                        Shop Name
+                    </th>
+                    <th>
+                        Customer Name
+                    </th>
+                    <th>
+                        @*Yashaswi 31-7-2018*@
+                        Is Leader
+                    </th>
+                    <th>
+                        Shipping Address
+                    </th>
+                    <th>
+                        Pincode
+                    </th>
+                    <th>
+                        City
+                    </th>
+                    <th>
+                        Email
+                    </th>
+                    <th>
+                        Primary Mobile
+                    </th>
+                    <th>SKU ID</th>   @*///addede by Priti*@
+
+                    <th>
+                        Joining Date
+                    </th>
+                    <th>
+                        Last Purchase Date
+                    </th>
+                    <th>
+                        Product Name
+                    </th>
+                    <th>
+                        Qty
+                    </th>
+                    <th>
+                        Size
+                    </th>
+                    <th>
+                        Sale Rate
+                    </th>
+                    <th>
+                        MRP    @*PRITI*@
+                    </th>
+                    <th>
+                        GST
+                    </th>
+                    <th>
+                        Total Amt
+                    </th>
+                    <th>
+                        @*Yashaswi 31-7-2018*@
+                        Retail Points
+                    </th>
+                    <th>
+                        @*Yashaswi 21-01-2019*@
+                        Wallet Amount Used
+                    </th>
+                    @*<th>
+            Total Order Amt
+        </th>*@
+
+                    <th>
+                        Order Date
+                    </th>
+                    <th>
+                        Address Field Mobile
+                    </th>
+                    <th>
+                        Order Status
+                    </th>
+                    <th>
+                        Payment Mode
+                    </th>
+                    <th>
+                        Delivery Date
+                    </th>
+                    <th>
+                        Delivery Slot
+                    </th>
+                    <th>
+                        Delivery Type
+                    </th>
+                    <th>
+                        Device Type
+                    </th>
+                </tr>
+            </thead>
+
+            @foreach (var item in Model)
+            {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.OrderCode)
+                </td>
+
+
+                <td>
+                    @Html.DisplayFor(modelItem => item.BatchCode)         @*Added by Priti*@
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ShopOrderCode)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ShopName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Customer)
+                </td>
+                <td>
+                    @*Yashaswi 31-7-2018*@
+                    @Html.DisplayFor(modelItem => item.IsLeader)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ShippingAddress)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Pincode)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.City)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.RegEmail)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.RegMobile)
+                </td>
+
+                <td>
+                    @Html.DisplayFor(modelItem => item.SKUID)
+                </td>
+
+
+
+                <td>
+                    @Html.DisplayFor(modelItem => item.JoiningDate)
+                </td>
+                <td>
+                    @{string lLastPurchaseDate = "";}
+                    @if (item.CreateDate != null)
+                    {
+                        lLastPurchaseDate = item.LastPurchaseDate.ToString("dd/MM/yyyy");
+                    }
+                    @lLastPurchaseDate
+
+                    @*@Html.DisplayFor(modelItem => item.LastPurchaseDate)*@
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ProductName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Qty)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Size)
+                </td>
+
+                <td>
+                    @Html.DisplayFor(modelItem => item.SaleRate)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.MRP)    @*PRITI*@
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.GST)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.PayableAmount)
+                </td>
+                <td>
+                    @*Yashaswi 31-7-2018*@
+                    @Html.DisplayFor(modelItem => item.RetailPoints)
+                </td>
+                <td>
+                    @*Yashaswi 21-01-2019*@
+                    @Html.DisplayFor(modelItem => item.WalleteAmountUsed)
+                </td>
+                @*<td>
+            @Html.DisplayFor(modelItem => item.OrderAmount)
+        </td>*@
+                <td>
+                    @{string lDate = "";}
+                    @if (item.CreateDate != null)
+                    {
+                        lDate = item.CreateDate.ToString("dd/MM/yyyy");
+                    }
+                    @lDate
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.PrimaryMobile)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.OrderStatus)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.PaymentMode)
+                </td>
+                <td>
+                    @{string lDDate = "";}
+                    @if (item.DeliveryDate != null)
+                    {
+                        lDDate = item.CreateDate.ToString("dd/MM/yyyy");
+                    }
+                    @lDDate
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.DeliveryTime)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.DeliveryType)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.DeviceType)
+                </td>
+            </tr>
+    }
+
+        </table>
+    </div>
+</div>
+<div id="Pager" style="margin-top:-56px;">
+    <div class="wrap">
+        <div id="slider1" class="slider">
+            <ul>
+                @for (int c = 1; c <= @ViewBag.TotalPages; c++)
+                {
+                    <li><a class="page-number" href="javascript:void();">@c</a></li>
+
+                }
+            </ul>
+        </div>
+        <div class="controls" style="margin-top:-27px; background:#F9F9F9">
+            <a href="#noname" class="prev-slide"><<</a>
+            <a href="#noname" class="next-slide" style="float: right; margin-right: 299px;">>></a>
+        </div>
+    </div>
+    <span class="totalcount"><b>Showing @ViewBag.PageSize of @ViewBag.TotalCount enteries</b></span>
+</div>
+
+<div class="loader">
+    <img id="loader_img" src="~/Content/img/loader.gif" style="display: none" />
+</div>
+<script>
+    $(document).ready(function () {
+        $("#Pager .page-number").click(function (e) {
+            //alert($(this).html());
+            $('#loader_img').show();
+            //alert($(this).html());
+            var pagecount = 0;
+            var page = parseInt($(this).html());
+            if (page > 1) {
+                pagecount = 1;
+            }
+            var fromDate = "@ViewBag.fromDate";
+            var toDate = "@ViewBag.toDate";
+            var shopID = "@ViewBag.shopID";
+            $.ajax({
+                url: '@Url.Action("GetReport", "OrderTransactionReport")',
+                data: { 'page': page, 'pagecount': pagecount, 'fromDate': fromDate, 'toDate': toDate, 'shopID': shopID },
+                type: "POST",
+                cache: false,
+                success: function (data) {
+                    //alert(data);
+                    $('#loader_img').hide();
+                    $('#divReport').empty();
+                    $('#divReport').append(data);
+
+                },
+                error: function (data) {
+
+                }
+            });
+        });
+    });
+
+</script>

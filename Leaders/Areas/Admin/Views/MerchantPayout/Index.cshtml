@@ -1,0 +1,99 @@
+﻿@model ModelLayer.Models.ViewModel.MerchantPayoutViewModel
+
+@{
+    ViewBag.Title = "Select Payout Cycle";
+    Layout = "~/Views/Shared/_LeadersLayout.cshtml";
+}
+
+<link rel="stylesheet" href="http://cdn.datatables.net/1.10.2/css/jquery.dataTables.min.css" />
+<script type="text/javascript" src="http://cdn.datatables.net/1.10.2/js/jquery.dataTables.min.js"></script>
+
+<script src="~/Scripts/MerchantMenuOpenup.js"></script>
+<div class="container">
+    <div id="progress" class="modal">
+        <div class="center">
+            <img src="~/img/ajax-loading-gif-transparent-background-8.gif" />
+        </div>
+    </div>
+    <div class="card" id="maindiv">
+        <div class="card-header"><strong>Merchant Network's Payout Process </strong></div>
+        <div class="card-body card-block">
+
+
+            @using (Html.BeginForm("", "Payout"))
+            {
+                <table>
+                    <tr>
+                        <td>
+                            Select Payout Cycle
+                            @Html.DropDownListFor(m => m.PayoutDateFilter, Model.PayoutDateFilter, "--Select--", new { @class = "BuildType", @id = "PayoutDateFilterid" })
+                        </td>
+                        <td>
+                            &nbsp;&nbsp;&nbsp;
+                            <input id="btnGo" type="button" value="Go" class="btn btn-info" />
+                        </td>
+                        <td>
+                            &nbsp;&nbsp;&nbsp;
+                            <input id="btnExport" type="button" value="Export" class="btn btn-warning" style="display:none" />
+                        </td>
+                        <td>
+                            &nbsp;&nbsp;&nbsp;
+                            <input id="btnPayout" type="button" value="Pay" class="btn btn-success" style="display:none" />
+                        </td>
+                    </tr>
+                </table>
+                <div id="MerchantPayoutDetailDiv">
+
+                </div>
+            }
+
+        </div>
+    </div>
+</div>
+<script>
+    $(document).ready(function () {
+        $("#btnGo").click(function () {
+            var id = $("#PayoutDateFilterid").val();
+            if (id != "") {
+                $("#progress").show();
+                $("#btnPayout").show();
+                $("#btnExport").show();
+                $("#MerchantPayoutDetailDiv").load("/Admin/MerchantPayout/GetPayoutDetails?EzeeMoneyPayoutId=" + id);
+            } else {
+                alert("Select Payout Cycle!!!");
+            }
+        });
+        $("#btnExport").click(function () {
+            window.location = "/admin/MerchantPayout/ExportToExcel";
+        });
+        $("#btnPayout").click(function () {
+            var id = $("#PayoutDateFilterid").val();
+            if (id != "") {
+                var r = confirm("Coutinue to Merchant Network Payout for Payout cycle " + $("#PayoutDateFilterid option:selected").text());
+                if (r == true) {
+                    $("#progress").show();
+                    $.ajax({
+                        type: "POST",
+                        dataType: "text",
+                        url: '/MerchantPayout/Payout?EzeeMoneyPayoutId=' + id,
+                        contentType: "application/json; charset=utf-8",
+                        success: function (data) {
+                            $("#progress").hide();
+                            alert(data);
+                            window.location.reload();
+                        },
+                        error: function (xhr) {
+                            $("#progress").hide();
+                        }
+                    });
+                }
+            } else {
+                alert("Select Payout Cycle!!!");
+            }
+        });
+    });
+</script>
+
+
+
+

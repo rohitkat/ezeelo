@@ -1,0 +1,95 @@
+﻿@model IEnumerable<ModelLayer.Models.SEO>
+
+@{
+    ViewBag.Title = "Index";
+}
+<style type="text/css">
+    table {
+        word-break: break-all;
+    }
+
+    td .btn {
+        width: 40px;
+        margin-bottom: 2px;
+    }
+
+    table td {
+        padding: 5px;
+        width: 8.2%;
+    }
+    table.dataTable tbody td {
+        padding: 8px 7px;
+    }
+    .dataTables_length {
+        margin-left: 0px;
+        margin-top: 7px;
+    }
+
+    .pagination {
+        margin: 0 40px;
+    }
+</style>
+<div id="content" class="span10">
+    <div class="row-fluid">
+
+        <div class="box span12">
+            <div class="box-header">
+                <h2><i class="icon-edit"></i><span class="break"></span>@Html.ActionLink("Create New", "Create")</h2>
+
+            </div>
+            <div class="box-content">
+                <table class="table table-striped table-bordered bootstrap-datatable datatable dataTable">
+                    <thead>
+                        <tr>
+                            <th>
+                                Metadata Type
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.Metatag)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.Description)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.MetaKeyword)
+                            </th>
+
+                            <th>
+                                @Html.DisplayNameFor(model => model.IsActive)
+                            </th>
+
+                            <th></th>
+                        </tr>
+                    </thead>
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.BusinessType.Name)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Metatag)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Description)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.MetaKeyword)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.IsActive)
+                            </td>
+
+                            <td>
+                                @Html.ActionLink("Edit", "Edit", new { id = item.ID }, new { @class = "btn btn-small btn-success" })
+                                @Html.ActionLink("Details", "Details", new { id = item.ID }, new { @class = "btn btn-small btn-primary" })
+                                @Html.ActionLink("Delete", "Delete", new { id = item.ID }, new { @class = "btn btn-small btn-danger" })
+                            </td>
+                        </tr>
+                    }
+
+                </table>
+            </div>
+        </div>
+    </div>
+</div>

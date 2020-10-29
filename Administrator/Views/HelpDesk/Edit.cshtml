@@ -1,0 +1,184 @@
+﻿@model ModelLayer.Models.HelpDeskDetails
+
+@{
+    ViewBag.Title = "Edit";
+}
+
+<div id="content" class="span10">
+    <ul class="breadcrumb">
+        <li>
+            <a href="#">HelpDesk/Edit</a>
+        </li>
+    </ul>
+    <span class="eror-msg">@ViewBag.lblError</span>
+    <div class="row-fluid">
+
+        <div class="box span12">
+            <div class="box-header">
+                <h2><i class="icon-edit"></i><span class="break"></span>Edit</h2>
+            </div>
+            <div class="box-content">
+                @using (Html.BeginForm())
+                {
+                    @Html.AntiForgeryToken()
+    <input type="hidden" id="hdnOldHelpLineNumber" name="hdnOldHelpLineNumber" value=@ViewBag.OldHelpLineNumber />
+    <input type="hidden" id="hdnOldManagmentNumber" name="hdnOldManagmentNumber" value=@ViewBag.OldManagmentNumber />
+
+
+                    <div class="form-horizontal">
+                        @Html.ValidationSummary(true)
+                        @Html.HiddenFor(model => model.ID)
+
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.CityID, "City", new { @class = "control-label col-md-2" })
+                            <div class="col-md-10">
+                                @Html.DropDownList("CityID", "---City---")
+                                @Html.ValidationMessageFor(model => model.CityID)
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.FranchiseID, "Franchise", new { @class = "control-label col-md-2" })
+                            <div class="col-md-10">
+                                @Html.DropDownList("FranchiseID", "---Franchise---")
+                                @Html.ValidationMessageFor(model => model.FranchiseID)
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.HelpLineNumber,"HelpLine Number", new { @class = "control-label col-md-2" })
+                            <div class="col-md-10">
+                                @Html.EditorFor(model => model.HelpLineNumber)
+                                @Html.ValidationMessageFor(model => model.HelpLineNumber)
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.ManagmentNumber, "Managment Number",new { @class = "control-label col-md-2" })
+                            <div class="col-md-10">
+                                @Html.EditorFor(model => model.ManagmentNumber)
+                                @Html.ValidationMessageFor(model => model.ManagmentNumber)
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.IsActive, new { @class = "control-label col-md-2" })
+                            <div class="col-md-10">
+                                @Html.EditorFor(model => model.IsActive)
+                                @Html.ValidationMessageFor(model => model.IsActive)
+                            </div>
+                        </div>
+
+                        @*<div class="form-group">
+                                @Html.LabelFor(model => model.CreateDate, new { @class = "control-label col-md-2" })
+                                <div class="col-md-10">
+                                    @Html.EditorFor(model => model.CreateDate)
+                                    @Html.ValidationMessageFor(model => model.CreateDate)
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.CreateBy, new { @class = "control-label col-md-2" })
+                                <div class="col-md-10">
+                                    @Html.EditorFor(model => model.CreateBy)
+                                    @Html.ValidationMessageFor(model => model.CreateBy)
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.ModifyDate, new { @class = "control-label col-md-2" })
+                                <div class="col-md-10">
+                                    @Html.EditorFor(model => model.ModifyDate)
+                                    @Html.ValidationMessageFor(model => model.ModifyDate)
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.ModifyBy, new { @class = "control-label col-md-2" })
+                                <div class="col-md-10">
+                                    @Html.EditorFor(model => model.ModifyBy)
+                                    @Html.ValidationMessageFor(model => model.ModifyBy)
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.NetworkIP, new { @class = "control-label col-md-2" })
+                                <div class="col-md-10">
+                                    @Html.EditorFor(model => model.NetworkIP)
+                                    @Html.ValidationMessageFor(model => model.NetworkIP)
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.DeviceType, new { @class = "control-label col-md-2" })
+                                <div class="col-md-10">
+                                    @Html.EditorFor(model => model.DeviceType)
+                                    @Html.ValidationMessageFor(model => model.DeviceType)
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.DeviceID, new { @class = "control-label col-md-2" })
+                                <div class="col-md-10">
+                                    @Html.EditorFor(model => model.DeviceID)
+                                    @Html.ValidationMessageFor(model => model.DeviceID)
+                                </div>
+                            </div>*@
+
+
+                    </div>
+                    <div class="form-actions no-color" style="padding-left:180px">
+                        <input type="submit" value="Save" class="btn btn-primary" />
+                        @Html.ActionLink("Back to List", "Index", string.Empty, new { @class = "btn btn-default" })
+                    </div>
+
+                }
+
+
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}
+
+
+<script src="~/Scripts/jquery-1.10.2.min.js"></script>
+<script>
+    $(function () {
+        $('#CityID').change(function (e) {
+            var selectedVal = $("#CityID option:selected").val();
+            if (selectedVal > 0) {
+                //alert(selectedVal);
+                $.ajax({
+                    type: "POST",
+                    url: "/HelpDesk/getFranchise",
+                    data: "{ CityID: '" + selectedVal + "'}",
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    async: true,
+                    cache: false,
+                    success: function (msg) {
+
+                        $('#FranchiseID').empty();
+                        $('#FranchiseID').append('<option value=0>Select FranchiseID</option>');
+                        $.each(msg, function (index, item) {
+                            $('#FranchiseID').append('<option value=' + item.value + '>' + item.text + '</option>');
+                        });
+                    },
+                    error: function (x, e) {
+                        //alert("The call to the server side failed. " + x.responseText);
+                    }
+                });
+            }
+        });
+
+
+
+    });
+
+
+</script>
+

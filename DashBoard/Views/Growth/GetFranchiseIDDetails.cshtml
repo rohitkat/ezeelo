@@ -1,0 +1,169 @@
+﻿@model IEnumerable<ModelLayer.Models.ViewModel.DashboardGrowthViewModel>
+@{
+    ViewBag.Title = "Growth Report";
+}
+@if (ViewBag.ThisMonth == 1)
+{
+    if (ViewBag.FranchiseID != null)
+    {
+        <div class="box">
+            <div class="box-body">
+                <table class="table table-bordered">
+
+                    <tr>
+                        @if (ViewBag.ReqType == "Order")
+                        {
+                            <th>Monthly OrderTarget</th>
+                            <th>Actual Order</th>
+                            <th>Short/Access Order</th>
+                        }
+                        @if (ViewBag.ReqType == "GMV")
+                        {
+                            <th>Monthly GMVTarget</th>
+                            <th>Actual GMV</th>
+                            <th>Short/Access GMV</th>
+                        }
+
+
+                    </tr>
+                    <tr>
+                        @if (Model != null)
+                        {
+                            foreach (var item in ViewBag.lDashboardGrowthViewModels2)
+                            {
+                                if (ViewBag.ReqType == "Order")
+                                {
+                                    <td>
+                                        @item.MonthlyOrderTarget
+                                    </td>
+                                    <td>
+                                        @item.ActualOrder
+                                    </td>
+                                    <td>
+                                        @item.ShortAccessOrder
+                                    </td>
+
+                                }
+                                if (ViewBag.ReqType == "GMV")
+                                {
+                                    <td>
+                                        @item.MonthlyGMVTarget
+                                    </td>
+                                    <td>
+                                        @item.ActualGMV
+                                    </td>
+                                    <td>
+                                        @item.ShortAccessGMV
+                                    </td>
+                                }
+
+                            }
+                        }
+                    </tr>
+                </table>
+            </div>
+        </div>
+    }
+}
+else
+{
+    if (ViewBag.FranchiseID != null)
+    { <div class="box">
+        <div class="box-body">
+            <table class="table table-bordered">
+
+                <tr>
+                    @if (ViewBag.ReqType == "Order")
+                    {
+                        <th>Cumulative OrderTarget</th>
+                        <th>Cumulative ActualOrder</th>
+                        <th>Short/Access Order</th>
+                    }
+                    @if (ViewBag.ReqType == "GMV")
+                    {
+                        <th>Cumulative GMVTarget</th>
+                        <th>Cumulative ActualGMV</th>
+                        <th>Short/Access GMV</th>
+
+                    }
+                </tr>
+
+                <tr>
+                    @if (Model != null)
+                    {
+                        foreach (var item in ViewBag.lDashboardGrowthViewModels2)
+                        {
+                            if (ViewBag.FranchiseID == item.ID)
+                            {
+                                if (ViewBag.ReqType == "Order")
+                                {
+                                    if (item.CumulativeOrderTarget == null)
+                                    {
+                                        <td>0 </td>
+                                    }
+                                    else
+                                    {
+                                        <td>
+                                            @item.CumulativeOrderTarget
+                                        </td>
+                                    } if (item.CumulativeActualOrder == null)
+                                    {
+                                        <td>0 </td>
+                                    }
+                                    else
+                                    {
+                                        <td>
+                                            @item.CumulativeActualOrder
+                                        </td>
+                                    } if (item.ShortAccessOrder == null)
+                                    {
+                                        <td>0 </td>
+                                    }
+                                    else
+                                    {
+                                        <td>
+                                            @item.ShortAccessOrder
+                                        </td>
+                                    }
+                                }
+                                if (ViewBag.ReqType == "GMV")
+                                {
+                                    if (item.CumulativeGMVTarget == null)
+                                    {
+                                        <td>0 </td>
+                                    }
+                                    else
+                                    {
+                                        <td>
+                                            @item.CumulativeGMVTarget
+                                        </td>
+                                    } if (item.CumulativeActualGMV == null)
+                                    {
+                                        <td>0 </td>
+                                    }
+                                    else
+                                    {
+                                        <td>
+                                            @item.CumulativeActualGMV
+                                        </td>
+                                    } if (item.ShortAccessGMV == null)
+                                    {
+                                        <td>0 </td>
+                                    }
+                                    else
+                                    {
+                                        <td>
+                                            @item.ShortAccessGMV
+                                        </td>
+                                    }
+                                }
+                            }
+
+                        }
+                    }
+                </tr>
+            </table>
+        </div>
+    </div>
+    }
+}

@@ -1,0 +1,34 @@
+﻿@model ModelLayer.Models.MerchantBanner
+@{
+    ViewBag.Title = "ViewBanner";
+}
+<section class="content">
+    <div class="row">
+        <div class="col-md-12">
+            <!-- general form elements -->
+            <div class="box box-primary">
+                <div class="box-header">
+                    <h3 class="box-title">Banner</h3>
+                    <h3 id="msg" class="box-title animated flash" style="float:right;display:none;">Inavalid Contact No</h3>
+                </div><!-- /.box-header -->
+                <!-- form start -->
+                @using (Html.BeginForm("ViewBanner", "Home", FormMethod.Post, new { id = "frm" }))
+                {
+                    @Html.HiddenFor(p => p.ID)
+                    @Html.HiddenFor(p => p.MerchantID)
+                    <div class="box-body">
+                        <div class="form-group">
+                            <img id="ShopImagePath" src="@Model.BannerPath" />
+                        </div>
+                        <div class="form-group">
+                            Is Display
+                            @Html.EditorFor(m => m.IsActive)
+                        </div>
+                        <input type="submit" value="Save" class="btn btn-sm btn-success" />
+                        @Html.ActionLink("Back", "BannerList", new { @class = "btn btn-sm btn-warning" })
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</section>

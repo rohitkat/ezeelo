@@ -1,0 +1,121 @@
+﻿@*//-----------------------------------------------------------------------
+    // <copyright file=" Charge.cshtml" company="Ezeelo Consumer Services Pvt. Ltd.">
+        //     Copyright (c) Ezeelo Consumer Services Pvt. Ltd. All rights reserved.
+        //
+    </copyright>
+    // <author>Snehal Shende</author>
+    //-----------------------------------------------------------------------*@
+
+@model ModelLayer.Models.ShopProductCharge
+
+@{
+    ViewBag.Title = "Apply Charge";
+}
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+    <div id="content" class="span10">
+        <ul class="breadcrumb">
+            <li>
+                <i class="icon-home"></i>
+                <a href="#">Shop Product Charge</a>
+                <i class="icon-angle-right"></i>
+            </li>
+        </ul>
+        <div class="row-fluid">
+            <div class="box span12">
+                <div class="box-header">
+                    <h2><i class="halflings-icon edit"></i><span class="break"></span>Apply Charge</h2>
+
+                </div>
+                <div class="box-content">
+                    <div class="form-horizontal">
+                        <fieldset>
+                            @Html.ValidationMessage("CustomError")
+                            @Html.ValidationSummary(true)
+
+                            <div class="control-group" style="display:none;">
+                                @Html.LabelFor(model => model.ShopID, "ShopID", new { @class = "control-label" })
+                                <div class="controls">
+                                    @Html.DropDownList("ShopID", "Select Shop")
+                                    @Html.ValidationMessageFor(model => model.ShopID)
+                                </div>
+                            </div>
+
+                            <div class="control-group" style="display:none;">
+                                @Html.LabelFor(model => model.ProductID, "ProductID", new { @class = "control-label" })
+                                <div class="controls">
+                                    @Html.TextBox("ProductID", (string)ViewBag.ProductID)
+                                    @*@Html.ValidationMessageFor(model => model.ProductID)*@
+                                </div>
+                            </div>
+
+                            <div class="control-group">
+                                @Html.LabelFor(model => model.ChargeID, "ChargeID", new { @class = "control-label" })
+                                <div class="controls">
+                                    @Html.DropDownList("ChargeID", "Select Charge")
+                                    @Html.ValidationMessageFor(model => model.ChargeID)
+                                </div>
+                            </div>
+
+                            <div class="control-group">
+                                @Html.LabelFor(model => model.ChargeInRs, new { @class = "control-label" })
+                                <div class="controls">
+                                    @*@Html.EditorFor(model => model.ChargeInRs)*@
+                                    @Html.TextBox("ChargeInRs", (string)ViewBag.ChargeInRs)
+                                    @*@Html.ValidationMessageFor(model => model.ChargeInRs)*@
+                                </div>
+                            </div>
+
+                            <div class="control-group">
+                                @Html.LabelFor(model => model.ChargeInPercent, new { @class = "control-label " })
+                                <div class="controls">
+                                    @*@Html.EditorFor(model => model.ChargeInPercent)*@
+                                    @Html.TextBox("ChargeInPercent", (string)ViewBag.ChargeInPercent)
+                                    @*@Html.ValidationMessageFor(model => model.ChargeInPercent)*@
+                                </div>
+                            </div>
+
+                            <div class="control-group">
+
+                                <div class="controls">
+                                    <label class="checkbox">
+                                        <div id="uniform-optionsCheckbox2" class="checker">
+                                            <span>
+                                                @Html.EditorFor(model => model.IsActive)
+                                                @Html.ValidationMessageFor(model => model.IsActive)
+                                            </span>
+                                        </div>
+                                        @Html.LabelFor(model => model.IsActive, new { @class = "CheckBoxMargin" })
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="control-group">
+                                    <div class="controls">
+                                        <label class="checkbox">
+                                            <div id="uniform-optionsCheckbox2" class="checker">
+                                                <span>
+                                                   @Html.CheckBox("IsProprietory") 
+                                                </span>
+                                            </div>
+                                            IsProprietory
+                                        </label>
+                                    </div>
+                                </div>
+                            <div class="form-actions">
+
+                                <input type="submit" value="Approve" class="btn btn-default" />
+
+                            </div>
+                        </fieldset>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}
+
+

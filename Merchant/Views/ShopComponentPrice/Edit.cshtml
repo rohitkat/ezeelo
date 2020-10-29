@@ -1,0 +1,266 @@
+﻿@model ModelLayer.Models.ShopComponentPrice
+
+@{
+    ViewBag.Title = "Edit";
+    //Layout = null;
+}
+
+<link href="~/Content/css/site.css" rel="stylesheet" />
+<link href="~/Content/css/bootstrap.min.css" rel="stylesheet" />
+<link href="~/Content/css/bootstrap-responsive.min.css" rel="stylesheet" />
+<link href="~/Content/css/style.css" rel="stylesheet" />
+<link href="~/Content/css/style-responsive.css" rel="stylesheet" />
+<link href="~/Content/css/halflings.css" rel="stylesheet" />
+<link href="~/Content/css/jquery-ui-1.8.21.custom.css" rel="stylesheet" />
+<link href="~/Content/css/jquery.cleditor.css" rel="stylesheet" />
+<link href="~/Content/css/uniform.default.css" rel="stylesheet" />
+
+<style type="text/css">
+   
+
+    .isActive {
+        float: left;
+        width: 70px;
+    }
+
+    .back-btn {
+        margin-top: 15px;
+        margin-bottom: 5px;
+        float: right;
+    }
+
+    .radio-place {
+        left: 50px;
+        width: 65px !important;
+    }
+
+    .padd-btm label:nth-of-type(1) {
+        position: relative;
+        left: 27px;
+        top: -18px;
+    }
+
+    .padd-btm label:nth-of-type(2) {
+        position: relative;
+        left: 260px;
+        top: -63px;
+    }
+
+    #rbPercent {
+        position: relative;
+        left: 235px;
+        top: -45px;
+    }
+
+    .cotrol-botom {
+        margin-top: -65px;
+    }
+</style>
+<div id="content" class="span10">
+    @using (Html.BeginForm())
+    {
+        @Html.AntiForgeryToken()
+        <div class="box-header" data-original-title>
+            <h2><i class="icon-edit"></i><span class="break"></span>Edit Component Prices</h2>
+            <div class="pull-right jumpBtn">
+                @Html.ActionLink("Back to List", "Index", string.Empty, new { @class = "btn btn-brown" })
+            </div>
+        </div>
+        <div class="box-content clearfix" style="overflow:hidden">
+            <div class="span12">
+                <div class="cmp-prise">
+                    <div>@Html.ValidationMessage("Error")</div>
+                    <form class="form-horizontal">
+                        @Html.ValidationSummary(true)
+                        @Html.HiddenFor(model => model.ID)
+
+                        <div class="control-group">
+                            @Html.LabelFor(model => model.ComponentID, "Component", new { @class = "control-label col-md-2" })
+                            <div class="">
+                                @Html.DropDownList("ComponentID", null, "Select Component", new { @disabled = "disabled" })
+                                @Html.ValidationMessageFor(model => model.ComponentID)
+                            </div>
+                        </div>
+                        <div class="control-group">
+                            @Html.LabelFor(model => model.ComponentUnitID, "Component Unit", new { @class = "control-label col-md-2" })
+                            <div class="">
+                                @if (Model.DependentOnComponentID > 0)
+                                        {  @Html.DropDownList("ComponentUnitID", null, "Select Unit ", new { @disabled = "disabled" })
+                                        }
+                                        else
+                                        {
+                                @Html.DropDownList("ComponentUnitID", null, "Select Unit ")
+                                        }
+
+
+                                @Html.ValidationMessageFor(model => model.ComponentUnitID)
+                            </div>
+                        </div>
+                        <div class="control-group">
+                            @Html.LabelFor(model => model.DependentOnComponentID, "Dependent On Component ", new { @class = "control-label col-md-2" })
+                            <div class="">
+                                @Html.DropDownList("DependentOnComponentID", null, "select Dependent Component", new { @disabled = "disabled" })
+                                @Html.ValidationMessageFor(model => model.DependentOnComponentID)
+                            </div>
+                        </div>
+                        <div class="control-group">
+                            @Html.LabelFor(model => model.IsActive, "Is Active", new { @class = "control-label isActive" })
+                            <div class="controls">
+                                @Html.EditorFor(model => model.IsActive)
+                                @Html.ValidationMessageFor(model => model.IsActive)
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="cmp-prise cmp-prise1">
+                    <div class="padd-btm">
+                        @if (@Model.PerUnitRateInPer > 0)
+                                {
+                        @Html.RadioButton("Product", "1", false, new { id = "rbPrice", @class = "radio-place" }) @Html.Label("Price")
+                        @Html.RadioButton("Product", "2", true, new { id = "rbPercent", @class = "radio-place" }) @Html.Label("Percent")
+                                }
+                                else
+                                {
+                        @Html.RadioButton("Product", "1", true, new { id = "rbPrice", @class = "radio-place" }) @Html.Label("Price")
+                        @Html.RadioButton("Product", "2", false, new { id = "rbPercent", @class = "radio-place" }) @Html.Label("Percent")
+                                }
+
+                    </div>
+                    <div class="cotrol-botom">
+                        <div class="control-group">
+                            @Html.LabelFor(model => model.PerUnitRateInRs, "Per Unit Rate In Rs", new { @class = "control-label col-md-2" })
+                            <div class="">
+                                @if (@Model.PerUnitRateInRs > 0)
+                                        {
+                                @Html.TextBoxFor(model => model.PerUnitRateInRs)
+                                        }
+                                        else
+                                        {
+                                @Html.TextBoxFor(model => model.PerUnitRateInRs, new { @readonly = "readonly" })
+                                        }
+                              
+                            </div>
+                        </div>
+
+                        <div class="control-group">
+                            @Html.LabelFor(model => model.PerUnitRateInPer, "Per Unit Rate In Percentage", new { @class = "control-label col-md-2" })
+                            <div class="">
+                                @if (@Model.PerUnitRateInPer > 0)
+                                        {
+                                @Html.TextBoxFor(model => model.PerUnitRateInPer)
+                                        }
+                                        else
+                                        {
+                                @Html.TextBoxFor(model => model.PerUnitRateInPer, new { @readonly = "readonly" })
+                                        }
+                              
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="sapn12">
+
+                    <div class="cmp-prise2">
+                        <div class="back-btn">
+                            <input type="submit" value="Save" class="btn btn-Ifrm-submit" onclick="return Validate();" />
+                       
+                            <input id="btnLoadProducts" type="button" value="Load Affected Products" class="btn btn-brwn-colr" />
+
+
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+
+            <div class="loader">
+                <img id="loader_img" src="~/Content/img/loader.gif" style="display: none" />
+            </div>
+
+
+
+        </div>
+
+
+        <div class="row-fluid">
+
+            <div class="sapn12">
+                <div id="divPartialView" style="width:100%;float:left;position:relative"></div>
+            </div>
+        </div>
+
+    }
+</div>
+
+
+
+<script src="~/Content/js/jquery-1.9.1.min.js"></script>
+<script>
+    var PageIndex;
+    $(function () {
+        $("input#btnLoadProducts").on('click', function () {
+            $('#loader_img').show();
+            var componentID = 0;
+            PageIndex = 1;
+            var PageSize = 20;
+            if ($("select#ComponentID option:selected").val() > 0) {
+                componentID = $("select#ComponentID option:selected").val();
+            }
+            if (componentID == 0) {
+                alert('Please select Component');
+                return;
+            }
+            $.ajax({
+                url: '@Url.Action("LoadProducts", "ShopComponentPrice")',
+                data: { 'componentID': componentID, 'PageIndex': PageIndex, 'PageSize': PageSize },
+                type: "Post",
+                cache: false,
+                success: function (data) {
+                    $('#divPartialView').html(data);
+                    $('#loader_img').hide();
+                },
+                error: function (data) {
+
+                }
+            });
+        });
+    });
+
+
+
+    $("input[name=Product]:radio").change(function () {
+        var Status = $('input[name=Product]:radio:checked').val();
+        if (Status == 2) { //if percent is checked
+            $('#PerUnitRateInPer:input').removeAttr('readonly');
+            $('#PerUnitRateInRs:input').attr('readonly', 'readonly');
+            $('#PerUnitRateInRs:input').val(0.00);
+            $('#PerUnitRateInPer:input').val('');
+        }
+        else if (Status == 1) { //if price is checked
+            $('#PerUnitRateInRs:input').removeAttr('readonly');
+            $('#PerUnitRateInPer:input').attr('readonly', 'readonly');
+            $('#PerUnitRateInPer:input').val(0.00);
+            $('#PerUnitRateInRs:input').val('');
+        }
+    });
+
+    function Validate() {
+        // alert($("select#ComponentUnitID option:selected").val());
+        var isdisable = $('#ComponentUnitID').is(':disabled');
+        if (isdisable == true) {
+
+        }
+        else {
+            if ($("select#ComponentUnitID option:selected").val() == '') {
+                alert('Please select Component Unit');
+                return false;
+            }
+        }
+        if (!confirm('Are you sure you wanted to Update the rate for all products?')) { //if no
+            return false;
+        }
+    }
+</script>

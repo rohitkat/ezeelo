@@ -1,0 +1,219 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>eZeelo | Market Partner - @ViewBag.Title</title>
+    <meta content='width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no' name='viewport'>
+    <link href="@Url.Content("~/bootstrap/css/bootstrap.min.css")" rel="stylesheet" type="text/css" />
+    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet" type="text/css" />
+    <link href="http://code.ionicframework.com/ionicons/2.0.0/css/ionicons.min.css" rel="stylesheet" type="text/css" />
+    <link href="@Url.Content("~/plugins/morris/morris.css")" rel="stylesheet" type="text/css" />
+    <link href="@Url.Content("~/plugins/jvectormap/jquery-jvectormap-1.2.2.css")" rel="stylesheet" type="text/css" />
+    <link href="@Url.Content("~/plugins/daterangepicker/daterangepicker-bs3.css")" rel="stylesheet" type="text/css" />
+    <link href="@Url.Content("~/dist/css/AdminLTE.min.css")" rel="stylesheet" type="text/css" />
+    <link href="@Url.Content("~/dist/css/skins/_all-skins.min.css")" rel="stylesheet" type="text/css" />
+    <link href="@Url.Content("~/plugins/Custom.css")" rel="stylesheet" type="text/css" />
+    <link href="@Url.Content("~/plugins/animate.css")" rel="stylesheet" type="text/css" />
+    <link href="@Url.Content("~/plugins/iCheck/all.css")" rel="stylesheet" type="text/css" />
+    <link href="@Url.Content("~/plugins/datatables/dataTables.bootstrap.css")" rel="stylesheet" type="text/css" />
+    <script src="@Url.Content("~/plugins/jQuery/jQuery-2.1.3.min.js")"></script>
+    <script src="@Url.Content("~/bootstrap/js/bootstrap.min.js")" type="text/javascript"></script>
+    <script src="@Url.Content("~/dist/js/app.min.js")" type="text/javascript"></script>
+    <script src="@Url.Content("~/plugins/datatables/jquery.dataTables.js")" type="text/javascript"></script>
+    <script src="@Url.Content("~/plugins/datatables/dataTables.bootstrap.js")" type="text/javascript"></script>
+    <script src="~/plugins/validate/jquery.validate.min.js"></script>
+    <script src="~/plugins/validate/jquery.validate.unobtrusive.min.js"></script>
+</head>
+<body class="skin-blue">
+    <script>
+        $(document).ready(function () {
+            $("#frm").submit(function (e) {
+                setTimeout(function () {
+                    if ($('.input-validation-error').length == 0) {
+                        $("#divPopupLoading").slideDown(1500);
+                        return true;
+                    }
+                    else {
+                        $("#divPopupLoading").slideUp(2000);
+                    }
+                }, 1000);
+            });
+            if ('@TempData["WarningMsg"]' != null && '@TempData["WarningMsg"]' != '') {
+                 $("#WarningCall").show();
+            }
+            if ('@TempData["SuccessMsg"]' != null && '@TempData["SuccessMsg"]' != '') {
+                $("#SuccesCall").show();
+            }
+        });
+    </script>
+    <div id="divPopupLoading" class="modal">
+        <div class="modal-dialog modal-sm" style="margin-top:18%">
+            <div class="modal-content" style="padding:10px;text-align:center">
+                <div class="row" style="padding: 10px;">
+                    <img src="~/plugins/loader.gif" style="width:50%;height:50%" />
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="SuccesCall" class="modal" style="z-index:1999 !important">
+        <div class="modal-dialog modal-sm">
+            <div class="row">
+                <div class="alert alert-success alert-dismissable">
+                    <button onclick="$('#SuccesCall').hide();" type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+                    <h4>	<i class="icon fa fa-check"></i> Alert!</h4>
+                    <label> @TempData["SuccessMsg"]</label>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="WarningCall" class="modal">
+        <div class="modal-dialog modal-sm">
+            <div class="row">
+                <div class="alert alert-warning alert-dismissable">
+                    <button onclick="$('#WarningCall').hide();" type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+                    <h4>	<i class="icon fa fa-warning"></i> Alert!</h4>
+                    <label> @TempData["WarningMsg"]</label>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="wrapper">
+        <header class="main-header">
+            <!-- Logo -->
+            <a style="background-color:#367fa9;display:block; color:white;font-size:25px;" href="@Url.Action("Index", "Home")"><b>@{string str = Session["ShopNAme"] == null ? "" : Session["ShopNAme"].ToString();}<center> @str</center></b></a>
+
+            <!-- Header Navbar: style can be found in header.less -->
+            <nav class="navbar navbar-static-top" role="navigation">
+                <!-- Sidebar toggle button-->
+                <a href="#" class="sidebar-toggle" data-toggle="offcanvas" role="button">
+                    <span class="sr-only">Toggle navigation</span>
+                </a>
+                <div>
+
+                </div>
+                <!-- Navbar Right Menu -->
+                <div class="navbar-custom-menu">
+                    <ul class="nav navbar-nav"></ul>
+                </div>
+            </nav>
+        </header>
+        <!-- Left side column. contains the logo and sidebar -->
+        <aside class="main-sidebar">
+            <!-- sidebar: style can be found in sidebar.less -->
+            <section class="sidebar">
+                <!-- Sidebar user panel -->
+                <a href="@Url.Action("Index", "Home")">
+                    <div class="user-panel">
+                        <div class="image">
+                            @if (Session["ShopImgPath"] == null)
+                            {
+                <img src="http://img.ezeelo.com/Images/Marchant/logo.png" alt="User Image" style="width:50%; height:50%;background-color:white;padding:15px;margin-left:23%" /> }
+            else
+            {
+<img src="@Session["ShopImgPath"]" onerror="this.onerror=null;this.src='http://img.ezeelo.com/Images/Marchant/logo.png'; this.style='width:50%; height:50%;background-color:white;padding:15px;margin-left:23%'" alt="User Image" />}
+                        </div>
+                        <div class="info">
+                            <p>@{ string str1 = Session["ContactPerson"] == null ? "" : Session["ContactPerson"].ToString();} @str1</p>
+                        </div>
+                    </div>
+                </a>
+                <!--Menu-->
+                <ul class="sidebar-menu">
+                    <li class="treeview" id="lnk-Dashboard">
+                        <a href="@Url.Action("Index", "Home")">
+                            <i class="fa fa-dashboard"></i> <span>Dashboard</span>
+                        </a>
+                    </li>
+                    <li class="treeview" id="lnk-Profile">
+                        <a href="@Url.Action("MyProfile", "Home")">
+                            <i class="fa fa-user"></i> <span>My Profile</span>
+                        </a>
+                    </li>
+                    <li id="lnk-Transaction">
+                        <a href="@Url.Action("AddNew", "MerchantTransaction")">
+                            <i class="fa fa-files-o"></i><span>Transaction</span>
+                        </a>
+                    </li>
+                    <li id="lnk-PendingTrans">
+                        <a href="@Url.Action("Index", "PendingTransaction")">
+                            <i class="fa fa-files-o"></i><span>Pending Transaction</span>
+                        </a>
+                    </li>
+                    <li id="lnk-Recharge">
+                        <a href="@Url.Action("Index", "RechargeAccount",new { flag=0})">
+                            <i class="fa fa-inr"></i><span>Topup Recharge</span>
+                        </a>
+                    </li>
+                    <li id="lnk-QrCode">
+                        <a href="@Url.Action("PrintQrCode", "Home")">
+                            <i class="fa fa-qrcode "></i><span>Print Qr Code</span>
+                        </a>
+                    </li>
+                    <li class="treeview" id="lnk-Report">
+                        <a href="#">
+                            <i class="fa fa-th"></i> <span>Report</span><i class="fa fa-angle-left pull-right"></i>
+                        </a>
+                        <ul class="treeview-menu">
+                            <li><a href="@Url.Action("TransactionReport", "Report")"><i class="fa fa-circle-o"></i> Transaction</a></li>
+                            <li><a href="@Url.Action("RatingReviewReport", "Report")"><i class="fa fa-circle-o"></i> Rating-Review Report</a></li>
+                            <li><a href="@Url.Action("PassbookReport", "Report")"><i class="fa fa-circle-o"></i> Passbook</a></li>
+                        </ul>
+                    </li>
+                    <li id="lnk-Online" style="color:yellow !important;">
+                        <i class="fa fa-desktop "></i><span>Go Online</span>
+                    </li>
+                </ul>
+            </section>
+            <!-- /.sidebar -->
+        </aside>
+        <!-- Right side column. Contains the navbar and content of the page -->
+        <div class="content-wrapper">
+            @RenderBody()
+
+        </div><!-- /.content-wrapper -->
+
+        <footer class="main-footer">
+            <div class="pull-right hidden-xs">
+                <b>Version</b> 1.0
+            </div>
+            <strong>Copyright &copy; 2019-2020 <a href="http://www.ezeelo.com">eZeelo</a>.</strong> All rights reserved.
+        </footer>
+    </div>
+
+</body>
+</html>
+
+<script src="https://code.jquery.com/jquery-1.9.1.min.js"></script>
+<script>
+    $(document).ready(function () {
+        $("#lnk-Online").bind("click", function (event) {
+            // var cityid = $("select#City option:selected").val();
+            //if (cityid == 0) {
+            //    $('#Pincode').empty();
+            //    $('#Pincode').append('<option value=0>Select Pincode</option>');
+           
+            //    return;
+            //}
+            $.ajax({
+                type: "GET",
+                url: "@Url.Action("GoOnline", "Home")",
+                data: "",
+                cache: false,
+                success: function (msg) {
+                    console.log(msg)
+                    if (msg != null) {
+                        if (msg.responseCode == 1) {
+                            window.location = msg;
+                        } else {
+                            alert('Failure, please make sure your KYC is done and you have Top Up');
+                        }
+                        
+                    }
+                },
+                error: function (x, e) {
+                    alert('Failure, please make sure your KYC is done and you have Top Up');
+                }
+            });
+        });
+    });
+</script>

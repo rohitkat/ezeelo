@@ -1,0 +1,171 @@
+﻿@model ModelLayer.Models.LeadersMobileDisplay_Downline
+
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_LeadersLayout.cshtml";
+}
+
+<legend>Display Status In List View and Tabular View</legend>
+
+<style type="text/css">
+    .switch {
+        position: relative;
+        display: inline-block;
+        width: 60px;
+        height: 34px;
+    }
+
+        .switch input {
+            display: none;
+        }
+
+    .slider {
+        position: absolute;
+        cursor: pointer;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-color: #ccc;
+        transition: .4s;
+    }
+
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 26px;
+            width: 26px;
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            transition: .4s;
+        }
+
+    /* include generated hidden field here */
+    input[type="checkbox"]:checked + input[type="hidden"] + .slider,
+    input[type="checkbox"]:checked + .slider {
+        background-color: #2196F3;
+    }
+
+    /* include generated hidden field here */
+    input[type="checkbox"]:focus + input[type="hidden"] + .slider,
+    input[type="checkbox"]:focus + .slider {
+        box-shadow: 0 0 1px #2196F3;
+    }
+
+    /* include generated hidden field here */
+    input[type="checkbox"]:checked + input[type="hidden"] + .slider:before,
+    input[type="checkbox"]:checked + .slider:before {
+        transform: translateX(26px);
+    }
+
+    /* Rounded sliders */
+    .slider.round {
+        border-radius: 34px;
+    }
+
+        .slider.round:before {
+            border-radius: 50%;
+        }
+</style>
+
+
+<table class="table">
+    
+    <tr>
+        <td>
+            Mobile Display in downline status
+        </td>
+        <td>
+            <label class="switch">
+                @Html.CheckBoxFor(model => model.IsMobileDisplay)
+                <div class="slider round">
+                </div>
+            </label>
+        </td>
+        <td>
+            Email Display 
+        </td>
+        <td>
+            <label class="switch">
+                @Html.CheckBoxFor(model => model.IsEmailDisplay)
+                <div class="slider round">
+                </div>
+            </label>
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => Model.ModifiedDate)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => Model.ModifyBy)
+        </td>
+        <td>
+           @* @Html.ActionLink("Edit", "Edit", new { /* id=item.PrimaryKey */ }) |*@
+
+        </td>
+    </tr>
+
+
+</table>
+<script>
+    $("#IsMobileDisplay").change(function () {
+
+        debugger
+        $.ajax({
+            type: "POST",
+            url: "@Url.Action("Update", "DisplayMobileInDownline")",
+
+            data: {
+                //checkedStatus: this.value
+                checkedStatus: $('#IsMobileDisplay').prop('checked')
+            }, //--> send id of checked checkbox on other page
+
+                success: function(data) {
+                    //alert('it worked');
+                   // alert(data);
+                   
+                },
+                 error: function() {
+                    alert('Not Changed');
+                },
+                complete: function() {
+                    alert('Completed!');
+                }
+            });
+        
+    })
+
+
+    
+
+    
+</script>
+
+<script>
+    $("#IsEmailDisplay").change(function () {
+
+      
+        $.ajax({
+            type: "POST",
+            url: "@Url.Action("UpdateEmail", "DisplayMobileInDownline")",
+
+            data: {
+                //emailStatus: this.value
+                emailStatus: $('#IsEmailDisplay').prop('checked')
+            }, //--> send id of checked checkbox on other page
+
+                success: function(data) {
+                    //alert('it worked');
+                   // alert(data);
+                   
+                },
+                 error: function() {
+                    alert('Not Changed');
+                },
+                complete: function() {
+                    alert('completed!');
+                }
+            });
+        
+    })
+</script>

@@ -1,0 +1,64 @@
+﻿@model ModelLayer.Models.ViewModel.CheckOTP
+<style>
+    .warning {
+        background: #fa6800 !important;
+        color: #ffffff !important;
+        border-color: #fa6800 !important;
+    }
+</style>
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+
+    <div class="form-horizontal">
+        @Html.ValidationSummary(true)
+
+        <div class="example">
+            <div class="grid">
+                <h4>OTP</h4>
+
+                <div class="row cells2">
+                    <div class="cell">
+                        <div class="input-control text full-size">
+                            @Html.TextBoxFor(model => model.OTP, new { placeholder = "OTP", autocomplete = "off" })
+                            @Html.ValidationMessageFor(model => model.OTP)
+                        </div>
+                    </div>
+                    <div class="cell">
+
+                    </div>
+                </div>
+                <input type="submit" value="Verify" class="button warning" />
+            </div>
+        </div>
+
+    </div>
+}
+
+@using (Html.BeginForm("ResendOTP", "Login", new { isExpressBuy = string.IsNullOrEmpty(Request.QueryString["IsExpressBuy"]) ? "false" : Request.QueryString["IsExpressBuy"] }, FormMethod.Post))
+{
+
+    <input type="submit" value="Resend OTP" class="link" />
+}
+
+<script type="text/javascript">
+    $(document).ready(function () {
+
+        $(".txtOTP").keydown(function (e) {
+            // Allow:delete, backspace,  tab
+            if ($.inArray(e.keyCode, [46, 8, 9]) !== -1 ||
+                // Allow: Ctrl+A, Command+A
+                (e.keyCode == 65 && (e.ctrlKey === true || e.metaKey === true)) ||
+                // Allow: home, end, left, right, down, up
+                (e.keyCode >= 35 && e.keyCode <= 40)) {
+                // let it happen, don't do anything
+                return;
+            }
+            // Ensure that it is a number and stop the keypress
+            if ((e.shiftKey || (e.keyCode < 48 || e.keyCode > 57)) && (e.keyCode < 96 || e.keyCode > 105)) {
+                e.preventDefault();
+            }
+        });
+    });
+
+</script>

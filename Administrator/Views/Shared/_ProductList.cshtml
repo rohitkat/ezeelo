@@ -1,0 +1,204 @@
+﻿@model ModelLayer.Models.ViewModel.MyProductList
+
+
+
+@*<script src="~/Content/js/jquery.dataTables.min.js"></script>
+<link href="~/Content/css/Site.css" rel="stylesheet" />
+<link href="~/Content/css/sortable.css" rel="stylesheet" />
+<link href="~/Content/css/searching.css" rel="stylesheet" />*@
+<style>
+    .btn-jequery {
+        margin-left: 21px;
+    }
+    .fg-toolbar {
+        display: none!important;
+    }
+    .dataTables_length {
+        margin-left: 0px;
+        margin-top: 7px;
+    }
+
+    .pagination {
+        margin: 0 40px;
+    }
+</style>
+@*<p>*@
+@*@Html.ActionLink("Create New", "Create")*@
+@*LIST OF SPECIFICATION*@
+@*</p>*@
+<script src="~/Content/js/jquery-1.9.1.min.js"></script>
+<script src="~/Content/js/jquery.dataTables.min.js"></script>
+<script src="~/Content/js/bootstrap.min.js"></script>
+<script type="text/javascript">
+    $(document).ready(function () {
+        $("#myTable").DataTable({
+            "bDestroy": true,
+            //"sPaginationType": "full_numbers",
+            "bJQueryUI": true,
+            "bInfo": false,
+            "scrollY": 700,
+            "scrollCollapse": true,
+            "bPaginate": false,
+            "iDisplayLength": 20,
+            "bAutoWidth": false,
+
+        });
+
+    });
+</script>
+
+@using (Html.BeginForm("Create", "FrequentlyBuyTogetherProduct"))
+{  @Html.AntiForgeryToken()
+    <div class="span10" id="content">
+        <ul class="breadcrumb">
+            <li>
+                <a href="index.html">LIST OF PRODUCTS</a>
+            </li>
+
+        </ul>
+        <div class="row-fluid">
+            <div class="box">
+                <div class="box-header">
+                    <h2><i class="icon-edit"></i><span class="break"></span>Products...</h2>
+
+                </div>
+                <div class="box-content table">
+                    <table class="table scroll" id="myTable">
+                        <thead>
+                            <tr>
+                                <th>
+                                    Id
+                                </th>
+                                <th>
+                                    Name
+                                </th>
+                                @*<th>
+                        Level
+                    </th>*@
+                                <th>
+                                    Select
+                                </th>
+                            </tr>
+                        </thead>
+
+                        @for (int i = 0; i < Model.pMyProductViewModel.Count(); i++)
+                        {
+                            <tr>
+                                <td>
+                                    @Html.DisplayFor(x => x.pMyProductViewModel[i].ID)
+                                    @Html.HiddenFor(x => x.pMyProductViewModel[i].ID)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(x => x.pMyProductViewModel[i].Name)
+                                    @Html.HiddenFor(x => x.pMyProductViewModel[i].Name)
+                                </td>
+                                @*<td>
+                        @Html.DisplayFor(x => x.pMyProductViewModel[i].level)
+                        @Html.HiddenFor(x => x.pMyProductViewModel[i].level)
+                    </td>*@
+                                <td> @Html.EditorFor(x => x.pMyProductViewModel[i].isSelected) </td>
+                            </tr>
+                        }
+
+                        <tr>
+                            <td>@Html.Hidden("ThreeLevelID", Model.ThreeLevelID)</td>
+
+                            <td>@Html.Hidden("TwoLevelID", Model.TwoLevelID)</td>
+                            <td>@Html.Hidden("hdnProdID", (long)ViewBag.ProIDD)</td>
+
+
+
+                        </tr>
+                    </table>
+                    
+
+                </div>
+            </div>
+            @*<div id="Pager">
+                <div class="wrap">
+                    <div id="slider1" class="slider">
+                        <ul>
+                            @for (int c = 1; c <= @ViewBag.TotalPages; c++)
+                            {
+                                <li><a class="page-number" href="javascript:void();">@c</a></li>
+
+                            }
+
+                        </ul>
+
+                    </div>
+
+                    <div class="controls" style="margin-top:-27px; background:#F9F9F9">
+                        <a href="#noname" class="prev-slide"><<</a>
+                        <a href="#noname" class="next-slide" style="float: right; margin-right: 299px;">>></a>
+                    </div>
+                </div>
+                <span class="totalcount"><b>Showing @ViewBag.PageSize of @ViewBag.TotalCount enteries</b></span>
+            </div>*@
+
+        </div>
+    </div>
+    <input type="submit" id="submit" name="SUBMIT" class="btn btn-primary btn-jequery" />
+    <span id="message"></span>
+}
+
+<script>
+    $(document).ready(function () {
+        $("#submit").click(function () {
+            var levelTwo = $("#TwoLevelID").val();
+            var levelThree = $("#ThreeLevelID").val()
+            if (levelThree == 0) {
+                $("#message").text("Please Select the Category and Regenerate Product List ");
+                return false;
+            }
+        });
+    });
+</script>
+@*<script src="~/Content/js/jquery.1.8.3.min.js"></script>*@
+<script>
+    $(document).ready(function () {
+        $("#Pager .page-number").click(function (e) {
+            $('#loader_img').show();
+            var pagecount = 0;
+            var page = parseInt($(this).html());
+            if (page > 1) {
+                pagecount = 1;
+            }
+            var fromDate = "@ViewBag.fromDate";
+            var toDate = "@ViewBag.toDate";
+            var cityID = "@ViewBag.cityID";
+            $.ajax({
+                url: '@Url.Action("GetReport", "CustomerRegistrationReport")',
+                data: { 'page': page, 'pagecount': pagecount, 'fromDate': fromDate, 'toDate': toDate, 'cityID': cityID },
+                type: "POST",
+                cache: false,
+                success: function (data) {
+                    //alert(data);
+                    $('#loader_img').hide();
+                    $('#divReport').empty();
+                    $('#divReport').append(data);
+
+                },
+                error: function (data) {
+
+                }
+            });
+        });
+
+    });
+
+</script>
+
+<script src="~/Content/js/lemmon-slider.js"></script>
+<script type="text/javascript">
+    $(document).ready(function () {
+        //alert('OK');
+        // slider 1
+        $('#slider1').lemmonSlider({
+            infinite: false
+        });
+
+    });
+
+</script>
+

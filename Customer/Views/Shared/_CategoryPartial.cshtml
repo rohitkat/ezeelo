@@ -1,0 +1,233 @@
+﻿@model ModelLayer.Models.ViewModel.ProductViewModel
+@using System.Text.RegularExpressions;
+@*<link href="~/Content/css/Site.css" rel="stylesheet" />*@
+<link href="~/Content/css/Site.css" rel="stylesheet" />
+<style>
+    .clearright {
+        float: right;
+        padding-right: 5px;
+        margin-top: -6px;
+        background: url("../Content/Images/clearbutton.png") no-repeat 2% / 33% !important;
+        width: 62px;
+        padding-top: 4px;
+    }
+
+    .contentcetg {
+        padding: 0rem;
+        height: auto;
+        min-height: 40px;
+        max-height: 250px;
+        overflow: auto;
+    }
+
+    .mtree-demo .mtree {
+        background: #EEE;
+        margin: 20px auto;
+        max-width: 320px;
+        border-radius: 3px;
+    }
+
+    .mtree-skin-selector {
+        text-align: center;
+        background: #EEE;
+        padding: 10px 0 15px;
+    }
+
+        .mtree-skin-selector li {
+            display: inline-block;
+            float: none;
+        }
+
+        .mtree-skin-selector button {
+            padding: 5px 10px;
+            margin-bottom: 1px;
+            background: #BBB;
+        }
+
+            .mtree-skin-selector button:hover {
+                background: #999;
+            }
+
+            .mtree-skin-selector button.active {
+                background: #999;
+                font-weight: bold;
+            }
+
+            .mtree-skin-selector button.csl.active {
+                background: #FFC000;
+            }
+
+    .shop-category-menu ul li:hover {
+        background: none;
+        color: #057f25;
+    }
+
+    .shop-category-menu ul li {
+        font-size: 10px;
+        margin: 1px 0px;
+        padding: 0px 0px;
+    }
+
+    .mtree-level-1 {
+        padding-left: 0px !important;
+    }
+
+    ul.mtree.transit li.mtree-node > ul > li:last-child {
+        margin-bottom: 0px !important;
+        padding-bottom: 0px !important;
+        border-bottom: 1px solid #333;
+    }
+
+    .mtree-level-1 li a {
+        font-size: 10px !important;
+        padding-left: 5px !important;
+    }
+
+        .mtree-level-1 li a:hover {
+            background: #FFF !important;
+            color: #333 !important;
+        }
+
+    ul.mtree.transit a {
+        padding: 2px 0px 2px 4px !important;
+        color: #555;
+        font-size: 12px !important;
+    }
+</style>
+
+@if (Model != null)
+{
+    string cityName = "";
+    int franchiseID = 0;////added
+    if (Request.Cookies["CityCookie"] != null && Request.Cookies["CityCookie"].Value != "")
+    {
+        cityName = Request.Cookies["CityCookie"].Value.Split('$')[1].ToLower();
+        franchiseID = Convert.ToInt32(Request.Cookies["CityCookie"].Value.Split('$')[2]);////added
+    }
+
+    if (Model.categoryList != null)
+    {
+        if (Model.categoryList.Count() > 0)
+        {
+
+            <div class="contentcetg">
+                @if (ViewBag.ShopID == 0)
+                {
+                    for (var i = 0; i < Model.categoryList.Distinct().Count(); i++)
+                    {
+                        <ul style="padding-left:0px;margin-left:0px;">
+                            <li>
+                                @Html.HiddenFor(model => model.categoryList[i].ID)
+                                @Html.HiddenFor(model => model.categoryList[i].Name)
+
+                                @if (ViewBag.ShopID == 0)
+                                {
+                                    string keyWord = Regex.Replace(ViewBag.Keyword.Substring(0, Math.Min(ViewBag.Keyword.Length, 30)), @"[\/\\#,+()$~%.':*?<>{} ]", "-").Replace("&", "and").ToLower();
+
+                                    if (ViewBag.ParentCategory != 0 && keyWord != null)
+                                    {
+                                        if (Model.categoryList[i].ID != ViewBag.SelectedCategory)
+                                        {
+                                            @Html.ActionLink(Model.categoryList[i].Name, "Products", "Product", new { item = keyWord, parentCategoryId = ViewBag.ParentCategory, selectedCategoryId = Model.categoryList[i].ID }, new { style = "color:#000;" })
+                                        }
+                                        else
+                                        {
+                                            @Html.ActionLink(Model.categoryList[i].Name, "Products", "Product", new { item = keyWord, parentCategoryId = ViewBag.ParentCategory, selectedCategoryId = Model.categoryList[i].ID }, new { style = "color:#CBA909;" })
+                                        }
+                                    }
+                                    else
+                                    {
+                                        if (Model.categoryList[i].ID != ViewBag.SelectedCategory)
+                                        {
+                                            @Html.ActionLink(Model.categoryList[i].Name, "Products", "Product", new { item = keyWord, selectedCategoryId = Model.categoryList[i].ID }, new { style = "color:#000;" })
+                                        }
+                                        else
+                                        {
+                                            @Html.ActionLink(Model.categoryList[i].Name, "Products", "Product", new { item = keyWord, selectedCategoryId = Model.categoryList[i].ID }, new { style = "color:#CBA909;" })
+                                        }
+                                    }
+                                }
+
+                            </li>
+                        </ul>
+                    }
+                }
+                else
+                {
+
+                    List<int> SecLvlCatList = Model.categoryList.Select(p => p.SecondLevelCatID).Distinct().ToList();
+                    <ul class="mtree transit">
+                        @for (int i = 0; i < SecLvlCatList.Count; i++)
+                        {
+                            var thirdLvlCatList = Model.categoryList.Select(x => new
+                            {
+                                x.ID,
+                                x.Name,
+                                x.SecondLevelCatID,
+                                x.SecondLevelCatName
+                            }).Where(x => x.SecondLevelCatID == SecLvlCatList[i]).ToList();
+
+                            <li>
+                                <a href="#">
+                                    @thirdLvlCatList[0].SecondLevelCatName
+                                </a>
+                                @foreach (var item in thirdLvlCatList)
+                                {
+                                    <ul>
+                                        @{
+
+                                    string lshopName = Regex.Replace(@Model.shopDetails.ShopBasicDetails.Name.Substring(0, Math.Min(Model.shopDetails.ShopBasicDetails.Name.Length, 30)), @"[\/\\#,+()$~%.':*?<>{} ]", "-").Replace("&", "and").ToLower();
+                                    string lcatName = Regex.Replace(@item.Name.Substring(0, Math.Min(item.Name.Length, 30)), @"[\/\\#,+()$~%.':*?<>{} ]", "-").Replace("&", "and").ToLower();
+                                    <li>
+                                        @if (item.ID != ViewBag.SelectedCategory)
+                                        {
+                                            @Html.RouteLink(item.Name, "ShopProducts", new { shopID = ViewBag.ShopID, shopName = lshopName, selectedCategoryId = item.ID, catName = lcatName, city = cityName, franchiseId = franchiseID }, new { style = "color:#000;" }) @*////added franchiseId=franchiseID*@
+                                        }
+                                        else
+                                        {
+                                            @Html.RouteLink(item.Name, "ShopProducts", new { shopID = ViewBag.ShopID, shopName = lshopName, selectedCategoryId = item.ID, lcatName, city = cityName, franchiseId = franchiseID }, new { style = "color:#CBA909;" }) @*////added franchiseId=franchiseID*@
+                                        }
+                                    </li>
+                                        }
+                                    </ul>
+                                }
+
+                            </li>
+                        }
+
+                    </ul>
+                }
+
+
+            </div>
+        }
+    }
+}
+<script src="~/Content/js/mtree.js"></script>
+<script>
+    $(document).ready(function () {
+        var mtree = $('ul.mtree');
+
+        // Skin selector for demo
+        mtree.wrap('<div class=mtree-demo></div>');
+        var skins = ['bubba', 'skinny', 'transit', 'jet', 'nix'];
+        mtree.addClass(skins[0]);
+        $('body').prepend('<div class="mtree-skin-selector"><ul class="button-group radius"></ul></div>');
+        var s = $('.mtree-skin-selector');
+        $.each(skins, function (index, val) {
+            s.find('ul').append('<li><button class="small skin">' + val + '</button></li>');
+        });
+        s.find('ul').append('<li><button class="small csl active">Close Same Level</button></li>');
+        s.find('button.skin').each(function (index) {
+            $(this).on('click.mtree-skin-selector', function () {
+                s.find('button.skin.active').removeClass('active');
+                $(this).addClass('active');
+                mtree.removeClass(skins.join(' ')).addClass(skins[index]);
+            });
+        })
+        s.find('button:first').addClass('active');
+        s.find('.csl').on('click.mtree-close-same-level', function () {
+            $(this).toggleClass('active');
+        });
+    });
+</script>

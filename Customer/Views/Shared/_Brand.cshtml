@@ -1,0 +1,44 @@
+﻿@model ModelLayer.Models.ViewModel.ProductViewModel
+@*<link href="~/Content/css/Site.css" rel="stylesheet" />*@
+<link href="~/Content/css/Site.css" rel="stylesheet" />
+<script src="~/Scripts/jquery-1.10.2.min.js"></script>
+<script type="text/javascript">
+    $(document).ready(function () {
+        $(".contentnew").show(200);
+        $(".title").click(function () {
+            $(".contentnew").toggle();
+        });
+        $('.brandCheckBox input[type="checkbox"]').each(function () {
+            $(this).prop('checked', false);
+        });
+    });
+</script>
+@if (Model != null)
+{
+    if (Model.brandList != null)
+    {
+        if (Model.brandList.Count() > 0)
+        {
+            if (!(Model.brandList.Count() == 1 && Model.brandList[0].ID == 1))
+            {
+
+                <table id="tblBrand">
+                    @for (var i = 0; i < Model.brandList.Distinct().Count(); i++)
+                    {
+                        <tr>
+                            <td>
+                                @Html.CheckBoxFor(it => it.brandList[i].IsSelected, new { onchange = "this.form.submit();", Style = "vertical-align:3px}", @class = "brandCheckBox" })
+                            </td>
+                            <td>
+                                @Html.HiddenFor(it => it.brandList[i].ID)
+                                @Html.HiddenFor(it => it.brandList[i].Name)
+                                @Html.DisplayFor(it => it.brandList[i].Name)
+                            </td>
+                        </tr>
+                    }
+                </table>
+
+            }
+        }
+    }
+}

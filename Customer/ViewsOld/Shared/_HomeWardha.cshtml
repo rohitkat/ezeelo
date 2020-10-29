@@ -1,0 +1,999 @@
+﻿@{
+    Layout = null;
+}
+<script src="~/Content/update(5-10)/js/jquery-1.11.2.min.js"></script>
+<script src="~/Scripts/ShortList.js"></script>
+<script type="text/javascript">
+    function AddProduct(shopStockId, itemId) {
+        var _url = '@Url.Action("AddProductInShoppingCart", "Product")';
+        AddProductToShppingCartWithoutQuantity(shopStockId, itemId, _url);
+    }
+</script>
+<script type="text/javascript">
+    $(document).ready(function () {
+        var newClone1 = $("#cpy1").html();
+        var newClone2 = $("#cpy2").html();
+        var newClone3 = $("#cpy3").html();
+        var newClone4 = $("#cpy4").html();
+        var newClone5 = $("#cpy5").html();
+        var newClone6 = $("#cpy6").html();
+        if ($(window).width() < 750) {
+            $(newClone1).clone().appendTo("#pst1");
+            $(newClone2).clone().appendTo("#pst2");
+            $(newClone3).clone().appendTo("#pst3");
+            $(newClone4).clone().appendTo("#pst4");
+            $(newClone5).clone().appendTo("#pst5");
+            $(newClone6).clone().appendTo("#pst6");
+
+        } else {
+            $("#pst1").empty();
+            $("#pst2").empty();
+            $("#pst3").empty();
+            $("#pst4").empty();
+            $("#pst5").empty();
+            $("#pst6").empty();
+        }
+    });
+</script>
+<script src="~/Scripts/jquery.lazyimage.js"></script>
+<script>
+    $(function () {
+
+        $('img.main-img').imgPreload()
+
+    });
+</script>
+<script src="~/Scripts/Products.js"></script>
+<style>
+    /*.product-list li .product-name {
+        height: 60px;
+    }*/
+    .active11 {
+        color: green !important;
+    }
+</style>
+@{
+    string cityName = "";
+    if (Request.Cookies["CityCookie"] != null && Request.Cookies["CityCookie"].Value != "")
+    {
+        cityName = Request.Cookies["CityCookie"].Value.Split('$')[1].ToLower();
+    }
+}
+
+<div class="content-page">
+    <div class="container">
+
+        <!-- featured category fashion -->
+
+
+
+        <div class="category-featured fashion">
+            <nav class="navbar nav-menu show-brand">
+                <div class="container">
+                    <!-- Brand and toggle get grouped for better mobile display -->
+                    <div class="navbar-brand"><a href="#">@*<img alt="fashion" src="~/Content/update(5-10)/images/icon-fashion.png">*@Lifestyle &amp; Fashion</a></div>
+                    <span class="toggle-menu"></span>
+                    <!-- Collect the nav links, forms, and other content for toggling -->
+                    <div class="collapse navbar-collapse">
+                        <ul class="nav navbar-nav" id="pst3"></ul>
+                    </div><!-- /.navbar-collapse -->
+                </div><!-- /.container-fluid -->
+                <div id="elevator-1" class="floor-elevator">
+                    <a href="#" class="btn-elevator up disabled fa fa-angle-up"></a>
+                    <a href="#elevator-2" class="btn-elevator down fa fa-angle-down"></a>
+                </div>
+            </nav>
+            <div class="product-featured clearfix">
+                <div class="row">
+                    <div class="col-sm-2 sub-category-wapper">
+                        <ul class="sub-category-list" id="cpy3">
+                            <li><a class="parent" href='@Url.RouteUrl("LifestyleAndFashionStreet", new { city = cityName })'>Women Wear</a></li>
+                            <li><a class="parent" href='@Url.RouteUrl("LifestyleAndFashionStreet", new { city = cityName })'>Women Western Wear</a></li>
+                            <li><a class="parent" href='@Url.RouteUrl("LifestyleAndFashionStreet", new { city = cityName })'>Men Clothing</a></li>
+                            <li><a class="parent" href='@Url.RouteUrl("LifestyleAndFashionStreet", new { city = cityName })'>Kid Section</a></li>
+                            <li><a class="parent" href='@Url.RouteUrl("LifestyleAndFashionStreet", new { city = cityName })'>Gifting Ideas</a></li>
+                        </ul>
+                    </div>
+                    <div class="col-sm-10 col-right-tab">
+                        <div class="product-featured-tab-content">
+                            <div class="tab-container">
+                                <div class="tab-panel active" id="tab-4">
+                                    <div class="box-left">
+                                        <div class="banner-img">
+                                            <a href="@Url.RouteUrl("ShopSearch2", new { city = cityName, shopName = "LORDS WEAR PVT LTD WARDHA".ToLower().Replace(" ", "-"), shopID = 10408 })"><img class="main-img" src="~/Content/update(5-10)/images/wardha_img/banner-lifestyle.jpg" alt="Banner Product"></a>
+                                        </div>
+                                    </div>
+                                    <div class="box-right">
+                                        <ul class="product-list row">
+                                            <li class="col-sm-4">
+                                                <div class="right-block">
+                                                    @*<h5 class="product-name"><a href="/PreviewItem?itemId=24678" title="Men's T Shirt Polyester Cotton Blend Knit Red With White Trimming"> Men's T Shirt Polyester Cotton Blend Knit Red With White Trimming</a></h5>*@
+                                                    <h5 class="product-name">
+                                                        <a href="@Url.RouteUrl("pre-prod-name", new { itemId = 24678, itemName = "Men's T Shirt Polyester Cotton".ToLower().Replace(' ', '-'), city = cityName })"
+                                                           title="Men's T Shirt Polyester Cotton">Men's T Shirt Polyester Cotton</a>
+                                                    </h5>
+                                                    <div class="content_price">
+                                                        <span class="price product-price">Rs240.00</span>
+                                                        @*<span class="price old-price">Rs525</span>*@
+                                                    </div>
+                                                </div>
+                                                <div class="left-block">
+                                                    @*<a href="/PreviewItem?itemId=24678"><img class="img-responsive main-img" alt="product" src="~/Content/update(5-10)/images/wardha_img/L1.png"></a>*@
+                                                    <a href="@Url.RouteUrl("pre-prod-name", new { itemId = 24678, itemName = "Men's T Shirt Polyester Cotton".ToLower().Replace(' ', '-'), city = cityName })">
+                                                        <img class="img-responsive" alt="product" src="~/Content/update(5-10)/images/wardha_img/L1.png">
+                                                    </a>
+                                                     <div class="quick-view">
+                                                        @*Id conatains productid # shopstockid # product name (space remove by _) *@
+                                                        @if (Request.Cookies["ShortListCookie"] != null && Request.Cookies["ShortListCookie"].ToString() != string.Empty)
+                                                        {
+                                                            string cookRecView = Request.Cookies["ShortListCookie"].Value;
+                                                            if (cookRecView.Contains("24678$49660$"))//productID$shpstockID
+                                                            {
+                                                                <a title="Added to shortlist" id="24678#49660#Men's T Shirt Polyester Cotton Blend Knit Red With White Trimming " class="heart active11" href="#"></a>
+                                                            }
+                                                            else
+                                                            {
+                                                                <a title="Add to shortlist" id="24678#49660#Men's T Shirt Polyester Cotton Blend Knit Red With White Trimming " class="heart" href="#" onclick="AddProductToShortListFromHome(this)"></a>
+                                                            }
+                                                        }
+                                                        else
+                                                        {
+                                                            <a title="Add to shortlist" id="24678#49660#Men's T Shirt Polyester Cotton Blend Knit Red With White Trimming " class="heart" href="#" onclick="AddProductToShortListFromHome(this)"></a>
+                                                        }
+
+                                                        @*<a title="Add to compare" class="compare" href="#"></a>*@
+                                                         <a title="Quick view" class="search" href="@Url.RouteUrl("pre-prod-name", new { itemId = 24678, itemName = "Men's T Shirt Polyester Cotton".ToLower().Replace(' ', '-'), city = cityName })"></a>
+                                                    </div>
+                                                    <div class="add-to-cart">
+                                                        @*<a title="Add to Cart" onclick="AddProductToShppingCartWithoutQuantity(49660, 24678)">Add to Cart</a>*@
+                                                        <a title="Add to Cart" onclick="AddProduct(49660, 24678)">Add to Cart</a>
+                                                    </div>
+                                                </div>
+                                            </li>
+                                            <li class="col-sm-4">
+                                                <div class="right-block">
+                                                    @*<h5 class="product-name"><a href="/PreviewItem?itemId=17199" title="Lords Men's Blue Formal Office Wear Shirt">Lords Men's Blue Formal Office Wear Shirt</a></h5>*@
+                                                    <h5 class="product-name">
+                                                        <a href="@Url.RouteUrl("pre-prod-name", new { itemId = 17199, itemName = "Lords Men's Blue Formal Office Wear Shirt".ToLower().Replace(' ', '-'), city = cityName })"
+                                                           title="Lords Men's Blue Formal Office Wear Shirt">Lords Men's Blue Formal Office Wear Shirt</a>
+                                                    </h5>
+                                                    <div class="content_price">
+                                                        <span class="price product-price">Rs280.00</span>
+                                                        @*<span class="price old-price">Rs160</span>*@
+                                                    </div>
+                                                </div>
+                                                <div class="left-block">
+                                                    @*<a href="~/PreviewItem?itemId=17199"><img class="img-responsive main-img" alt="product" src="~/Content/update(5-10)/images/wardha_img/L2.png"></a>*@
+                                                    <a href="@Url.RouteUrl("pre-prod-name", new { itemId = 17199, itemName = "Lords Men's Blue Formal Office Wear Shirt".ToLower().Replace(' ', '-'), city = cityName })">
+                                                        <img class="img-responsive" alt="product" src="~/Content/update(5-10)/images/wardha_img/L2.png">
+                                                    </a>
+                                                     <div class="quick-view">
+                                                        @*Id conatains productid # shopstockid # product name (space remove by _) *@
+                                                        @if (Request.Cookies["ShortListCookie"] != null && Request.Cookies["ShortListCookie"].ToString() != string.Empty)
+                                                        {
+                                                            string cookRecView = Request.Cookies["ShortListCookie"].Value;
+                                                            if (cookRecView.Contains("17199$50758$"))//productID$shpstockID
+                                                            {
+                                                                <a title="Added to shortlist" id="17199#50758#Lords Men's Blue Formal Office Wear Shirt" class="heart active11" href="#"></a>
+                                                            }
+                                                            else
+                                                            {
+                                                                <a title="Add to shortlist" id="17199#50758#Lords Men's Blue Formal Office Wear Shirt" class="heart" href="#" onclick="AddProductToShortListFromHome(this)"></a>
+                                                            }
+                                                        }
+                                                        else
+                                                        {
+                                                            <a title="Add to shortlist" id="17199#50758#Lords Men's Blue Formal Office Wear Shirt" class="heart" href="#" onclick="AddProductToShortListFromHome(this)"></a>
+                                                        }
+                                                        @*<a title="Add to compare" class="compare" href="#"></a>*@
+                                                         <a title="Quick view" class="search" href="@Url.RouteUrl("pre-prod-name", new { itemId = 17199, itemName = "Lords Men's Blue Formal Office Wear Shirt".ToLower().Replace(' ', '-'), city = cityName })"></a>
+                                                    </div>
+                                                    <div class="add-to-cart">
+                                                        @*<a title="Add to Cart" onclick="AddProductToShppingCartWithoutQuantity(50758, 17199)">Add to Cart</a>*@
+                                                        <a title="Add to Cart" onclick="AddProduct(50758, 17199)">Add to Cart</a>
+                                                    </div>
+                                                </div>
+                                            </li>
+                                            <li class="col-sm-4">
+                                                <div class="right-block">
+                                                    @*<h5 class="product-name"><a href="~/PreviewItem?itemId=22480" title="Men's Stylish Ethnic Neharu-modi Jacket">Men's Stylish Ethnic Neharu-modi Jacket</a></h5>*@
+                                                    <h5 class="product-name">
+                                                        <a href="@Url.RouteUrl("pre-prod-name", new { itemId = 22480, itemName = "Men's Stylish Ethnic Neharu-modi Jacket".ToLower().Replace(' ', '-'), city = cityName })"
+                                                           title="Men's Stylish Ethnic Neharu-modi Jacket">Men's Stylish Ethnic Neharu-modi Jacket</a>
+                                                    </h5>
+                                                    <div class="content_price">
+                                                        <span class="price product-price">Rs675.00</span>
+                                                        @*<span class="price old-price">Rs200.00</span>*@
+                                                    </div>
+                                                </div>
+                                                <div class="left-block">
+                                                    @*<a href="~/PreviewItem?itemId=22480"><img class="img-responsive main-img" alt="product" src="~/Content/update(5-10)/images/wardha_img/L3.png"></a>*@
+                                                    <a href="@Url.RouteUrl("pre-prod-name", new { itemId = 22480, itemName = "Men's Stylish Ethnic Neharu-modi Jacket".ToLower().Replace(' ', '-'), city = cityName })">
+                                                        <img class="img-responsive" alt="product" src="~/Content/update(5-10)/images/wardha_img/L3.png">
+                                                    </a>
+                                                    <div class="quick-view">
+                                                        @*Id conatains productid # shopstockid # product name (space remove by _) *@
+                                                        @if (Request.Cookies["ShortListCookie"] != null && Request.Cookies["ShortListCookie"].ToString() != string.Empty)
+                                                        {
+                                                            string cookRecView = Request.Cookies["ShortListCookie"].Value;
+                                                            if (cookRecView.Contains("22480$48514$"))//productID$shpstockID
+                                                            {
+                                                                <a title="Added to shortlist" id="22480#50709#Men's Stylish Ethnic Neharu-modi Jacket" class="heart active11" href="#"></a>
+                                                            }
+                                                            else
+                                                            {
+                                                                <a title="Add to shortlist" id="22480#50709#Men's Stylish Ethnic Neharu-modi Jacket" class="heart" href="#" onclick="AddProductToShortListFromHome(this)"></a>
+                                                            }
+                                                        }
+                                                        else
+                                                        {
+                                                            <a title="Add to shortlist" id="22480#50709#Men's Stylish Ethnic Neharu-modi Jacket" class="heart" href="#" onclick="AddProductToShortListFromHome(this)"></a>
+                                                        }
+                                                        @*<a title="Add to compare" class="compare" href="#"></a>*@
+                                                        <a title="Quick view" class="search" href="@Url.RouteUrl("pre-prod-name", new { itemId = 22480, itemName = "Men's Stylish Ethnic Neharu-modi Jacket".ToLower().Replace(' ', '-'), city = cityName })"></a>
+                                                    </div>
+                                                    <div class="add-to-cart">
+                                                        @*AddProductToShppingCartWithoutQuantity(shopstockId,ProductId)*@
+                                                        @*<a title="Add to Cart" onclick="AddProductToShppingCartWithoutQuantity(50709, 22480)">Add to Cart</a>*@
+                                                        <a title="Add to Cart" onclick="AddProduct(50709, 22480)">Add to Cart</a>
+                                                    </div>
+                                                </div>
+                                            </li>
+                                            <li class="col-sm-4">
+                                                <div class="right-block">
+                                                    @*<h5 class="product-name"><a href="~/PreviewItem?itemId=17176" title="Lords Women Ethnic Sari,Saree with Blouse">Lords Women Ethnic Sari,Saree with Blouse</a></h5>*@
+                                                    <h5 class="product-name">
+                                                        <a href="@Url.RouteUrl("pre-prod-name", new { itemId = 17176, itemName = "Lords Women Ethnic Sari,Saree with Blouse".ToLower().Replace(' ', '-'), city = cityName })"
+                                                           title="Lords Women Ethnic Sari,Saree with Blouse">Lords Women Ethnic Sari,Saree with Blouse</a>
+                                                    </h5>
+                                                    <div class="content_price">
+                                                        <span class="price product-price">Rs775.00</span>
+                                                        @*<span class="price old-price">Rs1250</span>*@
+                                                    </div>
+                                                </div>
+                                                <div class="left-block">
+                                                    @*<a href="~/PreviewItem?itemId=17176"><img class="img-responsive main-img" alt="product" src="~/Content/update(5-10)/images/wardha_img/L4.png"></a>*@
+                                                    <a href="@Url.RouteUrl("pre-prod-name", new { itemId = 17176, itemName = "Lords Women Ethnic Sari,Saree with Blouse".ToLower().Replace(' ', '-'), city = cityName })">
+                                                        <img class="img-responsive" alt="product" src="~/Content/update(5-10)/images/wardha_img/L4.png">
+                                                    </a>
+                                                    <div class="quick-view">
+                                                        @*Id conatains productid # shopstockid # product name (space remove by _) *@
+                                                        @if (Request.Cookies["ShortListCookie"] != null && Request.Cookies["ShortListCookie"].ToString() != string.Empty)
+                                                        {
+                                                            string cookRecView = Request.Cookies["ShortListCookie"].Value;
+                                                            if (cookRecView.Contains("17176$6494$"))//productID$shpstockID
+                                                            {
+                                                                <a title="Added to shortlist" id="17176#50446#Lords Women Ethnic Sari,Saree with Blouse, Crepe Silk for Office & Party Wear FS-19" class="heart active11" href="#"></a>
+                                                            }
+                                                            else
+                                                            {
+                                                                <a title="Add to shortlist" id="17176#50446#Lords Women Ethnic Sari,Saree with Blouse, Crepe Silk for Office & Party Wear FS-19" class="heart" href="#" onclick="AddProductToShortListFromHome(this)"></a>
+                                                            }
+                                                        }
+                                                        else
+                                                        {
+                                                            <a title="Add to shortlist" id="17176#50446#Lords Women Ethnic Sari,Saree with Blouse, Crepe Silk for Office & Party Wear FS-19" class="heart" href="#" onclick="AddProductToShortListFromHome(this)"></a>
+                                                        }
+                                                        @*<a title="Add to compare" class="compare" href="#"></a>*@
+                                                        <a title="Quick view" class="search" href="@Url.RouteUrl("pre-prod-name", new { itemId = 17176, itemName = "Lords Women Ethnic Sari,Saree with Blouse".ToLower().Replace(' ', '-'), city = cityName })"></a>
+                                                    </div>
+                                                    <div class="add-to-cart">
+                                                        @*<a title="Add to Cart" onclick="AddProductToShppingCartWithoutQuantity(50446, 17176)">Add to Cart</a>*@
+                                                        <a title="Add to Cart" onclick="AddProduct(50446, 17176)">Add to Cart</a>
+                                                    </div>
+                                                </div>
+                                            </li>
+                                            <li class="col-sm-4">
+                                                <div class="right-block">
+                                                    @*<h5 class="product-name"><a href="~/PreviewItem?itemId=17204" title="Lords Men's Single Button Tuxedo Pippin Blazer Jacket for Parties">Lords Men's Single Button Tuxedo Pippin Blazer Jacket for Parties</a></h5>*@
+                                                    <h5 class="product-name">
+                                                        <a href="@Url.RouteUrl("pre-prod-name", new { itemId = 17204, itemName = "Lords Men's Single Button Tuxedo".ToLower().Replace(' ', '-'), city = cityName })"
+                                                           title="Lords Men's Single Button Tuxedo">Lords Men's Single Button Tuxedo</a>
+                                                    </h5>
+                                                    <div class="content_price">
+                                                        <span class="price product-price">Rs1675.00</span>
+                                                        <span class="price old-price">Rs1825.00</span>
+                                                    </div>
+                                                </div>
+                                                <div class="left-block">
+                                                    @*<a href="~/PreviewItem?itemId=17204"><img class="img-responsive main-img" alt="product" src="~/Content/update(5-10)/images/wardha_img/L5.png"></a>*@
+                                                    <a href="@Url.RouteUrl("pre-prod-name", new { itemId = 17204, itemName = "Lords Men's Single Button Tuxedo".ToLower().Replace(' ', '-'), city = cityName })">
+                                                        <img class="img-responsive" alt="product" src="~/Content/update(5-10)/images/wardha_img/L5.png">
+                                                    </a>
+                                                    <div class="quick-view">
+                                                        @*Id conatains productid # shopstockid # product name (space remove by _) *@
+                                                        @if (Request.Cookies["ShortListCookie"] != null && Request.Cookies["ShortListCookie"].ToString() != string.Empty)
+                                                        {
+                                                            string cookRecView = Request.Cookies["ShortListCookie"].Value;
+                                                            if (cookRecView.Contains("17204$50740$"))//productID$shpstockID
+                                                            {
+                                                                <a title="Added to shortlist" id="17204#50740#Lords Men's Single Button Tuxedo Pippin Blazer Jacket for Parties" class="heart active11" href="#"></a>
+                                                            }
+                                                            else
+                                                            {
+                                                                <a title="Add to shortlist" id="17204#50740#Lords Men's Single Button Tuxedo Pippin Blazer Jacket for Parties" class="heart" href="#" onclick="AddProductToShortListFromHome(this)"></a>
+                                                            }
+                                                        }
+                                                        else
+                                                        {
+                                                            <a title="Add to shortlist" id="17204#50740#Lords Men's Single Button Tuxedo Pippin Blazer Jacket for Parties" class="heart" href="#" onclick="AddProductToShortListFromHome(this)"></a>
+                                                        }
+                                                        @*<a title="Add to compare" class="compare" href="#"></a>*@
+                                                        <a title="Quick view" class="search" href="@Url.RouteUrl("pre-prod-name", new { itemId = 17204, itemName = "Lords Men's Single Button Tuxedo".ToLower().Replace(' ', '-'), city = cityName })"></a>
+                                                    </div>
+                                                    <div class="add-to-cart">
+                                                        @*<a title="Add to Cart" onclick="AddProductToShppingCartWithoutQuantity(50740, 17204)">Add to Cart</a>*@
+                                                        <a title="Add to Cart" onclick="AddProduct(50740, 17204)">Add to Cart</a>
+                                                    </div>
+                                                </div>
+                                            </li>
+                                            <li class="col-sm-4">
+                                                <div class="right-block">
+                                                    @*<h5 class="product-name"><a href="~/PreviewItem?itemId=17166" title="Lords Women Ethnic Sari,Saree with Blouse,Crepe Silk for Office & Party Wear">Lords Women Ethnic Sari,Saree with Blouse,Crepe Silk for Office & Party Wear</a></h5>*@
+                                                    <h5 class="product-name">
+                                                        <a href="@Url.RouteUrl("pre-prod-name", new { itemId = 17166, itemName = "Lords Women Ethnic Sari,Saree with Blouse".ToLower().Replace(' ', '-'), city = cityName })"
+                                                           title="Lords Women Ethnic Sari,Saree with Blouse">Lords Women Ethnic Sari,Saree with Blouse</a>
+                                                    </h5>
+                                                    <div class="content_price">
+                                                        <span class="price product-price">Rs775.00</span>
+                                                        @*<span class="price old-price">Rs500</span>*@
+                                                    </div>
+                                                </div>
+                                                <div class="left-block">
+                                                    @*<a href="~/PreviewItem?itemId=17166"><img class="img-responsive main-img" alt="product" src="~/Content/update(5-10)/images/wardha_img/L6.png"></a>*@
+                                                    <a href="@Url.RouteUrl("pre-prod-name", new { itemId = 17166, itemName = "Lords Women Ethnic Sari,Saree with Blouse".ToLower().Replace(' ', '-'), city = cityName })">
+                                                        <img class="img-responsive" alt="product" src="~/Content/update(5-10)/images/wardha_img/L6.png">
+                                                    </a>
+                                                    <div class="quick-view">
+                                                        @*Id conatains productid # shopstockid # product name (space remove by _) *@
+                                                        @if (Request.Cookies["ShortListCookie"] != null && Request.Cookies["ShortListCookie"].ToString() != string.Empty)
+                                                        {
+                                                            string cookRecView = Request.Cookies["ShortListCookie"].Value;
+                                                            if (cookRecView.Contains("17166$50455$"))//productID$shpstockID
+                                                            {
+                                                                <a title="Added to shortlist" id="17166#50455#Lords Women Ethnic Sari,Saree with Blouse, Crepe Silk for Office & Party Wear" class="heart active11" href="#"></a>
+                                                            }
+                                                            else
+                                                            {
+                                                                <a title="Add to shortlist" id="17166#734850455#Lords Women Ethnic Sari,Saree with Blouse, Crepe Silk for Office & Party Wear" class="heart" href="#" onclick="AddProductToShortListFromHome(this)"></a>
+                                                            }
+                                                        }
+                                                        else
+                                                        {
+                                                            <a title="Add to shortlist" id="17166#50455#Lords Women Ethnic Sari,Saree with Blouse, Crepe Silk for Office & Party Wear" class="heart" href="#" onclick="AddProductToShortListFromHome(this)"></a>
+                                                        }
+                                                        @*<a title="Add to compare" class="compare" href="#"></a>*@
+                                                        <a title="Quick view" class="search" href="@Url.RouteUrl("pre-prod-name", new { itemId = 17166, itemName = "Lords Women Ethnic Sari,Saree with Blouse".ToLower().Replace(' ', '-'), city = cityName })"></a>
+                                                    </div>
+                                                    <div class="add-to-cart">
+                                                        @*<a title="Add to Cart" onclick="AddProductToShppingCartWithoutQuantity(50455, 17166)">Add to Cart</a>*@
+                                                        <a title="Add to Cart" onclick="AddProduct(50455, 17166)">Add to Cart</a>
+                                                    </div>
+                                                </div>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- end featured category fashion -->
+        <!-- featured category Jewelry -->
+        <div class="category-featured jewelry">
+            <nav class="navbar nav-menu show-brand">
+                <div class="container">
+                    <!-- Brand and toggle get grouped for better mobile display -->
+                    <div class="navbar-brand"><a href="#">@*<img alt="fashion" src="~/Content/update(5-10)/images/icon-jewelry.png">*@Home Appliances</a></div>
+                    <span class="toggle-menu"></span>
+                    <!-- Collect the nav links, forms, and other content for toggling -->
+                    <div class="collapse navbar-collapse">
+
+                        <ul class="nav navbar-nav" id="pst4"></ul>
+
+                    </div><!-- /.navbar-collapse -->
+                </div><!-- /.container-fluid -->
+                <div id="elevator-6" class="floor-elevator">
+                    <a href="#" class="btn-elevator up fa fa-angle-up"></a>
+                    <a href="#" class="btn-elevator disabled down fa fa-angle-down"></a>
+                </div>
+            </nav>
+            <div class="product-featured clearfix">
+                <div class="row">
+                    <div class="col-sm-2 sub-category-wapper">
+                        <ul class="sub-category-list" id="cpy4">
+                            <li><a class="parent" href='@Url.RouteUrl("HomeAndKitchenAppliances", new { city = cityName })'>Small Appliances</a></li>
+                            <li><a class="parent" href='@Url.RouteUrl("HomeAndKitchenAppliances", new { city = cityName })'>Kitchen Wear</a></li>
+                        </ul>
+                    </div>
+                    <div class="col-sm-10 col-right-tab">
+                        <div class="product-featured-tab-content">
+                            <div class="tab-container">
+                                <div class="tab-panel active" id="tab-14">
+                                    <div class="box-left">
+                                        <div class="banner-img">
+                                            <a href="#"><img class="main-img" src="~/Content/update(5-10)/images/wardha_img/banner_homeApp.jpg" alt="Banner Product"></a>
+                                        </div>
+                                    </div>
+                                    <div class="box-right">
+                                        <ul class="product-list row">
+                                            <li class="col-sm-4">
+                                                <div class="right-block">
+                                                    @*<h5 class="product-name"><a href="~/PreviewItem?itemId=40011" title="Sunflame Classic 3 Burner Gas Stove">Sunflame Classic 3 Burner Gas Stove</a></h5>*@
+                                                    <h5 class="product-name">
+                                                        <a href="@Url.RouteUrl("pre-prod-name", new { itemId = 40011, itemName = "Sunflame Classic 3 Burner Gas Stove".ToLower().Replace(' ', '-'), city = cityName })"
+                                                        title="Sunflame Classic 3 Burner Gas Stove">Sunflame Classic 3 Burner Gas Stove</a>
+                                                    </h5>
+                                                    <div class="content_price">
+                                                        <span class="price product-price">Rs4200.00</span>
+                                                        <span class="price old-price">Rs7490.00</span>
+                                                    </div>
+                                                </div>
+                                                <div class="left-block">
+                                                    @*<a href="~/PreviewItem?itemId=40011">
+                                                        <img class="img-responsive main-img" alt="product" src="~/Content/update(5-10)/images/wardha_img/HA1.png">
+                                                    </a>*@
+                                                    <a href="@Url.RouteUrl("pre-prod-name", new { itemId = 40011, itemName = "Sunflame Classic 3 Burner Gas Stove".ToLower().Replace(' ', '-'), city = cityName })">
+                                                        <img class="img-responsive" alt="product" src="~/Content/update(5-10)/images/wardha_img/HA1.png">
+                                                    </a>
+                                                    <div class="quick-view">
+                                                        @*Id conatains productid # shopstockid # product name (space remove by _) *@
+                                                        @if (Request.Cookies["ShortListCookie"] != null && Request.Cookies["ShortListCookie"].ToString() != string.Empty)
+                                                        {
+                                                            string cookRecView = Request.Cookies["ShortListCookie"].Value;
+                                                            if (cookRecView.Contains("40011$3046$"))//productID$shpstockID
+                                                            {
+                                                                <a title="Added to shortlist" id="40011#45352#Sunflame Classic 3 Burner Gas Stove" class="heart active11" href="#"></a>
+                                                            }
+                                                            else
+                                                            {
+                                                                <a title="Add to shortlist" id="40011#45352#Sunflame Classic 3 Burner Gas Stove" class="heart" href="#" onclick="AddProductToShortListFromHome(this)"></a>
+                                                            }
+                                                        }
+                                                        else
+                                                        {
+                                                            <a title="Add to shortlist" id="40011#45352#Sunflame Classic 3 Burner Gas Stove" class="heart" href="#" onclick="AddProductToShortListFromHome(this)"></a>
+                                                        }
+                                                        @*<a title="Add to compare" class="compare" href="#"></a>*@
+                                                        <a title="Quick view" class="search" href="@Url.RouteUrl("pre-prod-name", new { itemId = 40011, itemName = "Sunflame Classic 3 Burner Gas Stove".ToLower().Replace(' ', '-'), city = cityName })"></a>
+                                                    </div>
+                                                    <div class="add-to-cart">
+                                                        @*<a title="Add to Cart" onclick="AddProductToShppingCartWithoutQuantity(45352, 40011)">Add to Cart</a>*@
+                                                        <a title="Add to Cart" onclick="AddProduct(45352, 40011)">Add to Cart</a>
+                                                    </div>
+                                                </div>
+                                            </li>
+                                            <li class="col-sm-4">
+                                                <div class="right-block">
+                                                    @*<h5 class="product-name"><a href="~/PreviewItem?itemId=40010" title="N-Dura Quite Mixer Grinder">N-Dura Quite Mixer Grinder</a></h5>*@
+                                                    <h5 class="product-name">
+                                                        <a href="@Url.RouteUrl("pre-prod-name", new { itemId = 40010, itemName = "N-Dura Quite Mixer Grinder".ToLower().Replace(' ', '-'), city = cityName })"
+                                                        title="N-Dura Quite Mixer Grinder">Sunflame Classic 3 Burner Gas Stove</a>
+                                                    </h5>
+                                                     <div class="content_price">
+                                                        <span class="price product-price">Rs1999.00</span>
+                                                        <span class="price old-price">Rs2895.00</span>
+                                                    </div>
+                                                </div>
+                                                <div class="left-block">
+                                                    @*<a href="~/PreviewItem?itemId=40010">
+                                                        <img class="img-responsive main-img" alt="product" src="~/Content/update(5-10)/images/wardha_img/HA2.png">
+                                                    </a>*@
+                                                    <a href="@Url.RouteUrl("pre-prod-name", new { itemId = 40010, itemName = "N-Dura Quite Mixer Grinder".ToLower().Replace(' ', '-'), city = cityName })">
+                                                        <img class="img-responsive" alt="product" src="~/Content/update(5-10)/images/wardha_img/HA2.png">
+                                                    </a>
+                                                    <div class="quick-view">
+                                                        @*Id conatains productid # shopstockid # product name (space remove by _) *@
+                                                        @if (Request.Cookies["ShortListCookie"] != null && Request.Cookies["ShortListCookie"].ToString() != string.Empty)
+                                                        {
+                                                            string cookRecView = Request.Cookies["ShortListCookie"].Value;
+                                                            if (cookRecView.Contains("40010$45351$"))//productID$shpstockID
+                                                            {
+                                                                <a title="Added to shortlist" id="40010#45351#N-Dura Quite Mixer Grinder" class="heart active11" href="#"></a>
+                                                            }
+                                                            else
+                                                            {
+                                                                <a title="Add to shortlist" id="40010#45351#N-Dura Quite Mixer Grinder" class="heart" href="#" onclick="AddProductToShortListFromHome(this)"></a>
+                                                            }
+                                                        }
+                                                        else
+                                                        {
+                                                            <a title="Add to shortlist" id="40010#45351#N-Dura Quite Mixer Grinder" class="heart" href="#" onclick="AddProductToShortListFromHome(this)"></a>
+                                                        }
+                                                        @*<a title="Add to compare" class="compare" href="#"></a>*@
+                                                        <a title="Quick view" class="search" href="@Url.RouteUrl("pre-prod-name", new { itemId = 40010, itemName = "N-Dura Quite Mixer Grinder".ToLower().Replace(' ', '-'), city = cityName })"></a>
+                                                    </div>
+                                                    <div class="add-to-cart">
+                                                        @*<a title="Add to Cart" onclick="AddProductToShppingCartWithoutQuantity(45351, 40010)">Add to Cart</a>*@
+                                                        <a title="Add to Cart" onclick="AddProduct(45351, 40010)">Add to Cart</a>
+                                                    </div>
+                                                </div>
+                                            </li>
+                                            <li class="col-sm-4">
+                                                <div class="right-block">
+                                                    @*<h5 class="product-name"><a href="~/PreviewItem?itemId=28653" title="Prestige Pic 15 Induction Cooktop">Prestige Pic 15 Induction Cooktop</a></h5>*@
+                                                    <h5 class="product-name">
+                                                        <a href="@Url.RouteUrl("pre-prod-name", new { itemId = 28653, itemName = "Prestige Pic 15 Induction Cooktop".ToLower().Replace(' ', '-'), city = cityName })"
+                                                           title="Prestige Pic 15 Induction Cooktop">Prestige Pic 15 Induction Cooktop</a>
+                                                    </h5>
+                                                    <div class="content_price">
+                                                        <span class="price product-price">Rs2986.00</span>
+                                                        <span class="price old-price">Rs4595.00</span>
+                                                    </div>
+                                                </div>
+                                                <div class="left-block">
+                                                    @*<a href="~/PreviewItem?itemId=28653">
+                                                        <img class="img-responsive main-img" alt="product" src="~/Content/update(5-10)/images/wardha_img/HA3.png">
+                                                    </a>*@
+                                                    <a href="@Url.RouteUrl("pre-prod-name", new { itemId = 28653, itemName = "Prestige Pic 15 Induction Cooktop".ToLower().Replace(' ', '-'), city = cityName })">
+                                                        <img class="img-responsive" alt="product" src="~/Content/update(5-10)/images/wardha_img/HA3.png">
+                                                    </a>
+                                                    <div class="quick-view">
+                                                        @*Id conatains productid # shopstockid # product name (space remove by _) *@
+                                                        @if (Request.Cookies["ShortListCookie"] != null && Request.Cookies["ShortListCookie"].ToString() != string.Empty)
+                                                        {
+                                                            string cookRecView = Request.Cookies["ShortListCookie"].Value;
+                                                            if (cookRecView.Contains("28653$45535$"))//productID$shpstockID
+                                                            {
+                                                                <a title="Added to shortlist" id="28653#32647#Prestige Pic 15 Induction Cooktop" class="heart active11" href="#"></a>
+                                                            }
+                                                            else
+                                                            {
+                                                                <a title="Add to shortlist" id="28653#32647#Prestige Pic 15 Induction Cooktop" class="heart" href="#" onclick="AddProductToShortListFromHome(this)"></a>
+                                                            }
+                                                        }
+                                                        else
+                                                        {
+                                                            <a title="Add to shortlist" id="28653#32647#Prestige Pic 15 Induction Cooktop" class="heart" href="#" onclick="AddProductToShortListFromHome(this)"></a>
+                                                        }
+                                                        @*<a title="Add to compare" class="compare" href="#"></a>*@
+                                                        <a title="Quick view" class="search" href="@Url.RouteUrl("pre-prod-name", new { itemId = 28653, itemName = "Prestige Pic 15 Induction Cooktop".ToLower().Replace(' ', '-'), city = cityName })"></a>
+                                                    </div>
+                                                    <div class="add-to-cart">
+                                                        @*<a title="Add to Cart" onclick="AddProductToShppingCartWithoutQuantity(32647, 28653)">Add to Cart</a>*@
+                                                        <a title="Add to Cart" onclick="AddProduct(32647, 28653)">Add to Cart</a>
+                                                    </div>
+                                                </div>
+                                            </li>
+                                            <li class="col-sm-4">
+                                                <div class="right-block">
+                                                    @*<h5 class="product-name"><a href="~/PreviewItem?itemId=28652" title="Prestige Oven Toaster Grill POTG 19 PCR 1380-Watt">Prestige Oven Toaster Grill POTG 19 PCR 1380-Watt</a></h5>*@
+                                                    <h5 class="product-name">
+                                                        <a href="@Url.RouteUrl("pre-prod-name", new { itemId = 28652, itemName = "Prestige Oven Toaster Grill POTG 19 PCR 1380-Watt".ToLower().Replace(' ', '-'), city = cityName })"
+                                                           title="Prestige Oven Toaster Grill POTG 19 PCR 1380-Watt">Prestige Oven Toaster Grill POTG 19 PCR 1380-Watt</a>
+                                                    </h5>
+                                                    <div class="content_price">
+                                                        <span class="price product-price">Rs4476.00</span>
+                                                        <span class="price old-price">Rs5595.00</span>
+                                                    </div>
+                                                </div>
+                                                <div class="left-block">
+                                                    @*<a href="~/PreviewItem?itemId=28652">
+                                                        <img class="img-responsive main-img" alt="product" src="~/Content/update(5-10)/images/wardha_img/HA4.png">
+                                                    </a>*@
+                                                    <a href="@Url.RouteUrl("pre-prod-name", new { itemId = 28652, itemName = "Prestige Oven Toaster Grill POTG 19 PCR 1380-Watt".ToLower().Replace(' ', '-'), city = cityName })">
+                                                        <img class="img-responsive" alt="product" src="~/Content/update(5-10)/images/wardha_img/HA4.png">
+                                                    </a>
+                                                    <div class="quick-view">
+                                                        @*Id conatains productid # shopstockid # product name (space remove by _) *@
+                                                        @if (Request.Cookies["ShortListCookie"] != null && Request.Cookies["ShortListCookie"].ToString() != string.Empty)
+                                                        {
+                                                            string cookRecView = Request.Cookies["ShortListCookie"].Value;
+                                                            if (cookRecView.Contains("3004$32645$"))//productID$shpstockID
+                                                            {
+                                                                <a title="Added to shortlist" id="28652#32645#Prestige Oven Toaster Grill POTG 19 PCR 1380-Watt" class="heart active11" href="#"></a>
+                                                            }
+                                                            else
+                                                            {
+                                                                <a title="Add to shortlist" id="28652#32645#Prestige Oven Toaster Grill POTG 19 PCR 1380-Watt" class="heart" href="#" onclick="AddProductToShortListFromHome(this)"></a>
+                                                            }
+                                                        }
+                                                        else
+                                                        {
+                                                            <a title="Add to shortlist" id="28652#32645#Prestige Oven Toaster Grill POTG 19 PCR 1380-Watt" class="heart" href="#" onclick="AddProductToShortListFromHome(this)"></a>
+                                                        }
+                                                        @*<a title="Add to compare" class="compare" href="#"></a>*@
+                                                        <a title="Quick view" class="search" href="@Url.RouteUrl("pre-prod-name", new { itemId = 28652, itemName = "Prestige Oven Toaster Grill POTG 19 PCR 1380-Watt".ToLower().Replace(' ', '-'), city = cityName })"></a>
+                                                    </div>
+                                                    <div class="add-to-cart">
+                                                        @*<a title="Add to Cart" onclick="AddProductToShppingCartWithoutQuantity(32645, 28652)">Add to Cart</a>*@
+                                                        <a title="Add to Cart" onclick="AddProduct(32645, 28652)">Add to Cart</a>
+                                                    </div>
+                                                </div>
+                                            </li>
+                                            <li class="col-sm-4">
+                                                <div class="right-block">
+                                                    @*<h5 class="product-name"><a href="~/PreviewItem?itemId=28630" title="Prestige PECMD-2.0 Coffee Maker">Prestige PECMD-2.0 Coffee Maker</a></h5>*@
+                                                    <h5 class="product-name">
+                                                        <a href="@Url.RouteUrl("pre-prod-name", new { itemId = 28630, itemName = "Prestige PECMD-2.0 Coffee Maker".ToLower().Replace(' ', '-'), city = cityName })"
+                                                        title="Prestige PECMD-2.0 Coffee Maker">Prestige PECMD-2.0 Coffee Maker</a>
+                                                    </h5>
+                                                    <div class="content_price">
+                                                        <span class="price product-price">Rs5700</span>
+                                                        <span class="price old-price">Rs7495.00</span>
+                                                    </div>
+                                                </div>
+                                                <div class="left-block">
+                                                    @*<a href="~/PreviewItem?itemId=28630">
+                                                        <img class="img-responsive main-img" alt="product" src="~/Content/update(5-10)/images/wardha_img/HA5.png">
+                                                    </a>*@
+                                                    <a href="@Url.RouteUrl("pre-prod-name", new { itemId = 28630, itemName = "Prestige PECMD-2.0 Coffee Maker".ToLower().Replace(' ', '-'), city = cityName })">
+                                                        <img class="img-responsive" alt="product" src="~/Content/update(5-10)/images/wardha_img/HA5.png">
+                                                    </a>
+                                                    <div class="quick-view">
+                                                        @*Id conatains productid # shopstockid # product name (space remove by _) *@
+                                                        @if (Request.Cookies["ShortListCookie"] != null && Request.Cookies["ShortListCookie"].ToString() != string.Empty)
+                                                        {
+                                                            string cookRecView = Request.Cookies["ShortListCookie"].Value;
+                                                            if (cookRecView.Contains("28630$21978$"))//productID$shpstockID
+                                                            {
+                                                                <a title="Added to shortlist" id="28630#50083#Prestige PECMD-2.0 Coffee Maker" class="heart active11" href="#"></a>
+                                                            }
+                                                            else
+                                                            {
+                                                                <a title="Add to shortlist" id="28630#50083#Prestige PECMD-2.0 Coffee Maker" class="heart" href="#" onclick="AddProductToShortListFromHome(this)"></a>
+                                                            }
+                                                        }
+                                                        else
+                                                        {
+                                                            <a title="Add to shortlist" id="28630#50083#Prestige PECMD-2.0 Coffee Maker" class="heart" href="#" onclick="AddProductToShortListFromHome(this)"></a>
+                                                        }
+                                                        @*<a title="Add to compare" class="compare" href="#"></a>*@
+                                                        @*<a title="Add to compare" class="compare" href="#"></a>*@
+                                                        <a title="Quick view" class="search" href="@Url.RouteUrl("pre-prod-name", new { itemId = 28630, itemName = "Prestige PECMD-2.0 Coffee Maker".ToLower().Replace(' ', '-'), city = cityName })"></a>
+                                                    </div>
+                                                    <div class="add-to-cart">
+                                                        @*<a title="Add to Cart" onclick="AddProductToShppingCartWithoutQuantity(50083, 28630)">Add to Cart</a>*@
+                                                        <a title="Add to Cart" onclick="AddProduct(50083, 28630)">Add to Cart</a>
+                                                    </div>
+                                                </div>
+                                            </li>
+                                            <li class="col-sm-4">
+                                                <div class="right-block">
+                                                    @*<h5 class="product-name"><a href="~/PreviewItem?itemId=28632" title="Prestige PPTSKB Pop up toaster - Black and Silver">Prestige PPTSKB Pop up toaster - Black and Silver</a></h5>*@
+                                                    <h5 class="product-name">
+                                                        <a href="@Url.RouteUrl("pre-prod-name", new { itemId = 28632, itemName = "Prestige PPTSKB Pop up toaster".ToLower().Replace(' ', '-'), city = cityName })"
+                                                           title="Prestige PPTSKB Pop up toaster">Prestige PPTSKB Pop up toaster</a>
+                                                    </h5>
+                                                    <div class="content_price">
+                                                        <span class="price product-price">Rs1800.00</span>
+                                                        <span class="price old-price">Rs2425.00</span>
+                                                    </div>
+                                                </div>
+                                                <div class="left-block">
+                                                    @*<a href="~/PreviewItem?itemId=28632">
+                                                        <img class="img-responsive main-img" alt="product" src="~/Content/update(5-10)/images/wardha_img/HA6.png">
+                                                    </a>*@
+                                                    <a href="@Url.RouteUrl("pre-prod-name", new { itemId = 28632, itemName = "Prestige PPTSKB Pop up toaster".ToLower().Replace(' ', '-'), city = cityName })">
+                                                        <img class="img-responsive" alt="product" src="~/Content/update(5-10)/images/wardha_img/HA6.png">
+                                                    </a>
+                                                    <div class="quick-view">
+                                                        @*Id conatains productid # shopstockid # product name (space remove by _) *@
+                                                        @if (Request.Cookies["ShortListCookie"] != null && Request.Cookies["ShortListCookie"].ToString() != string.Empty)
+                                                        {
+                                                            string cookRecView = Request.Cookies["ShortListCookie"].Value;
+                                                            if (cookRecView.Contains("28632$45570$"))//productID$shpstockID
+                                                            {
+                                                                <a title="Added to shortlist" id="28632#50070#Prestige PPTSKB Pop up toaster - Black and Silver" class="heart active11" href="#"></a>
+                                                            }
+                                                            else
+                                                            {
+                                                                <a title="Add to shortlist" id="28632#50070#Prestige PPTSKB Pop up toaster - Black and Silver" class="heart" href="#" onclick="AddProductToShortListFromHome(this)"></a>
+                                                            }
+                                                        }
+                                                        else
+                                                        {
+                                                            <a title="Add to shortlist" id="28632#50070#Prestige PPTSKB Pop up toaster - Black and Silver" class="heart" href="#" onclick="AddProductToShortListFromHome(this)"></a>
+                                                        }
+                                                        @*<a title="Add to compare" class="compare" href="#"></a>*@
+                                                        @*<a title="Add to compare" class="compare" href="#"></a>*@
+                                                        <a title="Quick view" class="search" href="@Url.RouteUrl("pre-prod-name", new { itemId = 28632, itemName = "Prestige PPTSKB Pop up toaster".ToLower().Replace(' ', '-'), city = cityName })"></a>
+                                                    </div>
+                                                    <div class="add-to-cart">
+                                                        @*<a title="Add to Cart" onclick="AddProductToShppingCartWithoutQuantity(50070, 28632)">Add to Cart</a>*@
+                                                        <a title="Add to Cart" onclick="AddProduct(50070, 28632)">Add to Cart</a>
+                                                    </div>
+                                                </div>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- end featured category sports-->
+        <!-- featured category electronic -->
+        <div class="category-featured electronic">
+            <nav class="navbar nav-menu show-brand">
+                <div class="container">
+                    <!-- Brand and toggle get grouped for better mobile display -->
+                    <div class="navbar-brand"><a href="#">@*<img alt="fashion" src="~/Content/update(5-10)/images/icon-electronic.png">*@Winter Collection</a></div>
+                    <span class="toggle-menu"></span>
+                    <!-- Collect the nav links, forms, and other content for toggling -->
+                    <div class="collapse navbar-collapse">
+                        <ul class="nav navbar-nav" id="pst5"></ul>
+                    </div><!-- /.navbar-collapse -->
+                </div><!-- /.container-fluid -->
+                <div id="elevator-3" class="floor-elevator">
+                    <a href="#elevator-2" class="btn-elevator up fa fa-angle-up"></a>
+                    <a href="#elevator-4" class="btn-elevator down fa fa-angle-down"></a>
+                </div>
+            </nav>
+            <div class="product-featured clearfix">
+                <div class="row">
+                    <div class="col-sm-2 sub-category-wapper">
+                        <ul class="sub-category-list" id="cpy5">
+                            <li><a class="parent" href='@Url.RouteUrl("WinterWear", new { city = cityName })'>Winter Wear Women</a></li>
+                            <li><a class="parent" href='@Url.RouteUrl("WinterWear", new { city = cityName })'>Winter Wear Men</a></li>
+                            <li><a class="parent" href='@Url.RouteUrl("WinterWear", new { city = cityName })'>Winter Wear Kids</a></li>
+                            <li><a class="parent" href='@Url.RouteUrl("WinterWear", new { city = cityName })'>Home Furnishing</a></li>
+                            <li><a class="parent" href='@Url.RouteUrl("WinterWear", new { city = cityName })'>Small Appliances</a></li>
+                            <li><a class="parent" href='@Url.RouteUrl("WinterWear", new { city = cityName })'>Skin Care</a></li>
+                        </ul>
+                    </div>
+                    <div class="col-sm-10 col-right-tab">
+                        <div class="product-featured-tab-content">
+                            <div class="tab-container">
+                                <div class="tab-panel active" id="tab-8">
+                                    <div class="box-left">
+                                        <div class="banner-img">
+                                            <a href="#"><img class="main-img" src="~/Content/update(5-10)/images/wardha_img/_winter.jpg" alt="Banner Product"></a>
+                                        </div>
+                                    </div>
+                                    <div class="box-right">
+                                        <ul class="product-list row">
+                                            <li class="col-sm-4">
+                                                <div class="right-block">
+                                                    @*<h5 class="product-name"><a href="~/PreviewItem?itemId=42441" title="Kavya Winter Sweater For Women 033">Kavya Winter Sweater For Women 033</a></h5>*@
+                                                    <h5 class="product-name">
+                                                        <a href="@Url.RouteUrl("pre-prod-name", new { itemId = 42441, itemName = "Kavya Winter Sweater For Women 033".ToLower().Replace(' ', '-'), city = cityName })"
+                                                           title="Kavya Winter Sweater For Women 033">Kavya Winter Sweater For Women 033</a>
+                                                    </h5>
+                                                    <div class="content_price">
+                                                        <span class="price product-price">Rs1400.00</span>
+                                                        <span class="price old-price">Rs1600.00</span>
+                                                    </div>
+                                                </div>
+                                                <div class="left-block">
+                                                    @*<a href="~/PreviewItem?itemId=42441">
+                                                        <img class="img-responsive main-img" alt="product" src="~/Content/update(5-10)/images/wardha_img/WC1.png">
+                                                    </a>*@
+                                                    <a href="@Url.RouteUrl("pre-prod-name", new { itemId = 42441, itemName = "Kavya Winter Sweater For Women 033".ToLower().Replace(' ', '-'), city = cityName })">
+                                                        <img class="img-responsive" alt="product" src="~/Content/update(5-10)/images/wardha_img/WC1.png">
+                                                    </a>
+                                                    <div class="quick-view">
+                                                        @*Id conatains productid # shopstockid # product name (space remove by _) *@
+                                                        @if (Request.Cookies["ShortListCookie"] != null && Request.Cookies["ShortListCookie"].ToString() != string.Empty)
+                                                        {
+                                                            string cookRecView = Request.Cookies["ShortListCookie"].Value;
+                                                            if (cookRecView.Contains("42441$16599$"))//productID$shpstockID
+                                                            {
+                                                                <a title="Added to shortlist" id="42441#16599#Kavya Winter Sweater For Women 033" class="heart active11" href="#"></a>
+                                                            }
+                                                            else
+                                                            {
+                                                                <a title="Add to shortlist" id="42441#16599#Kavya Winter Sweater For Women 033" class="heart" href="#" onclick="AddProductToShortListFromHome(this)"></a>
+                                                            }
+                                                        }
+                                                        else
+                                                        {
+                                                            <a title="Add to shortlist" id="42441#16599#Kavya Winter Sweater For Women 033" class="heart" href="#" onclick="AddProductToShortListFromHome(this)"></a>
+                                                        }
+
+                                                        @*<a title="Add to compare" class="compare" href="#"></a>*@
+                                                        <a title="Quick view" class="search" href="@Url.RouteUrl("pre-prod-name", new { itemId = 42441, itemName = "Kavya Winter Sweater For Women 033".ToLower().Replace(' ', '-'), city = cityName })"></a>
+                                                    </div>
+                                                    <div class="add-to-cart">
+                                                        @*<a title="Add to Cart" onclick="AddProductToShppingCartWithoutQuantity(16599, 42441)">Add to Cart</a>*@
+                                                        <a title="Add to Cart" onclick="AddProduct(16599, 42441)">Add to Cart</a>
+                                                    </div>
+                                                </div>
+                                            </li>
+                                            
+                                            <li class="col-sm-4">
+                                                <div class="right-block">
+                                                    @*<h5 class="product-name"><a href="~/PreviewItem?itemId=42327" title="Combo Of Kids Cartoon Cap & Scarf">Combo Of Kids Cartoon Cap & Scarf</a></h5>*@
+                                                    <h5 class="product-name">
+                                                        <a href="@Url.RouteUrl("pre-prod-name", new { itemId = 42327, itemName = "Combo Of Kids Cartoon Cap Scarf".ToLower().Replace(' ', '-'), city = cityName })"
+                                                           title="Combo Of Kids Cartoon Cap Scarf">Combo Of Kids Cartoon Cap Scarf</a>
+                                                    </h5>
+                                                    <div class="content_price">
+                                                        <span class="price product-price">Rs220.00</span>
+                                                        <span class="price old-price">Rs250.00</span>
+                                                    </div>
+                                                </div>
+                                                <div class="left-block">
+                                                    @*<a href="~/PreviewItem?itemId=42327">
+                                                        <img class="img-responsive main-img" alt="product" src="~/Content/update(5-10)/images/wardha_img/WC3.png">
+                                                    </a>*@
+                                                    <a href="@Url.RouteUrl("pre-prod-name", new { itemId = 42327, itemName = "Combo Of Kids Cartoon Cap Scarf".ToLower().Replace(' ', '-'), city = cityName })">
+                                                        <img class="img-responsive" alt="product" src="~/Content/update(5-10)/images/wardha_img/WC3.png">
+                                                    </a>
+                                                    <div class="quick-view">
+                                                        @*Id conatains productid # shopstockid # product name (space remove by _) *@
+                                                        @if (Request.Cookies["ShortListCookie"] != null && Request.Cookies["ShortListCookie"].ToString() != string.Empty)
+                                                        {
+                                                            string cookRecView = Request.Cookies["ShortListCookie"].Value;
+                                                            if (cookRecView.Contains("42327$8132$"))//productID$shpstockID
+                                                            {
+                                                                <a title="Added to shortlist" id="42327#8132#Combo Of Kids Cartoon Cap & Scarf" class="heart active11" href="#"></a>
+                                                            }
+                                                            else
+                                                            {
+                                                                <a title="Add to shortlist" id="42327#8132#Combo Of Kids Cartoon Cap & Scarf" class="heart" href="#" onclick="AddProductToShortListFromHome(this)"></a>
+                                                            }
+                                                        }
+                                                        else
+                                                        {
+                                                            <a title="Add to shortlist" id="42327#8132#Combo Of Kids Cartoon Cap & Scarf" class="heart" href="#" onclick="AddProductToShortListFromHome(this)"></a>
+                                                        }
+
+                                                        @*<a title="Add to compare" class="compare" href="#"></a>*@
+                                                        <a title="Quick view" class="search" href="@Url.RouteUrl("pre-prod-name", new { itemId = 42327, itemName = "Combo Of Kids Cartoon Cap Scarf".ToLower().Replace(' ', '-'), city = cityName })"></a>
+                                                    </div>
+                                                    <div class="add-to-cart">
+                                                        @*<a title="Add to Cart" onclick="AddProductToShppingCartWithoutQuantity(8132, 42327)">Add to Cart</a>*@
+                                                        <a title="Add to Cart" onclick="AddProduct(8132, 42327)">Add to Cart</a>
+                                                    </div>
+                                                </div>
+                                            </li>
+                                            <li class="col-sm-4">
+                                                <div class="right-block">
+                                                    @*<h5 class="product-name"><a href="~/PreviewItem?itemId=41582" title="Women's Purple & White Color Sweater">Women's Purple & White Color Sweater</a></h5>*@
+                                                    <h5 class="product-name">
+                                                        <a href="@Url.RouteUrl("pre-prod-name", new { itemId = 41582, itemName = "Women's Purple White Color Sweater".ToLower().Replace(' ', '-'), city = cityName })"
+                                                           title="Women's Purple White Color Sweater">Women's Purple White Color Sweater</a>
+                                                    </h5>
+                                                    <div class="content_price">
+                                                        <span class="price product-price">Rs480.00</span>
+                                                        <span class="price old-price">Rs580.00</span>
+                                                    </div>
+                                                </div>
+                                                <div class="left-block">
+                                                    @*<a href="~/PreviewItem?itemId=41582">
+                                                        <img class="img-responsive main-img" alt="product" src="~/Content/update(5-10)/images/wardha_img/WC4.png">
+                                                    </a>*@
+                                                    <a href="@Url.RouteUrl("pre-prod-name", new { itemId = 41582, itemName = "Women's Purple White Color Sweater".ToLower().Replace(' ', '-'), city = cityName })">
+                                                        <img class="img-responsive" alt="product" src="~/Content/update(5-10)/images/wardha_img/WC4.png">
+                                                    </a>
+                                                    <div class="quick-view">
+                                                        @*Id conatains productid # shopstockid # product name (space remove by _) *@
+                                                        @if (Request.Cookies["ShortListCookie"] != null && Request.Cookies["ShortListCookie"].ToString() != string.Empty)
+                                                        {
+                                                            string cookRecView = Request.Cookies["ShortListCookie"].Value;
+                                                            if (cookRecView.Contains("41582$17366$"))//productID$shpstockID
+                                                            {
+                                                                <a title="Added to shortlist" id="41582#17366#Women's Purple & White Color Sweater" class="heart active11" href="#"></a>
+                                                            }
+                                                            else
+                                                            {
+                                                                <a title="Add to shortlist" id="41582#17366#Women's Purple & White Color Sweater" class="heart" href="#" onclick="AddProductToShortListFromHome(this)"></a>
+                                                            }
+                                                        }
+                                                        else
+                                                        {
+                                                            <a title="Add to shortlist" id="41582#17366#Women's Purple & White Color Sweater" class="heart" href="#" onclick="AddProductToShortListFromHome(this)"></a>
+                                                        }
+
+                                                        @*<a title="Add to compare" class="compare" href="#"></a>*@
+                                                        <a title="Quick view" class="search" href="@Url.RouteUrl("pre-prod-name", new { itemId = 41582, itemName = "Women's Purple White Color Sweater".ToLower().Replace(' ', '-'), city = cityName })"></a>
+                                                    </div>
+                                                    <div class="add-to-cart">
+                                                        @*<a title="Add to Cart" onclick="AddProductToShppingCartWithoutQuantity(17366, 41582)">Add to Cart</a>*@
+                                                        <a title="Add to Cart" onclick="AddProduct(17366, 41582)">Add to Cart</a>
+                                                    </div>
+                                                </div>
+                                            </li>
+                                            <li class="col-sm-4">
+                                                <div class="right-block">
+                                                    @*<h5 class="product-name"><a href="~/PreviewItem?itemId=41521" title="Winter Fashion Womens Wool Shawl">Winter Fashion Womens Wool Shawl</a></h5>*@
+                                                    <h5 class="product-name">
+                                                        <a href="@Url.RouteUrl("pre-prod-name", new { itemId = 41521, itemName = "Winter Fashion Womens Wool Shawl".ToLower().Replace(' ', '-'), city = cityName })"
+                                                           title="Winter Fashion Womens Wool Shawl">Winter Fashion Womens Wool Shawl</a>
+                                                    </h5>
+                                                    <div class="content_price">
+                                                        <span class="price product-price">Rs450.00</span>
+                                                        <span class="price old-price">Rs650.00</span>
+                                                    </div>
+                                                </div>
+                                                <div class="left-block">
+                                                    @*<a href="~/PreviewItem?itemId=41521">
+                                                        <img class="img-responsive main-img" alt="product" src="~/Content/update(5-10)/images/wardha_img/WC5.png">
+                                                    </a>*@
+                                                    <a href="@Url.RouteUrl("pre-prod-name", new { itemId = 41521, itemName = "Winter Fashion Womens Wool Shawl".ToLower().Replace(' ', '-'), city = cityName })">
+                                                        <img class="img-responsive" alt="product" src="~/Content/update(5-10)/images/wardha_img/WC5.png">
+                                                    </a>
+                                                    <div class="quick-view">
+                                                        @*Id conatains productid # shopstockid # product name (space remove by _) *@
+                                                        @if (Request.Cookies["ShortListCookie"] != null && Request.Cookies["ShortListCookie"].ToString() != string.Empty)
+                                                        {
+                                                            string cookRecView = Request.Cookies["ShortListCookie"].Value;
+                                                            if (cookRecView.Contains("41521$9759$"))//productID$shpstockID
+                                                            {
+                                                                <a title="Added to shortlist" id="41521#9759#Winter Fashion Womens Wool Shawl" class="heart active11" href="#"></a>
+                                                            }
+                                                            else
+                                                            {
+                                                                <a title="Add to shortlist" id="41521#9759#Winter Fashion Womens Wool Shawl" class="heart" href="#" onclick="AddProductToShortListFromHome(this)"></a>
+                                                            }
+                                                        }
+                                                        else
+                                                        {
+                                                            <a title="Add to shortlist" id="41521#9759#Winter Fashion Womens Wool Shawl" class="heart" href="#" onclick="AddProductToShortListFromHome(this)"></a>
+                                                        }
+
+                                                        @*<a title="Add to compare" class="compare" href="#"></a>*@
+                                                        <a title="Quick view" class="search" href="@Url.RouteUrl("pre-prod-name", new { itemId = 41521, itemName = "Winter Fashion Womens Wool Shawl".ToLower().Replace(' ', '-'), city = cityName })"></a>
+                                                    </div>
+                                                    <div class="add-to-cart">
+                                                        @*<a title="Add to Cart" onclick="AddProductToShppingCartWithoutQuantity(9759, 41521)">Add to Cart</a>*@
+                                                        <a title="Add to Cart" onclick="AddProduct(9759, 41521)">Add to Cart</a>
+                                                    </div>
+                                                </div>
+                                            </li>
+                                            <li class="col-sm-4">
+                                                <div class="right-block">
+                                                    @*<h5 class="product-name"><a href="~/PreviewItem?itemId=41554" title="Black Woolen Cap For Women">Black Woolen Cap For Women</a></h5>*@
+                                                    <h5 class="product-name">
+                                                        <a href="@Url.RouteUrl("pre-prod-name", new { itemId = 41554, itemName = "Black Woolen Cap For Women".ToLower().Replace(' ', '-'), city = cityName })"
+                                                        title="Black Woolen Cap For Women">Black Woolen Cap For Women</a>
+                                                    </h5>
+                                                     <div class="content_price">
+                                                        <span class="price product-price">Rs160.00</span>
+                                                        <span class="price old-price">Rs250.00</span>
+
+                                                    </div>
+                                                </div>
+                                                <div class="left-block">
+                                                    @*<a href="~/PreviewItem?itemId=41554">
+                                                        <img class="img-responsive main-img" alt="product" src="~/Content/update(5-10)/images/wardha_img/WC6.png">
+                                                    </a>*@
+                                                    <a href="@Url.RouteUrl("pre-prod-name", new { itemId = 41554, itemName = "Black Woolen Cap For Women".ToLower().Replace(' ', '-'), city = cityName })">
+                                                        <img class="img-responsive" alt="product" src="~/Content/update(5-10)/images/wardha_img/WC6.png">
+                                                    </a>
+                                                    <div class="quick-view">
+                                                        @*Id conatains productid # shopstockid # product name (space remove by _) *@
+                                                        @if (Request.Cookies["ShortListCookie"] != null && Request.Cookies["ShortListCookie"].ToString() != string.Empty)
+                                                        {
+                                                            string cookRecView = Request.Cookies["ShortListCookie"].Value;
+                                                            if (cookRecView.Contains("41554$4897$"))//productID$shpstockID
+                                                            {
+                                                                <a title="Added to shortlist" id="41554#16727#Black Woolen Cap For Women" class="heart active11" href="#"></a>
+                                                            }
+                                                            else
+                                                            {
+                                                                <a title="Add to shortlist" id="41554#16727#Black Woolen Cap For Women" class="heart" href="#" onclick="AddProductToShortListFromHome(this)"></a>
+                                                            }
+                                                        }
+                                                        else
+                                                        {
+                                                            <a title="Add to shortlist" id="41554#16727#Black Woolen Cap For Women" class="heart" href="#" onclick="AddProductToShortListFromHome(this)"></a>
+                                                        }
+
+                                                        @*<a title="Add to compare" class="compare" href="#"></a>*@
+                                                        <a title="Quick view" class="search" href="@Url.RouteUrl("pre-prod-name", new { itemId = 41554, itemName = "Black Woolen Cap For Women".ToLower().Replace(' ', '-'), city = cityName })"></a>
+                                                    </div>
+                                                    <div class="add-to-cart">
+                                                        @*<a title="Add to Cart" onclick="AddProductToShppingCartWithoutQuantity(16727, 41554)">Add to Cart</a>*@
+                                                        <a title="Add to Cart" onclick="AddProduct(16727, 41554)">Add to Cart</a>
+                                                    </div>
+                                                </div>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- end featured category electronic-->
+    </div>
+</div>

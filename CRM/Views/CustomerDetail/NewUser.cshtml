@@ -1,0 +1,169 @@
+﻿@using PagedList;
+@using PagedList.Mvc;
+@model IPagedList<ModelLayer.Models.OTPLog>
+@{
+    //Layout = "~/Views/Shared/_LayoutPartial.cshtml";
+}
+
+<div class="row">
+    <div class="span12" id="divtable">
+        <div class="widget">
+            <div class="widget-header">
+                <i class="icon-list-alt"></i>
+                <h3> Sent OTP Log</h3>
+            </div>
+            <!-- /widget-header -->
+            <div class="widget-content">
+                <div class="widget big-stats-container">
+                    <div class="widget-content matchdivheight">
+                        @using (Html.BeginForm())
+                        {
+                            @Html.AntiForgeryToken()
+                            <div class="form-horizontal">
+                                <br />
+                                <table class="table-responsive for_tbleFst">
+                                    <tr>
+
+                                        <td>
+                                            <div class="control-group mrg-left col-sm-3" style="margin-top: -30px;">
+                                                <label>Mobile &nbsp;</label>
+                                                <div class="col-sm-12">
+                                                    @Html.TextBox("Mobile", ViewBag.Mobile as string, new { @class = "search", placeholder = "Mobile" }) &nbsp;
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="control-group mrg-left col-sm-3" style="margin-top: -30px;">
+                                                <label>Email &nbsp;</label>
+                                                <div class="col-sm-12">
+                                                    @Html.TextBox("Email", ViewBag.Email as string, new { @class = "search email_search", placeholder = "Email" }) &nbsp;
+                                                </div>
+                                            </div>
+                                        </td>
+
+
+                                        <td style=" white-space: nowrap;">
+                                            <button type="submit" name="submit" value="Search" class="btn btn-small btn-warning1" style="margin-top: -30px;">
+                                                <span class="glyphicon glyphicon-search"></span> Search
+                                            </button>
+                                        </td>
+
+                                    </tr>
+                                </table>
+
+                            </div>
+                        }
+
+                        <table id="myTable" class="table table-bordered table-hover table-responsive table-striped">
+                            <thead>
+                                <tr>
+                                    <th style="width:20px;">Sr.No</th>
+                                    <th>
+                                        Name
+                                    </th>
+                                    <th>
+                                        EmailId
+                                    </th>
+                                    <th>
+                                        Email OTP
+                                    </th>
+                                    <th>
+                                        Mobile No
+                                    </th>
+                                    <th>
+                                        Mobile OTP
+                                    </th>
+                                    <th>
+                                        IsActive
+                                    </th>
+                                    <th>
+                                        IsVerfied
+                                    </th>
+                                    <th>
+                                        OTP Sent datetime
+                                    </th>
+                                    <th>
+                                        OTP Expire Datetime
+                                    </th>
+
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @if (Model.Count() == 0)
+                                {
+                                    <tr>
+                                        <td colspan="6" class="text-center"><h3>No Record Found...</h3></td>
+                                    </tr>
+                                }
+                                else
+                                {
+                                    int i = 0;
+                                    foreach (var item in Model)
+                                    {
+                                        <tr>
+
+                                            <td>@{ i = i + 1; } @i</td>
+
+                                            <td>
+                                                @Html.DisplayFor(modelItem => item.Name)
+                                            </td>
+
+                                            <td>
+                                                @Html.DisplayFor(modelItem => item.Email)
+                                            </td>
+                                            <td>
+                                                @Html.DisplayFor(modelItem => item.EmailOTP)
+                                            </td>
+                                            <td>
+                                                @Html.DisplayFor(modelItem => item.Mobile)
+                                            </td>
+                                            <td>
+                                                @Html.DisplayFor(modelItem => item.MobileOTP)
+                                            </td>
+                                            <td>
+                                                @Html.DisplayFor(modelItem => item.IsActive)
+                                            </td>
+                                            <td>
+                                                @Html.DisplayFor(modelItem => item.IsValidated)
+                                            </td>
+                                            <td>
+                                                @Html.DisplayFor(modelItem => item.CreateDate)
+                                            </td>
+                                            <td>
+                                                @Html.DisplayFor(modelItem => item.OTPExpire)
+                                            </td>
+                                        </tr>
+                                    }
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="pager">
+                        @Html.PagedListPager(Model, Page => Url.Action("NewUser", new
+                   {
+                       page = Page,
+                       Mobile = ViewBag.Mobile,
+                       Email = ViewBag.Email
+                   }),
+                                                            new PagedListRenderOptions()
+                                                            {
+                                                                Display = PagedListDisplayMode.IfNeeded
+                                                            })
+                    </div>
+                    <!-- /widget-content -->
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="span4">
+        <div class="loader">
+            <img id="loader_img" src="~/Content/Images/loader.gif" style="display: none" />
+        </div>
+        <div id="Details">
+            <iframe id="frameEdit" name="frameEdit" src='' width="100%" height="800px" frameborder="0" style="margin:0px; padding:0px;"></iframe>
+        </div>
+
+    </div>
+
+</div>
+

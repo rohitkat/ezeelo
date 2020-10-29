@@ -1,0 +1,398 @@
+﻿@model ModelLayer.Models.ViewModel.WastageEntry
+
+@{
+    ViewBag.Title = "ItemWastageEntry";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<link href="~/Content/assets/css/font-awesome.min.css" rel="stylesheet" />
+<style>
+    .detailHead {
+        font-weight: bold;
+        width: 40%;
+    }
+</style>
+<script src="~/Content/js/jquery-1.11.0.min.js"></script>
+<script>
+    $(document).ready(function () {
+        if ($("#waste_qty").val() == "") {
+            $("#waste_qty").val(0);
+            var a = 0;
+            $("#total_amt").val(a.toFixed(2));
+        }
+        else {
+            calValRate();
+        }
+
+        $('#reason').live('change', function () {
+            $.ajax({
+                type: 'POST',
+                url: '/WarehouseWastageStock/GetSubReason',
+                data: { reason: $('#reason').val() },
+                dataType: 'json',
+                success: function (data) {
+                    $('#sub_reason option').remove();
+                    $.each(data, function (index, val) {
+                        var optionTag = $('<option></option>');
+                        $(optionTag).val(val.Value).text(val.Text);
+                        $('#sub_reason').append(optionTag);
+
+                    });
+                }
+            });
+        });
+
+        $("#file").change(function () {
+            if (this.files && this.files[0]) {
+                var filerdr = new FileReader();
+                filerdr.onload = function (e) {
+                    $('#waste_img').attr('src', e.target.result);
+                }
+                filerdr.readAsDataURL(this.files[0]);
+            }
+        });
+        $("#waste_qty").keyup(function () {
+            calValRate();
+
+        });
+
+        function calValRate() {
+            var waste_qty = $("#waste_qty").val();
+            var total_qty = $("#batch_avl_qty").text();
+            var amt = 0;
+            var rate = $("#buy_rate_per_unit").text();
+            if (Number(waste_qty) > Number(total_qty)) {
+                $("#waste_qty").val(0);
+                var a = 0;
+                $("#total_amt").val(a.toFixed(2));
+                $("#NewAvlQty").text(total_qty);
+            }
+            else {
+                if (waste_qty != "") {
+                    total_qty = total_qty - waste_qty;
+                    amt = waste_qty * rate;
+                }
+                $("#NewAvlQty").text(total_qty);
+                $("#total_amt").val(amt.toFixed(2));
+            }
+        }
+    });
+</script>
+<script>
+    $(document).ready(function () {
+        $("#reLocate").change(function () {
+            if ($(this).prop("checked") == true) {
+                $("#new_item_location").removeAttr("disabled");
+                $("#new_item_location").focus();
+            } else {
+                $("#new_item_location").attr("disabled", "disabled");
+                $("#new_item_location").val("");
+            }
+
+        });
+        $(window).load(function () {
+            $('#uniform-file').find('span').remove();
+        });
+
+        $("#Form1_").on("submit", function (e) {
+            
+            if ($("#waste_qty").val() == 0 || $("#waste_qty").val() == "") {
+                $("#reqWastQty").show();
+                e.preventDefault();
+                return false;
+            }
+            else if ($("#reason").val() == "") {
+                $("#reqMainReason").show();
+                e.preventDefault();
+                return false;
+            }
+            else {
+                $("#reqWastQty").hide();
+                $("#reqMainReason").hide();
+                Lobibox.progress({
+                    title: 'Please wait',
+                    label: 'Saving Data..',
+                    onShow: function ($this) {
+                        var i = 0;
+                        var inter = setInterval(function () {
+                            window.console.log(i);
+                            if (i > 100) {
+                                inter = clearInterval(inter);
+                            }
+                            i = i + 0.8;
+                            $this.setProgress(i);
+                        }, 10);
+                    }
+                });
+            }
+        });
+    });
+</script>
+
+<div id="content" class="span10">
+    @using (Html.BeginForm("ItemWastageEntry", "WarehouseWastageStock",FormMethod.Post, new { enctype = "multipart/form-data", id = "Form1_" }))
+    {
+        @Html.ValidationSummary(true)
+        @Html.HiddenFor(model => model.id)
+        <div class="row-fluid">
+            <div class="box span12">
+                <div class="box-content">
+                    <center><p style="font-size:large"><b><u>Wastage Entry For Product @Model.item_name</u></b></p></center>
+                    <div class="form-horizontal">
+                        <div class="row-fluid">
+                            <div class="box span12">
+                                <div class="box-header creatProduct clearfix" data-original-title="">
+                                    <h2>
+                                        <i class="icon-exclamation-sign"></i>
+                                        <span class="break"></span>
+                                        Item Details
+                                    </h2>
+                                </div>
+                                <div class="box-content nameDscrp">
+                                    <div class="form-horizontal">
+                                        <div class="NameDescription">
+                                            <div class="control-group mrg-left">
+                                                <center>
+                                                    @Html.ValidationMessageFor(model => model.id)
+                                                    <table>
+                                                        <tr>
+                                                            <td class="detailHead">@Html.DisplayNameFor(model => model.item_name)</td>
+                                                            <td>
+                                                                @Html.DisplayFor(model => model.item_name)
+                                                                @Html.HiddenFor(m => m.item_name)
+                                                            </td>
+                                                            <td rowspan="6">
+                                                                <img id=" imgproductimage" src="@Model.item_image_Path" onerror="this.src = '/Content/Images/no_image.png'" @*style="width: 70px; height:70px;"*@ alt=" eZeelo " />
+                                                                @Html.HiddenFor(m => m.item_image_Path)
+                                                            </td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td class="detailHead">@Html.DisplayNameFor(model => model.total_item_qty_in_stock)</td>
+                                                            <td>
+                                                                @Html.DisplayFor(model => model.total_item_qty_in_stock)
+                                                                @Html.HiddenFor(m => m.total_item_qty_in_stock)
+                                                            </td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td class="detailHead">@Html.DisplayNameFor(model => model.reorder_level)</td>
+                                                            <td>
+                                                                @Html.DisplayFor(model => model.reorder_level)
+                                                                @Html.HiddenFor(m => m.reorder_level)
+                                                            </td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td class="detailHead">@Html.DisplayNameFor(model => model.batch_code)</td>
+                                                            <td>
+                                                                @Html.DisplayFor(model => model.batch_code)
+                                                                @Html.HiddenFor(m => m.batch_code)
+                                                            </td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td class="detailHead">@Html.DisplayNameFor(model => model.buy_rate_per_unit)</td>
+                                                            <td><i class="fa fa-inr"></i> &nbsp; <span id="buy_rate_per_unit"> @Html.DisplayFor(model => model.buy_rate_per_unit) </span>@Html.HiddenFor(m => m.buy_rate_per_unit)</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td class="detailHead">@Html.DisplayNameFor(model => model.batch_qty)</td>
+                                                            <td>
+                                                                @Html.DisplayFor(model => model.batch_qty)
+                                                                @Html.HiddenFor(m => m.batch_qty)
+                                                            </td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td class="detailHead">@Html.DisplayNameFor(model => model.batch_avl_qty)</td>
+                                                            <td>
+                                                                <span id="batch_avl_qty">@Html.DisplayFor(model => model.batch_avl_qty)</span>
+                                                                @Html.HiddenFor(m => m.batch_avl_qty)
+                                                            </td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td class="detailHead">@Html.DisplayNameFor(model => model.expiry_date)</td>
+                                                            <td>
+                                                                @Html.DisplayFor(model => model.expiry_date)
+                                                                @Html.HiddenFor(m => m.expiry_date)
+                                                            </td>
+                                                        </tr>
+                                                    </table>
+                                                </center>
+                                            </div>
+                                            <div class="clr"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="box-header creatProduct clearfix" data-original-title="">
+                                <h2>
+                                    <i class="icon-exclamation-sign"></i>
+                                    <span class="break"></span>
+                                    Wastage Details
+                                </h2>
+                            </div>
+                            <div class="box-content nameDscrp">
+                                <div class="form-horizontal">
+                                    <div class="NameDescription">
+                                        <br />
+                                        <center>
+                                            <table style="width:60%">
+                                                <tr>
+                                                    <td style="width:40%">
+                                                        <div class="control-group mrg-left">
+                                                            <div class="col-sm-3">
+                                                                <span>
+                                                                    @Html.DisplayNameFor(model => model.waste_qty)
+                                                                    <span style="margin-left: 25px">Avl Qty</span>
+                                                                </span>
+                                                            </div>
+                                                            <div class="col-sm-6">
+                                                                @Html.TextBoxFor(model => model.waste_qty, new { style = "width:90px", onkeyup = "if (/\\D/g.test(this.value)) this.value = this.value.replace(/\\D/g,'')" })
+
+                                                                <span id="NewAvlQty" style="color: red; width: 90px; margin-left: 10px">@Model.batch_avl_qty</span>
+                                                               <br />
+                                                                 <span id="reqWastQty" style="color: red; width: 90px; margin-left: 10px;display:none">Please Enter Wastage Quantity</span>
+                                                                <br />
+                                                                @Html.ValidationMessageFor(model => model.waste_qty)
+                                                            </div>
+                                                        </div>
+                                                    </td>
+                                                    <td style="width:40%">
+                                                        <div class="control-group mrg-left">
+                                                            <div class="col-sm-3">
+                                                                @Html.DisplayNameFor(model => model.total_amt)
+                                                            </div>
+                                                            <div class="col-sm-6">
+                                                                <span> <i class="fa fa-inr"></i> &nbsp; @Html.TextBoxFor(model => model.total_amt, new { disabled = "disabled", style = "width:190px" })</span>
+                                                                @Html.HiddenFor(m => m.total_amt)
+                                                            </div>
+                                                        </div>
+                                                    </td>
+
+                                                </tr>
+                                                <tr>
+                                                    <td>
+                                                        <div class="control-group mrg-left">
+                                                            <div class="col-sm-3">
+                                                                @Html.DisplayNameFor(model => model.reason)
+                                                            </div>
+                                                            <div class="col-sm-6">
+                                                                @Html.DropDownList("reason", Model.MainReasonlist, "Select Main Reason", null)
+                                                                <br />
+                                                                <span id="reqMainReason" style="color: red; width: 90px; margin-left: 10px;display:none">Please Select Main Reason</span>
+                                                                @Html.ValidationMessageFor(model => model.reason)
+                                                            </div>
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <div class="control-group mrg-left">
+                                                            <div class="col-sm-3">
+                                                                @Html.DisplayNameFor(model => model.sub_reason)
+                                                            </div>
+                                                            <div class="col-sm-6">
+                                                                @Html.DropDownList("sub_reason", Model.SubReasonlist, "Select Sub Reason", null)
+                                                                @Html.ValidationMessageFor(model => model.SubReasonlist)
+                                                            </div>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                                @*<tr>
+                                                        <td style="width:50%">
+                                                            <div class="control-group mrg-left">
+                                                                <div class="col-sm-3">
+                                                                    @Html.DisplayNameFor(model => model.item_current_location)
+                                                                </div>
+                                                                <div class="col-sm-6">
+                                                                    @Html.TextBoxFor(model => model.item_current_location, new { disabled = "disabled",style = "width:208px" })
+                                                                @Html.HiddenFor(m => m.item_current_location)
+                                                                </div>
+                                                            </div>
+                                                        </td>
+                                                        <td>
+                                                            <div class="control-group mrg-left">
+                                                                <div class="col-sm-3">
+                                                                    @Html.DisplayNameFor(model => model.reLocate)
+                                                                </div>
+                                                                <div class="col-sm-6">
+                                                                    @Html.EditorFor(model => model.reLocate)
+                                                                </div>
+
+                                                            </div>
+                                                        </td>
+                                                        <td></td>
+                                                    </tr>*@
+                                                <tr>
+                                                    <td>
+                                                        <img id="waste_img" src="~/Content/Images/no_image.png" style="border:groove;width:150px;height:150px " />
+                                                        <br />
+                                                        @Html.ValidationMessageFor(model => model.wastage_imgae_path)
+                                                    </td>
+                                                    <td>
+                                                        @*<div class="control-group mrg-left" style="margin-top:-10px">
+                                                                <div class="col-sm-3">
+                                                                    @Html.DisplayNameFor(model => model.new_item_location)
+                                                                </div>
+                                                                <div class="col-sm-6">
+
+                                                                    @Html.TextBoxFor(model => model.new_item_location, new { disabled = "disabled", style = "width:208px" })
+                                                                    @Html.HiddenFor(m => m.new_item_location)
+                                                                </div>
+                                                            </div>*@
+                                                        <input type="file" title="search image" id="file" name="file" style="margin-left: 50%;" />
+                                                        <div class="control-group mrg-left">
+                                                            <div class="col-sm-3">
+                                                                @Html.DisplayNameFor(model => model.Remark)
+                                                            </div>
+                                                            <div class="col-sm-6">
+                                                                <textarea id="Remark" name="Remark" style="width:88%;"></textarea>
+                                                            </div>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                            </table>
+                                            <br />
+                                            <br />
+
+                                            <input type="submit" value="Save" class="btn btn-success mrg-left mrg-top" />
+                                            &nbsp;&nbsp;&nbsp;
+                                            @*yashaswi 19/3/2018*@
+                                            @Html.ActionLink("Back To Batch List", "ItemBatchwise", new { ID = @Model.item_id, imgproductimage = @Model.item_image_Path, ItemName = @Model.item_name, AvailableQuantity = @Model.total_item_qty_in_stock.ToString(), ReorderLevel = @Model.reorder_level.ToString() }, new { @class = "btn btn-default mrg-left mrg-top" })
+                                            &nbsp;&nbsp;&nbsp;
+                                            @Html.ActionLink("Back To Item List", "AllItems", null, new { @class = "btn btn-default mrg-left mrg-top" })
+
+                                        </center>
+
+                                        <br />
+                                        <br />
+                                        <div class="clr"></div>
+                                    </div>
+
+                                    <div class="NameDescription">
+                                        <table style="width:60%">
+
+                                            @*<tr>
+                                                    <td >
+                                                        <div class="control-group mrg-left">
+                                                            <div class="col-sm-3">
+                                                                @Html.DisplayNameFor(model => model.Remark)
+                                                            </div>
+                                                            <div class="col-sm-6">
+                                                                <textarea id="Remark" name="Remark" style="width:20%;"></textarea>
+                                                            </div>
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <input type="button" class="itemList btn btn-warning btn-small" value="Save" />
+                                                    </td>
+                                                </tr>*@
+                                        </table>
+                                        <div class="clr"></div>
+                                    </div>
+
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+</div>
+

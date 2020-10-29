@@ -1,0 +1,132 @@
+﻿@model IEnumerable<ModelLayer.Models.ViewModel.EarnAndReferDetailReportViewModel>
+@{
+    ViewBag.Title = "Index";
+    int i = 1;
+}
+@{
+    ViewBag.Title = "eZeelo: Buy Online Electronics, Jewellaries, cloths, collectibles";
+    string cityName = "";
+    if (Request.Cookies["CityCookie"] != null && Request.Cookies["CityCookie"].Value != "")
+    {
+        cityName = Request.Cookies["CityCookie"].Value.Split('$')[1].ToLower();
+    }
+}
+<style>
+    .table > tbody > tr > td, .table > tbody > tr > th, .table > tfoot > tr > td, .table > tfoot > tr > th, .table > thead > tr > td, .table > thead > tr > th {
+        padding: 10px;
+        line-height: 1.42857143;
+        vertical-align: top;
+        border-top: 0px solid rgb(135, 135, 135);
+        box-shadow: 0px 1px 3px #ccc;
+        font-size: 13px;
+    }
+
+    .table-striped > tbody > tr:nth-of-type(odd) {
+        background-color: rgba(249, 249, 249, 0);
+    }
+
+    .headearn {
+        font-size: 35px;
+        text-shadow: 4px 2px 0px #efc574;
+    }
+
+    .headearn1 {
+        font-size: 30px;
+        text-shadow: 4px 2px 0px #ccc;
+    }
+</style>
+<div id="navbar">
+    <ol class="breadcrumb page-breadcrumb">
+        <li>
+            @Html.RouteLink("Home", "Home", new { city = cityName })
+        </li>
+        <li>@Html.RouteLink("My Account", "CustomerOrder/myorders", new { city = cityName })</li>
+        <li class="active">Refer And Earn Summary</li>
+    </ol>
+</div>
+<div class="row box animated fadeInUp" data-gutter="15" style="min-height: 400px;">
+    <div style=" text-align: center;">
+        <h2>Refer And Earn Summary</h2>
+        @if (@ViewBag.ExpiryDate != null && @ViewBag.RemBudgetAmt > 0)
+        {
+            <h3>Earn Upto <i class="fa fa-inr" aria-hidden="true"></i> @ViewBag.RemBudgetAmt</h3>
+            <b>First Come First Serve.</b><br />
+        }
+    </div>
+    <table class="table-shopping-cart" style="width:100%;font-weight:700;">
+        <tr>
+            <td>Total Earn Amount : <b style="color:brown;"><i class="fa fa-inr" aria-hidden="true"></i> @ViewBag.totalEarnAmount</b></td>
+            <td>Total Used Amount : <b style="color:brown;"><i class="fa fa-inr" aria-hidden="true"></i> @ViewBag.totalUsedAmount</b></td>
+            <td>Remaining Amount  : <b style="color:brown;"><i class="fa fa-inr" aria-hidden="true"></i> @ViewBag.RemainingAmount</b></td>
+        </tr>
+    </table>
+    <hr />
+    <div class="earntablediv">
+        <table class="table table-striped bootstrap-datatable datatable" style="width: 100%; margin-bottom: 10px;">
+
+            <tr>
+                <th class="earntable_th" style="width: 30px;">Sr.No</th>
+                <th class="earntable_th">
+                    Email
+                </th>
+                <th class="earntable_th">
+                    Mobile
+                </th>
+                <th class="earntable_th">
+                    Earn Amount
+                </th>
+            </tr>
+
+            @foreach (var item in Model)
+            {
+                if (item.ReferenceID != null)
+                {
+                    <tr style="background-color: rgba(168, 207, 69, 0.6)">
+                        <td style="width:30px;">@i</td>
+                        <td style="word-break: break-all;">
+                            @Html.DisplayFor(modelItem => item.Email)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Mobile)
+                        </td>
+                        @if (item.EarnAmount != null)
+                        {
+                            <td>
+                                <span class="earnmoney_span">@Html.DisplayFor(modelItem => item.EarnAmount)</span>
+                            </td>
+                        }
+                        else
+                        {
+                            <td>
+                                <span class="earnnomoney_sapn">@Html.DisplayFor(modelItem => item.EarnAmount)</span>
+                            </td>
+                        }
+                    </tr>
+                }
+                else
+                {
+                    <tr>
+                        <td style="width:30px;">@i</td>
+                        <td style="word-break: break-all;">
+                            @Html.DisplayFor(modelItem => item.Email)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Mobile)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.EarnAmount)
+                        </td>
+
+                    </tr>
+                }
+                i++;
+
+            }
+
+        </table>
+    </div>
+    <a class="btn btn-warning" href="@System.Configuration.ConfigurationManager.AppSettings["EZEELO_CUSTOMER_URL"]">Continue shopping</a>
+    <a href="@Url.RouteUrl("Refer", new { city = cityName })" class="btn btn-success">Refer And Earn</a>
+</div>
+
+<div class="gap"></div>

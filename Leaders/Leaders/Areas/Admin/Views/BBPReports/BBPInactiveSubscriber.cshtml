@@ -1,0 +1,195 @@
+﻿@model ModelLayer.Models.ViewModel.BBPDashboardViewModel
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_LeadersLayout.cshtml";
+}
+
+<link href="//cdn.datatables.net/1.10.19/css/jquery.dataTables.min.css" rel="stylesheet" />
+<script src="//cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
+<script src="~/Scripts/BBPMenuOpenup.js"></script>
+<style>
+    #searchPar {
+        border-collapse: separate;
+        border-spacing: 15px;
+    }
+
+    .nav-link {
+        color: #007bff !important;
+    }
+
+    a.nav-link.active.show {
+        color: black !important;
+    }
+
+    input[type=checkbox] {
+        height: 20px;
+        width: 20px;
+    }
+</style>
+@if (TempData["BBPResult"] != null)
+{
+    <script>
+    alert("@TempData["BBPResult"]");
+    </script>
+}   `
+<script>
+    $(document).ready(function () {
+        $("#btnExport").click(function () {
+            window.location = "/admin/BBPReports/ExportToExcel_Inactive";
+        })
+        $("#checkALL").change(function () {
+            if ($("#checkALL").prop('checked') == true) {
+                $(".chkSingle").prop('checked', true);
+            } else {
+                $(".chkSingle").prop('checked', false);
+            }
+        })
+        $('.chkSingle').click(function () {
+            if ($(".chkSingle").length == $(".chkSingle:checked").length) {
+                $("#checkALL").prop("checked", true);
+            } else {
+                $("#checkALL").prop("checked", false);
+            }
+        });
+    });
+</script>
+<div class="container">
+    <div id="progress" class="modal">
+        <div class="center">
+            <img src="~/img/ajax-loading-gif-transparent-background-8.gif" />
+        </div>
+    </div>
+
+    <div class="card" id="maindiv">
+        <div class="card-header"><strong>Business Booster Plan Inactive Subscriber Report </strong></div>
+        <div class="card-body card-block">
+            @using (Html.BeginForm("BBPInactiveSubscriber", "BBPReports"))
+            {
+                @Html.AntiForgeryToken()
+                <table id="searchPar">
+                    <tr>
+                        <td>
+                            <div class="form-group">
+                                @Html.DropDownListFor(m => m.PayoutDateFilterID, Model.PayoutDateFilter, "Select Payout Week", new { @class = "form-control" })
+                            </div>
+                        </td>
+                        <td>
+                            @Html.CheckBoxFor(m => m.NearToInactiveStatus, new { @class = "form-control" }) Near to Inactive Status
+                        </td>
+                        <td>
+                            <input id="btnGo" type="submit" value="Go" class="btn btn-info" name="action:Report" />
+                        </td>
+                        <td>
+                            <input id="btnExport" type="button" value="Export To Excel" class="btn btn-warning" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="3">
+                            Hi #--NAME--#
+                            @Html.TextAreaFor(m => m.Msg, 3, 20, new { @class = "form-control" })
+                        </td>
+                        <td>
+                            <input id="btnGo" type="submit" value="Send SMS" class="btn btn-info" name="action:SendSMS" />
+                        </td>
+                    </tr>
+                </table>
+                if (Model != null)
+                {
+                    <div style="max-width:1000px;overflow:auto">
+                        <table id="tblData" class="table" width="100%">
+                            <thead>
+                                <tr>
+                                    <th>
+                                        Select All
+                                        <input type="checkbox" id="checkALL" />
+                                    </th>
+                                    <th>UserLoginId</th>
+                                    <th>Name</th>
+                                    <th>Email</th>
+                                    <th>Phone No</th>
+                                    <th>ERP</th>
+                                    <th>Pending ERP</th>
+                                    <th>Total ERP</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @{ var i = 0; }
+                                @if (Model.InactiveSubscriber.Count != 0)
+                                {
+                                    for (i = 0; i < @Model.InactiveSubscriber.Count; i++)
+                                    {
+                                        <tr>
+                                            <td>
+                                                @{
+                                                    var j = i + 1;
+                                                }
+                                                @j
+                                                @Html.CheckBoxFor(modelItem => Model.InactiveSubscriber[i].IsSelected, new { @class = "chkSingle" })
+                                                @Html.HiddenFor(modelItem => Model.InactiveSubscriber[i].Mobile)
+                                                @Html.HiddenFor(modelItem => Model.InactiveSubscriber[i].Name)
+                                            </td>
+                                            <td>
+                                                @Html.DisplayFor(modelItem => Model.InactiveSubscriber[i].UserloginId)
+                                            </td>
+                                            <td>
+                                                @Html.DisplayFor(modelItem => Model.InactiveSubscriber[i].Name)
+                                            </td>
+                                            <td>
+                                                @Html.DisplayFor(modelItem => Model.InactiveSubscriber[i].Email)
+                                            </td>
+                                            <td>
+                                                @Html.DisplayFor(modelItem => Model.InactiveSubscriber[i].Mobile)
+                                            </td>
+
+                                            <td>
+                                                @Html.DisplayFor(modelItem => Model.InactiveSubscriber[i].ERP)
+                                            </td>
+                                            <td>
+                                                @Html.DisplayFor(modelItem => Model.InactiveSubscriber[i].PendingERP)
+                                            </td>
+                                            <td>
+                                                @Html.DisplayFor(modelItem => Model.InactiveSubscriber[i].TotalERP)
+                                            </td>
+                                            @if (Model.InactiveSubscriber[i].Status == true)
+                                            {
+                                                <td>
+                                                    Active
+                                                </td>
+                                            }
+                                            else
+                                            {
+                                                <td>
+                                                    InActive
+                                                </td>
+                                            }
+
+                                        </tr>
+                                    }
+                                }
+                                else
+                                {
+                                    <tr>
+                                        <td colspan="9" style="min-width:960px;max-width:960px">
+                                            <label style=" color: #138afc; ">No Record Found.... </label>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                }
+            }
+
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+    $(document).ready(function () {
+        @*$('#tblData').DataTable();
+        if ('@TempData["Search"]' != '') {
+            oTable = $('#tblData').DataTable();
+            oTable.column(6).search('^' + '@TempData["Search"]' + '$', true, false).draw();
+        }*@
+    });
+</script>

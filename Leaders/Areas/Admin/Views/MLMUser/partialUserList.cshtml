@@ -1,0 +1,138 @@
+﻿@model IEnumerable<ModelLayer.Models.ViewModel.MLMUserViewModel>
+
+
+<script src="~/Scripts/jquery-1.12.4.js"></script>
+
+<link href="//cdn.datatables.net/1.10.19/css/jquery.dataTables.min.css" rel="stylesheet" />
+<script src="//cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
+
+@*<style>
+    .pro_th thead tr th {
+        font-size: 12px;
+        border-bottom: 1px solid #EEE;
+        padding: 6px 0;
+        background-color: #26A69A;
+    }
+
+    .pro_th tbody td {
+        font-size: 12px;
+        text-align: center;
+        border: 1px solid #EEE;
+    }
+
+        .pro_th tbody td.btn-set {
+            white-space: nowrap;
+        }
+
+    .dataTables_length {
+        margin-left: 0px !important;
+        margin-top: 7px;
+    }
+
+    .pagination {
+        margin: 0 26px;
+    }
+
+    form {
+        margin: 0 0 -15px;
+    }
+</style>*@
+
+<div id="wrap">
+    <div class="container">
+        <div id="content" class="span10" style="min-height: 403px;">
+            <table id="mlmUserTable" class="table table-striped table-bordered dt-responsive nowrap" width="40%" cellspacing="0">
+                <thead>
+                   
+                    <tr>
+                        <th>Network Report</th>
+                        <th>Full Name</th>
+                        <th>Designation</th>
+                        <th>Email</th>
+                        <th>Mobile</th>
+                        <th>Create Date</th>
+                        <th>Referal ID</th>
+                        <th>Level</th>
+                        <th>Join Date</th>
+
+                        <th>Activate Date Ref</th>
+                        <th>Refered By</th>
+                        <th>Parent Name</th>
+                        <th>RP</th>
+                        <th>Left QRP</th>
+                        <th>ERP</th>
+
+                    </tr>
+                    </thead>
+                <tbody>
+
+                    @foreach (var item in Model)
+                    {
+                    <tr>
+                        <td>
+                            <a href="@Url.Action("Index", "NetworkReport", new { id = item.UserID ,area="Admin"})">Network Report</a>
+                        </td>
+                        @*<td>
+            @Html.ActionLink("Click", "Index", "NetworkReport", new { id = item.UserID, area="Admin" })
+        </td>*@
+
+                        <td>
+                            @Html.DisplayFor(modelItem => item.FullName)
+                        </td>
+                        <td> @Html.DisplayFor(modelItem => item.Designation) </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Email)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Mobile)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.CreateDate)
+                        </td>
+
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Ref_Id)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Level)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Join_date_ref)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Activate_date_ref)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Refered_Id_ref)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.ParentName)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.RP)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.LeftQRP)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.ERP)
+                        </td>
+
+                    </tr>
+                    }
+                </tbody>
+
+
+
+                    </table>
+            </div>
+        </div>
+    </div>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('#mlmUserTable').DataTable();
+
+
+    });
+</script>

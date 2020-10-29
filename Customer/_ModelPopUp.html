@@ -1,0 +1,509 @@
+﻿<!------------------------------------------------------------- Start Select City -->
+<script>
+    //------------- when the browser is refresh or close then, clear localstorage --//
+    //$(window).unload(function () {
+    //    window.localStorage.clear();
+    //});
+
+    showSelectCity();
+    function showSelectCity() {
+        if (localStorage.getItem("ngStorage-cityID") == null) {
+            $('#overlay').modal('show');
+        }
+    }
+    //setTimeout(function () {
+    //    $('#overlay').modal('hide');
+    //}, 5000);
+</script>
+
+<div class="modal fade" id="overlay" ng-controller="HomeController">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <a href="" style="color:#A8CF45;"><span class="glyphicon glyphicon-map-marker"></span> Select Your City</a>
+            </div>
+            <div class="modal-body" style="min-height:250px;">
+                <div class="row">
+                    <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6 popupimg">
+                        <img src="Assets/img/Banners/1-min.JPG" style="width:250px;" />
+                    </div>
+                    <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6 popuptext">
+                        <div class="row text-center">
+                            <img src="Assets/img/logo.png" class="logo gblogo" style="width:100px;" />
+                        </div>
+                        <div class="row">
+                            <div style="padding-left:15%;margin-top:16px;" class="popuptextbox">
+                                <!--<div class="input-group  search" style="width:200px;">
+                                    <input type="text" ng-model="pincode" placeholder="Your Pincode" class="form-control"><span class="input-group-addon search-addon" ng-click="checkPincode(pincode, 0)"><i class="glyphicon glyphicon-map-marker"></i></span>
+                                </div>-->
+                            </div>
+                        </div>
+                        <div class="row text-center">Select Your City</div>
+                        <div class="row text-center" ng-controller="TopMenuController" style="margin-top:6px;">
+                            <select class="gb-top-select-city" ng-options="city as city.Name
+                                                                        for city in CityList"
+                                    ng-model="selectedCity" ng-change="ChangeCity(selectedCity)" style="height: 30px; width: 200px; background-color:white; color:black;">
+                                <option value="-1">Select City</option>
+                            </select>
+                        </div>
+
+                        <div class="row text-center popupshopping">
+                            <p style=" margin-top: 5px; margin-bottom: 4px; font-weight: bold;">Or</p>
+                            <!--<button type="button" data-dismiss="modal" class="btn btn-success btn-sm" ng-click="checkPincode(pincode, 1)">Just Start Shopping</button>-->
+                            <button type="button" data-dismiss="modal" class="btn btn-success btn-sm">Just Start Shopping</button>
+                        </div>
+
+                        <!--<div ng-show="waiting" style="text-align:center">
+                            <img src="Assets/img/loading-icon.gif" style="width:50px; height:50px;" />
+                        </div>-->
+                    </div>
+                </div>
+                <!--<div ng-show="show">
+                    <br />
+                    <p style="margin-left:15px; color:{{ pincodeStatusColor}};">{{ pincodeMsg }}</p>
+                </div>-->
+            </div>
+        </div>
+    </div>
+</div>
+<!--------------------------------------------------------------- End Select City -->
+<!------------------------------------------------------------- Start Track Order -->
+<div class="modal fade bs-example-modal-lg" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" ng-controller="HomeController">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <a href="" style="color:#A8CF45;"><span class="glyphicon glyphicon-map-marker"></span> Track Your Order</a>
+            </div>
+            <div class="modal-body">
+                <div class="col-xs-2 col-sm-2 col-md-2 col-lg-2" style="margin-right:-60px;">
+                    <img src="Assets/img/logo.png" class="logo" style="width:50px;" />
+                </div>
+
+                <div class="input-group  search">
+                    <input type="text" id="trackOrderCode" ng-model="trackOrderCode" placeholder="Track Your Order" class="form-control"><span class="input-group-addon search-addon" ng-click="trackOrder(trackOrderCode)"><i class="glyphicon glyphicon-map-marker"></i></span>
+                </div>
+                <div ng-show="waiting" style="text-align:center">
+                    <img src="Assets/img/loading-icon.gif" style="width:50px; height:50px;" />
+                </div>
+
+                <div ng-show="show" id="show">
+                    <table class="table">
+                        <tr ng-repeat="customerorderviewmodel in trackOrderList.CustomerOrderViewModels">
+                            <td>
+                                <table class="table table-condensed table-hover table-responsive">
+                                    <tr>
+                                        <td>Order Placed By</td>
+                                        <td>&nbsp;</td>
+                                        <td>{{ customerorderviewmodel.PersonalName }}</td>
+                                        <td>Placed On</td>
+                                        <td>&nbsp;</td>
+                                        <td>{{ customerorderviewmodel.CreateDate | date:'MMM-dd-yyyy, h:mma' }}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Contact No.</td>
+                                        <td>&nbsp;</td>
+                                        <td><span class="glyphicon glyphicon-earphone"></span>&nbsp;{{ customerorderviewmodel.PrimaryMobile }}</td>
+                                        <td>Email</td>
+                                        <td>&nbsp;</td>
+                                        <td><span class="glyphicon glyphicon-envelope"></span>&nbsp;{{ customerorderviewmodel.Username }}</td>
+                                    </tr>
+                                    <tr>
+                                        <td rowspan="4">Shipping Address</td>
+                                        <td rowspan="4">&nbsp;</td>
+                                        <td rowspan="4">{{ customerorderviewmodel.ShippingAddress }}, {{ customerorderviewmodel.AreaName }}, {{ customerorderviewmodel.PincodeName }}</td>
+                                    </tr>
+
+                                    <tr>
+                                        <td>Order Amount</td>
+                                        <td>&nbsp;</td>
+                                        <td><span class="gb-indian_currency"></span>&nbsp;{{ customerorderviewmodel.OrderAmount }}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Delivery Charge</td>
+                                        <td>&nbsp;</td>
+                                        <td><span class="gb-indian_currency"></span>&nbsp;{{ customerorderviewmodel.TotalDeliveryChargeForCustomerOrder }} [ {{ customerorderviewmodel.TotalDeliveryTypeForCustomerOrder }} ]</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Payable Amount</td>
+                                        <td>&nbsp;</td>
+                                        <td><span class="gb-indian_currency"></span>&nbsp;{{ customerorderviewmodel.PayableAmount }} [ {{ customerorderviewmodel.PaymentMode }} ]</td>
+                                    </tr>
+
+
+                                </table>
+                            </td>
+                        </tr>
+
+                        <tr ng-repeat="customerorderviewmodel in trackOrderList.CustomerOrderViewModels">
+                            <td>
+                                <div class="accordion" id="accordion2" ng-repeat="ShopGroupByShopOrderCodeViewModel in customerorderviewmodel.ShopGroupByShopOrderCodeViewModels">
+                                    <div class="accordion-group">
+                                        <div class="accordion-heading">
+                                            <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#{{ShopGroupByShopOrderCodeViewModel.ShopOrderCode}}">
+                                                {{ ShopGroupByShopOrderCodeViewModel.ShopName | uppercase }} [ {{ ShopGroupByShopOrderCodeViewModel.ShopOrderCode }} ]
+                                            </a>
+                                        </div>
+                                        <div id="{{ShopGroupByShopOrderCodeViewModel.ShopOrderCode}}" class="accordion-body collapse in">
+                                            <div class="accordion-inner">
+                                                <div>
+                                                    <!-- Nav tabs -->
+                                                    <ul class="nav nav-tabs" role="tablist">
+                                                        <li role="presentation" class="active"><a href="#Shipment{{ShopGroupByShopOrderCodeViewModel.ShopOrderCode}}" aria-controls="Shipment{{ShopGroupByShopOrderCodeViewModel.ShopOrderCode}}" role="tab" data-toggle="tab">Shipment</a></li>
+                                                        <li role="presentation"><a href="#OrderList{{ShopGroupByShopOrderCodeViewModel.ShopOrderCode}}" aria-controls="OrderList{{ShopGroupByShopOrderCodeViewModel.ShopOrderCode}}" role="tab" data-toggle="tab">Order List</a></li>
+                                                    </ul>
+
+                                                    <!-- Tab panes -->
+                                                    <div class="tab-content">
+                                                        <div role="tabpanel" class="tab-pane active" id="Shipment{{ShopGroupByShopOrderCodeViewModel.ShopOrderCode}}">
+                                                            <!--<table class="table table-bordered table-condensed table-hover table-responsive table-striped">
+                                                                <tr ng-repeat="customerOrderHistoryViewModel in ShopGroupByShopOrderCodeViewModel.CustomerOrderHistoryViewModels | unique:'Status'">
+                                                                    <td style="width:20px;"><img src="Assets/img/TrackOrder/{{ customerOrderHistoryViewModel.Status }}.jpg" style="width:22px; height:27px;" /></td>
+                                                                    <td>{{customerOrderHistoryViewModel.StatusName}}</td>
+                                                                    <td>{{ customerOrderHistoryViewModel.CreateDate }}</td>
+                                                                </tr>
+                                                            </table>-->
+                                                            <ul class="timeline" ng-repeat="customerOrderHistoryViewModel in ShopGroupByShopOrderCodeViewModel.CustomerOrderHistoryViewModels | unique:'Status'">
+                                                                <li ng-if="customerOrderHistoryViewModel.Status % 2 == 0">
+                                                                    <div class="timeline-badge warning"><img src="Assets/img/TrackOrder/{{ customerOrderHistoryViewModel.Status }}.png" /></div>
+                                                                    <div class="timeline-panel">
+                                                                        <div class="timeline-heading">
+                                                                            <h4 class="timeline-title">{{customerOrderHistoryViewModel.StatusName}}</h4>
+                                                                            <p><small class="text-muted"><i class="glyphicon glyphicon-time"></i> {{ customerOrderHistoryViewModel.CreateDate | date:'MMM-dd-yyyy, h:mma' }}</small></p>
+                                                                        </div>
+                                                                        <div class="timeline-body">
+                                                                            <!--<p>Hello World</p>-->
+                                                                        </div>
+                                                                    </div>
+                                                                </li>
+                                                                <li ng-if="customerOrderHistoryViewModel.Status % 2 != 0" class="timeline-inverted">
+                                                                    <div class="timeline-badge success"><img src="Assets/img/TrackOrder/{{ customerOrderHistoryViewModel.Status }}.png" /></div>
+                                                                    <div class="timeline-panel">
+                                                                        <div class="timeline-heading">
+                                                                            <h4 class="timeline-title">{{customerOrderHistoryViewModel.StatusName}}</h4>
+                                                                            <p><small class="text-muted"><i class="glyphicon glyphicon-time"></i> {{ customerOrderHistoryViewModel.CreateDate | date:'MMM-dd-yyyy, h:mma' }}</small></p>
+                                                                        </div>
+                                                                        <div class="timeline-body">
+                                                                            <!--<p>Hello World</p>-->
+                                                                        </div>
+                                                                    </div>
+                                                                </li>
+                                                            </ul>
+                                                        </div>
+
+                                                        <div role="tabpanel" class="tab-pane" id="OrderList{{ShopGroupByShopOrderCodeViewModel.ShopOrderCode}}">
+                                                            <table class="table table-bordered table-condensed table-responsive">
+                                                                <tr>
+                                                                    <th>Product</th>
+                                                                    <th style="width:200px">Sale Rate</th>
+                                                                    <th style="width:20px">Qty</th>
+                                                                    <th style="width:80px; text-align:right">Amount</th>
+                                                                </tr>
+                                                                <tr ng-repeat="customerOrderDetailViewModel in ShopGroupByShopOrderCodeViewModel.CustomerOrderDetailViewModels">
+                                                                    <td>{{ customerOrderDetailViewModel.ProductName }}</td>
+                                                                    <td><span class="gb-indian_currency"></span> {{ customerOrderDetailViewModel.SaleRate }} / {{ customerOrderDetailViewModel.ProductSize }} </td>
+                                                                    <td>{{ customerOrderDetailViewModel.Qty }}</td>
+                                                                    <td style="text-align:right"><span class="gb-indian_currency"></span> {{ customerOrderDetailViewModel.TotalAmount }}</td>
+                                                                </tr>
+                                                            </table>
+                                                        </div>
+                                                    </div>
+
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-sm btn-default" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-sm btn-warning" ng-click="trackOrder(trackOrderCode)">Track</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!--------------------------------------------------------------- End Track Order -->
+<!-------------------------------------------------------------------- Start Model Pop Up Cart -->
+<script>
+    //window.setInterval(function () {
+    //    //checkTotalCartAmount();
+    //}, 1000);
+
+    //function checkTotalCartAmount() {
+    //    var lTotalCartAmount = parseInt(localStorage.getItem("totalCartAmount"));
+    //    $('#cartTotalAmount').html(lTotalCartAmount);
+    //    $('#cartTotalAmountSummary').html(lTotalCartAmount);
+
+    //    $('#cartTotalAmountModel').html(lTotalCartAmount);
+    //    $('#cartTotalAmountModelSummary').html(lTotalCartAmount);
+
+    //    $('#cartTotalAmountModel1').html(lTotalCartAmount);
+    //    $('#cartTotalAmountModel1Summary').html(lTotalCartAmount);
+
+
+    //    var lDeliveryCharge = parseInt($('#cartDeliveryCharge').html());
+    //    var lCartPayableAmount = lTotalCartAmount + lDeliveryCharge;
+    //    $('#cartPayableAmount').html(lCartPayableAmount);
+    //    $('#cartPayableAmountSummary').html(lCartPayableAmount);
+
+    //}
+</script>
+<style>
+    .model-cart {
+        min-height: 400px !important;
+        max-height: 400px !important;
+        overflow-y: auto !important;
+    }
+</style>
+<div class="modal fade bs-example-modal-lg" id="myModalCart" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" ng-controller="ProductListController">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header" style="padding-bottom: 4px;">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <a href="" style="color:#A8CF45;"><img src="Assets/img/logo.png" class="logo" style="width:50px;" /><span class="glyphicon glyphicon-shopping-cart" style="margin-left:5px;"></span> My Cart</a>
+            </div>
+            <div class="modal-body model-cart">
+                <!------------------------ cart start -->
+                <!--<button style=" padding-top: 1px;"><span class="gb-indian_currency"></span>{{ cartAmount }}</button>-->
+                <button style=" padding-top: 1px;"><span class="gb-indian_currency"></span><b id="cartTotalAmountModel">{{ cartAmount }}</b></button>
+                <button ng-controller="CartController"><i class="glyphicon glyphicon-shopping-cart gb-th"></i><span class="gb-th">{{ cart.length }}</span></button>
+
+                <div id="basket" ng-controller="CartController">
+                    <table class="table table-bordered table-condensed table-hover table-responsive table-striped">
+                        <tr>
+                            <th>Product</th>
+                            <th style="width:160px">MRP</th>
+                            <th style="width:160px">Sale Rate</th>
+                            <th style="width:60px">Saving</th>
+                            <th style="width:180px;text-align:center;">Quantity</th>
+                            <th style="width:80px; text-align:right">Amount</th>
+                        </tr>
+                        <tr ng-repeat="cartItem in cart | orderBy:'ProductID'">
+                            <td><img ng-src="{{ cartItem.ImgUrl }}" class="gb-img-small" onerror="this.src = 'Assets/img/products/default.png'"><div class="gb-cart-qty"><span class="cartspan">{{ cartItem.ProductName }}</span></div></td>
+                            <td><del style="color:red;"><span class="gb-indian_currency"></span> {{ cartItem.MRP }} / {{ cartItem.ProductVarientSize }} </del></td>
+                            <td><span class="gb-indian_currency"></span> {{ cartItem.RetailerRate }} / {{ cartItem.ProductVarientSize }} </td>
+                            <td><span class="gb-indian_currency"></span> {{ cartItem.MRP * cartItem.BuyQty - cartItem.RetailerRate * cartItem.BuyQty }} </td>
+                            <!--<td>{{ cartItem.BuyQty }}</td>-->
+
+
+
+                            <td style="text-align:center;">
+                                <!--<div>
+                                    <button class="{{ tileHeaderRs }}"><span class="gb-indian_currency"></span>{{ cartItem.BuyAmount }}</button>
+                                    <select class="{{ tileHeaderSelectVarient }}" ng-init="item=cartItem.ShopStockByVarients[0]" ng-options="ShopStockByVarient as ShopStockByVarient.RetailerRate  + '/' + ShopStockByVarient.ProductVarientSize
+                                                                               for ShopStockByVarient in cartItem.ShopStockByVarients"
+                                            ng-model="item" ng-change="changeVarient(product, item)"></select>
+                                </div>-->
+
+                                <div>
+                                    <button style="width:26px;" id="Minus{{ cartItem.ProductID }}" ng-click="ChangeQty('Minus', cartItem)">-</button>
+                                    <input style="width:48px;" type="text" readonly="readonly" value="{{ cartItem.BuyQty }}" />
+                                    <button style="width:26px;" id="Plus{{ cartItem.ProductID }}" ng-click="ChangeQty('Plus', cartItem)">+</button>
+
+                                    <button class="gb-addProduct" id="{{ cartItem.ProductID }}" ng-click="AddToCart(cartItem)"><i style="color:red; background-color:transparent !important" class="glyphicon glyphicon-remove {{ cartItem.AddedInCart }}"></i></button>
+                                </div>
+                            </td>
+
+                            <td style="text-align:right"><span class="gb-indian_currency"></span> {{ cartItem.BuyAmount }}</td>
+                        </tr>
+                        <tr>
+                            <td colspan="4" rowspan="3"></td>
+                            <td style="text-align: right; padding-right: 18px;"><span>Amount Total</span></td>
+                            <td style="text-align:right"><span class="gb-indian_currency"></span><span id="cartTotalAmountModel1">{{ cartAmount }}</span></td>
+                        </tr>
+                        <tr>
+                            <!--<td colspan="2"></td>-->
+                            <td style="text-align: right; padding-right: 18px; "><span>Delivery Charge</span></td>
+                            <td style="text-align:right"><span class="gb-indian_currency"></span><span id="cartDeliveryCharge">{{ deliveryCharge }}</span></td>
+                        </tr>
+                        <tr>
+                            <!--<td colspan="2"></td>-->
+                            <td style="text-align: right; padding-right:18px;"><b>Payable Amount</b></td>
+                            <td style="text-align:right"><span class="gb-indian_currency"></span><b id="cartPayableAmount">{{ payableAmount }}</b></td>
+                        </tr>
+                        <tr class="{{ isDeliveryPossible }}">
+                            <td colspan="6">
+                                <span class="text-danger">Delivery of Fruits and Vegetables ordered on Friday shall be delivered on next day.</span>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+                <!-------------------------- cart end -->
+            </div>
+            <div class="modal-footer" ng-controller="PaymentProcessController">
+                <button type="button" class="btn btn-sm btn-default" data-dismiss="modal">Close</button>
+                <a class="btn btn-sm btn-warning" href="CustomerShippingAddress/Index">Check Out</a>
+                <!--<button type="button" class="btn btn-sm btn-warning" data-dismiss="modal" ng-click="checkOut()">Check Out</button>-->
+            </div>
+        </div>
+    </div>
+</div>
+
+<!---------------------------------------------------------------------- End Model Pop Up Cart -->
+<!-------------------------------------------------------------------- Start Model Pop Up Preview -->
+<style>
+    .model-preview {
+        min-height: 400px !important;
+        max-height: 600px !important;
+        height: 600px;
+        overflow-y: auto !important;
+    }
+
+    .preview-btn {
+        height: 36px !important;
+        margin-top: -7px;
+        margin-bottom: -7px;
+    }
+</style>
+
+<div class="modal fade bs-example-modal-lg" id="myModalPreview" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" ng-controller="ProductListController">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content model-preview">
+            <div class="modal-header" style="padding-bottom: 4px;">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <a href="" style="color:#A8CF45;"><img src="Assets/img/logo.png" class="logo" style="width:50px;" /><span class="glyphicon glyphicon glyphicon-picture" style="margin-left:5px;"></span>&nbsp;&nbsp;{{ PreviewItem.ProductName }}</a>
+            </div>
+
+            <table class="table">
+                <tr>
+                    <td style="width:20%">
+                        <ul>
+                            <li class="{{ layout }}" style="height:228px;">
+                                <div class="styleMain">
+                                    <div class="avid" ng-click="AddToPreview(PreviewItem)" data-toggle="modal" data-target="#myModalPreview">
+                                        <div style="top:8px;" class="{{ PreviewItem.OfferClass }} Offer_set">{{ PreviewItem.Offer | num }}%</div>
+                                        <img style="margin-top:30px;" ng-src="{{ PreviewItem.ImgUrl }}" id="img1" class="{{ imgView }}" onerror="this.src = 'Assets/img/products/default.png'">
+                                        <div class="{{ PreviewItem.OfferClass }} offer_mrp" style=" top: 2px; left:26px; background-image: none; color: #777;"><span style="padding-left: 20px;line-height: 25px;">MRP : </span><del style="color:red;">{{ PreviewItem.MRP }}</del> <b>{{ PreviewItem.RetailerRate }}</b></div>
+                                        <p>{{ PreviewItem.ProductName }}</p>
+                                    </div>
+                                </div>
+                            </li>
+                        </ul>
+                    </td>
+
+                    <td>
+                        <table class="table table-bordered table-condensed table-hover table-responsive table-striped">
+                            <tr>
+                                <td>Product</td>
+                                <td style="width:80%;">{{ PreviewItem.ProductName }}</td>
+                            </tr>
+                            <tr>
+                                <td>Brand</td>
+                                <td style="width:40px;">{{ PreviewItem.ProductBrandName }}</td>
+                            </tr>
+
+                            <!--<tr>
+                                <td>Description</td>
+                                <td>{{ PreviewItem.ProductDescription }}</td>
+                            </tr>-->
+                            <tr>
+                                <td>Length</td>
+                                <td>{{ PreviewItem.ProductLengthInCm }} cm</td>
+                            </tr>
+                            <tr>
+                                <td>Breadth</td>
+                                <td>{{ PreviewItem.ProductBreadthInCm }} cm</td>
+                            </tr>
+                            <tr>
+                                <td>Height</td>
+                                <td>{{ PreviewItem.ProductHeightInCm }} cm</td>
+                            </tr>
+                        </table>
+                        <table class="table">
+                            <tr>
+                                <td style=" border: 0px;">&nbsp;</td>
+                                <td class="{{ tileHeader }} {{ PreviewItem.AddedInCart }}" style="width:414px; border:0px;">
+                                    <button class="{{ tileHeaderRs }} preview-btn"><span class="gb-indian_currency"></span>{{ PreviewItem.BuyAmount }}</button>
+                                    <select id="previewItem" style="width: 130px;" class="{{ tileHeaderSelectVarient }} preview-btn" ng-init="item=PreviewItem.ShopStockByVarients[0]" ng-options="ShopStockByVarient as ShopStockByVarient.RetailerRate  + '/' + ShopStockByVarient.ProductVarientSize
+                                                                            for ShopStockByVarient in PreviewItem.ShopStockByVarients"
+                                            ng-model="item" ng-change="changeVarient(PreviewItem, item)"></select>
+
+                                    <button id="Minus{{ PreviewItem.ProductID }}" class="preview-btn" ng-click="ChangeQty('Minus', PreviewItem)">-</button>
+                                    <input type="text" readonly="readonly" class="preview-btn" value="{{ PreviewItem.BuyQty }}" />
+                                    <button id="Plus{{ PreviewItem.ProductID }}" class="preview-btn" ng-click="ChangeQty('Plus', PreviewItem)">+</button>
+
+                                    <button id="{{ PreviewItem.ProductID }}" style="width:auto; margin-left:2px;" class="preview-btn" ng-click="AddToCart(PreviewItem)">Add to Cart<i class="glyphicon glyphicon-shopping-cart"></i></button>
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+            </table>
+
+            <div class="row">
+                <a href="#/preview?ID={{PreviewItem.ID}}&Name={{PreviewItem.ProductName}}"><span style="color:#A8CF45">{{PreviewItem.ProductName}}</span></a>
+            </div>
+
+            <table class="table">
+                <tr>
+                    <td>
+                        <h4>Genereal Specification <span style="color:#A8CF45;">[ {{ PreviewItem.ProductName }} ]</span></h4>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <iframe id="iframeSpecification" ng-src="{{ PreviewItem.ProductDescription | trustAsResourceUrl }}" style="height:200px; width:100%; border:none; overflow-y:scroll;"></iframe>
+                    </td>
+                </tr>
+            </table>
+
+            <div class="row container-fluid" style="width: 100%; border-bottom: 1px solid #A8CF45; margin-bottom:10px;">
+                <table class="table">
+                    <tr>
+                        <td style="border-bottom: 1px solid rgb(221, 221, 221);">
+                            <h4>You may also interested in</h4>
+                        </td>
+                    </tr>
+                </table>
+                <div style="width:91%;overflow-x:scroll;margin:auto">
+                    <div style="width:2000px; overflow-x:auto;">
+                        <ul>
+                            <li ng-repeat="product in Products | limitTo: 10" class="{{ layout }}">
+                                <div class="styleMain">
+                                    <div class="{{ tileHeader }} {{ product.AddedInCart }}">
+                                        <button class="{{ tileHeaderRs }}"><span class="gb-indian_currency"></span>{{ product.BuyAmount }}</button>
+                                        <select class="{{ tileHeaderSelectVarient }}" ng-init="item=product.ShopStockByVarients[0]" ng-options="ShopStockByVarient as ShopStockByVarient.RetailerRate  + '/' + ShopStockByVarient.ProductVarientSize
+                                                                               for ShopStockByVarient in product.ShopStockByVarients"
+                                                ng-model="item" ng-change="changeVarient(product, item)"></select>
+                                    </div>
+
+                                    <div class="{{ tileBottom }} {{ product.AddedInCart }}">
+                                        <button id="Minus{{ product.ProductID }}" ng-click="ChangeQty('Minus', product)">-</button>
+                                        <input type="text" readonly="readonly" value="{{ product.BuyQty }}" />
+                                        <button id="Plus{{ product.ProductID }}" ng-click="ChangeQty('Plus', product)">+</button>
+
+                                        <button class="gb-addProduct" id="{{ product.ProductID }}" ng-click="AddToCart(product)">Add <i class="glyphicon glyphicon-shopping-cart"></i></button>
+                                    </div>
+
+                                    <!--<div ng-click="showDescription(product)" class="avid">-->
+                                    <div class="avid" ng-click="AddToPreview(product)" data-toggle="modal" data-target="#myModalPreview">
+                                        <!--<div class="offer">{{ ((product.MRP - product.RetailerRate) / product.MRP * 100) | num }}%</div>-->
+                                        <div class="{{ product.OfferClass }} Offer_set">{{ product.Offer | num }}%</div>
+                                        <img ng-src="{{ product.ImgUrl }}" id="img1" class="{{ imgView }}" onerror="this.src = 'Assets/img/products/default.png'">
+                                        <div class="{{ product.OfferClass }} offer_mrp" style=" top: 190px; left:-10px; background-image: none; color: #777;"><span style="padding-left: 20px;line-height: 25px;">MRP : </span><del style="color:red;">{{ product.MRP }}</del> <b>{{ product.RetailerRate }}</b></div>
+                                        <p>{{ product.ProductName }}</p>
+                                    </div>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+
+
+
+
+
+
+
+        </div>
+    </div>
+</div>
+
+<!---------------------------------------------------------------------- End Model Pop Up Preview -->

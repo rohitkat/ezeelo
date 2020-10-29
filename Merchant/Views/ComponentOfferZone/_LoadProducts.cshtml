@@ -1,0 +1,552 @@
+﻿@*@model IPagedList<ModelLayer.Models.ViewModel.ProductVarientViewModel>*@
+@model IEnumerable<ModelLayer.Models.ViewModel.ProductVarientViewModel>
+
+
+@{
+    Layout = null;
+}
+
+<style>
+    .oferNme {
+        margin-left: 400px;
+        color: #90A213;
+    }
+    .lstProdct {
+        margin:5px 0 5px 10px;
+        color: #C08217;
+    }
+    .menheding th {
+        text-align: center;
+        font-size: 15px;
+        color: #F0EDEB;
+    }
+
+    .subHed td {
+        text-align: center;
+    }
+
+    .freeProBtn {
+        background-color: #F0AF4E;
+        border: 1px solid #F0AF4E;
+        padding: 3px;
+        color: #fff;
+    }
+
+    .oferScroll {
+        overflow-y: scroll;
+    }
+
+    .getOneofer {
+        margin: 5px 0 5px 10px;
+        color: #C08217;
+        background-color: #ECE6DE;
+        padding: 1px 15px;
+        border: 1px solid #CEC3B1;
+    }
+
+    .oferName {
+        margin-left: 380px;
+        color: #90A213;
+    }
+
+    tr.subHed td {
+        background-color: #ECE6DE !important;
+    }
+
+    #report-div {
+        height: 244px;
+        overflow-y: scroll;
+        margin-top: 29px;
+    }
+
+    tr.menheding {
+        position: absolute;
+        top: 75px;
+        z-index: 72;
+    }
+
+        tr.menheding th:nth-of-type(1) {
+            width: 725px;
+        }
+
+        tr.menheding th:nth-of-type(2) {
+            width: 663px;
+        }
+
+    a.page-number {
+        float: left;
+    }
+
+    .wrap {
+        background: none;
+    }
+
+    .text-class {
+        font-size: 17px;
+        color: #545352;
+    }
+
+     th, td {
+        padding: 5px;
+    }
+
+    th {
+        background-color: rgb(248, 248, 248);
+    }
+
+    #gridT, #gridT tr {
+        border: 1px solid #0D857B;
+    }
+
+    #subT, #subT tr {
+        border: 1px solid #f3f3f3;
+    }
+
+    #subT {
+        margin: 0px 0px 0px 10px;
+        padding: 5px;
+        width: 95%;
+    }
+
+        #subT th {
+            font-size: 12px;
+        }
+
+    .hoverEff {
+        cursor: pointer;
+    }
+
+        .hoverEff:hover {
+            background-color: rgb(248, 242, 242);
+        }
+
+    .expand {
+        background-image: url(/Content/img/quicklook-bg.png);
+        background-position-x: -22px;
+        background-repeat: no-repeat;
+    }
+
+    .collapse {
+        background-image: url(/Images/pm.png);
+        background-position-x: -2px;
+        background-repeat: no-repeat;
+    }
+  
+    .tablesubth {
+        text-align: center;
+        font-size: 11px;
+    }
+   
+
+    tr.menheding th {
+        text-align: center;
+        color: #F0EDEB;
+        background-color: #CF9547;
+        }
+
+     
+    td.successnew {
+        text-align: center;
+    }
+
+        td.successnew b {
+            color: #79621A;
+        }
+
+   
+    #content {
+        margin: 8px 0 0 10px !important;
+        padding: 0 !important;
+        min-height: 0 !important;
+    }
+
+    .breadcrumb {
+        margin: 0 0 20px 0 !important;
+    }
+
+    tr.subHed td {
+        background-color: #ECE6DE !important;
+    }
+
+    tr.colorHeding th {
+        background-color: #F7E1C2;
+        text-align: center;
+    }
+
+    .value-prodct {
+    }
+
+        .value-prodct ul {
+            float: left;
+            position: relative;
+            padding-right: 10px;
+        }
+
+            .value-prodct ul:last-child > li:last-child {
+                display: none;
+            }
+
+    .thirdLi {
+        position: absolute;
+        right: -12px;
+        top: 28%;
+    }
+
+    .value-prodct ul li span {
+    }
+
+    .plus {
+        font-size: 16px;
+    }
+ 
+    .showpage {float:right;
+    }
+   
+</style>
+<div id="content" class="span10" style="background:#FFF;width:100%!important;margin:0px!important">
+    <div class="control-group clearfix">
+        <div class="span2 text-class" style="text-align:right">Search By Category</div>
+        <div class="controls span8">
+            @Html.DropDownList("CategoryID", "Select Category")
+            <input type="button" value="search" onclick="GetProducts();" class="btn btnOffer" style="margin-top:-10px;" />
+            <img id="loader_img1" src="~/Content/img/ajax_loader.gif" style="display: none" height="30" width="30" />
+        </div>
+    </div>
+    <div class="getOneofer clearfix">
+        <b>List of Products</b>
+        <b class="oferNme">Offer Name: @ViewBag.OfferName</b>
+    </div>
+
+    <table class="table table-striped table-bordered bootstrap-datatable datatable dataTable" id="DataTables_Table_0" aria-describedby="DataTables_Table_0_info">
+        <tr>
+            <td>
+                <div id="report-div">
+                    <table class="table table-striped table-bordered bootstrap-datatable datatable" id="tblProduct">
+
+                        <thead>
+                            <tr class="menheding">
+                                <th colspan="4">Image</th>
+                                <th colspan="3">Product Name</th>
+                            </tr>
+                        </thead>
+                        @{
+
+
+                            if (Model != null)
+                            {
+                                System.Text.StringBuilder sb = new System.Text.StringBuilder();
+                                //List<long> VarientId = new List<long>();
+                                List<long> ProdId = Model.Select(p => p.ProductID).Distinct().ToList();
+                                string ProdName = "";
+                                string ProdImage = "";
+
+                                for (int i = 0; i < ProdId.Count; i++)
+                                {
+                                    //VarientId = Model.Where(x => x.ProductID == ProdId[i]).Select(x => x.ProductVarientID).Distinct().ToList();
+                                    ProdName = Model.Where(x => x.ProductID == ProdId[i]).Select(x => x.ProductName).FirstOrDefault();
+                                    ProdImage = Model.Where(x => x.ProductID == ProdId[i]).Select(x => x.ShopImage).FirstOrDefault();
+                                    var varient = Model.Where(p => p.ProductID == ProdId[i]).Select(p => new
+                                    {
+                                        p.ProductVarientID,
+                                        p.ProductName,
+                                        p.SizeName,
+                                        p.ColorName,
+                                        p.MaterialName,
+                                        p.DimensionName,
+                                        p.Total,
+                                        p.TotalSaleRate,
+                                        p.ShopStockID
+
+
+                                    }).Distinct().ToList();
+
+                                    <tr class="subHed">
+                                        @*<td>
+                                                <a href="#" class="btn-minimize"><i class="halflings-icon white chevron-up"></i></a>
+                                            </td>*@
+                                        <td colspan="6" style=" text-align: center;">
+                                            @*<img id="imgProductImage" src="~/Images/logo.png" style="width: 95px" alt="" />*@
+                                            <img id="imgProductImage" src="@Url.Content(string.IsNullOrEmpty(ProdImage) ? "/Content/no_image.png" : ProdImage)" style="width: 30px; height:30px;" alt= "eZeelo" />
+                                        </td>
+                                        <td colspan="3" class="successnew"><b>@ProdName</b></td>
+                                    </tr>
+
+
+                                    <tr class="colorHeding">
+                                        <th class="tablesubth">ApplyOffer</th>
+                                        <th class="tablesubth">Color</th>
+                                        <th class="tablesubth">Size</th>
+                                        <th class="tablesubth">Dimension</th>
+                                        <th class="tablesubth">Material</th>
+                                        <th class="tablesubth">MRP</th>
+                                        <th class="tablesubth">Sale Rate</th>
+                                        <th class="tablesubth">Component Distribution</th>
+                                    </tr>
+
+
+                                    for (int k = 0; k < varient.Count; k++)
+                                    {
+
+                                        var component = Model.Where(p => p.ProductVarientID == varient[k].ProductVarientID).Select(p => p.shopProductComponentList).ToList();
+                                        string CompName = "";
+                                        decimal CompTotal = 0;
+                                        string ComponentTotal = "";
+                                        var str = (HtmlString)null;
+                                        foreach (var cmp in component)
+                                        {
+                                            sb.Clear();
+                                            sb.Append("<div class='value-prodct'>");
+                                            foreach (var c in cmp)
+                                            {
+                                                if (c.ComponentName == "VAT")
+                                                {
+                                                    CompName = c.ComponentName + "(" + c.PerUnitRateInPer + " %" + ")";
+                                                }
+                                                else if (c.DependentOnComponentID > 0)
+                                                {
+                                                    if (c.PerUnitRateInPer > 0)
+                                                    {
+                                                        CompName = c.ComponentName + "(" + c.PerUnitRateInPer + " %" + ")";
+                                                    }
+                                                    else if (c.PerUnitRateInRs > 0)
+                                                    {
+                                                        CompName = c.ComponentName + "(Rs. " + c.PerUnitRateInRs + ")";
+                                                    }
+                                                }
+                                                else
+                                                {
+                                                    CompName = c.ComponentName + "(" + c.ComponentWeight + " " + c.ComponentUnitName + ")";
+                                                }
+                                                //ComponentName = ComponentName + CompName;
+                                                CompTotal = Math.Round(c.ComponentRate, 2);
+                                                sb.Append("<ul>");
+                                                sb.Append("<li style='border-bottom:1px solid#ccc'>");
+                                                sb.Append(CompName);
+
+                                                sb.Append("</li>");
+                                                sb.Append("<li>");
+                                                sb.Append("Rs." + CompTotal.ToString());
+                                                sb.Append("</li>");
+                                                sb.Append("<li class='thirdLi'><div class='plus'>+</div></li>");
+                                                //sb.Append("+");
+                                                sb.Append("</ul>");
+
+                                                ComponentTotal = ComponentTotal + " +" + CompTotal;
+
+                                            }
+                                            //ComponentName = ComponentName.TrimEnd(ComponentName[ComponentName.Length - 1]);
+                                            sb.Remove(sb.ToString().Length - 1, 1);
+                                            sb.Append("</div>");
+                                            str = new HtmlString(sb.ToString());
+
+                                            ComponentTotal = ComponentTotal.Remove(0, 1);
+
+                                        }
+                                        <tr>
+                                            <td class="tablesubth"><input type="checkbox" class="chkApply" value="@varient[k].ShopStockID" id="chk#@varient[k].ShopStockID" onclick="ApplyOfferonProduct(this.id); " /><span class='savemsg' style='color:Green'></td>
+                                            <td class="tablesubth">@varient[k].ColorName</td>
+                                            <td class="tablesubth">@varient[k].SizeName</td>
+                                            <td class="tablesubth">@varient[k].DimensionName</td>
+                                            <td class="tablesubth">@varient[k].MaterialName</td>
+                                            <td class="tablesubth">@varient[k].TotalSaleRate</td>
+                                            <td class="tablesubth">@varient[k].TotalSaleRate</td>
+                                            <td class="tablesubth">@Html.Raw(str)</td>
+
+                                        </tr>
+                                    }
+
+                                }
+                            }
+                        }
+
+
+                    </table>
+
+                </div>
+            </td>
+        </tr>
+    </table>
+    <div id="Pager">
+        <div class="wrap">
+            <div id="slider1" class="slider">
+                <ul>
+                    @for (int c = 1; c <= @ViewBag.TotalPages; c++)
+                    {
+                        <li><a class="page-number" href="javascript:void();">@c</a></li>
+                    }
+
+
+                </ul>
+
+            </div>
+
+            <div class="controls" style="margin-top:-27px;">
+                <a href="#noname" class="prev-slide"><<</a>
+                <a href="#noname" class="next-slide" style="float: right; margin-right: 299px;">>></a>
+            </div>
+        </div>
+        <span class="totalcount countEntris"><b class="showpage">Showing @ViewBag.PageSize of @ViewBag.TotalCount enteries</b></span>
+    </div>
+    <div class="loader">
+        <img id="loader_img" src="~/Content/img/loader.gif" style="display: none" />
+    </div>
+</div>
+    <script src="~/Content/js/jquery-1.9.1.min.js"></script>
+    <script type="text/javascript">
+        //$(function () {
+        var PageIndex;
+        function GetProducts() {
+            $('#loader_img1').show();
+            var componentID = "@ViewBag.CompID";
+            var ComponentOfferID = "@ViewBag.ComponentOfferID";
+            var OfferName = "@ViewBag.OfferName";
+            PageIndex = 1;
+            var PageSize = 10;
+            var CategoryID = 0;
+            if ($("select#CategoryID option:selected").val() > 0) {
+                CategoryID = $("select#CategoryID option:selected").val();
+            }
+            //alert(CategoryID);
+            $.ajax({
+                type: "POST",
+                url: '@Url.Action("LoadProducts", "ComponentOfferZone")',
+                data: { 'componentID': componentID, 'ComponentOfferID': ComponentOfferID, 'OfferName': OfferName, 'PageIndex': PageIndex, 'PageSize': PageSize, 'CategoryID': CategoryID },
+
+                cache: false,
+                success: function (data) {
+
+                    setTimeout(function () {
+                        $("[id*=divPartialProduct]").html(data);
+                    }, 2000);
+                    setTimeout(function () {
+                        BindSavedOffersToProduct(OfferID);
+                    }, 2000);
+                    $('#loader_img1').hide();
+                },
+                error: function (x, e) {
+                    alert('Failure');
+
+                }
+            });
+        }
+        $("#Pager .page-number").click(function (e) {
+            $('#divPartialProduct').html('');
+            $('#loader_img').show();
+            $('#Pager').empty();
+            var CategoryID = 0;
+            if ($("select#CategoryID option:selected").val() > 0) {
+                CategoryID = $("select#CategoryID option:selected").val();
+            }
+            var componentID = "@ViewBag.CompID";
+            var page = parseInt($(this).html());
+            var ComponentOfferID = "@ViewBag.ComponentOfferID";
+            var OfferName = "@ViewBag.OfferName";
+            PageIndex = page;
+            var PageSize = 10;
+            $.ajax({
+                url: '@Url.Action("LoadProducts", "ComponentOfferZone")',
+                data: { 'componentID': componentID, 'ComponentOfferID': ComponentOfferID, 'OfferName': OfferName, 'PageIndex': page, 'PageSize': PageSize, 'CategoryID': CategoryID },
+                type: "Post",
+                cache: false,
+                success: function (data) {
+                    $('#loader_img').hide();
+                    setTimeout(function () {
+                        $('#divPartialProduct').html(data);
+                    }, 2000);
+
+                    setTimeout(function () {
+                        BindSavedOffersToProduct(ComponentOfferID);
+                    }, 2000)
+                    //$('#divPartialProduct').html(data);
+
+                },
+                error: function (data) {
+
+                }
+            });
+        });
+
+
+
+        //function to save and delete  offers for product
+        function ApplyOfferonProduct(ID) {
+            var id = ID.split('#');
+            var ComponentOfferID = "@ViewBag.ComponentOfferID";
+            var ShopStockID = id[1];
+            if ($("[id='" + ID + "']").prop('checked')) { //check if checkbox is checked..If yes call save offer otherwise call Delete offer
+                $.ajax({
+                    url: '@Url.Action("SaveOffer", "ComponentOfferZone")',
+                    data: { 'ShopStockID': ShopStockID, 'ComponentOfferID': ComponentOfferID },
+                    type: "Post",
+                    cache: false,
+                    success: function (data) {
+                        var msg = $("[id*='" + ID + "']").closest('tr').find('.savemsg');
+                        $(msg).text(data);
+                        $(msg).show();
+                        setTimeout(function () { $(msg).hide(); }, 5000);
+                        $('#loader_img').hide();
+                    },
+                    error: function (data) {
+
+                    }
+                });
+            }
+            else {
+
+                $.ajax({
+                    url: '@Url.Action("DeleteOffer", "ComponentOfferZone")',
+                    data: { 'ShopStockID': ShopStockID, 'ComponentOfferID': ComponentOfferID },
+                    type: "Post",
+                    cache: false,
+                    success: function (data) {
+                        var msg = $("[id*='" + ID + "']").closest('tr').find('.savemsg');
+                        $(msg).text(data);
+                        $(msg).show();
+                        setTimeout(function () { $(msg).hide(); }, 5000);
+                        //$('#loader_img').hide();
+                    },
+                    error: function (data) {
+
+                    }
+                });
+            }
+        }
+        function BindSavedOffersToProduct(ComponentOfferID) {
+            // alert(OfferID);
+            $.ajax({
+                url: '@Url.Action("BindSavedOffersToProduct", "ComponentOfferZone")',
+                data: { 'ComponentOfferID': ComponentOfferID },
+                type: "Post",
+                cache: false,
+                success: function (data) {
+                    $.each(data, function (index, item) {
+                        $("#tblProduct tr:gt(2)").each(function () {
+                            var ShopStockID = $(this).closest('tr').find('.chkApply').val();
+                            if (item == ShopStockID) {
+                                $(this).closest('tr').find('.chkApply').attr('checked', true);
+                            }
+                        });
+                    });
+
+                },
+                error: function (data) {
+
+                }
+            });
+
+        }
+    </script>
+
+
+    <script src="~/Content/js/lemmon-slider.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            //alert('OK');
+            // slider 1
+            $('#slider1').lemmonSlider({
+                infinite: false
+            });
+
+        });
+
+    </script>

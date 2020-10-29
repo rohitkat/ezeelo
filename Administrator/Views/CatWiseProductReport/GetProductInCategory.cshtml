@@ -1,0 +1,200 @@
+﻿@{
+    ViewBag.Title = "GetProductInCategory";
+}
+
+
+<style>
+    #txtFromDate {margin-left:-15px; width:147px;
+    }
+    #txtToDate {width:147px; margin-left:-14px;
+    }
+    toDate {white-space:nowrap;
+    }
+     .lineSpaceRes {
+        margin-top: 10px;
+    }
+    </style>
+
+<div class="span12 lineSpaceRes" style="width:100%">
+    <div class="span4 control-group">
+        @Html.Label("From Date", new { @class = "control-label span3" })
+        <input type="text" id="txtFromDate" class="input-large datepicker" />
+        <label for="txtFromDate" class="dtPic"><i class="glyphicons-icon calendar"></i></label>
+
+    </div>
+    <div class="span3 control-group">
+        @Html.Label("To Date", new { @class = "control-label toDate span3" })
+        <input type="text" id="txtToDate" class="input-large datepicker" />
+        <label for="txtToDate" class="dtPic"><i class="glyphicons-icon calendar"></i></label>
+
+    </div>
+    <div class="span4 control-group">
+        @Html.RadioButton("Product", "1", true, new { id = "rbApproved" }) Approved
+        @Html.RadioButton("Product", "2", false, new { id = "rbNonApproved" }) Non Approved
+        @Html.RadioButton("Product", "3", false, new { id = "rbproductUpload" }) Uploaded Product
+    </div>
+    <div class="span1"><input type="submit" value="Search" id="btnSearch" class="btn btnSearch-f"></div>
+    <div class="span3 control-group">
+        <label id="lblMsg" style="color:red"></label>
+    </div>
+    @*<div><input type="submit" value="Search" id="btnSearch" class="btn btnSearch-f"></div>*@
+    @*<div class="span4 control-group">
+        @Html.RadioButton("Product", "1", true, new { id = "rbApproved" }) Approved
+        @Html.RadioButton("Product", "2", false, new { id = "rbNonApproved" }) Non Approved
+        @Html.RadioButton("Product", "3", false, new { id = "rbproductUpload" }) Uploaded Product
+    </div>*@
+    @*<div class="span6" style="margin-top:27px;">
+        <span class="hed-owner">Export To</span>
+        @Html.DropDownList("ExportOption", new List<SelectListItem>
+
+    {
+
+
+       new SelectListItem{ Text="Excel", Value = "1" },
+       new SelectListItem{ Text="Csv", Value = "2" },
+       new SelectListItem{ Text="Pdf", Value = "3" }
+
+    })
+
+        <input type="submit" value="Export" id="btnExport" class="btn btnSearch-f btn_ex">
+        <input type="submit" value="Print" id="btnPrint" onclick="PrintReport();" class="btn btnSearch-f btn_ex btn-primary">
+    </div>*@
+</div>
+
+<div class="span12" style="margin-top:27px;">
+    <span class="hed-owner">Export To</span>
+    @Html.DropDownList("ExportOption", new List<SelectListItem>
+
+    {
+
+
+       new SelectListItem{ Text="Excel", Value = "1" },
+       new SelectListItem{ Text="Csv", Value = "2" },
+       new SelectListItem{ Text="Pdf", Value = "3" }
+
+    })
+
+    <input type="submit" value="Export" id="btnExport" class="btn btnSearch-f btn_ex">
+    <input type="submit" value="Print" id="btnPrint" onclick="PrintReport();" class="btn btnSearch-f btn_ex btn-primary">
+    <input type="submit" value="Back to List" id="btnBack" onclick="BackList();" class="btn btnSearch-f btn_ex btn-primary">
+</div>
+
+<div class="loader">
+    <img id="loader_img" src="~/Content/img/loader.gif" style="display: none" />
+</div>
+<div id="divReport" style="width:100%; overflow:visible" class="scrollable">
+
+</div>
+<script src="~/Content/js/jquery.1.8.3.min.js"></script>
+<script type="text/javascript">
+    $(function () {
+        $("input#btnSearch").on('click', function () {
+
+            var pagecount = 0;
+            var page = 1;
+            $('#loader_img').show();
+            var approvedStatus = $('input[name=Product]:radio:checked').val();
+            var toDate = $('#txtToDate').val();
+            var fromDate = $('#txtFromDate').val();
+            var CategoryID = "@ViewBag.CategoryID";
+            var isValid = ValidateDate(fromDate, toDate);
+            if (isValid == false) {
+                $('#loader_img').hide();
+                return;
+            }
+
+            $.ajax({
+                url: '@Url.Action("GetReport", "CatWiseProductReport")',
+                data: { 'page': page, 'pagecount': pagecount, 'fromDate': fromDate, 'toDate': toDate, 'approvedStatus': approvedStatus, 'CategoryID': CategoryID },
+                type: "Post",
+                cache: false,
+                success: function (data) {
+                    //alert(data);
+                    $('#loader_img').hide();
+                    $('#divReport').empty();
+                    $('#divReport').append(data);
+
+                },
+                error: function (data) {
+
+                }
+            });
+        });
+
+
+       
+        $("input#btnExport").on('click', function () {
+
+            var print = 0;
+            var option = 0;
+            if ($("select#ExportOption option:selected").val() > 0) {
+                option = $("select#ExportOption option:selected").val();
+            }
+            var approvedStatus = $('input[name=Product]:radio:checked').val();
+            var toDate = $('#txtToDate').val();
+            var fromDate = $('#txtFromDate').val();
+            var CategoryID = "@ViewBag.CategoryID";
+            var isValid = ValidateDate(fromDate, toDate);
+            if (isValid == false) {
+                return;
+            }
+            window.location.href = "/CatWiseProductReport/Export?&fromDate=" + fromDate + "&toDate=" + toDate + "&option=" + option + "&print=" + print + "&approvedStatus=" + approvedStatus + "&CategoryID=" + CategoryID;
+
+        });
+    });
+    function PrintReport() {
+     
+        var print = 1;
+        var option = 0;
+        if ($("select#ExportOption option:selected").val() > 0) {
+            option = $("select#ExportOption option:selected").val();
+        }
+        //alert(option);
+        var approvedStatus = $('input[name=Product]:radio:checked').val();
+        //alert(approvedStatus);
+        var toDate = $('#txtToDate').val();
+        var fromDate = $('#txtFromDate').val();
+        var CategoryID = "@ViewBag.CategoryID";
+        var isValid = ValidateDate(fromDate, toDate);
+        if (isValid == false) {
+            return;
+        }
+        //alert('in');
+        var url = "/CatWiseProductReport/Export?&fromDate=" + fromDate + "&toDate=" + toDate + "&option=" + option + "&print=" + print + "&approvedStatus=" + approvedStatus + "&CategoryID=" + CategoryID;
+        window.open(url, '_blank')
+
+    }
+    function BackList() {
+        window.location.href = "/CatWiseProductReport/Index";
+    }
+
+    function ValidateDate(fromDate, toDate) {
+
+        if (fromDate == '' && toDate == '') {
+            $('[id*=lblMsg]').text('Please Select From Date and To Date.');
+            return false;
+        }
+        else if (fromDate == '') {
+            $('[id*=lblMsg]').text('Please Select From Date.');
+            return false;
+        }
+        else if (toDate == '') {
+            $('[id*=lblMsg]').text('Please Select To Date.');
+            return false;
+        }
+
+        if (fromDate != '' && toDate != '') {
+            dateFirst = fromDate.split('/');
+            dateSecond = toDate.split('/');
+            var from = new Date(dateFirst[2], dateFirst[1], dateFirst[0]); //Year, Month, Date
+            var to = new Date(dateSecond[2], dateSecond[1], dateSecond[0]);
+            if (from > to) {
+                $('[id*=lblMsg]').text('To Date must be greater than From Date.');
+                return false;
+            }
+            else {
+                $('[id*=lblMsg]').text('');
+            }
+        }
+    }
+</script>

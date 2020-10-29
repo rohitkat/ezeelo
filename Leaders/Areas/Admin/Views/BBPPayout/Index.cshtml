@@ -1,0 +1,194 @@
+﻿@model ModelLayer.Models.ViewModel.BBPViewModel
+
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_LeadersLayout.cshtml";
+}
+
+<link href="//cdn.datatables.net/1.10.19/css/jquery.dataTables.min.css" rel="stylesheet" />
+<script src="//cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
+<script src="~/Scripts/BBPMenuOpenup.js"></script>
+<style>
+    table {
+        border-collapse: separate;
+        border-spacing: 15px;
+    }
+
+    .nav-link {
+        color: #007bff !important;
+    }
+
+    a.nav-link.active.show {
+        color: black !important;
+    }
+</style>
+@if (TempData["BBPResult"] != null)
+{
+    <script>
+    alert("@TempData["BBPResult"]");
+    </script>
+}
+<script>
+    $(document).ready(function () {
+        $("#FromDate").datepicker({
+            dateFormat: 'mm/dd/yy',
+            onSelect: function (dateText) {
+                var fdate = new Date(dateText);
+                var ldate = new Date('@Model.LastToDate');
+                if (ldate > fdate) {
+                    alert("You Cant select this Date, Please Select date greater than Last Payout To date");
+                    $('#btnGo').attr('disabled', 'disabled');
+                }
+                else {
+                    $('#btnGo').removeAttr('disabled');
+                }
+
+            }
+        });
+        $("#ToDate").datepicker({
+            dateFormat: 'mm/dd/yy',
+            onSelect: function (dateText) {
+                var tdate = new Date(dateText);
+                var fdate = new Date($("#FromDate").val());
+                if (tdate < fdate) {
+                    alert("You Cant select this Date, Please Select To date greater than From date");
+                    $('#btnGo').attr('disabled', 'disabled');
+                }
+                else {
+                    $('#btnGo').removeAttr('disabled');
+                }
+
+                var ldate = new Date('@Model.LastToDate');
+                if (ldate > tdate) {
+                    alert("You Cant select this Date, Please Select date greater than Last Payout To date");
+                    $('#btnGo').attr('disabled', 'disabled');
+                }
+                else {
+                    $('#btnGo').removeAttr('disabled');
+                }
+            }
+        });
+        $("#btnExport").click(function () {
+            window.location = "/admin/BBPPayout/ExportToExcel";
+        })
+    });
+</script>
+<div class="container">
+    <div id="progress" class="modal">
+        <div class="center">
+            <img src="~/img/ajax-loading-gif-transparent-background-8.gif" />
+        </div>
+    </div>
+    <div class="card" id="maindiv">
+        <div class="card-header"><strong>Business Booster Plan Payout Process </strong></div>
+        <div class="card-body card-block">
+            <strong>
+                Payout Date :=>
+                @if (@Model.LastFromDate.ToString("dd/MM/yyyy") != "01/01/0001")
+                {
+                    <span style="color: #0cba23;font-weight:normal"> Last Payout: @Model.LastFromDate.ToString("dd/MM/yyyy") To @Model.LastToDate.ToString("dd/MM/yyyy") </span>
+                }
+            </strong>
+            @using (Html.BeginForm("Index", "BBPPayout"))
+            {
+                @Html.AntiForgeryToken()
+                <table>
+                    <tr>
+                        <td>
+                            @Html.TextBoxFor(model => model.FromDate, Model.FromDate.ToString("MM/dd/yyyy"), new { @class = "control-label", style = "width:90px" })
+                            @Html.HiddenFor(model => model.FromDate)
+                        </td>
+                        <td>
+                            @Html.TextBoxFor(model => model.ToDate, Model.ToDate.ToString("MM/dd/yyyy"), new { @class = "control-label", style = "width:90px" })
+                            @Html.HiddenFor(model => model.ToDate)
+                        </td>
+                        <td>
+                            <input id="btnGo" type="submit" value="Go" class="btn btn-info" />
+                        </td>
+                        <td>
+                            <input id="btnExport" type="button" value="Export To Excel" class="btn btn-warning" />
+                        </td>
+                        <td>
+                            <input id="btnPayEzMny" type="button" value="Pay" class="btn btn-success" />
+                        </td>
+                    </tr>
+                </table>
+            }
+            @if (Model != null)
+            {
+                <div id="divRpt">
+                    <ul class="nav nav-tabs" id="myTab">
+                        <li class="nav-item">
+                            <a href="#main-P" class="nav-link active show" data-toggle="tab">Payout Details</a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="#Pdetails" class="nav-link" data-toggle="tab">Payout Report</a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="#Puserwise" class="nav-link" data-toggle="tab">Userwise Payout Report</a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="#Porderwise" class="nav-link" data-toggle="tab">Orderwise Payout Report</a>
+                        </li>
+                    </ul>
+                    <div class="tab-content">
+                        <div class="tab-pane fade" id="main-P" style="max-width:1000px;overflow:auto">
+                            @if (@Model.bBPPayout != null)
+                            {
+                                <br />
+                                @Html.Partial("~/Areas/Admin/Views/BBPPayout/Payout.cshtml", @Model.bBPPayout)
+                            }
+                        </div>
+                        <div class="tab-pane fade" id="Pdetails" style="max-width:1000px;overflow:auto">
+                            @if (@Model.List_details != null)
+                            {
+                                <br />
+                                @Html.Partial("~/Areas/Admin/Views/BBPPayout/PayoutDetails.cshtml", @Model.List_details)
+                            }
+                        </div>
+                        <div class="tab-pane fade" id="Puserwise" style="max-width:1000px;overflow:auto">
+                            @if (@Model.List_userwise != null)
+                            {
+                                <br />
+                                @Html.Partial("~/Areas/Admin/Views/BBPPayout/PayoutUserwise.cshtml", @Model.List_userwise)
+                            }
+                        </div>
+                        <div class="tab-pane fade" id="Porderwise" style="max-width:1000px;overflow:auto">
+                            @if (@Model.List_orderwise != null)
+                            {
+                                <br />
+                                @Html.Partial("~/Areas/Admin/Views/BBPPayout/PayoutOrderwise.cshtml", @Model.List_orderwise)
+                            }
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+@if (@Model.bBPPayout != null)
+{
+    <script>
+        $('#btnExport').removeAttr('disabled');
+        $("#main-P").addClass("active show");
+        $(document).ready(function () {
+            $("#btnPayEzMny").click(function () {
+                var PendingDeliveries = '@Model.bBPPayout.PendingDeliveries';
+                if (PendingDeliveries > 0) {
+                    alert("Sorry!!! You can not proceed to payout, Please first clear all pending deliveries.");
+                }
+                else {
+                    if (confirm("Continue to Payout.")) {
+                        window.location = "/admin/BBPPayout/Payout";
+                    }
+                }
+            });
+        });
+    </script>
+}
+else
+{
+    <script>
+        $('#btnExport').attr('disabled', 'disabled');
+    </script>
+}

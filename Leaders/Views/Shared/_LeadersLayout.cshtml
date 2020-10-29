@@ -1,0 +1,509 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <title>Ezeelo Admin</title>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="description" content="Sufee Admin - HTML5 Admin Template">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="apple-touch-icon" href="apple-icon.png">
+    <link rel="shortcut icon" href="favicon.ico">
+    <link rel="stylesheet" href="~/Templates/assets/css/normalize.css">
+    <link rel="stylesheet" href="~/Templates/assets/css/bootstrap.min.css">
+    <link rel="stylesheet" href="~/Templates/assets/css/font-awesome.min.css">
+    <link rel="stylesheet" href="~/Templates/assets/css/themify-icons.css">
+    <link rel="stylesheet" href="~/Templates/assets/css/flag-icon.min.css">
+    <link rel="stylesheet" href="~/Templates/assets/css/cs-skin-elastic.css">
+    <link rel="stylesheet" href="~/Templates/assets/scss/style.css">
+    <link href="~/Templates/assets/css/lib/vector-map/jqvmap.min.css" rel="stylesheet">
+    <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,600,700,800' rel='stylesheet' type='text/css'>
+    <script src="~/Scripts/jquery-1.12.4.js"></script>
+    <script src="~/Scripts/jquery-ui-1.12.1.min.js"></script>
+    <script src="~/Scripts/jquery.validate.min.js"></script>
+    <script src="~/Scripts/jquery.validate.unobtrusive.js"></script>
+    <script src="~/Scripts/jquery.unobtrusive-ajax.js"></script>
+    <link href="~/Content/css/datepicker.css" rel="stylesheet" />
+    <link href="~/Content/css/jquery-ui-1.8.21.custom.css" rel="stylesheet" />
+
+    <style>
+        .navbar-nav h3{
+            cursor:pointer !important;
+            line-height:20px !important;
+        }
+            .navbar-nav h3:hover {
+                color: #007bff;
+            }
+            .navbar-nav h3 span {
+                float: right;
+                color:red;
+                font-weight:bolder;
+            }
+    </style>
+</head>
+
+<body>
+    <!-- Left Panel -->
+    <aside id="left-panel" class="left-panel">
+        <nav class="navbar navbar-expand-sm navbar-default">
+            <div class="navbar-header">
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#main-menu" aria-controls="main-menu" aria-expanded="false" aria-label="Toggle navigation">
+                    <i class="fa fa-bars"></i>
+                </button>
+                <a href="@Url.Action("Index", "Home", new { area="Admin"})"><h5 style="color:white;">Ezeelo Leader's Admin</h5></a>
+                <a class="navbar-brand hidden" href="./"><img src="~/Templates/images/logo2.png" alt="Logo"></a>
+            </div>
+            <div id="main-menu" class="main-menu collapse navbar-collapse">
+                <ul class="nav navbar-nav" style="position:relative" >                   
+                    <h3 id="h-UserNet" class="menu-title">User's Network<span>+</span> </h3><!-- /.menu-title -->
+                    <div id="div-UserNet" style="display:none" >
+                        <li class="menu-item-has-children dropdown">
+                            <a href="@Url.Action("Index", "MLMUser")" aria-haspopup="true" aria-expanded="false"> <i class="menu-icon fa fa-laptop"></i>Leaders List</a>
+                        </li>
+                        @if (Session["RoleName"].ToString() == "superadmin")
+                        {
+                            <li>
+                                <a href="@Url.Action("Index", "KYCDocument", new { area = "Admin" })"><i class="menu-icon fa fa-bars"></i>KYC Documents</a>
+                            </li>
+                        }
+                        <li class="menu-item-has-children dropdown">
+                            <a href="@Url.Action("Select", "LeadersCustomerOrder", new { area="Admin"})" aria-haspopup="true" aria-expanded="true"> <i class="menu-icon fa fa-tasks"></i>Leaders Order</a>
+                        </li>
+                        @if (Session["RoleName"].ToString() != "leaders")
+                        {
+                            <li class="menu-item-has-children dropdown">
+                                <a href="@Url.Action("Select", "EzeeloCustomerOrder")" aria-haspopup="true" aria-expanded="true"> <i class="menu-icon fa fa-table"></i>Ezeelo Order</a>
+                            </li>
+                        }
+                        @if (Session["RoleName"] == null)
+                        {
+                            Url.Action("Login", "Index", new { area = "Admin" });
+                        }
+
+                        @if (Session["RoleName"].ToString() == "superadmin" || Session["RoleName"].ToString() == "admin")
+                        {
+                            <li class="menu-item-has-children dropdown">
+                                <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> <i class="menu-icon fa fa-th"></i>Masters</a>
+                                <ul class="sub-menu children dropdown-menu">
+                                    @if (Session["RoleName"].ToString() == "superadmin")
+                                    {
+                                        <li>
+                                            <a href="@Url.Action("Create","CoinRateMaster")" aria-haspopup="true" aria-expanded="false">Coin Rate Master</a>
+
+                                        </li>
+                                    }
+                                    else
+                                    {
+                                        <li>
+                                            <a href="@Url.Action("Index","CoinRateMaster")" aria-haspopup="true" aria-expanded="false">Coin Rate Master</a>
+
+                                        </li>
+                                    }
+                                    @if (Session["RoleName"].ToString() == "superadmin")
+                                    {
+                                        <li><a href="@Url.Action("Index", "LeadersDesignationQualifierMaster")">Designation Qualifier</a></li>
+                                    }
+                                    else
+                                    {
+                                        <li><a href="@Url.Action("Index2", "LeadersDesignationQualifierMaster")">Designation Qualifier</a></li>
+                                    }
+                                    @if (Session["RoleName"].ToString() == "superadmin")
+                                    {
+                                        <li><a href="@Url.Action("Index","QRPMaster")">QRP</a></li>
+                                    }
+                                    else if (Session["RoleName"].ToString() == "admin")
+                                    {
+                                        <li><a href="@Url.Action("Index2","QRPMaster")">QRP</a></li>
+                                    }
+                                    else
+                                    {
+
+                                    }
+                                    @if (Session["RoleName"].ToString() == "superadmin")
+                                    {
+                                        <li><a href="@Url.Action("Index","PayoutMaster")">Payout</a></li>
+                                    }
+                                    else if (Session["RoleName"].ToString() == "admin")
+                                    {
+                                        <li><a href="@Url.Action("Index2","PayoutMaster")">Payout</a></li>
+                                    }
+                                    else
+                                    {
+
+                                    }
+                                    @if (Session["RoleName"].ToString() == "superadmin")
+                                    {
+                                        <li><a href="@Url.Action("Index","ReactivationMaster")">Reactivation</a></li>
+                                    }
+                                    else if (Session["RoleName"].ToString() == "admin")
+                                    {
+                                        <li><a href="@Url.Action("Index2","ReactivationMaster")">Reactivation</a></li>
+                                    }
+                                    else
+                                    {
+
+                                    }
+
+
+                                    @if (Session["RoleName"].ToString() == "superadmin")
+                                    {
+                                        <li><a href="@Url.Action("Index","IncomeMaster")">Income Distrubation</a></li>
+                                    }
+                                    else if (Session["RoleName"].ToString() == "admin")
+                                    {
+                                        <li><a href="@Url.Action("Index2","IncomeMaster")">Income Distrubation</a></li>
+                                    }
+                                    else
+                                    {
+
+                                    }
+
+                                    @if (Session["RoleName"].ToString() == "superadmin")
+                                    {
+                                        <li><a href="@Url.Action("Index","DisplayMobileInDownline")">Display Mobile and Email</a></li>
+                                    }
+
+                                    @*@if (Session["RoleName"].ToString() == "superadmin")
+                    {
+                        <li><a href="@Url.Action("Index","SubstractDaysForPayoutMonth")">Substract Days For Payout</a></li>
+                    }*@
+
+                                </ul>
+                            </li>
+                        }
+
+                        @*<h3 class="menu-title">Icons</h3>*@<!-- /.menu-title -->
+                        @if (Session["RoleName"].ToString() == "superadmin" || Session["RoleName"].ToString() == "admin")
+                        {
+                            <li class="menu-item-has-children dropdown">
+                                <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> <i class="menu-icon fa fa-tasks"></i>Reports</a>
+                                <ul class="sub-menu children dropdown-menu">
+                                    <li><i class="menu-icon fa fa-fort-awesome"></i><a href="#">Report 1</a></li>
+                                    <li><i class="menu-icon ti-themify-logo"></i><a href="@Url.Action("Index", "MLMUser")">Network Report</a></li>
+                                    <li><i class="menu-icon fa fa-fort-awesome"></i><a href="#">Report 3</a></li>
+                                    <li><i class="menu-icon ti-themify-logo"></i><a href="@Url.Action("Index", "BusinessValueReport", new { area = "Admin" })">Business Value Report</a></li>
+                                    <li><i class="menu-icon fa fa-fort-awesome"></i><a href="#">Report 5</a></li>
+                                    <li><i class="menu-icon ti-themify-logo"></i><a href="@Url.Action("GetList", "Report6", new { area="Admin"})">ERP Distribution Report</a></li>  @*---amit on 19-1-19--*@
+                                    <li><i class="menu-icon ti-themify-logo"></i><a href="@Url.Action("Index", "BankPayoutReport", new { area="Admin"})">HDFC Bank Report</a></li>  @*---amit on 19-1-19--*@
+                                    <li><i class="menu-icon ti-themify-logo"></i><a href="@Url.Action("AfterPayment", "BankPayoutReport", new { area="Admin"})">Conferm Bank Payment</a></li>  @*---amit on 19-1-19--*@
+
+                                    <li><i class="menu-icon ti-themify-logo"></i><a href="@Url.Action("BankPayoutReport", "BankPayoutReport", new { area="Admin"})">Bank Payment Report</a></li>  @*---amit on 19-1-19--*@
+                                    <li><i class="menu-icon ti-themify-logo"></i><a href="@Url.Action("Index", "EzeeMoneyPayoutReport", new { area="Admin"})">EzeeMoney Payout Report</a></li>  @*---amit on 13-2-19--*@
+                                    <li><i class="menu-icon ti-themify-logo"></i><a href="@Url.Action("Index", "PromotionalERPPayoutReport", new { area="Admin"})">Promotional ERP Payout Report</a></li>  @*---amit on 13-2-19--*@
+                                    <li><i class="menu-icon ti-themify-logo"></i><a href="@Url.Action("EWsearch", "EWalletRefund", new { area="Admin"})"> Ewallet Refund Report</a></li>  @*---Roshan on 18-4-19--*@
+
+                                    <li><i class="menu-icon ti-themify-logo"></i><a href="@Url.Action("Designation_Report", "EzeeMoneyPayout", new { area="Admin"})"> Designation Report</a></li>  @*---Roshan on 18-4-19--*@
+
+                                </ul>
+                            </li>
+                        }
+
+
+                        @if (Session["RoleName"].ToString() == "superadmin")
+                        {
+                            <li class="menu-item-has-children dropdown">
+                                <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> <i class="menu-icon fa fa-tasks"></i>Payout</a>
+                                <ul class="sub-menu children dropdown-menu">
+                                    <li><i class="menu-icon ti-bookmark"></i><a href="@Url.Action("Index", "EzeeMoneyPayout")">Ezee Money Payout</a></li>
+                                    <li><i class="menu-icon ti-bookmark"></i><a href="@Url.Action("OrderWiseERP", "EzeeMoneyPayout")">Order Wise ERP</a></li>
+                                    <li><i class="menu-icon ti-bookmark"></i><a href="@Url.Action("Index", "BonusERP", new { area = "Admin" })">Promotional ERP Bonus Payout</a></li> @*Yashaswi 29-10-2018*@
+                                    <li><i class="menu-icon ti-bookmark"></i><a href="@Url.Action("Userlist", "BonusERP")">Userwise ERP Bonus Payout</a></li>
+                                    <li><i class="menu-icon ti-bookmark"></i><a href="@Url.Action("SelectPayout", "InActivePointsPayout")">Inactive points payout for Active user</a></li>
+                                    <li><i class="menu-icon ti-bookmark"></i><a href="@Url.Action("Index", "CashbackPointPayout")">Cashback points payout</a></li>
+                                </ul>
+                            </li>
+                            <li class="menu-item-has-children dropdown">
+                                <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> <i class="menu-icon fa fa-tasks"></i>Payout Request</a>
+                                <ul class="sub-menu children dropdown-menu">
+                                    <li>
+                                        <a href="@Url.Action("Index","PayoutRequest")"><i class="menu-icon ti-tasks"></i>View Payout Request</a>
+                                    </li>
+                                    <li>
+                                        <a href="@Url.Action("GetUserist","PayoutRequest")"><i class="menu-icon ti-tasks"></i>Send Payout Request</a>
+                                    </li>
+                                </ul>
+                            </li>
+
+                        }
+                        @if (Session["RoleName"].ToString() == "superadmin" || Session["RoleName"].ToString() == "admin")
+                        {
+                            <li>
+                                <a href="@Url.Action("Index","EWalletRefund")"><i class="menu-icon ti-email"></i>EWallet Return Request</a>
+                            </li>
+                        }
+                    </div>
+                    @*Start By yashaswi 16-09-2019 for Business Booster Plan*@
+                    @if (Session["RoleName"].ToString() == "superadmin")
+                    {
+                        <h3 id="h-BBP" class="menu-title">Business Booster Plan<span>+</span></h3>
+                        <div id="div-BBP" style="display:none">
+                            <li class="menu-item dropdown">
+                                <a href="@Url.Action("Index", "BBPDashboard")" aria-haspopup="true" aria-expanded="false"> <i class="menu-icon fa fa-laptop"></i>Dashboard</a>
+                            </li>
+                            <li class="menu-item-has-children dropdown">
+                                <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> <i class="menu-icon fa fa-money"></i>Payout</a>
+                                <ul class="sub-menu children dropdown-menu">
+                                    <li><i class="menu-icon ti-receipt"></i><a href="@Url.Action("Index", "BBPPayout")">Weekly Payout</a></li>
+                                    <li><i class="menu-icon ti-receipt"></i><a href="@Url.Action("BBPInactivePointPayout", "BBPPayout")">Inactive Point Payout</a></li>
+                                </ul>
+                            </li>
+                            <li class="menu-item-has-children dropdown">
+                                <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> <i class="menu-icon fa fa-tasks"></i>Reports</a>
+                                <ul class="sub-menu children dropdown-menu">
+                                    <li><i class="menu-icon ti-receipt"></i><a href="@Url.Action("Index", "BBPReports")">Payout</a></li>
+                                    <li><i class="menu-icon ti-receipt"></i><a href="@Url.Action("BBPSubscribers", "BBPReports")">Subscribers</a></li>
+                                    <li><i class="menu-icon ti-receipt"></i><a href="@Url.Action("BBPOrders", "BBPReports", new { area = "Admin" })">Orders</a></li>
+                                    <li><i class="menu-icon ti-receipt"></i><a href="@Url.Action("BBPInactiveSubscriber", "BBPReports", new { area = "Admin" })">Inactive Subscribers</a></li>
+                                    <li><i class="menu-icon ti-receipt"></i><a href="@Url.Action("BBPInactivePointReport", "BBPReports", new { area = "Admin" })">Inactive Points</a></li>
+                                </ul>
+                            </li>
+                        </div>
+                    }
+                    @*End By yashaswi 16-09-2019 for Business Booster Plan*@
+                    @*Start By yashaswi 01-07-2019 for Merchant's Network*@
+                    @if (Session["RoleName"].ToString() == "superadmin")
+                    {
+                        <h3 id="h-MerchantNet" class="menu-title">Merchant's Network<span>+</span></h3>
+                        <div id="div-MerchantNet" style="display:none">
+                            <li class="menu-item dropdown">
+                                <a href="@Url.Action("Index", "LeadersMerchantDashboard")" aria-haspopup="true" aria-expanded="false"> <i class="menu-icon fa fa-laptop"></i>Dashboard</a>
+                            </li>
+                            <li class="menu-item-has-children dropdown">
+                                <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> <i class="menu-icon fa fa-th"></i>Masters</a>
+                                <ul class="sub-menu children dropdown-menu">
+                                    <li>
+                                        <a href="@Url.Action("ServiceIndex","MerchantMaster")" aria-haspopup="true" aria-expanded="false">Service</a>
+                                    </li>
+                                    <li>
+                                        <a href="@Url.Action("CommissionIndex","MerchantMaster")" aria-haspopup="true" aria-expanded="false">Commission</a>
+                                    </li>
+                                    <li>
+                                        <a href="@Url.Action("ShopTimingIndex","MerchantMaster")" aria-haspopup="true" aria-expanded="false">Shop Timing</a>
+                                    </li>
+                                    <li>
+                                        <a href="@Url.Action("HolidayIndex","MerchantMaster")" aria-haspopup="true" aria-expanded="false">Holiday</a>
+                                    </li>
+                                    <li>
+                                        <a href="@Url.Action("ServiceIncomeIndex", "MerchantMaster")" aria-haspopup="true" aria-expanded="false">Service Income</a>
+                                    </li>
+                                    <li>
+                                        <a href="@Url.Action("MerchantSelfCBPointsList", "MerchantMaster")" aria-haspopup="true" aria-expanded="false">Payout Self CB Point</a>
+                                    </li>
+                                </ul>
+                            </li>
+                            <li class="menu-item-has-children dropdown">
+                                <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> <i class="menu-icon fa fa-user"></i>Merchant</a>
+                                <ul class="sub-menu children dropdown-menu">
+                                    <li>
+                                        <a href="@Url.Action("Registered","MerchantList")" aria-haspopup="true" aria-expanded="false">Registered Merchant</a>
+                                    </li>
+                                    <li>
+                                        <a href="@Url.Action("Registered","MerchantList",new { status="1"})" aria-haspopup="true" aria-expanded="false">Approved Merchant</a>
+                                    </li>
+                                    <li>
+                                        <a href="@Url.Action("NotAcceptedList","MerchantList")" aria-haspopup="true" aria-expanded="false">Rejected Merchant</a>
+                                    </li>
+                                    <li>
+                                        <a href="@Url.Action("ProfileUpdateList","MerchantList")" aria-haspopup="true" aria-expanded="false">Profile Update Request</a>
+                                    </li>
+                                    <li>
+                                        <a href="@Url.Action("BannerImageList","MerchantList")" aria-haspopup="true" aria-expanded="false">Banner Image Update Request</a>
+                                    </li>
+                                    <li>
+                                        <a href="@Url.Action("RechargeList", "MerchantMaster")" aria-haspopup="true" aria-expanded="false"> Topup Recharge Request</a>
+                                    </li>
+                                </ul>
+                            </li>
+                            <li class="menu-item dropdown">
+                                <a href="@Url.Action("Index", "MerchantPayout")" aria-haspopup="true" aria-expanded="false"> <i class="menu-icon fa fa-money"></i>Payout</a>
+                            </li>
+                            <li class="menu-item-has-children dropdown">
+                                <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> <i class="menu-icon fa fa-bars"></i>Report</a>
+                                <ul class="sub-menu children dropdown-menu">
+                                    <li>
+                                        <a href="@Url.Action("TransactionReport","MerchantReport")" aria-haspopup="true" aria-expanded="false">Merchant Transaction Report</a>
+                                    </li>
+                                    <li>
+                                        <a href="@Url.Action("RatingReport","MerchantReport")" aria-haspopup="true" aria-expanded="false">Merchant Rating/Review Report</a>
+                                    </li>
+                                    <li>
+                                        <a href="@Url.Action("PendingTransactionReport","MerchantReport")" aria-haspopup="true" aria-expanded="false">Merchant Pending Transaction Report</a>
+                                    </li>
+                                    <li>
+                                        <a href="@Url.Action("MerchantPayoutReport","MerchantPayout")" aria-haspopup="true" aria-expanded="false">Merchant Payout Report</a>
+                                    </li>
+                                    <li>
+                                        <a href="@Url.Action("GSTReport","MerchantReport")" aria-haspopup="true" aria-expanded="false">Merchant GST Report</a>
+                                    </li>
+                                </ul>
+                            </li>
+                        </div>
+                    }
+                    @*End By yashaswi 01-07-2019 for Merchant's Network*@
+
+                </ul>
+            </div><!-- /.navbar-collapse -->
+        </nav>
+    </aside><!-- /#left-panel -->
+   
+    <div id="right-panel" class="right-panel">
+        <!-- Header-->
+        <header id="header" class="header">
+            <div class="header-menu">
+                <div class="col-sm-5">
+                    <a id="menuToggle" class="menutoggle pull-left"><i class="fa fa fa-tasks"></i></a>
+                </div>
+                <div class="col-sm-7">
+                    <div class="user-area dropdown float-right">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <img class="user-avatar rounded-circle" src="~/Templates/images/admin.jpg" alt="User Avatar">
+                        </a>
+                        <div class="user-menu dropdown-menu">
+                            <a class="nav-link" href="/Login/Logout"><i class="fa fa-power -off"></i>Logout</a>
+                        </div>
+                    </div>
+                    @if (Session["RoleName"].ToString() == "superadmin")
+                    {
+                        <div class="header-left float-right" style="padding-right:30px !important">
+                            <div class="dropdown for-notification">
+                                <button class="btn btn-secondary dropdown-toggle" type="button" id="notification" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    <i class="fa fa-bell"></i>
+                                    <span id="spNotCount" class="bg-danger" style="border-radius:50%;padding:5px;top:0;right:0;position:absolute;width:15px;font-size:11px;line-height:11px;color:white">0</span>
+                                </button>
+
+                                <div class="dropdown-menu" aria-labelledby="notification" style="margin-left:-150px;width:250px;height:400px;overflow:auto">
+                                    <p class="red" style="color:green;font-weight:bold">You have  <span id="spNotCount_"></span> Notification</p>
+                                    <ul style="padding:10px;" id="ulnotification">
+                                        <li style="border-bottom:groove;background-color:#ebe7e7;padding:3px;text-justify:distribute"><a href="@Url.Action("UpdateNotificationStatus", "MerchantMaster")"></a></li>
+                                    </ul>
+                                </div>
+                                <script>
+                                    $(document).ready(function () {
+                                        setInterval(function () {
+                                            CheckNotification();
+                                        }, 15000);
+                                        CheckNotification();
+                                        function CheckNotification() {
+                                            $.ajax({
+                                                url: '/Admin/MerchantMaster/GetNotifications',
+                                                dataType: "json",
+                                                type: "POST",
+                                                contentType: "application/json; charset=utf-8",
+                                                success: function (data) {
+                                                    var count = data.length;
+                                                    $("#spNotCount").text(count);
+                                                    $("#spNotCount_").text(count);
+                                                    $("#ulnotification").html("");
+                                                    $.each(data, function (key, value) {
+                                                        $("#ulnotification").append('<li style="border-bottom:groove;background-color:#ebe7e7;padding:3px;text-justify:distribute"><a href="/Admin/MerchantMaster/UpdateNotificationStatus?id=' + value.Id + '" >' + value.Message + ' Dt:- ' + value.Date + '</a></li>');
+                                                    });
+                                                },
+                                                error: function (response) {
+                                                    window.location.href = "/Admin/Login/Index";
+                                                },
+                                                failure: function (response) {
+                                                    window.location.href = "/Admin/Login/Index";
+                                                }
+                                            });
+                                        }
+                                    });
+                                </script>
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+
+        </header>
+
+        <div class="content mt-3">
+            <div class="container">
+                @RenderBody()
+                @RenderSection("scripts", required: false)
+                <hr />
+            </div>
+        </div> <!-- .content -->
+        <footer>
+            <p>&copy; @DateTime.Now.Year -EZEELO</p>
+        </footer>
+    </div>
+
+    <script src="~/Templates/assets/js/vendor/jquery-2.1.4.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.3/umd/popper.min.js"></script>
+    <script src="~/Templates/assets/js/plugins.js"></script>
+    <script src="~/Templates/assets/js/main.js"></script>
+
+    <script src="~/Templates/assets/js/lib/chart-js/Chart.bundle.js"></script>
+    <script src="~/Templates/assets/js/dashboard.js"></script>
+    <script src="~/Templates/assets/js/widgets.js"></script>
+    <script src="~/Templates/assets/js/lib/vector-map/jquery.vmap.js"></script>
+    <script src="~/Templates/assets/js/lib/vector-map/jquery.vmap.min.js"></script>
+    <script src="~/Templates/assets/js/lib/vector-map/jquery.vmap.sampledata.js"></script>
+    <script src="~/Templates/assets/js/lib/vector-map/country/jquery.vmap.world.js"></script>
+
+    <script>
+        (function ($) {
+            "use strict";
+
+            jQuery('#vmap').vectorMap({
+                map: 'world_en',
+                backgroundColor: null,
+                color: '#ffffff',
+                hoverOpacity: 0.7,
+                selectedColor: '#1de9b6',
+                enableZoom: true,
+                showTooltip: true,
+                values: sample_data,
+                scaleColors: ['#1de9b6', '#03a9f5'],
+                normalizeFunction: 'polynomial'
+            });
+        })(jQuery);
+    </script>
+    <script>
+        $(document).ready(function () {
+            $("#h-UserNet").click(function () {
+                if ($("#h-UserNet span").text() == "+") {
+                    $("#h-UserNet span").text("X");
+                    $("#h-BBP span").text("+");
+                    $("#h-MerchantNet span").text("+");
+                    $("#div-BBP").slideUp(1000);
+                    $("#div-MerchantNet").slideUp(1000);
+                    $("#div-UserNet").slideDown(1000);
+                }
+                else {
+                    $("#h-UserNet span").text("+");
+                    $("#div-UserNet").slideUp(1000);
+                }
+            });
+            $("#h-BBP").click(function () {
+                if ($("#h-BBP span").text() == "+") {
+                    $("#h-BBP span").text("X");
+                    $("#h-UserNet span").text("+");
+                    $("#h-MerchantNet span").text("+");
+                    $("#div-BBP").slideDown(1000);
+                    $("#div-MerchantNet").slideUp(1000);
+                    $("#div-UserNet").slideUp(1000);
+                }
+                else {
+                    $("#h-BBP span").text("+");
+                    $("#div-BBP").slideUp(1000);
+                }
+            });
+            $("#h-MerchantNet").click(function () {
+                if ($("#h-MerchantNet span").text() == "+") {
+                    $("#h-MerchantNet span").text("X");
+                    $("#h-BBP span").text("+");
+                    $("#h-UserNet span").text("+");
+                    $("#div-BBP").slideUp(1000);
+                    $("#div-MerchantNet").slideDown(1000);
+                    $("#div-UserNet").slideUp(1000);
+                }
+                else {
+                    $("#h-MerchantNet span").text("+");
+                    $("#div-MerchantNet").slideUp(1000);
+                }
+            });
+        })
+    </script>
+
+</body>
+</html>

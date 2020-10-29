@@ -1,0 +1,152 @@
+﻿@model ModelLayer.Models.ViewModel.BBPNetworkViewVeiwModel
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_LeaderUsersLayout.cshtml";
+}
+
+
+<link href="//cdn.datatables.net/1.10.19/css/jquery.dataTables.min.css" rel="stylesheet" />
+<script src="//cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
+<style>
+    .maintabularPageView {
+        font-size: medium !important
+    }
+
+    .table .thead-dark th {
+        color: #fff;
+        background-color: #620000 !important;
+        border-color: #FF8888;
+        font-size: medium !important; font-weight:bold;
+    }
+
+    .table .thead-dark1 th {
+        color: #fff !important;
+        background-color: black !important;
+        border-color: #FF8888;
+        font-size: medium !important; font-weight:bold;
+    }
+
+    .mainlevel {
+        /*color: #1922ce;*/
+        text-decoration: underline;
+        cursor: pointer !important;
+    }
+    .footertr {
+        color: #fff !important;
+        background-color: black !important;
+        border-color: #FF8888;
+        font-size: medium !important;
+        font-weight:bold;
+    }
+
+    .table tr {
+        color: black;
+    }
+
+    .panel-title {
+        color: #620000 !important;
+        text-decoration: double !important;
+        font-weight: bold;
+    }
+    .sp-heading {
+        color: #620000;
+        text-decoration: double !important;
+        font-weight: bold;
+    }
+
+</style>
+<section class="maintabularPageView">
+    <div class="maintabularPageView-child">
+        <div class="container">
+            <div class="maintabularPageView-heading">
+                @using (Html.BeginForm("BBPNetwork", "BBPUsersReport", null, FormMethod.Post, new { id = "bbpNetworkRpt" }))
+                {
+                <center>
+                    <div class="form-group">
+                        <span class="sp-heading">Business Booster Payout Week</span>
+                        @Html.DropDownListFor(m => m.PayoutDateFilterId, Model.PayoutDateFilter, "Select Business Booster Payout Week", new { @class = "form-control", style = "width:auto" })
+                    </div>
+                </center>
+                }
+            </div>
+            <div id="abc">
+
+            </div>
+            <center>
+                <table id="tablePreview" class="table table-striped table-hover table-responsive" style="max-width:600px; ">
+                    <thead class="thead-dark">
+                        <tr>
+                            <th style="width:100px">Level</th>
+                            <th style="width:400px">Total Leaders</th>
+                            <th style="width:100px">Total ERP</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @{ decimal total = 0; }
+                        @foreach (var item in Model.main)
+                        {
+                            <tr>
+                                <td>
+                                    @if (item.count == 0)
+                                    {
+                                        <span>@item.Level </span>
+                                    }
+                                    else
+                                    {
+                                        <a class="mainlevel" data-val="@item.Level" data-count="@item.count"> @item.Level</a>
+                                    }
+                                </td>
+                                <td style="width:400px"  id="td_@item.Level" >@item.count <span style="color:green;display:none">&nbsp;&nbsp;&nbsp;Please wait!!! Loading Data...</span>
+                                <td>@item.ERP @{total = total + item.ERP;}</td>
+                            </tr>
+                        }
+                    </tbody>
+                    <tfoot  class="thead-dark">
+                        <tr>
+                            <th colspan="2">Total</th>
+                            <th>@total</th>
+                        </tr>
+                    </tfoot>
+                </table>
+            </center>
+        </div>
+    </div>
+</section>
+
+<script>
+    $(document).ready(function () {
+        $(".mainlevel").click(function (e) {
+            var l = $(this).attr("data-val");
+            var c = $(this).attr("data-count");
+            $("#tablePreview #td_" + l + " span").show();
+            var SelID = $("#PayoutDateFilterId option:Selected").val();
+            $.ajax({
+                type: "GET",
+                url: "@Url.Action("BBPNetworkDetails", "BBPUsersReport")",
+                contentType: "application/json; charset=utf-8",
+                dataType: "html",
+                data: { BoosterPlanPayoutId: SelID, level: l },
+                success: function (data, status, xhr) {
+                    var indx = l - 1;
+                    var Nindex = Number(l) + Number(c) + 1;
+                    $('.addedrow').remove();
+                    $('#tablePreview tbody tr').removeClass('footertr');
+                    $('.mainlevel').each(function (i, obj) {
+                        $(obj).text($(obj).attr("data-val"));
+                    });
+                    var newRow = $('<tr class="addedrow"><td style="font-weight:bold">Level ' + l +'</td><td colspan="2">' + data + '</td></tr>');
+                    newRow.insertBefore($('#tablePreview tbody tr:nth(' + indx + ')'));
+                    $('#tablePreview tbody tr:nth(' + Nindex + ')').addClass('footertr');
+                    $(e.target).text("Total");
+                    $("#tablePreview #td_" + l + " span").hide();
+                },
+                error: function (xhr, status, error) {
+                    $("#tablePreview #td_" + l + " span").hide();
+                }
+            });
+        });
+        $("#PayoutDateFilterId").change(function () {
+            $("#bbpNetworkRpt").submit();
+        });
+    });
+</script>

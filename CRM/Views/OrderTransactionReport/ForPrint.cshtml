@@ -1,0 +1,171 @@
+﻿@*<copyright file="GetReport.cshtml" company="Ezeelo Consumer Services Pvt. Ltd.">
+     Copyright (c) Ezeelo Consumer Services Pvt. Ltd. All rights reserved.
+    </copyright>
+    <author>Harshada Raghorte</author>*@
+@{
+    ViewBag.Title = "Print";
+    //Layout = null;
+}
+@model IEnumerable<ModelLayer.Models.ViewModel.OrderTransactionReportViewModel>
+<style>
+    td:nth-child(1) {
+        max-width: 100px;
+        word-wrap: break-word;
+    }
+
+    td:nth-child(2) {
+        max-width: 67px;
+        word-wrap: break-word;
+    }
+
+    td:nth-child(3) {
+        max-width: 100px;
+        word-wrap: break-word;
+    }
+
+    td:nth-child(4) {
+        max-width: 47px;
+        word-wrap: break-word;
+    }
+
+    td:nth-child(5) {
+        max-width: 107px;
+        word-wrap: break-word;
+    }
+
+    td:nth-child(6) {
+        max-width: 74px;
+        word-wrap: break-word;
+    }
+
+    td:nth-child(7) {
+        max-width: 47px;
+        word-wrap: break-word;
+    }
+
+    td:nth-child(8) {
+        max-width: 61px;
+        word-wrap: break-word;
+    }
+
+    td:nth-child(9) {
+        max-width: 32px;
+        word-wrap: break-word;
+    }
+
+    td:nth-child(10) {
+        max-width: 46px;
+        word-wrap: break-word;
+    }
+</style>
+<h2 id="btnPrint" class="btn btn-primary">Print</h2>
+<div>
+    <div class="table" id="dvContainer">
+        <table class="table" id="myTable">
+            <thead>
+                <tr class="hed-tble">
+                    <th>
+                        Order Code
+                    </th>
+                    <th>
+                        Shop Name
+                    </th>
+                    <th>
+                        Order Amount
+                    </th>
+                    <th>
+                        Name
+                    </th>
+                    <th>
+                        Email
+                    </th>
+                    <th>
+                        Primary Mobile
+                    </th>
+
+                    <th>
+                        Pincode
+                    </th>
+                    <th>
+                        Shipping Address
+                    </th>
+                    <th>
+                        City
+                    </th>
+                    <th>
+                        Franchise
+                    </th>
+                    <th>
+                        Order Placed Date
+                    </th>
+
+                    <th></th>
+                </tr>
+            </thead>
+
+            @foreach (var item in Model)
+            {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.OrderCode)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ShopName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.OrderAmount)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Customer)
+                </td>
+
+                <td>
+                    @Html.DisplayFor(modelItem => item.RegEmail)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.RegMobile)
+                </td>
+
+                <td>
+                    @Html.DisplayFor(modelItem => item.Pincode)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ShippingAddress)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.City)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ShopFranchiseName)
+                </td>
+
+                <td>
+                    @{string lDate = "";}
+                    @if (item.CreateDate != null)
+                    {
+                        lDate = item.CreateDate.ToString("dd/MM/yyyy");
+                    }
+                    @lDate
+                </td>
+                <td></td>
+            </tr>
+            }
+
+        </table>
+    </div>
+</div>
+<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
+<script type="text/javascript">
+    $("#btnPrint").live("click", function () {
+        var divContents = $("#dvContainer").html();
+        var printWindow = window.open('', '', 'height=400,width=800');
+        printWindow.document.write('<html><head><title>Order Transaction Report</title>');
+        printWindow.document.write('</head><body >');
+        printWindow.document.write(divContents);
+        printWindow.document.write('</body></html>');
+        printWindow.document.close();
+        printWindow.print();
+    });
+</script>
+
+

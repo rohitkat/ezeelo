@@ -1,0 +1,43 @@
+﻿@model ModelLayer.Models.MerchantBannerUpdateRequest
+@{
+    Layout = "~/Views/Shared/_LeadersLayout.cshtml";
+}
+
+<script src="~/Scripts/MerchantMenuOpenup.js"></script>
+@using (Html.BeginForm())
+{
+    @Html.HiddenFor(m => m.ID)
+    @Html.HiddenFor(m => m.MerchantID)
+    <div class="container">
+        <div class="card-header">
+            <strong style="text-transform:uppercase !important"> @Model.Remark</strong>
+        </div>
+        <div class="card-body card-block">
+            <div class="grid">
+                @if (ViewBag.result == "1" || ViewBag.result == "2" || ViewBag.result == "3" || ViewBag.result == "4")
+                {
+                    <label>Banner Image</label>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <img src="@Model.BannerPath" />
+                        </div>
+                    </div>
+                }
+                <br />
+                <br />
+                @if (ViewBag.result == "4" || ViewBag.result == "5")
+                {
+                    <label>Shop Image</label>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <img src="@Model.ShopPath" />
+                        </div>
+                    </div>
+                }
+                <br />
+                <input type="submit" value="Accept" name="Accept" class="btn btn-sm btn-success" />
+                <input type="submit" value="Reject" name="Reject" class="btn btn-sm btn-danger" />
+            </div>
+        </div>
+    </div>
+}

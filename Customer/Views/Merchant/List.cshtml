@@ -1,0 +1,218 @@
+﻿@model IEnumerable<ModelLayer.Models.Merchant>
+@using System.Text.RegularExpressions;
+@using System.Globalization;
+@using ModelLayer.Models;
+@{
+    /**/
+
+    /**/
+    Layout = "~/Views/Shared/_Layout_Internal.cshtml";
+    ViewBag.Title = "eZeelo: Electronics, Fashion, Coupons, Home Appliances | Lowest Price";
+}
+@{
+    string cityName = System.Configuration.ConfigurationManager.AppSettings["DFLT_CITY_NAME"]; @*//Yashaswi 01/12/2018 Default City Change *@
+
+    if (Request.Cookies["CityCookie"] != null && Request.Cookies["CityCookie"].Value != "")
+    {
+        cityName = Request.Cookies["CityCookie"].Value.Split('$')[1].ToLower();
+
+    }
+
+    List<ModelLayer.Models.ViewModel.BlockViewModel> blocks = new List<ModelLayer.Models.ViewModel.BlockViewModel>();
+}
+
+<style type="text/css">
+    .row {
+        margin: 10px 0px;
+    }
+
+    .product.animated.fadeInUp {
+        overflow: hidden;
+        /*height: 250px !important;*/
+        min-height: 250px !important;
+    }
+
+    .product-img-alt, .product-img {
+        width: 200px;
+        margin: auto;
+        height: auto;
+        display: block;
+        /* -webkit-transition: 0.3s; */
+        -moz-transition: 0.3s;
+        -o-transition: 0.3s;
+        -ms-transition: 0.3s;
+        transition: 0.5s;
+        z-index: 1;
+        -webkit-box-shadow: 0 3px 2px rgba(0,0,0,0.25), 0 0 1px rgba(0,0,0,0.25);
+        box-shadow: 0 3px 2px rgba(0,0,0,0.25), 0 0 1px rgba(0,0,0,0.25);
+        -webkit-border-radius: 4px;
+        border-radius: 4px;
+    }
+
+    span {
+        font-size: 18px;
+        text-wrap: normal;
+        text-align: justify;
+        vertical-align: text-top;
+    }
+
+    .sidenav {
+        height: 100%;
+        width: auto;
+        min-width: 250px;
+        text-wrap: normal;
+        position: relative;
+        z-index: 1;
+        top: 0;
+        left: 0;
+        overflow-x: hidden;
+        padding-top: 15px;
+        padding-bottom: 20px;
+        -webkit-box-shadow: 0 3px 2px rgba(0,0,0,0.25), 0 0 1px rgba(0,0,0,0.25);
+        box-shadow: 0 3px 2px rgba(0,0,0,0.25), 0 0 1px rgba(0,0,0,0.25);
+        -webkit-border-radius: 4px;
+        border-radius: 4px;
+        background-color: aliceblue;
+        margin-right: 15px;
+        margin-top: 10px;
+    }
+
+        .sidenav h4 {
+            border-bottom: 1px solid gray;
+            color: #818181;
+            padding-left: 10px;
+        }
+
+        .sidenav a {
+            padding: 6px 8px 6px 16px;
+            text-decoration: none;
+            font-size: 16px;
+            color: #818181;
+            display: block;
+        }
+
+            .sidenav a:hover {
+                background-color: gold;
+                color: white;
+            }
+
+    .selectedMerchantServiceId {
+        background-color: gold;
+        color: white !important;
+    }
+</style>
+@using (Html.BeginForm())
+{
+    <div class="container">
+        <div class="row">
+
+            <div class="col-md-12">
+                <div class="box-lg">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="example">
+                                <div class="grid">
+                                    <h3 class="widget-title">@ViewBag.ServiceName Categories in @CultureInfo.CurrentCulture.TextInfo.ToTitleCase(cityName.ToLower())</h3>
+                                    <div class="row">
+                                        <div class="col-md-3 sidenav">
+                                            <h4>Category List</h4>
+                                            @foreach (var item in (List<ServiceMaster>)ViewBag.Services)
+                                            {
+                                                if (ViewBag.SelectedMerchantService != item.Id)
+                                                {
+                                                    <a href="@Url.RouteUrl("MerchantList", new { id = item.Id })">@CultureInfo.CurrentCulture.TextInfo.ToTitleCase(item.Name)</a>
+                                                }
+                                                else
+                                                {
+                                                    <a class="selectedMerchantServiceId" href="@Url.RouteUrl("MerchantList", new { id = item.Id })">@CultureInfo.CurrentCulture.TextInfo.ToTitleCase(item.Name)</a>
+                                                }
+                                            }
+                                        </div>
+
+                                        <div class="col-md-9 secondLevelOfCateProducts">
+
+                                            @foreach (var merchant in Model)
+                                            {
+                                                <div class="row product animated fadeInUp" style="text-align:justify;">
+                                                    <div class="col-md-3 col-sm-3">
+                                                        <div class="product-img-wrap" style="padding-top:20px;overflow:visible">
+
+                                                            <img class="product-img" id="imgShop" src="@merchant.PhotoImageURL" onerror="this.src = '/Content/Images/no_image.png'" alt=" eZeelo ">
+                                                            @*<img class="product-img" id="imgShop" src="/Content/Images/no_image.png" alt=" eZeelo ">*@
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-3 col-sm-3">
+                                                        <h3 style="color: #0f6bb2 !important;padding-top:25px;">@merchant.FranchiseName</h3>
+                                                        <span style="color:white;background-color:forestgreen;border:1px solid black;padding:3px;">@merchant.Rating.ToString("#.#")&nbsp; <i class="fa fa-star"></i></span>
+                                                        @*@{ int i = 5 - (int)merchant.Rating;
+                                                        int j = 5 - i;
+
+                                                        for (int cnt = 0; cnt < i; cnt++)
+                                                        {<i class="fa fa-star"></i> }
+                                                        for (int cnt = 0; cnt < j; cnt++)
+                                                        {<i class="fa fa-star-o"></i> }
+                                                    }*@
+
+                                                        &nbsp;&nbsp;&nbsp;<a href="#" style="font-size:16px;font-weight:bold">@merchant.NoOfReviews review(s)</a><br /><br />
+                                                        <span><b>Service :</b>  @merchant.ServiceMasterDetail.Name</span><br />
+                                                        <span><b>Referral fee :</b>  @merchant.CommissionMasterDetail.Commission %</span><br />
+                                                        <span><b>Cashback to buyer :</b>  @merchant.CasbackToBuyer %</span><br />
+                                                        <span><i class="fa fa-address-card" aria-hidden="true"></i>  @merchant.Address, @merchant.CityDetail.Name, @merchant.StateDetail.Name, @merchant.Pincode </span><br />
+                                                        <span><i class="fa fa-user" aria-hidden="true"></i>  @merchant.ContactPerson</span><br />
+                                                        <span><i class="fa fa-phone" aria-hidden="true"></i>  @merchant.ContactNumber</span><br />
+                                                        <span><i class="fa fa-envelope" aria-hidden="true"></i>  @merchant.Email</span><br />
+                                                        <br />
+
+                                                    </div>
+                                                    <div class="col-md-2 col-sm-2">
+                                                        <a href="@Url.Action("Details", "Merchant",new{id=merchant.Id})" class="btn btn-success btnDetails" style="background-color:gold;color:white;width:auto !important">View More Info <i class="fa fa-arrow-circle-right"></i></a>
+                                                    </div>
+
+                                                    <div class="col-md-2 col-sm-2">
+                                                        @if (merchant.OnlineMerchantHash != null && merchant.IsOnline == true)
+                                                        {
+                                                            <button class="btn btn-success btnDetails" style="background-color:lightgreen;color:white;width:auto !important; padding: 6px !important; margin: 95px !important;text-align: justify !important;font-size: 14px;" onclick="redirectOnline(@merchant.Id)">Online Store <i class="fa fa-shopping-cart fa-xs"></i></button>
+                                                        }
+                                                    </div>
+                                                </div>
+                                            }
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+    </div>
+}
+
+
+
+@section pagescripts{
+
+
+    <script type="text/javascript">
+        function redirectOnline(merchantId) {
+            $.ajax({
+                type: "GET",
+                url: "@Url.Action("GoOnline", "Merchant")",
+                data: { "merchantId": merchantId},
+                cache: false,
+                success: function (msg) {
+                    console.log(msg)
+                    window.location = msg;
+                },
+                error: function (x, e) {
+                    alert('Failure');
+                }
+            });
+        }
+    </script>
+}
+        
+

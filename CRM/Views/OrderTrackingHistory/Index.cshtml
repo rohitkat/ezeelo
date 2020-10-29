@@ -1,0 +1,376 @@
+﻿@*@using PagedList;
+    @using PagedList.Mvc;
+    @model IPagedList<CRM.Models.ViewModel.OrderTrackHistoryViewModel>
+
+    @{
+        ViewBag.Title = "List [ Order Track ]";
+    }
+    <style>
+        .input {
+            width: 80px;
+        }
+
+        select {
+            width: 100px;
+        }
+    </style>
+    <div class="row">
+        <div class="span12" id="divtable">
+            <div class="widget">
+                <div class="widget-header">
+                    <i class="icon-list-alt"></i>
+                    <h3> List [ Order Track ]</h3>
+                </div>
+                <!-- /widget-header -->
+                <div class="widget-content">
+                    <div class="widget big-stats-container">
+                        <div class="widget-content matchdivheight">
+
+                            @using (Html.BeginForm("Index", "OrderTrackingHistory", FormMethod.Post))
+                            {   @Html.AntiForgeryToken()
+                                <div class="form-horizontal">
+                                    <table>
+                                        <tr>
+                                            <td>From Date &nbsp;</td>
+                                            <td>@Html.TextBox("FromDate", null, new { @readonly = "readonly", @class = "input" }) &nbsp;</td>
+                                            <td>To Date &nbsp;</td>
+                                            <td>@Html.TextBox("ToDate", null, new { @readonly = "readonly", @class = "input" }) &nbsp;</td>
+                                            <td>Order Code &nbsp;</td>
+                                            <td>@Html.TextBox("SearchString", null, new { @class = "input" }) &nbsp;</td>
+                                            <td>Current Status &nbsp;</td>
+                                            <td>@Html.DropDownList("CurrentOrderStatus", "All")</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Shop &nbsp;</td>
+                                            <td>@Html.TextBox("Shop", null, new { ID = "Shop" })</td>
+                                            <td>Delivery &nbsp;</td>
+                                            <td>@Html.TextBox("Delivery", null, new { ID = "Delivery" })</td>
+                                            <td>
+                                                <button type="submit" value="Search" class="btn btn-small btn-warning">
+                                                    <span class="glyphicon glyphicon-search"></span> Search
+                                                </button>
+                                                <button type="button" class="btn btn-small btn-info" id="btn_clear">Clear</button>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </div>
+                            }
+
+
+
+                            <table class="table table-bordered table-hover table-responsive table-striped">
+                                <tr>
+                                    <th style="width:20px;">Sr.No</th>
+                                    <th style="width:140px;">Shop Order</th>
+                                    <th style="width:80px;">Current Status</th>
+                                    <th>Shop</th>
+                                    <th>Delivery</th>
+                                    <th style="width:80px;">Order Date</th>
+                                    <th style="width:80px;">Status Date</th>
+                                    <th style="width:160px;">Change By</th>
+                                    <th style="width:80px;">Duration</th>
+                                </tr>
+
+                                @if (Model.Count() == 0)
+                                {
+                                    <tr>
+                                        <td colspan="6" class="text-center"><h3>No Record Found...</h3></td>
+                                    </tr>
+                                }
+                                else
+                                {
+                                    int i = 1;
+                                    foreach (var item in Model)
+                                    {
+                                        <tr>
+                                            <td>@{int SrNo = ((ViewBag.PageNumber - 1) * ViewBag.PageSize) + i; i = i + 1; } @SrNo</td>
+                                            <td>
+                                                @Html.DisplayFor(modelItem => item.ShopOrderCode)
+                                            </td>
+                                            <td>
+
+                                                @CRM.Common.Common.GetDeliveryStatus(item.OrderStatus)
+                                            </td>
+                                            <td>
+                                                @Html.DisplayFor(modelItem => item.ShopName)
+                                            </td>
+                                            <td>
+                                                @Html.DisplayFor(modelItem => item.DeliveryPartnerName)
+                                            </td>
+                                            <td>
+                                                @Html.DisplayFor(modelItem => item.CreateDate)
+                                            </td>
+                                            <td>
+                                                @Html.DisplayFor(modelItem => item.ModifyDate)
+                                            </td>
+                                            <td>
+                                                @Html.DisplayFor(modelItem => item.ModifyBy)
+                                            </td>
+                                            <td>
+                                                @Html.DisplayFor(modelItem => item.Duration)
+                                            </td>
+                                        </tr>
+                                    }
+                                }
+
+                            </table>
+                            <div class="pager">
+                                @Html.PagedListPager(Model, Page => Url.Action("Index", new
+                           {
+                               page = Page,
+                               SearchString = ViewBag.SearchString,
+                               FromDate = ViewBag.FromDate,
+                               ToDate = ViewBag.ToDate,
+                               Shop = ViewBag.Shop,
+                               Delivery = ViewBag.Delivery,
+                               CurrentOrderStatus = ViewBag.CurrentOrderStatus1
+                           }),
+                                                                        new PagedListRenderOptions()
+                                                                        {
+                                                                            Display = PagedListDisplayMode.IfNeeded
+                                                                        })
+                            </div>
+                        </div>
+                        <!-- /widget-content -->
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- /span12 -->
+    </div>
+
+    @section MyScripts{
+        <script>
+
+            //----------------------------------------------------------------------For datepicker---//
+            //<![CDATA[
+            $(window).load(function () {
+                //$('#DOB').datepicker('setDate', new Date());
+                $('#FromDate').datepicker('update');
+                $('#ToDate').datepicker('update');
+            });//]]>
+        </script>
+
+
+
+    }*@
+
+
+@using PagedList;
+@using PagedList.Mvc;
+@model IPagedList<CRM.Models.ViewModel.OrderViewModel>
+
+@{
+    ViewBag.Title = "List [ Order Track ]";
+}
+<style>
+    .input {
+        width: 80px;
+    }
+
+    select {
+        width: 100px;
+    }
+
+    .accordion-group {
+        margin-bottom: -18px !important;
+    }
+</style>
+<div class="row">
+    <div class="span12" id="divtable">
+        <div class="widget">
+            <div class="widget-header">
+                <i class="icon-list-alt"></i>
+                <h3> List [ Order History ]</h3>
+            </div>
+            <!-- /widget-header -->
+            <div class="widget-content">
+                <div class="widget big-stats-container">
+                    <div class="widget-content matchdivheight">
+
+                        @using (Html.BeginForm("Index", "OrderTrackingHistory", FormMethod.Post))
+                        {   @Html.AntiForgeryToken()
+                            <div class="form-horizontal">
+                                <table>
+                                    <tr>
+                                        <td>From Date &nbsp;</td>
+                                        <td>@Html.TextBox("FromDate", null, new { @readonly = "readonly", @class = "input" }) &nbsp;</td>
+                                        <td>To Date &nbsp;</td>
+                                        <td>@Html.TextBox("ToDate", null, new { @readonly = "readonly", @class = "input" }) &nbsp;</td>
+                                        <td>Order Code &nbsp;</td>
+                                        <td>@Html.TextBox("SearchString", null, new { @class = "input" }) &nbsp;</td>
+                                        <td>Current Status &nbsp;</td>
+                                        <td>@Html.DropDownList("CurrentOrderStatus", "All")</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Shop &nbsp;</td>
+                                        <td>@Html.TextBox("Shop", null, new { ID = "Shop" })</td>
+                                        <td>Delivery &nbsp;</td>
+                                        <td>@Html.TextBox("Delivery", null, new { ID = "Delivery" })</td>
+                                        <td>
+                                            <button type="submit" value="Search" class="btn btn-small btn-warning">
+                                                <span class="glyphicon glyphicon-search"></span> Search
+                                            </button>
+                                            <button type="button" class="btn btn-small btn-info" id="btn_clear">Clear</button>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+                        }
+
+
+
+                        <table class="table table-bordered table-hover table-responsive table-striped">
+                            <tr>
+                                @*<th style="width:20px;">Sr.No</th>
+                                    <th style="width:160px;">Shop Order</th>
+                                    <th style="width:160px;">Current Status</th>
+                                    <th>Shop</th>
+                                    <th>Delivery</th>
+                                    <th style="width:160px;">Order Date</th>
+                                    <th style="width:160px;">Total Amount</th>
+                                    <th>Details</th>*@
+
+                                <th style="width:30px;">Sr No.</th>
+                                <th style="width:130px;">
+                                    Order Code
+                                </th>
+                                @*<th style="width:100px;">
+                                        Current Status
+                                    </th>*@
+                                @*<th style="width:220px;">
+                                        Shop
+                                    </th>
+                                    <th style="width:180px;">
+                                        Delivery
+                                    </th>*@
+                                <th style="width:150px;">
+                                    Order Date
+                                </th>
+                                <th style="width:100px;">
+                                    Order Amount
+                                </th>
+                                <th>Details</th>
+                            </tr>
+                        </table>
+                        @if (Model.Count() == 0)
+                        {
+                            <tr>
+                                <td colspan="6" class="text-center"><h3>No Record Found...</h3></td>
+                            </tr>
+                        }
+                        else
+                        {
+                            <div class="accordion" id="accordion2">
+                                @{ int i = 1; }
+                                @foreach (var item in Model)
+                                {
+                                    <div class="accordion-group" style="height: auto !important; ">
+                                        <div class="accordion-heading">
+
+                                            <table class="table table-bordered table-hover table-responsive table-striped">
+                                                <tr>
+                                                    <td style="width:30px;">@{int SrNo = ((ViewBag.PageNumber - 1) * ViewBag.PageSize) + i; i = i + 1; } @SrNo</td>
+                                                    <td style="width:130px;">
+                                                        @Html.DisplayFor(modelItem => item.OrderCode)
+                                                    </td>
+                                                    @*<td style="width:100px;">
+                                                                @Html.DisplayFor(modelItem => item.OrderStatus)
+                                                                @CRM.Common.Common.GetDeliveryStatus(item.OrderStatus)
+                                                            </td>
+                                                        <td style="width:220px;">
+                                                            @Html.DisplayFor(modelItem => item.ShopName)
+                                                        </td>
+                                                        <td style="width:180px;">
+                                                            @Html.DisplayFor(modelItem => item.DeliveryPartnerName)
+                                                        </td>*@
+                                                    <td style="width:150px;">
+                                                        @Html.DisplayFor(modelItem => item.CreateDate)
+                                                    </td>
+                                                    <td style="width:100px;">
+                                                        <span class="indian_currency"></span> @Html.DisplayFor(modelItem => item.OrderAmount)
+                                                    </td>
+                                                    <td>
+                                                        <a class="accordion-toggle margin_padding_zero" data-toggle="collapse" data-parent="#accordion2" href="#@item.CustomerOrderID"><span class="btn btn-small btn-primary">Details</span></a>
+                                                    </td>
+                                                </tr>
+                                            </table>
+                                        </div>
+                                        <div id="@item.CustomerOrderID" class="accordion-body collapse">
+                                            @*<div class="widget-content">*@
+                                            <iframe id="frameCreate_@item.CustomerOrderID" name="frameCreate_@item.CustomerOrderID" src='@Url.Action("OrderHistory", "OrderTrackingHistory", new { CustomerOrderID = item.CustomerOrderID })' width="100%" height="400px" frameborder="0"></iframe>
+                                            @*</div>*@
+                                        </div>
+                                    </div>
+                                }
+                            </div>
+                        }
+
+
+                        <div class="pager">
+                            @Html.PagedListPager(Model, Page => Url.Action("Index", new
+                       {
+                           page = Page,
+                           SearchString = ViewBag.SearchString,
+                           FromDate = ViewBag.FromDate,
+                           ToDate = ViewBag.ToDate,
+                           Shop = ViewBag.Shop,
+                           Delivery = ViewBag.Delivery,
+                           CurrentOrderStatus = ViewBag.CurrentOrderStatus1
+                       }),
+                                                                    new PagedListRenderOptions()
+                                                                    {
+                                                                        Display = PagedListDisplayMode.IfNeeded
+                                                                    })
+                        </div>
+                    </div>
+
+                    <!-- /widget-content -->
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- /span12 -->
+</div>
+
+@section MyScripts{
+    <script>
+
+        //----------------------------------------------------------------------For datepicker---//
+        //<![CDATA[
+        $(window).load(function () {
+            //$('#DOB').datepicker('setDate', new Date());
+            $('#FromDate').datepicker('update');
+            $('#ToDate').datepicker('update');
+        });//]]>
+    </script>
+
+    <script>
+        @* $(function () {
+        var lShopName = $('#ShopName').val();
+        $.ajax({
+            url: '@Url.Action("GetShops", "OrderTracking")?ShopName=' + lShopName,
+            type: "GET",
+            success: function (result) {
+                alert(result);
+                availableTags = result;
+            },
+            error: function (data) {
+                alert('error');
+                //alert('Pincode : ' + lPincode + ' Dose Not Exist, please Contact to ADMIN');
+            }
+        });
+    });*@
+    </script>
+
+
+}
+
+
+
+
+
+
+
+
+

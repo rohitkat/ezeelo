@@ -1,0 +1,1183 @@
+﻿@model ModelLayer.Models.ViewModel.CustomerClassificationViewModel
+@{
+    ViewBag.Title = "Customer Classification";
+}
+
+<link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" />
+
+@*<link href="~/Content/css/font-awesome.min.css" rel="stylesheet" />*@
+<style>
+    #content {
+        width: 100%;
+        padding: 28px 15px 0px 0px;
+        margin: 0px 0px;
+        margin-left: 0 !important;
+    }
+
+    .ui-widget-header {
+        border: 0px !important;
+    }
+
+    .input-large {
+        width: 140px !important;
+    }
+
+    #lblMsg {
+        margin-top: 14px;
+    }
+
+    #txtToDate {
+        margin-left: -7px !important;
+    }
+
+    #ExportOption {
+        margin-top: 5px;
+    }
+
+    select {
+        width: 160px;
+        background-color: #ffffff;
+        border: 1px solid #cccccc;
+        text-transform: lowercase;
+    }
+
+    .section {
+        position: relative;
+        border: 1px solid #000;
+        padding-top: 35px !important;
+        margin-left: -4px !important;
+        background: #D2C6B5 !important;
+        margin-top: 0px;
+        width: 995px;
+        /*overflow-x: scroll;*/
+    }
+
+    th div {
+        color: #000 !important;
+    }
+
+    .wrap {
+        margin-top: 20px;
+    }
+
+    .table {
+        width: 100%;
+        margin-bottom: 0px;
+    }
+</style>
+
+
+@*<link href="~/Content/css/font-awesome.css" rel="stylesheet" />*@
+<!-- start: Content -->
+<div id="content" class="span10">
+@*@using (Html.BeginForm())
+    {
+    @Html.ValidationSummary(true)*@
+    <div class="row-fluid" style="margin-left:10px;">
+        <div class="box span12">
+            <div class="box-header">
+                <h2><i class="icon-home"></i><span class="break"></span>Customer Classification</h2>
+
+            </div>
+            @*@using (Html.BeginForm("GetReport", "OrderWiseCouponTransaction", FormMethod.Post))
+                {*@
+            <div class="box-content viewCont">
+                <div class="span12" style="width:100%">
+
+                    <div class="span2">
+                        <label>Initial Date</label>
+                      
+                           @Html.TextBoxFor(model => model.InitialFromDate, new { @id = "InitialFromDate", @class = "input-large datepicker" })
+                      
+                        @*<input type="text" id="InitialFromDate" name="InitialFromDate" class="input-large datepicker" placeholder="Data Including From" />*@
+                      
+                           </div>
+                    <div class="span2">
+                        <label>From Date</label>
+                        @Html.TextBoxFor(model => model.FromDate, new { @id = "FromDate", @class = "input-large datepicker" })
+                        @*<input type="text" id="FromDate" name="FromDate" class="input-large datepicker" placeholder="From Date" />*@
+                         <label for="txtFromDate" class="dtPic"></label>
+                    </div>
+                    <div class="span2">
+                        <label>To Date</label>
+                        @Html.TextBoxFor(model => model.ToDate, new { @id = "ToDate", @class = "input-large datepicker" })
+                        @*<input type="text" id="ToDate" name="ToDate" class="input-large datepicker" placeholder="To Date" />*@
+                       @*@Html.TextBoxFor(model => model.ToDate, "{0:dd/MM/yyyy}", new { @readonly = "readonly", @class = "input-large datepicker", @id = "ToDate", @placeholder = "To Date", @required = "required" })
+                        @Html.ValidationMessageFor(model => model.ToDate)*@
+                        <label for="txtToDate" class="dtPic"></label>
+                        <label id="lblMsg" style="color: red; margin-top: -10px; margin-left: 0px;"></label>
+                    </div>
+                    <div class="span2">
+                        <label>City</label>
+                        @Html.DropDownList("City", (SelectList)ViewBag.CityID, "--Select City--")
+                        @*<input type="submit" value="Search" id="btnSearch" class="btn btn-small btn-warning1" style="float:right">*@
+
+                    </div>
+                    <div class="span6">
+                        <label>Pincode</label>
+                        @if (ViewBag.City != null && Convert.ToInt64(ViewBag.City) > 0)
+                        {
+                            @Html.DropDownListFor(model => model.PincodeID, ((IEnumerable<Franchise.Controllers.CustomerClassificationController.ForLoopClass>)ViewBag.lPincode).Select(option => new SelectListItem
+{
+    Text = (option == null ? "None" : option.Name),
+    Value = option.ID.ToString(),
+    Selected = (Model != null) && (option.ID == Model.PincodeID)
+}), "--Select Pincode--")
+
+                            @Html.ValidationMessageFor(model => model.PincodeID)
+                        }
+                        else
+                        {
+                            <select id="PincodeID" name="PinCode" />
+                        }
+                        
+                        
+                        <input type="submit" value="Search" id="btnSearch" class="btn btn-small btn-warning1" style=" margin-top: -10px; margin-left: 10px;">
+                        @*@Html.DropDownList("PinCode", (SelectList)ViewBag.PinCode, "--Select Coupon Code--")*@
+                    </div>
+                </div>
+            </div>           
+
+        </div>
+    </div>
+    <div class="row-fluid" style="margin-left:10px;">
+        <div class="box span12">
+            @*<table class="table table-striped table-bordered bootstrap-datatable datatable dataTable" id="DataTables_Table_0" aria-describedby="DataTables_Table_0_info">
+                <tr>
+                    <td>*@
+                        <div id="divReport" style="width:100%; overflow:visible">
+                            <div class="box-header">
+                                Main Category of Customers
+                            </div>
+                            <table class="table no-margin" id="tbl">
+                                <thead>
+                                    <tr>
+                                        <th>Symbol</th>&nbsp;
+                                        <th>Total Customer</th>
+                                        <th>Description</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var OrderDetail in Model.lCustomerClassificationFirstLevelCategory)
+                                    {
+                                        <tr>
+                                            <td style="text-align:center">
+                                                @for (int i = 0; i < OrderDetail.ImageCount; i++)
+{
+    if (@OrderDetail.ImageType == "Circle")
+    {
+        <i class="fa fa-circle-o fa-lg"></i>
+    }
+    else if (@OrderDetail.ImageType == "Square")
+    {
+        <i class="fa fa-square-o fa-lg"></i>
+    }
+    else
+    {
+        <i class="fa fa-star-o fa-lg"></i>
+    }
+}
+
+                                            </td>
+                                            <td>
+                                                @if (@OrderDetail.TotalCount > 0)
+                                                {    
+                                                    <a href="@Url.Action("GetDetail", "CustomerClassification", new { Category = "Main", Level = @OrderDetail.LevelID, Condition = "T", Model.InitialFromDate, fromDate = Model.FromDate, toDate = Model.ToDate, City = Model.CityID, PincodeID = Model.PincodeID, Option = "Excel" })"><span><i class="fa fa-file-excel-o" style="color:green"></i></span></a>                                                                                        
+                                                   @:&nbsp;          
+                                                   @Html.ActionLink(OrderDetail.TotalCount.ToString(), "GetDetail", new { Category = "Main", Level = @OrderDetail.LevelID, Condition = "T", Model.InitialFromDate, fromDate = Model.FromDate, toDate = Model.ToDate, City = Model.CityID, PincodeID = Model.PincodeID, Option = "View" }, new { target = "_blank" })
+                                                   
+                                                }
+                                                else
+                                                {
+                                                    @OrderDetail.TotalCount
+                                                }
+                                            </td>
+
+                                            <td>@OrderDetail.Description
+
+                                            </td>
+
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+
+
+            <div id="divVegList" style="width:100%; overflow:visible">
+                @if (Model.lCustomerClassificationFruitsAndVegitablesCategory != null &&  Model.lCustomerClassificationFruitsAndVegitablesCategory.Count > 0)
+                { 
+                            <div class="box-header">Only Fruits & Vegetables</div>                
+                            
+                <table class="table no-margin" id="tbl">
+                    <thead>
+                        <tr>
+                            <th>Symbol</th>
+                            <th>Total Customer</th>
+                            <th>Rs.(1-450)</th>
+                            <th>Rs.(451-750)</th>
+                            <th>Rs.(751-900)</th>
+                            <th>Rs.(901 & more)</th>                           
+                        </tr>                       
+                    </thead>
+                    <tbody>
+                        @foreach (var OrderDetail in Model.lCustomerClassificationFruitsAndVegitablesCategory)
+                        {
+                            <tr>
+                                <td style="width:20%;text-align:center">
+                                    @for (int i = 0; i < OrderDetail.ImageCount; i++)
+{
+    if (@OrderDetail.ImageType == "Circle")
+    {
+        <i class="fa fa-circle fa-lg" style="color:green"></i>
+    }
+    else if (@OrderDetail.ImageType == "Square")
+    {
+        <i class="fa fa-square fa-lg" style="color: green"></i>
+    }
+    else
+    {
+        <i class="fa fa-star fa-lg" style="color: green"></i>
+    }
+}
+
+                                </td>
+                                <td>
+                                    @if (@OrderDetail.TotalVegCount > 0)
+                                    {
+                                         <a href="@Url.Action("GetDetail", "CustomerClassification", new { Category = "OnlyVeg", Level = @OrderDetail.LevelID, Condition = "T", Model.InitialFromDate, fromDate = Model.FromDate, toDate = Model.ToDate, City = Model.CityID, PincodeID = Model.PincodeID, Option = "Excel" })"><span><i class="fa fa-file-excel-o" style="color:green"></i></span></a>                                                                                        
+                                         @:&nbsp;   
+                                         @Html.ActionLink(OrderDetail.TotalVegCount.ToString(), "GetDetail", new { Category = "OnlyVeg", Level = @OrderDetail.LevelID, Condition = "T", Model.InitialFromDate, fromDate = Model.FromDate, toDate = Model.ToDate, City = Model.CityID, PincodeID = Model.PincodeID, Option = "View" }, new { target = "_blank" })
+                                    }
+                                    else
+                                    {
+                                        @OrderDetail.TotalVegCount
+                                    }
+                                </td>   
+                                <td>
+                                    @if (@OrderDetail.Condition1 > 0)
+                                    {
+                                        <a href="@Url.Action("GetDetail", "CustomerClassification", new { Category = "OnlyVeg", Level = @OrderDetail.LevelID, Condition = "C1", Model.InitialFromDate, fromDate = Model.FromDate, toDate = Model.ToDate, City = Model.CityID, PincodeID = Model.PincodeID, Option = "Excel" })"><span><i class="fa fa-file-excel-o" style="color:green"></i></span></a>                                                                                        
+                                         @:&nbsp; 
+                                        @Html.ActionLink(OrderDetail.Condition1.ToString(), "GetDetail", new { Category = "OnlyVeg", Level = @OrderDetail.LevelID, Condition = "C1", Model.InitialFromDate, fromDate = Model.FromDate, toDate = Model.ToDate, City = Model.CityID, PincodeID = Model.PincodeID, Option = "View" }, new { target = "_blank" })
+                                    }
+                                    else
+                                    {
+                                        @OrderDetail.Condition1
+                                    }
+                                </td>
+                                <td>
+                                    @if (@OrderDetail.Condition2 > 0)
+                                    {
+                                        <a href="@Url.Action("GetDetail", "CustomerClassification", new { Category = "OnlyVeg", Level = @OrderDetail.LevelID, Condition = "C2", Model.InitialFromDate, fromDate = Model.FromDate, toDate = Model.ToDate, City = Model.CityID, PincodeID = Model.PincodeID, Option = "Excel" })"><span><i class="fa fa-file-excel-o" style="color:green"></i></span></a>                                                                                        
+                                         @:&nbsp; 
+                                        @Html.ActionLink(OrderDetail.Condition2.ToString(), "GetDetail", new { Category = "OnlyVeg", Level = @OrderDetail.LevelID, Condition = "C2", Model.InitialFromDate, fromDate = Model.FromDate, toDate = Model.ToDate, City = Model.CityID, PincodeID = Model.PincodeID, Option = "View" }, new { target = "_blank" })
+                                    }
+                                    else
+                                    {
+                                        @OrderDetail.Condition2
+                                    }
+                                </td>
+                                <td>
+                                    @if (@OrderDetail.Condition3 > 0)
+                                    {
+                                        <a href="@Url.Action("GetDetail", "CustomerClassification", new { Category = "OnlyVeg", Level = @OrderDetail.LevelID, Condition = "C3", Model.InitialFromDate, fromDate = Model.FromDate, toDate = Model.ToDate, City = Model.CityID, PincodeID = Model.PincodeID, Option = "Excel" })"><span><i class="fa fa-file-excel-o" style="color:green"></i></span></a>                                                                                        
+                                         @:&nbsp; 
+                                        @Html.ActionLink(OrderDetail.Condition3.ToString(), "GetDetail", new { Category = "OnlyVeg", Level = @OrderDetail.LevelID, Condition = "C3", Model.InitialFromDate, fromDate = Model.FromDate, toDate = Model.ToDate, City = Model.CityID, PincodeID = Model.PincodeID, Option = "View" }, new { target = "_blank" })
+                                    }
+                                    else
+                                    {
+                                        @OrderDetail.Condition3
+                                    }
+                                </td>
+                                <td>
+                                    @if (@OrderDetail.Condition4 > 0)
+                                    {
+                                         <a href="@Url.Action("GetDetail", "CustomerClassification", new { Category = "OnlyVeg", Level = @OrderDetail.LevelID, Condition = "C4", Model.InitialFromDate, fromDate = Model.FromDate, toDate = Model.ToDate, City = Model.CityID, PincodeID = Model.PincodeID, Option = "Excel" })"><span><i class="fa fa-file-excel-o" style="color:green"></i></span></a>                                                                                        
+                                         @:&nbsp;
+                                        @Html.ActionLink(OrderDetail.Condition4.ToString(), "GetDetail", new { Category = "OnlyVeg", Level = @OrderDetail.LevelID, Condition = "C4", Model.InitialFromDate, fromDate = Model.FromDate, toDate = Model.ToDate, City = Model.CityID, PincodeID = Model.PincodeID, Option = "View" }, new { target = "_blank" })
+                                    }
+                                    else
+                                    {
+                                        @OrderDetail.Condition4
+                                    }
+                                </td>
+                               
+                        </tr>
+                        }
+                    </tbody>
+                </table>
+                }
+            </div>
+
+            <div id="divGroceryList" style="width:100%; overflow:visible">
+                @if (Model.lCustomerClassificationGroceryCategory != null && Model.lCustomerClassificationGroceryCategory.Count > 0)
+                {
+                    <div class="box-header">
+                        Only Grocery & Staples
+                    </div>
+                    <table class="table no-margin" id="tbl">
+                        <thead>
+                            <tr>
+                                <th>Symbol</th>
+                                <th>Total Customer</th>
+                                <th>Rs.(1-450)</th>
+                                <th>Rs.(451-750)</th>
+                                <th>Rs.(751-900)</th>
+                                <th>Rs.(901 & more)</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var OrderDetail in Model.lCustomerClassificationGroceryCategory)
+                            {
+                                <tr>
+                                    <td style="width:20%;text-align:center">
+                                        @for (int i = 0; i < OrderDetail.ImageCount; i++)
+{
+    if (@OrderDetail.ImageType == "Circle")
+    {
+        <i class="fa fa-circle fa-lg" style="color: Sienna"></i>
+    }
+    else if (@OrderDetail.ImageType == "Square")
+    {
+        <i class="fa fa-square fa-lg" style="color: Sienna"></i>
+    }
+    else
+    {
+        <i class="fa fa-star fa-lg" style="color: Sienna"></i>
+    }
+}
+
+                                    </td>
+                                    <td>
+                                        @if (@OrderDetail.TotalGroceryCount > 0)
+                                        {
+                                             <a href="@Url.Action("GetDetail", "CustomerClassification", new { Category = "OnlyGrocery", Level = @OrderDetail.LevelID, Condition = "T", Model.InitialFromDate, fromDate = Model.FromDate, toDate = Model.ToDate, City = Model.CityID, PincodeID = Model.PincodeID, Option = "Excel" })"><span><i class="fa fa-file-excel-o" style="color: Sienna"></i></span></a>                                                                                        
+                                         @:&nbsp;
+                                            @Html.ActionLink(OrderDetail.TotalGroceryCount.ToString(), "GetDetail", new { Category = "OnlyGrocery", Level = @OrderDetail.LevelID, Condition = "T", Model.InitialFromDate, fromDate = Model.FromDate, toDate = Model.ToDate, City = Model.CityID, PincodeID = Model.PincodeID, Option = "View" }, new { target = "_blank" })
+                                        }
+                                        else
+                                        {
+                                            @OrderDetail.TotalGroceryCount
+                                        }
+                                    </td>
+                                    <td>
+                                        @if (@OrderDetail.Condition1 > 0)
+                                        {
+                                            <a href="@Url.Action("GetDetail", "CustomerClassification", new { Category = "OnlyGrocery", Level = @OrderDetail.LevelID, Condition = "C1", Model.InitialFromDate, fromDate = Model.FromDate, toDate = Model.ToDate, City = Model.CityID, PincodeID = Model.PincodeID, Option = "Excel" })"><span><i class="fa fa-file-excel-o" style="color: Sienna"></i></span></a>                                                                                        
+                                         @:&nbsp;
+                                            @Html.ActionLink(OrderDetail.Condition1.ToString(), "GetDetail", new { Category = "OnlyGrocery", Level = @OrderDetail.LevelID, Condition = "C1", Model.InitialFromDate, fromDate = Model.FromDate, toDate = Model.ToDate, City = Model.CityID, PincodeID = Model.PincodeID, Option = "View" }, new { target = "_blank" })
+                                        }
+                                        else
+                                        {
+                                            @OrderDetail.Condition1
+                                        }
+                                    </td>
+                                    <td>
+                                        @if (@OrderDetail.Condition2 > 0)
+                                        {
+                                             <a href="@Url.Action("GetDetail", "CustomerClassification", new { Category = "OnlyGrocery", Level = @OrderDetail.LevelID, Condition = "C2", Model.InitialFromDate, fromDate = Model.FromDate, toDate = Model.ToDate, City = Model.CityID, PincodeID = Model.PincodeID, Option = "Excel" })"><span><i class="fa fa-file-excel-o" style="color: Sienna"></i></span></a>                                                                                        
+                                         @:&nbsp;
+                                            @Html.ActionLink(OrderDetail.Condition2.ToString(), "GetDetail", new { Category = "OnlyGrocery", Level = @OrderDetail.LevelID, Condition = "C2", Model.InitialFromDate, fromDate = Model.FromDate, toDate = Model.ToDate, City = Model.CityID, PincodeID = Model.PincodeID, Option = "View" }, new { target = "_blank" })
+                                        }
+                                        else
+                                        {
+                                            @OrderDetail.Condition2
+                                        }
+                                    </td>
+                                    <td>
+                                        @if (@OrderDetail.Condition3 > 0)
+                                        {
+                                            <a href="@Url.Action("GetDetail", "CustomerClassification", new { Category = "OnlyGrocery", Level = @OrderDetail.LevelID, Condition = "C3", Model.InitialFromDate, fromDate = Model.FromDate, toDate = Model.ToDate, City = Model.CityID, PincodeID = Model.PincodeID, Option = "Excel" })"><span><i class="fa fa-file-excel-o" style="color: Sienna"></i></span></a>                                                                                        
+                                         @:&nbsp;
+                                            @Html.ActionLink(OrderDetail.Condition3.ToString(), "GetDetail", new { Category = "OnlyGrocery", Level = @OrderDetail.LevelID, Condition = "C3", Model.InitialFromDate, fromDate = Model.FromDate, toDate = Model.ToDate, City = Model.CityID, PincodeID = Model.PincodeID, Option = "View" }, new { target = "_blank" })
+                                        }
+                                        else
+                                        {
+                                            @OrderDetail.Condition3
+                                        }
+                                    </td>
+                                    <td>
+                                        @if (@OrderDetail.Condition4 > 0)
+                                        {
+                                            <a href="@Url.Action("GetDetail", "CustomerClassification", new { Category = "OnlyGrocery", Level = @OrderDetail.LevelID, Condition = "C4", Model.InitialFromDate, fromDate = Model.FromDate, toDate = Model.ToDate, City = Model.CityID, PincodeID = Model.PincodeID, Option = "Excel" })"><span><i class="fa fa-file-excel-o" style="color: Sienna"></i></span></a>                                                                                        
+                                         @:&nbsp;
+                                            @Html.ActionLink(OrderDetail.Condition4.ToString(), "GetDetail", new { Category = "OnlyGrocery", Level = @OrderDetail.LevelID, Condition = "C4", Model.InitialFromDate, fromDate = Model.FromDate, toDate = Model.ToDate, City = Model.CityID, PincodeID = Model.PincodeID, Option = "View" }, new { target = "_blank" })
+                                        }
+                                        else
+                                        {
+                                            @OrderDetail.Condition4
+                                        }
+                                    </td>                       
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                }
+            </div>
+
+
+
+            <div id="divMeatList" style="width:100%; overflow:visible">
+                @if (Model.lCustomerClassificationMeatAndPoultry != null && Model.lCustomerClassificationMeatAndPoultry.Count > 0)
+                {
+                    <div class="box-header">
+                        Only Meat & Poultry
+                    </div>
+                    <table class="table no-margin" id="tbl">
+                        <thead>
+                            <tr>
+                                <th>Symbol</th>
+                                <th>Total Customer</th>
+                                <th>Rs.(1-450)</th>
+                                <th>Rs.(451-750)</th>
+                                <th>Rs.(751-900)</th>
+                                <th>Rs.(901 & more)</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var OrderDetail in Model.lCustomerClassificationMeatAndPoultry)
+                            {
+                                <tr>
+                                    <td style="width:20%;text-align:center">
+                                        @for (int i = 0; i < OrderDetail.ImageCount; i++)
+{
+    if (@OrderDetail.ImageType == "Circle")
+    {
+        <i class="fa fa-circle fa-lg" style="color:red"></i>
+    }
+    else if (@OrderDetail.ImageType == "Square")
+    {
+        <i class="fa fa-square fa-lg" style="color: red"></i>
+    }
+    else
+    {
+        <i class="fa fa-star fa-lg" style="color: red"></i>
+    }
+}
+                                    </td>
+                                    <td>
+                                        @if (@OrderDetail.TotalMeatCount > 0)
+                                        {
+                                             <a href="@Url.Action("GetDetail", "CustomerClassification", new { Category = "OnlyNonVeg", Level = @OrderDetail.LevelID, Condition = "T", Model.InitialFromDate, fromDate = Model.FromDate, toDate = Model.ToDate, City = Model.CityID, PincodeID = Model.PincodeID, Option = "Excel" })"><span><i class="fa fa-file-excel-o" style="color: red"></i></span></a>                                                                                        
+                                         @:&nbsp;
+                                            @Html.ActionLink(OrderDetail.TotalMeatCount.ToString(), "GetDetail", new { Category = "OnlyNonVeg", Level = @OrderDetail.LevelID, Condition = "T", Model.InitialFromDate, fromDate = Model.FromDate, toDate = Model.ToDate, City = Model.CityID, PincodeID = Model.PincodeID }, new { target = "_blank" })
+                                        }
+                                        else
+                                        {
+                                            @OrderDetail.TotalMeatCount
+                                        }
+                                    </td>
+                                    <td>
+                                        @if (@OrderDetail.Condition1 > 0)
+                                        {
+                                            <a href="@Url.Action("GetDetail", "CustomerClassification", new { Category = "OnlyNonVeg", Level = @OrderDetail.LevelID, Condition = "C1", Model.InitialFromDate, fromDate = Model.FromDate, toDate = Model.ToDate, City = Model.CityID, PincodeID = Model.PincodeID, Option = "Excel" })"><span><i class="fa fa-file-excel-o" style="color: red"></i></span></a>
+                                            @:&nbsp;
+                                            @Html.ActionLink(OrderDetail.Condition1.ToString(), "GetDetail", new { Category = "OnlyNonVeg", Level = @OrderDetail.LevelID, Condition = "C1", Model.InitialFromDate, fromDate = Model.FromDate, toDate = Model.ToDate, City = Model.CityID, PincodeID = Model.PincodeID, Option = "View" }, new { target = "_blank" })
+                                        }
+                                        else
+                                        {
+                                            @OrderDetail.Condition1
+                                        }
+                                    </td>
+                                    <td>
+                                        @if (@OrderDetail.Condition2 > 0)
+                                        {
+                                            <a href="@Url.Action("GetDetail", "CustomerClassification", new { Category = "OnlyNonVeg", Level = @OrderDetail.LevelID, Condition = "C2", Model.InitialFromDate, fromDate = Model.FromDate, toDate = Model.ToDate, City = Model.CityID, PincodeID = Model.PincodeID, Option = "Excel" })"><span><i class="fa fa-file-excel-o" style="color: red"></i></span></a>
+                                            @:&nbsp;
+                                            @Html.ActionLink(OrderDetail.Condition2.ToString(), "GetDetail", new { Category = "OnlyNonVeg", Level = @OrderDetail.LevelID, Condition = "C2", Model.InitialFromDate, fromDate = Model.FromDate, toDate = Model.ToDate, City = Model.CityID, PincodeID = Model.PincodeID, Option = "View" }, new { target = "_blank" })
+                                        }
+                                        else
+                                        {
+                                            @OrderDetail.Condition2
+                                        }
+                                    </td>
+                                    <td>
+                                        @if (@OrderDetail.Condition3 > 0)
+                                        {
+                                            <a href="@Url.Action("GetDetail", "CustomerClassification", new { Category = "OnlyNonVeg", Level = @OrderDetail.LevelID, Condition = "C3", Model.InitialFromDate, fromDate = Model.FromDate, toDate = Model.ToDate, City = Model.CityID, PincodeID = Model.PincodeID, Option = "Excel" })"><span><i class="fa fa-file-excel-o" style="color: red"></i></span></a>
+                                            @:&nbsp;
+                                            @Html.ActionLink(OrderDetail.Condition3.ToString(), "GetDetail", new { Category = "OnlyNonVeg", Level = @OrderDetail.LevelID, Condition = "C3", Model.InitialFromDate, fromDate = Model.FromDate, toDate = Model.ToDate, City = Model.CityID, PincodeID = Model.PincodeID, Option = "View" }, new { target = "_blank" })
+                                        }
+                                        else
+                                        {
+                                            @OrderDetail.Condition3
+                                        }
+                                    </td>
+                                    <td>
+                                        @if (@OrderDetail.Condition4 > 0)
+                                        {
+                                            <a href="@Url.Action("GetDetail", "CustomerClassification", new { Category = "OnlyNonVeg", Level = @OrderDetail.LevelID, Condition = "C4", Model.InitialFromDate, fromDate = Model.FromDate, toDate = Model.ToDate, City = Model.CityID, PincodeID = Model.PincodeID, Option = "Excel" })"><span><i class="fa fa-file-excel-o" style="color: red"></i></span></a>
+                                            @:&nbsp;
+                                            @Html.ActionLink(OrderDetail.Condition4.ToString(), "GetDetail", new { Category = "OnlyNonVeg", Level = @OrderDetail.LevelID, Condition = "C4", Model.InitialFromDate, fromDate = Model.FromDate, toDate = Model.ToDate, City = Model.CityID, PincodeID = Model.PincodeID, Option = "View" }, new { target = "_blank" })
+                                        }
+                                        else
+                                        {
+                                            @OrderDetail.Condition4
+                                        }
+                                    </td> 
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                }
+            </div>
+
+
+            <div id="divFMCGList" style="width:100%; overflow:visible">
+                @if (Model.lCustomerClassificationFMCGProducts != null && Model.lCustomerClassificationFMCGProducts.Count > 0)
+                {
+                    <div class="box-header">
+                        Only FMCG Products
+                    </div>
+                    <table class="table no-margin" id="tbl">
+                        <thead>
+                            <tr>
+                                <th>Symbol</th>
+                                <th>Total Customer</th>
+                                <th>Rs.(1-450)</th>
+                                <th>Rs.(451-750)</th>
+                                <th>Rs.(751-900)</th>
+                                <th>Rs.(901 & more)</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var OrderDetail in Model.lCustomerClassificationFMCGProducts)
+                            {
+                                <tr>
+                                    <td style="width:20%;text-align:center">
+                                        @for (int i = 0; i < OrderDetail.ImageCount; i++)
+                                        {
+                                            if (@OrderDetail.ImageType == "Circle")
+                                            {
+                                                <i class="fa fa-circle fa-lg" style="color:blue"></i>
+                                            }
+                                            else if (@OrderDetail.ImageType == "Square")
+    {
+        <i class="fa fa-square fa-lg" style="color: blue"></i>
+    }
+    else
+                                            {
+                                                <i class="fa fa-star fa-lg" style="color: blue; "></i>
+                                            }
+                                        }
+                                    </td>
+                                    <td>
+                                        @if (@OrderDetail.TotalFMCGCount > 0)
+                                        {
+                                            <a href="@Url.Action("GetDetail", "CustomerClassification", new { Category = "FMCG", Level = @OrderDetail.LevelID, Condition = "T", Model.InitialFromDate, fromDate = Model.FromDate, toDate = Model.ToDate, City = Model.CityID, PincodeID = Model.PincodeID, Option = "Excel" })"><span><i class="fa fa-file-excel-o" style="color: blue"></i></span></a>                                                                                        
+                                         @:&nbsp;
+                                            @Html.ActionLink(OrderDetail.TotalFMCGCount.ToString(), "GetDetail", new { Category = "FMCG", Level = @OrderDetail.LevelID, Condition = "T", Model.InitialFromDate, fromDate = Model.FromDate, toDate = Model.ToDate, City = Model.CityID, PincodeID = Model.PincodeID, Option = "View" }, new { target = "_blank" })
+                                        }
+                                        else
+                                        {
+                                            @OrderDetail.TotalFMCGCount
+                                        }
+                                    </td>
+                                    <td>
+                                        @if (@OrderDetail.Condition1 > 0)
+                                        {
+                                            <a href="@Url.Action("GetDetail", "CustomerClassification", new { Category = "FMCG", Level = @OrderDetail.LevelID, Condition = "C1", Model.InitialFromDate, fromDate = Model.FromDate, toDate = Model.ToDate, City = Model.CityID, PincodeID = Model.PincodeID, Option = "Excel" })"><span><i class="fa fa-file-excel-o" style="color: blue"></i></span></a>
+                                            @:&nbsp;
+                                            @Html.ActionLink(OrderDetail.Condition1.ToString(), "GetDetail", new { Category = "FMCG", Level = @OrderDetail.LevelID, Condition = "C1", Model.InitialFromDate, fromDate = Model.FromDate, toDate = Model.ToDate, City = Model.CityID, PincodeID = Model.PincodeID, Option = "View" }, new { target = "_blank" })
+                                        }
+                                        else
+                                        {
+                                            @OrderDetail.Condition1
+                                        }
+                                    </td>
+                                    <td>
+                                        @if (@OrderDetail.Condition2 > 0)
+                                        {
+                                            <a href="@Url.Action("GetDetail", "CustomerClassification", new { Category = "FMCG", Level = @OrderDetail.LevelID, Condition = "C2", Model.InitialFromDate, fromDate = Model.FromDate, toDate = Model.ToDate, City = Model.CityID, PincodeID = Model.PincodeID, Option = "Excel" })"><span><i class="fa fa-file-excel-o" style="color: blue"></i></span></a>
+                                            @:&nbsp;
+                                            @Html.ActionLink(OrderDetail.Condition2.ToString(), "GetDetail", new { Category = "FMCG", Level = @OrderDetail.LevelID, Condition = "C2", Model.InitialFromDate, fromDate = Model.FromDate, toDate = Model.ToDate, City = Model.CityID, PincodeID = Model.PincodeID, Option = "View" }, new { target = "_blank" })
+                                        }
+                                        else
+                                        {
+                                            @OrderDetail.Condition2
+                                        }
+                                    </td>
+                                    <td>
+                                        @if (@OrderDetail.Condition3 > 0)
+                                        {
+                                            <a href="@Url.Action("GetDetail", "CustomerClassification", new { Category = "FMCG", Level = @OrderDetail.LevelID, Condition = "C3", Model.InitialFromDate, fromDate = Model.FromDate, toDate = Model.ToDate, City = Model.CityID, PincodeID = Model.PincodeID, Option = "Excel" })"><span><i class="fa fa-file-excel-o" style="color: blue"></i></span></a>
+                                            @:&nbsp;
+                                            @Html.ActionLink(OrderDetail.Condition3.ToString(), "GetDetail", new { Category = "FMCG", Level = @OrderDetail.LevelID, Condition = "C3", Model.InitialFromDate, fromDate = Model.FromDate, toDate = Model.ToDate, City = Model.CityID, PincodeID = Model.PincodeID, Option = "View" }, new { target = "_blank" })
+                                        }
+                                        else
+                                        {
+                                            @OrderDetail.Condition3
+                                        }
+                                    </td>
+                                    <td>
+                                        @if (@OrderDetail.Condition4 > 0)
+                                        {
+                                            <a href="@Url.Action("GetDetail", "CustomerClassification", new { Category = "FMCG", Level = @OrderDetail.LevelID, Condition = "C4", Model.InitialFromDate, fromDate = Model.FromDate, toDate = Model.ToDate, City = Model.CityID, PincodeID = Model.PincodeID, Option = "Excel" })"><span><i class="fa fa-file-excel-o" style="color: blue"></i></span></a>
+                                            @:&nbsp;
+                                            @Html.ActionLink(OrderDetail.Condition4.ToString(), "GetDetail", new { Category = "FMCG", Level = @OrderDetail.LevelID, Condition = "C4", Model.InitialFromDate, fromDate = Model.FromDate, toDate = Model.ToDate, City = Model.CityID, PincodeID = Model.PincodeID, Option = "View" }, new { target = "_blank" })
+                                        }
+                                        else
+                                        {
+                                            @OrderDetail.Condition4
+                                        }
+                                    </td>    
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                }
+            </div>
+
+
+            <div id="divMixedList" style="width:100%; overflow:visible">
+                @if (Model.lCustomerClassificationMixedCategoryProducts != null && Model.lCustomerClassificationMixedCategoryProducts.Count > 0)
+                {
+                    <div class="box-header">
+                        Mixed Category Products
+                    </div>
+                    <table class="table no-margin" id="tbl">
+                        <thead>
+                            <tr>
+                                <th>Symbol</th>
+                                <th>Total Customer</th>
+                                <th>Rs.(1-450)</th>
+                                <th>Rs.(451-750)</th>
+                                <th>Rs.(751-900)</th>
+                                <th>Rs.(901 & more)</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var OrderDetail in Model.lCustomerClassificationMixedCategoryProducts)
+                            {
+                                <tr>
+                                    <td style="width:20%;text-align:center">
+                                        @for (int i = 0; i < OrderDetail.ImageCount; i++)
+                                        {
+                                            if (@OrderDetail.ImageType == "Circle")
+                                            {
+                                                <i class="fa fa-circle fa-lg" style="color:yellow"></i>
+                                            }
+                                            else if (@OrderDetail.ImageType == "Square")
+    {
+        <i class="fa fa-square fa-lg" style="color: yellow"></i>
+    }
+    else
+                                            {
+                                                <i class="fa fa-star fa-lg" style="color: yellow; "></i>
+                                            }
+                                        }
+                                    </td>
+                                    <td>
+                                        @if (@OrderDetail.TotalMixedCount > 0)
+                                        {
+                                             <a href="@Url.Action("GetDetail", "CustomerClassification", new { Category = "Mixed", Level = @OrderDetail.LevelID, Condition = "T", Model.InitialFromDate, fromDate = Model.FromDate, toDate = Model.ToDate, City = Model.CityID, PincodeID = Model.PincodeID, Option = "Excel" })"><span><i class="fa fa-file-excel-o" style="color: yellowgreen"></i></span></a>                                                                                        
+                                         @:&nbsp;
+                                            @Html.ActionLink(OrderDetail.TotalMixedCount.ToString(), "GetDetail", new { Category = "Mixed", Level = @OrderDetail.LevelID, Condition = "T", Model.InitialFromDate, fromDate = Model.FromDate, toDate = Model.ToDate, City = Model.CityID, PincodeID = Model.PincodeID, Option = "View" }, new { target = "_blank" })
+                                        }
+                                        else
+                                        {
+                                            @OrderDetail.TotalMixedCount
+                                        }
+                                    </td>
+                                    <td>
+                                        @if (@OrderDetail.Condition1 > 0)
+                                        {
+                                            <a href="@Url.Action("GetDetail", "CustomerClassification", new { Category = "Mixed", Level = @OrderDetail.LevelID, Condition = "C1", Model.InitialFromDate, fromDate = Model.FromDate, toDate = Model.ToDate, City = Model.CityID, PincodeID = Model.PincodeID, Option = "Excel" })"><span><i class="fa fa-file-excel-o" style="color: yellowgreen"></i></span></a>
+                                            @:&nbsp;
+                                            @Html.ActionLink(OrderDetail.Condition1.ToString(), "GetDetail", new { Category = "Mixed", Level = @OrderDetail.LevelID, Condition = "C1", Model.InitialFromDate, fromDate = Model.FromDate, toDate = Model.ToDate, City = Model.CityID, PincodeID = Model.PincodeID, Option = "View" }, new { target = "_blank" })
+                                        }
+                                        else
+                                        {
+                                            @OrderDetail.Condition1
+                                        }
+                                    </td>
+                                    <td>
+                                        @if (@OrderDetail.Condition2 > 0)
+                                        {
+                                            <a href="@Url.Action("GetDetail", "CustomerClassification", new { Category = "Mixed", Level = @OrderDetail.LevelID, Condition = "C2", Model.InitialFromDate, fromDate = Model.FromDate, toDate = Model.ToDate, City = Model.CityID, PincodeID = Model.PincodeID, Option = "Excel" })"><span><i class="fa fa-file-excel-o" style="color: yellowgreen"></i></span></a>
+                                            @:&nbsp;
+                                            @Html.ActionLink(OrderDetail.Condition2.ToString(), "GetDetail", new { Category = "Mixed", Level = @OrderDetail.LevelID, Condition = "C2", Model.InitialFromDate, fromDate = Model.FromDate, toDate = Model.ToDate, City = Model.CityID, PincodeID = Model.PincodeID, Option = "View" }, new { target = "_blank" })
+                                        }
+                                        else
+                                        {
+                                            @OrderDetail.Condition2
+                                        }
+                                    </td>
+                                    <td>
+                                        @if (@OrderDetail.Condition3 > 0)
+                                        {
+                                            <a href="@Url.Action("GetDetail", "CustomerClassification", new { Category = "Mixed", Level = @OrderDetail.LevelID, Condition = "C3", Model.InitialFromDate, fromDate = Model.FromDate, toDate = Model.ToDate, City = Model.CityID, PincodeID = Model.PincodeID, Option = "Excel" })"><span><i class="fa fa-file-excel-o" style="color: yellowgreen"></i></span></a>
+                                            @:&nbsp;
+                                            @Html.ActionLink(OrderDetail.Condition3.ToString(), "GetDetail", new { Category = "Mixed", Level = @OrderDetail.LevelID, Condition = "C3", Model.InitialFromDate, fromDate = Model.FromDate, toDate = Model.ToDate, City = Model.CityID, PincodeID = Model.PincodeID, Option = "View" }, new { target = "_blank" })
+                                        }
+                                        else
+                                        {
+                                            @OrderDetail.Condition3
+                                        }
+                                    </td>
+                                    <td>
+                                        @if (@OrderDetail.Condition4 > 0)
+                                        {
+                                            <a href="@Url.Action("GetDetail", "CustomerClassification", new { Category = "Mixed", Level = @OrderDetail.LevelID, Condition = "C4", Model.InitialFromDate, fromDate = Model.FromDate, toDate = Model.ToDate, City = Model.CityID, PincodeID = Model.PincodeID, Option = "Excel" })"><span><i class="fa fa-file-excel-o" style="color: yellowgreen"></i></span></a>
+                                            @:&nbsp;
+                                            @Html.ActionLink(OrderDetail.Condition4.ToString(), "GetDetail", new { Category = "Mixed", Level = @OrderDetail.LevelID, Condition = "C4", Model.InitialFromDate, fromDate = Model.FromDate, toDate = Model.ToDate, City = Model.CityID, PincodeID = Model.PincodeID, Option = "View" }, new { target = "_blank" })
+                                        }
+                                        else
+                                        {
+                                            @OrderDetail.Condition4
+                                        }
+                                    </td>   
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                }
+            </div>  
+
+
+            <div id="divOtherList" style="width:100%; overflow:visible">
+                @if (Model.lCustomerClassificationOtherCategory != null && Model.lCustomerClassificationOtherCategory.Count > 0)
+                {
+                    <div class="box-header">
+                        Other Category (Festival Needs, Local Delicacies, Restaurant)
+                    </div>
+                    <table class="table no-margin" id="tbl">
+                        <thead>
+                            <tr>
+                                <th>Symbol</th>
+                                <th>Total Customer</th>
+                                <th>Rs.(1-450)</th>
+                                <th>Rs.(451-750)</th>
+                                <th>Rs.(751-900)</th>
+                                <th>Rs.(901 & more)</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var OrderDetail in Model.lCustomerClassificationOtherCategory)
+                            {
+                                <tr>
+                                    <td style="width:20%;text-align:center">
+                                        @for (int i = 0; i < OrderDetail.ImageCount; i++)
+                                        {
+                                            if (@OrderDetail.ImageType == "Circle")
+                                            {
+                                                <i class="fa fa-circle fa-lg" style="color:indigo"></i>
+                                            }
+                                            else if (@OrderDetail.ImageType == "Square")
+    {
+        <i class="fa fa-square fa-lg" style="color: indigo"></i>
+    }
+    else
+                                            {
+                                                <i class="fa fa-star fa-lg" style="color: indigo; "></i>
+                                            }
+                                        }
+                                    </td>
+                                    <td>
+                                        @if (@OrderDetail.TotalOtherCount > 0)
+                                            
+                                        {
+                                             <a href="@Url.Action("GetDetail", "CustomerClassification", new { Category = "Other", Level = @OrderDetail.LevelID, Condition = "T", Model.InitialFromDate, fromDate = Model.FromDate, toDate = Model.ToDate, City = Model.CityID, PincodeID = Model.PincodeID, Option = "Excel" })"><span><i class="fa fa-file-excel-o" style="color: indigo"></i></span></a>                                                                                        
+                                             @:&nbsp;
+                                            @Html.ActionLink(OrderDetail.TotalOtherCount.ToString(), "GetDetail", new { Category = "Other", Level = @OrderDetail.LevelID, Condition = "T", Model.InitialFromDate, fromDate = Model.FromDate, toDate = Model.ToDate, City = Model.CityID, PincodeID = Model.PincodeID, Option = "View" }, new { target = "_blank" })
+                                        }
+                                        else
+                                        {
+                                            @OrderDetail.TotalOtherCount
+                                        }
+                                    </td>
+                                    <td>
+                                        @if (@OrderDetail.Condition1 > 0)
+                                        {
+                                            <a href="@Url.Action("GetDetail", "CustomerClassification", new { Category = "Other", Level = @OrderDetail.LevelID, Condition = "C1", Model.InitialFromDate, fromDate = Model.FromDate, toDate = Model.ToDate, City = Model.CityID, PincodeID = Model.PincodeID, Option = "Excel" })"><span><i class="fa fa-file-excel-o" style="color: indigo"></i></span></a>
+                                            @:&nbsp;
+                                            @Html.ActionLink(OrderDetail.Condition1.ToString(), "GetDetail", new { Category = "Other", Level = @OrderDetail.LevelID, Condition = "C1", Model.InitialFromDate, fromDate = Model.FromDate, toDate = Model.ToDate, City = Model.CityID, PincodeID = Model.PincodeID, Option = "View" }, new { target = "_blank" })
+                                        }
+                                        else
+                                        {
+                                            @OrderDetail.Condition1
+                                        }
+                                    </td>
+                                    <td>
+                                        @if (@OrderDetail.Condition2 > 0)
+                                        {
+                                            <a href="@Url.Action("GetDetail", "CustomerClassification", new { Category = "Other", Level = @OrderDetail.LevelID, Condition = "C2", Model.InitialFromDate, fromDate = Model.FromDate, toDate = Model.ToDate, City = Model.CityID, PincodeID = Model.PincodeID, Option = "Excel" })"><span><i class="fa fa-file-excel-o" style="color: indigo"></i></span></a>
+                                            @:&nbsp;
+                                            @Html.ActionLink(OrderDetail.Condition2.ToString(), "GetDetail", new { Category = "Other", Level = @OrderDetail.LevelID, Condition = "C2", Model.InitialFromDate, fromDate = Model.FromDate, toDate = Model.ToDate, City = Model.CityID, PincodeID = Model.PincodeID, Option = "View" }, new { target = "_blank" })
+                                        }
+                                        else
+                                        {
+                                            @OrderDetail.Condition2
+                                        }
+                                    </td>
+                                    <td>
+                                        @if (@OrderDetail.Condition3 > 0)
+                                        {
+                                            <a href="@Url.Action("GetDetail", "CustomerClassification", new { Category = "Other", Level = @OrderDetail.LevelID, Condition = "C3", Model.InitialFromDate, fromDate = Model.FromDate, toDate = Model.ToDate, City = Model.CityID, PincodeID = Model.PincodeID, Option = "Excel" })"><span><i class="fa fa-file-excel-o" style="color: indigo"></i></span></a>
+                                            @:&nbsp;
+                                            @Html.ActionLink(OrderDetail.Condition3.ToString(), "GetDetail", new { Category = "Other", Level = @OrderDetail.LevelID, Condition = "C3", Model.InitialFromDate, fromDate = Model.FromDate, toDate = Model.ToDate, City = Model.CityID, PincodeID = Model.PincodeID, Option = "View" }, new { target = "_blank" })
+                                        }
+                                        else
+                                        {
+                                            @OrderDetail.Condition3
+                                        }
+                                    </td>
+                                    <td>
+                                        @if (@OrderDetail.Condition4 > 0)
+                                        {
+                                            <a href="@Url.Action("GetDetail", "CustomerClassification", new { Category = "Other", Level = @OrderDetail.LevelID, Condition = "C4", Model.InitialFromDate, fromDate = Model.FromDate, toDate = Model.ToDate, City = Model.CityID, PincodeID = Model.PincodeID, Option = "Excel" })"><span><i class="fa fa-file-excel-o" style="color: indigo"></i></span></a>
+                                            @:&nbsp;
+                                            @Html.ActionLink(OrderDetail.Condition4.ToString(), "GetDetail", new { Category = "Other", Level = @OrderDetail.LevelID, Condition = "C4", Model.InitialFromDate, fromDate = Model.FromDate, toDate = Model.ToDate, City = Model.CityID, PincodeID = Model.PincodeID, Option = "View" }, new { target = "_blank" })
+                                        }
+                                        else
+                                        {
+                                            @OrderDetail.Condition4
+                                        }
+                                    </td>      
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                }
+            </div>
+
+
+
+            <div id="divPetCareList" style="width:100%; overflow:visible">
+                @if (Model.lCustomerClassificationPetCareProducts != null && Model.lCustomerClassificationPetCareProducts.Count > 0)
+                {
+                    <div class="box-header">
+                       Only Pet Care products
+                    </div>
+                    <table class="table no-margin" id="tbl">
+                        <thead>
+                            <tr>
+                                <th>Symbol</th>
+                                <th>Total Customer</th>
+                                <th>Rs.(1-450)</th>
+                                <th>Rs.(451-750)</th>
+                                <th>Rs.(751-900)</th>
+                                <th>Rs.(901 & more)</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var OrderDetail in Model.lCustomerClassificationPetCareProducts)
+                            {
+                                <tr>
+                                    <td style="width:20%;text-align:center">
+                                        @for (int i = 0; i < OrderDetail.ImageCount; i++)
+                                        {
+                                            if (@OrderDetail.ImageType == "Circle")
+                                            {
+                                                <i class="fa fa-circle fa-lg" style="color:orange"></i>
+                                            }
+                                            else if (@OrderDetail.ImageType == "Square")
+    {
+        <i class="fa fa-square fa-lg" style="color: orange"></i>
+    }
+    else
+                                            {
+                                                <i class="fa fa-star fa-lg" style="color: orange; "></i>
+                                            }
+                                        }
+                                    </td>
+                                    <td>
+                                        @if (@OrderDetail.TotalPetCareCount > 0)
+                                        {
+                                             <a href="@Url.Action("GetDetail", "CustomerClassification", new { Category = "PetCare", Level = @OrderDetail.LevelID, Condition = "T", Model.InitialFromDate, fromDate = Model.FromDate, toDate = Model.ToDate, City = Model.CityID, PincodeID = Model.PincodeID, Option = "Excel" })"><span><i class="fa fa-file-excel-o" style="color: orange"></i></span></a>                                                                                        
+                                         @:&nbsp;
+                                            @Html.ActionLink(OrderDetail.TotalPetCareCount.ToString(), "GetDetail", new { Category = "PetCare", Level = @OrderDetail.LevelID, Condition = "T", Model.InitialFromDate, fromDate = Model.FromDate, toDate = Model.ToDate, City = Model.CityID, PincodeID = Model.PincodeID, Option = "View" }, new { target = "_blank" })
+                                        }
+                                        else
+                                        {
+                                            @OrderDetail.TotalPetCareCount
+                                        }
+                                    </td>
+                                    <td>
+                                        @if (@OrderDetail.Condition1 > 0)
+                                        {
+                                            <a href="@Url.Action("GetDetail", "CustomerClassification", new { Category = "PetCare", Level = @OrderDetail.LevelID, Condition = "C1", Model.InitialFromDate, fromDate = Model.FromDate, toDate = Model.ToDate, City = Model.CityID, PincodeID = Model.PincodeID, Option = "Excel" })"><span><i class="fa fa-file-excel-o" style="color: orange"></i></span></a>
+                                            @:&nbsp;
+                                            @Html.ActionLink(OrderDetail.Condition1.ToString(), "GetDetail", new { Category = "PetCare", Level = @OrderDetail.LevelID, Condition = "C1", Model.InitialFromDate, fromDate = Model.FromDate, toDate = Model.ToDate, City = Model.CityID, PincodeID = Model.PincodeID, Option = "View" }, new { target = "_blank" })
+                                        }
+                                        else
+                                        {
+                                            @OrderDetail.Condition1
+                                        }
+                                    </td>
+                                    <td>
+                                        @if (@OrderDetail.Condition2 > 0)
+                                        {
+                                            <a href="@Url.Action("GetDetail", "CustomerClassification", new { Category = "PetCare", Level = @OrderDetail.LevelID, Condition = "C2", Model.InitialFromDate, fromDate = Model.FromDate, toDate = Model.ToDate, City = Model.CityID, PincodeID = Model.PincodeID, Option = "Excel" })"><span><i class="fa fa-file-excel-o" style="color: orange"></i></span></a>
+                                            @:&nbsp;
+                                            @Html.ActionLink(OrderDetail.Condition2.ToString(), "GetDetail", new { Category = "PetCare", Level = @OrderDetail.LevelID, Condition = "C2", Model.InitialFromDate, fromDate = Model.FromDate, toDate = Model.ToDate, City = Model.CityID, PincodeID = Model.PincodeID, Option = "View" }, new { target = "_blank" })
+                                        }
+                                        else
+                                        {
+                                            @OrderDetail.Condition2
+                                        }
+                                    </td>
+                                    <td>
+                                        @if (@OrderDetail.Condition3 > 0)
+                                        {
+                                            <a href="@Url.Action("GetDetail", "CustomerClassification", new { Category = "PetCare", Level = @OrderDetail.LevelID, Condition = "C3", Model.InitialFromDate, fromDate = Model.FromDate, toDate = Model.ToDate, City = Model.CityID, PincodeID = Model.PincodeID, Option = "Excel" })"><span><i class="fa fa-file-excel-o" style="color: orange"></i></span></a>
+                                            @:&nbsp;
+                                            @Html.ActionLink(OrderDetail.Condition3.ToString(), "GetDetail", new { Category = "PetCare", Level = @OrderDetail.LevelID, Condition = "C3", Model.InitialFromDate, fromDate = Model.FromDate, toDate = Model.ToDate, City = Model.CityID, PincodeID = Model.PincodeID, Option = "View" }, new { target = "_blank" })
+                                        }
+                                        else
+                                        {
+                                            @OrderDetail.Condition3
+                                        }
+                                    </td>
+                                    <td>
+                                        @if (@OrderDetail.Condition4 > 0)
+                                        {
+                                            <a href="@Url.Action("GetDetail", "CustomerClassification", new { Category = "PetCare", Level = @OrderDetail.LevelID, Condition = "C4", Model.InitialFromDate, fromDate = Model.FromDate, toDate = Model.ToDate, City = Model.CityID, PincodeID = Model.PincodeID, Option = "Excel" })"><span><i class="fa fa-file-excel-o" style="color: orange"></i></span></a>
+                                            @:&nbsp;
+                                            @Html.ActionLink(OrderDetail.Condition4.ToString(), "GetDetail", new { Category = "PetCare", Level = @OrderDetail.LevelID, Condition = "C4", Model.InitialFromDate, fromDate = Model.FromDate, toDate = Model.ToDate, City = Model.CityID, PincodeID = Model.PincodeID, Option = "View" }, new { target = "_blank" })
+                                        }
+                                        else
+                                        {
+                                            @OrderDetail.Condition4
+                                        }
+                                    </td>   
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                }
+            </div>
+
+
+
+            <div id="divOfferList" style="width:100%; overflow:visible">
+                @if (Model.lCustomerClassificationOfferProducts != null && Model.lCustomerClassificationOfferProducts.Count > 0)
+                {
+                    <div class="box-header">
+                        Only Offer Products
+                    </div>
+                    <table class="table no-margin" id="tbl">
+                        <thead>
+                            <tr>
+                                <th>Symbol</th>
+                                <th>Total Customer</th>
+                                <th>Rs.(1-450)</th>
+                                <th>Rs.(451-750)</th>
+                                <th>Rs.(751-900)</th>
+                                <th>Rs.(901 & more)</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var OrderDetail in Model.lCustomerClassificationOfferProducts)
+                            {
+                                <tr>
+                                    <td style="width:20%;text-align:center">
+                                        @for (int i = 0; i < OrderDetail.ImageCount; i++)
+                                        {
+                                            if (@OrderDetail.ImageType == "Circle")
+                                            {
+                                                <i class="fa fa-circle fa-lg" style="color: deeppink; "></i>
+                                            }
+                                            else if (@OrderDetail.ImageType == "Square")
+    {
+        <i class="fa fa-square fa-lg" style="color: deeppink"></i>
+    }
+    else
+                                            {
+                                                <i class="fa fa-star fa-lg" style="color: deeppink; "></i>
+                                            }
+                                        }
+                                    </td>
+                                    <td>
+                                        @if (@OrderDetail.TotalOfferCount > 0)
+                                        {
+                                            <a href="@Url.Action("GetDetail", "CustomerClassification", new { Category = "Offer", Level = @OrderDetail.LevelID, Condition = "T", Model.InitialFromDate, fromDate = Model.FromDate, toDate = Model.ToDate, City = Model.CityID, PincodeID = Model.PincodeID, Option = "Excel" })"><span><i class="fa fa-file-excel-o" style="color: deeppink"></i></span></a>                                                                                        
+                                             @:&nbsp;
+                                            @Html.ActionLink(OrderDetail.TotalOfferCount.ToString(), "GetDetail", new { Category = "Offer", Level = @OrderDetail.LevelID, Condition = "T", Model.InitialFromDate, fromDate = Model.FromDate, toDate = Model.ToDate, City = Model.CityID, PincodeID = Model.PincodeID, Option = "View" }, new { target = "_blank" })
+                                        }
+                                        else
+                                        {
+                                            @OrderDetail.TotalOfferCount
+                                        }
+                                    </td>
+                                    <td>
+                                        @if (@OrderDetail.Condition1 > 0)
+                                        {
+                                            <a href="@Url.Action("GetDetail", "CustomerClassification", new { Category = "Offer", Level = @OrderDetail.LevelID, Condition = "C1", Model.InitialFromDate, fromDate = Model.FromDate, toDate = Model.ToDate, City = Model.CityID, PincodeID = Model.PincodeID, Option = "Excel" })"><span><i class="fa fa-file-excel-o" style="color: deeppink"></i></span></a>
+                                            @:&nbsp;
+                                            @Html.ActionLink(OrderDetail.Condition1.ToString(), "GetDetail", new { Category = "Offer", Level = @OrderDetail.LevelID, Condition = "C1", Model.InitialFromDate, fromDate = Model.FromDate, toDate = Model.ToDate, City = Model.CityID, PincodeID = Model.PincodeID, Option = "View" }, new { target = "_blank" })
+                                        }
+                                        else
+                                        {
+                                            @OrderDetail.Condition1
+                                        }
+                                    </td>
+                                    <td>
+                                        @if (@OrderDetail.Condition2 > 0)
+                                        {
+                                            <a href="@Url.Action("GetDetail", "CustomerClassification", new { Category = "Offer", Level = @OrderDetail.LevelID, Condition = "C2", Model.InitialFromDate, fromDate = Model.FromDate, toDate = Model.ToDate, City = Model.CityID, PincodeID = Model.PincodeID, Option = "Excel" })"><span><i class="fa fa-file-excel-o" style="color: deeppink"></i></span></a>
+                                            @:&nbsp;
+                                            @Html.ActionLink(OrderDetail.Condition2.ToString(), "GetDetail", new { Category = "Offer", Level = @OrderDetail.LevelID, Condition = "C2", Model.InitialFromDate, fromDate = Model.FromDate, toDate = Model.ToDate, City = Model.CityID, PincodeID = Model.PincodeID, Option = "View" }, new { target = "_blank" })
+                                        }
+                                        else
+                                        {
+                                            @OrderDetail.Condition2
+                                        }
+                                    </td>
+                                    <td>
+                                        @if (@OrderDetail.Condition3 > 0)
+                                        {
+                                            <a href="@Url.Action("GetDetail", "CustomerClassification", new { Category = "Offer", Level = @OrderDetail.LevelID, Condition = "C3", Model.InitialFromDate, fromDate = Model.FromDate, toDate = Model.ToDate, City = Model.CityID, PincodeID = Model.PincodeID, Option = "Excel" })"><span><i class="fa fa-file-excel-o" style="color: deeppink"></i></span></a>
+                                            @:&nbsp;
+                                            @Html.ActionLink(OrderDetail.Condition3.ToString(), "GetDetail", new { Category = "Offer", Level = @OrderDetail.LevelID, Condition = "C3", Model.InitialFromDate, fromDate = Model.FromDate, toDate = Model.ToDate, City = Model.CityID, PincodeID = Model.PincodeID, Option = "View" }, new { target = "_blank" })
+                                        }
+                                        else
+                                        {
+                                            @OrderDetail.Condition3
+                                        }
+                                    </td>
+                                    <td>
+                                        @if (@OrderDetail.Condition4 > 0)
+                                        {
+                                            <a href="@Url.Action("GetDetail", "CustomerClassification", new { Category = "Offer", Level = @OrderDetail.LevelID, Condition = "C4", Model.InitialFromDate, fromDate = Model.FromDate, toDate = Model.ToDate, City = Model.CityID, PincodeID = Model.PincodeID, Option = "Excel" })"><span><i class="fa fa-file-excel-o" style="color: deeppink"></i></span></a>
+                                            @:&nbsp;
+                                            @Html.ActionLink(OrderDetail.Condition4.ToString(), "GetDetail", new { Category = "Offer", Level = @OrderDetail.LevelID, Condition = "C4", Model.InitialFromDate, fromDate = Model.FromDate, toDate = Model.ToDate, City = Model.CityID, PincodeID = Model.PincodeID, Option = "View" }, new { target = "_blank" })
+                                        }
+                                        else
+                                        {
+                                            @OrderDetail.Condition4
+                                        }
+                                    </td>   
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                }
+            </div>           
+
+
+                    @*</td>
+                </tr>
+            </table>*@
+        </div>
+    </div>
+@*}*@
+</div>
+
+<div class="loader">
+    <img id="loader_img" src="~/Content/img/loader.gif" style="display: none" />
+</div>
+<script src="~/Content/js/jquery-1.9.1.min.js"></script>
+
+@*<script type="text/javascript">
+    $(document).ready(function () {
+
+        //$('#FromDate').datepicker({ dateFormat: '0:dd/MM/yyyy' });
+        //$('#ToDate').datepicker({ dateFormat: '0:dd/MM/yyyy' });
+        var today = new Date()
+        var priorDate = new Date();
+        priorDate.setDate(priorDate.getDate() - 30)      
+
+        $("#FromDate").datepicker("setDate", priorDate);
+        $("#ToDate").datepicker("setDate", today);
+
+        //$("#InitialFromDate").datepicker("setDate", "01/4/2017");
+    });
+
+</script>*@
+<script type="text/javascript">    
+
+    $("select#City").bind('change', function () {
+
+        var CityID = $("select#City option:selected").val();
+        if (CityID == 0) {
+            $('#PincodeID').empty();
+            return;
+        }
+        $.ajax({
+            type: "POST",
+            url: '@Url.Action("BindCities", "CustomerClassification")',
+            data: { 'CityID': CityID },
+            //dataType: "json",
+            cache: false,
+            success: function (msg) {
+                $('#PincodeID').empty();
+                $('#PincodeID').append('<option value="">Select PincodeID</option>');
+                $.each(msg, function (index, item) {
+                    $('#PincodeID').append('<option value=' + item.ID + '>' + item.Name + '</option>');
+                });
+            },
+            error: function (x, e) {
+                alert('Failure');
+
+            }
+        });
+
+        //}
+    });
+
+    function ValidateDate(fromDate, toDate, InitialFromDate) {
+        if (fromDate == '' && toDate == '') {
+            $('[id*=lblMsg]').text('Please Select From Date and To Date.');
+            return false;
+        }
+        else if (fromDate == '') {
+            $('[id*=lblMsg]').text('Please Select From Date.');
+            return false;
+        }
+        else if (toDate == '') {
+            $('[id*=lblMsg]').text('Please Select To Date.');
+            return false;
+        }
+
+        if (fromDate != '' && toDate != '') {
+            InitialDate = InitialFromDate.split('/');
+            dateFirst = fromDate.split('/');
+            dateSecond = toDate.split('/');
+            var Initial = new Date(InitialDate[2], InitialDate[1], InitialDate[0]); //Year, Month, Date
+            var from = new Date(dateFirst[2], dateFirst[1], dateFirst[0]); //Year, Month, Date
+            var to = new Date(dateSecond[2], dateSecond[1], dateSecond[0]);
+            if (from < Initial) {
+                $('[id*=lblMsg]').text('From Date must be greater than Initial Date.');
+                return false;
+            }
+            else if (from > to) {
+                    $('[id*=lblMsg]').text('To Date must be greater than From Date.');
+                    return false;
+                }
+                else {
+                    $('[id*=lblMsg]').text('');
+                }            
+        }
+    }
+
+
+    $("input#btnSearch").on('click', function () {       
+         
+        var City = null;
+        var PinCode = "";
+        City = $('#City :selected').val();
+        PinCode = $('#PincodeID :selected').val();
+
+        var InitialFromDate = $('#InitialFromDate').val();
+        var fromDate = $('#FromDate').val();
+        var toDate = $('#ToDate').val();       
+        var isValid = ValidateDate(fromDate, toDate, InitialFromDate);
+        if (isValid == false) {          
+            return;
+        }
+        if (PinCode == null || PinCode == "")
+        {
+            PinCode = 0;
+        }
+        if (City == null || City == "") {
+            City = 0;
+        }
+      
+        window.location.href = "/CustomerClassification/Search?InitialFromDate=" + InitialFromDate + "&fromDate=" + fromDate + "&toDate=" + toDate + "&City=" + City + "&PincodeID=" + PinCode;
+      
+    });
+       
+</script>
+

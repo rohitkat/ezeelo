@@ -1,0 +1,273 @@
+﻿@model ModelLayer.Models.ViewModel.WastageEntry
+
+@{
+    ViewBag.Title = "ItemWastageEntry";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<link href="~/Content/assets/css/font-awesome.min.css" rel="stylesheet" />
+<style>
+    .detailHead {
+        font-weight: bold;
+        width: 40%;
+    }
+</style>
+<script src="~/Content/js/jquery-1.11.0.min.js"></script>
+<script>
+    $(document).ready(function () {
+        var wastage_qty = $("#waste_qty").val();
+        $('#reason').live('change', function () {
+            $.ajax({
+                type: 'POST',
+                url: '/WarehouseWastageStock/GetSubReason',
+                data: { reason: $('#reason').val() },
+                dataType: 'json',
+                success: function (data) {
+                    $('#sub_reason option').remove();
+                    $.each(data, function (index, val) {
+                        var optionTag = $('<option></option>');
+                        $(optionTag).val(val.Value).text(val.Text);
+                        $('#sub_reason').append(optionTag);
+
+                    });
+                }
+            });
+        });
+
+        $("#file").change(function () {
+            if (this.files && this.files[0]) {
+                var filerdr = new FileReader();
+                filerdr.onload = function (e) {
+                    $('#waste_img').attr('src', e.target.result);
+                }
+                filerdr.readAsDataURL(this.files[0]);
+            }
+        });
+        $("#waste_qty").keyup(function () {
+            calValRate();
+        });
+
+        function calValRate() {
+            var waste_qty = $("#waste_qty").val();
+            var total_qty = $("#batch_avl_qty").text();
+            var amt = 0;
+            var rate = $("#buy_rate_per_unit").text();
+            if (waste_qty == "") {
+                waste_qty = 0;
+                $("#waste_qty").val(0);
+            }
+            if (Number(waste_qty) < Number(wastage_qty)) {
+                var rem_qty = wastage_qty - waste_qty;
+                total_qty = Number(total_qty) + Number(rem_qty);
+                amt = waste_qty * rate;
+                $("#NewAvlQty").text(total_qty);
+                $("#total_amt").val(amt.toFixed(2));
+            }
+            else {
+                $("#waste_qty").val(wastage_qty);
+                $("#NewAvlQty").text(total_qty);
+                amt = wastage_qty * rate;
+                $("#total_amt").val(amt.toFixed(2));
+            }
+        }
+    });
+</script>
+<script>
+    $(document).ready(function () {
+        $("#reLocate").change(function () {
+            if ($(this).prop("checked") == true) {
+                $("#new_item_location").removeAttr("disabled");
+                $("#new_item_location").focus();
+            } else {
+                $("#new_item_location").attr("disabled", "disabled");
+                $("#new_item_location").val("");
+            }
+
+        });
+        $(window).load(function () {
+            $('#uniform-file').find('span').remove();
+        });
+
+
+    });
+</script>
+<section class="right_side_main_part">
+    @using (Html.BeginForm("Edit", "WarehouseWastageStock", FormMethod.Post, new { id = "Form_" }))
+    {
+        <div id="content" class="span10">
+
+            @Html.ValidationSummary(true)
+            @Html.HiddenFor(model => model.id)
+            <div class="row-fluid">
+                <div class="box span12" style="border:0;">
+                    <div class="box-content">
+                        <center><p style="font-size:large"><b>Product @Model.item_name Adding to Stock</b></p></center>
+                        <div class="form-horizontal">
+                            <div class="row-fluid">
+                                <div class="box span12 right_side_up_part">
+                                    <div class="box-header creatProduct clearfix" data-original-title="">
+                                        <h2>
+                                            <i class="icon-exclamation-sign"></i>
+                                            <span class="break"></span>
+                                            Item Details
+                                        </h2>
+                                    </div>
+                                    <div class="box-content nameDscrp">
+                                        <div class="form-horizontal">
+                                            <div class="NameDescription">
+                                                <div class="control-group mrg-left">
+                                                    <center>
+                                                        @Html.ValidationMessageFor(model => model.id)
+                                                        @Html.HiddenFor(model => model.waste_id)
+                                                        <table>
+                                                            <tr>
+                                                                <td class="detailHead">@Html.DisplayNameFor(model => model.item_name)</td>
+                                                                <td>
+                                                                    @Html.DisplayFor(model => model.item_name)
+                                                                    @Html.HiddenFor(m => m.item_name)
+                                                                </td>
+                                                                <td rowspan="6">
+                                                                    <img id=" imgproductimage" src="@Model.item_image_Path" onerror="this.src = '/Content/Images/no_image.png'" @*style="width: 70px; height:70px;"*@ alt=" eZeelo " />
+                                                                    @Html.HiddenFor(m => m.item_image_Path)
+                                                                </td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td class="detailHead">@Html.DisplayNameFor(model => model.total_item_qty_in_stock)</td>
+                                                                <td>
+                                                                    @Html.DisplayFor(model => model.total_item_qty_in_stock)
+                                                                    @Html.HiddenFor(m => m.total_item_qty_in_stock)
+                                                                </td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td class="detailHead">@Html.DisplayNameFor(model => model.reorder_level)</td>
+                                                                <td>
+                                                                    @Html.DisplayFor(model => model.reorder_level)
+                                                                    @Html.HiddenFor(m => m.reorder_level)
+                                                                </td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td class="detailHead">@Html.DisplayNameFor(model => model.batch_code)</td>
+                                                                <td>
+                                                                    @Html.DisplayFor(model => model.batch_code)
+                                                                    @Html.HiddenFor(m => m.batch_code)
+                                                                </td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td class="detailHead">@Html.DisplayNameFor(model => model.buy_rate_per_unit)</td>
+                                                                <td><i class="fa fa-inr"></i> &nbsp; <span id="buy_rate_per_unit"> @Html.DisplayFor(model => model.buy_rate_per_unit) </span>@Html.HiddenFor(m => m.buy_rate_per_unit)</td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td class="detailHead">@Html.DisplayNameFor(model => model.batch_qty)</td>
+                                                                <td>
+                                                                    @Html.DisplayFor(model => model.batch_qty)
+                                                                    @Html.HiddenFor(m => m.batch_qty)
+                                                                </td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td class="detailHead">@Html.DisplayNameFor(model => model.batch_avl_qty)</td>
+                                                                <td>
+                                                                    <span id="batch_avl_qty">@Html.DisplayFor(model => model.batch_avl_qty)</span>
+                                                                    @Html.HiddenFor(m => m.batch_avl_qty)
+                                                                </td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td class="detailHead">@Html.DisplayNameFor(model => model.expiry_date)</td>
+                                                                <td>
+                                                                    @Html.DisplayFor(model => model.expiry_date)
+                                                                    @Html.HiddenFor(m => m.expiry_date)
+                                                                </td>
+                                                            </tr>
+                                                        </table>
+                                                    </center>
+                                                </div>
+                                                <div class="clr"></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="box-header creatProduct clearfix" data-original-title="">
+                                    <h2>
+                                        <i class="icon-exclamation-sign"></i>
+                                        <span class="break"></span>
+                                        Wastage Details
+                                    </h2>
+                                </div>
+                                <div class="box-content nameDscrp">
+                                    <div class="form-horizontal">
+                                        <div class="NameDescription">
+                                            <br />
+                                            <div class="WASTAGE_DETAILS-downSection">
+                                                <table style="border-collapse:separate;border-spacing:20px ">
+                                                    <tr>
+                                                        @*Yashaswi 30/5/2018*@
+                                                        <td>
+                                                            @if (Model.wastage_imgae_path != null && Model.wastage_imgae_path != "")
+                                                            {
+                                                                <img id="invoice_Attach" src="@ViewBag.WastageItemPath" style="border:groove;width:150px;height:150px" alt=" eZeelo " />
+
+                                                                <a class="submenu" style="color:blue;cursor:pointer" href=@Url.Action("Download", new { fileName = Model.wastage_imgae_path }) id="btnRate">&nbsp;&nbsp;<span class="hidden-tablet">DownLoad Attachment -> @Model.wastage_imgae_path</span></a>
+                                                            }
+                                                        </td>
+                                                        <td>
+                                                            <div class="control-group mrg-left">
+                                                                <div class="col-sm-3">
+                                                                    <span>
+                                                                        @Html.DisplayNameFor(model => model.waste_qty)
+                                                                        <span style="margin-left: 25px">Avl Qty</span>
+                                                                    </span>
+                                                                </div>
+                                                                <div class="col-sm-6">
+                                                                    @Html.TextBoxFor(model => model.waste_qty, new { style = "width:90px", onkeyup = "if (/\\D/g.test(this.value)) this.value = this.value.replace(/\\D/g,'')" })
+
+                                                                    <span id="NewAvlQty" style="color: red; margin-left: 10px">@Model.batch_avl_qty</span>
+                                                                    <br />
+                                                                    @Html.ValidationMessageFor(model => model.waste_qty)
+                                                                </div>
+                                                            </div>
+                                                        </td>
+                                                        <td>
+                                                            <div class="control-group mrg-left">
+                                                                <div class="col-sm-3">
+                                                                    @Html.DisplayNameFor(model => model.total_amt)
+                                                                </div>
+                                                                <div class="col-sm-6">
+                                                                    <span> <i class="fa fa-inr"></i> &nbsp; @Html.TextBoxFor(model => model.total_amt, new { disabled = "disabled", style = "width:190px" })</span>
+                                                                    @Html.HiddenFor(m => m.total_amt)
+                                                                </div>
+                                                            </div>
+                                                        </td>
+                                                        <td colspan="2">
+                                                            <div class="col-sm-3">
+                                                                @Html.DisplayNameFor(model => model.Remark)
+                                                            </div>
+                                                            <div class="col-sm-6">
+                                                                <textarea id="Remark" name="Remark"></textarea>
+                                                            </div>
+                                                        </td>
+                                                    </tr>
+
+                                                </table>
+                                                <br />
+                                                <br />
+
+
+                                            </div>
+
+                                            <div class="clr"></div>
+
+                                        </div>
+
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="save_button_">
+            <input type="submit" value="&nbsp;&nbsp; Save &nbsp;&nbsp;" class="btn btn-success mrg-left mrg-top" />
+        </div>
+    }
+</section>

@@ -1,0 +1,451 @@
+@model ModelLayer.Models.ViewModel.QuotationViewModel
+@using ModelLayer.Models.ViewModel
+
+@* This partial view defines form fields that will appear when creating and editing entities *@
+<style type="text/css">
+    #msform1 fieldset:not(:first-of-type) {
+        display: none;
+    }
+
+    .field-validation-error {
+        color: #000000 !important;
+    }
+
+    .succes-msg {
+        color: #31A012;
+        font-size: 20px;
+    }
+
+    .beatpicker-clearButton button {
+        display: none;
+    }
+
+    .input-parent button {
+        display: none;
+    }
+
+    .textarea-adjust {
+        width: 85%;
+    }
+    /*Beatpicker Css*/
+    .beatpicker-clearButton button {
+        display: none;
+    }
+
+    .input-parent button {
+        display: none;
+    }
+
+    .header-navbar-button {
+        position: absolute !important;
+    }
+
+    .beatpicker .main-nav .current-indicator {
+        text-align: center !important;
+    }
+
+    .beatpicker .main-nav .prev1 {
+        left: 0 !important;
+        width: 14%;
+        padding: 0px 10px;
+        color: #fff;
+        font-size: 16px;
+    }
+
+    .beatpicker .main-nav .next1 {
+        right: 0 !important;
+        width: 9%;
+        color: #fff;
+        font-size: 16px;
+    }
+
+    .beatpicker .main-nav .prev1:hover {
+        left: 0 !important;
+        width: 14%;
+        padding: 0px 10px;
+        color: #fff;
+        font-size: 20px;
+        cursor: pointer !important;
+    }
+
+    .beatpicker .main-nav .next1:hover {
+        right: 0 !important;
+        width: 9%;
+        color: #fff;
+        font-size: 20px;
+        cursor: pointer !important;
+    }
+
+    #divImages .remove {
+        background: url(/Content/img/remove-icon.png) no-repeat 0px 0px #fff;
+        float: left;
+        font-size: 0 !important;
+        width: 23px !important;
+        padding: 2px 4px;
+    }
+    /*Beatpicker Css End*/
+
+    #Remark{
+        width:99%;
+    }
+</style>
+
+
+
+<link href="~/Content/css/BeatPicker.min.css" rel="stylesheet" />
+<script src="~/Content/js/jquery-1.11.0.min.js"></script>
+<script src="~/Content/js/BeatPicker.js"></script>
+<link href="~/Content/assets/css/style.css" rel="stylesheet" />
+<script src="~/Content/js/jquery-1.9.1.min.js"></script>
+<link href="http://www.jqueryscript.net/css/jquerysctipttop.css" rel="stylesheet" type="text/css">
+<link href="~/Content/assets/css/form-design.css" rel="stylesheet" />
+
+<div class="row-fluid">   
+    <div class="box">
+        <div class="box-header creatProduct clearfix" data-original-title="">
+            <h2>
+                <i class="icon-file-alt"></i>
+                <span class="break"></span>
+                QUOTATION ITEM(S)
+            </h2>
+        </div>
+
+        <div class="box-content nameDscrp">
+            <div class="NameDescription">                  
+                <div class="box-content box-content1" style="padding-left:0px;width:99%;overflow-x:scroll;z-index:1;">               
+                    <div id="ItemDetails"> 
+                        @if (Session["lQuotationItemDetailViewModel"] != null)
+                        {                            
+                            @Html.Partial("ItemDetails", Model);
+                        }
+                        else
+                        {
+                            @Html.Partial("ItemDetails", Model);
+                        }
+                    </div>                 
+                </div>
+                </div>
+            </div>
+        </div>   
+    <br />
+    <div class="col-md-12">
+        <div class="NameDescription">       
+            <div class="control-group mrg-left">
+                <div class="col-sm-3">
+                    Shipping Charge
+                </div>
+                <div class="col-sm-6">
+                    @Html.TextBoxFor(model => model.ShippingCharge, new { placeholder = "Shipping Charge" })
+                    @Html.ValidationMessageFor(model => model.ShippingCharge)
+                </div>
+            </div>
+            <div class="control-group mrg-left">
+                <div class="col-sm-3">
+                    Additional Cost
+                </div>
+                <div class="col-sm-6">
+                    @Html.TextBoxFor(model => model.AdditionalCost, new { placeholder = "Additional Cost" })
+                    @Html.ValidationMessageFor(model => model.AdditionalCost)
+                </div>
+            </div>    
+                                    
+            <div class="mrg-left">
+                <div class="col-sm-3">
+                  
+                </div>
+                <div class="col-sm-6">
+                    @Html.TextBoxFor(model => model.Remark, new { placeholder = "Remark" })
+                    @Html.ValidationMessageFor(model => model.Remark)
+                </div>
+            </div>
+
+            <div class="control-group mrg-left">
+                <div class="col-sm-3">
+                    <span>Send Quotation on Save</span>
+                </div>
+
+                <div class="col-sm-6">
+                    @Html.CheckBoxFor(model => model.IsReplied, new { @checked = true })
+                    @Html.ValidationMessageFor(model => model.IsReplied)
+
+                </div>
+            </div> 
+           
+            <div class="clr"></div>
+            </div>
+    </div> 
+    </div>
+
+
+
+<script type="text/javascript">
+
+    $("select#WarehouseID").bind('change', function () {
+        $('#ddlParentCatetory').empty();
+        $('#ddlCategorySecondID').empty();
+        $('#ddlCategoryThirdID').empty();
+        $('#ddlProductID').empty();
+        $('#ddlProductVarientID').empty();
+        var WarehouseID = $("select#WarehouseID option:selected").val();
+      
+        // alert(categoryid);
+        $.ajax({
+            type: "POST",
+            url: '@Url.Action("BindParentCategory", "Quotation")',
+            data: { 'WarehouseID': WarehouseID },
+            //dataType: "json",
+            cache: false,
+            success: function (data) {
+                var ID = 0;
+                $("#ddlParentCatetory").prepend("<option value='' selected='selected'>--Select--</option>");
+                $.each(data, function (index, item) {
+                    ID = item.ID;
+                    $('#ddlParentCatetory').append('<option value=' + item.ID + '>' + item.Name + '</option>');
+                });
+
+            },
+            error: function (x, e) {
+                //alert('Failure');
+                //alert("The call to the server side failed. " + x.responseText);
+            }
+        });
+    });      
+
+    $("select#ddlParentCatetory").bind('change', function () {
+        $('#ddlCategorySecondID').empty();
+        $('#ddlCategoryThirdID').empty();
+        $('#ddlProductID').empty();
+        $('#ddlProductVarientID').empty();
+        var categoryid = $("select#ddlParentCatetory option:selected").val();
+        // alert(categoryid);
+        $.ajax({
+            type: "POST",
+            url: '@Url.Action("GetNextLevelCategory", "Quotation")',
+            data: { 'categoryID': categoryid },
+            //dataType: "json",
+            cache: false,
+            success: function (data) {
+                SecondLevelCategory(data);
+
+            },
+            error: function (x, e) {
+                //alert('Failure');
+                //alert("The call to the server side failed. " + x.responseText);
+            }
+        });
+    });
+
+    function SecondLevelCategory(data) {
+        var ID = 0;
+
+        $("#ddlCategorySecondID").prepend("<option value='' selected='selected'>--Select--</option>");
+        $.each(data, function (index, item) {
+            ID = item.ID;
+            $('#ddlCategorySecondID').append('<option value=' + item.ID + '>' + item.Name + '</option>');
+        });
+    }
+
+
+    $("select#ddlCategorySecondID").bind('change', function () {
+        $('#ddlCategoryThirdID').empty();
+        $('#ddlProductID').empty();
+        $('#ddlProductVarientID').empty();
+        var categoryid = $("select#ddlCategorySecondID option:selected").val();
+        // alert(categoryid);
+        $.ajax({
+            type: "POST",
+            url: '@Url.Action("GetNextLevelCategory", "Quotation")',
+            data: { 'categoryID': categoryid },
+            //dataType: "json",
+            cache: false,
+            success: function (data) {
+                GetThirdLevelCategory(data);
+
+            },
+            error: function (x, e) {
+                //alert('Failure');
+                //alert("The call to the server side failed. " + x.responseText);
+            }
+        });
+    });
+
+    function GetThirdLevelCategory(data) {
+        var ID = 0;
+        $("#ddlCategoryThirdID").prepend("<option value='' selected='selected'>--Select--</option>");
+
+        $.each(data, function (index, item) {
+            ID = item.ID;
+            $('#ddlCategoryThirdID').append('<option value=' + item.ID + '>' + item.Name + '</option>');
+        });
+    }
+
+
+
+    $("select#ddlCategoryThirdID").bind('change', function () {
+        $('#ddlProductID').empty();
+        var categoryid = $("select#ddlCategoryThirdID option:selected").val();
+        var WarehouseID = $("select#RequestFromWarehouseID option:selected").val();
+        $('#ddlProductVarientID').empty();
+        // alert(categoryid);
+        $.ajax({
+            type: "POST",
+            url: '@Url.Action("GetProductList", "Quotation")',
+            data: { 'categoryID': categoryid, 'WarehouseID': WarehouseID },
+            //dataType: "json",
+            cache: false,
+            success: function (data) {
+                GetProductList(data);
+            },
+            error: function (x, e) {
+                //alert('Failure');
+                //alert("The call to the server side failed. " + x.responseText);
+            }
+        });
+    });
+
+    function GetProductList(data) {
+        var ID = 0;
+        $("#ddlProductID").prepend("<option value='' selected='selected'>--Select--</option>");
+        $.each(data, function (index, item) {
+            ID = item.ID;
+            $('#ddlProductID').append('<option value=' + item.ID + '>' + item.Name + '</option>');
+        });
+    }
+
+
+
+
+    $("select#ddlProductID").bind('change', function () {
+        $('#ddlProductVarientID').empty();
+        var ProductID = $("select#ddlProductID option:selected").val();
+        // alert(categoryid);
+        $.ajax({
+            type: "POST",
+            url: '@Url.Action("GetProductVarientList", "Quotation")',
+            data: { 'ProductID': ProductID },
+            //dataType: "json",
+            cache: false,
+            success: function (data) {
+                GetProductVarientList(data);
+            },
+            error: function (x, e) {
+                //alert('Failure');
+                //alert("The call to the server side failed. " + x.responseText);
+            }
+        });
+    });
+
+    function GetProductVarientList(data) {
+        var ID = 0;
+        $("#ddlProductVarientID").prepend("<option value='' selected='selected'>--Select--</option>");
+        $.each(data, function (index, item) {
+            ID = item.ID;
+            $('#ddlProductVarientID').append('<option value=' + item.ID + '>' + item.Name + '</option>');
+        });
+    }
+
+    //Used to get Available item quantity in stock, If required then remove comment
+    @*$("select#ddlProductVarientID").bind('change', function () {
+        var ProductVarientID = $("select#ddlProductVarientID option:selected").val();
+        
+        $.ajax({
+            type: "POST",
+            url: '@Url.Action("GetProductVarientDetail", "PurchaseOrders")',
+            data: { 'ProductVarientID': ProductVarientID },
+            //dataType: "json",
+            cache: false,
+            success: function (data) {         
+                var xmlDoc = $.parseXML(data);
+                var xml = $(xmlDoc);               
+                var $person = xml.find("NewDataSet");             
+                $person.each(function () {
+                    var SizeID = $(this).find('SizeID').text(),
+                        StockIn = $(this).find('StockIn').text();                   
+
+                    if(SizeID==1)
+                    {
+                        alert('Size not alloted to this Item! Please contact with Admin.');
+                        return false;
+                    }
+
+                    $("#StockIn").val(StockIn);
+
+                });
+              
+            },
+            error: function (x, e) {
+                alert('Failure');
+                alert("The call to the server side failed. ");
+            }
+        });  
+    });*@
+
+</script>
+
+
+
+<script type="text/javascript">
+    @*$(document).ready(function () {
+
+        $('#btnAdd').click(function ()
+        {           
+            document.location = '@Url.Action("Add", "Quotation")';
+      });
+
+    });*@
+
+
+    $(document).ready(function () {
+
+        $(".itemList").click(function (evt) {
+           
+            var ProductID = $("select#ddlProductID option:selected").val();
+            var ProductVarientID = $("select#ddlProductVarientID option:selected").val();
+            var Quantity = $("#Quantity").val();          
+            var Nickname = $("#Nickname").val();
+           
+            if (ProductID===undefined || ProductID <= 0) {
+                alert('Please Select Product')
+                return;
+            }
+
+            if (ProductVarientID === undefined || ProductVarientID <= 0) {
+                alert('Please Select Varient/Item')
+                return;
+            }
+
+            if (Quantity <= 0)
+            {
+                alert('Please Enter Item Quantity')
+                return;
+            }
+           
+                      
+            $("#ItemDetails").load("/Quotation/Add", { 'ProductID': ProductID, 'ProductVarientID': ProductVarientID, 'Quantity': Quantity, 'Nickname': Nickname });
+        
+            document.getElementById('Quantity').value = '';
+            document.getElementById('Nickname').value = '';
+            document.getElementById('UnitPrice').value = '';
+
+
+
+            $("#RequestFromWarehouseID").attr("readonly", true);
+            $("#RequestFromWarehouseID").attr("readonly", true);
+           
+        });
+
+        //$(".orderDetails").click(function (evt) {
+        //    var cell = $(evt.target).closest("tr").children().first();
+        //    var custID = cell.text();
+        //    $("#viewPlaceHolder").load("/home/getview",
+        //       { customerID: custID, viewName: "OrderDetails" });
+        //});
+    });
+</script>
+
+
+<script language="javascript">   
+    $(document).ready(function () {
+        $('#ExpectedReplyDate').datepicker({ dateFormat: 'mm/dd/yy' });
+    });
+</script>

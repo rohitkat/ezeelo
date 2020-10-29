@@ -1,0 +1,32 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Web;
+using System.Web.Mvc;
+using System.Web.Routing;
+
+namespace MarketPartner
+{
+    public class MvcApplication : System.Web.HttpApplication
+    {
+        protected void Application_Start()
+        {
+            AreaRegistration.RegisterAllAreas();
+            RouteConfig.RegisterRoutes(RouteTable.Routes);
+        }
+        protected void Application_Error(object sender, EventArgs e)
+        {
+            string strError;
+            strError = Server.GetLastError().ToString();
+            if (Context != null)
+            {
+                Context.ClearError();
+                BusinessLogicLayer.ErrorLog.ErrorLogFile(DateTime.Now.ToShortTimeString()
+                   + Environment.NewLine + strError + Environment.NewLine
+                  , BusinessLogicLayer.ErrorLog.Module.MarketPartner, System.Web.HttpContext.Current.Server);
+                Response.Redirect("/Home/Error");
+            }
+        }
+
+    }
+}

@@ -1,0 +1,95 @@
+﻿@model ModelLayer.Models.ViewModel.TranasactionReportViewModel
+@{
+    ViewBag.Title = "RatingReviewReport";
+}
+
+<link href="~/plugins/datepicker/datepicker3.css" rel="stylesheet" />
+<script src="~/plugins/datepicker/bootstrap-datepicker.js"></script>
+<section class="content">
+    <div class="row">
+        <!-- left column -->
+        <div class="col-md-12">
+            <div class="box box-primary">
+                <div class="box-header">
+                    <h3 class="box-title">Transaction Report</h3>
+                </div><!-- /.box-header -->
+                <div class="box-body">
+                    @using (Html.BeginForm("RatingReviewReport", "Report", FormMethod.Post, new { id = "frm" }))
+                    {
+                        <div class="form-group">
+                            <table>
+                                <tr>
+                                    <td>
+                                        <div class="input-group">
+                                            <div class="input-group-addon">
+                                                <i class="fa fa-calendar"></i>
+                                            </div>
+                                            @Html.TextBoxFor(m => m.FromDate, "{0:MM/dd/yyyy}", new { @class = "form-control pull-right" })
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="input-group">
+                                            <div class="input-group-addon">
+                                                <i class="fa fa-calendar"></i>
+                                            </div>
+                                            @Html.TextBoxFor(m => m.ToDate, "{0:MM/dd/yyyy}", new { @class = "form-control pull-right" })
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <input type="submit" value="Go" class="form-control pull-right btn btn-sm btn-success" />
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+                    }
+                    <div class="table-responsive">
+                        <table id="tblrpt" class="table table-bordered table-striped">
+                            <thead>
+                                <tr>
+                                    <th>Name</th>
+                                    <th>Rating</th>
+                                    <th>Review</th>
+                                    <th>Date</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var item in Model.RatingList)
+                                {
+                                    <tr>
+                                        <td>@item.Name</td>
+                                        <td>@item.Rating</td>
+                                        <td>@item.Review</td>
+                                        <td>@item.CreateDate</td>
+                                    </tr>
+                                }
+                            </tbody>
+
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<script src="~/plugins/Custom.js"></script>
+<script>
+    $(document).ready(function () {
+        $("#lnk-Report").addClass("active");
+        $("#tblrpt").dataTable();
+        $("#FromDate").datepicker({ dateFormat: 'MM/dd/yyyy' });
+        $("#ToDate").datepicker({
+            autoclose: 'true',
+        }).on('changeDate', function (ev) {
+            var tdate = new Date(ev.date.valueOf());
+            fdate = new Date($("#FromDate").val());
+            if (tdate < fdate) {
+                alert("Plaese select date greater than From date.");
+                $("#ToDate").val("").datepicker("update");;
+            }
+        });
+    })
+</script>
+
+
+

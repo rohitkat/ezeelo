@@ -1,0 +1,115 @@
+﻿@model ModelLayer.Models.ComponentOffer
+
+@{
+    ViewBag.Title = "Create";
+}
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+
+      <div class="span10" id="content">
+          <div class="row-fluid sortable ui-sortable">
+              <div class="box span12">
+                  <div class="box-header">
+                      <h2><i class="icon-edit"></i><span class="break"></span>Component Offer</h2>
+
+                  </div>
+                  <div class="box-content">
+                      <form class="form-horizontal">
+                     
+                          @Html.ValidationSummary(true)
+                          <div class="control-group">
+                              @Html.LabelFor(model => model.ComponentID, "Component Name", new { @class = "control-label span2" })
+                              <div class="">
+                                  @Html.DropDownList("ComponentID", "Select Component")
+                                  @Html.ValidationMessageFor(model => model.ComponentID)
+                              </div>
+                          </div>
+                          <div class="control-group">
+                              @Html.LabelFor(model => model.ShortName,"Offer Name", new { @class = "control-label span2" })
+                              <div class="">
+                                  @Html.EditorFor(model => model.ShortName)
+                                  @Html.ValidationMessageFor(model => model.ShortName)
+                              </div>
+                          </div>
+                          <div class="control-group">
+                              @Html.LabelFor(model => model.Description, new { @class = "control-label span2" })
+                              <div class="">
+                                  @Html.EditorFor(model => model.Description)
+                                  @Html.ValidationMessageFor(model => model.Description)
+                              </div>
+                          </div>
+
+
+                          <div class="control-group">
+                              @Html.LabelFor(model => model.OfferInRs,"Offer In Rs", new { @class = "control-label span2" })
+                              <div class="">
+                                  @Html.EditorFor(model => model.OfferInRs)
+
+                              </div>
+                          </div>
+
+                          <div class="control-group">
+                              @Html.LabelFor(model => model.OfferInPercent,"Offeer In Percent", new { @class = "control-label span2" })
+                              <div class="">
+                                  @Html.EditorFor(model => model.OfferInPercent)
+
+                              </div>
+                          </div>
+
+
+
+                          <div class="control-group">
+                              @Html.LabelFor(model => model.IsActive, new { @class = "control-label span2" })
+                              <div class="">
+                                  @Html.EditorFor(model => model.IsActive)
+                                  @Html.ValidationMessageFor(model => model.IsActive)
+                              </div>
+                          </div>
+
+
+                          <div class="form-actions">
+                              <div class="col-md-offset-2 col-md-10">
+                                  <input type="submit" value="Create" class="btn btn-Ifrm-submit1 dollr" onclick="return Validate();" />
+                                  @Html.ActionLink("Back to List", "Index", string.Empty, new { @class = "btn btn-brown" })
+                              </div>
+                          </div>
+                      </form>
+                      </div>
+                  </div>
+              </div>
+          </div>
+}
+
+@*<div>
+    @Html.ActionLink("Back to List", "Index")
+</div>*@
+<script>
+    function Validate() {
+
+        if (($('#OfferInRs:input').val() == 0 || $('#OfferInRs:input').val() == "") && ($('#OfferInPercent:input').val() == 0 || $('#OfferInPercent:input').val() == "")) {
+            alert('Please fill value 0 or greater than 0 in Rs Or Percent field.');
+            return false;
+        }
+        else if ($('#OfferInRs:input').val() > 0 && $('#OfferInPercent:input').val() == "") {
+            alert('Please fill value 0 in Percent field.');
+            return false;
+        }
+        else if ($('#OfferInRs:input').val() == "" && $('#OfferInPercent:input').val() > 0) {
+            alert('Please fill value 0 in Rs field.');
+            return false;
+        }
+        else if ($('#OfferInRs:input').val() == "" || $('#OfferInPercent:input').val() == "") {
+            alert('Please fill value 0 or greater than 0 in Rs Or Percent field.');
+            return false;
+        }
+        else if ($('#OfferInRs:input').val() > 0 && $('#OfferInPercent:input').val() > 0) {
+            alert('You can not fill value greater than 0 in both Rs and Percent Field.');
+            return false;
+
+        }
+        
+
+    }
+</script>

@@ -1,0 +1,91 @@
+﻿@model ModelLayer.Models.DeliveryCashHandlingCharge
+
+@{
+    ViewBag.Title = "Details Weight Slab [ " + @Model.MaxAmount + " ]";
+}
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<div class="row-fluid">
+    <div class="box span12">
+            <div class="box-header">
+                <i class="icon-list-alt"></i>
+                <h3> Details Weight Slab [ @Model.MaxAmount ]</h3>
+            </div>
+            <!-- /widget-header -->
+            <div class="box-content">
+                <div class="big-stats-container">
+                    <div class="widget-content matchdivheight">
+                        <dl class="dl-horizontal">
+                            @*<dt>
+                            @Html.DisplayNameFor(model => model.DeliveryPartner.GodownAddress)
+                        </dt>
+
+                        <dd>
+                            &nbsp;@Html.DisplayFor(model => model.DeliveryPartner.GodownAddress)
+                        </dd>
+
+                        <dt>
+                            @Html.DisplayNameFor(model => model.DeliveryPartner.BusinessDetail.Name)
+                        </dt>
+
+                        <dd>
+                            &nbsp;@Html.DisplayFor(model => model.DeliveryPartner.BusinessDetail.Name)
+                        </dd>*@
+
+                            <dt>
+                                Max Amount
+                            </dt>
+
+                            <dd>
+                                &nbsp;@Html.DisplayFor(model => model.MaxAmount)
+                            </dd>
+
+                            <dt>
+                                Per Hour Charge
+                            </dt>
+
+                            <dd>
+                                &nbsp;@Html.DisplayFor(model => model.PerHourCharge)
+                            </dd>
+
+                            <dt>
+                                Is Approved
+                            </dt>
+
+                            <dd>
+                                &nbsp;@Html.DisplayFor(model => model.IsApproved)
+                            </dd>
+
+                            <dt>
+                                Is Active
+                            </dt>
+
+                            <dd>
+                                &nbsp;@Html.DisplayFor(model => model.IsActive)
+                            </dd>
+
+
+                        </dl>
+                    </div>
+                    <p>
+                        @using (Html.BeginForm("Approve", "DeliveryCashHandlingChargeApproval", new { ID = @Model.ID, UID = @ViewBag.UID }, FormMethod.Post))
+                        {
+                            @Html.ActionLink("Edit", "Edit", new { ID = @Model.ID, UID = @ViewBag.UID }, new { @class = "btn btn-small btn-danger" })
+                            <input type="submit" class="btn btn-small btn-success" value="Approve" />
+                        }
+                    </p>
+                    @Html.ActionLink("Back to List", "Index", new { UID = ViewBag.UID }, new { @class="btn"})
+                </div>
+                <!-- /widget-content -->
+            </div>
+    </div>
+</div>
+<script>
+    function Back() {
+        $('#divtable').removeClass('span8');
+        $('#divtable').addClass('span12');
+        window.parent.$("[id$=Details]").hide();
+        $('#loader_img').hide();
+    }
+</script>

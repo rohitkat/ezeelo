@@ -1,0 +1,71 @@
+﻿@model ModelLayer.Models.HolidayMaster
+@{
+    ViewBag.Title = "HolidayUpdate";
+    Layout = "~/Views/Shared/_LeadersLayout.cshtml";
+}
+
+<script src="~/Scripts/MerchantMenuOpenup.js"></script>
+<script>
+    $(document).ready(function () {
+        $("#HolidayDate").datepicker({
+            minDate: 0
+        });
+        $("#frmMerMst").submit(function (e) {
+            if ('@ViewBag.IsInUse' == 'True') {
+                if (confirm('This value is in use wish to update')) {
+                    return true;
+                } else {
+                    e.preventDefault();
+                    return false;
+                }
+            }
+        });
+    });
+</script>
+<style>
+    .form-control-label {
+        width: 120px !important;
+    }
+</style>
+<div class="container">
+    @using (Html.BeginForm("HolidayUpdate", "MerchantMaster", FormMethod.Post, new { id = "frmMerMst" }))
+    {
+        @Html.AntiForgeryToken()
+        @Html.ValidationSummary(true)
+        <div class="card">
+            <div class="card-header">
+                <strong>Holiday Master</strong>
+            </div>
+            <div class="card-body card-block">
+                <div class="form-group">
+                    @if (ViewBag.IsInUse == true)
+                    {
+                        <label style="color:red;font-weight:bold">Service in use</label>
+                        <br />
+                    }
+                    <label for="company" class=" form-control-label">Name</label>
+                    @Html.EditorFor(model => model.Name)
+                    @Html.ValidationMessageFor(model => model.Name, null, new { @class = "text-danger" })
+                </div>
+                <div class="form-group">
+                    <label for="company" class=" form-control-label">Date(optional)</label>
+                    @Html.TextBoxFor(model => model.HolidayDate, Model.HolidayDate.HasValue ? Model.HolidayDate.Value.ToString("MM/dd/yyyy") : "")
+                    @Html.ValidationMessageFor(model => model.HolidayDate, null, new { @class = "text-danger" })
+                </div>
+                <div class="form-group">
+                    <label for="company" class=" form-control-label">IsActive</label>
+                    @Html.EditorFor(model => model.IsActive)
+                    @Html.ValidationMessageFor(model => model.IsActive)
+                </div>
+                <div class="form-group">
+                    <div class="col-md-offset-2 col-md-10">
+                        <input type="submit" value="Update" class="btn btn-primary btn-sm" />
+                        <a class="btn btn-info btn-sm" href="@Url.Action("HolidayIndex", "MerchantMaster", new { area = "Admin" })">Back To List</a>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    }
+</div>
+

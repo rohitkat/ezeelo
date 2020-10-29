@@ -1,0 +1,82 @@
+﻿@model ModelLayer.Models.ViewModel.ForgotPasswordViewModel
+
+@{
+    ViewBag.Title = "eZeelo: Nagpur's Largest Online Shopping store For All Types Of Products";
+}
+
+<style>
+    .btncolor {
+        background-color: #60a917 !important;
+        color: white !important;
+    }
+
+    .newselect {
+        border: none;
+        border-radius: 0px 0px 0px 0px !important;
+        background: transparent;
+        width: 150px;
+        padding: 5px 35px 5px 5px;
+        font-size: .875rem;
+        border: 1px solid #eaeaea;
+        height: 34px;
+        /*-webkit-appearance: none;*/
+        /*-moz-appearance: none;*/
+        appearance: none;
+        background: none !important;
+    }
+
+    .atagelink {
+        position: fixed !important;
+        margin-top: -38px;
+        z-index: 10;
+        background-color: #656565;
+        color: white !important;
+    }
+
+    .ahomelink {
+        background-image: url(../Content/Images/arrowright.png) !important;
+        padding-bottom: 0px;
+        float: left;
+        background-position: right center;
+        background-repeat: no-repeat;
+        padding-right: 24px;
+        padding-top: 0px;
+        padding-left: 2px;
+        color: #ffffff !important;
+    }
+</style>
+<div>
+    @using (Html.BeginForm())
+    {
+        @Html.AntiForgeryToken()
+        if (ViewBag.Message != null)
+        {
+            <div class="breadcrumbs dark">
+                @ViewBag.Message
+            </div>
+        }
+        <div class="form-horizontal neweditdiv">
+
+            <div class="example " data-text="">
+                <div class="grid example320 grid768">
+                    <p> Enter the e-mail address associated with your account, and then click Submit. We'll email you a link to a page where you can easily create a new password.</p>
+                    <div class="row cells2">
+                        <div class="cell">
+                            <b><label>Email Id:</label></b>
+                            <div class="input-control text full-size">
+                                @Html.TextBoxFor(model => model.EmailId, new { placeholder = "Email Id", maxlength = 150, autocomplete = "off" })
+                                @Html.ValidationMessageFor(model => model.EmailId)
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row cells2">
+                        <input type="submit" value="Submit" class="button success btncolor" />
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+</div>
+@section Scripts{
+    @Scripts.Render("~/bundles/jqueryval")
+}

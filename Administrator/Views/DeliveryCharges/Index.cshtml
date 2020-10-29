@@ -1,0 +1,79 @@
+﻿@model IEnumerable<ModelLayer.Models.DeliveryCharge>
+
+@{
+    /**/
+
+    ViewBag.Title = "Index";
+}
+
+@*@Html.ValidationMessage("Message")*@
+<div id="content" class="span10">
+    <ul class="breadcrumb">
+        <li>
+            <a href="#">Delivery Charge/Index</a>
+        </li>
+    </ul>
+
+    <div class="row-fluid">
+
+        <div class="box span12">
+            <div class="box-header">
+                <h2><i class="icon-edit"></i><span class="break"></span>Delivery Charge</h2>
+                <div class="pull-right jumpBtn CreateFormBtn">
+                    @Html.ActionLink("Create New", "Create", null, new { @class = "btn btn-primary btn-small" })
+                </div>
+            </div>
+            <div class="box-content">
+                <table class="table">
+                    <tr>
+                        <th>
+                            Delivery Charges
+                        </th>
+                        <th>
+                            Order Amount
+                        </th>
+                        <th>
+                            City
+                        </th>
+                        <th>
+                            Franchise @*////added*@
+                        </th>
+                        <th>
+                            IsActive
+                        </th>
+                        <th>Actions</th>
+                    </tr>
+                    @if (Model != null)
+                    {
+                        foreach (var item in Model)
+                        {
+                            <tr>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Charges)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.OrderAmount)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.City.Name)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Franchise.ContactPerson) @*////added*@
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.IsActive)
+                                </td>
+                                <td>
+                                    @Html.ActionLink("Edit", "Edit", new { id = item.ID }, new { @class = "btn btn-small btn-success" })
+                                    @Html.ActionLink("Details", "Details", new { id = item.ID }, new { @class = "btn btn-small btn-primary" })
+                                    @Html.ActionLink("Delete", "Delete", new { id = item.ID }, new { @class = "btn btn-small btn-danger" })
+                                </td>
+                            </tr>
+                        }
+                    }
+
+                </table>
+            </div>
+        </div>
+    </div>
+</div>

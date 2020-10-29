@@ -1,0 +1,54 @@
+﻿@model ModelLayer.Models.WarehouseReason
+
+@{
+    ViewBag.Title = "Details";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<link href="~/Content/assets/css/font-awesome.min.css" rel="stylesheet" />
+<div id="content" class="span10">
+    <div class="row-fluid">
+        <div class="box span12">
+
+            <div class="box-header creatProduct clearfix" data-original-title="">
+                <h2>
+                    <i class="icon-exclamation-sign"></i>
+                    <span class="break"></span>
+                    Sub Reason Details
+                </h2>
+            </div>
+            <div class="box-content nameDscrp">
+                <div class="form-horizontal">
+                    <div class="NameDescription">
+                        <div class="box-content">
+                            <div class="form-horizontal">
+                                <div class="display-label">Cattegory: <b>@ViewBag.Category</b></div>
+                                <div class="display-label">Reason: <b>@Model.Reason</b></div>
+                                <div class="display-label">Sub Reason: <b>@ViewBag.MainReason</b></div>
+
+                                <div class="display-label">IsActive: @Html.CheckBoxFor(model => model.IsActive, new { @disabled = "disabled" })</div>
+
+                                <div class="display-label">Created On Date: <b>@Model.CreateDate.ToString("dd/MM/yyyy")</b></div>
+
+                                <div class="display-label">Created By: <b>@ViewBag.CreatedBy</b></div>
+                                @if (Model.ModifyDate != null)
+                                {
+                                    <div class="display-label">Modified On Date: <b>@Convert.ToDateTime(@Model.ModifyDate).ToString("dd/MM/yyyy")</b></div>
+                                    <div class="display-label">Modified By: <b>@ViewBag.ModifyBy</b></div>
+                                }
+
+
+
+                            </div>
+                        </div>
+                        <br />
+                        <p>
+                            @Html.ActionLink("Edit", "EditSubReason", new { id = Model.ID }, new { @class = "btn btn-default mrg-left mrg-top" }) |
+                            @Html.ActionLink("Back to List", "IndexSubReason", null, new { @class = "btn btn-default mrg-left mrg-top" })
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

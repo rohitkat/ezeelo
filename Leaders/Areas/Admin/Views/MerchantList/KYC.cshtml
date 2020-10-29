@@ -1,0 +1,541 @@
+﻿
+@model ModelLayer.Models.MerchantKYC
+@{
+    ViewBag.Title = "Merchant KYC Details";
+    Layout = "~/Views/Shared/_LeadersLayout.cshtml";
+}
+<link href="~/Content/css/material-design.minfd53.css" rel="stylesheet" />
+<link rel="stylesheet" href="~/Content/css/dropify.minfd53.css">
+<link rel="stylesheet" href="~/Content/css/custom.css">
+
+<style type="text/css">
+
+    #divLoading {
+        margin: 0px;
+        padding: 0px;
+        position: fixed;
+        right: 0px;
+        top: 0px;
+        width: 100%;
+        height: 100%;
+        background-color: rgb(102, 102, 102);
+        z-index: 30001;
+        opacity: 0.8;
+        display: none;
+    }
+
+    .row {
+        margin: 0 !important;
+    }
+
+    p {
+        font-size: 1.2em;
+        line-height: 1.7em;
+        font-weight: bold;
+        color: #999;
+        padding-top: 20px;
+    }
+
+    .col-md-4 {
+        padding-left: 15px;
+        padding-right: 15px;
+    }
+
+    .dropify-wrapper input {
+        position: absolute;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        left: 0;
+        height: 100%;
+        width: 100%;
+        opacity: 0;
+        cursor: pointer;
+        z-index: 5;
+    }
+
+    .dropify-font-upload:before, .dropify-wrapper .dropify-message span.file-icon:before {
+        content: '\f382';
+        display: none !important;
+    }
+
+    .dropify-font:before, .dropify-wrapper .dropify-message span.file-icon:before, .dropify-wrapper .dropify-preview .dropify-infos .dropify-infos-inner p.dropify-filename span.file-icon:before, [class*=" dropify-font-"]:before, [class^=dropify-font-]:before {
+        font-family: dropify;
+        font-style: normal;
+        font-weight: 400;
+        speak: none;
+        display: inline-block;
+        text-decoration: inherit;
+        width: 1em;
+        margin-left: .2em;
+        margin-right: .2em;
+        text-align: center;
+        font-variant: normal;
+        text-transform: none;
+        line-height: 1em;
+    }
+
+    .row.mt-30 .col-xs-4.col-sm-4.col-md-4 .dropify-wrapper.touch-fallback .dropify-message {
+        padding: 0;
+    }
+
+    .dropify-wrapper.touch-fallback .dropify-message span.file-icon figure img {
+        width: 265px;
+        height: 200px;
+    }
+
+    .dropify-wrapper.touch-fallback .dropify-message {
+        padding: 0;
+    }
+</style>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<script type="text/javascript" src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
+<script type="text/javascript" src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
+<script type="text/javascript" src="https://unpkg.com/jquery-mousewheel@3.1.13"></script>
+<script src="~/Scripts/ZoomImage/hammer.min.js"></script>
+<script type="text/javascript" src="https://unpkg.com/jquery-hammerjs@2.0.0"></script>
+<script src="~/Scripts/ZoomImage/imgViewer.js"></script>
+
+<script src="~/Scripts/MerchantMenuOpenup.js"></script>
+@using (Html.BeginForm(null, null, FormMethod.Post, new { enctype = "multipart/form-data", id = "frmMerchantKYC" }))
+{
+    @Html.AntiForgeryToken()
+
+    <div class="container">
+        <div id="divLoading">
+            <p style="position: absolute; color: White; top: 35%; left: 45%;">
+                <img src="~/img/ajax-loading-gif-transparent-background-8.gif">
+            </p>
+        </div>
+        <div class="card">
+            <div class="card-header">
+                <strong style="text-transform:uppercase !important"> @ViewBag.MerchantName shop KYC Details</strong>
+            </div>
+            <div class="card-body card-block">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="box-lg">
+                            <div class="row">
+                                @if (Model != null)
+                                {
+                                    <div class="col-md-12">
+                                        <div class="example">
+                                            <div class="grid">
+                                                @Html.ValidationSummary(true)
+
+                                                @if (TempData["Messaage"] != null)
+                                                {
+                                                    <div id="divmsg" class="alert alert-danger alert-dismissible">
+                                                        <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                                                        <strong>Warning!</strong> @TempData["Messaage"]
+                                                    </div>
+                                                }
+                                                @if (TempData["Alert"] != null)
+                                                {
+                                                    <div id="divmsg" class="alert alert-success alert-dismissible">
+                                                        <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                                                        <strong>Success!</strong> @TempData["Alert"]
+                                                    </div>
+                                                }
+                                                <div class="row" style="text-align: center;">
+                                                    <span id="errorMessage" class="breadcrumbs dark" style="width:100%;text-align:center"></span>
+                                                </div>
+
+                                                @Html.HiddenFor(model => model.MerchantID, new { @Value = Model.MerchantID })
+                                            </div>
+                                        </div>
+                                        <span style="color:red;font-weight:bold;display:block">*Note : Images accepted formats: png, jpg, jpeg, raw, pdf  & Maximum size for Image: 150KB & for Banner 300KB(1200 * 400)</span>
+
+                                        <span style="color:red;font-weight:bold">Note: To check full width image click on image header</span>
+                                        <br />
+                                        <div class="row mt-30">
+                                            <div class="col-xs-4 col-sm-4 col-md-4">
+                                                <a target="_blank" href="@Model.PhotoImageUrl"><p><i class="fa fa-pencil-square"></i>&nbsp;Photo</p></a>
+                                                <div class="dropify-wrapper touch-fallback">
+                                                    <div class="dropify-message">
+                                                        <span class="file-icon">
+                                                            <figure>
+                                                                @if (Model.PhotoImageUrl != null)
+                                                                {
+                                                                    <img id="imgPhoto" src="@Model.PhotoImageUrl" alt=" eZeelo ">
+                                                                }
+                                                                else
+                                                                {
+                                                                    <img id="imgPhoto" src="/Content/Images/no_image.png" alt=" eZeelo ">
+                                                                }
+                                                            </figure>
+                                                        </span>
+                                                    </div>
+                                                    <input type="file" class="dropify KYCUploadinput" name="photo" data-show-remove="false" onchange="readfile(this,'Photo');">
+
+                                                </div>
+                                            </div>
+                                            <div class="col-xs-8 col-sm-8 col-md-8">
+                                                @*<a target="_blank" href="@Model.BannerImageUrl"><p><i class="fa fa-pencil-square"></i>&nbsp;Shop Banner</p></a>*@
+                                                <p><i class="fa fa-pencil-square"></i>&nbsp;Shop Banner @Html.ActionLink("Banner List", "MerchantApprovedBannerList", new { MerchantId = Model.MerchantID }, new { @Class = "btn btn-success" })</p>
+
+                                                <div class="dropify-wrapper touch-fallback">
+                                                    <div class="dropify-message">
+                                                        <span class="file-icon">
+                                                            <figure>
+                                                                @if (Model.BannerImageUrl != null)
+                                                                {
+                                                                    <img id="imgBanner" src="@Model.BannerImageUrl" alt=" eZeelo " style="width:1200px;">
+                                                                }
+                                                                else
+                                                                {
+                                                                    <img id="imgBanner" src="/Content/Images/no_image.png" alt=" eZeelo " style="width:1200px;">
+                                                                }
+                                                            </figure>
+                                                        </span>
+                                                    </div>
+                                                    <input type="file" class="dropify KYCUploadinput" name="Banner" data-show-remove="false" onchange="readfile(this,'Banner');">
+
+                                                </div>
+                                            </div>
+                                            <div class="col-xs-4 col-sm-4 col-md-4">
+                                                <a target="_blank" href="@Model.ShopEstablishmentCertificateImageUrl">
+                                                    <p><i class="fa fa-pencil-square"></i>&nbsp;Shop Certificate</p>
+                                                </a>
+                                                <div class="dropify-wrapper touch-fallback">
+                                                    <div class="dropify-message">
+                                                        <span class="file-icon">
+                                                            <figure>
+                                                                @if (Model.ShopEstablishmentCertificateImageUrl != null)
+                                                                {
+                                                                    <img id="imgShop" src="@Model.ShopEstablishmentCertificateImageUrl" alt=" eZeelo ">
+                                                                }
+                                                                else
+                                                                {
+                                                                    <img id="imgShop" src="/Content/Images/no_image.png" alt=" eZeelo ">
+                                                                }
+                                                            </figure>
+                                                        </span>
+                                                    </div>
+                                                    <input type="file" class="dropify KYCUploadinput" name="shopCertificate" data-show-remove="false" onchange="readfile(this,'Shop');">
+
+                                                </div>
+                                            </div>
+                                            <div class="col-xs-4 col-sm-4 col-md-4">
+                                                <a target="_blank" href="@Model.PanImageUrl">
+                                                    <p><i class="fa fa-pencil-square"></i>&nbsp;&nbsp;PAN Card</p>
+                                                </a>
+                                                <div class="dropify-wrapper touch-fallback">
+                                                    <div class="dropify-message">
+                                                        <span class="file-icon">
+                                                            <figure>
+                                                                @if (Model.PanImageUrl != null)
+                                                                {
+                                                                    <img id="imgPAN" src="@Model.PanImageUrl" alt=" eZeelo ">
+                                                                }
+                                                                else
+                                                                {
+                                                                    <img id="imgPAN" src="/Content/Images/no_image.png" alt=" eZeelo ">
+                                                                }
+                                                            </figure>
+                                                        </span>
+                                                    </div>
+                                                    <input type="file" class="dropify KYCUploadinput" name="pan" data-show-remove="false" onchange="readfile(this,'PAN');">
+
+                                                </div>
+                                            </div>
+
+                                            <div class="col-xs-4 col-sm-4 col-md-4">
+                                                <a target="_blank" href="@Model.GSTRegistrationImageUrl">
+                                                    <p><i class="fa fa-pencil-square"></i>&nbsp;GST Certificate</p>
+                                                </a>
+                                                <div class="dropify-wrapper touch-fallback">
+                                                    <div class="dropify-message">
+                                                        <span class="file-icon">
+                                                            <figure>
+                                                                @if (Model.GSTRegistrationImageUrl != null)
+                                                                {
+                                                                    <img id="imgGST" src="@Model.GSTRegistrationImageUrl" alt=" eZeelo ">
+                                                                }
+                                                                else
+                                                                {
+                                                                    <img id="imgGST" src="/Content/Images/no_image.png" alt=" eZeelo ">
+                                                                }
+                                                            </figure>
+                                                        </span>
+                                                    </div>
+                                                    <input type="file" class="dropify KYCUploadinput" name="gst" data-show-remove="false" onchange="readfile(this,'GST');">
+                                                </div>
+                                            </div>
+                                            <div class="col-xs-4 col-sm-4 col-md-4">
+                                                <a target="_blank" href="@Model.AddressProofUrl">
+                                                    <p><i class="fa fa-pencil-square"></i>&nbsp;Address Proof</p>
+                                                </a>
+                                                <div class="dropify-wrapper touch-fallback">
+                                                    <div class="dropify-message">
+                                                        <span class="file-icon">
+                                                            <figure>
+                                                                <figure>
+                                                                    @if (Model.AddressProofUrl != null)
+                                                                    {
+                                                                        <img id="imgAddress" src="@Model.AddressProofUrl" alt=" eZeelo ">
+                                                                    }
+                                                                    else
+                                                                    {
+                                                                        <img id="imgAddress" src="/Content/Images/no_image.png" alt=" eZeelo ">
+                                                                    }
+                                                                </figure>
+
+                                                            </figure>
+                                                        </span>
+                                                    </div>
+                                                    <input type="file" class="dropify KYCUploadinput" name="address" data-show-remove="false" onchange="readfile(this,'Address');">
+
+                                                </div>
+                                            </div>
+                                            <div class="col-xs-4 col-sm-4 col-md-4">
+                                                <a target="_blank" href="@Model.VisingCardImageUrl">
+                                                    <p><i class="fa fa-pencil-square"></i>&nbsp;Visiting Card</p>
+                                                </a>
+                                                <div class="dropify-wrapper touch-fallback">
+                                                    <div class="dropify-message">
+                                                        <span class="file-icon">
+                                                            <figure>
+                                                                @if (Model.VisingCardImageUrl != null)
+                                                                {
+                                                                    <img id="imgVistingCard" src="@Model.VisingCardImageUrl" alt=" eZeelo ">
+                                                                }
+                                                                else
+                                                                {
+                                                                    <img id="imgVistingCard" src="/Content/Images/no_image.png" alt=" eZeelo ">
+                                                                }
+                                                            </figure>
+                                                        </span>
+                                                    </div>
+                                                    <input type="file" class="dropify KYCUploadinput" name="visitingCard" data-show-remove="false" onchange="readfile(this,'Visiting');">
+
+                                                </div>
+                                            </div>
+                                            <div class="col-xs-4 col-sm-4 col-md-4">
+                                                <a target="_blank" href="@Model.CancelledblankChequeImageUrl">
+                                                    <p><i class="fa fa-pencil-square"></i>&nbsp;Cancelled Blank Cheque</p>
+                                                </a>
+                                                <div class="dropify-wrapper touch-fallback">
+                                                    <div class="dropify-message">
+                                                        <span class="file-icon">
+                                                            <figure>
+                                                                @if (Model.CancelledblankChequeImageUrl != null)
+                                                                {
+                                                                    <img id="imgCheque" src="@Model.CancelledblankChequeImageUrl" alt=" eZeelo ">
+                                                                }
+                                                                else
+                                                                {
+                                                                    <img id="imgCheque" src="/Content/Images/no_image.png" alt=" eZeelo ">
+                                                                }
+                                                            </figure>
+                                                        </span>
+                                                    </div>
+                                                    <input type="file" class="dropify KYCUploadinput" name="cancelledCheque" data-show-remove="false" onchange="readfile(this,'Cheque');">
+
+                                                </div>
+                                            </div>
+                                            <br />
+                                            <br />
+
+                                        </div>
+                                        <div class="form-group" style="padding-left:15px;margin-top:15px">
+                                            <input type="submit" value="Upload" class="btn btn-info btn-sm" id="submit" />
+                                            @if (Model.IsVerified == false)
+                                            {
+                                                <input type="button" id="btnApprove" value="Approve" class="btn btn-success btn-sm" />
+                                            }
+                                            else
+                                            {
+                                                <a target="_blank" href="@System.Configuration.ConfigurationManager.AppSettings["EZEELO_CUSTOMER_URL"]@ViewBag.CityName/@ViewBag.FranchiseId/Merchant/Details/@Model.MerchantID" class="btn btn-success btn-sm">Preview</a>
+                                                @*<strong style="color:green">Approved</strong>*@
+                                            }
+                                            <input type="button" id="btnReject" value="Reject" class="btn btn-danger btn-sm" />
+                                            @*<a target="_blank" href="@System.Configuration.ConfigurationManager.AppSettings["EZEELO_CUSTOMER_URL"]/merchant/preview?id=@Model.MerchantID" class="btn btn-success btn-sm">Preview</a>*@
+
+                                            <a onclick=" window.location.href = '@TempData["PreviousUrl"]';" class="btn btn-warning btn-sm">Back</a>
+
+                                        </div>
+                                    </div>
+                                }
+                                else
+                                {
+                                    <span>Data are not available...</span>
+                                }
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+@section Scripts {
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+            if ($("#divmsg").length != 0) {
+                $("html, body").delay(1000).animate({ scrollTop: $('#divmsg').offset().top }, 2000);
+            }
+        });
+        $("#btnApprove").bind('click', function () {
+                $("#divLoading").show();
+                $.ajax({
+                    type: "POST",
+                    url: "@Url.Action("Approve", "MerchantList")",
+                    data: "{'MerchantID':" + $("#MerchantID").val() + "}",
+                    contentType: "application/json; charset = utf-8",
+                    dataType: "json",
+                    cache: false,
+                    success: function (data) {
+                        $("#divLoading").hide();
+                        //alert(data);
+                        window.location.reload();
+                    },
+                    error: function (x, e) {
+                        $("#divLoading").hide();
+                    }
+                });
+            });
+        $("#btnReject").bind('click', function () {
+            var Remark = prompt("Please enter Remark", "");
+            if (Remark != null && Remark != "") {
+                $("#divLoading").show();
+                $.ajax({
+                    type: "POST",
+                    url: "@Url.Action("Reject", "MerchantList")",
+                    data: "{'MerchantID':" + $("#MerchantID").val() + ",'Remark':'" + Remark +"'}",
+                    contentType: "application/json; charset = utf-8",
+                    dataType: "json",
+                    cache: false,
+                    success: function (data) {
+                        $("#divLoading").hide();
+                        //alert(data);
+                        window.location.reload();
+                    },
+                    error: function (x, e) {
+                        $("#divLoading").hide();
+                    }
+                });
+            }
+        });
+        function readfile(input, type) {
+
+            if (input.files && input.files[0]) {
+                var reader = new FileReader();
+                //Image size validation
+                if (input.files[0].size > 150000 && type != "Banner") {
+                    alert("Selected Image Size can not be greater than 150KB");
+                    return false;
+                } else if (input.files[0].size > 300000) {
+                    alert("Selected Banner Size can not be greater than 300KB");
+                    return false;
+                }
+                //if (type == "Banner") {
+                //    let img = new Image()
+                //    img.src = window.URL.createObjectURL(input.files[0])
+                //    img.onload = () => {
+                //        var Width = img.width;
+                //        var Height = img.height;
+                //        if (Number(Width) != 1200 || Number(height) != 400) {
+                //            var result = confirm("Banner width and height must be  1200* 400. Wish to resize banner.")
+                //            if (result != true) {
+                //                return false;
+                //            }
+                //        }
+                //    }
+                //}
+
+                if (type == "Photo") {
+                    reader.onload = function (e) {
+                        $('#imgPhoto').attr('src', e.target.result);
+                        var image = new Image();
+                        image.onload = function () {
+                            document.getElementById("imgPhoto").src = image.src;
+                            var canvas = document.createElement("canvas");
+                            var context = canvas.getContext("2d");
+                            canvas.width = 300;
+                            canvas.height = 200;
+                            context.drawImage(image,
+                                0,
+                                0,
+                                image.width,
+                                image.height,
+                                0,
+                                0,
+                                canvas.width,
+                                canvas.height
+                            );
+
+                            document.getElementById("imgPhoto").src = canvas.toDataURL();
+                        }
+                        image.src = event.target.result;
+                    }
+                }
+                if (type == "Shop") {
+                    reader.onload = function (e) {
+                        $('#imgShop').attr('src', e.target.result);
+                    }
+                }
+                if (type == "PAN") {
+                    reader.onload = function (e) {
+                        $('#imgPAN').attr('src', e.target.result);
+                    }
+                }
+                if (type == "GST") {
+                    reader.onload = function (e) {
+                        $('#imgGST').attr('src', e.target.result);
+                    }
+                }
+                if (type == "Address") {
+                    reader.onload = function (e) {
+                        $('#imgAddress').attr('src', e.target.result);
+                    }
+                }
+                if (type == "Visiting") {
+                    reader.onload = function (e) {
+                        $('#imgVistingCard').attr('src', e.target.result);
+                    }
+                }
+                if (type == "Cheque") {
+                    reader.onload = function (e) {
+                        $('#imgCheque').attr('src', e.target.result);
+                    }
+                }
+                if (type == "Banner") {
+                    reader.onload = function (e) {
+                        $('#imgBanner').attr('src', e.target.result);
+
+                        var image = new Image();
+                        image.onload = function () {
+                            document.getElementById("imgBanner").src = image.src;
+                            var canvas = document.createElement("canvas");
+                            var context = canvas.getContext("2d");
+                            canvas.width = 1200;
+                            canvas.height = 400;
+                            context.drawImage(image,
+                                0,
+                                0,
+                                image.width,
+                                image.height,
+                                0,
+                                0,
+                                canvas.width,
+                                canvas.height
+                            );
+
+                            document.getElementById("imgBanner").src = canvas.toDataURL();
+                        }
+                        image.src = event.target.result;
+                    }
+                }
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+
+
+    </script>
+
+
+
+}

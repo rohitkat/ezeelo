@@ -1,0 +1,330 @@
+﻿@model ModelLayer.Models.ViewModel.EmployeeManagement
+
+@{
+    ViewBag.Title = "Edit";
+}
+
+@*<h2>Edit</h2>*@
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+    <div id="content" class="span10" style="min-height: 400px;">
+        <ul class="breadcrumb">
+            <li>
+                <i class="icon-home"></i>
+                <a href="">Employee Management</a>
+
+            </li>
+            @*<li><a href="#">Tables</a></li>*@
+        </ul>
+        <div class="row-fluid">
+            <div class="box span12">
+                <div class="box-header">
+                    <h2><i class="icon-group"></i><span class="break"></span>Edit</h2>
+
+                </div>
+                <div class="box-content">
+                    <form class="form-horizontal">
+                        @*<h4>EmployeeManagement</h4>*@
+                      
+                        @Html.ValidationSummary(false)
+                        @Html.HiddenFor(model => model.ID)
+                        <div class="content-hed">
+                            <div class="control-group clearfix">
+                                @Html.LabelFor(model => model.UserLoginID, new { @class = "control-label span2 top-text" })
+                                <div class="controls">
+                                    @Html.DisplayFor(model => model.UserLoginID)
+                                    @Html.HiddenFor(model => model.UserLoginID)
+                                    @Html.ValidationMessageFor(model => model.UserLoginID)
+                                </div>
+                            </div>
+
+                            <div class="control-group clearfix">
+                                @Html.LabelFor(model => model.EmployeeCode, new { @class = "control-label span2 top-text" })
+                                <div class="controls">
+                                    @Html.DisplayFor(model => model.EmployeeCode)
+                                    @Html.HiddenFor(model => model.EmployeeCode)
+                                    @Html.ValidationMessageFor(model => model.EmployeeCode)
+                                </div>
+                            </div>
+                        </div>
+                        <div class="control-group">
+                            <label class="control-label span2" for="focusedInput"> Business Type</label>
+                            <div class="controls">
+                                @*@Html.EditorFor(model => model.OwnerID)*@
+                                @Html.DropDownList("OwnerType", "Select Business")
+                                <span id="OwnerTypeMsg"></span>
+                                @Html.ValidationMessageFor(model => model.OwnerID)
+                            </div>
+                        </div>
+
+                        <div class="control-group">
+                            <label class="control-label span2" for="focusedInput">Owner Name</label>
+
+                            <div class="controls">
+                                @Html.DropDownList("BusinessOwner", "Select")
+                                <span id="BusinessOwnerMsg"></span>
+                                @Html.ValidationMessageFor(model => model.OwnerID)
+                            </div>
+                        </div>
+
+                        <div class="control-group">
+                            @*@Html.LabelFor(model => model.SalutationID, new { @class = "control-label col-md-2" })*@
+                            <label class="control-label span2" for="focusedInput"> Salutation</label>
+                            <div class="controls">
+                                @*@Html.EditorFor(model => model.SalutationID)*@
+                                @Html.DropDownList("Salutation", "Select")
+                                <span id="SalutationMsg"></span>
+                                @Html.ValidationMessageFor(model => model.SalutationID)
+                            </div>
+                        </div>
+
+                        <div class="control-group">
+                            @Html.LabelFor(model => model.FirstName, new { @class = "control-label span2" })
+                            <div class="controls">
+                                @Html.EditorFor(model => model.FirstName)
+                                @Html.ValidationMessageFor(model => model.FirstName)
+                            </div>
+                        </div>
+
+                        <div class="control-group">
+                            @Html.LabelFor(model => model.MiddleName, new { @class = "control-label span2" })
+                            <div class="controls">
+                                @Html.EditorFor(model => model.MiddleName)
+                                @Html.ValidationMessageFor(model => model.MiddleName)
+                            </div>
+                        </div>
+
+                        <div class="control-group">
+                            @Html.LabelFor(model => model.LastName, new { @class = "control-label span2" })
+                            <div class="controls">
+                                @Html.EditorFor(model => model.LastName)
+                                @Html.ValidationMessageFor(model => model.LastName)
+                            </div>
+                        </div>
+
+
+
+                        <div class="control-group">
+                            @Html.LabelFor(model => model.Gender, new { @class = "control-label span2" })
+                            <div class="controls">
+                                @*@Html.EditorFor(model => model.Gender)*@
+                                @Html.DropDownList("Gender", "Select")
+                                <span id="GenderMsg"></span>
+                                @Html.ValidationMessageFor(model => model.Gender)
+                            </div>
+                        </div>
+
+
+
+                        <div class="control-group">
+                            @Html.LabelFor(model => model.Address, new { @class = "control-label span2" })
+                            <div class="controls">
+                                @Html.EditorFor(model => model.Address)
+                                @Html.ValidationMessageFor(model => model.Address)
+                            </div>
+                        </div>
+
+                        <div class="control-group">
+                            @Html.LabelFor(model => model.Mobile, new { @class = "control-label span2" })
+                            <div class="controls">
+                                @Html.EditorFor(model => model.Mobile)
+                                <span id="MobileError"></span>
+                                @Html.ValidationMessageFor(model => model.Mobile)
+                            </div>
+                        </div>
+
+                        <div class="control-group">
+                            @Html.LabelFor(model => model.AlternateMobile, new { @class = "control-label span2" })
+                            <div class="controls">
+                                @Html.EditorFor(model => model.AlternateMobile)
+                                @Html.ValidationMessageFor(model => model.AlternateMobile)
+                            </div>
+                        </div>
+                        
+                        <div class="control-group">
+                            @Html.LabelFor(model => model.Email, new { @class = "control-label span2" })
+                            <div class="controls">
+                                @Html.EditorFor(model => model.Email)
+                                <span id="EmailError"></span>
+                                @Html.ValidationMessageFor(model => model.Email)
+                            </div>
+                        </div>
+
+                        <div class="control-group">
+                            @Html.LabelFor(model => model.AlternateEmail, new { @class = "control-label span2" })
+                            <div class="controls">
+                                @Html.EditorFor(model => model.AlternateEmail)
+                                @Html.ValidationMessageFor(model => model.AlternateEmail)
+                            </div>
+                        </div>
+                        
+
+                        <div class="control-group">
+                            @Html.LabelFor(model => model.Password, new { @class = "control-label span2" })
+                            <div class="controls">
+                                @Html.EditorFor(model => model.Password)
+                                @Html.ValidationMessageFor(model => model.Password)
+                            </div>
+                        </div>
+
+                      
+
+                        <div class="control-group">
+                            @Html.LabelFor(model => model.IsActive, new { @class = "control-label span2" })
+                            <div class="controls">
+                                @Html.EditorFor(model => model.IsActive)
+                                @Html.ValidationMessageFor(model => model.IsActive)
+                            </div>
+                        </div>
+
+                        <div class="form-actions">
+                            <div class="col-md-offset-2 col-md-10">
+                                <input type="submit" value="Save" id="btnSubmit" class="btn btn-success" />
+                                @Html.ActionLink("Back to List", "Index", string.Empty, new { @class = "btn" })
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                </div>
+            </div>
+        </div>
+}
+
+@*<div>
+    @Html.ActionLink("Back to List", "Index")
+</div>*@
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}
+
+
+<script src="~/Scripts/jquery-1.10.2.min.js"></script>
+<script>
+    $(function () {
+        $("#btnSubmit").click(function (e) {
+            //alert('1');
+            var selectedOwner = $("#BusinessOwner option:selected ").val();
+            var selectOwnerType = $("#OwnerType option:selected").val();
+            var Salutation = $("#Salutation option:selected").val();
+            var selectGender = $("#Gender option:selected").val();
+
+            $('#OwnerTypeMsg').text('');
+            $('#BusinessOwnerMsg').text('');
+            $('#salutationMsg').text('');
+            $('#GenderMsg').text('');
+
+
+            if (selectOwnerType == "Select Business" || selectOwnerType == '') {
+                $('#OwnerTypeMsg').text("Select Business type");
+                // alert('Please select the Business type');
+                return false;
+            }
+            else if (selectedOwner == "Select Owner" || selectedOwner == 0) {
+                $('#BusinessOwnerMsg').text("Select Owner");
+
+                //alert('Select Owner');
+                return false;
+
+            }
+            else if (Salutation == 'Select' || Salutation == '') {
+                $('#salutationMsg').text("Select Salutation");
+                // alert('Select Salutation');
+                return false;
+            }
+            else if (Gender == 'Select' || selectGender == '') {
+                $('#GenderMsg').text("Select Gender");
+                //alert('Plese Select the Gender');
+                return false;
+            }
+        });
+    });
+
+    $(function () {
+        //MobileError
+        $('#Mobile').blur(function (e) {
+            var strMobile = $("#Mobile").val();
+            var strUserLoginID = $("#UserLoginID").val();
+            
+            $.ajax({
+                type: "POST",
+                url: "/EmployeeManagement/CheckEditMobile",
+                data: "{ 'strMobile': '" + strMobile + "', 'strUserLoginID': '" + strUserLoginID + "'}",
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                async: true,
+                cache: false,
+                success: function (msg) {
+                    if (msg > 0) {
+                        $("#MobileError").text("Mobile No is Already Exist");
+
+                    }
+                    else
+                        $("#MobileError").text('');
+                },
+                error: function (x, e) {
+                    alert("unable to Retrive Mobile No ");
+                }
+
+            });
+        });
+    });
+
+    $(function () {
+        //MobileError
+        $('#Email').blur(function (e) {
+            //alert('hello');
+            var strEmail = $("#Email").val();
+            var strUserLoginID = $("#UserLoginID").val();
+            $.ajax({
+                type: "POST",
+                url: "/EmployeeManagement/CheckEditEmail",
+                data: "{ 'strEmail': '" + strEmail + "', 'strUserLoginID': '" + strUserLoginID + "'}",
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                async: true,
+                cache: false,
+                success: function (msg) {
+                    if (msg > 0)
+                        $("#EmailError").text("Email Address is Already Exist");
+                    else
+                        $("#EmailError").text('');
+                },
+                error: function (x, e) {
+                    alert("unable to Retrive Email No ");
+                }
+
+            });
+        });
+    });
+
+    $(function () {
+        $('#OwnerType').change(function (e) {
+            var selectedVal = $("#OwnerType option:selected").val();
+            if (selectedVal > 0) {
+
+                $.ajax({
+                    type: "POST",
+                    url: "/EmployeeManagement/getOwnerID",
+                    data: "{ businessTypeID: '" + selectedVal + "'}",
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    async: true,
+                    cache: false,
+                    success: function (msg) {
+                        $('#BusinessOwner').empty();
+                        $('#BusinessOwner').append('<option value=0>Select Owner</option>');
+                        $.each(msg, function (index, item) {
+                            $('#BusinessOwner').append('<option value=' + item.ID + '>' + item.Name + '</option>');
+                        });
+                    },
+                    error: function (x, e) {
+                        alert("Sorry No Such Type of Owner Is available. ");
+                    }
+                });
+            }
+        });
+    });
+
+</script>

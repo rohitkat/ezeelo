@@ -1,0 +1,190 @@
+﻿@model IEnumerable<ModelLayer.Models.Employee>
+@using ModelLayer.Models;
+@{
+    ViewBag.Title = "Index";
+
+}
+
+@*<h2>Index</h2>*@
+
+@*<p>
+    @Html.ActionLink("Create New", "Create")
+</p>*@
+<div id="content" class="span10">
+
+    <div class="row-fluid ">
+        <div class="box ">
+            <div class="box-header">
+                <h2><i class="icon-edit"></i><span class="break"></span>Employee Management</h2>
+                <div class="pull-right jumpBtn CreateFormBtn">
+                    @Html.ActionLink("Create New", "Create", null, new { @class = "btn grid-addpro btn-small" })
+                </div>
+            </div>
+           
+            @*<div class="box-content">
+                <div class="row-fluid">
+                    <div class="span6">
+                        <span class="hed-owner">Select Owner Type</span>
+                        @Html.DropDownList("BusinessType", "Select Business Type")
+                    </div>
+                    <div class="span6">
+                        <span class="hed-owner">Select Owner</span>
+                        @Html.DropDownList("BusinessOwner")
+                    </div>
+
+                </div>*@
+            <div class="box-content">
+                <table class="table border-table" id="tableSimilarProduct">
+                    <thead>
+                        <tr>
+                            <th>
+                                @Html.DisplayNameFor(model => model.EmployeeCode)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.OwnerID)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.IsActive)
+                            </th>
+                            <th></th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        @foreach (var item in Model)
+                        {
+                            <tr>
+                                <td class="center">@Html.DisplayFor(modelItem => item.EmployeeCode)</td>
+                                <td class="center">@Html.DisplayFor(modelItem => item.OwnerID)</td>
+                                <td class="center">@Html.DisplayFor(modelItem => item.IsActive, new { @class = "chkBox" })</td>
+                                <td class="center">
+                                    @Html.ActionLink("Edit", "Edit", new { id = item.ID }, new { @class = "btn btn-small grid-btn1" })
+                                    @Html.ActionLink("Details", "Details", new { id = item.ID }, new { @class = "btn btn-small grid-btn2" })
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+
+
+                </table>
+            </div>
+            </div>
+        </div>
+    </div>
+  
+
+@*<script src="~/Scripts/jquery-1.10.2.min.js"></script>
+    <script>
+
+        $(function () {
+
+            $.ajax({
+                type: "POST",
+                url: "/EmployeeManagement/EmployeeList",
+                data: "{ businessTypeID: " + 0 + ",OwnerID:" + 0 + "}",
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                async: true,
+                cache: false,
+                success: function (msg) {
+
+                    $.each(msg, function (index, item) {
+                        //alert("1");
+
+                        $("#tableSimilarProduct ").append("<tr>" +
+                            "<td>" + item.EmployeeCode + "</td>" +
+                            "<td>" + item.OwnerID + "</td>" +
+                            "<td>" + item.IsActive + "</td>" +
+                            "<td>" +
+                            "<a class='btn btn-small grid-btn1' href='@Url.Action("Edit", "EmployeeManagement")?id=" + item.LoginID + "'> Edit </a> |" +
+                            "<a class='btn btn-small grid-btn2' href='@Url.Action("Details", "EmployeeManagement")?id=" + item.LoginID + "'>Detail </a> |" +
+                            "<a class='btn btn-small grid-btn3' href='@Url.Action("Delete", "EmployeeManagement")?id=" + item.LoginID + "'>Delete </a>"
+                            + "</td> </tr>"
+                        );
+                    });
+                },
+                error: function (x, e) {
+                    alert("Sorry No Unable to Bind Data. ");
+                }
+
+            });
+        });
+
+
+
+
+        $(function () {
+            $('#BusinessOwner').change(function (e) {
+                var selectedVal = $('#BusinessOwner option:selected').val();
+                var selectOwner = $('#BusinessType option:selected').val();
+                if (selectedVal > 0) {
+
+                    $.ajax({
+                        type: "POST",
+                        url: "/EmployeeManagement/EmployeeList",
+                        data: "{ businessTypeID: " + selectOwner + ",OwnerID:" + selectedVal + "}",
+                        contentType: "application/json; charset=utf-8",
+                        dataType: "json",
+                        async: true,
+                        cache: false,
+                        success: function (msg) {
+                            $('#tableSimilarProduct').empty();
+                            $("#tableSimilarProduct ").append("<tr>" +
+                                   "<th>EmployeeCode</th>" +
+                                   "<th>OwnerID </th>" +
+                                   "<th>IsActive </th>" +
+                                   "<th></th> </tr>"
+                                );
+                            $.each(msg, function (index, item) {
+                                $("#tableSimilarProduct ").append("<tr>" +
+                                    "<td>" + item.EmployeeCode + "</td>" +
+                                    "<td>" + item.OwnerID + "</td>" +
+                                    "<td>" + item.IsActive + "</td>" +
+                                    "<td>" +
+                                    "<a href='@Url.Action("Edit", "EmployeeManagement")?id=" + item.LoginID + "'> Edit </a>" +
+                                    "<a href='@Url.Action("Details", "EmployeeManagement")?id=" + item.LoginID + "'>Detail </a>" +
+                                    "<a href='@Url.Action("Delete", "EmployeeManagement")?id=" + item.LoginID + "'>Delete </a>"
+                                    + "</td> </tr>"
+                                );
+                            });
+                        },
+                        error: function (x, e) {
+                            alert("Sorry No Unable to Bind Data. ");
+                        }
+                    });
+                }
+
+            });
+        });
+
+
+
+        $(function () {
+            $('#BusinessType').change(function (e) {
+                var selectedVal = $("#BusinessType option:selected").val();
+                if (selectedVal > 0) {
+
+                    $.ajax({
+                        type: "POST",
+                        url: "/EmployeeManagement/getOwnerID",
+                        data: "{ businessTypeID: '" + selectedVal + "'}",
+                        contentType: "application/json; charset=utf-8",
+                        dataType: "json",
+                        async: true,
+                        cache: false,
+                        success: function (msg) {
+                            $('#BusinessOwner').empty();
+                            $('#BusinessOwner').append('<option value=0>Select Owner</option>');
+                            $.each(msg, function (index, item) {
+                                $('#BusinessOwner').append('<option value=' + item.ID + '>' + item.Name + '</option>');
+                            });
+                        },
+                        error: function (x, e) {
+                            alert("Sorry No Such Type of Owner Is available. ");
+                        }
+                    });
+                }
+            });
+        });
+    </script>*@
+

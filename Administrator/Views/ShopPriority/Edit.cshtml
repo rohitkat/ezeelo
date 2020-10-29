@@ -1,0 +1,349 @@
+﻿@model ModelLayer.Models.ShopPriority
+
+@{
+    ViewBag.Title = "Edit";
+}
+
+
+
+<style>
+    .CategoryDiv {
+        width: 233px;
+        float: left;
+        padding: 10px;
+    }
+
+        .CategoryDiv span {
+            display: block;
+            font-size: 15px;
+            font-weight: 600;
+        }
+
+        .CategoryDiv label {
+            display: block;
+            font-size: 15px;
+            font-weight: 600;
+            text-align: left !important;
+        }
+
+        .CategoryDiv select {
+            display: block;
+        }
+
+    .form-horizontal .form-actions {
+        padding-left: 10px !important;
+    }
+
+    .textDiv {
+        margin-left: 10px;
+        width: 100%;
+        float: left;
+    }
+
+    #Content {
+    }
+</style>
+
+<div id="content" class="span10">
+    <ul class="breadcrumb">
+        <li>
+            <a href="#">Edit</a>
+        </li>
+    </ul>
+
+    <div class="row-fluid">
+
+        <div class="box span12">
+            <div class="box-header">
+                <h2><i class="icon-edit"></i><span class="break"></span>ShopPriority</h2>
+
+            </div>
+            <div class="box-content">
+
+                @using (Html.BeginForm())
+                {
+                    @Html.AntiForgeryToken()
+                    if (ViewBag.Messaage != null)
+                    {
+                        <div style="font-weight:bold; color:red;">@ViewBag.Messaage</div>
+                    }
+                    <div class="form-horizontal">
+
+                        @Html.ValidationSummary(true)
+
+                        <div style="width:100%;">
+                            <div class="CategoryDiv">
+
+                                <span>Select Franchise</span>
+                                @Html.DropDownList("FranchiseList","Select Franchise")
+                                <span id="FranchiseListErro" style="font-weight:bold;color:red;"></span>
+                            </div>
+                            <div class="CategoryDiv">
+                                <span>Select Shop</span>
+                                @Html.DropDownList("ShopID", "Select Shop")
+                                <span id="ShopIDErro" style="font-weight:bold;color:red;"></span>
+                            </div>
+                            <div class="clr"></div>
+
+
+                            <div class="CategoryDiv">
+                                <span>Select Category</span>
+                                @Html.DropDownList("CategoryList", "Select Category")
+                            </div>
+                            <div class="CategoryDiv">
+                                <span>Select Level Two Category</span>
+                                @Html.DropDownList("LevelTwoCategoryList", "Select Category")
+                            </div>
+                            <div class="CategoryDiv">
+                                <span>Select Level Three Category</span>
+                                @Html.DropDownList("LevelThreeCategoryList", "Select Category")
+                            </div>
+                            <div class="clr"></div>
+                            <div><span id="CategoryErro" style="font-weight:bold;color:red;"></span></div>
+
+
+                            <div class="CategoryDiv">
+                                    @Html.LabelFor(model => model.PriorityLevel, new { @class = "control-label col-md-2" })
+
+                                        @Html.EditorFor(model => model.PriorityLevel)
+                                        @Html.ValidationMessageFor(model => model.PriorityLevel)
+                                <span id="PriorityLevelErro" style="font-weight:bold;color:red;"></span>
+
+                                </div>
+
+                            <div class="CategoryDiv">
+                                @Html.LabelFor(model => model.IsActive, new { @class = "control-label col-md-2" })
+
+                                @Html.EditorFor(model => model.IsActive)
+                                @Html.ValidationMessageFor(model => model.IsActive)
+                                <span id="IsActiveErro" style="font-weight:bold;color:red;"></span>
+
+                            </div>
+                            <div class="clr"></div>
+                        </div>
+
+
+                        <div class="form-actions" style="clear:both;">
+
+                            <input type="submit" value="Create" class="btn btn-success" />
+                            @Html.ActionLink("Back to List", "Index", null, new { @class = "btn btn-brown" })
+                        </div>
+                    </div>
+                }
+
+
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="~/Scripts/jquery-1.10.2.min.js"></script>
+
+<script>
+
+    $(document).ready(function () {
+
+        $(".btn-success").click(function () {
+            var ErrorCount = 0;
+            var isActive = $("#IsActive option:selected").text();
+            var franchise = $("#FranchiseList option:selected").text()
+            var shop = $("#ShopID option:selected").text()
+            var LevelOne = $("#CategoryList option:selected").text()
+            var LevelTwo = $("#LevelTwoCategoryList option:selected").text()
+            var LevelThree = $("#LevelThreeCategoryList option:selected").text()
+            var PriorityLevel = $("#PriorityLevel").val()
+
+            if (isActive == 'Not Set') {
+                $('#IsActiveErro').html('Please Select the IsActive');
+                ErrorCount = ErrorCount + 1;
+            }
+            else {
+                $('#IsActiveErro').html('');
+            }
+
+            if (franchise == 'Select Franchise') {
+                $('#FranchiseListErro').html('Please Select Franchise');
+                ErrorCount = ErrorCount + 1;
+            }
+            else {
+                $('#FranchiseListErro').html('');
+            }
+
+            if (shop == 'Select Shop') {
+                $('#ShopIDErro').html('Please Select Shop');
+                ErrorCount = ErrorCount + 1;
+            }
+            else {
+                $('#ShopIDErro').html('');
+            }
+            if (LevelOne == 'Select Category' && LevelTwo == 'Select Category' && LevelThree == 'Select Category') {
+                $('#CategoryErro').html('Please Select Category');
+                ErrorCount = ErrorCount + 1;
+            }
+            else {
+                $('#CategoryErro').html('');
+            }
+            if (PriorityLevel == '') {
+                $('#PriorityLevelErro').html('Please Select PriorityLevel or Set to Zero (0)');
+                ErrorCount = ErrorCount + 1;
+            }
+            else {
+                $('#PriorityLevelErro').html('');
+            }
+
+            if (ErrorCount > 0) {
+                return false;
+            }
+        });
+
+        $('#FranchiseList').change(function (e) {
+            var id = $("#FranchiseList  option:selected").val();
+            $("#pageloaddiv").css('display', 'block');
+            $("#pageloaddiv").fadeOut(1000);
+            $.ajax({
+                type: "POST",
+                //URL: "/ShopPriority/SelectLevelOneCategoryByFranchise?id=" + id,
+                url: "/ShopPriority/SelectLevelOneCategoryByFranchise",
+                data: "{ id: " + id + "}",
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                async: true,
+                cache: false,
+                success: function (msg) {
+
+                    $('#CategoryList').empty();
+                    $('#CategoryList').append('<option value=0>Select Category</option>');
+
+                    $.each(msg, function (index, item) {
+
+                        $('#CategoryList').append('<option value=' + item.ID + '>' + item.Name + '</option>');
+                    });
+                    $("#pageloaddiv").css('display', 'none');
+                    $("#pageloaddiv").fadeOut(1000);
+                },
+                error: function (x, e) {
+                    alert("unable to Retrive Data No ");
+                    $("#pageloaddiv").css('display', 'none');
+                    $("#pageloaddiv").fadeOut(1000);
+                }
+
+            });
+
+            $("#pageloaddiv").css('display', 'block');
+            $("#pageloaddiv").fadeOut(1000);
+            $.ajax({
+                type: "POST",
+                //URL: "/ShopPriority/SelectLevelOneCategoryByFranchise?id=" + id,
+                url: "/ShopPriority/FranchiseShopList/?franchiseID= " + id,
+                //data: "{ franchiseID: " + id + "}",
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                async: true,
+                cache: false,
+                success: function (msg) {
+
+                    $('#ShopID').empty();
+                    $('#ShopID').append('<option value=0>Select Shop</option>');
+
+                    $.each(msg, function (index, item) {
+
+                        $('#ShopID').append('<option value=' + item.ID + '>' + item.Name + '</option>');
+                    });
+                    $("#pageloaddiv").css('display', 'none');
+                    $("#pageloaddiv").fadeOut(1000);
+                },
+                error: function (x, e) {
+                    alert("unable to Retrive Data No ");
+                    $("#pageloaddiv").css('display', 'none');
+                    $("#pageloaddiv").fadeOut(1000);
+                }
+
+            });
+
+        });
+
+        $("#CategoryList").change(function () {
+            /* Get the selected value of dropdownlist */
+            var selectedID = $(this).val();
+            var FranchiseID = $("#FranchiseList option:selected").val();
+            var level = 1;
+
+
+            /*Processing Image*/
+            $("#pageloaddiv").css('display', 'block');
+            $("#pageloaddiv").fadeOut(1000);
+
+
+            $.ajax({
+                type: "POST",
+                url: "/ShopPriority/SelectCategory/?ParentCategory=" + selectedID + "&level=2",
+                //url: "/ShopPriority/ParentCategory",
+                //data: "{ ParentCategory: " + id + ",level:"+ 2 +"}",
+                dataType: "json",
+                async: true,
+                cache: false,
+                success: function (msg) {
+                    $('#LevelTwoCategoryList').empty();
+                    $('#LevelTwoCategoryList').append('<option value=0>Select Category</option>');
+                    $.each(msg, function (index, item) {
+                        $('#LevelTwoCategoryList').append('<option value=' + item.ID + '>' + item.Name + '</option>');
+                    });
+                    $("#pageloaddiv").css('display', 'none');
+                    $("#pageloaddiv").fadeOut(1000);
+                },
+                error: function (x, e) {
+                    alert("Sorry No Such Type of Category Is available. ");
+                    $("#pageloaddiv").css('display', 'none');
+                    $("#pageloaddiv").fadeOut(1000);
+                }
+            });
+        });
+
+        $("#LevelTwoCategoryList").change(function () {
+            /* Get the selected value of dropdownlist */
+            var selectedID = $(this).val();
+            var FranchiseID = $("#FranchiseList option:selected").val();
+            var level = 2;
+            /*Processing Image*/
+            $("#pageloaddiv").css('display', 'block');
+            $("#pageloaddiv").fadeOut(1000);
+
+
+
+            $.ajax({
+                type: "POST",
+                url: "/ShopPriority/SelectCategory/?ParentCategory=" + selectedID + "&level=3",
+                //url: "/ShopPriority/ParentCategory",
+                //data: "{ ParentCategory: " + id + ",level:"+ 2 +"}",
+                dataType: "json",
+                async: true,
+                cache: false,
+                success: function (msg) {
+
+                    $('#LevelThreeCategoryList').empty();
+                    $('#LevelThreeCategoryList').append('<option value=0>Select Category</option>');
+                    $.each(msg, function (index, item) {
+                        $('#LevelThreeCategoryList').append('<option value=' + item.ID + '>' + item.Name + '</option>');
+                    });
+                    $("#pageloaddiv").css('display', 'none');
+                    $("#pageloaddiv").fadeOut(1000);
+                },
+                error: function (x, e) {
+
+                    alert("Sorry No Such Type of Category Is available. ");
+                    $("#pageloaddiv").css('display', 'none');
+                    $("#pageloaddiv").fadeOut(1000);
+                }
+            });
+
+
+
+
+
+
+        });
+
+    });
+
+</script>

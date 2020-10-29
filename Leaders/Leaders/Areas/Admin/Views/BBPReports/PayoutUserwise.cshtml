@@ -1,0 +1,62 @@
+﻿@model List<ModelLayer.Models.ViewModel.BBPPayoutUserWiseViewModel>
+<table id="tblDataUsrwise" class="table table-bordered table-striped table-condensed display" width="100%">
+    <thead>
+        <tr>
+            <th>Sr.No.</th>
+            <th>UserLoginId</th>
+            <th>Name</th>
+            <th>Downline UserLoginId</th>
+            <th>Downline User Name</th>
+            <th>ERP</th>
+            <th>Level</th>
+        </tr>
+    </thead>
+    <tbody>
+        @{ var i = 0; }
+        @if (Model.Count != 0)
+        {
+            foreach (var item in @Model)
+            {
+                <tr>
+                    <td>
+                        @{
+                            i = i + 1;
+                        }
+                        @i
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.UplineUserLoginId)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.UplineName)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.UserloginId)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Name)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.ERP)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.level)
+                    </td>
+                </tr>
+            }
+        }
+        else
+        {
+            <tr>
+                <td colspan="8" style="min-width:960px;max-width:960px">
+                    <label style=" color: #138afc; ">No Record Found.... </label>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('#tblDataUsrwise').DataTable();
+    });
+</script>

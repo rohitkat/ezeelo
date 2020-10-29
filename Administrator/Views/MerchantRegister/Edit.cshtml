@@ -1,0 +1,124 @@
+﻿@model ModelLayer.Models.ViewModel.MerchantRegisterViewModel
+
+@{
+    ViewBag.Title = "Edit";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+
+    <div class="span10" id="content">
+        <ul class="breadcrumb">
+            <li>
+                <a href="#">Customer list/Edit</a>
+            </li>
+        </ul>
+        <div class="row-fluid ">
+            <div class="box span6">
+                <div class="box-header">
+                    <h2><i class="icon-edit"></i><span class="break"></span>Edit</h2>
+                </div>
+                <div class="box-content">
+                    <div class="form-horizontal">
+                       <span style="color:red;"> @ViewBag.message</span>
+                        <hr />
+                        @Html.ValidationSummary(true)
+                        @Html.HiddenFor(model => model.userLogin.ID)
+
+                        <div class="control-group">
+                            @Html.LabelFor(model => model.userLogin.Email, new { @class = "control-label col-md-2" })
+                            <div class="col-md-10 controls">
+                                @Html.TextBoxFor(model => model.userLogin.Email, new { @placeholder = "Email", @class = "form-control", @onchange = "return ValidateEmail(this);", required = "required" })
+                                @Html.ValidationMessageFor(model => model.userLogin.Email)
+                            </div>
+                        </div>
+
+                        <div class="control-group">
+                            @Html.LabelFor(model => model.userLogin.Mobile, new { @class = "control-label col-md-2" })
+                            <div class="col-md-10 controls">
+                                @Html.TextBoxFor(model => model.userLogin.Mobile, new { @id = "Mobile", @class = "form-control-Widout-block form-control", @placeholder = "Enter Mobile", @onkeydown = "return ValidateNumber(event);", @onchange = "return ValidateMobile(this);", @onkeypress = "return isValidPincode(event)", required = "required", maxlength = 10 })
+                                @Html.ValidationMessageFor(model => model.userLogin.Mobile)
+                            </div>
+                        </div>
+                        <div class="control-group">
+                            @Html.LabelFor(model => model.userLogin.IsLocked, new { @class = "control-label col-md-2" })
+                            <div class="col-md-10 controls">
+                               @Html.CheckBoxFor(model=>model.userLogin.IsLocked)
+                                @Html.ValidationMessageFor(model => model.userLogin.IsLocked)
+                            </div>
+                        </div>
+                        <div class="form-actions">
+                            <div class="col-md-offset-2 col-md-10">
+                                <input type="submit" value="Save" class="btn btn-primary" />
+                                @Html.ActionLink("Back to List", "Index", string.Empty, new { @class = "btn" })
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+<script type="text/javascript">
+
+    function ValidateNumber(e) {
+        var evt = (e) ? e : window.event;
+        var charCode = (evt.keyCode) ? evt.keyCode : evt.which;
+        if ((charCode > 45 && charCode < 58) || (charCode > 95 && charCode < 106) || charCode == 8 || charCode == 127 || charCode == 37 || charCode == 39) { // (charCode > 31 && (charCode < 48 || charCode > 57)) {
+            return true;
+        }
+        else if (charCode == 9) {
+            SendKeys("{tab}");
+            return true;
+        }
+        return false;
+    };
+
+    function ValidateEmail(obj) {
+        var email = $(obj).val();
+        var filter = /^([\w-\.]+@@([\w-]+\.)+[\w-]{2,4})?$/;
+        $('#divEmailError').hide();
+        if (filter.test(email)) {
+            return true;
+        }
+        else {
+            $('#divEmailError').show();
+            $('#divEmailError').html('Invalid Email [' + email + ']');
+            $('#userLogin_Email').val('');
+            $('#userLogin_Email').focus();
+            return false;
+        }
+    }
+
+    function ValidateMobile(obj) {
+        var mobile = $(obj).val();
+        var filter = /^[7-9]{1}[0-9]{9}$/;
+        $('#divMobileError').hide();
+        if (filter.test(mobile)) {
+            return true;
+        }
+        else {
+            $('#divMobileError').show();
+            $('#divMobileError').html('Invalid Mobile [' + mobile + ']');
+            $('#Mobile').val('');
+            $('#Mobile').focus();
+            return false;
+        }
+    }
+
+    function setFocus() {
+        var pwd = $('#userLogin_Password').val();
+        $('#divPwdError').hide();
+        if (pwd == '') {
+            $('#ConfirmPassword').val('');
+            $('#userLogin_Password').focus();
+        }
+        else {
+            $('#ConfirmPassword').val('');
+            $('#ConfirmPassword').focus();
+        }
+    };
+
+</script>

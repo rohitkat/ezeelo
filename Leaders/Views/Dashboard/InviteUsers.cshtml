@@ -1,0 +1,54 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    
+   
+    <!-- Latest compiled and minified CSS -->
+    @*<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">*@
+    <!-- Optional theme -->
+   @* <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css">*@
+
+    <script src="~/Scripts/jquery-1.12.4.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    
+    <link href="~/Content/form.css" rel="stylesheet" />
+    <script src="~/Scripts/form.js"></script>
+</head>
+<body>
+    <div class="container">
+        <div class="row">
+            <div class="col-md-6 col-md-offset-3">
+                <h2>Invite Users</h2> 
+                <form class="form" method="post" id="reused_form">
+                    <div class="form-group">
+                        <label for="name"> Name:</label>
+                        <input type="text" class="form-control" id="name" name="name" required maxlength="50">
+                    </div>
+                    <div class="form-group">
+                        <label for="name"> Mobile:</label>
+                        <input type="text" class="form-control" id="mobile" name="mobile" required maxlength="50">
+                    </div>
+                    <div class="form-group">
+                        <label for="email"> Email:</label>
+                        <input type="email" class="form-control" id="email" name="email" required maxlength="50">
+                    </div>
+                    <div class="form-group">
+                        <label for="name"> Message:</label>
+                        <textarea class="form-control" type="textarea" name="message" id="message" placeholder="Your Message Here" maxlength="6000" rows="7"></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-lg btn-success pull-right" id="btnContactUs" >INVITE! &rarr;</button>
+                </form>
+                <div id="success_message" style="width:100%; height:100%; display:none; "> <h3>Sent your message successfully!</h3> </div>
+                <div id="error_message" style="width:100%; height:100%; display:none; "> <h3>Error</h3> Sorry there was an error sending your form. </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
+<script>
+    $("#btnContactUs").click(function () {
+
+        var url = " @Url.Action("SendInvite", "Dashboard")";
+        $.post(url, { name: $("#name").val(), email: $("#email").val(), mobile: $("#mobile").val(), msgText: $("#message").val() })
+    })
+</script>

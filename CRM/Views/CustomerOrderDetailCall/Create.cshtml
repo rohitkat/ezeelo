@@ -1,0 +1,116 @@
+﻿@model ModelLayer.Models.CustomerOrderDetailCall
+
+
+@{
+    Layout = "~/Views/Shared/_LayoutPartial.cshtml";
+}
+<style>
+    .margin_left_right_decress {
+        margin-left: -20px;
+        margin-right: -20px;
+    }
+
+    .margin_left_zero {
+        margin-left: 0px;
+    }
+    textarea{
+        width:80%;
+        height:40px;
+    }
+</style>
+@Html.Hidden("ShopID")
+@Html.Hidden("DeliveryPartnerID")
+@Html.Hidden("ShopOrderCode")
+@Html.Hidden("OrderStatus")
+@Html.Hidden("PaymentMode", @Request.QueryString["PaymentMode"])
+@Html.Hidden("OrderCode", @Request.QueryString["OrderCode"])
+<script src="~/Content/js/jquery-1.9.1.min.js"></script>
+@*Hide EPOD from Ashish for Live*@
+@*<script src="~/Content/js/CRMViewEvent.min.js"></script>*@
+<div class="row margin_left_zero">
+    <div id="divtable">
+        <div class="widget">
+            <div class="widget-header">
+                <i class="icon-list-alt"></i>
+                <h3> Create Call Logs [ @Request.QueryString["ShopOrderCode"] ]</h3>
+            </div>
+            <!-- /widget-header -->
+            <div class="widget-content">
+                <div class="widget big-stats-container">
+                    <div class="widget-content matchdivheight">
+
+                        @using (Html.BeginForm())
+                        {
+                            @Html.AntiForgeryToken()
+
+                            <div class="form-horizontal">
+                                @Html.ValidationSummary(true)
+
+                                <div class="control-group">
+                                    <span class="control-label">Call To</span>
+                                    <div class="controls">
+                                        @Html.DropDownList("BusinessTypeID")
+                                        @Html.ValidationMessageFor(model => model.BusinessTypeID)
+                                    </div>
+                                </div>
+
+                                <div class="control-group">
+                                    <span class="control-label">Change Status</span>
+                                    <div class="controls">
+                                        @Html.DropDownList("OrderStatus")
+                                        @Html.ValidationMessageFor(model => model.OrderStatus)
+                                    </div>
+                                </div>
+
+
+                                <div class="control-group">
+                                    @Html.LabelFor(model => model.Description, new { @class = "control-label" })
+                                    <div class="controls">
+                                        @Html.TextAreaFor(model => model.Description)
+                                        @Html.ValidationMessageFor(model => model.Description)
+                                    </div>
+                                </div>
+                                @*Hide EPOD from Ashish for Live*@
+                                @*<div id="pnlDelevered" style="display:block">
+                                    <div class="">
+                                        @Html.LabelFor(model => model.OTP, new { @class = "control-label " })
+                                        <div class="controls">
+                                            @Html.EditorFor(model => model.OTP)
+                                            @Html.ValidationMessageFor(model => model.OTP)
+                                            @Html.Label((string)ViewBag.lblOTP, new { @id = "lblOTP" })
+                                            @Html.Label("lblOtpValidation", new { @id = "lblOtpValidation", @style = "color:red;display:block" })
+                                        </div>
+                                    </div>
+                                </div>*@
+                                <div class="control-group">
+                                    <span class="control-label">Send SMS to Customer</span>
+                                    <div class="controls">
+                                        <input type="checkbox" name="sendSMSToCustomer" />
+                                    </div>
+                                </div>
+
+                                <div class="control-group">
+                                    <div style="float:right">
+                                        @*<input type="button" id="btnSave" class="btn btn-danger btn-small" value="create" />*@
+                                        <button id="btnSave" class="btn btn-danger btn-small">create</button>
+                                    </div>
+                                </div>
+                            </div>
+                        }
+
+                        <div>
+                            <button class="btn btn-small btn-success" onclick="Back()">Back</button>
+                        </div>
+                    </div>
+                    <!-- /widget-content -->
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function Back() {
+        window.parent.$("[id$=divLog]").hide();
+    }
+</script>

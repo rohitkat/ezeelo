@@ -1,0 +1,225 @@
+﻿@model IEnumerable<ModelLayer.Models.ViewModel.SubscriptionFacilityDetailViewModel>
+
+@{
+    ViewBag.Title = "Index";
+}
+@{
+    ViewBag.Title = "eZeelo: Electronics, Fashion, Coupons, Home Appliances | Lowest Price in Nagpur";
+    string cityName = "";
+    if (Request.Cookies["CityCookie"] != null && Request.Cookies["CityCookie"].Value != "")
+    {
+        cityName = Request.Cookies["CityCookie"].Value.Split('$')[1].ToLower();
+    }
+}
+<style>
+    .neweditdiv {
+        min-height: 300px;
+        height: auto;
+        overflow-x: auto;
+        max-height: 300px;
+        margin: 20px 0 20px 0;
+    }
+
+    .atagelink {
+        position: fixed !important;
+        margin-top: -38px;
+        z-index: 10;
+        background-color: #EFEFEF;
+        color: white !important;
+    }
+
+    .ahomelink {
+        background-image: url(/Content/Images/arrowright.png) !important;
+        padding-bottom: 0px;
+        float: left;
+        background-position: right center;
+        background-repeat: no-repeat;
+        padding-right: 24px;
+        padding-top: 0px;
+        padding-left: 2px;
+        color: #ffffff !important;
+    }
+
+    .spanMessage {
+        color: red;
+    }
+
+    .neweditdiv .tablenew {
+        color: #333;
+        font-family: Calibri;
+        font-size: .9em;
+        font-weight: 300;
+        text-align: left;
+        line-height: 40px;
+        border-spacing: 0;
+        border: 1px solid #428bca;
+        margin: 0px auto;
+        text-align: center;
+    }
+
+    .tablenew thead tr:first-child {
+        background: #4390df;
+        color: #fff;
+        border: none;
+    }
+
+    .tablenew th {
+        font-weight: bold;
+        border: none;
+        color: white;
+        background: #428bca;
+    }
+
+    th:first-child, td:first-child {
+        padding: 0 15px 0 20px;
+    }
+
+    .tablenew thead tr:last-child th {
+        border-bottom: 2px solid #ddd;
+    }
+
+    .tablenew tbody tr:hover {
+        background-color: #f0fbff;
+    }
+
+    .tablenew tbody tr:last-child td {
+        border: none;
+    }
+
+    .tablenew tbody td {
+        border-bottom: 1px solid #ddd;
+    }
+
+    .tablenew td:last-child {
+        text-align: right;
+        padding-right: 10px;
+    }
+
+    .tablenew .alterar:hover {
+        background-color: #428bca;
+    }
+
+    .tablenew .excluir:hover {
+        background-color: #dc2a2a;
+    }
+
+    .success {
+        background: #60a917 !important;
+        color: #ffffff !important;
+        border-color: #60a917 !important;
+        height: 30px !important;
+        padding: 0 3px 0 3px !important;
+        font-size: 12px !important;
+    }
+
+    th {
+        text-align: center;
+    }
+</style>
+<div id="navbar">
+    <ol class="breadcrumb page-breadcrumb">
+        <li>
+            @Html.RouteLink("Home", "Home", new { city = cityName })
+        </li>
+        <li class="active">Subscription History</li>
+    </ol>
+</div>
+@Html.Partial("_CustomerDashboardMenu")
+<div class="gap"></div>
+<div class="row box" data-gutter="15">
+    <div class="neweditdiv">
+        <table class="table-shopping-cart" style="width:100%;font-weight:700;">
+            <tr>
+                <th>No</th>
+                <th>
+                    Plan
+                </th>
+
+                <th>
+                    Start Date
+                </th>
+                <th>
+                    End Date
+                </th>
+                <th>Fees</th>
+                <th>Validity (Days)</th>
+                <th>
+                    Active
+                </th>
+                @*<th></th>*@
+            </tr>
+            @{ int i = 0;}
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>@{i++;}@i</td>
+                    <td>
+
+                        @Html.DisplayFor(modelItem => item.SubscriptionPlan)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.StartDate)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.EndDate)
+                    </td>
+                    <td>@Html.DisplayFor(modelItem => item.Fees)</td>
+                    <td>@Html.DisplayFor(modelItem => item.NoOfDays)</td>
+                    <td>
+                        @{
+
+                    Boolean lIsActive = false;
+                    if (item.IsActive != null)
+                    {
+                        lIsActive = Convert.ToBoolean(item.IsActive);
+                    }
+                        }
+                        @{
+                if (lIsActive)
+                {
+                    <input type="checkbox" checked="checked" disabled="disabled" />
+                }
+                else
+                {
+                    <input type="checkbox" disabled="disabled" />
+                }
+                        }
+
+                    </td>
+                    <td>
+                        <img id="Load$@item.ID" src="~/Content/Images/ajax_loader.gif" style="display: none" height="30" width="30" />
+
+                    </td>
+                </tr>
+            }
+
+        </table>
+    </div>
+    <div id="divPartial" class="divpartial">
+
+    </div>
+</div>
+<div class="gap"></div>
+<script type="text/javascript">
+    function ViewFacilities(id) {
+        var SubPlanID = id;
+        $.ajax({
+            url: '@Url.Action("FacilityDetail", "SubscriptionPlanPurchasedBy")',
+            data: { 'SubPlanID': SubPlanID },
+            type: "Post",
+            cache: false,
+            success: function (data) {
+                $("#divPartial").empty();
+                $("#divPartial").html(data);
+            },
+            error: function (data) {
+
+            }
+        });
+
+    }
+
+</script>
+
+
+

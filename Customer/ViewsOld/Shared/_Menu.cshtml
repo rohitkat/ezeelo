@@ -1,0 +1,154 @@
+﻿@model IEnumerable<ModelLayer.Models.ViewModel.MenuViewModel>
+@using System.Text.RegularExpressions;
+@using System.Globalization;
+@{
+    string cityName = "";
+    string cityID = "";
+    int franchiseID = 0;////added
+    if (Request.Cookies["CityCookie"] != null && Request.Cookies["CityCookie"].Value != "")
+    {
+        cityName = Request.Cookies["CityCookie"].Value.Split('$')[1].ToLower();
+        cityID = Request.Cookies["CityCookie"].Value.Split('$')[0].Trim();
+        franchiseID = Convert.ToInt32(Request.Cookies["CityCookie"].Value.Split('$')[2]);////added
+    }
+}
+@{int i = 0; string categoryName = string.Empty;}
+<style>
+    .dropdown-menu-category > div > ul > li > a:after {
+        position: absolute;
+        display: block;
+        content: '\f105';
+        font-family: 'FontAwesome';
+        top: 0;
+        right: 0;
+        width: 31px;
+        height: 31px;
+        line-height: 31px;
+        text-align: center;
+        opacity: 0.6;
+        -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=60)";
+        filter: alpha(opacity=60);
+    }
+
+    #MenuListing > ul > li > a {
+        height: 33px;
+        line-height: 31px !important;
+        padding: 0 30px 0 10px !important;
+        font-size: 14px;
+        position: relative;
+        /*width: 230px;*/
+    }
+
+    #MenuListing > ul > li > a {
+        display: block;
+        /* padding: 3px 20px; */
+        clear: both;
+        font-weight: normal;
+        line-height: 1.42857143;
+        color: #333;
+        white-space: nowrap;
+    }
+
+    .dropdown-menu-category > div > ul > li:hover > a {
+        background: #663399;
+        color: #fff!important;
+    }
+
+    #MenuListing > ul > li > a:hover {
+        color: #fff;
+    }
+
+    .dropdown-menu-category > div > ul > li:hover > img {
+        opacity: 1;
+        -ms-filter: none;
+        filter: none;
+    }
+</style>
+<ul style="padding-left:0px;">
+
+    @foreach (var item in Model)
+    {
+        string cl = "cat-" + i;
+        categoryName = Regex.Replace(item.CategoryName.Substring(0, Math.Min(item.CategoryName.Length, 30)), @"[\/\\#,+()$~%.':*?<>{} ]", "-").Replace("&", "and").ToLower();  @*////added franchiseId=franchiseID*@
+        @*<ul class="vertical-menu-list">
+            <li>*@
+        @*Level - 1*@
+        <li style="list-style-type: none; border-bottom: 1px dotted #CCC;">
+
+            <a class="parent" href="@Url.RouteUrl("CategoryPages", new { city = cityName, franchiseId = franchiseID, catName = categoryName, catID = item.ID })"><img class="icon-menu" alt="@item.CategoryName" src="@item.ImagePath" style="width: 30px; height: 30px; border-radius: 20px; margin-right: 5px;" onerror="this.src = '/Content/Images/no_image.png'">@CultureInfo.CurrentCulture.TextInfo.ToTitleCase(item.CategoryName.ToLower())</a>@*////added franchiseId=franchiseID*@
+
+            @*@string cl = "cat-" + i;*@
+            <div class="dropdown-menu-category-section">
+                <div class="dropdown-menu-category-section-inner" id="@cl">
+                    <div class="dropdown-menu-category-section-content">
+
+                        @*Level - 2*@
+                        @if (item.LevelTwoListing != null)
+                        {
+                            foreach (var ltwo in item.LevelTwoListing)
+                            {
+                                //string ltwoCatName = Regex.Replace(item.CategoryName.Substring(0, Math.Min(item.CategoryName.Length, 30)), @"[\/\\#,+()$~%.':*?<>{} ]", "-").Replace("&", "and").ToLower(); hide old
+                                @*//***** SEO Second Leve URL Structure RULE by tejaswee 18/11/2016 ******//*@
+                                string ltwoCatName = Regex.Replace(ltwo.CategoryName.Substring(0, Math.Min(ltwo.CategoryName.Length, 30)), @"[\/\\#,+()$~%.':*?<>{} ]", "-").Replace("&", "and").ToLower();
+                                ltwoCatName = Regex.Replace(ltwoCatName, @"\-+", "-");
+                                ltwoCatName = ltwoCatName.Trim(new[] { '-' });
+                                //***** END SEO URL Structure RULE by Ashish 18/11/2016 ******//
+
+                                // string ltwoCatName = itemName;
+
+                                <div class="col-md-3 " style="border-right: 1px solid #d9d9d9;">
+                                    @*<h5 class="dropdown-menu-category-title"><a href='@Url.RouteUrl("CategoryPages", new { catName = ltwoCatName, catID = item.ID,secLvlCatID=ltwo.ID, city = cityName, franchiseId = franchiseID })'>@CultureInfo.CurrentCulture.TextInfo.ToTitleCase(ltwo.CategoryName.ToLower())</a></h5>*@
+                                    <h5 class="dropdown-menu-category-title"><a style="color: #663399; font-weight: 800; " href='@Url.RouteUrl("SecondLevelCategoryPages", new { catName = ltwoCatName, FirstLvtName = categoryName, catID = item.ID, secLvlCatID = ltwo.ID, city = cityName, franchiseId = franchiseID })'>@CultureInfo.CurrentCulture.TextInfo.ToTitleCase(ltwo.CategoryName.ToLower())</a></h5>
+                                    <ul class="dropdown-menu-category-list">
+                                        @*Level - 3*@
+                                        @{int lthreeCount = 0;}
+                                        @if (ltwo.LevelThreeListing != null)
+                                        {
+                                            foreach (var lthree in ltwo.LevelThreeListing)
+                                            {
+                                                if (lthreeCount < 8)
+                                                {
+                                                    string itemName = Regex.Replace(lthree.CategoryName.Substring(0, Math.Min(lthree.CategoryName.Length, 30)), @"[\/\\#,+()$~%.':*?<>{} ]", "-").Replace("&", "and").ToLower();
+                                                    //***** SEO URL Structure RULE by Ashish 18/11/2016 ******//
+                                                    //itemName = Regex.Replace(itemName, @"\-{2}", "-");
+                                                    itemName = Regex.Replace(itemName, @"\-+", "-");
+                                                    itemName = itemName.Trim(new[] { '-' });
+                                                    //***** END SEO URL Structure RULE by Ashish 18/11/2016 ******//
+                                                    <li>
+                                                        @*@if (!lthree.IsManaged)
+                                                            {
+                                                                <a href="@Url.RouteUrl("ProductsByCategory", new { item = itemName, parentCategoryId = lthree.ID, city = cityName })">@CultureInfo.CurrentCulture.TextInfo.ToTitleCase(lthree.CategoryName.ToLower())</a>
+                                                            }
+                                                            else
+                                                            {
+                                                                <a href="@Url.RouteUrl("Managed", new { CatName = itemName, ParentCatID = lthree.ID, Level = lthree.Level, cityId = cityID, city = cityName })">@CultureInfo.CurrentCulture.TextInfo.ToTitleCase(lthree.CategoryName.ToLower())</a>
+                                                            }*@
+                                                        <a href="@Url.RouteUrl("productsbycategory", new { item=itemName, parentcategoryid=lthree.ID, city=cityName, franchiseid=franchiseID })">@CultureInfo.CurrentCulture.TextInfo.ToTitleCase(lthree.CategoryName.Substring(0, Math.Min(lthree.CategoryName.Length, 25)).ToLower())</a>@*////added franchiseId=franchiseID*@
+                                                    </li>
+                                                    lthreeCount++;
+                                                }
+                                            }
+                                        }
+                                        <li>
+                                            @if (ltwo.LevelThreeListing.Count > 8)
+                                            {
+                                                <a class="view_more" href="@Url.RouteUrl("CategoryPages", new { city = cityName, franchiseId = franchiseID, catName = categoryName, catID = item.ID, secLvlCatID = ltwo.ID })">View More>></a> @*////added franchiseId=franchiseID*@
+                                            }
+                                        </li>
+
+                                    </ul>
+                                </div>
+
+                            }
+                            <a class="view_more" href="@Url.RouteUrl("CategoryPages", new { city = cityName, franchiseId = franchiseID, catName = categoryName, catID = item.ID, secLvlCatID = 0 })" style="width:100%;">View More Category>></a> @*////added franchiseId=franchiseID*@
+                        }
+
+                    </div>
+                </div>
+
+            </div>
+
+        </li>
+                        i++;
+    }
+</ul>

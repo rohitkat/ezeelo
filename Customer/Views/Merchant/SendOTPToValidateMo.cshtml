@@ -1,0 +1,224 @@
+﻿
+@{
+
+    Layout = "~/Views/Shared/_Layout_Internal.cshtml";
+    ViewBag.Title = "eZeelo";
+}
+<link href="~/Content/css/material-design.minfd53.css" rel="stylesheet" />
+<link rel="stylesheet" href="~/Content/css/dropify.minfd53.css">
+<link rel="stylesheet" href="~/Content/css/custom.css">
+<script>
+    function ValidateNumber(e) {
+        var evt = (e) ? e : window.event;
+        var charCode = (evt.keyCode) ? evt.keyCode : evt.which;
+        if ((charCode > 47 && charCode < 59) || charCode == 8 || charCode == 46) { // (charCode > 31 && (charCode < 48 || charCode > 57)) {
+            return true;
+        }
+        else if (charCode == 9) {
+            SendKeys("{tab}");
+            return true;
+        }
+        return false;
+    };
+    $(document).ready(function () {
+        $("#ContactNo").bind('keyup', function () {
+            CheckNo(1);
+        });
+        $("#ValiDateOTP").bind('click', function () {
+            CheckNo(2);
+        });
+        $("#submit").bind('click', function () {
+            if ($("#OTP").val().length == 6) {
+                $("#divPopupLoading").show();
+                var dataObj = {};
+                dataObj.OTP = $("#OTP").val();
+                dataObj.Password = $("#Password").val()
+                dataObj.MerchantId = $("#MerchantID").val();
+                $.ajax({
+                    type: "POST",
+                    url: "@Url.Action("ValidateOTP", "Merchant")",
+                    //data: "{'OTP':" + $("#OTP").val() + ",'MerchantId':" + $("#MerchantID").val() + ",'Password':" + $("#Password").val() + "}",
+                    data: JSON.stringify(dataObj),
+                    contentType: "application/json; charset = utf-8",
+                    dataType: "json",
+                    cache: false,
+                    success: function (data) {
+                        // alert(data);
+                        $("#divPopupLoading").hide();
+                        if (data.Message == "") {
+                            $('#msgOTP').css("display", "block");
+                            $('#msgOTP').html('Invalid OTP! Please Enter Correct OTP');
+                            $("#OTP").focus();
+                        }
+                        else {
+                            //$("#divPopupMsg").show();
+                            //$("#DelivryMsg_Id").text(data.Message);
+                            window.location.replace(data.DashboardLink);
+
+                        }
+
+                    },
+                    error: function (x, e) {
+                        $("#divPopupLoading").hide();
+                    }
+                });
+            }
+            else {
+                $("#OTP").focus();
+                alert("Please enter correct OTP");
+            }
+        });
+            function CheckNo(par) {
+                if ($("#ContactNo").val().length > 9) {
+                    $('#msgLeader').css("color", "red");
+                    $('#msgLeader').css("display", "block");
+                    if(par == 1)
+                        $('#msgLeader').html('Please wait, verifying your registered contact no...');
+                    else
+                        $('#msgLeader').html('Please wait, resending OTP on your registered contact no...');
+                    $.ajax({
+                        type: "POST",
+                        url: "@Url.Action("ValidateMerchantContactNoSendOTP", "Merchant")",
+                        data: "{'contactNo':" + $("#ContactNo").val() + ",'id':" + $("#MerchantID").val() + ",'par':" + par+"}",//,'id:" + $("#MerchantID").val() + "'
+                        contentType: "application/json; charset = utf-8",
+                        dataType: "json",
+                        cache: false,
+                        success: function (data) {
+                            // alert(data);
+                            if (data.Message == "") {
+                                $('#submit').prop("disabled", true);
+                                $('#msgLeader').css("display", "block");
+                                $('#msgLeader').html('Invalid Contact No.');
+                                $("#OTPDiv").slideUp(1000);
+                            }
+                            else {
+                                $('#submit').prop("disabled", false);
+                                $('#msgLeader').html(data.Message);
+                                if (data.Success == 1)
+                                    $('#msgLeader').css("color", "green");
+                                else
+                                    $('#msgLeader').css("color", "red");
+                                $("#OTPDiv").slideDown(1000);
+                                $("#OTP").focus();
+                                $("#ContactNo").attr("disabled", "disabled");
+                            }
+
+                        },
+                        error: function (x, e) {
+                        }
+                    });
+                }
+            }
+    });
+</script>
+@using (Html.BeginForm(null, null, FormMethod.Post, new { enctype = "multipart/form-data", id = "frmMerchantKYC" }))
+{
+    @Html.AntiForgeryToken()
+
+    <div class="container">
+
+        <div class="row" style="height:500px;">
+
+            <div class="col-md-12">
+                <div class="box-lg">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="example">
+                                <div class="grid">
+                                    @Html.ValidationSummary(true)
+                                    <h5>Welcome, @ViewBag.MerchantName</h5>
+
+                                    @if (ViewBag.Messaage != null)
+                                    {
+                                        <div class="alert alert-danger alert-dismissible">
+                                            <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                                            <strong>Danger!</strong> @ViewBag.Messaage
+                                        </div>
+                                    }
+
+                                    <div class="row" style="text-align: center;">
+                                        <span id="errorMessage" class="breadcrumbs dark" style="width:100%;text-align:center;color:red;font-weight:bold"></span>
+                                    </div>
+
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-4 col-md-4">
+                                    <div class="form-group">
+                                        <label>
+                                            Registered Contact No.
+                                        </label>
+                                        @Html.TextBox("ContactNo", null, new { autocomplete = "off", maxlength = 10, placeholder = "Enter Registered Contact NO.", @class = "form-control", required = "required", @onkeypress = "return ValidateNumber(event);", @value = ViewBag.ContactNo })
+
+                                        <input type="hidden" id="MerchantID" value="@ViewBag.ID" />
+                                        <br />
+                                        <label class="danger" style="color:red;display:none;font-weight:bold" id="msgLeader"></label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div id="OTPDiv" style="display:none">
+                                <div class="row">
+                                    <div class="col-sm-4 col-md-4">
+                                        <div class="form-group">
+                                            <label>
+                                                OTP
+                                            </label>
+                                            @Html.TextBox("OTP", null, new { autocomplete = "off", maxlength = 15, placeholder = "Enter OTP", @class = "form-control", required = "required" })
+
+                                            <label class="danger" style="color:red;display:none;font-weight:bold" id="msgOTP"></label>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-4 col-md-4">
+                                        <div class="form-group">
+                                            <label>
+                                                Password
+                                            </label>
+                                            @Html.Password("Password", null, new { autocomplete = "off", placeholder = "Password", @class = "form-control", required = "required" })
+
+                                            @*<label class="danger" style="color:red;display:none;font-weight:bold" id="msgOTP"></label>*@
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-sm-4 col-md-4" id="OTPDiv">
+                                        <div class="form-group">
+                                            <input type="button" value="Submit" class="btn btn-success" id="submit" disabled />
+                                            <input type="button" value="Resend OTP" class="btn btn-info" id="ValiDateOTP" />
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="divPopupLoading" class="modal" style="background: rgba(130, 129, 129, 0.77); ">
+        <div class="modal-dialog modal-sm" style="margin-top:15%">
+            <div class="modal-content" style="padding:10px;text-align:center">
+                <div class="row" style="padding: 10px;">
+                    <img src="~/Content/Images/ajax_loader.gif" style="width:50%;height:50%" />
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="divPopupMsg" class="modal" style="background: rgba(130, 129, 129, 0.77); ">
+        <div class="modal-dialog modal-sm" style="width:500px !important;">
+            <div class="modal-content" style="padding:20px;text-align:center">
+                <div class="row" style="padding: 10px;">
+                    <div class="col-lg-12" style="text-align:left">
+                        <p>
+                            <span id="DelivryMsg_Id" style="font-size:16px"> </span>
+                        </p>
+                        <div style="text-align:center">
+                            <a href="@System.Configuration.ConfigurationManager.AppSettings["EZEELO_CUSTOMER_URL"]" class="btn btn-warning" style="font-size:15px;width:90px;height:35px !important">OK</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+}

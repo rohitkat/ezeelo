@@ -1,0 +1,392 @@
+﻿@model ModelLayer.Models.SEO
+
+@{
+    ViewBag.Title = "Edit";
+}
+<div id="content" class="span10">
+    <ul class="breadcrumb">
+        <li>
+            <a href="#">SEO</a>
+        </li>
+    </ul>
+    <div class="row-fluid">
+        <div class="box span12">
+            <div class="box-header">
+                <h2><i class="icon-edit"></i><span class="break"></span>Edit</h2>
+            </div>
+            <div class="box-content">
+
+
+                @using (Html.BeginForm())
+                {
+                    @Html.AntiForgeryToken()
+
+                    <div class="form-horizontal">
+                        @Html.ValidationSummary(true)
+                        @if (ViewBag.ErrorMessage != null)
+                        {
+                            <div style="color:red; font-weight:bold;">
+                                @ViewBag.ErrorMessage
+                            </div>
+                        }
+                        @Html.HiddenFor(model => model.ID)
+                        <div class="col-md-12 formDiv">
+                            <ul>
+                                <li class="span4">
+                                    @Html.LabelFor(model => model.BusinessTypeID, "BusinessTypeID", new { @class = "control-label col-md-2" })
+                                    @Html.DropDownList("BusinessTypeID", "select BusinessType")
+                                    @Html.ValidationMessageFor(model => model.BusinessTypeID)
+                                </li>
+
+                            </ul>
+                            <div class="clr"></div>
+
+                        </div>
+                        <div id="CategoryList">
+                            <div class="heading-seo">
+                                <h2>Select Option</h2>
+                                <div class="form-group">
+                                    <div class="col-md-10">
+                                        @Html.HiddenFor(model => model.EntityID)
+                                        @Html.ValidationMessageFor(model => model.EntityID)
+                                    </div>
+                                </div>
+                            </div>
+                            <ul class="formDiv">
+                                <li class="span3">
+                                    <label>Select LevelOne Category</label>
+                                    @Html.RadioButton("EntityType", false, new { @Class = "OneLevelchk" })
+                                    @*@Html.DropDownList("LevelOne", (SelectList)ViewBag.LevelOne, "select Category")*@
+                                    @Html.DropDownList("LevelOne", "select Category")
+                                </li>
+                                <li class="span3">
+                                    <label>Select LevelTwo Category</label>
+                                    @Html.RadioButton("EntityType", false, new { @Class = "TwoLevelchk" })
+                                    @Html.DropDownList("LevelTwo", "select Category")
+                                </li>
+                                <li class="span3">
+                                    <label>Select LevelThree Category</label>
+                                    @Html.RadioButton("EntityType", false, new { @Class = "ThreeLevelchk" })
+                                    @Html.DropDownList("LevelThree", "select Category")
+                                </li>
+                                <li class="span3">
+                                    <label>Select Product</label>
+                                    @Html.RadioButton("EntityType", false, new { @Class = "Productchk" })
+                                    @Html.DropDownList("ProductID", "select Product")
+                                </li>
+                            </ul>
+                            <div class="clr"></div>
+                        </div>
+                        <div class="listFor">
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.H1, new { @class = "control-label col-md-2" })
+                                <div class="col-md-10">
+                                    @Html.EditorFor(model => model.H1)
+                                    @Html.ValidationMessageFor(model => model.H1)
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                @*@Html.LabelFor(model => model.Metatag, new { @class = "control-label col-md-2" })*@
+                                <label class="control-label col-md-2">Page Title </label>
+                                <div class="col-md-10">
+                                    @Html.TextAreaFor(model => model.Metatag)
+                                    @Html.ValidationMessageFor(model => model.Metatag)
+                                </div>
+                            </div>
+
+
+
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.MetaKeyword, new { @class = "control-label col-md-2" })
+                                <div class="col-md-10">
+                                    @Html.TextAreaFor(model => model.MetaKeyword)
+                                    @Html.ValidationMessageFor(model => model.MetaKeyword)
+                                </div>
+                            </div>
+
+                            @*<div class="form-group">
+                                @Html.LabelFor(model => model.URL, new { @class = "control-label col-md-2" })
+                                <div class="col-md-10">
+                                    @Html.EditorFor(model => model.URL)
+                                    @Html.ValidationMessageFor(model => model.URL)
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.PageName, new { @class = "control-label col-md-2" })
+                                <div class="col-md-10">
+                                    @Html.EditorFor(model => model.PageName)
+                                    @Html.ValidationMessageFor(model => model.PageName)
+                                </div>
+                            </div>*@
+
+
+
+
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.Description, new { @class = "control-label col-md-2" })
+                                <div class="col-md-10">
+                                    @Html.TextAreaFor(model => model.Description)
+                                    @Html.ValidationMessageFor(model => model.Description)
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="control-label col-md-2">
+                                    Product Description
+                                    </label>
+                                    <div class="col-md-10">
+                                        @if (ViewBag.ProductDisription != null)
+                                        {
+                                            @Html.TextArea("ProductDisription", (string)ViewBag.ProductDisription)
+                                        }
+                                        else
+                                        {
+                                            @Html.TextArea("ProductDisription")
+                                        }
+                                    </div>
+</div>
+
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.IsActive, new { @class = "control-label col-md-2" })
+                                <div class="col-md-10">
+                                    @Html.EditorFor(model => model.IsActive)
+                                    @Html.ValidationMessageFor(model => model.IsActive)
+                                </div>
+                            </div>
+
+
+
+                            <div class="form-actions">
+                                <div class="col-md-offset-2 col-md-10">
+                                    <input type="submit" value="Save" class="btn btn-success" />
+                                    @Html.ActionLink("Back to List", "Index", null, new { @class = "btn" })
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                }
+
+
+            </div>
+        </div>
+    </div>
+</div>
+<script src="~/Scripts/jquery-1.10.2.min.js"></script>
+<script>
+
+    $(document).ready(function () {
+        $(function () {
+            var idLevelOne = $("#LevelOne option:selected").val();
+            var idLevelTwo = $("#LevelTwo option:selected").val();
+            var idLevelThree = $("#LevelThree option:selected").val();
+            var idProduct = $("#ProductID option:selected").val();
+            var businesstype = $("#BusinessTypeID option:selected").text();
+
+            if (businesstype == 'ProductMetadata') {
+                // $("#EntityID").val(idProduct);
+                $(".OneLevelchk").attr("disabled", true);
+                $(".TwoLevelchk").attr("disabled", true);
+                $(".ThreeLevelchk").attr("disabled", true);
+                $(".Productchk").attr("disabled", false);
+
+                $(".Productchk").attr("checked", true);
+
+            }
+            else if (parseInt(idLevelThree) > 0) {
+                //$("#EntityID").val(idLevelThree);
+                $(".ThreeLevelchk").attr("checked", true);
+                $(".Productchk").attr("disabled", true);
+
+            }
+            else if (parseInt(idLevelTwo) > 0) {
+                //$("#EntityID").val(idLevelTwo);
+
+                $(".TwoLevelchk").attr("checked", true);
+                $(".Productchk").attr("disabled", true);
+            }
+            else if (parseInt(idLevelOne) > 0) {
+                //$("#EntityID").val(idLevelOne);
+                $(".OneLevelchk").attr("checked", true);
+                $(".Productchk").attr("disabled", true);
+            }
+
+
+
+        });
+
+
+        $("#BusinessTypeID").change(function () {
+            // $("#CategoryList").attr("display", "none");
+            //$("#CategoryList").css("display", "none");
+
+            var prefix = $("#BusinessTypeID option:selected").val();
+
+            $.ajax({
+                type: "POST",
+                url: "/SEOPage/PrefixVerification?id=" + prefix,
+                datatype: "Json",
+                contentType: "application/json; charset=utf-8",
+                success: function (msg) {
+                    if (msg == 'MTDT') {
+                        //$("#CategoryList").attr("display", "block");
+                        //$("#CategoryList").css("display", "block");
+
+
+                        $(".OneLevelchk").attr("disabled", true);
+                        $(".TwoLevelchk").attr("disabled", true);
+                        $(".ThreeLevelchk").attr("disabled", true);
+                        $(".Productchk").attr("disabled", false);
+
+                        $(".Productchk").attr("checked", true);
+
+
+                        var id = $("#ProductID option:selected").val();
+                        $("#EntityID").val(id);
+
+                    }
+                    else {
+                        $(".Productchk").attr("disabled", true);
+
+                        $(".OneLevelchk").attr("disabled", false);
+                        $(".TwoLevelchk").attr("disabled", false);
+                        $(".ThreeLevelchk").attr("disabled", false);
+
+                        $(".OneLevelchk").attr("checked", true);
+
+                        var id = $("#LevelOne option:selected").val();
+                        $("#EntityID").val(id);
+                    }
+                    $("#ProductID").empty();
+                    $("#ProductID").append("<option value=0>Select Product</option>");
+                    $("#LevelThree").empty();
+                    $("#LevelThree").append("<option value=0>Select Category</option>");
+                    $("#LevelTwo").empty();
+                    $("#LevelTwo").append("<option value=0>Select Category</option>");
+                },
+                error: function (x, e) {
+                    alert("Wrong Selection");
+                }
+            });
+        });
+
+
+        $("#LevelOne").change(function () {
+
+            var id = $("#LevelOne option:selected").val();
+            var check = $("input:radio[name=EntityType]:checked").attr("class");
+            if (check == 'OneLevelchk') {
+                $("#EntityID").val(id);
+            }
+
+
+            $.ajax({
+                type: "POST",
+                url: "/SEOPage/CaltegoryList?id=" + id,
+                datatype: "JSON",
+                success: function (msg) {
+                    $("#ProductID").empty();
+                    $("#ProductID").append("<option value=0>Select Product</option>");
+                    $("#LevelThree").empty();
+                    $("#LevelThree").append("<option value=0>Select Category</option>");
+                    $("#LevelTwo").empty();
+                    $("#LevelTwo").append("<option value=0>Select Category</option>");
+
+                    $.each(msg, function (index, item) {
+                        $('#LevelTwo').append('<option value=' + item.ID + '>' + item.Name + '</option>');
+                    });
+                }
+            });
+        });
+
+        $("#LevelTwo").change(function () {
+
+            var id = $("#LevelTwo option:selected").val();
+            var check = $("input:radio[name=EntityType]:checked").attr("class");
+            if (check == 'TwoLevelchk') {
+                $("#EntityID").val(id);
+            }
+
+            $.ajax({
+                type: "POST",
+                url: "/SEOPage/CaltegoryList?id=" + id,
+                datatype: "JSON",
+                success: function (msg) {
+                    $("#ProductID").empty();
+                    $("#ProductID").append("<option value=0>Select Product</option>");
+                    $("#LevelThree").empty();
+                    $("#LevelThree").append("<option value=0>Select Category</option>");
+
+                    $.each(msg, function (index, item) {
+                        $('#LevelThree').append('<option value=' + item.ID + '>' + item.Name + '</Option>');
+                    });
+
+                }
+            });
+
+        });
+
+        $("#LevelThree").change(function () {
+
+            var id = $("#LevelThree option:selected").val();
+            var check = $("input:radio[name=EntityType]:checked").attr("class");
+            if (check == 'ThreeLevelchk') {
+                $("#EntityID").val(id);
+            }
+
+            $.ajax({
+                type: "POST",
+                url: "/SEOPage/ProductList?id=" + id,
+                datatype: "JSON",
+                success: function (msg) {
+                    $("#ProductID").empty();
+                    $('#ProductID').append('<option value=0>Select Product</Option>');
+
+                    $.each(msg, function (index, item) {
+                        $('#ProductID').append('<option value=' + item.ID + '>' + item.Name + '</Option>');
+                    });
+
+                }
+            });
+
+        });
+
+        $("#ProductID").change(function () {
+
+            var id = $("#ProductID option:selected").val();
+            var check = $("input:radio[name=EntityType]:checked").attr("class");
+            if (check == 'Productchk') {
+                $("#EntityID").val(id);
+            }
+        });
+
+
+        $("input:radio[name=EntityType]").click(function () {
+
+
+            var check = $("input:radio[name=EntityType]:checked").attr("class");
+            if (check == 'TwoLevelchk') {
+                var id = $("#LevelTwo option:selected").val();
+                $("#EntityID").val(id);
+
+            }
+
+            if (check == 'ThreeLevelchk') {
+                var id = $("#LevelThree option:selected").val();
+                $("#EntityID").val(id);
+            }
+
+            if (check == 'OneLevelchk') {
+                var id = $("#LevelOne option:selected").val();
+                $("#EntityID").val(id);
+            }
+            if (check == 'Productchk') {
+                var id = $("#ProductID option:selected").val();
+                $("#EntityID").val(id);
+            }
+        });
+
+    });
+
+</script>

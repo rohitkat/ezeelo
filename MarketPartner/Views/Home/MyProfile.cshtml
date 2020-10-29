@@ -1,0 +1,457 @@
+﻿@model ModelLayer.Models.Merchant
+@{
+    ViewBag.Title = "MyProfile";
+}
+<style type="text/css">
+    select {
+        float: none !important;
+        border-radius: 4px !important;
+    }
+
+    .row {
+        margin: 0 !important;
+    }
+
+    .ms-options-wrap > button:focus, .ms-options-wrap > button {
+        border-radius: 4px !important;
+        box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075);
+        border: 1px solid #673AB7;
+        height: 34px;
+        color: #555 !important;
+        line-height: 1.42857143;
+        transition: border-color ease-in-out .15s, box-shadow ease-in-out .15s;
+    }
+
+    .field-validation-error {
+        color: red
+    }
+
+    #divLoading {
+        margin: 0px;
+        padding: 0px;
+        position: fixed;
+        right: 0px;
+        top: 0px;
+        width: 100%;
+        height: 100%;
+        background-color: rgb(102, 102, 102);
+        z-index: 30001;
+        opacity: 0.8;
+        display: none;
+    }
+
+    .dashboard {
+        background-color: brown;
+        border-color: brown;
+        color: white;
+    }
+
+        .dashboard:focus {
+            background-color: saddlebrown;
+        }
+
+    .details {
+        background-color: orangered;
+        border-color: orangered;
+        color: white;
+    }
+</style>
+<section class="content">
+    @using (Html.BeginForm("MyProfile", "Home", FormMethod.Post, new { id = "frm" }))
+    {
+        @Html.AntiForgeryToken()
+        @Html.ValidationSummary(true)
+        @Html.HiddenFor(model => model.Id)
+        <div class="row">
+            <div class="col-md-12">
+                <div class="box box-primary">
+                    <div class="box-header">
+                        <h3 class="box-title">My Profile</h3>
+                    </div>
+                    <div class="box-body">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <span style="font-weight:bold;color:brown">
+                                    @Html.DisplayFor(modelItem => modelItem.Remark)
+                                </span>
+                                @if (ViewBag.Status != "")
+                                {
+                                    <span style="font-weight:bold;color:brown">
+                                        @ViewBag.Status
+                                    </span>
+                                }
+                                <div class="example">
+                                    <div class="grid">
+                                        @Html.ValidationSummary(true)
+
+                                        <br />
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <div class="form-group">
+                                                    <label>
+                                                        Franchise/ Shop Name
+                                                    </label>
+                                                    @Html.TextBoxFor(model => model.FranchiseName, null, new { autocomplete = "off", maxlength = 200, placeholder = "Enter Franchise/ Shop Name", @class = "form-control", required = "required" })
+                                                    @Html.ValidationMessageFor(model => model.FranchiseName)
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <div class="form-group">
+                                                    <label>
+                                                        GSTIN No.
+                                                    </label>
+                                                    <div class="row">
+                                                        <div class="col-md-9">
+                                                            @Html.TextBoxFor(model => model.GSTINNo, null, new { autocomplete = "off", maxlength = 15, placeholder = "Enter GSTIN No.", @class = "form-control", required = "required" })
+                                                            @Html.ValidationMessageFor(model => model.GSTINNo)
+                                                        </div>
+                                                        <div class="col-md-3">
+                                                            @Html.CheckBox("chkGSTApplicable", new { @id = "chkGSTApplicable" })
+                                                            <lable>Not Applicable</lable>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div><div class="col-md-6">
+                                                <div class="form-group">
+                                                    <label>
+                                                        PAN No.
+                                                    </label>
+                                                    @Html.TextBoxFor(model => model.PANNo, null, new { autocomplete = "off", maxlength = 15, placeholder = "Enter PAN No.", @class = "form-control", required = "required" })
+                                                    @Html.ValidationMessageFor(model => model.PANNo)
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                <div class="form-group">
+                                                    <label>
+                                                        Address
+                                                    </label>
+                                                    @Html.TextBoxFor(model => model.Address, null, new { autocomplete = "off", maxlength = 150, placeholder = "Enter Address", @class = "form-control", required = "required" })
+                                                    @Html.ValidationMessageFor(model => model.Address)
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-4">
+                                                <div class="form-group">
+                                                    <label>
+                                                        State
+                                                    </label>
+                                                    @Html.DropDownListFor(model => model.State, new SelectList(ViewBag.State, "ID", "Name"), "Select State", new { @class = "form-control", required = "required" })
+                                                    @Html.ValidationMessageFor(model => model.State)
+                                                </div>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <div class="form-group">
+                                                    <label>
+                                                        City
+                                                    </label>
+                                                    @if (ViewBag.City != null)
+                                                    {
+                                                        @Html.DropDownListFor(model => model.City, new SelectList(ViewBag.City, "CityID", "CityName"), "Select City", new { @class = "form-control", required = "required" })
+                                                    }
+                                                    else
+                                                    { @Html.DropDownListFor(model => model.City, new SelectList(new List<ModelLayer.Models.City>(), "ID", "Name"), "Select City", new { @class = "form-control", required = "required" })}
+                                                    @Html.ValidationMessageFor(model => model.City)
+                                                </div>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <div class="form-group">
+                                                    <label>
+                                                        Pincode
+                                                    </label>
+                                                    @Html.TextBoxFor(model => model.Pincode, new { @class = "form-control", required = "required", maxlength = 6, minlength = 6, placeholder = "Enter Pincode", @onkeypress = "return ValidateNumber(event);" })
+                                                    @*@if (ViewBag.Pincode != null)
+        {
+            @Html.DropDownListFor(model => model.Pincode, new SelectList(ViewBag.Pincode, "ID", "Name"), "Select Pincode", new { @class = "form-control", required = "required" })
+        }
+        else
+        { @Html.DropDownListFor(model => model.Pincode, new SelectList(new List<ModelLayer.Models.Pincode>(), "ID", "Name"), "Select Pincode", new { @class = "form-control", required = "required" })}*@
+                                                    @Html.ValidationMessageFor(model => model.Pincode)
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <div class="form-group">
+                                                    <label>
+                                                        Shop Timings
+                                                    </label>
+                                                    @Html.DropDownListFor(model => model.ShopTiming, (IEnumerable<SelectListItem>)ViewBag.ShopTiming, "Select Shop Timings", new { @class = "form-control", required = "required" })
+                                                    @Html.ValidationMessageFor(model => model.ShopTiming)
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="form-group">
+                                                    <label>
+                                                        Holiday &nbsp;<i title="Use Ctrl+ for multiple selection" style="color:green" class="fa fa-info-circle"></i>
+                                                    </label>
+                                                    @Html.DropDownList("Holiday", new SelectList(ViewBag.Holiday, "Id", "Name"), new { @class = "form-control mdb-select", @multiple = "multiple" })
+
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-4">
+                                                <div class="form-group">
+                                                    <label>
+                                                        Contact Person
+                                                    </label>
+                                                    @Html.TextBoxFor(model => model.ContactPerson, null, new { autocomplete = "off", maxlength = 150, placeholder = "Enter Contact Person Name", @class = "form-control", required = "required" })
+                                                    @Html.ValidationMessageFor(model => model.ContactPerson)
+                                                </div>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <div class="form-group">
+                                                    <label>
+                                                        Contact Number
+                                                    </label>
+                                                    @Html.TextBoxFor(model => model.ContactNumber, null, new { autocomplete = "off", maxlength = 10, placeholder = "Enter Contact No.", @class = "form-control", required = "required" })
+                                                    @Html.ValidationMessageFor(model => model.ContactNumber)
+                                                    <label class="field-validation-error" style="display:none" id="msgCon"></label>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <div class="form-group">
+                                                    <label>
+                                                        Email
+                                                    </label>
+                                                    @Html.TextBoxFor(model => model.Email, null, new { autocomplete = "off", maxlength = 150, placeholder = "Enter Email Address", @class = "form-control", required = "required", @type = "email" })
+                                                    @Html.ValidationMessageFor(model => model.Email)
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <div class="form-group">
+                                                    <label>
+                                                        Category
+                                                    </label>
+                                                    @Html.DropDownListFor(model => model.Category, new SelectList(ViewBag.Category, "Id", "Name"), "Select Category", new { @class = "form-control", required = "required" })
+                                                    @Html.ValidationMessageFor(model => model.Category)
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="form-group">
+                                                    <label>
+                                                        Commission
+                                                    </label>
+                                                    @Html.DropDownListFor(model => model.Comission, new SelectList(ViewBag.Comission, "Id", "Commission"), "Select Commission", new { @class = "form-control", required = "required" })
+                                                    @Html.ValidationMessageFor(model => model.Comission)
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <div class="form-group">
+                                                    <label>
+                                                        Validity Period(1 years)
+                                                    </label>
+                                                    <br />
+                                                    @if (ViewBag.RemainingDays != null)
+                                                    {
+                                                        if (ViewBag.RemainingDays == "E")
+                                                        {
+                                                            <span style="color:red;font-weight:bold">
+                                                                Expired
+                                                            </span>
+                                                        }
+                                                        else
+                                                        {
+                                                            <span style="color:green;font-weight:bold">
+                                                                Remaining Days @ViewBag.RemainingDays
+                                                            </span>
+                                                        }
+
+                                                    }
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="form-group">
+                                                    <label>
+                                                        Google Map Link
+                                                    </label>
+                                                    @Html.TextBoxFor(model => model.GoogleMapLink, null, new { autocomplete = "off", placeholder = "Enter Google Map Link", @type = "url", @class = "form-control" })
+                                                    @Html.ValidationMessageFor(model => model.GoogleMapLink)
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label>
+                                                Shop Introduction
+                                            </label>
+                                            @Html.TextAreaFor(model => model.SpecialRemark, 5, 10, new { autocomplete = "off", maxlength = 15000, placeholder = "Enter Special Remarks", @class = "form-control" })
+                                            @Html.ValidationMessageFor(model => model.SpecialRemark)
+                                        </div>
+                                        <div class="form-group">
+                                            <input type="submit" value="Save" class="btn btn-sm btn-success" />
+                                            @Html.ActionLink("Banner", "BannerList", "Home", new { @class = "btn btn-sm btn-warning" })
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+</section>
+
+<script src="~/plugins/Custom.js"></script>
+<script>
+    $(document).ready(function () {
+        if ("@Model.Remark"!= "") {
+            $("#frm :input").prop("disabled", true);
+        }
+
+        $("#lnk-Profile").addClass("active");
+        document.getElementById("GSTINNo").onkeypress = function () { ValidateAlphaNumeric() };
+        document.getElementById("PANNo").onkeypress = function () { ValidateAlphaNumeric() };
+        document.getElementById("ContactNumber").onkeypress = function () { ValidateNumber() };
+        $("select#State").val(@Model.State);
+        $("select#City").val(@Model.City);
+        $('#Pincode').val(@Model.Pincode);
+        $("#ShopTiming").val(@Model.ShopTiming);
+        $("#Comission").val(@Model.Comission);
+        $("#Category").val(@Model.Category);
+        var holiday = "@ViewBag.Holidays";
+        if (holiday != '') {
+            var valArr = holiday.split(",")
+            var i = 0; var size = valArr.length;
+            $options = $('#Holiday option');
+            for (i; i < size; i++) {
+                $options.filter('[value="' + valArr[i] + '"]').prop('selected', true);
+            }
+
+        }
+
+        var chk = "@ViewBag.NotApplicableGST";
+            if (chk == "False")
+                $('[id*=chkGSTApplicable]').prop("checked", false);
+            else {
+                $('[id*=chkGSTApplicable]').prop("checked", true);
+                $('[id*=GSTINNo]').removeAttr("required");
+                $('[id*=GSTINNo]').prop("disabled", true);
+                $('[id*=GSTINNo]').removeClass('field-validation-error').next('span[data-valmsg-for]').removeClass('field-validation-error').html("");
+        }
+
+        $("select#State").bind('change', function () {
+       // $('#loader_img2').show();
+
+        var stateid = $("select#State option:selected").val();
+        if (stateid == 0) {
+            $('#City').empty();
+            $('#City').append('<option value=0>Select City</option>');
+            $('#Pincode').empty();
+            $('#Pincode').append('<option value=0>Select Pincode</option>');
+
+         //   $('#loader_img2').hide();
+            return;
+        }
+        $.ajax({
+            type: "POST",
+            url:"@Url.Action("GetCityList", "Home")",
+            data: "{'stateID':"+stateid+"}",
+            contentType: "application/json; charset = utf-8",
+            dataType: "json",
+            cache: false,
+            success: function (msg) {
+                $('#Pincode').empty();
+                $('#Pincode').append('<option value=0>Select Pincode</option>');
+                $('#City').empty();
+                $('#City').append('<option value=0>Select City</option>');
+                $.each(msg, function (index, item) {
+                    $('#City').append('<option value=' + item.CityID + '>' + item.CityName + '</option>');
+                });
+                //$('#loader_img2').hide();
+            },
+            error: function (x, e) {
+                alert('Failure');
+
+            }
+        });
+
+    });
+
+        $("select#City").bind('change', function () {
+            // $('#loader_img2').show();
+
+            var cityid = $("select#City option:selected").val();
+            if (cityid == 0) {
+                $('#Pincode').empty();
+                $('#Pincode').append('<option value=0>Select Pincode</option>');
+                //   $('#loader_img2').hide();
+                return;
+            }
+            $.ajax({
+                type: "POST",
+                url: "@Url.Action("GetPincodeByCityId", "Home")",
+                data: "{'cityID':" + cityid + "}",
+                contentType: "application/json; charset = utf-8",
+                dataType: "json",
+                cache: false,
+                success: function (msg) {
+                    $('#Pincode').empty();
+                    $('#Pincode').append('<option value=0>Select Pincode</option>');
+                    $.each(msg, function (index, item) {
+                        $('#Pincode').append('<option value=' + item.value + '>' + item.text + '</option>');
+                    });
+                    //$('#loader_img2').hide();
+                },
+                error: function (x, e) {
+                    alert('Failure');
+
+                }
+            });
+        });
+
+        $("#chkGSTApplicable").bind('change', function () {
+
+            if ($(this).prop("checked")) {
+                $('[id*=GSTINNo]').removeAttr("required");
+                $('[id*=GSTINNo]').prop("disabled", true);
+                $('[id*=GSTINNo]').val("");
+                $('[id*=GSTINNo]').removeClass('field-validation-error').next('span[data-valmsg-for]').removeClass('field-validation-error').html("");
+            }
+            else {
+                $('[id*=GSTINNo]').attr("required", "required");
+                $('[id*=GSTINNo]').prop("disabled", false);
+                $('[id*=GSTINNo]').val('@Model.GSTINNo');
+            }
+        });
+
+        function ValidateNumber(e) {
+
+            var evt = (e) ? e : window.event;
+            var charCode = (evt.keyCode) ? evt.keyCode : evt.which;
+            if ((charCode > 47 && charCode < 59) || charCode == 8 || charCode == 46) { // (charCode > 31 && (charCode < 48 || charCode > 57)) {
+                return true;
+            }
+            else if (charCode == 9) {
+                SendKeys("{tab}");
+                return true;
+            }
+            return false;
+        };
+
+        function ValidateAlphaNumeric(e) {
+            var evt = (e) ? e : window.event;
+            var charCode = (evt.keyCode) ? evt.keyCode : evt.which;
+            if ((charCode >= 65 && charCode <= 90) || (charCode > 45 && charCode < 58) || (charCode > 95 && charCode < 106) || charCode == 8 || charCode == 127 || charCode == 37 || charCode == 39 || charCode == 189 || charCode == 109) { // (charCode > 31 && (charCode < 48 || charCode > 57)) {
+                return true;
+            }
+            else if (charCode == 9) {
+                SendKeys("{tab}");
+                return true;
+            }
+            return false;
+        };
+
+    });
+</script>

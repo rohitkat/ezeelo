@@ -1,0 +1,168 @@
+﻿@model IEnumerable<ModelLayer.Models.NetworkReportViewModel>
+
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_LeadersLayout.cshtml";
+}
+
+<div class="row">
+    <div class="col-2">
+        <legend>Network Report Of</legend>
+
+    </div>
+    <div class="col-2">
+        <legend style="color:blue;">@ViewBag.UserName</legend>
+
+    </div>
+    <div class="col-2">
+        <legend style="color:blue;">@ViewBag.Email</legend>
+    </div>
+</div>
+<div class="row">
+    <div class="col-2">
+        <legend style="color:blue;">@ViewBag.Designation</legend>
+    </div>
+
+    <div class="col-2">
+        <legend style="color:blue;">@ViewBag.Mobile</legend>
+    </div>
+    <div class="col-2">
+        <legend style="color:blue;">@ViewBag.MemberCount</legend>
+    </div>
+    <div class="col-2">
+        <legend style="color:blue;">@ViewBag.DateRange</legend>
+    </div>
+</div>
+
+
+<script src="~/Scripts/jquery-1.12.4.js"></script>
+
+<link href="//cdn.datatables.net/1.10.19/css/jquery.dataTables.min.css" rel="stylesheet" />
+<script src="//cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
+
+
+<div class="card-body">
+
+    <table class="table" id="networkReportTable">
+
+        <thead>
+            <tr>
+                @*<th>Network Report</th>*@
+                <th scope="col">
+                    @Html.DisplayNameFor(model => model.FullName)
+                </th>
+                <th scope="col">
+                    @Html.DisplayNameFor(model => model.UserEmail)
+                </th>
+                <th scope="col">
+                    @Html.DisplayNameFor(model => model.Mobile)
+                </th>
+                <th scope="col">
+                        RefferalCode
+                    </th>
+                    <th scope="col">
+                        @Html.DisplayNameFor(model => model.InActivePoints)
+                    </th>
+                <th scope="col">
+                    RP
+                </th>
+                <th scope="col">
+                    @Html.DisplayNameFor(model => model.ERP)
+                </th>
+                <th scope="col">
+                    Last Trx Date
+                </th>
+                <th scope="col">
+                    @Html.DisplayNameFor(model => model.Downline)
+                </th>
+                <th scope="col">
+                    @Html.DisplayNameFor(model => model.ParentName)
+                </th>
+                <th scope="col">
+                    JoinDate
+                </th>
+                <th scope="col">
+                    ActiveStatus
+                </th>
+
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+
+                    <td>
+                        @Html.DisplayFor(modelItem => item.FullName)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.UserEmail)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Mobile)
+                    </td>
+                    <td>
+                            @Html.DisplayFor(modelItem => item.ReferalID)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.InActivePoints)
+                        </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.RPOnMyPurchase)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.ERP)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.LastTransaction)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Downline)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.ParentName)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.JoinDate)
+                    </td>
+                    <td>
+                        @if (@item.PendingPoints == 0)
+                        {
+                            <span style="background-color:#0ceb4a" class="badge badge-table badge-success">Active</span>
+                        }
+                        else
+                        {
+                            <span style="background-color:#b30707" class="badge badge-table badge-danger">Inactive</span>
+                        }
+                    </td>
+                </tr>
+            }
+        </tbody>
+
+    </table>
+</div>
+<a href="@Url.Action("Index", "MLMUser", new {area="Admin" })">Back To List</a>
+
+<div class="col-2">
+    <input type="button" name="btnExcel" id="btnExcel" value="Export To Excel" class="btn btn-primary" />
+</div>
+<script>
+    $(document).ready(function () {
+        $('#networkReportTable').DataTable();
+
+
+    });
+</script>
+<script>
+
+
+    $('#btnExcel').click(function () {
+        var sDate = $("#min").val();
+        var eDate = $("#max").val();
+
+        window.location.href = "/NetworkReport/ExportToExcel"
+
+    })
+
+</script>
+

@@ -1,0 +1,432 @@
+﻿@model ModelLayer.Models.ViewModel.MerchantPayoutViewModel
+
+
+<div id="wrap">
+    <div class="container">
+        <div id="content" class="span10" style="min-height: 403px;">
+            <div id="divRpt">
+                <ul class="nav nav-tabs" id="myTab">
+                    <li class="nav-item">
+                        <a href="#main-P" class="nav-link active show" data-toggle="tab">Payout</a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#Pdetails" class="nav-link" data-toggle="tab">Payout Details</a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#Puserwise" class="nav-link" data-toggle="tab">Transaction List</a>
+                    </li>
+                </ul>
+                <div class="tab-content">
+                    <div class="tab-pane fade active show" id="main-P" style="max-width:1000px;overflow:auto">
+                        @if (@Model.payout != null)
+                        {
+                            <br />
+                            <table class="table" style="width:70%">
+                                <tbody class="form-group form-material">
+                                    <tr>
+                                        <td class="heading">
+                                            <i class="fa fa-calendar"></i>&nbsp;&nbsp;From Date:
+                                        </td>
+                                        <td class="details" id="name-input">@Model.payout.FromDate.ToString("dd/MM/yyyy")</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="heading">
+                                            <i class="fa fa-calendar" aria-hidden="true"></i>&nbsp;&nbsp;To Date:
+                                        </td>
+                                        <td class="details" id="mobile">@Model.payout.ToDate.ToString("dd/MM/yyyy")</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="heading">
+                                            <i class="fa fa-user"></i>&nbsp;&nbsp;Total Users:
+                                        </td>
+                                        <td class="details">@Html.DisplayFor(modelItem => Model.payout.TotalUser)</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="heading">
+                                            <i class="fa fa-money"></i>&nbsp;&nbsp;Relationship Manager's ERP:
+                                        </td>
+                                        <td class="details">@Html.DisplayFor(modelItem => Model.payout.RMERP)</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="heading">
+                                            <i class="fa fa-money"></i>&nbsp;&nbsp;Buyers ERP:
+                                        </td>
+                                        <td class="details" id="Ref_ID">@Html.DisplayFor(modelItem => Model.payout.L0ERP)</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="heading">
+                                            <i class="fa fa-money"></i>&nbsp;&nbsp;Network ERP:
+                                        </td>
+                                        <td class="details">@Html.DisplayFor(modelItem => Model.payout.UptoL6ERP)</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="heading">
+                                            <i class="fa fa-money"></i>&nbsp;&nbsp;Relationship Manager Inactive Points:
+                                        </td>
+                                        <td class="details">@Html.DisplayFor(modelItem => Model.payout.RMInactivePoints)</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="heading">
+                                            <i class="fa fa-money"></i>&nbsp;&nbsp;Network Inactive Points:
+                                        </td>
+                                        <td class="details">@Html.DisplayFor(modelItem => Model.payout.UptoL6InactivePoints)</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="heading">
+                                            <i class="fa fa-money"></i>&nbsp;&nbsp;Payable ERP from Paid Payout:
+                                        </td>
+                                        <td class="details">@Html.DisplayFor(modelItem => Model.payout.PrevoiusUnpaidERP)</td>
+                                    </tr>
+
+                                    <tr>
+                                        <td class="heading">
+                                            <i class="fa fa-money"></i>&nbsp;&nbsp;Unpaid ERP:
+                                        </td>
+                                        <td class="details">@Html.DisplayFor(modelItem => Model.payout.UnpaidERP)</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="heading">
+                                            <i class="fa fa-money"></i>&nbsp;&nbsp;Company ERP:
+                                        </td>
+                                        <td class="details">@Html.DisplayFor(modelItem => Model.payout.Company)</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="heading">
+                                            <i class="fa fa-money"></i>&nbsp;&nbsp;Part5th:
+                                        </td>
+                                        <td class="details">@Html.DisplayFor(modelItem => Model.payout.Part5th)</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="heading">
+                                            <i class="fa fa-money"></i>&nbsp;&nbsp;Total ERP:
+                                        </td>
+                                        <td class="details">@Html.DisplayFor(modelItem => Model.payout.TotalERP)</td>
+                                    </tr>
+
+                                    <tr style="color:green;font-weight:bold">
+                                        <td class="heading">
+                                            <i class="fa fa-money"></i>&nbsp;&nbsp;Payable ERP:
+                                        </td>
+                                        <td class="details">@Html.DisplayFor(modelItem => Model.payout.PayableERP)</td>
+                                    </tr>
+
+                                </tbody>
+                            </table>
+                        }
+                    </div>
+                    <div class="tab-pane fade" id="Pdetails" style="max-width:1000px;overflow:auto">
+                        @if (@Model.PayoutDetails != null)
+                        {
+                           <br />
+                            <table id="tblData" class="table table-bordered table-striped table-condensed display" width="100%">
+                                <thead>
+                                    <tr>
+                                        <th>SrNo</th>
+                                        <th>UserLoginId</th>
+                                        <th>Name</th>
+                                        <th>Relationship Manager ERP</th>
+                                        <th>Buyer ERP</th>
+                                        <th>Network ERP</th>
+                                        <th>RM Inactive Points</th>
+                                        <th>Network Inactive Points</th>
+                                        <th>Payable ERP from Paid Payout</th>
+                                        <th>Unpaid ERP</th>
+                                        <th>Total ERP</th>
+                                        <th>Payable ERP</th>
+                                        <th>Status</th>
+                                        <th>BBP Subscriber</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @{ var j = 0; }
+                                    @foreach (var item in @Model.PayoutDetails)
+                                    {
+                                    <tr>
+                                        <td>
+                                            @{
+                                                j = j + 1;
+                                            }
+                                            @j
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.UserLoginId)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.Name)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.RMERP)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.L0ERP)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.UptoL6ERP)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.RMInactivePoint)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.UptoL6InactivePoint)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.PreviousUnpaidERP)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.UnpaidERP)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.TotalERP)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.PayableERP)
+                                        </td>
+                                        <td>
+                                            @if (item.Status)
+                                            {
+                                                <span>Active</span>
+                                            }
+                                            else
+                                            {
+                                                <span>Inactive</span>
+                                            }
+                                        </td>
+                                        <td>
+                                            @if (item.BBPSubscriber)
+                                            {
+                                                <span>Yes</span>
+                                            }
+                                            else
+                                            {
+                                                <span>No</span>
+                                            }
+                                        </td>
+                                    </tr>
+                                    }
+
+                                </tbody>
+                            </table>
+                        }
+                    </div>
+                    <div class="tab-pane fade" id="Puserwise" style="max-width:1000px;overflow:auto">
+                        @if (@Model.TransactionList != null)
+                        {
+                            <br />
+                            <table id="tblData1" class="table table-bordered table-striped table-condensed display" width="100%">
+                                <thead>
+                                    <tr>
+                                        <th>Sr.No.</th>
+                                        <th>ShopName</th>
+                                        <th>Transaction Code</th>
+                                        <th>Transaction Date</th>
+                                        <th>Bill Amount</th>
+                                        <th>Commission</th>
+                                        <th>GST</th>
+                                        <th>Is Apply</th>
+                                        <th>Calculated Commission</th>
+                                        <th>Commission To ERP</th>
+                                        <th>Company%</th>
+                                        <th>Company ERP</th>
+                                        <th>RM%</th>
+                                        <th>RM UserLoginId</th>
+                                        <th>RM Name</th>
+                                        <th>RM ERP</th>
+                                        <th>Buyer%</th>
+                                        <th>Buyer UserloginId</th>
+                                        <th>Buyer Name</th>
+                                        <th>Buyer ERP</th>
+                                        <th>Network%</th>
+                                        <th>Network ERP</th>
+                                        <th>L1 UserloginId</th>
+                                        <th>L1 Name</th>
+                                        <th>L1 ERP</th>
+                                        <th>L2 UserloginId</th>
+                                        <th>L2 Name</th>
+                                        <th>L2 ERP</th>
+                                        <th>L3 UserloginId</th>
+                                        <th>L3 Name</th>
+                                        <th>L3 ERP</th>
+                                        <th>L4 UserloginId</th>
+                                        <th>L4 Name</th>
+                                        <th>L4 ERP</th>
+                                        <th>L5 UserloginId</th>
+                                        <th>L5 Name</th>
+                                        <th>L5 ERP</th>
+                                        <th>L6 UserloginId</th>
+                                        <th>L6 Name</th>
+                                        <th>L6 ERP</th>
+                                        <th>Is Paid</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @{ var i = 0; }
+                                    @if (Model.TransactionList.Count != 0)
+                                    {
+                                        foreach (var item in @Model.TransactionList)
+                                        {
+                                            <tr style=@(item.IsPayable == true ? "" : "color:red;")>
+                                                <td>
+                                                    @{
+                                                        i = i + 1;
+                                                    }
+                                                    @i
+                                                </td>
+                                                <td>
+                                                    @Html.DisplayFor(modelItem => item.ShopName)
+                                                </td>
+                                                <td>
+                                                    @Html.DisplayFor(modelItem => item.TransactionCode)
+                                                </td>
+                                                <td>
+                                                    @Html.DisplayFor(modelItem => item.TransactionDate)
+                                                </td>
+                                                <td>
+                                                    @Html.DisplayFor(modelItem => item.BillAmount)
+                                                </td>
+                                                <td>
+                                                    @Html.DisplayFor(modelItem => item.Commission)
+                                                </td>
+                                                <td>
+                                                    @Html.DisplayFor(modelItem => item.GST)
+                                                </td>
+                                                <td>
+                                                    @if (item.IsApplied)
+                                                    {
+                                                        <span>
+                                                            Yes
+                                                        </span>
+                                                    }
+                                                    else
+                                                    {
+                                                        <span>No</span>
+                                                    }
+                                                </td>
+                                                <td>
+                                                    @Html.DisplayFor(modelItem => item.CalculatedCommission)
+                                                </td>
+                                                <td>
+                                                    @Html.DisplayFor(modelItem => item.CommissionToERP)
+                                                </td>
+                                                <td>
+                                                    @Html.DisplayFor(modelItem => item.CompanyPercentage)
+                                                </td>
+                                                <td>
+                                                    @Html.DisplayFor(modelItem => item.CompanyERP)
+                                                </td>
+                                                <td>
+                                                    @Html.DisplayFor(modelItem => item.RelationshipManagerPercentage)
+                                                </td>
+                                                <td>
+                                                    @Html.DisplayFor(modelItem => item.RelationshipManager_UserloginId)
+                                                </td>
+                                                <td>
+                                                    @Html.DisplayFor(modelItem => item.RelationshipManagerName)
+                                                </td>
+                                                <td>
+                                                    @Html.DisplayFor(modelItem => item.RelationshipManagerERP)
+                                                </td>
+                                                <td>
+                                                    @Html.DisplayFor(modelItem => item.BuyerPercentage)
+                                                </td>
+                                                <td>
+                                                    @Html.DisplayFor(modelItem => item.BuyerUserLoginID)
+                                                </td>
+                                                <td>
+                                                    @Html.DisplayFor(modelItem => item.BuyerName)
+                                                </td>
+                                                <td>
+                                                    @Html.DisplayFor(modelItem => item.BuyerERP)
+                                                </td>
+                                                <td>
+                                                    @Html.DisplayFor(modelItem => item.NetworkPercentage)
+                                                </td>
+                                                <td>
+                                                    @Html.DisplayFor(modelItem => item.NetworkERP)
+                                                </td>
+                                                <td>
+                                                    @Html.DisplayFor(modelItem => item.Level1_UserLoginID)
+                                                </td>
+                                                <td>
+                                                    @Html.DisplayFor(modelItem => item.Level1_Name)
+                                                </td>
+                                                <td>
+                                                    @Html.DisplayFor(modelItem => item.Level1ERP)
+                                                </td>
+                                                <td>
+                                                    @Html.DisplayFor(modelItem => item.Level2_UserLoginID)
+                                                </td>
+                                                <td>
+                                                    @Html.DisplayFor(modelItem => item.Level2_Name)
+                                                </td>
+                                                <td>
+                                                    @Html.DisplayFor(modelItem => item.Level2ERP)
+                                                </td>
+                                                <td>
+                                                    @Html.DisplayFor(modelItem => item.Level3_UserLoginID)
+                                                </td>
+                                                <td>
+                                                    @Html.DisplayFor(modelItem => item.Level3_Name)
+                                                </td>
+                                                <td>
+                                                    @Html.DisplayFor(modelItem => item.Level3ERP)
+                                                </td>
+                                                <td>
+                                                    @Html.DisplayFor(modelItem => item.Level4_UserLoginID)
+                                                </td>
+                                                <td>
+                                                    @Html.DisplayFor(modelItem => item.Level4_Name)
+                                                </td>
+                                                <td>
+                                                    @Html.DisplayFor(modelItem => item.Level4ERP)
+                                                </td>
+                                                <td>
+                                                    @Html.DisplayFor(modelItem => item.Level5_UserLoginID)
+                                                </td>
+                                                <td>
+                                                    @Html.DisplayFor(modelItem => item.Level5_Name)
+                                                </td>
+                                                <td>
+                                                    @Html.DisplayFor(modelItem => item.Level5ERP)
+                                                </td>
+                                                <td>
+                                                    @Html.DisplayFor(modelItem => item.Level6_UserLoginID)
+                                                </td>
+                                                <td>
+                                                    @Html.DisplayFor(modelItem => item.Level6_Name)
+                                                </td>
+                                                <td>
+                                                    @Html.DisplayFor(modelItem => item.Level6ERP)
+                                                </td>
+                                                <td>
+                                                    @if (item.IsPaid)
+                                                    {
+                                                        <span>
+                                                            Yes
+                                                        </span>
+                                                    }
+                                                    else
+                                                    {
+                                                        <span>No</span>
+                                                    }
+                                                </td>
+                                            </tr>
+                                        }
+                                    }
+                                    
+                                </tbody>
+                            </table>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $("#progress").hide();
+        $('#tblData').DataTable();
+        $('#tblData1').DataTable();
+    });
+</script>

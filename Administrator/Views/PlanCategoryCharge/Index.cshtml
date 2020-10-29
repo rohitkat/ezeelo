@@ -1,0 +1,123 @@
+﻿@*//-----------------------------------------------------------------------
+        // <copyright file="Index.cshtml" company="Ezeelo Consumer Services Pvt. Ltd.">
+        //     Copyright (c) Ezeelo Consumer Services Pvt. Ltd. All rights reserved.
+        //
+    </copyright>
+        // <author>Snehal Shende</author>
+        //-----------------------------------------------------------------------*@
+
+@model IEnumerable<ModelLayer.Models.Plan>
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<style>
+    .dataTables_length {
+        margin-left: 0px;
+        margin-top: 7px;
+    }
+    .pagination {
+        margin: 0px 40px;
+    }
+</style>
+<div id="content" class="span10">
+    <ul class="breadcrumb">
+        <li>
+            <i class="icon-home"></i>
+            <a href="#">Plan category charge</a>
+            <i class="icon-angle-right"></i>
+        </li>
+
+    </ul>
+
+    <div class="row-fluid">
+        <div class="box span12">
+            <div class="box-header">
+                <h2><i class="halflings-icon user"></i><span class="break"></span>Index</h2>
+            </div>
+            <div class="box-content">
+                <table class="table table table-striped table-bordered bootstrap-datatable datatable dataTable">
+                    <thead>
+                        <tr>
+                            <th>
+                                Plan
+                            </th>
+
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    @foreach (var item in Model)
+                    {
+                        if (item.IsActive)
+                        {
+                            <tr>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.ShortName)
+                                </td>
+
+                                <td>
+                                    @Html.ActionLink("Apply Charge", "ShowList", "PlanCategoryCharge", new { planId = item.ID }, new { @class = "btn btn-small btn-primary" })
+
+                                    @*@Html.ActionLink("Add Plan", "Index", "OwnerPlan", new { modelItem = item.OwnerId })*@
+                                </td>
+                            </tr>
+                        }
+                    }
+
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+@*<table class="table">
+        <tr>
+            <th>
+                Category Name
+            </th>
+            <th>
+                Charge Name
+            </th>
+
+            <th>
+                @Html.DisplayNameFor(model => model.ChargeInPercent)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ChargeInRupee)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.IsActive)
+            </th>
+
+            <th>Actions</th>
+        </tr>
+
+    @foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Category.Name)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Charge.Name)
+            </td>
+
+            <td>
+                @Html.DisplayFor(modelItem => item.ChargeInPercent)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ChargeInRupee)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.IsActive)
+            </td>
+            <td>
+                @Html.ActionLink("Add", "Create", new { catID = item.CategoryID, planID=item.PlanID }) |
+                @Html.ActionLink("Edit", "Edit", new { id=item.CategoryID }) |
+                @Html.ActionLink("Details", "Details", new { id=item.ID }) |
+                @Html.ActionLink("Delete", "Delete", new { id=item.ID })
+            </td>
+        </tr>
+    }
+
+    </table>*@

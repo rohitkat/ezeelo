@@ -1,0 +1,197 @@
+﻿@model IEnumerable<ModelLayer.Models.Employee>
+@using ModelLayer.Models;
+@using Franchise.Models;
+@{
+    ViewBag.Title = "Index";
+
+}
+<style>
+    .pagination {
+        margin: 0px 40px;
+    }
+    .dataTables_length {
+        margin-left: 1px;
+        margin-top: 7px;
+    }
+    div.checker {
+        margin-top: -5px !important;
+    }
+</style>
+
+<div id="content" class="span10" style="min-height: 400px;">
+    <div class="row-fluid">
+        <div class="box span12">
+            <div class="box-header">
+                <h2><i class="icon-edit"></i><span class="break"></span>@Html.ActionLink("Create New", "Create")</h2>
+
+            </div>
+            <div class="box-content">
+                <div class="row-fluid">
+                    <div class="span6">
+                        <span class="hed-owner">Select Shop</span>
+
+                        @Html.DropDownList("BusinessOwner", null, "Select", new { @style = "width:auto;" })
+                    </div>
+                </div>
+                <table class="table table-striped table-bordered bootstrap-datatable datatable dataTable" id="tableSimilarProduct">
+                    <thead>
+                        <tr>
+                            <th>
+                                @Html.DisplayNameFor(model => model.EmployeeCode)
+                            </th>
+                            <th>
+                                Employee Name
+                            </th>
+                            <th>
+                                Is Active
+                            </th>
+                            <th>Is Locked</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.EmployeeCode)
+                            </td>
+                            @*<td>
+                                    @Html.DisplayFor(modelItem => item.OwnerID)
+                                </td>*@
+                            <td>
+                                @FranchiseCommonFunction.GetEmployeeName(item.UserLoginID)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.IsActive)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.UserLogin.IsLocked)
+                            </td>
+                            <td class="center">
+                                @Html.ActionLink("Edit", "Edit", new { id = item.UserLoginID }, new { @class = "btn btn-small btn-danger" })
+                                @Html.ActionLink("Details", "Details", new { id = item.UserLoginID }, new { @class = "btn btn-small btn-primary" })
+                                @*@Html.ActionLink("Delete", "Delete", new { id = item.UserLoginID })*@
+                            </td>
+                        </tr>
+                    }
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="~/Scripts/jquery-1.10.2.min.js"></script>
+<script>
+
+      @*    $(function () {
+
+            $.ajax({
+                type: "POST",
+                url: "/EmployeeManagement/EmployeeList",
+                data: "{ businessTypeID: " + 0 + ",OwnerID:" + 0 + "}",
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                async: true,
+                cache: false,
+                success: function (msg) {
+
+                    $.each(msg, function (index, item) {
+                        //alert("1");
+
+                        $("#tableSimilarProduct ").append("<tr>" +
+                            "<td>" + item.EmployeeCode + "</td>" +
+                            "<td>" + item.OwnerID + "</td>" +
+                            "<td>" + item.IsActive + "</td>" +
+                            "<td>" +
+                            "<a class='btn btn-danger' href='@Url.Action("Edit", "EmployeeManagement")?id=" + item.LoginID + "'> Edit </a> |" +
+                            "<a class='btn btn-primary' href='@Url.Action("Details", "EmployeeManagement")?id=" + item.LoginID + "'>Detail </a> |" +
+                            "<a class='btn btn-danger' href='@Url.Action("Delete", "EmployeeManagement")?id=" + item.LoginID + "'>Delete </a>"
+                            + "</td> </tr>"
+                        );
+                    });
+                },
+                error: function (x, e) {
+                    alert("Sorry No Unable to Bind Data. ");
+                }
+
+            });
+        });*@
+
+
+
+
+    $(function () {
+        $('#BusinessOwner').change(function (e) {
+            var selectedVal = $('#BusinessOwner option:selected').val();
+            if (selectedVal == '') {
+                selectedVal = 0;
+            }
+            //var selectOwner = $('#BusinessType option:selected').val();
+            //alert(selectedVal);
+            //if (selectedVal > 0) {
+            $.ajax({
+                type: "POST",
+                url: "/EmployeeManagement/EmployeeList",
+                data: "{OwnerID:" + selectedVal + "}",
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                async: true,
+                cache: false,
+                success: function (msg) {
+                    $('#tableSimilarProduct').children('tbody').empty();
+
+                    $.each(msg, function (index, item) {
+                        $("#tableSimilarProduct tbody").append("<tr>" +
+                            "<td>" + item.EmployeeCode + "</td>" +
+                            "<td>" + item.EmployeeName + "</td>" +
+                            "<td><div class='checker'><input type='checkbox' class='check-box' disabled='disabled' id='IsActive'/></div></td>" +
+                            "<td><div class='checker'><input type='checkbox' class='check-box' disabled='disabled' id='IsLocked'/></div></td>" +
+                            "<td>" +
+                            "<a class='btn btn-small btn-danger' href='@Url.Action("Edit", "EmployeeManagement")?id=" + item.LoginID + "'> Edit </a> " +
+                            "<a class='btn btn-small btn-primary' href='@Url.Action("Details", "EmployeeManagement")?id=" + item.LoginID + "'>Details </a> "
+                            @*"<a class='btn btn-danger'href='@Url.Action("Delete", "EmployeeManagement")?id=" + item.LoginID + "'>Delete </a>"*@
+                            + "</td> </tr>"
+                        );
+                        $("#tableSimilarProduct tr:last").find('#IsActive').prop('checked',item.IsActive);
+                        $("#tableSimilarProduct tr:last").find('#IsLocked').prop('checked',item.IsLocked);
+                    });
+                },
+                error: function (x, e) {
+                    alert("Sorry No Unable to Bind Data. ");
+                }
+            });
+            //}
+
+        });
+    });
+
+
+
+    //$(function () {
+    //    $('#BusinessType').change(function (e) {
+    //        var selectedVal = $("#BusinessType option:selected").val();
+    //        if (selectedVal > 0) {
+
+    //    $.ajax({
+    //        type: "POST",
+    //        url: "/EmployeeManagement/getOwnerID",
+    //        contentType: "application/json; charset=utf-8",
+    //        dataType: "json",
+    //        async: true,
+    //        cache: false,
+    //        success: function (msg) {
+    //            $('#BusinessOwner').empty();
+    //            $('#BusinessOwner').append('<option value=0>Select Owner</option>');
+    //            $.each(msg, function (index, item) {
+    //                $('#BusinessOwner').append('<option value=' + item.ID + '>' + item.Name + '</option>');
+    //            });
+    //        },
+    //        error: function (x, e) {
+    //            alert("Sorry No Such Type of Owner Is available. ");
+    //        }
+    //    });
+    //    //}
+    //    //});
+    //});
+
+</script>

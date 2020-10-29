@@ -1,0 +1,208 @@
+﻿
+@model IEnumerable<ModelLayer.Models.Area>
+
+@{
+    ViewBag.Title = "Index";
+}
+<style>
+    .dataTables_length {
+        margin-left: 0px;
+        margin-top: 7px;
+    }
+    .pagination {
+        padding: 0px 40px;
+    }
+</style>
+<br />
+@using (@Html.BeginForm())
+{
+    <div class="row-fluid" style="margin-left: 15px;">
+        <div class="box span12">
+            <div class="box-header">
+                <h2><i class="icon-edit"></i><span class="break">@Html.ActionLink("Create New", "Create")</span></h2>
+            </div>
+
+            <div>
+                <br />
+                <span style="font-weight:bold;margin-left:10px;">Select State</span>
+                @Html.DropDownList("state", (SelectList)ViewBag.state)
+                <span style="font-weight:bold">Select District</span>
+                @Html.DropDownList("district", (SelectList)ViewBag.district)
+                <span style="font-weight:bold">Select City</span>
+                @Html.DropDownList("city", (SelectList)ViewBag.city, new { @onchange = "this.form.submit();" })
+
+
+            </div>
+            <div id="pageloaddiv"></div>
+            <div class="box-content">
+
+                <table class="table table-striped table-bordered bootstrap-datatable datatable">
+                    <thead>
+                        <tr>
+                            @*<th>@Html.DisplayNameFor(model => model.District.Name) </th>
+                                <th>@Html.DisplayNameFor(model => model.Name) </th>
+                                <th>@Html.DisplayNameFor(model => model.IsActive) </th>*@
+                            @*<th></th>*@
+                            <th>Area</th>
+                            <th>Pincode</th>
+                            <th>IsActive</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model)
+                        {
+
+                            <tr>
+                                @*<td>@Html.DisplayFor(modelItem => item.District.Name)</td>*@
+                                <td class="center">@Html.DisplayFor(modelItem => item.Name)</td>
+                                <td class="center">@Html.DisplayFor(modelItem => item.Pincode.Name)</td>
+                                <td class="center">@Html.DisplayFor(modelItem => item.IsActive, new { @class = "chkBox" })</td>
+
+                                <td class="center">
+                                    @Html.ActionLink("Edit", "Edit", new { id = item.ID }, new { @class = "btn btn-small btn-success" })
+                                    @Html.ActionLink("Details", "Details", new { id = item.ID }, new { @class = "btn btn-small btn-primary" })
+
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+                @*<div class="pager">
+                        @Html.PagedListPager(Model, page => Url.Action("Index", new { page }))
+                    </div>*@
+            </div>
+        </div>
+    </div>
+}
+
+<style type="text/css">
+    #pageloaddiv {
+        position: fixed;
+        left: 0px;
+        top: 0px;
+        width: 100%;
+        height: 100%;
+        z-index: 1000;
+        background: url('../Content/Images/ajax_loader.gif') no-repeat center center;
+        background-size: 100px;
+        display: none;
+    }
+</style>
+<script src="~/Scripts/jquery-1.10.2.min.js"></script>
+<script>
+    $(function () {
+        $('#state').change(function (e) {
+            var selectedVal = $("#state option:selected").val();
+
+            if (selectedVal > 0) {
+                $("#pageloaddiv").attr("display", "block");
+                $("#pageloaddiv").css("display", "block");
+
+                $.ajax({
+                    type: "POST",
+                    url: "Area/getDistrict",
+                    data: "{ StateID: '" + selectedVal + "'}",
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    async: true,
+                    cache: false,
+                    success: function (msg) {
+                        $('#district').empty();
+                        $('#district').append('<option value=0>Select District</option>');
+                        $.each(msg, function (index, item) {
+                            $('#district').append('<option value=' + item.value + '>' + item.text + '</option>');
+                        });
+                        $("#pageloaddiv").css('display', 'none');
+                        $("#pageloaddiv").fadeOut(1000);
+                    },
+                    error: function (x, e) {
+                        alert("Sorry No Such Type of Owner Is available. ");
+                        $("#pageloaddiv").css('display', 'none');
+                        $("#pageloaddiv").fadeOut(1000);
+                    }
+                });
+            }
+        });
+
+
+        $('#district').change(function (e) {
+            var selectedVal = $("#district option:selected").val();
+
+            if (selectedVal > 0) {
+                $("#pageloaddiv").attr("display", "block");
+                $("#pageloaddiv").css("display", "block");
+
+                $.ajax({
+                    type: "POST",
+                    url: "Area/getCity",
+                    data: "{ DistrictID: '" + selectedVal + "'}",
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    async: true,
+                    cache: false,
+                    success: function (msg) {
+                        $('#city').empty();
+                        $('#city').append('<option value=0>Select city</option>');
+                        $.each(msg, function (index, item) {
+                            $('#city').append('<option value=' + item.value + '>' + item.text + '</option>');
+                        });
+                        $("#pageloaddiv").css('display', 'none');
+                        $("#pageloaddiv").fadeOut(1000);
+                    },
+                    error: function (x, e) {
+                        alert("Sorry No Such Type of Owner Is available. ");
+                        $("#pageloaddiv").css('display', 'none');
+                        $("#pageloaddiv").fadeOut(1000);
+                    }
+                });
+            }
+        });
+    });
+
+</script>
+
+
+@*
+<div class="row-fluid">
+    <div class="box span12">
+        <div class="box-header">
+            <h2><i class="icon-edit"></i><span class="break"></span>@Html.ActionLink("Create Area", "Create")</h2>
+
+        </div>
+        <div class="box-content">
+            <table class="table table-striped table-bordered bootstrap-datatable datatable dataTable">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Name</th>
+                        <th>IsActive</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td>@Html.DisplayFor(modelItem => item.ID)</td>
+                            <td class="center">@Html.DisplayFor(modelItem => item.Name)</td>
+                            <td class="center">@Html.DisplayFor(modelItem => item.IsActive, new { @class = "chkBox" })</td>
+
+                            <td class="center">
+                                @Html.ActionLink("Edit", "Edit", new { id = item.ID }, new { @class = "btn btn-small btn-success" })
+                                @Html.ActionLink("Details", "Details", new { id = item.ID }, new { @class = "btn btn-small btn-primary" })
+                         
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+            <div class="pager">
+                @Html.PagedListPager(Model, page => Url.Action("Index", new { page }))
+            </div>
+           
+        </div>
+    </div><!--/span-->
+
+</div>
+    *@

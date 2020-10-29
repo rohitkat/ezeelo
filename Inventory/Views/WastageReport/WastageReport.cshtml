@@ -1,0 +1,313 @@
+﻿@model ModelLayer.Models.ViewModel.WastageReportViewModelList
+
+<style>
+    .ClaimAmtList table {
+        border-collapse: separate;
+        width: 800px;
+        max-width: 800px;
+        overflow-x: scroll;
+        display: block;
+    }
+
+    .ClaimAmtList thead, .ClaimAmtList tfoot {
+        background-color: #EFEFEF;
+    }
+
+    .ClaimAmtList thead, .ClaimAmtList tbody, .ClaimAmtList tfoot {
+        display: block;
+    }
+
+    .ClaimAmtList tbody {
+        overflow-y: scroll;
+        overflow-x: auto;
+        max-height: 350px;
+    }
+
+    .ClaimAmtList td, .ClaimAmtList th {
+        padding: 5px;
+        min-width: 80px;
+        height: 25px;
+        border: inset 1px lightblue;
+        /*overflow: hidden;*/
+        text-overflow: ellipsis;
+        max-width: 80px;
+        /*word-break: break-all;*/
+        text-align: center;
+    }
+</style>
+
+
+
+<link href="~/Content/css/bootstrap-datetimepicker.min.css" rel="stylesheet" />
+<link href="~/Content/css/bootstrap-datetimepicker.css" rel="stylesheet" />
+<link href="~/Content/assets/css/font-awesome.min.css" rel="stylesheet" />
+<link href="~/Content/assets/css/form-design.css" rel="stylesheet" />
+
+
+
+<div class="row-fluid">
+    @using (Html.BeginForm("WastageReportNote", "WastageReport", new { enctype = "multipart/form-data" }, FormMethod.Post, new { id = "Form_" }))
+    {
+        @Html.ValidationSummary(true)
+
+        <div class="box span12">
+            <div class="box-header creatProduct clearfix">
+                <h2>
+                    <i class="icon-list-alt"></i>
+                    <span class="break"></span>
+                    Good Receipt Note Report
+                </h2>
+            </div>
+            <div class="box-content nameDscrp">
+                <div class="form-horizontal">
+                    <div class="NameDescription">
+                        <div class="control-group mrg-left">
+                            <div class="col-sm-3">
+                                Filter by Warehouse
+                            </div>
+
+
+                            <div class="span3">
+
+                               @*@Html.DropDownListFor(model => model.WarehouseID, Model.WarehouseList)*@
+
+                                @*@Html.DropDownList("WarehouseID", ((IEnumerable<ModelLayer.Models.Warehouse>)ViewBag.warehouseList).Select(option => new SelectListItem
+                                          //@Html.DropDownList("WarehouseID", (zzzViewBag.warehouseList).Select(option => new SelectListItem
+                                    {
+                                        Text = (option == null ? "None" : option.Name),
+                                        Value = option.ID.ToString(),
+                                        Selected = (Model != null) && (option.ID == Model.WarehouseID)
+                                    }), "Select Franchise")*@
+
+                            </div>
+
+
+
+                            @*<div class="col-sm-6">
+                                         @if (ViewBag.PossibleSuppliers != null)
+                                         {
+                                             @Html.DropDownListFor(model => model.SupplierID, ((IEnumerable<ModelLayer.Models.Supplier>)ViewBag.PossibleSuppliers).Select(option => new SelectListItem
+                                {
+                                    Text = (option == null ? "None" : option.Name),
+                                    Value = option.ID.ToString(),
+                                    Selected = (Model != null) && (option.ID == Model.SupplierID)
+                                }), "--All Suppliers--")
+                                         }
+                                     </div>*@
+                        </div>
+
+                        <div class="control-group mrg-left">
+                            <div class="col-sm-3">
+                                From Date
+                            </div>
+                            <div class="col-sm-6">
+                                @*@Html.TextBox("FromDate", null, new { @readonly = "readonly", @class = "search", placeholder = "From" })*@
+                                @Html.TextBoxFor(model => model.FromDate, "{0:dd/MM/yyyy}", new { @readonly = "readonly", @required = "required" })
+                                @Html.HiddenFor(model => model.FromDate)
+                            </div>
+                        </div>
+                        <div class="control-group mrg-left">
+                            <div class="col-sm-3">
+                                To Date
+                            </div>
+                            <div class="col-sm-6">
+                                @*@Html.TextBox("ToDate", null, new { @readonly = "readonly", @class = "search", placeholder = "To" })*@
+                                @Html.TextBoxFor(model => model.ToDate, "{0:MM/dd/yyyy}", new { @readonly = "readonly", @required = "required" })
+                                @Html.HiddenFor(model => model.ToDate)
+                            </div>
+                        </div>
+
+                        <div class="control-group mrg-left">
+                            <div class="col-sm-3">
+                                Export In
+                            </div>
+                            <div class="col-sm-6">
+                                @Html.DropDownList("ExportOption", new List<SelectListItem>
+                         {
+                                 new SelectListItem{ Text="Excel", Value = "1" },
+                                 new SelectListItem{ Text="Csv", Value = "2" },
+                                 new SelectListItem{ Text="Pdf", Value = "3" }
+                        })
+                            </div>
+                        </div>
+                        <div class="clr"></div>
+                        <button value="Search" type="submit" class="btnRemove btn btn-warning">Search</button>
+                        <a id="Print" class="print btn btn-default" href="@Url.Action("WastageReportNote", "WastageReport")" target="_blank">Print</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+
+    @*<iframe id="txtArea1" style="display:none"></iframe>*@
+    <center>  <button id="Export" value="Export" type="submit" class="btn btn-success">Export</button>  </center>
+    @*<button id="btnExport" onclick="fnExcelReport();" class="btnPrint btn btn-success btn-small">EXPORT TO EXCEL</button>*@
+    <div class="box">
+        <div class="box-content">
+            <div class="NameDescription">
+                <div style="overflow-x: scroll; overflow-y: scroll; width:1150px; height: 500px; background: #ffffff; " id="divToPrint">
+                    <table id="headerTable" class="ClaimAmtList" border="1" cellpadding="2" cellspacing="0">
+                        <thead>
+                            <tr><td style="text-align:center" colspan="12"><h2>WASTAGE REPORT NOTE (@Convert.ToDateTime(@Model.FromDate).ToString("dd MMM yyyy") To @Convert.ToDateTime(@Model.ToDate).ToString("dd MMM yyyy"))</h2></td></tr>
+                            <tr>
+                                <th style="min-width: 50px; max-width: 50px; word-break: break-all">Sr.No.</th>
+                                <th style="min-width: 100px; max-width: 100px; word-break: break-all">
+                                    HSN Code
+                                </th>
+                                <th>
+                                    item_name
+                                </th>
+                                @*<th style="min-width: 120px; max-width: 120px;">
+                                        Supplier
+                                    </th>*@
+                                <th style="min-width: 150px; max-width: 150px; word-break: break-all">Manufacturer</th>
+                                <th>batch_code</th>
+
+                                <th>waste_qty</th>
+                                <th>reason</th>
+                                <th>sub_reason</th>
+                                <th>Remark</th>
+                                <th>SupplierID</th>
+                                <th>
+                                    Amount
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @{
+                                var i = 1;
+                            }
+                            @*@foreach (var item in Model)*@
+
+                            @foreach (var item in Model.lWastageReportViewModel)
+                            {
+                                <tr>
+                                    <td style="text-align: center; min-width: 50px; max-width: 50px; word-break: break-all">
+                                        @i
+                                        @{
+                                i = i + 1;
+                                        }
+                                    </td>
+                                    @*<td style="min-width: 100px; max-width: 100px; word-break: break-all;">*@
+                                    @*@(item.PurchaseOrderCode == null ? "" : item.PurchaseOrderCode)*@
+                                    @*<a id="Print" style="color: #3C73DC; font-weight: bold; " href="@Url.Action("PrintOrder", "PurchaseOrders", new { id = @item.PurchaseOrderID })" target="_blank">@(item == null ? "" : item.PurchaseOrderCode)</a>
+                                        </td>*@
+                                    <td>
+                                        @item.HSNCode.
+                                    </td>
+
+                                    @*<td style="min-width: 120px; max-width: 120px;text-align:left">
+                                            @(item.SupplierName == null ? "None" : item.SupplierName)
+                                        </td>*@
+
+                                    <td style="min-width: 150px; max-width: 150px; text-align: left">@item.item_name</td>
+                                    <td style="text-align:center">@item.Manufacturer</td>
+
+                                    <td>
+                                        @item.batch_code
+                                    </td>
+                                    @*<td style="color: #DB4437; font-weight: bold; word-break: break-all">
+                                            <a id="Print" style="color: #DB4437; font-weight: bold" href="@Url.Action("PrintGR", "Invoices", new { InvoiceID = @item.InvoiceID })" target="_blank">@item.InvoiceCode</a>
+                                        </td>*@
+                                    <td style="text-align:right">@item.item_name </td>
+                                    <td style="text-align:right">@item.reason</td>
+                                    <td style="text-align:center">@item.sub_reason</td>
+                                    <td style="text-align:right"> @item.waste_qty</td>
+
+                                    <td style="text-align:right"> @item.SupplierID</td>
+                                </tr>
+                                @*Yashaswi 17-3-108*@
+
+                            }
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+<script type="text/javascript">
+
+    $(document).ready(function () {
+        $('#ToDate').datepicker({ dateFormat: 'mm/dd/yy', maxDate: 'now' });
+        $('#FromDate').datepicker({ dateFormat: 'mm/dd/yy' });
+
+
+        $("#Export").on('click', function () {
+
+            var print = 0;
+            var option = 0;
+            var supplierID = 0
+
+            if ($("select#SupplierID option:selected").val() > 0) {
+                supplierID = $("select#SupplierID option:selected").val();
+            }
+
+            if ($("select#ExportOption option:selected").val() > 0) {
+                option = $("select#ExportOption option:selected").val();
+            }
+            var toDate = $('#ToDate').val();
+            var fromDate = $('#FromDate').val();
+
+            window.location.href = "/WastageReport/Export?&FromDate=" + fromDate + "&ToDate=" + toDate + "&option=" + option + "&SupplierID=" + WarehouseID;
+
+        });
+    });
+</script>
+
+
+<script type="text/javascript">
+
+
+    function fnExcelReport() {
+        var tab_text = "<table border='2px'><tr bgcolor='#87AFC6'>";
+        var textRange; var j = 0;
+        tab = document.getElementById('headerTable'); // id of table
+
+
+        for (j = 0 ; j < tab.rows.length ; j++) {
+            tab_text = tab_text + tab.rows[j].innerHTML + "</tr>";
+            //tab_text=tab_text+"</tr>";
+        }
+
+        tab_text = tab_text + "</table>";
+        tab_text = tab_text.replace(/<A[^>]*>|<\/A>/g, "");//remove if u want links in your table
+        tab_text = tab_text.replace(/<img[^>]*>/gi, ""); // remove if u want images in your table
+        tab_text = tab_text.replace(/<input[^>]*>|<\/input>/gi, ""); // reomves input params
+
+        var ua = window.navigator.userAgent;
+        var msie = ua.indexOf("MSIE ");
+
+        if (msie > 0 || !!navigator.userAgent.match(/Trident.*rv\:11\./))      // If Internet Explorer
+        {
+            txtArea1.document.open("txt/html", "replace");
+            txtArea1.document.write(tab_text);
+            //txtArea1.document.AddHeader("PURCHASE ORDER HISTORY")
+            txtArea1.document.close();
+            txtArea1.focus();
+            sa = txtArea1.document.execCommand("SaveAs", true, "Say Thanks to Sumit.xls");
+        }
+        else                 //other browser not tested on IE 11
+            sa = window.open('data:application/vnd.ms-excel,' + 'filename=PurchaseOrderHistory.xls,' + encodeURIComponent(tab_text));
+
+        return (sa);
+    }
+
+</script>
+
+<script type="text/javascript">
+    $(function () {
+        $("#Search").click(function () {
+            var WarehouseID = $("select#WarehouseID option:selected").val();
+            //window.location = "/WastageReport/WastageReportNotePrint?WarehouseID=" + WarehouseID;
+            window.location = "/WastageReport/WastageReport?WarehouseID=" + WarehouseID;
+        });
+    });
+
+</script>

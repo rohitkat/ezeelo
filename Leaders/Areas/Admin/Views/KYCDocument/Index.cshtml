@@ -1,0 +1,362 @@
+﻿@using PagedList;
+
+@using PagedList.Mvc;
+
+@model IPagedList<ModelLayer.Models.ViewModel.LeadersProfileViewModel>
+
+
+
+@{
+    /**/
+
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_LeadersLayout.cshtml";
+}
+
+<style type="text/css">
+    body {
+        font-family: Arial;
+        font-size: 10pt;
+    }
+
+    .Grid {
+        border: 1px solid #ccc;
+        border-collapse: collapse;
+    }
+
+        .Grid th {
+            background-color: #F7F7F7;
+            font-weight: bold;
+        }
+
+        .Grid th, .Grid td {
+            padding: 5px;
+            border: 1px solid #ccc;
+        }
+
+        .Grid, .Grid table td {
+            border: 0px solid #ccc;
+        }
+
+            .Grid img {
+                height: 150px;
+                width: 150px;
+                cursor: pointer;
+            }
+
+    #dialog img {
+        height: 550px;
+        width: 575px;
+        cursor: pointer;
+    }
+    /*Added by roshan*/
+    .hover-zoom {
+        -moz-transition: all 0.3s;
+        -webkit-transition: all 0.3s;
+        transition: all 0.3s
+    }
+
+        .hover-zoom:hover {
+            -moz-transform: scale(1.1);
+            -webkit-transform: scale(1.1);
+            transform: scale(3.5)
+        }
+
+    .pagination ul {
+        list-style-type: none;
+        margin: 0;
+        padding: 0;
+        overflow: hidden; /*background-color: #333;*/
+    }
+
+    .pagination li {
+        float: left;
+        border-right: 1px solid #bbb;
+    }
+
+        .pagination li:last-child {
+            border-right: none;
+        }
+
+        .pagination li a {
+            display: block;
+            color: Black;
+            text-align: center;
+            padding: 14px 16px;
+            text-decoration: none;
+        }
+
+            .pagination li a:hover:not(.active) {
+                background-color: #4CAF50;
+            }
+
+    .pagination .active {
+        background-color: #4CAF50;
+    }
+
+    td img {
+        border: groove;
+        width: 150px;
+        height: 90px
+    }
+</style>
+
+<script src="~/Scripts/jquery-1.12.4.js"></script>
+
+<link href="//cdn.datatables.net/1.10.19/css/jquery.dataTables.min.css" rel="stylesheet" />
+
+<link href="https://cdn.datatables.net/fixedcolumns/3.2.6/css/fixedColumns.dataTables.min.css" rel="stylesheet" />
+<script src="//cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/fixedcolumns/3.2.6/js/dataTables.fixedColumns.min.js"></script>
+
+<script>
+    if ('@TempData["Message"]' != '') {
+        alert('@TempData["Message"]');
+    }
+</script>
+<script>
+    $(document).ready(function () {
+        hideSymbol();
+        function hideSymbol() {
+            var listItems = $(".pagination li");
+            listItems.each(function (li) {
+                if ($(this).text() == "»") {
+                    $(this).hide();
+                }
+                if ($(this).text() == "«") {
+                    $(this).hide();
+                }
+            });
+        }
+
+        $("#Clear").click(function () {
+            window.location.href = "/Admin/KYCDocument";
+        });
+    });
+</script>
+
+@using (Html.BeginForm("Index", "KYCDocument", FormMethod.Get))
+{
+    <b style="font-size:medium">Search Option: </b>@Html.RadioButton("option", "Name") <span style="font-size:medium">Name</span> @Html.RadioButton("option", "Mobile") <span style="font-size:medium"> Mobile </span>
+    @Html.RadioButton("option", "Email")<span style="font-size:medium">Email</span> @Html.TextBox("search")
+    <input type="submit" name="submit" value="Search" class="btn btn-info btn-sm" />
+    <input type="button" id="Clear" value="Clear" class="btn btn-warning btn-sm" />
+    <br />
+    <br />
+    <table class="table table-striped table-bordered bootstrap-datatable datatable dataTable" width="100%" id="KYCDocument">
+        <tr>
+            <th>
+                UserLogin Id
+            </th>
+            <th>
+                Full Name
+            </th>
+            <th>
+                Mobile
+            </th>
+            <th>
+                Email
+            </th>
+            <th>
+                Adhar Image
+            </th>
+            <th>
+                PAN Image
+            </th>
+            <th>
+                Passbook Image
+            </th>
+            <th>
+                KYC Image
+            </th>
+
+        </tr>
+
+        @foreach (var item in Model)
+        {
+        <tr style="@( (item.IsVerified) ? " background-color:#7af67f": "" ) " >
+            <td >
+                @Html.DisplayFor(modelItem => item.UserID)
+            </td>
+            <td style="">
+                @Html.ActionLink(item.FullName, "Details",new { UserLoginId = item.UserID },new { style= "text-decoration:underline;font-weight:bold;color:mediumblue" })
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Mobile)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Email)
+            </td>
+            <td>
+                <figure>
+
+                    @if (item.AdhaarImageUrl != null)
+                    {
+                        <img id="imgAadhar" class="hover-zoom" src="@item.AdhaarImageUrl" onerror="this.src = '/Content/Images/no_image.png'" alt="eZeelo">//Added by Roshan
+                        if (!string.IsNullOrEmpty(item.AdhaarImageUrl))
+                        {
+                            using (Html.BeginForm("Download", "KYCDocument", new { fileName = item.AdhaarImageUrl }))
+                            {
+                                <button name="button" value="ActionOne" class="button" style="width:40px;display:none">
+                                    <i style="font-size:24px" class="fa">&#xf019;</i>
+                                </button>
+                            }
+                        }
+                        if (!string.IsNullOrEmpty(item.AdhaarImageUrl))
+                        {
+                            using (Html.BeginForm("Download", "KYCDocument", new { fileName = item.AdhaarImageUrl }))
+                            {
+                                <button name="button" value="ActionOne" class="button" style="width:40px;">
+                                    <i style="font-size:24px" class="fa">&#xf019;</i>
+                                </button>
+
+                            }
+                        }
+                    }
+                    else
+                    {
+                        <img id="imgAadhar" src="/Content/Images/no_image.png" alt=" eZeelo ">
+                    }
+
+                </figure>
+            </td>
+
+            <td>
+                <figure>
+
+                    @if (item.PANImage != null)
+                    {
+                        @*<img id="imgAadhar" src="@item.PANImage" onerror="this.src = '/Content/Images/no_image.png'" alt=" eZeelo " style="border:groove;width:150px;height:150px">*@
+                        <img id="imgAadhar" class="hover-zoom" src="@item.PANImage" onerror="this.src = '/Content/Images/no_image.png'" alt=" eZeelo ">//Added by Roshan
+                        if (!string.IsNullOrEmpty(item.PANImage))
+                        {
+                            using (Html.BeginForm("Download", "KYCDocument", new { fileName = item.PANImage }))
+                            {
+                                <button name="button" value="ActionOne" class="button" style="width:40px;">
+                                    <i style="font-size:24px" class="fa">&#xf019;</i>
+                                </button>
+
+                            }
+                        }
+                    }
+                    else
+                    {
+                        <img id="imgAadhar" src="/Content/Images/no_image.png" alt=" eZeelo ">
+                    }
+
+                </figure>
+            </td>
+            <td>
+                <figure>
+
+                    @if (item.PassbookImage != null)
+                    {
+                        <img id="imgAadhar" class="hover-zoom" src="@item.PassbookImage" onerror="this.src = '/Content/Images/no_image.png'" alt=" eZeelo ">
+                        using (Html.BeginForm("Download", "KYCDocument", new { fileName = item.PassbookImage }))
+                        {
+                            <button name="button" value="ActionOne" class="button" style="width:40px;">
+                                <i style="font-size:24px" class="fa">&#xf019;</i>
+                            </button>
+
+                        }
+                    }
+                    else
+                    {
+                        <img id="imgAadhar" src="/Content/Images/no_image.png" alt=" eZeelo ">
+                    }
+
+                </figure>
+            </td>
+            <td>
+                <figure>
+
+                    @if (item.KYCForm != null)
+                    {
+                        <img id="imgAadhar" class="hover-zoom" src="@item.KYCForm" onerror="this.src = '/Content/Images/no_image.png'" alt=" eZeelo ">
+                        using (Html.BeginForm("Download", "KYCDocument", new { fileName = item.KYCForm }))
+                        {
+                            <button name="button" value="ActionOne" class="button" style="width:40px;">
+                                <i style="font-size:24px" class="fa">&#xf019;</i>
+                            </button>
+
+                        }
+                    }
+                    else
+                    {
+                        <img id="imgAadhar" src="/Content/Images/no_image.png" alt=" eZeelo ">
+                    }
+
+                </figure>
+            </td>
+
+
+            @*@Html.ActionLink("Edit", "Edit", new { /* id=item.PrimaryKey */ }) |*@
+            @*@Html.ActionLink("Details", "Details", new { /* id=item.PrimaryKey */ }) |*@
+
+
+        </tr>
+        }
+
+        <tfoot>
+            <tr>
+                <td colspan="12" style="min-width:960px;max-width:960px">
+                    <div id="pager">
+                        <p style="float: right; color: #138afc; font-size:medium" onclick="ShowPage(5)">
+
+                            @Html.PagedListPager(Model, pageNumber => Url.Action("Index", new
+                       {
+                           pageNumber,
+                       }))
+
+                        </p>
+                    </div>
+                </td>
+            </tr>
+        </tfoot>
+
+    </table>
+}
+
+<script>
+    $("#btnBetweenDate").click(function () {
+
+
+        $.ajax({
+            type: "POST",
+            url: "@Url.Action("FilterDateList", "Report6")",
+            contentType: "application/json; charset=utf-8",
+            data: '{"startDate":"' + $("#sDate").val() + '","endDate":"' + $("#eDate").val() + '"}',
+            dataType: "html",
+
+            success: function (data, status, xhr) {
+
+                $(".Report6Table").empty();
+                $(".filterTable").html(data);
+
+
+            },
+            error: function (xhr, status, error) {
+                //$("#dataDiv").html("Result: " + status + " " + error + " " + xhr.status + " " + xhr.statusText)
+            }
+        });
+
+    });
+</script>
+
+
+@*<script type="text/javascript">
+        $(function () {
+            $("#dialog").dialog({
+                autoOpen: false,
+                modal: true,
+                height: 600,
+                width: 600,
+                title: "Zoomed Image"
+            });
+            $("#imgAadhar1").click(function () {
+                $('#dialog').html('');
+                $('#dialog').append($(this).clone());
+                $('#dialog').dialog('open');
+            });
+        });
+    </script>*@

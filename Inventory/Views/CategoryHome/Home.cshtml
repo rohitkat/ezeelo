@@ -1,0 +1,222 @@
+﻿
+@{
+    ViewBag.Title = "Home";
+    Layout = "~/Views/Shared/_CategoryLayout.cshtml";
+}
+
+
+<style>
+    .rednew {
+        background-color: #CC8181 !important;
+    }
+
+    .packed {
+        background-color: #11B344 !important;
+    }
+
+    .Dispach {
+        background-color: #0D9136 !important;
+    }
+
+    .Delivary {
+        background-color: #065F22 !important;
+    }
+
+    .Return {
+        background-color: #575454 !important;
+    }
+
+    .quick-button {
+        margin-bottom: 20px;
+        min-width: 14.893617021276595%;
+        width: auto !important;
+    }
+</style>
+<h2>Home</h2>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<link rel="stylesheet" href="~/Content/css/style.css">
+<h1 class="page-header">Category Dashboard</h1>
+@*<div class="span6" style="line-height :30px;">
+    @if (Session["WarehouseName"] != null)
+    {
+        <h1 class="pull-right WarehouseName">
+            <span>@Session["WarehouseName"].ToString()</span>
+        </h1>
+
+
+
+        <br />
+    }
+</div>*@
+<section class="right_side_main_part">
+    <div id="page-wrapper">
+        <div class="row">
+            <div class="col-lg-12">
+                <h1 class="page-header">
+
+
+                    <div class="col-sm-1">
+                        Filter by Warehouse
+                    </div>
+                    <div>
+
+                        @Html.DropDownList("WarehouseName",new SelectList ( ViewBag.WarehouseList,"ID","Name")
+                       )
+
+                    </div>
+
+                    <div class="col-sm-1">
+                        Filter by DV
+                    </div>
+                    <div>
+
+                        @Html.DropDownList("DVName",new SelectList ( ViewBag.DVList, "ID","Name")
+                       )
+
+                    </div>
+                    <div class="col-sm-1">
+                        Filter by FV
+                    </div>
+                    <div>
+
+                        @Html.DropDownList("FVName",new SelectList ( ViewBag.FVList, "ID","Name")
+                       )
+
+                    </div>
+
+
+                </h1>
+            </div>
+
+        </div>
+
+    </div>>
+</section>
+
+@section Scripts{
+
+    <script type="text/javascript">
+
+
+        $(document).ready(function () {
+    $('#buttonid').click(function () {
+        document.location = '@Url.Action("ActionName","ControllerName")';
+        });
+        });
+
+        $(document).ready(function () {
+            $("#WarehouseName").change(function () {
+                var selectedText = $(this).find("option:selected").text();
+                var selectedValue = $(this).val();
+                //alert("Selected Text: " + selectedText + " Value: " + selectedValue);
+
+               $.ajax({
+                   url: '@Url.Action("Authenticate", "CategoryHome")',
+
+            type: "post",
+
+                   data: {
+                       result:selectedValue
+                   },
+
+            contenttype: "application/json",
+            success: function (selectedvalue) {
+                //alert(selectedvalue);               
+            },
+
+                    error: function () {
+                        //alert("false");
+
+                    },
+                    complete: function () {
+                        //alert("Complete");
+                    },
+
+
+                });
+
+
+
+
+            });
+
+        });
+
+        $(document).ready(function () {
+            $("#DVName").change(function () {
+                var selectedText = $(this).find("option:selected").text();
+                var selectedValue = $(this).val();
+                //alert("Selected Text: " + selectedText + " Value: " + selectedValue);
+                '<%Session["WarehouseID"] = "' + selectedValue + '"; %>';
+                //alert('<%=Session["WarehouseID"] %>');
+
+
+
+
+               $.ajax({
+                   url: '@Url.Action("Authenticate", "CategoryHome")',
+
+            type: "post",
+
+                   data: {
+                       result:selectedValue
+                   },
+
+            contenttype: "application/json",
+            success: function (selectedvalue) {
+                //alert(selectedvalue);
+
+
+                var WarehouseID = '<%= Session["WarehouseID"] %>';
+                alert(username);
+            },
+            error: function () {
+                alert("false");
+            },
+            complete: function () {
+                //alert("complete");
+            }
+                });
+
+            });
+
+        });
+
+
+
+        $(document).ready(function () {
+            $("#FVName").change(function () {
+                var selectedText = $(this).find("option:selected").text();
+                var selectedValue = $(this).val();
+                //alert("Selected Text: " + selectedText + " Value: " + selectedValue);
+                  $.ajax({
+                   url: '@Url.Action("Authenticate", "CategoryHome")',
+
+            type: "post",
+
+                   data: {
+                       result:selectedValue
+                   },
+
+            contenttype: "application/json",
+            success: function (selectedvalue) {
+                //alert(selectedvalue);
+            },
+            error: function () {
+                //alert("false");
+            },
+            complete: function () {
+                //alert("complete");
+            }
+                });
+
+            });
+        });
+
+        var selectedValue = $(this).val();
+
+    </script>
+
+
+}  

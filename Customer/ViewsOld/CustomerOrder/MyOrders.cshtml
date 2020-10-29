@@ -1,0 +1,532 @@
+﻿@model ModelLayer.Models.ViewModel.ViewCustomerOrderViewModel
+@using System.Text.RegularExpressions;
+@{
+    ViewBag.Title = "eZeelo:Buy Online Electronics, Jewellaries, cloths, collectibles";
+    string cityName = string.Empty;
+    int franchiseID = 0;////added
+    if (Request.Cookies["CityCookie"] != null)
+    {
+        cityName = Request.Cookies["CityCookie"].Value.Split('$')[1].ToLower();
+        franchiseID = Convert.ToInt32(Request.Cookies["CityCookie"].Value.Split('$')[2]);////added
+    }
+    Layout = "~/Views/Shared/_Layout_Internal.cshtml";
+}
+<style>
+    .newbackground {
+        color: white !important;
+        text-align: center;
+        font-weight: 600;
+    }
+
+    .table thead th {
+        color: #52677a;
+    }
+
+    .table.bordered td {
+        border: 1px solid 1px solid rgba(128, 128, 128, 0.6);
+    }
+
+    .table thead {
+        border: 1px solid rgba(0, 0, 0, 1);
+        border-top: 1px solid rgba(0, 0, 0, 1);
+        border-bottom: 1px solid #000000;
+        border-right: 1px solid #000000;
+        border-left: 1px solid #000000;
+    }
+
+    .table.bordered th, .table.bordered td {
+        border: 1px solid 1px solid rgba(128, 128, 128, 0.6);
+    }
+
+    .rednew {
+        color: red;
+    }
+
+    .blacknew {
+        color: black;
+    }
+
+    .streamer {
+        position: relative;
+        display: block;
+        width: 16%;
+        overflow: hidden;
+        float: left;
+    }
+
+    .neweditdiv {
+        width: 82%;
+        float: left;
+        min-height: 450px !important;
+    }
+
+    .example {
+        min-height: 450px;
+        padding: .25rem .25rem .25rem .5rem;
+        border: 1px #eaeaea dashed;
+        position: relative;
+        margin: 0 0 .625rem 0;
+        background-color: #ffffff;
+    }
+
+    .maintablediv {
+        line-height: 20px;
+        background-color: white;
+        border-left: 1px solid rgba(128, 128, 128, 0.6);
+        border-right: 1px solid rgba(128, 128, 128, 0.6);
+        border-top: 1px solid rgba(128, 128, 128, 0.6);
+    }
+
+    .bottomdiv {
+        margin-bottom: 15px;
+        width: 100%;
+        font-size: 13px;
+    }
+
+    .bottomsubdiv {
+        width: 100%;
+        border: 1px solid rgba(128, 128, 128, 0.6);
+    }
+
+    .alignright {
+        float: right;
+        margin-top: 0px;
+        margin-right: 50px;
+        color: white !important;
+    }
+
+    .alignrightnew {
+        float: right;
+        margin-top: 0px;
+        margin-right: 180px;
+        color: white !important;
+    }
+
+    .table.bordered th, .table.bordered td .table.bordered tr {
+        border: 1px solid rgba(128, 128, 128, 0.17) !important;
+    }
+
+    .panel > .heading {
+        padding: 0px 0px;
+        color: #FFF;
+        background-color: #656565;
+        cursor: default;
+        vertical-align: middle;
+        z-index: 2;
+        height: 55px;
+        box-shadow: -1px 6px 6px -6px rgba(0, 0, 0, 0.35);
+        font-size: 12px;
+        -moz-user-select: none;
+    }
+
+    .divrightalign {
+        float: right;
+        padding-right: 10px;
+        cursor: pointer;
+        font-size: 12px;
+    }
+
+    .maindiv {
+        padding-bottom: 10px;
+    }
+
+    .leftaligndiv {
+        padding-left: 12px;
+    }
+
+    #divShopProduct, #trackRecords {
+        background-color: white;
+    }
+
+    .neweditdiv {
+        width: 82%;
+        float: left;
+        min-height: 450px !important;
+    }
+
+    .atagelink {
+        position: fixed !important;
+        margin-top: -38px;
+        z-index: 10;
+        background-color: #EFEFEF;
+        color: white !important;
+    }
+
+    .ahomelink {
+        background-image: url(/Content/Images/arrowright.png) !important;
+        padding-bottom: 0px;
+        float: left;
+        background-position: right center;
+        background-repeat: no-repeat;
+        padding-right: 24px;
+        padding-top: 0px;
+        padding-left: 2px;
+        color: #000 !important;
+    }
+</style>
+<div id="navbar">
+    <ol class="breadcrumb page-breadcrumb">
+        <li>
+            @Html.ActionLink("Home", "Index", "Home")
+        </li>
+        <li class="active">My Account</li>
+    </ol>
+    @*<ul class="nav navbar-nav">
+        <li>@Html.ActionLink("Home >> ", "Index", "Home", null, new { @class = "ahomelink" })</li>
+        <li>@Html.RouteLink("My Account", "CustomerOrder/myorders", new { city = cityName }, new { @class = "ahomelink" })</li>
+        </ul>*@
+</div>
+@Html.Partial("_CustomerDashboardMenu")
+<div class="gap"></div>
+@Html.Hidden("ShipmentID")
+<div class="row box animated fadeInUp" data-gutter="15" style="height: auto;overflow: auto;min-height: 300px;max-height: 300px;">
+    <h3>My Orders</h3>
+    @if (Model != null && Model.Orders.Count() > 0 && Model.OrderProducts.Count() > 0)
+    {
+        for (int i = 0; i < Model.Orders.Count(); i++)
+        {
+            long customerOrderId = 0;
+            long.TryParse(Convert.ToString(Model.Orders[i].CustomerOrderID), out customerOrderId);
+
+            var orderProducts = Model.OrderProducts.Where(x => x.CustomerOrderID == customerOrderId).ToList();
+
+            if (orderProducts != null)
+            {
+                if (orderProducts.Count() > 0)
+                {
+                    var distinctShop = orderProducts.Select(x => new { x.ShopOrderCode }).Distinct().ToList();
+
+                    if (distinctShop.Count() > 0)
+                    {
+                        @*<table class="bottomdiv">*@
+                        <div class="cell maindiv">
+                            <div class="panel" data-role="panel" style="margin-bottom:0px;">
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <table class="table-shopping-cart" style="width:100%;font-weight:700;">
+                                            <tr>
+                                                <td>
+                                                    Order No. : @Model.Orders[i].OrderCode
+                                                    @if (orderProducts.Count() <= 1)
+                                                    {
+                                                        <span>(@orderProducts.Count() Item)</span><br />
+                                                    }
+                                                    else
+                                                    {
+                                                        <span>(@orderProducts.Count() Items)</span><br />
+                                                    }
+                                                </td>
+                                                <td style=" text-align: right;">Placed On: @Model.Orders[i].OrderDate.ToString("dd MMM yyyy hh:mm:ss")</td>
+                                            </tr>
+                                            <tr>
+                                                <td colspan="2">
+                                                    @Html.RouteLink("View Order Details", "CustomerOrder/OrderHistory", new { orderId = customerOrderId, uid = Session["UID"], city = cityName.ToLower(), franchiseId = franchiseID }, new { @class = "btn btn-success" })
+                                                    @if (Model.Orders[i].IsCancellable)
+                                                    {
+                                                        @Html.RouteLink("Cancel Order", "CancelOrder", new { city = cityName.ToLower(), franchiseId = franchiseID, orderID = customerOrderId, shopStockID = 0 }, new { @class = "btn btn-danger" })
+                                                    }
+                                                </td>
+                                            </tr>
+
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        @*</table>*@
+                    }
+                }
+            }
+        }
+    }
+    else
+    {
+        <h5 class="breadcrumbs dark newbackground">Your orders is empty</h5>
+    }
+</div>
+<div class="gap"></div>
+<script type="text/javascript">
+    $(function () {
+        $(".trackorder").click(function () {
+
+            $(this).parent().find("#divShopProduct").css("display", "none");
+            $(this).parent().find(".anchorViewItem").text("View Items");
+            $(this).parent().find(".anchorViewItem").attr("accessKey", "1");
+
+            var accessKey = $(this).attr("accesskey");
+
+            $("#ShipmentID").val("");
+
+            var trackId = this.id;
+            var arr = trackId.split("-");
+
+            $("#ShipmentID").val(trackId);
+
+            if (accessKey == "1") {
+
+                $(this).attr("accessKey", "2");
+                $(this).text("Hide Shipment");
+
+                $.ajax({
+                    type: "POST",
+                    //url: "/CustomerOrder/TrackOrder",
+                    url: "@Url.Action("TrackOrder", "CustomerOrder", new { city = cityName.ToLower(), franchiseId = franchiseID })",////added franchiseId=franchiseID
+                    data: "{'orderId':" + $(this).parent().find("#hdnOrderID").val() + ", 'shopStockID':" + arr[1] + "}",
+                    contentType: "application/json; charset = utf-8",
+                    dataType: "json",
+                    success: OnSuccess,
+                    failure: function (response) {
+                        //  alert("fail");
+                    },
+                    error: function (response) {
+                        // alert("error");
+                    }
+                });
+            }
+            else {
+                // alert($(this).parent().find(".trackDiv").html());
+                $(this).parent().find(".trackDiv").html("");
+
+                $(this).attr("accessKey", "1");
+                $(this).text("View Shipment");
+            }
+        });
+    });
+
+    function OnSuccess(response) {
+        var id = $("#ShipmentID").val();
+        $(".disable").mouseover(MouseEnterFunction);
+        $(".disable").mouseout(MouseOutFunction);
+        BindOrderProcessStages();
+        var currentStatus = 0;
+        var lastStatus = 0;
+        var weekdays = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+        var months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "July", "Aug", "Sep", "Oct", "Nov", "Dec"];
+        var suffix = '';
+
+        $.each(response, function (j, dataVal) {
+
+            message = '';
+            currentStatus = dataVal.Status;
+
+            var value = new Date
+            (
+                 parseInt(dataVal.CreateDate.replace(/(^.*\()|([+-].*$)/g, ''))
+            );
+
+            message = GetStatus(currentStatus);
+
+            statusDate = new Date(value);
+
+            //alert(statusDate);
+
+            switch (statusDate.getDate()) {
+
+                case 1, 21, 31:
+                    suffix = "st";
+                    break;
+                case 2, 22:
+                    suffix = "nd";
+                    break;
+                case 3, 23:
+                    suffix = "rd";
+                    break;
+                default:
+                    suffix = "th";
+
+            }
+
+            statusDisplayDate = weekdays[statusDate.getDay()] + ", " + statusDate.getDate() + suffix + " " + months[statusDate.getMonth()] + " " + statusDate.getHours() + ":" + statusDate.getMinutes();
+
+            switch (currentStatus) {
+                case 1:
+                    window.parent.$("#" + id).parent().find(".trackDiv").find('.disable:first').css('opacity', '1');
+                    // $("[id*=trackRecords]").find('.disable:first').attr("src", GetRootPath() + '/IMAGES/track order images/1order_placed.png');
+                    window.parent.$("#" + id).parent().find(".trackDiv").find('.disable:first').removeClass("disable").addClass("placed01");
+                    window.parent.$("#" + id).parent().find(".trackDiv").append("<div id=" + currentStatus + "divDetails style='display:none;'><span class='spnMessage'>" + message + "</span><br/><span class='divDate'>" + statusDisplayDate + "</span></div>");
+                    window.parent.$("#" + id).parent().find(".trackDiv").find(".placed01").mouseover(MouseEnterFunction);
+                    window.parent.$("#" + id).parent().find(".trackDiv").find(".placed01").mouseout(MouseOutFunction);
+                    break;
+                case 2:
+                    window.parent.$("#" + id).parent().find(".trackDiv").find('.disable:first').css('opacity', '1');
+                    // $("[id*=trackRecords]").find('.disable:first').attr("src", GetRootPath() + '/IMAGES/track order images/2product_confirm.png');
+                    window.parent.$("#" + id).parent().find(".trackDiv").find('.disable:first').removeClass("disable").addClass("received02");
+                    window.parent.$("#" + id).parent().find(".trackDiv").append("<div id=" + currentStatus + "divDetails style='display:none;'><span class='spnMessage'>" + message + "</span><br/><span class='divDate'>" + statusDisplayDate + "</span></div>");
+                    window.parent.$("#" + id).parent().find(".received02").mouseover(MouseEnterFunction);
+                    window.parent.$("#" + id).parent().find(".received02").mouseout(MouseOutFunction);
+                    break;
+                case 3:
+                    window.parent.$("#" + id).parent().find(".trackDiv").find("#step02").css('opacity', '1');
+                    window.parent.$("#" + id).parent().find(".trackDiv").find("#step02").removeClass("disable").addClass("received02");
+
+                    window.parent.$("#" + id).parent().find(".trackDiv").find("#step03").css('opacity', '1');
+                    window.parent.$("#" + id).parent().find(".trackDiv").find("#step03").removeClass("disable").addClass("packed03");
+                    window.parent.$("#" + id).parent().find(".trackDiv").append("<div id=" + currentStatus + "divDetails style='display:none;'><span class='spnMessage'>" + message + "</span><br/><span class='divDate'>" + statusDisplayDate + "</span></div>");
+                    window.parent.$("#" + id).parent().find(".packed03").mouseover(MouseEnterFunction);
+                    window.parent.$("#" + id).parent().find(".packed03").mouseout(MouseOutFunction);
+                    break;
+                case 4:
+                    window.parent.$("#" + id).parent().find(".trackDiv").find("#step02").css('opacity', '1');
+                    window.parent.$("#" + id).parent().find(".trackDiv").find("#step02").removeClass("disable").addClass("received02");
+
+                    window.parent.$("#" + id).parent().find(".trackDiv").find("#step03").css('opacity', '1');
+                    window.parent.$("#" + id).parent().find(".trackDiv").find("#step03").removeClass("disable").addClass("packed03");
+
+                    window.parent.$("#" + id).parent().find(".trackDiv").find("#step04").css('opacity', '1');
+                    window.parent.$("#" + id).parent().find(".trackDiv").find("#step04").removeClass("disable").addClass("dispatched04");
+
+                    window.parent.$("#" + id).parent().find(".trackDiv").append("<div id=" + currentStatus + "divDetails style='display:none;'><span class='spnMessage'>" + message + "</span><br/><span class='divDate'>" + statusDisplayDate + "</span></div>");
+                    window.parent.$("#" + id).parent().find(".dispatched04").mouseover(MouseEnterFunction);
+                    window.parent.$("#" + id).parent().find(".dispatched04").mouseout(MouseOutFunction);
+                    break;
+                case 7:
+                    window.parent.$("#" + id).parent().find(".trackDiv").find("#step02").css('opacity', '1');
+                    window.parent.$("#" + id).parent().find(".trackDiv").find("#step02").removeClass("disable").addClass("received02");
+
+                    window.parent.$("#" + id).parent().find(".trackDiv").find("#step03").css('opacity', '1');
+                    window.parent.$("#" + id).parent().find(".trackDiv").find("#step03").removeClass("disable").addClass("packed03");
+
+                    window.parent.$("#" + id).parent().find(".trackDiv").find("#step04").css('opacity', '1');
+                    window.parent.$("#" + id).parent().find(".trackDiv").find("#step04").removeClass("disable").addClass("dispatched04");
+
+                    window.parent.$("#" + id).parent().find(".trackDiv").find("#step0" + currentStatus).css('opacity', '1');
+                    window.parent.$("#" + id).parent().find(".trackDiv").find("#step0" + currentStatus).removeClass("disable").addClass("deliver07");
+                    window.parent.$("#" + id).parent().find(".trackDiv").append("<div id=" + currentStatus + "divDetails style='display:none;'><span class='spnMessage'>" + message + "</span><br/><span class='divDate'>" + statusDisplayDate + "</span></div>");
+                    window.parent.$("#" + id).parent().find(".deliver07").mouseover(MouseEnterFunction);
+                    window.parent.$("#" + id).parent().find(".deliver07").mouseout(MouseOutFunction);
+                    break;
+                case 8:
+                    //$("[id*=trackRecords]").find('.disable:first').attr("src", GetRootPath() + '/IMAGES/track order images/6return_Product_delivered.png');
+                    //$("[id*=trackRecords]").find('.disable:first').css('opacity', '1');
+                    window.parent.$("#" + id).parent().find(".trackDiv").find($("[id*=step0" + lastStatus + "]")).after("<img class='disable' id='step09' src='@Url.Content("/Content/track order images/6return_Product_delivered.png")' width='70' height='70' />");
+                    window.parent.$("#" + id).parent().find(".trackDiv").find($("[id*=step0" + lastStatus + "]")).after("---------------");
+
+                    window.parent.$("#" + id).parent().find(".trackDiv").find('.disable:first').removeClass("disable").addClass("return08");
+                    window.parent.$("#" + id).parent().find(".trackDiv").append("<div id=" + currentStatus + "divDetails style='display:none;'><span class='spnMessage'>" + message + "</span><br/><span class='divDate'>" + statusDisplayDate + "</span></div>");
+                    window.parent.$("#" + id).parent().find(".return08").mouseover(MouseEnterFunction);
+                    window.parent.$("#" + id).parent().find(".return08").mouseout(MouseOutFunction);
+                    break;
+                case 9:
+
+                    //$("[id*=trackRecords]").find($("[id*=step0" + lastStatus + "]")).after("<img class='disable' id='step09' src='" + GetRootPath() + "/IMAGES/track order images/7product_cancel.png' />");
+                    //$("[id*=trackRecords]").find($("[id*=step0" + lastStatus + "]")).after("<img src='" + GetRootPath() + "/IMAGES/straightLine.jpg' width='60px' />");
+
+                    window.parent.$("#" + id).parent().find(".trackDiv").find($("[id*=step0" + lastStatus + "]")).after("<img class='disable' id='step09' src='@Url.Content("/Content/track order images/7product_cancel.png")' width='70' height='70' />");
+                    window.parent.$("#" + id).parent().find(".trackDiv").find($("[id*=step0" + lastStatus + "]")).after("---------------");
+
+
+                    window.parent.$("#" + id).parent().find(".trackDiv").find('.disable:first').removeClass("disable").addClass("cancel09");
+                    window.parent.$("#" + id).parent().find(".cancel09").mouseover(MouseEnterFunction);
+                    window.parent.$("#" + id).parent().find(".cancel09").mouseout(MouseOutFunction);
+                    window.parent.$("#" + id).parent().find(".trackDiv").append("<div id=" + currentStatus + "divDetails style='display:none;'><span class='spnMessage'>" + message + "</span><br/><span class='divDate'>" + statusDisplayDate + "</span></div>");
+
+                    break;
+            }
+            lastStatus = currentStatus;
+        });
+    }
+
+    function GetStatus(status) {
+
+        var statusMessage = '';
+
+        switch (status) {
+
+            case 1:
+                statusMessage = "Your order has been placed.";
+                break;
+            case 2:
+                statusMessage = "Your order has been confirmed by organization.";
+                break;
+            case 3:
+                statusMessage = "Your order has been packed for delivery.";
+                break;
+            case 4:
+                statusMessage = "Your order has been dispatched.";
+                break;
+            case 7:
+                statusMessage = "Your order has been delivered.";
+                break;
+            case 8:
+                statusMessage = "Your order has been returned.";
+                break;
+            case 9:
+                statusMessage = "Your order has been cancelled.";
+                break;
+
+        }
+        return statusMessage;
+    }
+
+    function MouseEnterFunction() {
+
+        //alert($(this).parent().parent().find(".trackorder").attr("id"));
+
+        var id = $(this).parent().parent().find(".trackorder").attr("id");
+
+        var statusId = $(this).attr("class");
+        // alert(statusId);
+        var arr = statusId.split("0");
+
+        window.parent.$("#" + id).parent().find(".trackDiv").find("#" + arr[1] + "divDetails").css("display", "block");
+        //document.getElementById(arr[1] + "divDetails").style.display = 'block';
+    }
+
+    function MouseOutFunction() {
+
+        var id = $(this).parent().parent().find(".trackorder").attr("id");
+        var statusId = $(this).attr("class");
+
+        var arr = statusId.split("0");
+
+        // alert(window.parent.$("#" + id).parent().find(".trackDiv").find("#1divDetails").html());
+
+        window.parent.$("#" + id).parent().find(".trackDiv").find("#" + arr[1] + "divDetails").css("display", "none");
+        //document.getElementById(arr[1] + "divDetails").style.display = 'none';
+    }
+
+    function BindOrderProcessStages() {
+
+        var id = $("#ShipmentID").val();
+        //alert(window.parent.$("#" + id).parent().find(".trackDiv"));
+
+        window.parent.$("#" + id).parent().find(".trackDiv").append("<img class='disable' id='step01' src='@Url.Content("/Content/track order images/1order_placed.png")' style='opacity:0.3;' width='70' height='70' />");
+        window.parent.$("#" + id).parent().find(".trackDiv").append("---------------");
+        window.parent.$("#" + id).parent().find(".trackDiv").append("<img class='disable' id='step02' src='@Url.Content("/Content/track order images/2product_confirm.png")' style='opacity:0.3;' width='70' height='70' />");
+        window.parent.$("#" + id).parent().find(".trackDiv").append("---------------");
+        window.parent.$("#" + id).parent().find(".trackDiv").append("<img class='disable' id='step03'  src='@Url.Content("/Content/track order images/3product_packed.png")' style='opacity:0.3;' width='70' height='70' />");
+        window.parent.$("#" + id).parent().find(".trackDiv").append("---------------");
+        window.parent.$("#" + id).parent().find(".trackDiv").append("<img class='disable' id='step04'  src='@Url.Content("/Content/track order images/4Product_dispatched.png")' style='opacity:0.3;' width='70' height='70' />");
+        window.parent.$("#" + id).parent().find(".trackDiv").append("---------------");
+        window.parent.$("#" + id).parent().find(".trackDiv").append("<img class='disable' id='step07' src='@Url.Content("/Content/track order images/5Product_delivered.png")' style='opacity:0.3;' width='70' height='70' />");
+    }
+
+</script>
+
+<script type="text/javascript">
+    $(function () {
+        $(".anchorViewItem").click(function () {
+
+            var trackAccessKey = $(this).parent().find(".trackorder").attr("accessKey");
+
+            if (trackAccessKey == "2") {
+                $(this).parent().find("#trackRecords").html("");
+                $(this).parent().find(".trackorder").attr("accessKey", "1");
+                $(this).parent().find(".trackorder").text("View Shipment");
+            }
+
+            var accessKey = $(this).attr("accesskey");
+
+            if (accessKey == "1") {
+                $(this).attr("accesskey", "2");
+                $(this).parent().find("#divShopProduct").css("display", "block");
+                $(this).text("Hide Items");
+            }
+            else {
+                $(this).attr("accesskey", "1");
+                $(this).parent().find("#divShopProduct").css("display", "none");
+                $(this).text("View Items");
+            }
+        });
+    });
+</script>

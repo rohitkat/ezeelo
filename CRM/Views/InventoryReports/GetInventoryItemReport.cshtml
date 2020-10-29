@@ -1,0 +1,417 @@
+﻿@model ModelLayer.Models.ViewModel.InventoryReportViewModelList
+@{
+    ViewBag.Title = "Inventory Report";
+}
+<script src="~/Content/js/jquery-1.9.1.min.js"></script>
+
+
+@*<script src="~/Scripts/jquery-1.10.2.min.js"></script>
+    <link href="~/Content/css/datepicker.css" rel="stylesheet" />
+    <script src="~/Content/js/jquery-ui-1.10.0.custom.min.js"></script>
+    <link href="~/Content/css/jquery-ui-1.8.21.custom.css" rel="stylesheet" />*@
+
+<style>
+    .ClaimAmtList table {
+        border-collapse: separate;
+        width: 800px;
+        max-width: 800px;
+        overflow-x: scroll;
+        display: block;
+    }
+
+    .ClaimAmtList thead, .ClaimAmtList tfoot {
+        background-color: #EFEFEF;
+    }
+
+    .ClaimAmtList thead, .ClaimAmtList tbody, .ClaimAmtList tfoot {
+        display: block;
+    }
+
+    .ClaimAmtList tbody {
+        overflow-y: scroll;
+        overflow-x: auto;
+        max-height: 350px;
+    }
+
+    .ClaimAmtList td, .ClaimAmtList th {
+        padding: 5px;
+        min-width: 80px;
+        height: 25px;
+        border: inset 1px lightblue;
+        /*overflow: hidden;*/
+        text-overflow: ellipsis;
+        max-width: 80px;
+        /*word-break: break-all;*/
+        text-align: center;
+    }
+</style>
+
+<script src="~/Content/js/jquery-ui-1.10.0.custom.min.js"></script>
+<script src="~/Content/js/priti.js"></script>
+<link href="~/Content/css/datepicker.css" rel="stylesheet" />
+<link href="~/Content/css/jquery-ui-1.8.21.custom.css" rel="stylesheet" />
+
+
+
+
+<section class="inventory-Report_main">
+    <div class="row-fluid">
+        @using (Html.BeginForm("GetInventoryItemReport", "InventoryReports", new { enctype = "multipart/form-data" }, FormMethod.Post, new { id = "Form_" }))
+        {
+            @Html.ValidationSummary(true)
+
+
+
+
+            <div class="box span12 ">
+                <div class="box-header creatProduct clearfix">
+                    <h2>
+                        <i class="icon-list-alt"></i>
+                        <span class="break"></span>
+                        Inventory Report
+                    </h2>
+                </div>
+                <div class="box-content nameDscrp">
+                    <div class="form-horizontal">
+                        <div class="NameDescription">
+                            @*<div class="control-group mrg-left">
+
+        @Html.DropDownListFor(model => model.WarehouseID, Model.WarehouseList)*@
+                            @*<div class="col-sm-6">
+                         @if (ViewBag.PossibleSuppliers != null)
+                         {
+                             @Html.DropDownListFor(model => model.SupplierID, ((IEnumerable<ModelLayer.Models.Supplier>)ViewBag.PossibleSuppliers).Select(option => new SelectListItem
+                {
+                    Text = (option == null ? "None" : option.Name),
+                    Value = option.ID.ToString(),
+                    Selected = (Model != null) && (option.ID == Model.SupplierID)
+                }), "--All Suppliers--")
+                         }
+                     </div>
+        </div>*@
+
+                            <div class="control-group mrg-left">
+                                <div class="col-sm-3">
+                                    From Date
+                                </div>
+                                <div class="col-sm-6">
+                                    @*@Html.TextBox("FromDate", null, new { @readonly = "readonly", @class = "search", placeholder = "From" })*@
+                                    @Html.TextBoxFor(model => model.FromDate)
+                                    @Html.HiddenFor(model => model.FromDate)
+                                </div>
+                            </div>
+                            <div class="control-group mrg-left">
+                                <div class="col-sm-3">
+                                    To Date
+                                </div>
+                                <div class="col-sm-6">
+                                    @*@Html.TextBox("ToDate", null, new { @readonly = "readonly", @class = "search", placeholder = "To" })*@
+                                    @Html.TextBoxFor(model => model.ToDate)
+                                    @Html.HiddenFor(model => model.ToDate)
+                                </div>
+                            </div>
+                            <div class="control-group mrg-left">
+                                <div class="col-sm-3">
+                                    Filter By Stock
+                                </div>
+                                <div class="col-sm-6">
+                                    @*@Html.DropDownList("ExportOption", new List<SelectListItem>
+                 {
+                         new SelectListItem{ Text="out of stock ", Value = "0" },
+                         new SelectListItem{ Text="InStcok ", Value = "1" },
+                         new SelectListItem{ Text="Total Stock", Value = "2" }
+                })*@
+
+
+
+                                    @Html.DropDownList("ExportOption", new List<SelectListItem>
+             {
+                     new SelectListItem{ Text="InStock ", Value = "1" },
+                     new SelectListItem{ Text="out of stock ", Value = "0" },
+                     new SelectListItem{ Text="Total Stock", Value = "2" }
+            })
+                                </div>
+                            </div>
+
+
+                            @*<div class="control-group mrg-left">
+            <div class="col-sm-3">
+                Export In
+            </div>
+            <div class="col-sm-6">
+                @Html.DropDownList("StockFilter", new List<SelectListItem>
+         {
+                 new SelectListItem{ Text="Excel", Value = "1" },
+                 new SelectListItem{ Text="Csv", Value = "2" },
+                 new SelectListItem{ Text="Pdf", Value = "3" }
+        })
+            </div>
+        </div>*@
+                            <div class="clr"></div>
+                            <div class="all_check_btn">
+                                <label>
+
+                                    All Checkbox
+
+                                    @Html.CheckBoxFor(model => model.Checkbox, new { @checked = "checked" })
+                                    @Html.HiddenFor(model => model.Checkbox)
+
+                                </label>
+                            </div>
+
+
+                            @*<button value="StockFilter" type="submit" class="btnRemove btn btn-warning">StockFilter</button>*@
+                            <button value="Search" type="submit" class="btnRemove btn btn-warning">Search</button>
+                            @*<button id="btnPrint" class="btnPrint btn btn-success">Print</button>*@
+                            @*<a id="Print" class="print btn btn-default" href="@Url.Action("GetInventoryItemReport", "InventoryReports")" target="_blank">Print</a>*@
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        }
+        <iframe id="txtArea1" style="display:none"></iframe>
+
+        <div class="export_btn"><button id="btnExport" onclick="fnExcelReport();" class="btnPrint btn btn-success btn-small">EXPORT TO EXCEL</button></div>
+        <display:setproperty name="export.Excel.filename" value="InventoryReport.xls" />
+        <div class="box right_side_down_part">
+            <div class="box-content">
+                <div class="NameDescription">
+                    <div id="divToPrint">
+                        <table id="headerTable" class=" table table-bordered table-striped table-condensed" border="1" cellpadding="2" cellspacing="0">
+                            <thead>
+                                <tr>
+                                    <td class="TD_Heading" style="text-align:center" colspan="12"><h2>INVENTORY REPORT </h2></td>
+                                </tr>
+                                <tr>
+                                    <th>Sr.No.</th>
+
+                                    <th>SKU ID</th>
+                                    <th>SKU Name</th>
+                                    <th>SKU Unit</th>
+                                    @*<th style="min-width: 120px; max-width: 120px;">
+                                            Supplier
+                                        </th>*@
+                                    @*<th style="min-width: 150px; max-width: 150px; word-break: break-all">Manufacturer</th>*@
+                                    <th>Brand Name</th>
+                                    @*<th style="text-align:right"> ProductVarient </th>*@
+                                    <th>Batch Code</th>
+                                    <th>Invoice Code</th>
+                                    <th>Initial Quantity</th>
+                                    <th>Available In Stock</th>
+                                    @*<th style="min-width: 75px; max-width: 75px; text-align: left">  ReorderLevel </th>*@
+                                    <th style="text-align:right">Supplier Name</th>
+                                    <th style="text-align:right">Category 1</th>
+                                    <th style="text-align:right">Category 2</th>
+                                    <th style="text-align:right">Category 3</th>
+
+                                    <th style="text-align:right"> Amount </th>
+                                    <th style="text-align:right"> Purchase Date</th>
+                                    <th style="text-align:right">Buy Rate Per Unit</th>
+                                    <th style="text-align:right">Sale Rate</th>
+                                    <th style="text-align:right">MRP</th>
+                                    <th style="text-align:right">Retail Point</th>
+                                    <th style="text-align:right">Expiry Date</th>
+                                    <th style="text-align:right">Sale Qty</th>
+                                    <th style="text-align:right">Sale Value</th>
+                                    <th style="text-align:right">Inventory Value</th>
+                                    @*<th style="text-align:right">Return Qty </th>*@
+                                    <th style="text-align:right">Return Status</th>
+                                    <th style="text-align:right">Entity</th>
+                                    <th style="text-align:right">Franchise</th>
+                                    <th style="text-align:right">City</th>
+
+
+
+
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @{
+                                    var i = 1;
+                                }
+                                @*@foreach (var item in Model)*@
+
+                                @foreach (var item in Model.lInventoryReportViewModel)
+                                {
+                                    <tr>
+
+                                        <td>
+                                            @i
+                                            @{
+                                                i = i + 1;
+                                            }
+                                        </td>
+                                        @*<td style="min-width: 100px; max-width: 100px; word-break: break-all;">*@
+                                        <td> @item.SKUID</td>
+                                        <td>@item.SKUName</td>
+                                        <td>@item.SKUUnit</td>
+                                        <td>@item.Manifecturer</td>
+                                        @*<td style="text-align:right">@item.ProductVarient</td>*@
+                                        <td>@item.BatchCode</td>
+                                        <td>@item.InvoiceCode</td>
+                                        <td>@item.InitialQuantity</td>
+                                        <td>@item.AvailableInStock</td>
+                                        @*<td style="min-width:75px; max-width: 75px; text-align: left">@item.ReorderLevel</td>*@
+                                        <td style="text-align:right"> @item.SupplierName</td>
+                                        <td style="text-align:right">@item.Category1</td>
+                                        <td style="text-align:right">@item.Category2</td>
+                                        <td style="text-align:right">@item.Category3</td>
+                                        <td style="text-align:right">@item.Amount</td>
+                                        <td style="text-align:right">@item.CreateDate</td>
+                                        <td style="text-align:right">@item.BuyRatePerUnit</td>
+                                        <td style="text-align:right">@item.SaleRate</td>
+                                        <td style="text-align:right">@item.MRP</td>
+                                        <td style="text-align:right">@item.RetailPoint</td>
+                                        <td style="text-align:right">@item.ExpiryDate</td>
+                                        <td style="text-align:right">@item.SaleQty</td>
+                                        <td style="text-align:right">@item.SaleValue</td>
+                                        <td style="text-align:right">@item.InventoryValue</td>
+                                        @*<td style="text-align:right">@item.ReturnQuantity</td>*@
+                                        <td style="text-align:right">@item.Status</td>
+                                        <td style="text-align:right">@item.Entity</td>
+                                        <td style="text-align:right">@item.Franchises</td>
+                                        <td style="text-align:right">@item.City</td>
+
+                                    </tr>
+
+
+                                }
+
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<script>
+    $(document).ready(function () {
+        $("#ToDate").datepicker({
+            dateFormat: 'dd/mm/yy',//check change
+            changeMonth: true,
+            changeYear: true
+        });
+        $("#FromDate").datepicker({
+            dateFormat: 'dd/mm/yy',//check change
+            changeMonth: true,
+            changeYear: true
+        });
+
+        //$("#FromDate").val(twoDigitDate + "/" + twoDigitMonth + "/" + (fullDate.getFullYear() - 1) + ", " + hour + ":" + minute + " " + ampm);
+        //$("#ToDate").val(twoDigitDate + "/" + twoDigitMonth + "/" + fullDate.getFullYear() + ", " + hour + ":" + minute + " " + ampm);
+
+        //var toDate = $('#txtToDate').val();
+        //var fromDate = $('#txtFromDate').val();
+
+        $("#Export").on('click', function () {
+
+            var print = 0;
+            var option = 0;
+            var supplierID = 0
+
+            //if ($("select#SupplierID option:selected").val() > 0) {
+            //    supplierID = $("select#SupplierID option:selected").val();
+            //}
+
+            //if ($("select#ExportOption option:selected").val() > 0) {
+            //    option = $("select#ExportOption option:selected").val();
+            //}
+            var toDate = $('#ToDate').val();
+            var fromDate = $('#FromDate').val();
+
+            window.location.href = "/InventoryReports/Export?&FromDate=" + fromDate + "&ToDate=" + toDate + "&option=" + option;
+
+        });
+    });
+
+</script>
+<script type="text/javascript">
+
+
+    $("#Export").on('click', function () {
+
+        var print = 0;
+        var option = 1;
+        var supplierID = 0
+
+        if ($("select#SupplierID option:selected").val() > 0) {
+            supplierID = $("select#SupplierID option:selected").val();
+        }
+
+        if ($("select#ExportOption option:selected").val() > 0) {
+            option = $("select#ExportOption option:selected").val();
+        }
+        var toDate = $('#ToDate').val();
+        var fromDate = $('#FromDate').val();
+
+        window.location.href = "/InventoryReports/Export?&FromDate=" + fromDate + "&ToDate=" + toDate + "&option=" + 1 + "&SupplierID=" + FrenchiseID;
+
+    });
+
+</script>
+
+
+<script type="text/javascript">
+    function fnExcelReport() {
+        var tab_text = '<table border="1px" style="font-size:20px" ">';
+        var textRange;
+        var j = 0;
+        var tab = document.getElementById('headerTable'); // id of table
+        var lines = tab.rows.length;
+
+        // the first headline of the table
+        if (lines > 0) {
+            tab_text = tab_text + '<tr bgcolor="#DFDFDF">' + tab.rows[0].innerHTML + '</tr>';
+        }
+
+        // table data lines, loop starting from 1
+        for (j = 1; j < lines; j++) {
+            tab_text = tab_text + "<tr>" + tab.rows[j].innerHTML + "</tr>";
+        }
+
+
+
+
+        var fileName = 'Test file.xls';
+        var blob = new Blob([tab_text], {
+            type: "application/xls;charset=utf-8;"
+        });
+
+        if (window.navigator.msSaveBlob) {
+            // FOR IE BROWSER
+            navigator.msSaveBlob(blob, fileName);
+        } else {
+            // FOR OTHER BROWSERS
+            var csvUrl = URL.createObjectURL(blob);
+
+
+
+            //new added by Priti
+            let a = $("<a />", {
+                //href: 'data:application/vnd.ms-excel,' + encodeURIComponent(blob),
+                href: csvUrl,
+                download: "InventoryReport.xls"
+            })
+                .appendTo("body")
+                .get(0)
+                .click();
+            //$('#exportbutton').attr({
+            //    'download': fileName,
+            //    'href': csvUrl
+            //});
+        }
+    }
+</script>
+<script type="text/javascript">
+    $(function () {
+        $("#Search").click(function () {
+            var FrenchiseID = $("select#WarehouseID option:selected").val();
+            //window.location = "/WastageReport/WastageReportNotePrint?WarehouseID=" + WarehouseID;
+            window.location = "/InventoryReports/Indext?FrenchiseID =" + FrenchiseID;
+        });
+    });
+
+</script>

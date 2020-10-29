@@ -1,0 +1,150 @@
+﻿@model ModelLayer.Models.BlockItemsList
+
+@{
+    ViewBag.Title = "Edit";
+}
+<style>
+    .tri-state {
+        width: 80px;
+    }
+    .pagination {
+        margin: 0 40px;
+    }
+</style>
+<div id="content" class="span10">
+    <ul class="breadcrumb">
+        <li>
+            <a href="#">Edit</a>
+        </li>
+    </ul>
+
+    <div class="row-fluid">
+
+        <div class="box span12">
+            <div class="box-header">
+                <h2>Home Product Gallery</h2>
+            </div>
+            <div class="box-content">
+                @using (Html.BeginForm())
+                {
+                    @Html.AntiForgeryToken()
+
+                    <div class="form-horizontal">
+
+                        @Html.ValidationSummary(true)
+                        @Html.HiddenFor(model => model.ID)
+                        @Html.HiddenFor(model => model.ProductID)
+                        @Html.HiddenFor(model => model.FranchiseID)
+
+                        <div class="control-group">
+                            @Html.Label("Franchise", new { @class = "control-label col-md-2" })
+                            <div class="controls">
+                                @Html.DisplayFor(model => model.Franchise.BusinessDetail.Name)
+                            </div>
+                        </div>
+
+                        <div class="control-group">
+                            @Html.Label("Product Name", new { @class = "control-label col-md-2" })
+                            <div class="controls">
+                                @Html.DisplayFor(model => model.Product.Name)
+                            </div>
+                        </div>
+
+                        <div class="control-group">
+                            @Html.LabelFor(model => model.StartDate, "Start Date", new { @class = "control-label col-md-2" })
+                            <div class="controls">
+                                <input type="text" id="SDate" name="SDate" value="@ViewBag.SDate" class="datepicker" />
+                                @Html.ValidationMessageFor(model => model.StartDate)
+                                <span id="SDateErro" style="font-weight:bold;color:red;"></span>
+                                <span id="DateErro" style="font-weight:bold;color:red;"></span>
+                            </div>
+                        </div>
+
+                        <div class="control-group">
+                            @Html.LabelFor(model => model.EndDate, "End Date", new { @class = "control-label col-md-2" })
+                            <div class="controls">
+                                <input type="text" id="EDate" name="EDate" value="@ViewBag.EDate" class="datepicker" />
+                                @Html.ValidationMessageFor(model => model.EndDate)
+                                <span id="EDateErro" style="font-weight:bold;color:red;"></span>
+                            </div>
+                        </div>
+
+                        <div class="control-group">
+                            @Html.LabelFor(model => model.IsActive, "Is Active", new { @class = "control-label col-md-2 " })
+                            <div class="controls">
+                                @Html.EditorFor(model => model.IsActive, new { @style = "width:120px;" })
+                                @Html.ValidationMessageFor(model => model.IsActive)
+                                <span id="IsActiveErro" style="font-weight:bold;color:red;"></span>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="col-md-offset-2 col-md-10">
+                                <input type="submit" value="Save" class="btn btn-success" />
+                                @Html.ActionLink("Back to List", "Details", new { id = Model.FranchiseID }, new { @class = "btn btn-default" })
+                            </div>
+                        </div>
+                    </div>
+                }
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="~/Scripts/jquery-1.10.2.min.js"></script>
+<script>
+
+    $(document).ready(function () {
+
+        $(".btn-success").click(function () {
+            var ErrorCount = 0;
+            var isActive = $("#IsActive option:selected").text();
+            var startDate = $("#SDate").val();
+            var endDate = $("#EDate").val();
+
+            if (isActive == 'Not Set') {
+                $('#IsActiveErro').html('Please Select the IsActive');
+                ErrorCount = ErrorCount + 1;
+            }
+            else {
+                $('#IsActiveErro').html('');
+            }
+
+            if (startDate == '') {
+                $('#SDateErro').html('Please Select Start Date');
+                ErrorCount = ErrorCount + 1;
+            }
+            else {
+                $('#SDateErro').html('');
+            }
+
+            if (endDate == '') {
+                $("#EDateErro").html('Please Select End Date');
+                ErrorCount = ErrorCount + 1;
+            }
+            else {
+                $("#EDateErro").html('');
+            }
+
+            if (startDate != '' && endDate != '') {
+
+                var sdate = startDate.split("/");   //date present in dd/MM/yyyy format
+                var edate = endDate.split("/");    //date present in dd/MM/yyyy format
+
+                if (new Date(sdate[2], sdate[1], sdate[0]) > new Date(edate[2], edate[1], edate[0])) {     //date in yyyy mm dd format
+                    $("#DateErro").html('Please Select Start Date Less than End Date');
+                    ErrorCount = ErrorCount + 1;
+                }
+                else {
+                    $("#DateErro").html('');
+                }
+            }
+
+            if (ErrorCount > 0) {
+                return false;
+            }
+        });
+    });
+
+</script>

@@ -1,0 +1,97 @@
+﻿@{
+    ViewBag.Title = "SetSequence";
+}
+<style>
+    .CategoryDiv {
+        width: 233px;
+        float: left;
+        padding: 10px;
+    }
+
+        .CategoryDiv span {
+            display: block;
+            font-size: 15px;
+            font-weight: 600;
+        }
+
+        .CategoryDiv select {
+            display: block;
+        }
+
+    .textDiv {
+        margin-left: 10px;
+        width: 100%;
+        float: left;
+    }
+
+    #Content {
+    }
+</style>
+
+<div id="content" class="span10">
+    <ul class="breadcrumb">
+        <li>
+            <a href="#">Index</a>
+        </li>
+    </ul>
+
+    <div class="row-fluid">
+        <div class="box span12">
+            <div class="box-content">
+                <div style="width:100%;">
+                    @Html.Hidden("FranchiseList")                    
+                </div>
+                @if (TempData["Message"] != null)
+                {
+                    <br />
+                    <span style="font-weight:bold; color:red;"> @TempData["Message"]  </span>
+                }
+
+                <div id="divSequence" style="display:block;">
+
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<script src="~/Scripts/jquery-1.10.2.min.js"></script>
+<script>
+
+    $(document).ready(function () {
+       
+            var FranchiseID = $("#FranchiseList").val();
+           
+            /*Check Condition*/
+            $('#divSequence').html(null);
+
+            /*Processing Image*/
+            $("#pageloaddiv").css('display', 'block');
+            $("#pageloaddiv").fadeOut(1000);
+
+
+            /* Request the partial view with .get request. */
+            $.get('/HomeProductGallery/GetProductListInGallery?FranchiseID=' + FranchiseID, function (data) {
+                /* data is the pure html returned from action method, load it to your page */
+                $('#divSequence').html(data);
+
+                /* little fade in effect */
+                $('#divSequence').fadeIn('fast');
+            });
+
+            $("#pageloaddiv").css('display', 'none');
+            $("#pageloaddiv").fadeOut(1000);
+    });
+
+</script>
+
+
+
+
+
+
+
+
+

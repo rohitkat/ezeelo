@@ -1,0 +1,315 @@
+﻿@model IEnumerable<ModelLayer.Models.ViewModel.ShopDetailReportViewModel>
+
+@{
+    ViewBag.Title = "ForPrint";
+}
+<h2 id="btnPrint" class="btn btn-primary">Print</h2>
+<style>
+    .matchdivheight {
+        overflow: scroll;
+        /*height: 450px;*/ height:790px;
+    }
+
+    .widget {
+        margin-left: 37px;
+    }
+
+    .widget-content {
+        margin-top: -16px;
+        margin-left: -8px;
+    }
+    #btnPrint {
+        /*margin-bottom: 30px;*/
+        margin-left: 32px;
+    }
+
+    .total_C h4 {
+        float: right;
+        margin-right: 10px;
+    }
+</style>
+
+<style>
+    .btn_Print {
+        margin-bottom: 7px;
+        margin-top: 7px;
+        margin-left: 5px;
+    }
+
+    .section {
+        position: relative;
+        border: 1px solid #000;
+        /*padding-top: 37px;*/
+        margin-left: 5px;
+        margin-top: 40px;
+        /*background: #500;*/ background: #A4A5A7;
+    }
+
+        .section.positioned {
+            position: absolute;
+            top: 100px;
+            left: 100px;
+            width: 800px;
+            box-shadow: 0 0 15px #333;
+        }
+
+    .container_tbl {
+        overflow-y:scroll;
+        /*height: 200px;*/ height: 420px;
+        margin-top: 29px;
+    }
+
+    table {
+        border-spacing: 0;
+        width: 100%;
+    }
+
+    td + td {
+        border-left: 1px solid #eee;
+    }
+
+    td, th {
+        border-bottom: 1px solid #eee;
+        background: #ddd;
+        color: #000;
+        padding: 10px 25px;
+    }
+
+    #myTable thead tr th {
+        height: 0;
+        line-height: 0 !important;
+        padding-top: 0 !important;
+        padding-bottom: 0 !important;
+        color: transparent;
+        border: none;
+        white-space: nowrap;
+    }
+
+    th div {
+        position: absolute;
+        background: transparent;
+        color: #fff;
+        padding: 9px 10px;
+        top: 0;
+        margin-left: -8px;
+        line-height: normal;
+        /*border-left: 1px solid #800;*/ border-left: 1px solid #DDD; white-space:nowrap;
+    }
+
+    th:first-child div {
+        border: none;
+    }
+    .container_tbl table tbody {
+        margin-top: -18px;
+        display: block;
+    }
+
+    .wrap {
+        margin-top: 105px;
+    }
+
+    td:nth-child(1) {
+      width:70px;
+        word-wrap: break-word;
+    }
+
+    td:nth-child(2) {
+        max-width:92px;
+        word-wrap: break-word;
+    }
+
+    td:nth-child(3) {
+        width: 72px;
+        word-wrap: break-word;
+    }
+
+    td:nth-child(4) {
+        max-width: 130px;
+        word-wrap: break-word;
+    }
+
+    td:nth-child(5) {
+            width:95px;
+        word-wrap: break-word;
+    }
+
+    td:nth-child(6) {
+        max-width:72px;
+        word-wrap: break-word;
+    }
+
+    td:nth-child(7) {
+        max-width:35px;
+        word-wrap: break-word;
+    }
+
+    td:nth-child(8) {
+        max-width: 180px;
+        word-wrap: break-word;
+    }
+
+    td:nth-child(9) {
+        max-width:145px;
+        word-wrap: break-word;
+    }
+
+    td:nth-child(10) {
+        max-width:180px;
+        word-wrap: break-word;
+    }
+
+
+</style>
+
+@{
+      <div class="total_C"><h4><span style="margin-top:-35px; display:block;">Total Count:&nbsp;@ViewBag.TotalCount</span></h4></div>
+    <div class="section" id="dvContainer">
+      
+        <div class="table  scrollable container_tbl">
+            @*<div class="widget-content matchdivheight">*@
+
+                <table class="table scroll">
+                    @if (Model.Count() == 0)
+                    {
+                        <tr>
+                            <td colspan="6" class="text-center"><h3>No Record Found...</h3></td>
+                        </tr>
+                    }
+                    else
+                    {
+                        int i = 1;
+                        <tr class="header">
+                            @*<th>Sr No</th>*@
+                            <th>
+                                @*ShopName*@
+                                <div>ShopName</div>
+                            </th>
+                            <th>
+                                @*Merchant Name*@
+                                <div>Merchant Name</div>
+                            </th>
+                            <th>
+                                @*UserLogin ID*@
+                                <div>UserLogin ID</div>
+                            </th>
+                            <th>
+                                @*Login Email-ID*@
+                                <div>Login Email-ID</div>
+                            </th>
+                            <th>
+                                @*Login Mobile No*@
+                                <div>Login Mobile No</div>
+                            </th>
+                            <th>
+                                @*Password*@
+                                <div>Password</div>
+                            </th>
+                            <th>
+                                @*IsLive*@
+                                <div>IsLive</div>
+                            </th>
+                            <th>
+                                @*Address*@
+                                <div>Address</div>
+                            </th>
+                            <th>
+                                @*Alternate Mobile*@
+                                <div>Mobile</div>
+                            </th>
+                            <th>
+                                @*Landline No*@
+                                <div>Landline</div>
+                            </th>
+
+                        </tr>
+                        foreach (var item in Model)
+                        {
+
+                            <tr>
+                                @*<td>@{int SrNo = ((ViewBag.PageNumber - 1) * ViewBag.PageSize) + i; i = i + 1; } @SrNo</td>*@
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.ShopName)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.MerchantName)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.UserLoginID)
+                                </td>
+
+                                @{string Email = "";}
+                                <td>
+                                    @if (item.Email != null)
+                                    {
+                                        Email = item.Email;
+                                    }
+
+                                    @Email
+                                </td>
+
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Mobile)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Password)
+                                </td>
+                                @if (item.IsLive == true)
+                                {
+                                    <td>
+                                        Live
+                                    </td>
+                                }
+                                else
+                                {
+                                    <td>
+                                        Not Live
+                                    </td>
+                                }
+                                @*@if (item.IsActive == true)
+                                {
+                                    <td>
+                                        Active
+                                    </td>
+                                }
+                                else
+                                {
+                                    <td>
+                                        InActive
+                                    </td>
+                                }*@
+
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Address)
+
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.AlternateMobile)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.LandLine)
+                                </td>
+
+                            </tr>
+                        }
+                    }
+
+                </table>
+            @*</div>*@
+        </div>
+    </div>
+    @*<div class="total_C"><h4><span>Total Count:&nbsp;@ViewBag.TotalCount</span></h4></div>*@
+}
+
+<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
+<script type="text/javascript">
+    $("#btnPrint").live("click", function () {
+        var divContents = $("#dvContainer").html();
+        var printWindow = window.open('', '', 'height=400,width=800');
+        printWindow.document.write('<html><head><title>Shop Details Report</title>');
+        printWindow.document.write('</head><body >');
+        printWindow.document.write(divContents);
+        printWindow.document.write('</body></html>');
+        printWindow.document.close();
+        printWindow.print();
+    });
+</script>

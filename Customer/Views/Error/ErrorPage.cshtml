@@ -1,0 +1,18 @@
+﻿@{
+    Layout = "~/Views/Shared/_Layout_Internal.cshtml";
+    string cityName = "";
+    int franchiseID = 0;//added
+    if (Request.Cookies["CityCookie"] != null && Request.Cookies["CityCookie"].Value != string.Empty)
+    {
+        cityName = Request.Cookies["CityCookie"].Value.Split('$')[1].ToLower();
+        franchiseID = Convert.ToInt32(Request.Cookies["CityCookie"].Value.Split('$')[2]);////added
+    }
+}
+<div align="center" class="row box">
+    <img src="~/Content/Images/tags/PNF1.png" style="width:100%" />
+</div>
+<br />
+<div align="center">
+    @Html.RouteLink("Go To Home Page", "Home", new { city = cityName, franchiseId = franchiseID }, new { @class = "btn btn-warning" })
+</div>
+<br />

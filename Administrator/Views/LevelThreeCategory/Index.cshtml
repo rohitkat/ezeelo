@@ -1,0 +1,119 @@
+﻿@model IEnumerable<ModelLayer.Models.Category>
+
+@{
+    ViewBag.Title = "Index";
+}
+<style>
+    .dataTables_length {
+        margin-left: 0px;
+    }
+
+    .pagination {
+        margin: 0 40px;
+    }
+</style>
+<br />
+<div class="row-fluid" style="margin-left:15px;">
+    <div class="box span12">
+        <div class="box-header">
+            <h2><i class="icon-edit"></i><span class="break"></span>@Html.ActionLink("Create Level Three Category", "Create")</h2>
+
+        </div>
+        <div class="box-content">
+            <table class="table table-striped table-bordered bootstrap-datatable datatable">
+                <thead>
+                    <tr>
+                        <th>Parent Category</th>
+                        <th>Name</th>
+                        <th>Level</th>
+                        <th>Description</th>
+                        <th>SearchKeyword</th>
+                        <th>IsActive</th>
+                        <th>IsExpire</th>
+                        <th>ExpiryDate</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td>@Html.DisplayFor(modelItem => item.Category2.Name)</td>
+                            <td class="center">@Html.DisplayFor(modelItem => item.Name)</td>
+                            <td class="center">@Html.DisplayFor(modelItem => item.Level)</td>
+                            <td class="center">@Html.DisplayFor(modelItem => item.Description)</td>
+                            <td class="center">@Html.DisplayFor(modelItem => item.SearchKeyword)</td>
+                            <td class="center">@Html.DisplayFor(modelItem => item.IsActive, new { @class = "chkBox" })</td>
+
+                            <td class="center">@Html.DisplayFor(modelItem => item.IsExpire, new { @class = "chkBox" })</td>
+                            <td class="center">@Html.DisplayFor(modelItem => item.ExpiryDate)</td>
+
+
+                            <td class="center" style="width: 160px;">
+                                @Html.ActionLink("Edit", "Edit", new { id = item.ID }, new { @class = "btn btn-small btn-success" })
+                                @Html.ActionLink("Details", "Details", new { id = item.ID }, new { @class = "btn btn-small btn-primary" })
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+            @*<table id="datatable">
+                    <thead>
+                        <tr>
+                            <th>C3_ID   </th>
+                            <th>C3_Name </th>
+                            <th>C2_ID   </th>
+                            <th>C2_Name </th>
+                            <th>C1_ID   </th>
+                            <th>C1_Name </th>
+                            <th>totalCount   </th>
+
+                        </tr>
+                    </thead>
+
+                </table>*@
+        </div>
+    </div><!--/span-->
+
+</div>
+
+@*<script src="http://code.jquery.com/jquery-1.11.1.min.js"></script>
+
+    <link href="//datatables.net/download/build/nightly/jquery.dataTables.css" rel="stylesheet" type="text/css" />
+    <script src="//datatables.net/download/build/nightly/jquery.dataTables.js"></script>*@
+
+@*<script src="~/Scripts/jquery-1.10.2.min.js"></script>
+<script src="~/Content/js/jquery.dataTables.min.js"></script>
+
+
+
+<script>
+    $(document).ready(function () {
+
+        //$("#datatable").dataTable({
+        //    //Columns: [
+
+        //    //        { 'data': 'C3_ID', sDefaultContent: "n/a" },
+        //    //        { 'data': 'C3_Name', sDefaultContent: "n/a" },
+        //    //        { 'data': 'C2_ID', sDefaultContent: "n/a" },
+        //    //        { 'data': 'C2_Name', sDefaultContent: "n/a" },
+        //    //        { 'data': 'C1_ID', sDefaultContent: "n/a" },
+        //    //        { 'data': 'C1_Name', sDefaultContent: "n/a" },
+        //    //        { 'data': 'totalCount', sDefaultContent: "n/a" }
+
+        //    //],
+            
+        //    //bServerSide: true,
+        //    //sAjaxSource: 'LevelThreeCategory/AjaxHandler'
+
+        //});
+        $("#datatable").DataTable({
+            bServerSide: true,
+            sAjaxSource: 'LevelThreeCategory/AjaxHandler',
+            "order": [[0, 'desc']]
+        });
+
+    });
+
+
+</script>*@

@@ -1,0 +1,34 @@
+﻿@model IEnumerable<ModelLayer.Models.LeadersNotification>
+
+@{
+    ViewBag.Title = "Notification";
+    Layout = "~/Views/Shared/_LeaderUsersLayout.cshtml";
+}
+
+<div class="wrapper">
+    <section class="container-fluid mainContent">
+        <div class="mainContentInner">
+            <h2>Notification</h2>
+            @foreach (var item in Model)
+            {
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <a data-toggle="collapse" data-parent="#accordion" href="#collapse_@item.Id" >
+                            <h4 class="panel-title">
+                                @item.Title
+                            </h4>
+                        </a>
+                    </div>
+                    <div id="collapse_@item.Id" class="panel-collapse collapse">
+                        <div class="panel-body" style="font-size:medium">
+                            <ul>
+                                <li>@item.CreateDate.ToString("dd MMM yyyy")</li>
+                                <li>@item.Body</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    </section>
+</div>

@@ -1,0 +1,268 @@
+﻿@model ModelLayer.Models.ViewModel.MerchantRegisterViewModel
+<!DOCTYPE html>
+<html>
+<head>
+
+    <!-- start: Meta -->
+    <meta charset="utf-8">
+    <title>Merchant.eZeelo</title>
+    <meta name="description" content="Bootstrap Metro Dashboard">
+    <meta name="author" content="Dennis Ji">
+    <meta name="keyword" content="Metro, Metro UI, Dashboard, Bootstrap, Admin, Template, Theme, Responsive, Fluid, Retina">
+    <!-- end: Meta -->
+    <!-- start: Mobile Specific -->
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- end: Mobile Specific -->
+    <!-- start: CSS -->
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800&subset=latin,cyrillic-ext,latin-ext' rel='stylesheet' type='text/css'>
+    <!-- end: CSS -->
+    <link rel="icon" href="~/Content/Logo/logo.png">
+    <!-- The HTML5 shim, for IE6-8 support of HTML5 elements -->
+ 
+    <!--[if IE 9]>
+        <link id="ie9style" href="css/ie9.css" rel="stylesheet">
+    <![endif]-->
+    <link href="~/Content/assets/css/style.css" rel="stylesheet" />
+    @*<link href="~/Content/assets/css/animate.css" rel="stylesheet" />*@
+    <link href="~/Content/assets/css/bootstrap.css" rel="stylesheet" />
+    @*<link href="~/Content/assets/css/font-awesome.min.css" rel="stylesheet" />*@
+    @*<link href="~/Content/assets/css/prettyPhoto.css" rel="stylesheet" />*@
+    <link href="~/Content/assets/css/media-login.css" rel="stylesheet" />
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+      <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+    <![endif]-->
+    <style type="text/css">
+        .text-box {
+        }
+
+        h2 {
+            color: #fff;
+        }
+
+        .wdth-small {
+            width: 74px;
+        }
+
+        .wdth-mid {
+            width: 125px;
+        }
+
+        .wdth-large {
+            width: 163px;
+        }
+
+        .mrg-leftSm {
+            margin-left: 2px;
+        }
+
+        .mrg-top {
+            margin-top: 10px;
+        }
+
+
+        .login-div {
+            float: right;
+            margin-top: 10px;
+        }
+
+        .login-btn {
+            width: 59px !important;
+        }
+
+        .login-div input {
+            width: 222px;
+        }
+
+        .login-div .form-control {
+            height: 30px;
+            padding: 4px 12px;
+            font-size: 14px;
+            line-height: 1.42857;
+            color: #ECE3E3;
+            background-color: #414242;
+        }
+
+        #testimonials {
+            min-height: 318px;
+        }
+        .color-dark {
+            color:#808080!important;
+        }
+        .breadcrumbs {
+            color:#F57C95!important;
+        }
+		 .tagline {
+            float: left;
+            width: 30%;
+            padding: 5px 10px;
+            font-size: 20px;
+            margin-top: 1px;
+        }
+
+            .tagline a {
+                color: #00F100 !important;
+            }
+
+                .tagline a:hover {
+                    color: #fff !important;
+                }
+    </style>
+
+
+</head>
+<body>
+    <div id="pre-div">
+        <div id="loader">
+        </div>
+    </div>
+    <!-- start: Header -->
+    <div class="navbar navbar-default navbar-fixed-top move-me ">
+        <div class="row">
+            <div class="col-lg-12 col-md-12 col-sm-12">
+                 <div class="col-lg-4 col-md-4 col-sm-6 ">
+                    <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+                    <img src="~/Content/assets/img/logo1.png" class="navbar-brand-logo " alt="" />
+                </div>
+               <div class="col-lg-8 col-md-8 col-sm-9">
+				  <div class="tagline">
+                     <img src="~/Content/img/arrowkk2.gif" style="width:26px; height:26px;" /><a href="http://159.122.132.216/Merchant_app/merchantapp.apk" class="">Download App</a>
+                    </div>
+                    <div class="login-div">
+                        @*@using (Html.BeginForm())*@
+                        @using (Html.BeginForm("Login", "MerchantRegister", FormMethod.Post, new { enctype = "multipart/form-data" }))
+                        {
+
+                            @Html.TextBoxFor(model => model.loginViewModel.UserName, new { @placeholder = "UserName", @class = "form-control  pull-left wdth-mid mrg-leftSm", name = "userName", required = "required" })
+                            @Html.ValidationMessageFor(model => model.loginViewModel.UserName)
+                            @Html.TextBoxFor(model => model.loginViewModel.Password, new { @placeholder = "Password", @class = "form-control  pull-left wdth-mid mrg-leftSm", type = "password", name = "Password", required = "required" })
+                            @Html.ValidationMessageFor(model => model.loginViewModel.Password)
+                            @*<input type="text" class="form-control pull-left wdth-large mrg-leftSm" required="required" placeholder="User Name">
+                                <input type="text" class="form-control pull-left wdth-large mrg-leftSm" required="required" placeholder="Password">*@
+                            @*<button type="submit" id="Login" value="Login" class="btn btn-success mrg-leftSm">Login</button>*@
+    <input name="submit" type="submit" id="Login" value="Login" class="btn btn-success mrg-leftSm login-btn" />
+
+                            <div class="clearfix"></div>
+                            if (TempData["Message"] != null)
+                        {
+                        <div class="breadcrumbs dark  pull-left">
+                            @TempData["Message"]
+                        </div>
+                        }
+
+                     
+                        }
+                        <div class="pull-right" style="margin-right:64px;">
+                            @*<p style="color:#fff;"><a href="#">Forgot Password?</a></p>*@
+                            @Html.ActionLink(" Forgot Password ", "Edit", "ForgotPassword", null, new { @class = "link linkpadding" })
+                        </div>
+
+
+                    </div>
+
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+
+    <div class="body-content">
+        @RenderBody()
+    </div>
+
+
+
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/bootstrap")
+    @RenderSection("scripts", required: false)
+
+    <!-- start: JavaScript-->
+    <!-- start: JavaScript-->
+    <!--  Jquery Core Script -->
+    <script src="~/Content/assets/js/wow.min.js"></script>
+    <script src="~/Content/assets/js/bootstrap.js"></script>
+    <script src="~/Content/assets/js/custom.js" defer="defer"></script>
+    <script src="~/Content/assets/js/jquery-1.10.2.js"></script>
+    <script src="~/Content/assets/js/jquery.easing.min.js"></script>
+    <script src="~/Content/assets/js/jquery.prettyPhoto.js"></script>
+
+    @*<script src="~/Content/js/jquery-2.1.3.min.js"></script>
+    <script type="text/javascript">
+        alert("1");
+        var lPincode = $('#Pincode').val()
+        alert("2");
+        $('#Pincode').bind('input propertychange', function () {
+            var lPincode = $('#Pincode').val()
+            $('#divPincodeError').hide();
+
+            if (lPincode.length == 6) {
+                $('#Pincode_loading').show();
+                $.ajax({
+                    url: '@Url.Action("GetAddress", "FranchiseRegister")?Pincode=' + lPincode,
+                    type: "GET",
+                    success: function (result) {
+                        //$('#divAddress').html(result);
+                        $('#Pincode_loading').hide();
+                        $('#divPincodeError').hide();
+                        if (result == "1") {
+                            $('#divPincodeError').show();
+                            $('#divPincodeError').html('Pincode [' + lPincode + '] dose not exist, please Contact to ADMIN');
+                            $('#Pincode').val('');
+                        }
+                    },
+                    error: function (data) {
+                        //alert('Pincode : ' + lPincode + ' Dose Not Exist, please Contact to ADMIN');
+                        //$('#divAddress').empty();
+                        //$('#Pincode_loading').hide();
+                        $('#divPincodeError').hide();
+                        //$('#divPincodeError').html('Pincode [' + lPincode + '] dose not exist, please Contact to ADMIN');
+                        //$('#Pincode').val('');
+                    }
+                });
+            }
+        });
+
+    </script>
+    <script type="text/javascript">
+        var lMobile = $('#Mobile').val()
+        $('#Mobile').bind('input propertychange', function () {
+            var lMobile = $('#Mobile').val();
+            $('#divMobileError').hide();
+            if (lMobile.length == 10) {
+                //$('#Pincode_loading').show();
+                $.ajax({
+                    url: '@Url.Action("IsMobileAvailable", "FranchiseRegister")?Mobile=' + lMobile,
+                    type: "GET",
+                    success: function (result) {
+                        //alert(result);
+                        //$('#Pincode_loading').hide();
+                        $('#divlMobileError').hide();
+                        if (result == "1") {
+                            $('#divMobileError').show();
+                            $('#divMobileError').html('Mobile [' + lMobile + '] already exist');
+                            $('#Mobile').val('');
+                        }
+                        if (result == "0")
+
+                    },
+                    error: function (data) {
+                        $('#divlMobileError').hide();
+                    }
+                });
+            }
+        });
+
+    </script>*@
+
+
+
+    <!-- end: JavaScript-->
+
+</body>
+</html>

@@ -1,0 +1,27 @@
+﻿@model ModelLayer.Models.ViewModel.ColorImages
+@{
+    ViewBag.Title = "MultipleImages";
+}
+
+<h2>MultipleImages</h2>
+@using (Html.BeginForm("MultipleImages", "Bulk", FormMethod.Post, new { enctype = "multipart/form-data", id = "frmID" }))
+{
+
+    <input id="file1" type="file" name="Images" multiple="multiple" />
+    <input id="file2" type="file" name="Images" multiple="multiple" />
+    <input id="file3" type="file" name="Images" multiple="multiple" />
+    <input id="file4" type="file" name="Images" multiple="multiple" />
+
+
+    <input type="submit" value="Upload Excel" class="btn btn-small btn-danger" id="btnUploadSheet" />
+    <div id="divValidationMsg" class="validation-summary-errors">
+        <br /><br />
+        @if (TempData["ExcelValidationFaild"] != null) 
+        {
+
+            @Html.Raw(TempData["ExcelValidationFaild"])
+
+        }
+    </div>
+    <div id="pageloaddiv"></div>
+}

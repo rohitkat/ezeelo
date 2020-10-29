@@ -1,0 +1,182 @@
+﻿@model ModelLayer.Models.ViewModel.InvoicesReceivedReportViewModelList
+
+@{
+    ViewBag.Title = "Modified Invoice Report";
+    if (Session["Category"] != null)
+    {
+        if (Session["Category"].ToString() == "IsCategory")
+        {
+            Layout = "~/Views/Shared/_CategoryLayout.cshtml";
+        }
+    }
+}
+
+<link rel="stylesheet" href="http://cdn.datatables.net/1.10.2/css/jquery.dataTables.min.css" />
+<script type="text/javascript" src="http://cdn.datatables.net/1.10.2/js/jquery.dataTables.min.js"></script>
+<link href="~/Content/css/bootstrap-datetimepicker.min.css" rel="stylesheet" />
+<link href="~/Content/css/bootstrap-datetimepicker.css" rel="stylesheet" />
+<link href="~/Content/assets/css/font-awesome.min.css" rel="stylesheet" />
+<link href="~/Content/assets/css/form-design.css" rel="stylesheet" />
+<script type="text/javascript">
+    $(document).ready(function () {
+        //$('#headerTable').DataTable();
+        $("#btnExport").click(function () {           
+            window.location = "/ModifiedInvoiceReport/ExportToExcel";
+        });
+    });
+</script>
+<script type="text/javascript">
+    function fnExcelReport() {
+        var tab_text = '<table border="1px" style="font-size:20px" ">';
+        var textRange;
+        var j = 0;
+        var tab = document.getElementById('headerTable');
+        var lines = tab.rows.length;
+        if (lines > 0) {
+            tab_text = tab_text + '<tr bgcolor="#DFDFDF">' + tab.rows[0].innerHTML + '</tr>';
+        }
+        for (j = 1; j < lines; j++) {
+            tab_text = tab_text + "<tr>" + tab.rows[j].innerHTML + "</tr>";
+        }
+        var fileName = 'Test file.xls';
+        var blob = new Blob([tab_text], {
+            type: "application/xls;charset=utf-8;"
+        });
+
+        if (window.navigator.msSaveBlob) {
+            navigator.msSaveBlob(blob, fileName);
+        } else {
+
+            var csvUrl = URL.createObjectURL(blob);
+            let a = $("<a />", {
+                href: csvUrl,
+                download: "ModifiedInvoiceReport.xls"
+            })
+                .appendTo("body")
+                .get(0)
+                .click();
+        }
+    }
+
+</script>
+<section class="right_side_main_part">
+    <div class="row-fluid">
+        @using (Html.BeginForm("Index", "ModifiedInvoiceReport", FormMethod.Post, new { id = "Form_" }))
+        {
+            @Html.HiddenFor(m=>m.SupplierID)
+            @Html.ValidationSummary(true)
+
+        <div class="box span12 right_side_up_part">
+            <div class="box-header creatProduct clearfix">
+                <h2>
+                    <i class="icon-list-alt"></i>
+                    <span class="break"></span>
+                    Modified Invoice Report
+                </h2>
+            </div>
+            <div class="box-content nameDscrp">
+                <div class="form-horizontal">
+                    <div class="NameDescription">
+                        <div class="control-group mrg-left">
+                            <div class="col-sm-1">
+                                From Date
+                            </div>
+                            <div class="col-sm-3">
+                                @Html.TextBoxFor(model => model.Fdate, "{0:dd/MM/yyyy}")
+                                @Html.HiddenFor(model => model.Fdate)
+                            </div>
+                        </div>
+                        <div class="control-group mrg-left">
+                            <div class="col-sm-1">
+                                To Date
+                            </div>
+                            <div class="col-sm-3">
+                                @Html.TextBoxFor(model => model.TDate, "{0:MM/dd/yyyy}")
+                                @Html.HiddenFor(model => model.TDate)
+                            </div>
+                        </div>
+                        <div class="control-group mrg-left">
+                            <div class="col-sm-2">
+                                <button value="Search" type="submit" class="btnRemove btn btn-success">Search</button>
+                            </div>
+                        </div>
+                        <div class="control-group mrg-left">
+                            <div class="col-sm-2">
+                                <button onclick="fnExcelReport()" type="button" class="btnRemove btn btn-info">Export</button>
+                            </div>
+                        </div>
+                        <div class="control-group mrg-left">
+                            <table id="headerTable" class=" table table-bordered table-striped" border="1" cellpadding="2" cellspacing="0">
+                                <thead>
+                                    <tr>
+                                        <th>Sr.No.</th>
+                                        <th>SKU ID</th>
+                                        <th>SKU Name</th>
+                                        <th>SKU Unit</th>
+                                        <th>HSN Code</th>
+                                        <th>Invoice No</th>
+                                        <th>Invoice Date</th>
+                                        <th>MRP</th>
+                                        <th>Unit Price</th>
+                                        <th>Invoice Value</th>
+                                        <th>GST%</th>
+                                        <th>CGST Amt</th>
+                                        <th>SGST Amt</th>
+                                        <th>Quantity</th>
+                                        <th>Buyer Name</th>
+                                        <th>Status</th>
+                                        <th>PO NO.</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @{
+                                        var i = 1;
+                                    }
+                                    @foreach (var item in Model.lInvoicesReceivedReportViewModel)
+                                    {
+                                        <tr>
+                                            <td>
+                                                @i
+                                                @{
+                                                    i = i + 1;
+                                                }
+                                            </td>
+                                            <td>@item.SKUID</td>
+                                            <td>@item.SKUName</td>
+                                            <td>@item.SKUUnit</td>
+                                            <td>@item.HSNCode</td>
+                                            <td>@item.InvoiceCode</td>
+                                            <td>@item.InvoiceDate</td>
+                                            <td>@item.MRP</td>
+                                            <td>@item.UnitPrice</td>
+                                            <td>@item.Amount</td>
+                                            <td>@item.GSTInPer</td>
+                                            <td>@item.CGSTAmount</td>
+                                            <td>@item.SGSTAmount</td>
+                                            <td>@item.Quantity</td>
+                                            <td>@item.Supplier</td>
+                                            <td>@item.Status</td>
+                                            <td>@item.PONumber</td>
+                                        </tr>
+                                    }
+
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    
+                </div>
+            </div>
+        </div>
+        }
+            
+    </div>
+</section>
+
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('#Fdate').datepicker({ dateFormat: 'mm/dd/yy', maxDate: 'now' });
+        $('#TDate').datepicker({ dateFormat: 'mm/dd/yy' });
+    });
+</script>

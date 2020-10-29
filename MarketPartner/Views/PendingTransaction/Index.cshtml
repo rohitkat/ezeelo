@@ -1,0 +1,125 @@
+﻿@model List<ModelLayer.Models.MerchantTransactionRequest>
+@{
+    ViewBag.Title = "Index";
+}
+<section class="content">
+    <div class="row">
+        <!-- left column -->
+        <div class="col-md-12">
+            <div class="box box-primary">
+                <div class="box-header">
+                    <h3 class="box-title">Pending Transaction List</h3>
+                </div><!-- /.box-header -->
+                <div class="box-body">
+                    <div class="table-responsive">
+                        <table id="tblrpt" class="table table-bordered">
+                            <thead>
+                                <tr>
+                                    <th>Sr. No</th>
+                                    <th>Transcation Code</th>
+                                    <th>Date</th>
+                                    <th>User Name</th>
+                                    <th>Amount</th>
+                                    <th>Status</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @{
+                                    int i = 0;
+                                }
+                                @foreach (var item in Model)
+                                {
+                                    <tr>
+                                        <td>
+                                            @{
+                                                i = i + 1;
+                                            }
+                                            @i
+                                        </td>
+                                        <td>@item.TransactionId</td>
+                                        <td>@item.CreateDate</td>
+                                        <td>@item.UserName</td>
+                                        <td>@item.BillAmount</td>
+                                        <td>
+                                            @if (item.Status == 0)
+                                            {
+                                                <span>Pending</span>
+                                            }
+                                            else if (item.Status == 1)
+                                            {
+                                                <span>Accepted</span>
+                                            }
+                                            else
+                                            {
+                                                <span>Rejected</span>
+                                            }
+                                        </td>
+                                        <td>
+                                            @if (item.Status == 0)
+                                            {
+                                                <input data-Transid="@item.Id" type="button" value="Accept" class="btnAccept btn btn-sm btn-success" />
+                                                <input data-Transid="@item.Id" type="button" value="Reject" class="btnReject btn btn-sm btn-danger" />
+                                            }
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<script>
+    $(document).ready(function () {
+        $(".btnAccept").click(function () {
+            var TransId = $(this).attr("data-Transid");
+            if (confirm("Are you wish to accept this transaction, then action cant be rollback.")) {
+                var Remark = prompt("Please enter Remark", "");
+                $("#divPopupLoading").show();
+                 $.ajax({
+                    type: "POST",
+                    url: "@Url.Action("AcceptTransRequest", "PendingTransaction")",
+                    data: "{'ID':" + TransId + ",'Remark':'" + Remark+"'}",
+                    contentType: "application/json; charset = utf-8",
+                    dataType: "json",
+                    cache: false,
+                     success: function (data) {
+                         $("#divPopupLoading").hide();
+                        alert(data);
+                        window.location.reload();
+                    },
+                     error: function (x, e) {
+                         $("#divPopupLoading").hide();
+                    }
+                });
+            }
+        });
+        $(".btnReject").click(function () {
+            var TransId = $(this).attr("data-Transid");
+            if (confirm("Are you wish to reject this transaction, then action cant be rollback.")) {
+                var Remark = prompt("Please enter Remark", "");
+                $("#divPopupLoading").show();
+                 $.ajax({
+                    type: "POST",
+                    url: "@Url.Action("RejectTransRequest", "PendingTransaction")",
+                    data: "{'ID':" + TransId + ",'Remark':'" + Remark+"'}",
+                    contentType: "application/json; charset = utf-8",
+                    dataType: "json",
+                    cache: false,
+                     success: function (data) {
+                         $("#divPopupLoading").hide();
+                        alert(data);
+                        window.location.reload();
+                    },
+                     error: function (x, e) {
+                         $("#divPopupLoading").hide();
+                    }
+                });
+            }
+        });
+    });
+</script>

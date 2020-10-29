@@ -1,0 +1,31 @@
+@model ModelLayer.Models.ViewModel.WarehouseViewModel
+
+@{
+    ViewBag.Title = "Warehouse Registration";
+}
+<section class="right_side_main_part">
+    <div id="content" class="span10">
+        @using (Html.BeginForm("Create", "Warehouses", new { id = Model.ID }, FormMethod.Post, new { id = "Form_" }))
+        {
+            @Html.ValidationSummary(true)
+            <div class="row-fluid">
+                <div class="box span12 right_side_up_part">
+                    <div class="box-content">
+                        <div class="form-horizontal">
+
+                            @Html.Partial("_CreateOrEdit", Model)
+
+                            <p>
+                                <input type="submit" value="Save" class="btn btn-success mrg-left mrg-top" />
+
+                                @*Yashaswi 4-12-2018 For EVW*@
+                                @Html.ActionLink("Back to List", "Index", new { flag = Model.IsFulfillmentCenter, Entity = Model.Entity }, new { @class = "btn btn-default mrg-left mrg-top" })
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+
+</section>

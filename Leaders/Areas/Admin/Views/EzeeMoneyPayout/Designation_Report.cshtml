@@ -1,0 +1,106 @@
+﻿
+@model ModelLayer.Models.ViewModel.EzeeMoneyPayoutViewModel
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_LeadersLayout.cshtml";
+}
+
+<style>
+    table {
+        border-collapse: separate;
+        border-spacing: 15px;
+    }
+</style>
+<div class="container">
+    <div id="progress" class="modal">
+        <div class="center">
+            <img src="~/img/ajax-loading-gif-transparent-background-8.gif" />
+        </div>
+    </div>
+    <div class="card" id="maindiv">
+        <div class="card-header"><strong>Designation Report </strong></div>
+        <div class="card-body card-block">
+           
+            <center>
+                <div class="card">
+    <div class="card-header"><strong>Designation Report</strong></div>
+    <div class="card-body card-block">
+        @if (@Model.DesignationReportlist == null)
+        {
+            <table>
+                <tr>
+                    <td> No Data Available... </td>
+                </tr>
+            </table>
+        }
+        else
+        {
+            <table class="table border-table display" id="myTable">
+                <thead>
+                    <tr>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                        <th colspan="2"> Active Members </th>
+                        <th colspan="2"> InActive Members </th>
+
+                    </tr>
+
+                    <tr>
+                        <th>Sr.No.</th>
+                        <th>Designation</th>
+                        <th>Total Members</th>
+
+                        <th>Active</th>
+                        <th>Total RP</th>
+                        <th>Total ERP</th>
+                        <th>Total RP</th>
+                        <th>Total ERP</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @{int j = 0;}
+                    @foreach (var item in Model.DesignationReportlist)
+                    {
+                        <tr>
+                            <td>  @(j += 1)</td>
+                            <td>  <a href="@Url.Action("GetDeginationdetails", "EzeeMoneyPayout", new { Designationid = item.Designationid })"> @item.Designation </a> </td>
+                            <td>@item.TotalMembers</td>
+
+                            <td>@item.Active</td>
+                            <td>@item.ActiveRP</td>
+                            <td>@item.ActiveERP</td>
+                            <td>@item.InActiveRP</td>
+                            <td>@item.InActiveERP</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        }
+
+    </div>
+</div>
+            </center>
+        </div>
+    </div>
+</div>
+
+
+<script src="~/Scripts/jquery-1.12.4.js"></script>
+
+<link href="//cdn.datatables.net/1.10.19/css/jquery.dataTables.min.css" rel="stylesheet" />
+<script src="//cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
+
+<script src="~/Scripts/jquery-ui-1.12.1.min.js"></script>
+<link href="~/Content/css/datepicker.css" rel="stylesheet" />
+<link href="~/Content/css/jquery-ui-1.8.21.custom.css" rel="stylesheet" />
+
+<script type="text/javascript">
+    $(document).ready(function () {
+
+        $('#myTable').DataTable(
+
+        );
+    });
+</script>

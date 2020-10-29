@@ -1,0 +1,38 @@
+﻿@model ModelLayer.Models.ViewModel.BestDealProductCollection
+
+<div id="divMain">
+    <ul id="ulProduct" style="list-style-type:none;">
+
+        @for (var i = 0; i < Model.bestDealsViewModel.Count(); i++)
+        {
+            <li>
+                <div style="width:300px;height:300px;border:1px solid red;">
+                    <div class="product-image">
+                        <img src="~/Content/Images/no_image.png" height="150" width="200" />
+                    </div>
+                </div>
+                <div class="PRODUCT-ID">
+                    @Html.DisplayFor(it => it.bestDealsViewModel[i].ProductID)
+                </div>
+                <div class="PRODUCT-NAME">
+                    @Html.DisplayFor(it => it.bestDealsViewModel[i].Name)
+                </div>
+                <div class="CATEGORY-ID">
+                    @Html.DisplayFor(it => it.bestDealsViewModel[i].CategoryID)
+                </div>
+                <div class="STOCK-STATUS">
+                    @Html.DisplayFor(it => it.bestDealsViewModel[i].StockStatus)
+                </div>
+                <div class="MRP">
+                    @Html.DisplayFor(it => it.bestDealsViewModel[i].MRP)
+                </div>
+                <div class="SALE_RATE">
+                    @Html.DisplayFor(it => it.bestDealsViewModel[i].SaleRate)
+                </div>
+                @Html.ActionLink("Buy", "Index", "Preview", new { itemId = Model.bestDealsViewModel[i].ProductID }, null)
+
+            </li>
+        }
+
+    </ul>
+</div>

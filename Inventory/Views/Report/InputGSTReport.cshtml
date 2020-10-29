@@ -1,0 +1,287 @@
+﻿
+<style type="text/css">
+    #loading {
+        display: none;
+        position: fixed;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(255,255,255,0.8);
+        z-index: 1000;
+    }
+
+    #loadingcontent {
+        display: table;
+        position: fixed;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+    }
+
+    #loadingspinner {
+        display: table-cell;
+        vertical-align: middle;
+        width: 100%;
+        text-align: center;
+        font-size: larger;
+        padding-top: 80px;
+    }
+    section.right_side_main_part .row-fluid .box.span11.right_side_up_part .box-content center table tbody tr td div select {
+        margin-bottom: 0;
+        border-radius: 5px !important;
+    }
+
+    section.right_side_main_part .row-fluid .box.span11.right_side_up_part .box-content center table tbody tr td div input {
+        margin-bottom: 0;
+        border-radius: 5px !important;
+    }
+</style>
+<script src="~/Content/assets/js/Spinner.js"></script>
+<link href="~/Content/PagedList.css" rel="stylesheet" />
+<script>
+    $(document).ready(function () {
+        var WarehouseLevel = '@Session["WarehouseLevel"]';
+        if (WarehouseLevel == 3 || WarehouseLevel == 2) {
+            $("#WarehouseId").val('@Session["WarehouseID"]')
+            $("#WarehouseId").attr("disabled", "disabled");
+        }
+
+        function ChangeSearchCat() {
+            if ($("#ddlSearchCat").val() == "1") {
+                $("#tdsearch").hide();
+                $("#tdFrom").show();
+                $("#tdTo").show();
+            } else {
+                $("#tdsearch").show();
+                $("#tdFrom").hide();
+                $("#tdTo").hide();
+            }
+            if ($("#ddlSearchCat").val() != 0) {
+                $("#lblsearch").text("Enter " + $("#ddlSearchCat option:selected").text());
+            }
+            else {
+                $("#lblsearch").text(".");
+            }
+        }
+        $("#ddlSearchCat").change(function () {
+            ChangeSearchCat();
+        });
+        $('#txtTo').datepicker({ dateFormat: 'mm/dd/yy' });
+        $('#txtFrm').datepicker({ dateFormat: 'mm/dd/yy' });
+        //
+        $("#btnExport").attr("disabled", "disabled");
+        var isFV = '@ViewBag.isFV';
+        var page = 1;
+        $("#ddlmonth").val('@ViewBag.Month');
+             $("#ddlyear").val('@ViewBag.year');   /*Added by Priti on 10-1-2019*/
+        if (isFV == "False") {
+            $("#lblWarehouse").text("Select Distribution Center");
+            $("#heading").text("Distribution Center Input GST Report");
+        }
+        else if (isFV == "True") {
+            $("#lblWarehouse").text("Select Fullfillment Center");
+            $("#heading").text("Fullfillment Center Input GST Report");
+        }
+        else {
+            $("#divWarehouse").css('display', 'none');
+            $("#heading").text("Ezeelo Input GST Report");
+        }
+        if ('@ViewBag.IsPaged' == "1") {
+            $("#WarehouseId").val('@ViewBag.WarehouseId');
+            $("#ddlSearchCat").val('@ViewBag.SearchCat');
+            $("#txtserchText").val('@ViewBag.searchTxt');
+            $("#txtFrm").val('@ViewBag.frmDate');
+            $("#txtTo").val('@ViewBag.toDate');
+            page = '@ViewBag.page';
+            ChangeSearchCat()
+            ShowReport();
+        }
+        $("#ddlmonth").change(function () {
+            page = 1;
+            $("#btnExport").attr("disabled", "disabled");
+        });
+
+        ///ADDED BY Priti
+        $("#ddlyear").change(function () {
+            page = 1;
+            $("#btnExport").attr("disabled", "disabled");
+        });
+       // end by priti
+
+        $("#WarehouseId").change(function () {
+            $("#btnExport").attr("disabled", "disabled");
+            page = 1;
+        });
+        function ShowReport() {
+            var Month = $("#ddlmonth").val();
+            var year = $("#ddlyear").val();    ///ADDED BY Priti
+            var WarehouseId = $("#WarehouseId").val();
+
+            if (isFV == "" || WarehouseId != "") {
+                $("#loading").fadeIn();
+                var opts = {
+                    lines: 12, // The number of lines to draw
+                    length: 7, // The length of each line
+                    width: 4, // The line thickness
+                    radius: 10, // The radius of the inner circle
+                    color: '#000', // #rgb or #rrggbb
+                    speed: 1, // Rounds per second
+                    trail: 60, // Afterglow percentage
+                    shadow: false, // Whether to render a shadow
+                    hwaccel: false // Whether to use hardware acceleration
+                };
+                var target = document.getElementById('loading');
+                var spinner = new Spinner(opts).spin(target);
+                if (isFV == "") {
+                    $("#inputGstReportdiv").load("/Report/GetInputGSTReportList?page=" + page + "&Month=" + Month + "&WarehouseId=" + WarehouseId + "&SearchCat=" + $("#ddlSearchCat").val() + "&searchTxt=" + $("#txtserchText").val() + "&frmDate=" + $("#txtFrm").val() + "&toDate=" + $("#txtTo").val());
+                }
+                else {
+                    $("#inputGstReportdiv").load("/Report/GetInputGSTReportList?page=" + page + "&isFV=" + isFV + "&Month=" + Month + "&WarehouseId=" + WarehouseId + "&SearchCat=" + $("#ddlSearchCat").val() + "&searchTxt=" + $("#txtserchText").val() + "&frmDate=" + $("#txtFrm").val() + "&toDate=" + $("#txtTo").val());
+                }
+
+            } else {
+                $("#inputGstReportdiv").html("");
+                if (isFV == "False") {
+                    alert("Please Select Distribution Center");
+                }
+                else {
+                    alert("Please Select Fullfillment Center");
+                }
+            }
+        }
+        $("#btnGo").click(function () {
+            var cat = $("#ddlSearchCat").val();
+            var frm = $("#txtFrm").val();
+            var to = $("#txtTo").val();
+            var search = $("#txtserchText").val();
+
+            if (cat == 1) {
+                if (frm == "" && to == "") {
+                    alert("Please Select From Date And To Date.");
+                    return false;
+                }
+            }
+            else {
+                if (cat != 0) {
+                    if (search == "") {
+                        alert("Please Enter Search Text.");
+                        return false;
+                    }
+                    if (cat == 4 || cat == 5) {
+                        if (!$.isNumeric(search)) {
+                            alert("Please Enter Number Only.");
+                            return false;
+                        }
+                    }
+                }
+            }
+            ShowReport();
+        });
+        $("#btnExport").click(function () {
+            window.location = "/Report/ExportToExcel?ProductId=0&flag=3";
+        })
+
+    });
+</script>
+<section class="right_side_main_part">
+<div class="row-fluid">
+        <div class="box span11 right_side_up_part">
+        <div class="box-header">
+            <h2>
+                <i class="icon-list-alt"></i>
+                <span class="break"></span>
+                <span id="heading"> Output GST Report</span>
+            </h2>
+        </div>
+        <div class="box-content">
+            <center>
+                <table>
+                    <tr>
+                        <td style="padding:15px">
+                            <div>
+                                <label> Select Month</label>
+                                <select id="ddlmonth" style="text-transform:uppercase;width:130px">
+                                    <option value="1">january</option>
+                                    <option value="2">february</option>
+                                    <option value="3">march</option>
+                                    <option value="4">april</option>
+                                    <option value="5">may</option>
+                                    <option value="6">jun</option>
+                                    <option value="7">july</option>
+                                    <option value="8">augest</option>
+                                    <option value="9">september</option>
+                                    <option value="10">october</option>
+                                    <option value="11">november</option>
+                                    <option value="12">december</option>
+                                </select>
+                            </div>
+                        </td>
+                        <td style="padding:15px">
+                            <div id="divWarehouse">
+                                <label><span style="color:#b61010;font-size:20px">*</span><span id="lblWarehouse">Select Warehouse </span> </label>
+                                @Html.DropDownList("WarehouseId", ((IEnumerable<ModelLayer.Models.Warehouse>)ViewBag.PossibleWarehouse).Select(option => new SelectListItem
+                       {
+                           Text = (option == null ? "None" : option.Name),
+                           Value = option.ID.ToString(),
+                           Selected = (Model != null) && (option.ID == @ViewBag.SelectedWarehouse)
+                       }), "-- SELECT --", new { style = "width:180px" })
+                            </div>
+                        </td>
+                        <td style="padding:15px">
+                            <div>
+                                <label> Search By </label>
+                                <select id="ddlSearchCat" style="text-transform:uppercase;width:130px">
+                                    <option value="0">--Select--</option>
+                                    <option value="1">Invoice Date</option>
+                                    <option value="2">Invoice Code</option>
+                                    <option value="3">Item Name</option>
+                                    <option value="4">GST</option>
+                                    <option value="5">MRP</option>
+                                </select>
+                            </div>
+                        </td>
+                        <td style="padding:15px" id="tdsearch">
+                            <div>
+                                <label id="lblsearch">Search</label>
+                                <input type="text" placeholder="Enter Search Text Here" id="txtserchText" />
+                            </div>
+                        </td>
+                        <td id="tdFrom" style="padding:15px;display:none">
+                            <div>
+                                <label>From Date</label>
+                                <input type="text" id="txtFrm" style="width:90px" />
+                            </div>
+                        </td>
+                        <td id="tdTo" style="padding:15px;display:none">
+                            <div>
+                                <label>To Date</label>
+                                <input type="text" id="txtTo" style="width:90px" />
+                            </div>
+                        </td>
+                        <td style="padding:15px">
+                            <input type="button" value="&nbsp;&nbsp; Go &nbsp;&nbsp;" class="btn-success btn btn-warning btn-small" id="btnGo" style="margin-top:15px;" />
+                        </td>
+                        <td>
+                            <input type="button" value="&nbsp; Export To Excel &nbsp;" class="btn-success btn btn-warning btn-small" id="btnExport" style="margin-top:15px;" />
+                        </td>
+                    </tr>
+                </table>
+            </center>
+            <div id="loading">
+                <div id="loadingcontent">
+                    <p id="loadingspinner">
+                        Loading Report....
+                    </p>
+                </div>
+            </div>
+            <center>
+                <div id="inputGstReportdiv" style="font-size:15px !important;">
+
+                </div>
+            </center>
+        </div>
+    </div>
+</div>
+    </section>

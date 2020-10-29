@@ -1,0 +1,85 @@
+﻿@model ModelLayer.Models.MailReceiver
+
+@{
+    ViewBag.Title = "AddMailReceiver";
+}
+<style>
+    input[type=text] {
+        border: groove !important;
+        border-width: 1px !important;
+        border-color: black !important;
+    }
+</style>
+<script src="~/Scripts/jquery-1.10.2.min.js"></script>
+<script>
+    $(document).ready(function () {
+        $("#EmailID").keyup(function () {
+            var email = $(this).val();
+            var filter = /^([\w-\.]+@@([\w-]+\.)+[\w-]{2,4})?$/;
+            $('#divEmailError').hide();
+            if (filter.test(email)) {
+                return true;
+            }
+            else {
+                $('#divEmailError').show();
+                $('#divEmailError').html('Invalid Email [' + email + ']');
+                $('#EmailId').val('');
+                $('#EmailID').focus();
+                return false;
+            }
+        });
+        $("#EmailID").focusout(function () {
+            var email = $(this).val();
+            var filter = /^([\w-\.]+@@([\w-]+\.)+[\w-]{2,4})?$/;
+            $('#divEmailError').hide();
+            if (filter.test(email)) {
+                return true;
+            }
+            else {
+                $('#divEmailError').show();
+                $('#divEmailError').html('Invalid Email [' + email + ']');
+                $("#EmailID").val("");
+               // $('#EmailID').focus();
+            }
+        });
+    })
+</script>
+
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+    <div class="span10" id="content">
+        <ul class="breadcrumb">
+            <li>
+                <a href="">Add Mail Receiver</a>
+            </li>
+        </ul>
+        <div class="row-fluid">
+            <div class="box span6">
+                <div class="box-header">
+                    <h2>Create New</h2>
+                </div>
+                <div class="box-content">
+                    <div class="form-horizontal">
+                        @Html.ValidationSummary(true)
+
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.EmailID, new { @class = "control-label col-md-2" })
+                            <div class="col-md-10">
+                                @Html.TextBoxFor(model => model.EmailID, new { required = "required" })
+                                <div id="divEmailError" style="width: 229px; display: none; border-radius: 3px;padding-left:10px" class="alert-danger focused control-label col-md-2">  </div>
+                                @Html.ValidationMessageFor(model => model.EmailID)
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-actions">
+                        <input type="submit" value="Create" class="btn btn-success" />
+                        @Html.ActionLink("Back to List", "MailReceiver", null, new { @class = "btn" })
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+}

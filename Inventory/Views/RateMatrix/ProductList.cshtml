@@ -1,0 +1,400 @@
+﻿@model List<ModelLayer.Models.ViewModel.ProductRateListViewModel>
+@using ModelLayer.Models;
+
+<script src="~/Content/js/jquery-2.1.3.min.js"></script>
+<link href="~/Content/css/jquery.dataTables.css" rel="stylesheet" />
+<script src="~/Content/js/jquery.dataTables.js" language="jascript"></script>
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<style>
+
+    .btn {
+        border-radius: 5px !important;
+    }
+
+    .header {
+        background-color: #536075 !important; /*4B77BE*/
+        color: white;
+    }
+
+    select#ddlmonth {
+        border-radius: 5px;
+    }
+
+    input#search {
+        border-radius: 5px;
+    }
+
+    a.btn.btn-small.btn-info {
+        border-radius: 5px !important;
+    }
+
+    a#getCurRate {
+        border-radius: 5px !important;
+    }
+
+    table#tblData thead tr th {
+        white-space: nowrap;
+        background: #4b77be !important;
+    }
+
+    #tblDflt tr {
+        border: inset
+    }
+
+    .tblDflt-text {
+        width: 30%
+    }
+
+    .scrollit {
+        overflow: scroll;
+        height: 100px;
+        background-color: white;
+    }
+</style>
+<script type="text/javascript" class="init">
+    $(document).ready(function () {        
+
+        if ('@ViewBag.SelectedDVList ' != '') {
+            var SelectedDVStr = '@ViewBag.SelectedDVList';
+            var SelectedDV = SelectedDVStr.split(',');
+            $.each(SelectedDV, function (i) {
+                if (SelectedDV[i] != '') {
+                    $("#" + SelectedDV[i]).prop("checked", true);
+                }
+            });
+        }
+
+        $("#lblDflt").addClass('animated infinite flash');
+
+        $("#lblDflt").click(function () {
+            $("#divDfltOption").slideDown(1000);
+            $("#lblDflt").hide();
+            $("#saveMsg").hide();
+        });
+
+        $("#closeDivDfltOption").click(function () {
+            $("#divDfltOption").slideUp(1000);
+            $("#lblDflt").show();
+            $("#lblDflt").removeClass("infinite");
+        });
+
+        $("#btnDfltValue").click(function () {
+            var txtMrgn1 = $("#txtMrgn1").val();
+            var txtMrgn2 = $("#txtMrgn2").val();
+            var txtMrgn3 = $("#txtMrgn3").val();
+            var txtMrgn4 = $("#txtMrgn4").val();
+            var txtMrgn5 = $("#txtMrgn5").val();
+            var result = Number(txtMrgn1) + Number(txtMrgn2) + Number(txtMrgn3) + Number(txtMrgn4) + Number(txtMrgn5);
+
+            if (result > 100 || result < 100) {
+                $("#lblmsg1").addClass('animated infinite flash');
+                $("#chkMarginDevision").prop("checked", false);
+            }
+            else {
+                $("#lblmsg1").hide();
+                $("#saveMsg").show();
+                $("#saveMsg").text("Please wait!! saving data....");
+                var WarehouseIdCollection = ',';
+                var DvList = $(".chkDV");
+                $.each(DvList, function (i, e) {
+                    if ($(this).prop("checked")) {
+                        WarehouseIdCollection = WarehouseIdCollection + this.id + ',';
+                    }
+                });
+
+                if (WarehouseIdCollection == ',') {
+                    $("#saveMsg").text("Please select at least one DV.");
+                    $("#saveMsg").css("color", "#bc0707");
+                }
+                else {
+                    $("#saveMsg").css("color", "green");
+                    $.ajax({
+                        type: "POST",
+                        url: '@Url.Action("SaveDefaultValues", "RateMatrix")',
+                        data: { 'txtMrgn1': txtMrgn1, 'txtMrgn2': txtMrgn2, 'txtMrgn3': txtMrgn3, 'txtMrgn4': txtMrgn4, 'txtMrgn5': txtMrgn5, 'WarehouseIdCollection': WarehouseIdCollection },
+                        dataType: 'json',
+                        success: function (json) {
+                            $("#saveMsg").text("Default Data Save!!!!");
+                        },
+                        error: function (xmlHttpRequest, textStatus, errorThrown) {
+                            $("#saveMsg").text("Something went wrong!!!!");
+                            console.log('some error occured', textStatus, errorThrown);
+                        }
+                    });
+                }
+            }
+        });
+
+        $('#tblData').DataTable({
+            dom: 'T<"clear">lfrtip',
+            "processing": true,
+            "serverSide": true,
+            "aaSorting": []
+        });
+
+        $("#chkMarginDevision").change(function () {
+            if ($("#chkMarginDevision").prop("checked")) {
+                $("#txtMrgn1").val('@ViewBag.LEADERSHIPMaster');
+                $("#txtMrgn2").val('@ViewBag.EZEELOMaster');
+                $("#txtMrgn3").val('@ViewBag.LEADERS_ROYALTYMaster');
+                $("#txtMrgn4").val('@ViewBag.LIFESTYLE_FUNDMaster');
+                $("#txtMrgn5").val('@ViewBag.LEADERSHIP_DEVELOPMENT_FUNDMaster');
+            } else {
+                 $("#txtMrgn1").val('0');
+                $("#txtMrgn2").val('0');
+                $("#txtMrgn3").val('0');
+                $("#txtMrgn4").val('0');
+                $("#txtMrgn5").val('0');
+            }
+        });
+
+        $("#ddlmonth").val(@ViewBag.SelectedMonth);
+
+        $("#ddlmonth").change(function () {
+            $("#lblmsg").show();
+            window.location = "/RateMatrix/ProductList?Month=" + $(this).val();
+
+        });
+
+        $('#search').autocomplete({
+            source: function (request, response) {
+                //alert("this is search");
+                if ($('#search').val().length <= 2)
+                    return false;
+                var searchTerm = $("#search").val();
+                searchTerm = searchTerm.replace("+", "=");
+                var autocompleteUrl = '/RateMatrix/AutoComplete?term=' + searchTerm;
+                $.ajax({
+                    url: autocompleteUrl,
+                    type: 'GET',
+                    cache: false,
+                    dataType: 'json',
+                    success: function (json) {
+                        response($.map(json, function (data, id) {
+                            return {
+                                ID: data.ID,
+                                label: data.Name //Yashaswi 3/5/2018
+                            };
+                        }));
+                    },
+                    error: function (xmlHttpRequest, textStatus, errorThrown) {
+                        console.log('some error occured', textStatus, errorThrown);
+                    }
+                });
+            },
+            minLength: 1,
+
+            select: function (event, ui) {
+                event.preventDefault();
+                $('#search').val(ui.item.label);//Yashaswi 3/5/2018
+                $("#lblmsg").show();
+                window.location = "/RateMatrix/ProductList?ProductId=" + ui.item.ID;//Yashaswi 3/5/2018
+            },
+
+        });
+
+    });
+</script>
+
+
+<section class="right_side_main_part">
+    <div class="row-fluid">
+        <div class="box span12 right_side_up_part">
+            <div class="box-header">
+                <h2>
+                    <i class="icon-list-alt"></i>
+                    <span class="break"></span>
+                    Product List
+                </h2>
+            </div>
+
+            <div class="box-content">
+
+                <div style="width:100%">
+                    <center>
+                        <table style=" border-spacing: 10px; border-collapse: separate;">
+                            <tr style="text-align:center">
+                                <td><label> Select Month</label></td>
+                                <td><label> Search Other Products</label></td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <select id="ddlmonth" style="text-transform:uppercase;width:130px">
+                                        <option value="1">january</option>
+                                        <option value="2">february</option>
+                                        <option value="3">march</option>
+                                        <option value="4">april</option>
+                                        <option value="5">may</option>
+                                        <option value="6">jun</option>
+                                        <option value="7">july</option>
+                                        <option value="8">augest</option>
+                                        <option value="9">september</option>
+                                        <option value="10">october</option>
+                                        <option value="11">november</option>
+                                        <option value="12">december</option>
+                                    </select>
+                                </td>
+                                <td>
+                                    <input type="text" id="search" placeholder="Enter Product Name" style="width:250px" /> @*Yashaswi 3/5/2018*@
+                                </td>
+                            </tr>
+                            <tr>
+                                <td colspan="2" style="text-align:center">
+                                    <label id="lblmsg" style="color:red;display:none">Please Wait! Loading your Data...</label>
+                                    <label style="color:red" id="lblDflt"><i class="fa fa-info-circle fa-1x"> </i>&nbsp; Set default value for current session</label>
+                                </td>
+                            </tr>
+
+                        </table>
+
+                    </center>
+                    <div style="display:none" id="divDfltOption">
+                        <div class="box span12" style="width:60%;margin-left:20%">
+                            <div class="box-header">
+                                <h2>
+                                    <i class="icon-list-alt"></i>
+                                    <span class="break"></span>
+                                    Set default value for current session
+                                </h2>
+                                <span style="float:right;font-weight:bold;font-size:large;cursor:pointer" id="closeDivDfltOption">X</span>
+                            </div>
+                            <div class="box-content" style="background-color:#efefef">
+                                <span> <span style="font-weight:bold">Margin Devision</span> &nbsp;&nbsp; <input type="checkbox" id="chkMarginDevision" checked />From Master &nbsp; &nbsp; &nbsp;<span id="lblmsg1" style="color:#bc0707;font-weight:bold"> *Sum of Margin in % value should be 100.</span> &nbsp; &nbsp; &nbsp;  <span id="saveMsg" style="color:green;font-weight:bold"></span></span>
+                                <table style="width:auto">
+                                    <tr>
+                                        <td>
+                                            @ViewBag.LEADERSHIP_Name
+                                        </td>
+                                        <td>
+                                            @ViewBag.EZEELO_Name
+                                        </td>
+                                        <td>
+                                            @ViewBag.LEADERS_ROYALTY_Name
+                                        </td>
+                                        <td>
+                                            @ViewBag.LIFESTYLE_FUND_Name
+                                        </td>
+                                        <td>
+                                            @ViewBag.LEADERSHIP_DEVELOPMENT_FUND_Name
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <input type="number" id="txtMrgn1" class="tblDflt-text" value="@ViewBag.LEADERSHIP" />
+                                        </td>
+                                        <td>
+                                            <input type="number" id="txtMrgn2" class="tblDflt-text" value="@ViewBag.EZEELO" />
+                                        </td>
+                                        <td>
+                                            <input type="number" id="txtMrgn3" class="tblDflt-text" value="@ViewBag.LEADERS_ROYALTY" />
+                                        </td>
+                                        <td>
+                                            <input type="number" id="txtMrgn4" class="tblDflt-text" value="@ViewBag.LIFESTYLE_FUND" />
+                                        </td>
+                                        <td>
+                                            <input type="number" id="txtMrgn5" class="tblDflt-text" value="@ViewBag.LEADERSHIP_DEVELOPMENT_FUND" />
+                                        </td>
+                                    </tr>
+                                </table>
+                                <hr style="margin:0px;padding:0px;height:5px" />
+                                <span> <span style="font-weight:bold">Share Rate to DV</span> (Use Ctrl+F to search through DV list) </span>
+
+                                <div class="scrollit">
+                                    <table>
+                                        @{
+                                            List<Warehouse> obj = (List<Warehouse>)ViewBag.DVList;
+                                            foreach (var item in obj)
+                                            {
+                                                <tr>
+                                                    <td> <input type="checkbox" id="@item.ID" class="chkDV" /> </td>
+                                                    <td> @item.Name </td>
+                                                </tr>
+                                            }
+                                        }
+                                    </table>
+                                </div>
+                                <hr style="margin:0px;padding:0px;height:5px" />
+                                <center>
+                                    <input type="button" value="Save" id="btnDfltValue" class="btn btn-success mrg-left mrg-top" />
+                                </center>
+                            </div>
+                        </div>
+                    </div>
+
+
+
+                </div>
+
+                <table id="tblData" class="table border-table display" width="100%">
+                    <thead>
+                        <tr>
+                            <th class="header ">Sr. No</th>
+                            <th class="header ">Product</th>
+                            <th class="header ">Product Name</th>
+                            <th class="header ">HSNCode</th>
+                            <th class="header ">No of Varient</th>
+                            <th class="header ">Quotation Date</th>
+                            <th class="header "></th>
+                        </tr>
+                    </thead>
+
+                    @for (var i = 0; i < Model.Count(); i++)
+                    {
+                        <tr class="">
+
+                            <td class="hideCol-@i">
+
+                                @{
+                                    var j = i;
+                                    j = j + 1;
+                                }
+                                @j
+                                <label style="display:none" id="ProductId-@i">@Model[i].ProductId</label>
+                            </td>
+                            <td class="hideCol-@i">
+                                <img id=" imgproductimage" src="@Model[i].ProductImgPath" onerror="this.src = '/Content/Images/no_image.png'" style="width: 30px; height:30px;" alt=" eZeelo " />
+                            </td>
+                            <td class="hideCol-@i">
+                                @Model[i].ProductName
+                            </td>
+                            <td class="hideCol-@i">
+                                @Model[i].HSNCode
+                            </td>
+                            <td class="hideCol-@i">
+                                @Model[i].VarientCount
+                            </td>
+                            <td class="hideCol-@i">
+                                @Model[i].QuotationDate.ToString("dd/MM/yyyy")
+                            </td>
+                            <td class="hideCol-@i">
+                                @if (Session["Entity"] != null)
+                                {
+                                    if (Session["Entity"].ToString() == "EVW")
+                                    {
+                                        @Html.ActionLink("Add Rate", "AddRate", new { ProductId = @Model[i].ProductId }, new { @class = "btn btn-small btn-blue" }) 
+                                        @Html.ActionLink("Current Rate", "DVFVCurrentRateMarginList", new { ProductId = @Model[i].ProductId }, new { @class = "btn btn-small btn-success" })
+                                        @Html.ActionLink("All Rate", "DVFVRateMarginList", new { ProductId = @Model[i].ProductId }, new { @class = "btn btn-small btn-danger" })
+                                    }
+                                    else if (Session["Entity"].ToString() == "DV")
+                                    {
+                                        @Html.ActionLink("Current Rate", "DVCurrentRateList", new { ProductId = @Model[i].ProductId }, new { @class = "btn btn-small btn-success" })
+                                    }
+                                    else if (Session["Entity"].ToString() == "FV")
+                                    {
+                                        @Html.ActionLink("Current Rate", "FVCurrentRateList", new { ProductId = @Model[i].ProductId }, new { @class = "btn btn-small btn-success" })
+                                    }
+                                }
+                            </td>
+                        </tr>
+                    }
+                </table>
+
+            </div>
+        </div>
+    </div>
+</section>
+
+
+
+

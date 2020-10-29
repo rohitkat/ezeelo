@@ -1,0 +1,139 @@
+﻿@model ModelLayer.Models.DeliveryCharge
+
+@{
+    ViewBag.Title = "Create";
+}
+
+<div id="content" class="span10">
+    <ul class="breadcrumb">
+        <li>
+            <a href="#">DeliveryCharge/Create</a>
+        </li>
+    </ul>
+    <span class="eror-msg">@ViewBag.lblError</span>
+    <div class="row-fluid">
+
+        <div class="box span12">
+            <div class="box-header">
+                <h2><i class="icon-edit"></i><span class="break"></span>Create</h2>
+            </div>
+            <div class="box-content">
+                @using (Html.BeginForm())
+                {
+                    @Html.AntiForgeryToken()
+
+                <div class="form-horizontal">
+                    <span id="errorMsg" style="color:red"></span> @*////added*@
+                    @Html.ValidationSummary(true)
+                    <div class="control-group">
+                        @Html.LabelFor(model => model.Charges, new { @class = "control-label col-md-2" })
+                        <div class="col-md-10 controls">
+                            @Html.TextBoxFor(model => model.Charges, new { @class = "input-large ", autocomplete = "off", required = "required" })
+                            @Html.ValidationMessageFor(model => model.Charges)
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        @Html.LabelFor(model => model.OrderAmount, new { @class = "control-label col-md-2" })
+                        <div class="col-md-10 controls">
+                            @Html.TextBoxFor(model => model.OrderAmount, new { @class = "input-large ", autocomplete = "off", required = "required" })
+                            @Html.ValidationMessageFor(model => model.OrderAmount)
+                        </div>
+                    </div>
+
+                    <div class="control-group">
+                        @Html.LabelFor(model => model.City, new { @class = "control-label col-md-2" })
+                        <div class="col-md-10 controls">
+                            @Html.DropDownList("CityID", null, String.Empty, new {  required = "required" })
+                            @Html.ValidationMessageFor(model => model.CityID)
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        @Html.LabelFor(model => model.FranchiseID, "Franchise", new { @class = "control-label col-md-2" }) @*////added*@
+                        <div class="col-md-10 controls">
+                            @Html.DropDownList("FranchiseID", "Select Franchise")
+                            @*@Html.ValidationMessageFor(model => model.FranchiseID)*@
+                            @Html.ValidationMessageFor(model => model.Franchise.ContactPerson)
+                        </div>
+                    </div>
+                    @*//Added by Rumana_22/03/2019*@
+                    <div class="control-group">
+                        @Html.LabelFor(model => model.MinOrderAmount, "Minimum Order Amount", new { @class = "control-label col-md-2" }) @*////added*@
+                        <div class="col-md-10 controls">
+                            @Html.TextBoxFor(model => model.MinOrderAmount, new { @class = "input-large ", autocomplete = "off", required = "required"})
+                            @Html.ValidationMessageFor(model => model.MinOrderAmount)
+                        </div>
+                    </div>
+
+                    <div class="control-group">
+                        @Html.LabelFor(model => model.Message, "Message", new { @class = "control-label col-md-2" }) @*////added*@
+                        <div class="col-md-10 controls">
+                            @Html.TextBoxFor(model => model.Message, new { @class = "input-large ", autocomplete = "off", required = "required" })
+                            @Html.ValidationMessageFor(model => model.Message)
+                        </div>
+                    </div>
+                    @*//Close Added by Rumana_22/03/2019*@
+                    <div class="control-group">
+                        @Html.LabelFor(model => model.IsActive, new { @class = "control-label col-md-2" })
+                        <div class="col-md-10 controls">
+                            @Html.EditorFor(model => model.IsActive)
+                            @Html.ValidationMessageFor(model => model.IsActive)
+                        </div>
+                    </div>
+
+                </div>
+                    <div class="form-actions no-color" style="padding-left:180px">
+                        <input type="submit" value="Create" class="btn btn-primary" id="btnCreate" />
+                        @Html.ActionLink("Back to List", "Index", string.Empty, new { @class = "btn btn-default" })
+                    </div>
+
+                }
+
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="~/Scripts/jquery-1.10.2.min.js"></script> @*////added*@
+<script type="text/javascript">
+
+    $(document).ready(function () { ////added
+
+
+        $("#btnCreate").click(function () {
+            if ($("#FranchiseID").val() == 0) { ////added
+                $("#errorMsg").html("Please select Franchise.");
+                return false;
+            }
+        });
+
+        $("#CityID").change(function () {
+            var selectedVal = $("#CityID option:selected").val();
+            if (selectedVal > 0) {
+
+                $.ajax({
+                    type: "POST",
+                    url: "/DeliverySchedule/getFranchise",
+                    data: "{ CityID: '" + selectedVal + "'}",
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    async: true,
+                    cache: false,
+                    success: function (msg) {
+
+                        $('#FranchiseID').empty();
+                        $('#FranchiseID').append('<option value=0>Select FranchiseID</option>');
+                        $.each(msg, function (index, item) {
+                            $('#FranchiseID').append('<option value=' + item.value + '>' + item.text + '</option>');
+                        });
+                    },
+                    error: function (x, e) {
+                        //alert("The call to the server side failed. " + x.responseText);
+                    }
+                });
+
+            }
+        });
+    });
+
+</script>

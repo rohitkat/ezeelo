@@ -1,0 +1,162 @@
+﻿@model ModelLayer.Models.ViewModel.BBPViewModel
+
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_LeadersLayout.cshtml";
+}
+
+<link href="//cdn.datatables.net/1.10.19/css/jquery.dataTables.min.css" rel="stylesheet" />
+<script src="//cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
+
+<script src="~/Scripts/BBPMenuOpenup.js"></script>
+<style>
+    table {
+        border-collapse: separate;
+        border-spacing: 15px;
+    }
+
+    .nav-link {
+        color: #007bff !important;
+    }
+
+    a.nav-link.active.show {
+        color: black !important;
+    }
+</style>
+@if (TempData["BBPResult"] != null)
+{
+    <script>
+    alert("@TempData["BBPResult"]");
+    </script>
+}
+<script>
+    $(document).ready(function () {
+
+         if ('@ViewBag.PayableBBPId' == $("#PayoutDateFilterID").val()) {
+                $("#Payout").removeAttr("disabled");
+            }
+            else {
+                $("#Payout").attr("disabled", "disabled");
+            }
+        $("#btnExport").click(function () {
+            window.location = "/admin/BBPPayout/ExportToExcel_InactivePoint";
+        })
+        $("#PayoutDateFilterID").change(function () {
+            if ('@ViewBag.PayableBBPId' == $("#PayoutDateFilterID").val()) {
+                $("#Payout").removeAttr("disabled");
+            }
+            else {
+                $("#Payout").attr("disabled", "disabled");
+            }
+        });
+    });
+</script>
+<div class="container">
+    <div id="progress" class="modal">
+        <div class="center">
+            <img src="~/img/ajax-loading-gif-transparent-background-8.gif" />
+        </div>
+    </div>
+    <div class="card" id="maindiv">
+        <div class="card-header"><strong>Business Booster Plan Inactive Point Payout Process </strong></div>
+        <div class="card-body card-block">
+            @using (Html.BeginForm("BBPInactivePointPayout", "BBPPayout"))
+            {
+                @Html.AntiForgeryToken()
+                <table>
+                    <tr>
+                        <td>
+                            <div class="form-group">
+                                @Html.DropDownListFor(m => m.PayoutDateFilterID, Model.PayoutDateFilter, "Select Payout Week", new { @class = "form-control" })
+                            </div>
+                        </td>
+                        <td>
+                            <input id="GO" type="submit" value="Go" name="GO" class="btn btn-info" />
+                        </td>
+                        <td>
+                            <input id="btnExport" type="button" value="Export To Excel" class="btn btn-warning" />
+                        </td>
+                        <td>
+                            <input id="Payout" type="submit" value="Pay" name="Payout" class="btn btn-success" />
+                        </td>
+                    </tr>
+                </table>
+            }
+            @if (Model != null)
+            {
+                <div id="divRpt">
+                    <ul class="nav nav-tabs" id="myTab">
+                        <li class="nav-item">
+                            <a href="#Pdetails" class="nav-link active show" data-toggle="tab">Inactive Point Payout Report</a>
+                        </li>
+                    </ul>
+                    <div class="tab-content">
+                        <div class="tab-pane fade" id="Pdetails" style="max-width:1000px;overflow:auto">
+                            @if (@Model.List_details != null)
+                            {
+                                <table id="tblData" class="table table-bordered table-striped table-condensed display" width="100%">
+                                    <thead>
+                                        <tr>
+                                            <th>Sr.No.</th>
+                                            <th>UserLoginId</th>
+                                            <th>Name</th>
+                                            <th>Email</th>
+                                            <th>Phone No</th>
+                                            <th>Inactive Points</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @{ var i = 0; }
+                                        @if (@Model.List_details != null)
+                                        {
+                                            foreach (var item in @Model.List_details)
+                                            {
+                                                <tr>
+                                                    <td>
+                                                        @{
+                                                            i = i + 1;
+                                                        }
+                                                        @i
+                                                    </td>
+                                                    <td>
+                                                        @Html.DisplayFor(modelItem => item.UserloginId)
+                                                    </td>
+                                                    <td>
+                                                        @Html.DisplayFor(modelItem => item.Name)
+                                                    </td>
+                                                    <td>
+                                                        @Html.DisplayFor(modelItem => item.Email)
+                                                    </td>
+                                                    <td>
+                                                        @Html.DisplayFor(modelItem => item.Mobile)
+                                                    </td>
+                                                    <td>
+                                                        @Html.DisplayFor(modelItem => item.PendingERP)
+                                                    </td>
+                                                </tr>
+                                            }
+                                        }
+                                        else
+                                        {
+                                            <tr>
+                                                <td colspan="9" style="min-width:960px;max-width:960px">
+                                                    <label style=" color: #138afc; ">No Record Found.... </label>
+                                                </td>
+                                            </tr>
+                                        }
+                                    </tbody>
+                                </table>
+                                <script type="text/javascript">
+                                    $(document).ready(function () {
+                                        $('#tblData').DataTable();
+                                        $("#Pdetails").addClass("active show");
+                                    });
+                                </script>
+                            }
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</div>

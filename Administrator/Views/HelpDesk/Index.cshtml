@@ -1,0 +1,186 @@
+﻿@model IEnumerable<ModelLayer.Models.HelpDeskDetails>
+
+@{
+    ViewBag.Title = "Index";
+}
+<br />
+<style>
+    .dataTables_length {
+        margin-left: 0px;
+        margin-top: 7px;
+    }
+
+    .pagination {
+        padding: 0px 40px;
+    }
+</style>
+@*<div id="content" class="span10">
+    <ul class="breadcrumb">
+        <li>
+            <a href="#">HelpDesk/Index</a>
+        </li>
+    </ul>*@
+@using (@Html.BeginForm())
+{
+    <div class="row-fluid" style="margin-left: 15px;">
+
+        <div class="box span12">
+            <div class="box-header">
+                <h2><i class="icon-edit"></i><span class="break"></span>HelpDesk</h2>
+                <div class="pull-right jumpBtn CreateFormBtn">
+                    @Html.ActionLink("Create New", "Create", null, new { @class = "btn btn-primary btn-small" })
+                </div>
+            </div>
+            <div id="pageloaddiv"></div>
+             <div class="box-content">
+                <table class="table">
+                    <tr>
+                        <th>
+                            City
+                        </th>
+                        <th>
+                            Franchise
+                        </th>
+                        <th>
+                            HelpLineNumber
+                        </th>
+                        <th>
+                            ManagmentNumber
+                        </th>
+                        <th>
+                            IsActive
+                        </th>
+                        @*<th>
+                                @Html.DisplayNameFor(model => model.CreateDate)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.CreateBy)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.ModifyDate)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.ModifyBy)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.NetworkIP)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.DeviceType)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.DeviceID)
+                            </th>*@
+                        <th>Actions</th>
+                    </tr>
+                    @if (Model != null)
+                    {
+                        foreach (var item in Model)
+                        {
+                    <tr>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.City.Name)
+                        </td>
+                        <td>
+                            @*@Html.DisplayFor(modelItem => item.Franchise.ServiceNumber)*@
+                            @Html.DisplayFor(modelItem => item.Franchise.ContactPerson)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.HelpLineNumber)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.ManagmentNumber)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.IsActive)
+                        </td>
+
+                        @*<td>
+                                @Html.DisplayFor(modelItem => item.CreateDate)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.CreateBy)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.ModifyDate)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.ModifyBy)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.NetworkIP)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.DeviceType)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.DeviceID)
+                            </td>*@
+                        <td>
+                            @Html.ActionLink("Edit", "Edit", new { id = item.ID }, new { @class = "btn btn-small btn-success" })
+                            @Html.ActionLink("Details", "Details", new { id = item.ID }, new { @class = "btn btn-small btn-primary" })
+                            @*@Html.ActionLink("Delete", "Delete", new { id = item.ID }, new { @class = "btn btn-small btn-danger" })*@
+                        </td>
+                    </tr>
+                        }
+                    }
+
+                </table>
+            </div>
+        </div>
+    </div>
+}
+@*</div>*@
+
+<style type="text/css">
+    #pageloaddiv {
+        position: fixed;
+        left: 0px;
+        top: 0px;
+        width: 100%;
+        height: 100%;
+        z-index: 1000;
+        background: url('../Content/Images/ajax_loader.gif') no-repeat center center;
+        background-size: 100px;
+        display: none;
+    }
+</style>
+
+<script src="~/Scripts/jquery-1.10.2.min.js"></script>
+<script>
+    $(function () {
+        $('#CityID').change(function (e) {
+            var selectedVal = $("#CityID option:selected").val();
+            if (selectedVal > 0) {
+                //alert(selectedVal);
+                $("#pageloaddiv").attr("display", "block");
+                $("#pageloaddiv").css("display", "block");
+                $.ajax({
+                    type: "POST",
+                    url: "getFranchise",
+                    data: "{ CityID: '" + selectedVal + "'}",
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    async: true,
+                    cache: false,
+                    success: function (msg) {
+
+                        $('#FranchiseID').empty();
+                        $('#FranchiseID').append('<option value=0>Select Franchise</option>');
+                        $.each(msg, function (index, item) {
+                            $('#FranchiseID').append('<option value=' + item.value + '>' + item.text + '</option>');
+                        });
+                    },
+                    error: function (x, e) {
+                        alert("The call to the server side failed. " + x.responseText);
+                    }
+                });
+            }
+        });
+
+
+
+    });
+
+
+</script>

@@ -1,0 +1,137 @@
+﻿@model ModelLayer.Models.ViewModel.PlanBindManagement
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Index</h2>
+
+@*<div>
+
+@using (Html.BeginForm())
+{
+    @Html.ValidationSummary(false)
+
+
+    <div>
+        <span> @Html.DropDownList("MasterPlan", "Select Plan")</span>
+        <span><input type="submit" name="submit" id="btnSubmit" /></span>
+        <span id="pMessage"> </span>
+       
+    </div>
+    <div>
+        <span> @Html.RadioButtonFor(x => x.type, 1) Included </span>
+        <span> @Html.RadioButtonFor(x => x.type, 2)Excluded</span>
+    </div>
+
+
+
+    if (Model.planCommission.Count() > 0)
+    {
+
+        for (int i = 0; i < Model.planCommission.Count(); i++)
+        {
+            if (Model.planCommission[i].CategoryLevel < 2)
+            {
+                <div class="LevelOne">
+                    <span>
+                        @Html.HiddenFor(x => x.planCommission[i].CategoryID)
+                        @Html.HiddenFor(x => x.planCommission[i].CategoryName)
+                        @Html.CheckBoxFor(x => x.planCommission[i].isSelect)
+                        @Html.HiddenFor(x => x.planCommission[i].CategoryLevel)
+
+                        <b> @Html.DisplayFor(x => x.planCommission[i].CategoryName)</b>
+                    </span>
+
+                </div>
+            }
+            for (int j = 0; j < Model.planCommission.Count(); j++)
+            {
+                if (Model.planCommission[j].parentCategoryID == Model.planCommission[i].CategoryID && Model.planCommission[j].CategoryLevel > 1
+                    && Model.planCommission[j].CategoryLevel < 3)
+                {
+
+                    <div class="LevelTwo">
+
+                        <span>
+                            @Html.HiddenFor(y => y.planCommission[j].CategoryID)
+                            @Html.HiddenFor(y => y.planCommission[j].CategoryName)
+                            @Html.HiddenFor(x => x.planCommission[j].CategoryLevel)
+                            @Html.CheckBoxFor(x => x.planCommission[j].isSelect)
+                            @Html.DisplayFor(y => y.planCommission[j].CategoryName)
+                        </span>
+
+                    </div>
+
+                    for (int k = 0; k < Model.planCommission.Count(); k++)
+                    {
+                        if (Model.planCommission[k].CategoryLevel > 2 && Model.planCommission[j].parentCategoryID == Model.planCommission[i].CategoryID &&
+                             Model.planCommission[k].parentCategoryID == Model.planCommission[j].CategoryID)
+                        {
+                            <div class="LevelThree">
+
+                                <span>
+                                    @Html.HiddenFor(y => y.planCommission[k].CategoryID)
+                                    @Html.HiddenFor(y => y.planCommission[k].CategoryName)
+                                    @Html.HiddenFor(x => x.planCommission[k].CategoryLevel)
+                                    @Html.CheckBoxFor(x => x.planCommission[k].isSelect)
+
+                                    @Html.DisplayFor(y => y.planCommission[k].CategoryName)
+                                </span>
+
+                            </div>
+                        }
+                    }
+                }
+            }
+
+        }
+    }
+
+}
+
+</div>
+
+<script src="~/Scripts/jquery-1.10.2.min.js"></script>
+<script>
+    $(function () {
+        $("#btnSubmit").click(function () {
+            var selectedVal = $("#MasterPlan option:selected").text();
+            alert(selectedVal);
+            if (selectedVal == 'Select Plan') {
+                pMessage.textContent = 'Please select the Plan'
+                return false;
+            }
+            
+        });
+    });
+
+    $(function () {
+        $("#RoleList").change(function () {
+            var selectedVal = $("#RoleList option:selected").val();
+            if (selectedVal > 0) {
+
+                $.ajax({
+                    type: "POST",
+                    url: "RoleExistOrNot",
+                    data: "{ id: '" + selectedVal + "'}",
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    async: "true",
+                    cache: "false",
+                    success: function (msg) {
+                        if (msg > 0) {
+                            pMessage.textContent = 'Role Already Exists'
+                            return false;
+                        }
+                        else {
+                            pMessage.textContent = ''
+                        }
+                    },
+                    Error: function (x, e) {
+                        pMessage.textContent = 'Error in Role Selection'
+                    }
+                });
+            }
+        });
+    });
+</script>*@

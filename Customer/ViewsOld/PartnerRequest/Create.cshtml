@@ -1,0 +1,505 @@
+﻿@model ModelLayer.Models.PartnerRequest
+
+@{
+    //Layout = "~/Views/Shared/_Layout_Internal.cshtml";
+    ViewBag.Title = "eZeelo: Online Jewellery, Home Appliances, Electronics & Fashion Store Nagpur";
+}
+
+<link href="~/Content/css/style_asset.css" rel="stylesheet" />
+
+<style>
+    input[type="text"], select {
+        color: white !important;
+        border-color: white !important;
+    }
+   select {
+        border-radius: 3px !important;
+    }
+
+        select option {
+            color: black !important;
+        }
+
+    label {
+        margin-top: -15px !important;
+        font-size: 18px !important;
+    }
+
+    #home {
+        /*height: 665px;*/
+        background: url("../../Content/Images/partner-borsino-logistica-4.png") no-repeat center center;
+        -webkit-background-size: cover;
+        background-size: cover;
+        width: 100%;
+        /*padding-left: -50px !important;
+        padding-right: -15px !important;*/
+    }
+
+    .container #home, .body-content {
+        padding: 0px !important;
+        margin: 0px !important;
+        width: 100% !important;
+    }
+</style>
+
+<script>
+
+    $(document).ready(function (e) {
+        $("#Form_").on("submit", function () {
+
+            var data = "{'Name':'" + $("#Name").val() + "','EmailId':'" + $("#EmailId").val() + "','ContactNo':'" + $("#ContactNo").val() + "','StateID':'" + $("#StateList").val() + "','CityName':'" + $("#CityName").val() + "','InvestmentCapacity':'" + $("#InvestmentCapacityList").val() + "','Space':'" + $("#Space").val() + "','ExistingBusiness':'" + $("#ExistingBusiness").val() + "'}";
+
+            $.ajax({
+                type: "POST",
+                url: '@Url.Action("SavePartnerRequest", "PartnerRequest")',
+                data: data,
+                contentType: "application/json; charset = utf-8",
+                dataType: "json",
+                success: function (data) {
+                    if (data == "-1") {
+                        alert("Failed To Send Request! Please Try After Some Time.");
+                    } else {
+                        alert("Thanks for showing interest. Please check your email for further communication. You will also hear from us within next 48 hours.");
+                        window.location.href = '@Url.Action("Index", "Home")'
+                    }
+
+                },
+                error: function (jqXHR, exception) {
+
+                    var msg = '';
+                    if (jqXHR.status === 0) {
+                        msg = 'Not connect.\n Verify Network.';
+                    } else if (jqXHR.status == 404) {
+                        msg = 'Requested page not found. [404]';
+                    } else if (jqXHR.status == 500) {
+                        msg = 'Internal Server Error [500].';
+                    } else if (exception === 'parsererror') {
+                        msg = 'Requested JSON parse failed.';
+                    } else if (exception === 'timeout') {
+                        msg = 'Time out error.';
+                    } else if (exception === 'abort') {
+                        msg = 'Ajax request aborted.';
+                    } else {
+                        msg = 'Uncaught Error.\n' + jqXHR.responseText;
+                    }
+                    alert("Thanks for showing interest. Please check your email for further communication. You will also hear from us within next 48 hours.");
+                    window.location.reload();
+                },
+
+            });
+        });
+
+        $("#Name").focus();
+        $("#InvestmentCapacityList").val("");
+        //Bind City
+        @*$("select#StateList").bind('change', function () {
+            var id = $("#StateList").val();
+
+            $.ajax({
+                type: "POST",
+                url: '@Url.Action("BindCity", "PartnerRequest")',
+                data: "{'StateID':" + id + "}",
+                contentType: "application/json; charset = utf-8",
+                dataType: "json",
+                success: function (data) {
+                    BindCity(data);
+                },
+                error: function (jqXHR, exception) {
+                    var msg = '';
+                    if (jqXHR.status === 0) {
+                        msg = 'Not connect.\n Verify Network.';
+                    } else if (jqXHR.status == 404) {
+                        msg = 'Requested page not found. [404]';
+                    } else if (jqXHR.status == 500) {
+                        msg = 'Internal Server Error [500].';
+                    } else if (exception === 'parsererror') {
+                        msg = 'Requested JSON parse failed.';
+                    } else if (exception === 'timeout') {
+                        msg = 'Time out error.';
+                    } else if (exception === 'abort') {
+                        msg = 'Ajax request aborted.';
+                    } else {
+                        msg = 'Uncaught Error.\n' + jqXHR.responseText;
+                    }
+                    alert(msg);
+                },
+            });
+        });
+
+        $("#CityList").change(function () {
+            $.ajax({
+                type: "POST",
+                url: '@Url.Action("BindArea", "PartnerRequest")',
+                data: "{'CityID':" + $("#CityList").val() + "}",
+                contentType: "application/json; charset = utf-8",
+                dataType: "json",
+                success: function (data) {
+                    BindArea(data);
+                },
+                error: function (jqXHR, exception) {
+                    var msg = '';
+                    if (jqXHR.status === 0) {
+                        msg = 'Not connect.\n Verify Network.';
+                    } else if (jqXHR.status == 404) {
+                        msg = 'Requested page not found. [404]';
+                    } else if (jqXHR.status == 500) {
+                        msg = 'Internal Server Error [500].';
+                    } else if (exception === 'parsererror') {
+                        msg = 'Requested JSON parse failed.';
+                    } else if (exception === 'timeout') {
+                        msg = 'Time out error.';
+                    } else if (exception === 'abort') {
+                        msg = 'Ajax request aborted.';
+                    } else {
+                        msg = 'Uncaught Error.\n' + jqXHR.responseText;
+                    }
+                    alert(msg);
+                }
+            });
+        });*@
+
+
+        //function BindCity(data) {
+        //    $("#CityList").empty();
+        //    var ID = 0;
+        //    $("#CityList").prepend("<option value='' selected='selected'>-- Select City --</option>");
+
+        //    $.each(data, function (index, item) {
+        //        ID = item.ID;
+        //        $('#CityList').append('<option value=' + item.ID + '>' + item.Name + '</option>');
+        //    });
+        //    $("#CityList").focus();
+        //}
+        //function BindArea(data) {
+        //    var ID = 0;
+        //    $("#AreaList").empty();
+        //    $("#AreaList").prepend("<option value='' selected='selected'>-- Select Area --</option>");
+
+        //    $.each(data, function (index, item) {
+        //        ID = item.ID;
+        //        $('#AreaList').append('<option value=' + item.ID + '>' + item.Name + '</option>');
+        //    });
+        //    $("#AreaList").focus();
+        //}
+
+        $("#ContactNo").keydown(function (e) {
+            var evt = (e) ? e : window.event;
+            var charCode = (evt.keyCode) ? evt.keyCode : evt.which;
+            if ((charCode > 45 && charCode < 58) || (charCode > 95 && charCode < 106) || charCode == 8 || charCode == 127 || charCode == 37 || charCode == 39) {
+                return true;
+            }
+            else if (charCode == 9) {
+                SendKeys("{tab}");
+                return true;
+            }
+            return false;
+        });
+
+        $("#ContactNo").focusout(function () {
+            var mobile = $(this).val();
+            if (mobile != "") {
+                var filter = /^[7-9]{1}[0-9]{9}$/;
+                $('#divMobileError').hide();
+                if (filter.test(mobile)) {
+                    return true;
+                }
+                else {
+                    $('#divMobileError').show();
+                    $('#divMobileError').html('Invalid Mobile [' + mobile + ']');
+                    //$('#ContactNo').val('');
+                    $('#ContactNo').focus();
+                    return false;
+                }
+            }
+            else {
+                $('#divMobileError').hide();
+            }
+        });
+
+        $("#ContactNo").blur(function () {
+            if ($("#ContactNo").val() != "") {
+                $.ajax({
+                    type: "POST",
+                    url: '@Url.Action("CheckContactNo", "PartnerRequest")',
+                    data: "{'ContactNo':" + $(this).val() + "}",
+                    contentType: "application/json; charset = utf-8",
+                    dataType: "json",
+                    success: function (data) {
+                        if (data == 1) {
+                            $('#divMobileError').show();
+                            $('#divMobileError').html('Already Request Send With this Contact No. ' + $("#ContactNo").val());
+                            $('#ContactNo').focus();
+                            $('#ContactNo').val("");
+                            return false;
+                        } else {
+                            var mobile = $("#ContactNo").val();
+                            var filter = /^[7-9]{1}[0-9]{9}$/;
+                            $('#divMobileError').hide();
+                            if (filter.test(mobile)) {
+                                return true;
+                            }
+                            else {
+                                $('#divMobileError').show();
+                                $('#divMobileError').html('Invalid Mobile [' + mobile + ']');
+                                $('#ContactNo').val('');
+                                $('#ContactNo').focus();
+                                return false;
+                            }
+                        }
+                    },
+                    error: function (jqXHR, exception) {
+                        var msg = '';
+                        if (jqXHR.status === 0) {
+                            msg = 'Not connect.\n Verify Network.';
+                        } else if (jqXHR.status == 404) {
+                            msg = 'Requested page not found. [404]';
+                        } else if (jqXHR.status == 500) {
+                            msg = 'Internal Server Error [500].';
+                        } else if (exception === 'parsererror') {
+                            msg = 'Requested JSON parse failed.';
+                        } else if (exception === 'timeout') {
+                            msg = 'Time out error.';
+                        } else if (exception === 'abort') {
+                            msg = 'Ajax request aborted.';
+                        } else {
+                            msg = 'Uncaught Error.\n' + jqXHR.responseText;
+                        }
+                        alert(msg);
+                    }
+                });
+            }
+        });
+        $("#EmailId").keyup(function () {
+            var email = $(this).val();
+            var filter = /^([\w-\.]+@@([\w-]+\.)+[\w-]{2,4})?$/;
+            $('#divEmailError').hide();
+            if (filter.test(email)) {
+                return true;
+            }
+            else {
+                $('#divEmailError').show();
+                $('#divEmailError').html('Invalid Email [' + email + ']');
+                $('#EmailId').focus();
+                return false;
+            }
+        });
+
+        $("#EmailId").focusout(function () {
+            if ($("#EmailId").val() != "") {
+                $.ajax({
+                    type: "POST",
+                    url: '@Url.Action("CheckEmail", "PartnerRequest")',
+                    data: "{'EmailId':'" + $(this).val() + "'}",
+                    contentType: "application/json; charset = utf-8",
+                    dataType: "json",
+                    success: function (data) {
+                        if (data == 1) {
+                            $('#divEmailError').show();
+                            $('#divEmailError').html('Already Request Send With Email Id ' + $("#EmailId").val());
+                            $('#EmailId').focus();
+                            $('#EmailId').val("");
+                        } else {
+                            var email = $("#EmailId").val();
+                            var filter = /^([\w-\.]+@@([\w-]+\.)+[\w-]{2,4})?$/;
+                            $('#divEmailError').hide();
+                            if (filter.test(email)) {
+                                return true;
+                            }
+                            else {
+                                $('#divEmailError').show();
+                                $('#divEmailError').html('Invalid Email [' + email + ']');
+                                $('#EmailId').focus();
+                                $('#EmailId').val("");
+                                return false;
+                            }
+                        }
+                    },
+                    error: function (jqXHR, exception) {
+                        var msg = '';
+                        if (jqXHR.status === 0) {
+                            msg = 'Not connect.\n Verify Network.';
+                        } else if (jqXHR.status == 404) {
+                            msg = 'Requested page not found. [404]';
+                        } else if (jqXHR.status == 500) {
+                            msg = 'Internal Server Error [500].';
+                        } else if (exception === 'parsererror') {
+                            msg = 'Requested JSON parse failed.';
+                        } else if (exception === 'timeout') {
+                            msg = 'Time out error.';
+                        } else if (exception === 'abort') {
+                            msg = 'Ajax request aborted.';
+                        } else {
+                            msg = 'Uncaught Error.\n' + jqXHR.responseText;
+                        }
+                        alert(msg);
+                    }
+                });
+            }
+        });
+    });
+</script>
+@using (Html.BeginForm("Create", "PartnerRequest", FormMethod.Post, new { id = "Form_" }))
+{
+
+    @Html.AntiForgeryToken()
+    <div id="home">
+        <div class="overlay">
+            <div class="container">
+                <div class="row ">
+                    @*<div class="col-lg-4 col-md-5 col-sm-8 col-xs-12 ">*@
+                    <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
+                        <div class="div-trans">
+                            <h3 class="mrg-top" style="text-align:center;text-decoration:underline">Request For Partner</h3>
+                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                @*<div class="form-horizontal">*@
+
+                                @Html.ValidationSummary(true)
+                                <div class="form-group" style="margin-top:15px;">
+                                    @Html.TextBoxFor(model => model.Name, new { @placeholder = "Enter Full Name", @class = "form-control-Widout-block form-control", required = "required" })
+                                    @Html.ValidationMessageFor(model => model.Name)
+                                    <div class="clearfix"></div>
+                                </div>
+                                <div class="form-group">
+                                    @Html.TextBoxFor(model => model.ContactNo, new { @class = "form-control-Widout-block form-control", @placeholder = "Enter Mobile Number", required = "required", maxlength = 10 })
+                                    @Html.ValidationMessageFor(model => model.ContactNo)
+                                    <div id="divMobileError" style="width: 229px; display: none; border-radius: 3px; padding-left: 10px" class="alert-danger focused">  </div>
+                                    <div class="clearfix"></div>
+                                </div>
+                                <div class="form-group">
+                                    @Html.TextBoxFor(model => model.EmailId, new { @class = "form-control-Widout-block form-control", @placeholder = "Enter Email ID", required = "required" })
+                                    @Html.ValidationMessageFor(model => model.EmailId)
+                                    <div id="divEmailError" style="width: 229px; display: none; border-radius: 3px;padding-left:10px" class="alert-danger focused">  </div>
+                                    <div class="clearfix"></div>
+                                </div>
+                                <div class="form-group">
+                                    @Html.DropDownList("StateList", null, "-- Select State --", new { @class = "form-control", required = "required", @placeholder = "Select State" })
+                                    @Html.ValidationMessageFor(model => model.StateID)
+                                    <div class="clearfix"></div>
+                                </div>
+                                <div class="form-group">
+                                    @Html.TextBoxFor(model => model.CityName, new { @class = "form-control-Widout-block form-control", @placeholder = "Enter City Name", required = "required" })
+                                    @Html.ValidationMessageFor(model => model.CityName)                                    
+                                    <div class="clearfix"></div>
+                                </div>
+                                <div class="form-group">
+                                    @Html.DropDownList("InvestmentCapacityList", null, "-- Select Investment Capacity --", new { @class = "form-control", required = "required", @placeholder = "Select Investment Capacity" })
+                                    @Html.ValidationMessageFor(model => model.InvestmentCapacity)
+                                    <div class="clearfix"></div>
+                                </div>
+                                <div class="form-group" style="margin-top:-5px">
+                                    <table style="width:100%">
+                                        <tr>
+                                            <td style="width:30%"> <label>&nbsp;&nbsp; Space</label></td>
+                                            <td>
+                                                @Html.RadioButtonFor(model => model.Space, "Owned", new { required = "required" })     <label>Owned</label>
+                                            </td>
+                                            <td>
+                                                @Html.RadioButtonFor(model => model.Space, "Rented", new { required = "required" })    <label>Rented</label>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                    @Html.ValidationMessageFor(model => model.Space)
+                                </div>
+                                <div class="form-group" style="margin-top:-10px">
+                                    <textarea id="ExistingBusiness" style="resize: none; color: white !important; border: solid 1px white !important; " placeholder="Enter Existing Business Details | Remarks" required="required" class="form-control-Widout-block form-control"></textarea>
+                                    @*@Html.TextBoxFor(model => model.ExistingBusiness, new { @class = "form-control-Widout-block form-control", @placeholder = "Enter Existing Business details", required = "required" })*@
+                                    @Html.ValidationMessageFor(model => model.ExistingBusiness)
+                                    <div class="clearfix"></div>
+                                </div>
+
+                                <div class="form-group">
+                                    <button class="btn btn-success btn-block btn-lg" id="btnSave">Send Request </button>
+                                    <div class="clearfix"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    @*<div class="col-lg-4 col-md-5 col-sm-8 col-xs-12 ">*@
+                    <div class="col-lg-8 col-md-8 col-sm-8 col-xs-12">
+                        <div class="div-trans" style="font-family:Calibri !important;font-size:18px;">
+                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                <div>
+                                    <h3 style="padding: 0px; color: white; text-decoration: underline;">About Ezeelo</h3>
+                                    <ul>
+                                        <li style="list-style-type:circle">
+                                            Ezeelo is one of the fastest growing grocery e-tailing brand in India lead by a group of renowned professional and entrepreneurs.
+                                        </li>
+                                        <li style="list-style-type:circle">
+                                            Ezeelo is creating most efficient supply chain in FMCG Market at PAN India level.
+                                        </li>
+                                        <li style="list-style-type:circle">
+                                            Ezeelo supply chain model is based on collaboration and cost optimization which is fast scalable.
+                                        </li>
+                                        <li style="list-style-type:circle">
+                                            Ezeelo has an innovative model for customer acquisition and retention.
+                                        </li>
+                                    </ul>
+                                </div>
+                                <br />
+                                <br />
+                                <div>
+                                    <h3 style="padding: 0px; color: white;text-decoration:underline ">Why Ezeelo is a Good Business Idea</h3>
+                                    <table style="width:100%">
+                                        <tr>
+                                            <td style="width:40%">
+                                                <ul>
+                                                    <li style="list-style-type:circle">
+                                                        Easy to setup and operate business
+                                                    </li>
+                                                    <li style="list-style-type:circle">
+                                                        Low to Medium Investment
+                                                    </li>
+                                                    <li style="list-style-type:circle">
+                                                        Fast Growth
+                                                    </li>
+                                                    <li style="list-style-type:circle">
+                                                        Captive customers
+                                                    </li>
+                                                    <li style="list-style-type:circle">
+                                                        Fixed and assured Margins
+                                                    </li>
+                                                    <li style="list-style-type:circle">
+                                                        Low Gestation Period
+                                                    </li>
+                                                    <li style="list-style-type:circle">
+                                                        Better ROI than any other opportunity
+                                                    </li>
+                                                    
+                                                </ul>
+                                            </td>
+                                            <td>
+                                                <ul style="width:60%">
+                                                    <li style="list-style-type:circle">
+                                                        Standard Operating Procedures
+                                                    </li>
+                                                    <li style="list-style-type:circle">
+                                                        Teach Enabled Business
+                                                    </li>
+                                                    <li style="list-style-type:circle">
+                                                        Standard Operating Procedures
+                                                    </li>
+                                                    <li style="list-style-type:circle">
+                                                        Break Even within 6 months
+                                                    </li>
+                                                    <li style="list-style-type:circle">
+                                                        Payback period with 18 months
+                                                    </li>
+                                                    <li style="list-style-type:circle">
+                                                        Training on all processes and procedures
+                                                    </li>
+                                                    <li style="list-style-type:circle">
+                                                        Minimal Risk
+                                                    </li>
+                                                </ul>
+                                            </td>
+                                        </tr>
+                                    </table>                                   
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}

@@ -1,0 +1,321 @@
+﻿@model ModelLayer.Models.ViewModel.ProductApprovalViewModelList
+
+
+<h2>Varient and Stock List</h2>
+<script src="~/Content/js/jquery-2.1.3.min.js"></script>
+
+@*<script src="~/Scripts/jquery-1.10.2.min.js"></script>*@
+@{
+    var grid = new WebGrid(Model.ProductApprovalViewModelLIst);
+
+}
+<div id="gridContent">
+    @grid.GetHtml(
+   tableStyle: "webgrid-table table table-striped table-bordered bootstrap-datatable ",
+    headerStyle: "webgrid-header",
+    footerStyle: "webgrid-footer",
+    alternatingRowStyle: "webgrid-alternating-row",
+    selectedRowStyle: "webgrid-selected-row",
+    rowStyle: "webgrid-row-style",
+    mode: WebGridPagerModes.All,
+    columns:
+      grid.Columns(
+    @*grid.Column("ProductVarientID", format: @<text><span class="display-mode">@item.ProductVarientID</span><label id="ProductVarientID" class="edit-mode">@item.ProductVarientID</label></text>,
+        style: "col1Width" ),*@
+
+grid.Column("", format: @<text ><input id="ProductVarientID" type="hidden" value="@item.ProductVarientID" /> </text>,
+                      style: "hidecol"),
+      //==============================================
+
+        grid.Column("ColorID", "Color", format: @<text><span class="display-mode txt-adjWidth1"><label id="lblColorID">@item.ColorName</label></span>
+        @Html.DropDownList("ColorID", null, string.Empty, new { id = "ColorID", @class = "edit-mode txt-adjWidth1" })</text>),
+
+        grid.Column("SizeID", "Size", format: @<text><span class="display-mode txt-adjWidth1"><label id="lblSizeID">@item.SizeName</label></span>
+        @Html.DropDownList("SizeID", null, string.Empty, new { id = "SizeID", @class = "edit-mode txt-adjWidth1" })</text>),
+
+        grid.Column("DimensionID", "Dimension",format:@<text><span class="display-mode txt-adjWidth1"><label id="lblDimensionID">@item.DiamentionName</label></span>
+        @Html.DropDownList("DimensionID", null, string.Empty, new { id = "DimensionID", @class = "edit-mode txt-adjWidth1" })</text>),
+
+        grid.Column("MaterialID", "Material", format: @<text><span class="display-mode txt-adjWidth1"><label id="lblMaterialID">@item.MaterialName</label></span>
+        @Html.DropDownList("MaterialID", null, string.Empty, new { id = "MaterialID", @class = "edit-mode txt-adjWidth1" })</text>),
+
+
+
+    //========================================================
+
+         grid.Column("Qty", "Quantity", format: @<text><span class="display-mode txt-adjWidth1"><label id="lblQty">@item.Qty</label></span>
+        <input type="text" id="Qty" value="@item.Qty" class="edit-mode txt-adjWidth1" /></text>, style: "col2Width"),
+        grid.Column("ReorderLevel", "ReorderLevel", format: @<text><span class="display-mode txt-adjWidth1"><label id="lblReorderLevel">@item.ReorderLevel</label></span>
+        <input type="text" id="ReorderLevel" value="@item.ReorderLevel" class="edit-mode txt-adjWidth1" /></text>, style: "col2Width "),
+    @*grid.Column("StockStatus", format: @<text><span class="display-mode">@item.StockStatus</span><label id="StockStatus" class="edit-mode">@item.StockStatus</label></text>,
+        style: "col1Width" ),*@
+    @*grid.Column("StockStatus", format: @<text><input class="check-box" id="StockStatus" name="StockStatus" type="checkbox" value="@item.StockStatus" /></text> ),*@
+
+    @*grid.Column("StockStatus", "Stock Status", format: @<text> <span class="display-mode"> <label id="lblStockStatus">@item.StockStatus</label> </span>
+            <input  class="edit-mode" id="StockStatus"  name="StockStatus" type="checkbox" value="@if (item.StockStatus)
+            {<text>True</text>}
+            else
+            {<text>False</text>}" @if (item.StockStatus)
+            { <text> checked </text>  } />
+        </text>),*@
+
+            //---------------
+            @*grid.Column("StockStatus", "StockStatus", format: @<text> <span class="display-mode"> <label id="lblStockStatus">@item.StockStatus</label> </span>
+                <input class="edit-mode" id="StockStatus_@item.ProductVarientID" name="StockStatus" type="checkbox" value="@if (item.StockStatus)
+                {<text>True</text>}
+                else
+                {<text>False</text>}" @if (item.StockStatus)
+                { <text> checked </text>} />
+
+                </text>),*@
+            //-------------
+
+            @*grid.Column("StockStatus", "StockStatus", format: @<text><span class="display-mode txt-adjWidth1"><label id="lblStockStatus">@item.StockStatus</label></span>
+                @Html.DropDownList("StockStatus", null, new { id = "StockStatus", @class = "edit-mode txt-adjWidth1" })</text>),*@
+
+            @*grid.Column("StockStatus", style: "col2", format: @<text>
+                <span class="display-mode"><input type="checkbox" id="StockStatus" name="StockStatus" disabled="disabled" value="@item.StockStatus"/></span>
+                <span class="edit-mode"><input type="checkbox" id="StockStatus" name="StockStatus" value="@item.StockStatus" /></span></text>),*@
+
+            @*grid.Column(header: "",
+                style: "labelcolumn",
+                format: @<text><input class="check-box" id="StockStatus" name="StockStatus" type="checkbox" value="@item.StockStatus" /></text>),*@
+
+
+             grid.Column("PackSize", "PackSize", format: @<text><span class="display-mode txt-adjWidth1"><label id="lblPackSize">@item.PackSize</label></span>
+            <input type="text" id="PackSize" value="@item.PackSize" class="edit-mode txt-adjWidth1" /></text>, style: "col2Width"),
+        grid.Column("PackUnitID", "PackUnit", format: @<text><span class="display-mode txt-adjWidth1"><label id="lblPackUnitID">@item.UnitName</label></span>
+        @Html.DropDownList("PackUnitID", null, string.Empty, new { id = "PackUnitID", @class = "edit-mode txt-adjWidth1" })</text>),
+        grid.Column("MRP", "MRP", format: @<text><span class="display-mode txt-adjWidth1"><label id="lblMRP">@item.MRP</label></span>
+        <input type="text" id="MRP" value="@item.MRP" class="edit-mode txt-adjWidth1" /></text>, style: "col2Width"),
+
+    @*grid.Column("ShopStockID", format: @<text><span class="display-mode">@item.ShopStockID</span><label id="ShopStockID" class="edit-mode">@item.ShopStockID</label></text>,
+        style: "col1Width"  ),*@
+            //---------------------------
+        grid.Column("IsInclusiveOfTax", "IsInclusiveOfTax", format: @<text><span class="display-mode txt-adjWidth1"><label id="lblIsInclusiveOfTax">@item.IsInclusiveOfTax</label></span>
+        @Html.DropDownList("IsInclusiveOfTax", null, new { id = "IsInclusiveOfTax", @class = "edit-mode txt-adjWidth1" })</text>),
+
+    //---------------------------
+
+ grid.Column("", format: @<text ><input id="ShopStockID" type="hidden" value="@item.ShopStockID" /> </text>,
+                      style: "hidecol"),
+
+
+            //============================================
+
+
+         grid.Column("Action", format: @<text>
+                <input type="button" value="Edit" class="edit-user display-mode btn btn-info btn-small" />
+
+                <input type="button" value="Save" class="save-user edit-mode btn btn-success inline btn-small" />
+                <input type="button" value="Cancel" class="cancel-user edit-mode btn btn-primary inline btn-small" />
+
+
+        </text>, style: "col3Width center", canSort: false)
+                                                                    ))
+</div>
+
+<script type="text/javascript">
+
+    //$(function () {
+    //    $.cookie('VarientEdit', '', { expires: -1 });
+    //   // $('#ComponentDiv').hide();
+    //});
+    //$(".edit-user").click(function () {
+    //    alert();
+    //    $(".edit-mode").val('6');
+    //})
+
+    $(function () {
+        document.cookie = "VarientEdit=; expires=Thu, 01 Jan 1970 00:00:00 UTC";
+        $('.edit-mode').hide();
+        $('.edit-user, .cancel-user').on('click', function () {
+            var tr = $(this).parents('tr:first');
+            tr.find('.edit-mode, .display-mode').toggle();
+        });
+
+        $('.save-user').on('click', function () {
+
+            var tr = $(this).parents('tr:first');
+            // var ColorID = tr.find("#ColorID").text;
+            var ColorID = tr.find("#ColorID").val();
+            var SizeID = tr.find("#SizeID").val();
+            var DimensionID = tr.find("#DimensionID").val();
+            var MaterialID = tr.find("#MaterialID").val();
+            var Qty = tr.find("#Qty").val();
+            var ReorderLevel = tr.find("#ReorderLevel").val();
+            //---------------------
+            // var StockStatus = $('#StockStatus').attr('checked') ? "True" : "False";
+            //var StockStatus = $('#chkStockStatus1').is(':checked');
+            //alert(StockStatus);
+            var PackSize = tr.find("#PackSize").val();
+            var PackUnitID = tr.find("#PackUnitID").val();
+            var MRP = tr.find("#MRP").val();
+            //var ProductVarientID = tr.find("#ProductVarientID").html();S
+            var ProductVarientID = tr.find("#ProductVarientID").val();
+
+            //var ShopStockID = tr.find("#ShopStockID").html();
+            var ShopStockID = tr.find("#ShopStockID").val();
+            //var StockStatus = tr.find("#StockStatus_" + ProductVarientID).val();
+            //alert(StockStatus);
+            //var StockStatus = tr.find("#StockStatus").val();
+            var IsInclusiveOfTax = tr.find("#IsInclusiveOfTax").val();
+            var ColorName = tr.find("#ColorName").val();
+            var SizeName = tr.find("#SizeName").val();
+            var DiamentionName = tr.find("#DiamentionName").val();
+            var MaterialName = tr.find("#MaterialName").val();
+            var UnitName = tr.find("#UnitName").val();
+
+            tr.find("#lblColorID").text(ColorName);
+            tr.find("#lblSizeID").text(SizeName);
+            tr.find("#lblDimensionID").text(DiamentionName);
+            tr.find("#lblMaterialID").text(MaterialName);
+            tr.find("#lblQty").text(Qty);
+            tr.find("#lblReorderLevel").text(ReorderLevel);
+            //tr.find("#lblStockStatus").text(StockStatus);//------------------------
+            tr.find("#lblIsInclusiveOfTax").text(IsInclusiveOfTax);
+            tr.find("#lblPackSize").text(PackSize);
+            tr.find("#lblPackUnitID").text(UnitName);
+            tr.find("#lblMRP").text(MRP);
+            tr.find("#lblShopStockID").text(ShopStockID);
+            tr.find('.edit-mode, .display-mode').toggle();
+
+            //==================================================
+
+            var VarientEdit = getCookie("VarientEdit");
+            var cookieVal
+
+            if (VarientEdit != "" && VarientEdit != null) {
+
+                cookieVal = VarientEdit + "," + ProductVarientID + "$" + ColorID + "$" + SizeID + "$" + DimensionID + "$" + MaterialID + "$" + Qty
+                            + "$" + ReorderLevel + "$" + PackSize + "$" + PackUnitID + "$" + MRP + "$" + ShopStockID + "$" + IsInclusiveOfTax;
+
+                setCookie("VarientEdit", cookieVal, 1);
+                //alert(cookieVal);
+
+            }
+            else {
+                cookieVal = ProductVarientID + "$" + ColorID + "$" + SizeID + "$" + DimensionID + "$" + MaterialID + "$" + Qty
+                             + "$" + ReorderLevel + "$" + PackSize + "$" + PackUnitID + "$" + MRP + "$" + ShopStockID + "$" + IsInclusiveOfTax;
+
+                setCookie("VarientEdit", cookieVal, 1);
+                // alert(cookieVal);
+            }
+
+            //=========================================
+
+
+            var UserModel =
+            {
+                "ProductVarientID": ProductVarientID,
+                "ColorID": ColorID,
+                "SizeID": SizeID,
+                "DimensionID": DimensionID,
+                "MaterialID": MaterialID,
+                "Qty": Qty,
+                "ReorderLevel": ReorderLevel,
+                "PackUnitID": PackUnitID
+
+            };
+            $.ajax({
+                url: '/ProductApproval/Edit/',
+                data: JSON.stringify(UserModel),
+                type: 'POST',
+                contentType: 'application/json; charset=utf-8',
+                success: function (data) {
+                    alert(data);
+                }
+            });
+
+        });
+    })
+
+
+
+    function setCookie(c_name, value, expiredays) {
+        document.cookie = c_name + "=" + value;
+    }
+
+    function getCookie(name) {
+        var dc = document.cookie;
+        var prefix = name + "=";
+        var begin = dc.indexOf("; " + prefix);
+        if (begin == -1) {
+            begin = dc.indexOf(prefix);
+            if (begin != 0) return null;
+        } else {
+            begin += 2;
+        }
+        var end = document.cookie.indexOf(";", begin);
+        if (end == -1) {
+            end = dc.length;
+        }
+        return unescape(dc.substring(begin + prefix.length, end));
+    }
+</script>
+
+<style type="text/css">
+    .edit-mode {
+    }
+
+    .edit-user {
+    }
+
+        .edit-user display-mode {
+        }
+
+    .save-user edit-mode {
+    }
+
+    .display-mode {
+    }
+
+    .cancel-user {
+    }
+
+    .webgrid-table {
+        font-family: Arial,Helvetica,sans-serif;
+        font-size: 14px;
+        font-weight: normal;
+        width: 650px;
+        display: table;
+        border-collapse: collapse;
+        border: solid px #C5C5C5;
+        background-color: white;
+    }
+
+        .webgrid-table td, th {
+            border: 1px solid #C5C5C5;
+            padding: 3px 7px 2px;
+        }
+
+    .webgrid-header, .webgrid-header a {
+        background-color: #E3E3E3;
+        color: black;
+        text-align: left;
+        text-decoration: none;
+    }
+
+    .webgrid-footer {
+    }
+
+    .webgrid-row-style {
+        padding: 3px 7px 2px;
+    }
+
+    .webgrid-alternating-row {
+        background-color: #F5F5F5;
+        padding: 3px 7px 2px;
+    }
+
+    .col1Width {
+        width: 50px;
+    }
+
+    .col2Width {
+        width: 200px;
+    }
+</style>
+
+
+

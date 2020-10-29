@@ -1,0 +1,73 @@
+﻿@model ModelLayer.Models.ViewModel.NextBuyEnquiryViewModel
+@{
+    ViewBag.Title = "Create";
+}
+@Html.AntiForgeryToken()
+@Html.Hidden("CustomerOrderID", (long)ViewBag.CustomerOrderID)
+<div class="nextBuyEnquiry">
+    <h3>Hope you enjoyed shopping.</h3>
+    <ul id="dataUL">
+        <li>
+
+        </li>
+        <li>
+            <p> When you like to come again</p>
+            @Html.DropDownList("NextBuySchedle", (SelectList)ViewBag.NextBuySchedle)
+        </li>
+        <li>
+            <p> What You Like to Buy</p>
+            @Html.DropDownList("ThreeLevelCategory", (SelectList)ViewBag.ThreeLevelCategory)
+        </li>
+        <li>
+            <p>Your Remark</p>
+            @Html.TextAreaFor(model => model.Remark, new { @rows = "1" })
+        </li>
+
+        <li>
+            <p></p>
+            <input type="submit" value="SUBMIT" class="btn btn-buy" />
+        </li>
+    </ul>
+    <div>
+
+    </div>
+    <div id="resultMsg" style="color:red; font-weight:bold;"></div>
+</div>
+<script>
+    $(document).ready(function () {
+        $(".btn").click(function () {
+            var id = $("#NextBuySchedle option:selected").val();
+            var CategoryID = $("#ThreeLevelCategory option:selected").val();
+            var remarks = $("#Remark").val();
+            var CustomerOrderID = $("#CustomerOrderID").val();
+            if (parseInt(id) < parseInt(1) && parseInt(id) > parseInt(7)) {
+                alert("Please select your choice");
+            }
+            else {
+
+                $.ajax({
+                    type: "POST",
+                    url: "/CustomerOrder/NextBuyPost/?id=" + id + "&remarks=" + remarks + "&orderId=" + CustomerOrderID + "&CategoryID=" + CategoryID,
+                    dataType: "json",
+                    async: true,
+                    cache: false,
+                    success: function (msg) {
+                        $('#resultMsg').html(msg);
+
+                        $("#NextBuySchedle option:selected").attr("selected", null);
+                        $("#NextBuySchedle option[value='0']").attr("selected", "selected");
+                        $("#Remark").val('');
+                        if (msg != 'Please Select your Choice ') {
+                            $("#dataUL").html('');
+                        }
+                    },
+                    error: function (x, e) {
+                        alert("Sorry No Such Type of Category Is available. ");
+                    }
+
+
+                });
+            }
+        });
+    });
+</script>

@@ -1,0 +1,300 @@
+﻿@{
+    ViewBag.Title = "RatingFromMail";
+}
+<style type="text/css">
+    .p-ratting {
+    }
+
+        .p-ratting h3 {
+            font-size: 15px;
+            margin-top: 20px;
+        }
+
+    .feedback .p-ratting p {
+        font-weight: 600;
+    }
+
+    .feedback p span {
+        display: inline-block;
+        font-weight: 500;
+    }
+
+    .feedback p label {
+        display: inline-block;
+        width: 200px;
+    }
+
+    .p-ratting ul {
+        clear: both;
+        padding-top: 5px;
+        padding-left: 22px;
+    }
+
+    .feedback .p-ratting ul li {
+        display: inline-block;
+        float: left;
+        padding-left: 5px;
+        text-align: center;
+    }
+
+    .p-ratting ul li a {
+        display: block;
+    }
+
+        .p-ratting ul li a img {
+            display: block;
+            margin-top: 0;
+            padding-bottom: 5px;
+            width: 40px;
+            height: 40px;
+        }
+
+    .p-ratting ul li input {
+        display: block;
+        margin: auto;
+    }
+
+    .headingRate {
+        font-size: 18px;
+        font-weight: 600;
+        line-height: 30px;
+        margin-top: 25px;
+        border-bottom: 1px solid #808080;
+    }
+
+    .p-ratting label {
+        display: inline-block;
+    }
+
+    .rate-content {
+        width: 100%;
+        margin-right: 20px;
+    }
+
+    #comment {
+        width: 100%;
+    }
+
+    .comment-review {
+        width: 90%;
+    }
+
+    .feedback {
+        width: 75%;
+        margin: auto;
+    }
+
+    .rating-head {
+        width: 75%;
+        margin: auto;
+    }
+</style>
+<h2 class="rating-head">Rating Review</h2>
+
+@using (Html.BeginForm())
+{
+    <div class="feedback" style="margin-top:15px;">
+        <div data-text="" class="example feedRadius">
+            <div class="shopnamediv">
+            </div>
+            @if (ViewBag.FeedBackMessage == null)
+            {
+                <p>
+                    Kindly spare a few movment please.
+                </p>
+            }
+            <span>
+                @Html.Hidden("OrderID")
+                @Html.Hidden("loginID")
+                @Html.Hidden("RatingPoint")
+            </span>
+
+            <div class="p-ratting">
+                @if (ViewBag.FeedBackMessage == null)
+                {
+                    <div>
+                        <p><label>Order ID :</label> <span>@Html.Display("OrderID")</span></p>
+                    </div>
+                    <div>
+                        <p><label>Order Code :</label> <span> @Html.Display("OrderCode", (string)ViewBag.OrderCode) </span> </p>
+                    </div>
+                    <div>
+                        <p><label>Delivery Date:</label> <span> @Html.Display("DeliveryDate", (string)ViewBag.DeliveryDate) </span></p>
+                    </div>
+
+
+                    <div class="rate-content">
+                        <div class="headingRate">Rating</div>
+                        @if (ViewBag.Product == null)
+                        {
+
+                            <h3>Product</h3>
+                            <ul>
+                                <li>
+                                    <a href="#"> <img src="http://img.ezeelo.in/RatingImages/1.png" height="40" width="40" /></a>
+                                    @Html.RadioButton("Product", 1, false)
+                                </li>
+                                <li>
+                                    <a href="#"> <img src="http://img.ezeelo.in/RatingImages/2.png" height="40" width="40" /></a>
+                                    @Html.RadioButton("Product", 2, false)
+                                </li>
+                                <li>
+                                    <a href="#"> <img src="http://img.ezeelo.in/RatingImages/3.png" height="40" width="40" /></a>
+                                    @Html.RadioButton("Product", 3, false)
+                                </li>
+                                <li>
+                                    <a href="#"> <img src="http://img.ezeelo.in/RatingImages/4.png" height="40" width="40" /></a>
+                                    @Html.RadioButton("Product", 4, false)
+                                </li>
+                                <li>
+                                    <a href="#"> <img src="http://img.ezeelo.in/RatingImages/5.png" height="40" width="40" /></a>
+                                    @Html.RadioButton("Product", 5, false)
+                                </li>
+                                <li>@Html.Hidden("hdnproductID", null)</li>
+                            </ul>
+                        }
+                    </div>
+                    <div class="clr"></div>
+                    <div class="rate-content">
+                        @if (ViewBag.Shop == null)
+                        {
+                            <h3>Seller </h3>
+                            <ul>
+                                <li>
+                                    <a href="#"> <img src="http://img.ezeelo.in/RatingImages/1.png" height="40" width="40" /></a>
+                                    @Html.RadioButton("shop", 1, false)
+                                </li>
+                                <li>
+                                    <a href="#"> <img src="http://img.ezeelo.in/RatingImages/2.png" height="40" width="40" /></a>
+                                    @Html.RadioButton("shop", 2, false)
+                                </li>
+                                <li>
+                                    <a href="#"> <img src="http://img.ezeelo.in/RatingImages/3.png" height="40" width="40" /></a>
+                                    @Html.RadioButton("shop", 3, false)
+                                </li>
+                                <li>
+                                    <a href="#"> <img src="http://img.ezeelo.in/RatingImages/4.png" height="40" width="40" /></a>
+                                    @Html.RadioButton("shop", 4, false)
+                                </li>
+                                <li>
+                                    <a href="#"> <img src="http://img.ezeelo.in/RatingImages/5.png" height="40" width="40" /></a>
+                                    @Html.RadioButton("shop", 5, false)
+                                </li>
+                                <li>@Html.Hidden("hdnShopID", null)</li>
+                            </ul>
+                        }
+                    </div>
+                    <div class="clr"></div>
+                    <div class="rate-content">
+                        @if (ViewBag.Order == null)
+                        {
+                            <h3>Delivery</h3>
+                            <ul>
+                                <li>
+                                    <a href="#"> <img src="http://img.ezeelo.in/RatingImages/1.png" height="40" width="40" /></a>
+                                    @Html.RadioButton("Delivery", 1, false)
+                                </li>
+                                <li>
+                                    <a href="#"> <img src="http://img.ezeelo.in/RatingImages/2.png" height="40" width="40" /></a>
+                                    @Html.RadioButton("Delivery", 2, false)
+                                </li>
+                                <li>
+                                    <a href="#"> <img src="http://img.ezeelo.in/RatingImages/3.png" height="40" width="40" /></a>
+                                    @Html.RadioButton("Delivery", 3, false)
+                                </li>
+                                <li>
+                                    <a href="#"> <img src="http://img.ezeelo.in/RatingImages/4.png" height="40" width="40" /></a>
+                                    @Html.RadioButton("Delivery", 4, false)
+                                </li>
+                                <li>
+                                    <a href="#"> <img src="http://img.ezeelo.in/RatingImages/5.png" height="40" width="40" /></a>
+                                    @Html.RadioButton("Delivery", 5, false)
+                                </li>
+                                <li>@Html.Hidden("hdnDeliveryID", null)</li>
+                            </ul>
+                        }
+                    </div>
+
+                    <div class="clr"></div>
+                    <div class="rate-content">
+                        @if (ViewBag.Order == null)
+                        {
+                            <h3>OverAll</h3>
+                            <ul>
+                                <li>
+                                    <a href="#"> <img src="http://img.ezeelo.in/RatingImages/1.png" height="40" width="40" /></a>
+                                    @Html.RadioButton("Overall", 1, false)
+                                </li>
+                                <li>
+                                    <a href="#"> <img src="http://img.ezeelo.in/RatingImages/2.png" height="40" width="40" /></a>
+                                    @Html.RadioButton("Overall", 2, false)
+                                </li>
+                                <li>
+                                    <a href="#"> <img src="http://img.ezeelo.in/RatingImages/3.png" height="40" width="40" /></a>
+                                    @Html.RadioButton("Overall", 3, false)
+                                </li>
+                                <li>
+                                    <a href="#"> <img src="http://img.ezeelo.in/RatingImages/4.png" height="40" width="40" /></a>
+                                    @Html.RadioButton("Overall", 4, false)
+                                </li>
+                                <li>
+                                    <a href="#"> <img src="http://img.ezeelo.in/RatingImages/5.png" height="40" width="40" /></a>
+                                    @Html.RadioButton("Overall", 5, false)
+                                </li>
+                                <li>@Html.Hidden("hdnOverall", null)</li>
+                            </ul>
+                        }
+                    </div>
+                    <div class="clr"></div>
+                }
+            </div>
+
+            @if (ViewBag.FeedBackMessage != null)
+            {
+                <div class="rate-content">
+
+                    <span style="color:red; font-weight:bold;">@Html.Raw(ViewBag.FeedBackMessage)</span>
+                    <br /><br />
+
+                    <a href="http://ezeelo.com" class="button success">Shop Now</a>
+                </div>
+            }
+
+            else
+            {
+                <div class="cell comment-review">
+                    <h3><label for="comment">Feedback</label></h3>
+                    <div class="input-control text full-size">
+                        @Html.TextBox("comment")
+                        <div class="review_rcomment" style="float: right;">(10 - 100 characters)</div>
+                    </div>
+                    <button onclick="Submit();" class="button success">Submit</button>
+                    <span style="color:green" id="spnThank"></span>
+                </div>
+            }
+        </div>
+    </div>
+}
+
+<script src="//code.jquery.com/jquery-1.10.2.min.js"></script>
+<script>
+    $(document).ready(function () {
+
+        $('input[type="radio"]').click(function () {
+            if ($(this).is(':checked') && $(this).attr('id') == 'Product') {
+                $('#hdnproductID').val($(this).val());
+            }
+            if ($(this).is(':checked') && $(this).attr('id') == 'shop') {
+                $('#hdnShopID').val($(this).val());
+            }
+            if ($(this).is(':checked') && $(this).attr('id') == 'Delivery') {
+                $('#hdnDeliveryID').val($(this).val());
+            }
+            if ($(this).is(':checked') && $(this).attr('id') == 'Overall') {
+                $('#hdnOverall').val($(this).val());
+            }
+        });
+
+    });
+
+</script>

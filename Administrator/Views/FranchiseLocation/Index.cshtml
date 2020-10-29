@@ -1,0 +1,133 @@
+﻿@model IEnumerable<ModelLayer.Models.FranchiseLocation>
+
+@{
+    ViewBag.Title = "Index";
+}
+<div class="row-fluid" style="margin-left:15px;margin-top:28px;">
+    <div class="box span12">
+        <div class="box-header">
+            <h2>Franchise Location show </h2>
+        </div>
+        <div class="box-content">
+            <table class="mainPage">
+                <thead>
+                    <tr>
+                        <th>Select Franchise:-</th>
+                        <th>@Html.DropDownList("franchise", "--Select Franchise--")</th>
+                    </tr>
+                    <tr>
+                        <th>Select States:-</th>
+                        <th>
+                            @Html.DropDownList("stateID", "--Select State--")
+                            <img id="loader_img2" src="~/Content/Images/ajax_loader.gif" style="display: none" height="50" width="50" />
+                        </th>
+                    <tr>
+                        <th>Select City:-</th>
+                        <th class="span4"><select id="ddlCity" name="ddlCity" /></th>
+                    </tr>
+                </thead>
+            </table>
+            <div class="loader">
+                <img id="loader_img" src="~/Content/Images/ajax_loader.gif" style="display: none" height="50" width="50" />
+
+            </div>
+            <div style="width:100%">
+                <div id="divArea" style="float:left;position:relative;width:49%">
+
+                </div>
+                <div id="divAddedArea" style="float:left;position:relative;width:49%">
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="~/Content/js/jquery.1.8.3.min.js"></script>
+<script type="text/javascript">
+    $("select#stateID").bind('change', function () {
+        $('#loader_img2').show();
+        var stateid = $("select#stateID option:selected").val();
+        if (stateid == 0) {
+            $('#ddlCity').empty();
+            $('#loader_img2').hide();
+            return;
+        }
+        $.ajax({
+            type: "POST",
+            url: '@Url.Action("GetCityByStateId", "FranchiseLocation")',
+            data: { 'stateID': stateid },
+            //dataType: "json",
+            cache: false,
+            success: function (msg) {
+                $('#ddlCity').empty();
+                $('#ddlCity').append('<option value=0>Select City</option>');
+                $.each(msg, function (index, item) {
+                    $('#ddlCity').append('<option value=' + item.CityID + '>' + item.CityName + '</option>');
+                });
+                $('#loader_img2').hide();
+            },
+            error: function (x, e) {
+                alert('Failure');
+
+            }
+        });
+
+    });
+
+    $("select#ddlCity").bind('change', function () {
+        $('#divArea').empty();
+        $("[id*=divAddedArea]").empty();
+        $('#loader_img').show();
+        var FranchiseID = $("select#franchise option:selected").val();
+        if (FranchiseID == "") {
+            alert('Please select Franchise');
+            $('#loader_img').hide();
+            return false;
+        }
+        var pagecount = 0;
+        var page = 1;
+        var cityID = $("select#ddlCity option:selected").val();
+        $.ajax({
+            type: "POST",
+            url: '@Url.Action("GetAreaByCity", "FranchiseLocation")',
+            data: { 'cityID': cityID, 'page': page, 'pagecount': pagecount, 'FranchiseID': FranchiseID },
+
+            cache: false,
+            success: function (data) {
+                //$('#loader_img').hide();
+                $('#divArea').append(data);
+                GetAddedArea(FranchiseID);
+
+            },
+            error: function (x, e) {
+                alert('Failure');
+
+            }
+        });
+
+    });
+
+    function GetAddedArea(FranchiseID) {
+        $("[id*=divAddedArea]").empty();
+        var FranchiseID = $("select#franchise option:selected").val();
+        $.ajax({
+            type: "POST",
+            url: '@Url.Action("GetAddedArea", "FranchiseLocation")',
+            data: { 'FranchiseID': FranchiseID },
+
+            cache: false,
+            success: function (data) {
+                //alert(data);
+                $('#loader_img').hide();
+                $("[id*=divAddedArea]").append(data);
+
+            },
+            error: function (x, e) {
+                alert('Failure');
+
+            }
+        });
+
+    }
+</script>

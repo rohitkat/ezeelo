@@ -1,0 +1,72 @@
+﻿@model IEnumerable<ModelLayer.Models.ViewModel.ProductComponentViewModel>
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<div id="content" class="span10">
+
+    <div class="row-fluid sortable">
+        <div class="box span12">
+            <div class="box-header">
+                <h2><i class="icon-edit"></i><span class="break"></span>Shop Component Price List</h2>
+                <div class="pull-right jumpBtn CreateFormBtn">
+                    @Html.ActionLink("Create New", "Create", null, new { @class = "btn grid-addpro btn-small" })
+                </div>
+            </div>
+            <div class="box-content">
+                <table class="table border-table">
+                    <thead>
+                        <tr>
+
+                            <th>
+                                 @Html.DisplayNameFor(model => model.ComponentName)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.ComponentUnitName)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.DependentComponentName)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.PerUnitRateInRs)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.PerUnitRateInPer)
+                            </th>
+                            <th>Action</th>
+
+                        </tr>
+                    </thead>
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td>
+                                @Html.HiddenFor(modelItem => item.ComponentID)
+                                @Html.DisplayFor(modelItem => item.ComponentName)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.ComponentUnitName)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.DependentComponentName)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.PerUnitRateInRs)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.PerUnitRateInPer)
+                            </td>
+
+                            <td>
+                                @Html.ActionLink("Edit", "Edit", new { ComponentID = item.ComponentID, ShopID = item.ShopID }, new { @class = "btn btn-small grid-btn1" })
+                                @Html.ActionLink("Delete", "Delete", new { ComponentID = item.ComponentID, ShopID = item.ShopID }, new { @class = "btn btn-small  grid-btn2" })
+                            </td>
+                        </tr>
+                    }
+
+                </table>
+            </div>
+        </div>
+    </div>
+</div>

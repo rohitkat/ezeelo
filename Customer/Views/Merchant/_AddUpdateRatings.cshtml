@@ -1,0 +1,33 @@
+﻿
+@model ModelLayer.Models.MerchantRating
+
+<div id="modalMerchantReview" class="modal" style="background: rgba(130, 129, 129, 0.77); ">
+    <div class="modal-dialog modal-sm">
+        <!-- Modal content -->
+        <div class="modal-content" style="padding:25px;text-align:center">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span class="close"><i class="fa fa-close"></i></span></button>
+            <div class="row" style="padding: 10px;">
+                @using (Html.BeginForm("SubmitReview", "Merchant", FormMethod.Post, new { id = "frmMerchantReview" }))
+                {
+                    @Html.AntiForgeryToken()
+                    @Html.HiddenFor(modal => modal.MerchantID)
+                    @Html.HiddenFor(modal => modal.CustomerID)
+                <div class="form-group">
+                    @Html.TextBoxFor(modal => modal.Rating, new { id = "txtMerchantRating", @class = "form-control", data_size = "md", required = "required" })
+                    @Html.ValidationMessageFor(model => model.Rating)
+                </div>
+                    <div class="form-group">
+                        <label class="pull-left">
+                            Review
+                        </label>
+                        @Html.TextAreaFor(modal => modal.Review, 5, 10, new { id= "txtReview", autocomplete = "off", maxlength = 500, placeholder = "Enter Review", @class = "form-control" })
+                    </div>
+                    <div class="form-group">
+                        <button type="submit" value="Create" id="btnUpdateMerchantReview" class="btn btn-default btn-info">Submit</button>
+                        <a id="Clear" class="btn btn-default btn-danger" data-dismiss="modal" aria-label="Close">Cancel</a>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>

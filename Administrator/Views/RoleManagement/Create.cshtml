@@ -1,0 +1,284 @@
+﻿@*@model IEnumerable<ModelLayer.Models.RoleMenu>*@
+
+@model ModelLayer.Models.ViewModel.RoleManagerViewModel
+@{
+    ViewBag.Title = "Role Management";
+    
+}
+
+@*<script type="text/javascript" src="http://code.jquery.com/jquery-1.8.2.js"></script>*@
+
+<br />
+<div class="row-fluid" style="margin-left:15px;">
+    <div class="box span12">
+        <div class="box-header">
+            <h2><i class="icon-edit"></i><span class="break"></span>Create Role Management</h2>
+
+        </div>
+        <div class="box-content">
+            <div class="form-horizontal">
+
+                <div class="table">
+
+                    @using (Html.BeginForm())
+                    {
+                        <div>
+                            <div class="span3">
+                                <label style="font-weight:bold;">Select Role</label>
+                                @Html.DropDownList("RoleList", (SelectList)ViewBag.RoleList, "Select Role", new { onchange = "this.form.submit" })
+
+                                @*<span><input type="submit" name="submit" id="btnSubmit" class="btn btn-success" /></span>
+                                    @*<td>@Html.ActionLink("Get All Menu", "Create") </td>*@
+                                @*<span>
+                                    <button class="btn btn-primary">@Html.ActionLink("Get All Role", "Create")</button>
+                                    </span>*@
+
+                               
+                            </div>
+                            @*@Html.LabelFor(model => model.CategoryID, "CategoryID", new { @class = "control-label col-md-2" })*@
+                            <div class="span9" style="margin-bottom: 15px;">
+                                <label style="font-weight:bold;">Select Model</label>
+                                @Html.DropDownList("MasterMenu", (SelectList)ViewBag.MasterMenu, "Select Menu")
+                                @Html.ActionLink("Back to List", "Index", string.Empty, new { @class = "btn" })
+                            </div>
+
+                            <span><p id="pMessage"></p></span>
+                            <span style="color:red;font-weight:bold;">  @Html.Display("pMessage", "Select Parent Role") </span>
+
+                        </div>
+
+
+                        <div id="divSpecification" style="display:block;"></div>
+
+
+                        @*<div class="mainheaddiv">
+                                <span class="mainSpan">
+                                    Menu Name
+                                </span>
+                                <div class="mainHeading">
+                                    <span>
+                                        @Html.CheckBox("CanRead", new { @class = "chkBox" }) CanRead
+                                    </span>
+                                    <span>
+                                        @Html.CheckBox("CanWrite", new { @class = "chkBox" }) CanWrite
+                                    </span>
+                                    <span>
+                                        @Html.CheckBox("CanDelete", new { @class = "chkBox" }) CanDelete
+                                    </span>
+                                    <span>
+                                        @Html.CheckBox("CanPrint", new { @class = "chkBox" }) CanPrint
+                                    </span>
+                                    <span>
+                                        @Html.CheckBox("CanImport", new { @class = "chkBox" }) CanImport
+                                    </span>
+                                    <span>
+                                        @Html.CheckBox("CanExport", new { @class = "chkBox" }) CanExport
+                                    </span>
+
+                                    <span>
+                                        @Html.CheckBox("IsActive", new { @class = "chkBox" }) IsActive
+                                    </span>
+                                </div>
+                            </div>
+
+                            if (Model.rolemenuCollection.Count() > 0)
+                            {
+
+                                for (int i = 0; i < Model.rolemenuCollection.Count(); i++)
+                                {
+                                    if (Model.rolemenuCollection[i].MenuParentID == 0)
+                                    {
+                                        <div class="headindSpan">
+
+
+                                            <span>
+                                                @Html.HiddenFor(x => x.rolemenuCollection[i].MenuID)
+                                                @Html.HiddenFor(x => x.rolemenuCollection[i].MenuName)
+
+                                                <b> @Html.DisplayFor(x => x.rolemenuCollection[i].MenuName)</b>
+                                            </span>
+
+                                        </div>
+                                    }
+                                    for (int j = 0; j < Model.rolemenuCollection.Count(); j++)
+                                    {
+                                        if (Model.rolemenuCollection[j].MenuParentID == Model.rolemenuCollection[i].MenuID && Model.rolemenuCollection[i].MenuParentID >= 0)
+                                        {
+                                            <div class="headindSpan">
+
+                                                <span>
+                                                    @Html.HiddenFor(y => y.rolemenuCollection[j].MenuID)
+                                                    @Html.HiddenFor(y => y.rolemenuCollection[j].MenuName)
+
+                                                    @Html.DisplayFor(y => y.rolemenuCollection[j].MenuName)
+                                                </span>
+                                                <span class="chkCanRead">
+                                                    @Html.CheckBoxFor(y => y.rolemenuCollection[j].CanRead, new { @class = "chkBox" })
+                                                </span>
+                                                <span class="chkCanWrite">
+                                                    @Html.CheckBoxFor(y => y.rolemenuCollection[j].CanWrite, new { @class = "chkBox" })
+
+                                                </span>
+                                                <span class="chkCanDelete">
+                                                    @Html.CheckBoxFor(y => y.rolemenuCollection[j].CanDelete, new { @class = "chkBox" })
+
+
+                                                </span>
+                                                <span class="chkCanPrint">
+                                                    @Html.CheckBoxFor(y => y.rolemenuCollection[j].CanPrint, new { @class = "chkBox" })
+                                                </span>
+                                                <span class="chkCanImport">
+                                                    @Html.CheckBoxFor(y => y.rolemenuCollection[j].CanImport, new { @class = "chkBox" })
+                                                </span>
+                                                <span class="chkCanExport">
+                                                    @Html.CheckBoxFor(y => y.rolemenuCollection[j].CanExport, new { @class = "chkBox" })
+                                                </span>
+                                                <span class="chkIsActive">
+                                                    @Html.CheckBoxFor(y => y.rolemenuCollection[j].IsActive, new { @class = "chkBox" })
+                                                </span>
+                                            </div>
+                                        }
+                                    }
+
+                                }
+                            }*@
+
+                    }
+
+                </div>
+
+            </div>
+
+        </div>
+    </div><!--/span-->
+
+</div>
+
+<script src="~/Scripts/jquery-1.10.2.min.js"></script>
+
+
+<script>
+    $(document).ready(function () {
+
+
+        $("#MasterMenu").change(function () {
+            /* Get the selected value of dropdownlist */
+            var selectedID = $(this).val();
+            var roleList = $("#RoleList").val();
+
+            /*Check Condition*/
+            $('#divSpecification').html(null);
+
+            /*Processing Image*/
+            $("#pageloaddiv").css('display', 'block');
+            $("#pageloaddiv").fadeOut(1000);
+
+
+            /* Request the partial view with .get request. */
+            $.get('/RoleManagement/PartialRoleMenu/?MasterMenu=' + selectedID + '&RoleList=' + roleList, function (data) {
+                /* data is the pure html returned from action method, load it to your page */
+                $('#divSpecification').html(data);
+                /* little fade in effect */
+                $('#divSpecification').fadeIn('fast');
+            });
+
+            $("#pageloaddiv").css('display', 'none');
+            $("#pageloaddiv").fadeOut(1000);
+
+        });
+    });
+
+
+
+
+
+
+</script>
+
+<script>
+    $(function () {
+        $("#btnSubmit").click(function () {
+            var selectedVal = $("#RoleList option:selected").val();
+            if (selectedVal == '') {
+                pMessage.textContent = 'Please select the role'
+                return false;
+            }
+        });
+    });
+
+    $(function () {
+        $("#RoleList").change(function () {
+            var selectedVal = $("#RoleList option:selected").val();
+            if (selectedVal > 0) {
+
+                $.ajax({
+                    type: "POST",
+                    url: "RoleExistOrNot",
+                    data: "{ id: '" + selectedVal + "'}",
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    async: "true",
+                    cache: "false",
+                    success: function (msg) {
+                        if (msg > 0) {
+                            pMessage.textContent = 'Role Already Exists'
+                            return false;
+                        }
+                        else {
+                            pMessage.textContent = ''
+                        }
+                    },
+                    Error: function (x, e) {
+                        pMessage.textContent = 'Error in Role Selection'
+                    }
+                });
+            }
+        });
+    });
+</script>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $("#CanRead").click(function () {
+            $("[id*=CanRead]").prop('checked', $(this).prop('checked'));
+        });
+    });
+
+
+
+    $(document).ready(function () {
+        $("#CanWrite").click(function () {
+            $("[id*=CanWrite]").prop('checked', $(this).prop('checked'));
+        });
+    });
+
+    $(document).ready(function () {
+        $("#CanDelete").click(function () {
+            $("[id*=CanDelete]").prop('checked', $(this).prop('checked'));
+        });
+    });
+
+    $(document).ready(function () {
+        $("#CanPrint").click(function () {
+            $("[id*=CanPrint]").prop('checked', $(this).prop('checked'));
+        });
+    });
+
+    $(document).ready(function () {
+        $("#CanExport").click(function () {
+            $("[id*=CanExport]").prop('checked', $(this).prop('checked'));
+        });
+    });
+
+    $(document).ready(function () {
+        $("#CanImport").click(function () {
+            $("[id*=CanImport]").prop('checked', $(this).prop('checked'));
+        });
+    });
+
+    $(document).ready(function () {
+        $("#IsActive").click(function () {
+            $("[id*=IsActive]").prop('checked', $(this).prop('checked'));
+        });
+    });
+</script>

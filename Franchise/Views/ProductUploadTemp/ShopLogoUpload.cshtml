@@ -1,0 +1,80 @@
+﻿@model ModelLayer.Models.ViewModel.ProductUploadTempViewModel
+@{
+    ViewBag.Title = "Shop Image Uploding";
+}
+@using (Html.BeginForm("ShopLogoUpload", "ProductUploadTemp", FormMethod.Post, new{ enctype = "multipart/form-data" }))
+{
+    @*<input type="file" name="FileUpload" class="pull-right" style="float:left;" />*@
+
+    <div id="content" class="span10">
+        <div class="box-content">
+            <div class="row-fluid">
+                <div class="upload-ChooseFile  upload-ChooseFile-setHeight">
+                    <table class="table ">
+                        <tr>
+                            <td>Images</td>
+                            <td class="pull-right span4">
+                                <div class="browse-file">
+                                    <input type="file" name="Files" id="Files"  class="pull-right" />
+                               </div>
+                           </td>
+                        </tr>
+                        <tr>
+                            <td colspan="2" class="uploag_iconCntr">
+                                <div class="Box1 span12 DivMain">
+                                    <div id="dvPreview">
+                                    </div>
+                                </div>
+                            </td>
+                            <td>
+                              <div class="upload-center">
+                                  <input name="submit" type="submit" id="Upload" value="Upload" class="btn btn-blue"  style="float:right;" />
+                               </div>
+                            </td>
+                        </tr>
+
+                    </table>
+                  
+                </div>
+                </div>
+            </div>
+        </div>
+   
+
+}
+
+<script language="javascript" type="text/javascript">
+    window.onload = function () {
+
+        var Files = document.getElementById("Files");
+        Files.onchange = function () {
+            if (typeof (FileReader) != "undefined") {
+                var dvPreview = document.getElementById("dvPreview");
+                dvPreview.innerHTML = "";
+                var regex = /^([a-zA-Z0-9\s_\\.\-:])+(.jpg|.jpeg|.gif|.png|.bmp|.JPG|.JPEG|.GIF|.PNG|.BMP)$/;
+                for (var i = 0; i < Files.files.length; i++) {
+                    var file = Files.files[i];
+                    if (regex.test(file.name.toLowerCase())) {
+                        var reader = new FileReader();
+                        reader.onload = function (e) {
+                            var img = document.createElement("IMG");
+                            img.height = "200";
+                            img.width = "200";
+                            img.src = e.target.result;
+                            dvPreview.appendChild(img);
+                            //$('#img_upload'.hide());
+                        }
+                        reader.readAsDataURL(file);
+                    } else {
+                        alert(file.name + " is not a valid image file.");
+                        dvPreview.innerHTML = "";
+                        return false;
+                    }
+                }
+            } else {
+                alert("This browser does not support HTML5 FileReader.");
+            }
+        }
+    };
+</script>
+

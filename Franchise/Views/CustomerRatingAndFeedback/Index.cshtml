@@ -1,0 +1,248 @@
+﻿@using PagedList;
+@using PagedList.Mvc;
+
+@model IPagedList<Franchise.Models.ViewModel.ReviewIndexViewModel>
+
+@{
+    ViewBag.Title = "List [ Reviews ]";
+    Layout = "~/Views/Shared/_Layout_franchise2.cshtml";
+}
+@{
+    Dictionary<string, int> lReviewStatus = ViewBag.ReviewStatus;
+}
+<style>
+    input {
+        width: 80px;
+    }
+    body {
+        background-color: #fff!important; background-image:none!important;
+    }
+    .widget-header + .widget-content {
+        border-top: none;
+        -webkit-border-top-left-radius: 0;
+        -webkit-border-top-right-radius: 0;
+        -moz-border-radius-topleft: 0;
+        -moz-border-radius-topright: 0;
+        border-top-left-radius: 0;
+        border-top-right-radius: 0;
+    }
+
+    .widget-content {
+        zoom: 1;
+    }
+
+    .widget-content {
+        padding: 20px 15px 15px;
+        background: #FFF;
+        border: 1px solid #D5D5D5;
+        -moz-border-radius: 5px;
+        -webkit-border-radius: 5px;
+        border-radius: 5px;
+    }
+
+
+</style>
+<div class="row">
+    <div class="span12" id="divtable">
+        <div class="widget">
+            <div class="widget-header">
+                <i class="icon-list-alt"></i>
+                <h3> List [Review Approval ]</h3>
+            </div>
+            <!-- /widget-header -->
+            <div class="widget-content">
+                <div class="widget big-stats-container">
+                    <div class="widget-content matchdivheight">
+
+                        @using (Html.BeginForm("Index", "CustomerRatingAndFeedback", new { ReviewID = Request.QueryString["ReviewID"] }, FormMethod.Post))
+                        {   @Html.AntiForgeryToken()
+                            <div class="form-horizontal">
+                                <table>
+                                    <tr style="line-height:45px;">
+                                        <td style="white-space:nowrap;">From Date</td>
+                                        <td>
+                                            @Html.TextBox("FromDate", null, new { @readonly = "readonly" })
+                                            @*@Html.TextBoxFor(model => model.DOB, "{0d MMM yyyy}", new { placeholder = "Date Of Birth", @class = "datePicker", @readonly = "true", })*@
+                                        </td>
+                                        <td>To Date</td>
+                                        <td>@Html.TextBox("ToDate", null, new { @readonly = "readonly" })</td>
+                                        <td style="white-space:nowrap;">
+                                            <button type="submit" value="Search" class="btn btn-small btn-warning">
+                                                <span class="glyphicon glyphicon-search"></span> Search
+                                            </button>
+                                            <button type="button" class="btn btn-small btn-info" id="btn_clear">Clear</button>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>Review Pending</td>
+                                        <td>
+                                            <a href="@Url.Action("Index", "CustomerRatingAndFeedback", new { ReviewID = (int)Franchise.Common.Constant.REVIEW_TYPE.PENDING })"><div class="faq-number">@lReviewStatus["NewReview"]</div></a>
+                                        </td>
+
+                                        <td>Approved</td>
+                                        <td><a href="@Url.Action("Index", "CustomerRatingAndFeedback", new { ReviewID = (int)Franchise.Common.Constant.REVIEW_TYPE.APPROVED })"><div class="faq-number">@lReviewStatus["ReviweApproved"]</div></a></td>
+
+                                        <td>Rejected</td>
+                                        <td><a href="@Url.Action("Index", "CustomerRatingAndFeedback", new { ReviewID = (int)Franchise.Common.Constant.REVIEW_TYPE.REJECTED })"><div class="faq-number">@lReviewStatus["ReviweRejected"]</div></a></td>
+                                    </tr>
+                                </table>
+                            </div>
+                        }
+
+                        <table class="table table-bordered table-hover table-responsive table-striped">
+                            <tr>
+                                @*<th>
+                                        FirstName
+                                    </th>
+                                    <th>
+                                        PersonalDetail1
+                                    </th>*@
+                                <th style="width:20px;">Sr.No</th>
+                                <th>
+                                    Product
+                                </th>
+                                <th>
+                                    Star
+                                </th>
+                                <th>
+                                    Comment
+                                </th>
+                                <th style="width:160px;">
+                                    Review Date
+                                </th>
+                                <th style="width:80px;">
+                                    Is Approved
+                                </th>
+                                @*<th>
+                                    Analysed By
+                                </th>*@
+
+                                <th style="width:20px;"> Action </th>
+                            </tr>
+
+                            @if (Model.Count() == 0)
+                            {
+                                <tr>
+                                    <td colspan="6" class="text-center"><h3>No Record Found...</h3></td>
+                                </tr>
+                            }
+                            else
+                            {
+                                int i = 1;
+                                foreach (var item in Model)
+                                {
+                                    <tr>
+                                        @*<td>
+                                                @Html.DisplayFor(modelItem => item.PersonalDetail.FirstName)
+                                            </td>
+                                            <td>
+                                                @Html.DisplayFor(modelItem => item.PersonalDetail1.FirstName)
+                                            </td>*@
+                                        <td>@{int SrNo = ((ViewBag.PageNumber - 1) * ViewBag.PageSize) + i; i = i + 1; } @SrNo</td>
+
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.ProductName)
+                                        </td>
+
+                                        <td>
+                                            @*@Html.DisplayFor(modelItem => item.Point)*@
+                                            @for (int x = 1; x <= item.Point; x++)
+                                            {
+                                                <span class=" icon-star" style="color:red"></span>
+                                            }
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.Feedback)
+                                        </td>
+                                        <td>
+                                            @item.CreateDate.ToString("dd/MM/yyyy hh:mm:ss tt")
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.IsApproved)
+                                        </td>
+                                        @*<td>
+                                            @Html.DisplayFor(modelItem => item.ApprovedBy)
+                                        </td>*@
+
+
+                                        @*<td>
+                                                @Html.DisplayFor(mode
+                                                )
+                                            </td>*@
+                                        <td>
+                                            @*@Html.ActionLink("Edit", "Edit", new { id = item.ID }) |
+                                                @Html.ActionLink("Details", "Details", new { id = item.ID }) |
+                                                @Html.ActionLink("Delete", "Delete", new { id = item.ID })*@
+                                            @*<a class="btn btn-small btn-success a_white">Edit</a>*@
+                                            <a href="@Url.Action("Edit", "CustomerRatingAndFeedback", new { id = item.ID, Product = item.ProductName })" onclick="Edit(@item.ID)" target="frameEdit" class="btn btn-small btn-success a_white">Edit</a>
+                                        </td>
+                                    </tr>
+                                }
+                            }
+
+                        </table>
+                        <div class="pager">
+                            @Html.PagedListPager(Model, Page => Url.Action("Index",
+                                                                new { page = Page, 
+                                                                    SearchString = ViewBag.SearchString, 
+                                                                    ReviewID = Request.QueryString["ReviewID"],
+                                                                    FromDate = ViewBag.FromDate,
+                                                                    ToDate = ViewBag.ToDate
+                                                                    }),
+                                new PagedListRenderOptions()
+                                {
+                                    Display = PagedListDisplayMode.IfNeeded
+                                })
+                        </div>
+                    </div>
+                    <!-- /widget-content -->
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="span4">
+        <div class="loader">
+            <img id="loader_img" src="~/Content/Images/loader.gif" style="display: none" />
+        </div>
+        <div id="Details">
+            <iframe id="frameEdit" name="frameEdit" src='' width="100%" height="800px" frameborder="0" style="margin:0px; padding:0px;"></iframe>
+        </div>
+
+    </div>
+
+</div>
+
+@section MyScripts{
+    <script>
+
+        //----------------------------------------------------------------------For datepicker---//
+        //<![CDATA[
+        $(window).load(function () {
+            //$('#DOB').datepicker('setDate', new Date());
+            $('#FromDate').datepicker('update');
+            $('#ToDate').datepicker('update');
+        });//]]>
+
+
+        function Edit(id) {
+            $('#divtable').removeClass('span12');
+            $('#divtable').addClass('span7');
+            window.parent.$("[id$=Details]").show();
+           @*$('#loader_img').show();
+            $.ajax({
+                url: '@Url.Action("Edit", "FeedbackManagment")?ID=' + id,
+                type: "GET",
+                success: function (result) {
+                    $('#loader_img').hide();
+                    $('#Details').html(result);
+                },
+                error: function (data) {
+                    $('#Details').empty();
+                    $('#loader_img').hide();
+                }
+            });*@
+            }
+
+    </script>
+}
+

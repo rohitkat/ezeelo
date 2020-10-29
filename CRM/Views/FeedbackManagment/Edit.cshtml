@@ -1,0 +1,110 @@
+﻿@model ModelLayer.Models.FeedbackManagment
+
+@{
+    Layout = "~/Views/Shared/_LayoutPartial.cshtml";
+}
+<style>
+    .control-label {
+        float: left;
+        width: 140px;
+        padding-top: 5px;
+        text-align: left !important;
+    }
+</style>
+
+<div class="row  margin_left_right_decress">
+    <div class="span4">
+        <div class="widget">
+            <div class="widget-header">
+                <i class="icon-list-alt"></i>
+                <h3> Edit Feedback</h3>
+            </div>
+            <!-- /widget-header -->
+            <div class="widget-content">
+                <div class="widget big-stats-container">
+                    <div class="widget-content matchdivheight">
+                        <p>
+                            <button class="btn btn-small btn-success" onclick="Back()">Back</button>
+                        </p>
+                        @using (Html.BeginForm())
+                        {
+                            @Html.AntiForgeryToken()
+                            <div class="form-horizontal">
+                                @Html.ValidationSummary(true)
+                                @Html.HiddenFor(model => model.ID)
+
+                                <div class="control-group">
+                                    <span class="control-label">Email</span>
+                                    <div class="controls">
+                                        @Html.DisplayFor(model => model.Email)
+                                        @*@Html.TextBoxFor(model => model.Email, new { @readonly = "readonly" })*@
+                                        @*@Html.ValidationMessageFor(model => model.Email)*@
+                                    </div>
+                                </div>
+
+                                <div class="control-group">
+                                    <span class="control-label">Mobile</span>
+                                    <div>
+                                        @Html.DisplayFor(model => model.Mobile)
+                                        @*@Html.TextBoxFor(model => model.Mobile, new { @readonly = "readonly" })
+                                        @Html.ValidationMessageFor(model => model.Mobile)*@
+                                    </div>
+                                </div>
+
+                                <div class="control-group">
+                                    <span class="control-label">Feedback category</span>
+                                    <div>
+                                        @Html.DisplayFor(model => model.FeedbackCategary.Name)
+                                        @*@Html.TextBoxFor(model => model.FeedbackCategary.Name, new { @readonly = "readonly" })
+                                        @Html.ValidationMessageFor(model => model.FeedbackCategaryID)*@
+                                    </div>
+                                </div>
+
+                                <div class="control-group">
+                                    <span class="control-label">Message</span>
+                                    <div>
+                                        @Html.DisplayFor(model => model.Message)
+                                        @*@Html.TextAreaFor(model => model.Message, new { @readonly = "readonly" })
+                                        @Html.ValidationMessageFor(model => model.Message)*@
+                                    </div>
+                                </div>
+
+                                <div class="control-group">
+                                     <span class="control-label">Date</span>
+                                    <div>
+                                        @Html.DisplayFor(model => model.CreateDate)
+                                        @*@Html.TextBox("CreateDate", null, new { @readonly = "readonly" })
+                                        @Html.ValidationMessageFor(model => model.CreateDate)*@
+                                    </div>
+                                </div>
+
+
+                                <div class="control-group">
+                                    <span class="control-label">Feedback Type</span>
+                                    <div>
+                                        @Html.DropDownList("FeedBackTypeID", String.Empty)
+                                        @Html.ValidationMessageFor(model => model.FeedBackTypeID)
+                                    </div>
+                                </div>
+                                <div class="control-group">
+                                    <div style="float:right">
+                                        <input type="submit" value="Save" class="btn btn-danger" />
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                    </div>
+                </div>
+                <!-- /widget-content -->
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    function Back() {
+        window.parent.$("[id$=divtable]").removeClass('span8');
+        window.parent.$("[id$=divtable]").addClass('span12');
+        window.parent.$("[id$=Details]").hide();
+        $('#loader_img').hide();
+    }
+</script>

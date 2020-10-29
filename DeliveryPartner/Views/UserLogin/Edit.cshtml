@@ -1,0 +1,64 @@
+﻿@model DeliveryPartner.Models.ViewModel.ChangePasswordViewModel
+
+@{
+    ViewBag.Title = "Settings";
+}
+
+<div class="row">
+    <div class="span12">
+        <div class="widget">
+            <div class="widget-header">
+                <i class="icon-list-alt"></i>
+                <h3> Settings</h3>
+            </div>
+            <!-- /widget-header -->
+            <div class="widget-content">
+                <div class="widget big-stats-container">
+                    <div class="widget-content">
+
+                        @using (Html.BeginForm())
+                        {
+                            @Html.AntiForgeryToken()
+
+                            <div class="form-horizontal">
+                                @Html.ValidationSummary(false)
+                                @Html.HiddenFor(model => model.ID)
+
+                                <div class="control-group">
+                                    <span class="control-label">Old password</span>
+                                    <div class="controls">
+                                        @Html.PasswordFor(model => model.OldPassword)
+                                        @Html.ValidationMessageFor(model => model.OldPassword)
+                                    </div>
+                                </div>
+
+                                <div class="control-group">
+                                    <span class="control-label">New password</span>
+                                    <div class="controls">
+                                        @Html.PasswordFor(model => model.NewPassword)
+                                        @Html.ValidationMessageFor(model => model.NewPassword)
+                                    </div>
+                                </div>
+
+                                <div class="control-group">
+                                    <span class="control-label">Retype new password</span>
+                                    <div class="controls">
+                                        @Html.PasswordFor(model => model.ReTypeNewPassword)
+                                        @Html.ValidationMessageFor(model => model.ReTypeNewPassword)
+                                    </div>
+                                </div>
+
+                                <div class="control-group">
+                                    <div style="float:right">
+                                        <input type="submit" value="Save" class="btn btn-danger" />
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                    </div>
+                </div>
+                <!-- /widget-content -->
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,44 @@
+﻿@model ModelLayer.Models.CommissionMaster
+@{
+    ViewBag.Title = "CommissionCreate";
+    Layout = "~/Views/Shared/_LeadersLayout.cshtml";
+}
+<style>
+    .form-control-label {
+        width: 100px !important;
+    }
+</style>
+
+<script src="~/Scripts/MerchantMenuOpenup.js"></script>
+<div class="container">
+    @using (Html.BeginForm())
+    {
+        @Html.AntiForgeryToken()
+        @Html.ValidationSummary(true)
+        <div class="card">
+            <div class="card-header">
+                <strong>Commission Master</strong>
+            </div>
+            <div class="card-body card-block">
+                <div class="form-group">
+                    <label for="company" class=" form-control-label">Commission</label>
+                    @Html.TextBoxFor(model => model.Commission, new { style = "width:50px" })%
+                    @Html.ValidationMessageFor(model => model.Commission, null, new { @class = "text-danger" })
+                </div>
+                <div class="form-group">
+                    <label for="company" class=" form-control-label">IsActive</label>
+                    @Html.EditorFor(model => model.IsActive)
+                    @Html.ValidationMessageFor(model => model.IsActive)
+                </div>
+                <div class="form-group">
+                    <div class="col-md-offset-2 col-md-10">
+                        <input type="submit" value="Create" class="btn btn-primary btn-sm" />
+                        <a class="btn btn-info btn-sm" href="@Url.Action("CommissionIndex", "MerchantMaster", new { area = "Admin" })">Back To List</a>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    }
+</div>
+

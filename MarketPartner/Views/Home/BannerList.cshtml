@@ -1,0 +1,352 @@
+﻿@model ModelLayer.Models.ViewModel.MerchantShopImages
+@{
+    /**/
+
+    ViewBag.Title = "BannerList";
+}
+@*<link href="~/plugins/datepicker/datepicker3.css" rel="stylesheet" />
+    <script src="~/plugins/datepicker/bootstrap-datepicker.js"></script>*@
+<script>
+
+
+    function readfile(input, type) {
+
+        if (input.files && input.files[0]) {
+            var reader = new FileReader();
+            //Image size validation
+            if (input.files[0].size > 150000 && type != "Banner") {
+                alert("Selected Image Size can not be greater than 150KB");
+                return false;
+            } else if (input.files[0].size > 300000) {
+                alert("Selected Banner Size can not be greater than 300KB");
+                return false;
+            }
+
+            if (type == "Photo") {
+                reader.onload = function (e) {
+                    $('#ShopImagePath').attr('src', e.target.result);
+                    var image = new Image();
+                    image.onload = function () {
+                        document.getElementById("imgPhoto").src = image.src;
+                        var canvas = document.createElement("canvas");
+                        var context = canvas.getContext("2d");
+                        canvas.width = 300;
+                        canvas.height = 200;
+                        context.drawImage(image,
+                            0,
+                            0,
+                            image.width,
+                            image.height,
+                            0,
+                            0,
+                            canvas.width,
+                            canvas.height
+                        );
+
+                        document.getElementById("ShopImagePath").src = canvas.toDataURL();
+                    }
+                    image.src = event.target.result;
+                }
+            }
+
+            if (type == "Banner") {
+                reader.onload = function (e) {
+                    $('#BannerImgPath').attr('src', e.target.result);
+
+                    var image = new Image();
+                    image.onload = function () {
+                        document.getElementById("imgBanner").src = image.src;
+                        var canvas = document.createElement("canvas");
+                        var context = canvas.getContext("2d");
+                        canvas.width = 1200;
+                        canvas.height = 400;
+                        context.drawImage(image,
+                            0,
+                            0,
+                            image.width,
+                            image.height,
+                            0,
+                            0,
+                            canvas.width,
+                            canvas.height
+                        );
+
+                        document.getElementById("BannerImgPath").src = canvas.toDataURL();
+                    }
+                    image.src = event.target.result;
+                }
+            }
+            reader.readAsDataURL(input.files[0]);
+        }
+    }
+
+</script>
+<section class="content">
+    <div class="row">
+        <!-- left column -->
+        <div class="col-md-12">
+            <div class="box box-primary">
+                <div class="box-header">
+                    <h3 class="box-title">Shop Image/Banner List</h3>
+                </div><!-- /.box-header -->
+                <div class="box-body">
+                    <span style="color:red;font-weight:bold;display:block">*Note : Images accepted formats: png, jpg, jpeg, raw  & Maximum size for Image: 150KB & for Banner 300KB(1200 * 400)</span>
+                    <br />
+                    @using (Html.BeginForm("BannerList", "Home", FormMethod.Post, new { enctype = "multipart/form-data", id = "frm" }))
+                    {
+                        <div class="form-group">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="box box-primary">
+                                        <div class="box-header">
+                                            <h3 class="box-title">Shop Photo Image  </h3> &nbsp;&nbsp;<i title="To change shop image choose new image and save, once it is approved by admin it will start showing on your shop details page." class="fa fa-info-circle"></i>
+                                            <h3 id="msg" class="box-title animated flash" style="float:right;display:none;">Inavalid Contact No</h3>
+                                        </div>
+                                        <div class="box-body">
+                                            <div class="form-group">
+                                                <img id="ShopImagePath" src="@Model.ShopImagePath" style="width:150px;height:100px" />
+                                            </div>
+                                            <div class="form-group">
+                                                <input onchange="readfile(this,'Photo');" id="Photo" name="Photo" type="file" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="box box-primary">
+                                        <div class="box-header">
+                                            <h3 class="box-title">Add New Banner</h3> &nbsp;&nbsp;<i title="To add new banner choose new image and save, once it is approved by admin it will start showing on your shop details page." class="fa fa-info-circle"></i>
+                                            <h3 id="msg" class="box-title animated flash" style="float:right;display:none;">Inavalid Contact No</h3>
+                                        </div>
+                                        <div class="box-body">
+                                            <div class="form-group">
+                                                <img id="BannerImgPath" style="width:250px;height:100px" />
+                                            </div>
+                                            <div class="form-group">
+                                                <input onchange="readfile(this,'Banner');" id="Banner" name="Banner" type="file" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <input type="submit" value="Save Image" class="form-control btn btn-sm btn-success" />
+                                </div>
+                            </div>
+                        </div>
+                    }
+
+                    <div class="box box-primary">
+                        <div class="box-header">
+                            <h3 class="box-title">Pending for Approval</h3>
+                        </div>
+                        <div class="box-body table-responsive">
+                            <table id="tblrpt" class="table table-bordered table-striped">
+                                <thead>
+                                    <tr>
+                                        <th>SrNo</th>
+                                        <th>Banner/Shop</th>
+                                        <th>Changes</th>
+                                        <th>Status</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @{ 
+                                        int ii = 0;
+                                    }
+                                    @foreach (var item in Model.requestList)
+                                    {
+                                        <tr>
+                                            <td>
+                                                @{ 
+                                                    ii = ii + 1;
+                                                }
+                                                @ii
+                                            </td>
+                                            <td>
+                                                @if (item.BannerPath != null)
+                                                {
+                                                    if (item.BannerPath.Contains("ezeelo"))
+                                                    {
+                                                        <img data-val="Banner" title="Banner Image, click me to view" class="openBanner" src="@item.BannerPath" style="width:150px;height:50px" />                                                        
+                                                    }
+                                                }
+                                                @if (item.ShopPath != null)
+                                                {
+                                                    if (item.ShopPath != null)
+                                                    {
+                                                        if (item.ShopPath.Contains("ezeelo"))
+                                                        {
+                                                            <img data-val="Shop" title="Shop Image, click me to view" class="openBanner" src="@item.ShopPath" style="width:100px;height:80px" />
+                                                        }
+                                                    }
+                                                }
+                                            </td>
+                                            <td> @item.Remark</td>
+                                            <td>
+                                                @if (item.Status == 0)
+                                                {
+                                                    <span class="label label-primary">Pending</span>
+                                                }
+                                                else
+                                                {
+                                                    <span class="label label-danger">Not Approved</span>
+                                                }
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+
+                            </table>
+                        </div>
+                    </div>
+                    <div class="box box-primary">
+                        <div class="box-header">
+                            <div class="row">
+                                <div class="col-md-6"> <h3 class="box-title">Approved Banner</h3></div>
+                                <div class="col-md-4"> <label class="pull-right">Search by Display Mode: </label></div>
+                                <div class="col-md-2">
+                                    <select id="drpSearch" class="form-control">
+                                        <option value="0">All</option>
+                                        <option value="1">Yes</option>
+                                        <option value="2">No</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                        </div>
+                        <div class="box-body table-responsive">
+                            @using (Html.BeginForm("EditApprovedBanner", "Home", FormMethod.Post, new { id = "frm" }))
+                            {
+                                <table id="tblAppBnr" class="table table-bordered table-striped">
+                                    <thead>
+                                        <tr>
+                                            <th>SrNo</th>
+                                            <th>Banner</th>
+                                            <th>Is Display</th>
+                                            <th><input type="checkbox" id="checkALL" style = "width:20px;height:20px" /></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @for (int i = 0; i < Model.list.Count; i++)
+                                        {
+                                            <tr>
+                                                <td>
+                                                    @{ int j = i;
+                                                        j = j + 1;
+                                                     }
+                                                    @j
+                                                </td>
+                                                <td> <img data-val="Banner" title="Banner Image, click me to view" class="openBanner" src="@Model.list[i].BannerPath" style="width:150px;height:50px" /></td>
+                                                <td>
+                                                    @Html.HiddenFor(model=> Model.list[i].ID)
+                                                    @if (Model.list[i].IsActive)
+                                                    {
+                                                        <span>Yes</span>
+                                                    }
+                                                    else
+                                                    {
+                                                        <span>No</span>
+                                                    }
+                                                </td>
+                                                <td>
+                                                    @Html.CheckBoxFor(model => Model.list[i].IsActive, new { style = "width:20px;height:20px",@Class = "chkSingle" })
+                                                    @* @Html.ActionLink("View", "ViewBanner", new { id = item.ID }, new { @class = "btn btn-sm btn-info" })*@
+                                                </td>
+                                            </tr>
+                                        }
+                                    </tbody>
+                                    <tfoot>
+                                        <tr>
+                                            <td colspan="2"></td>
+                                            <td>
+                                                <input type="submit" class="btn btn-sm btn-success" value="Update" />
+                                            </td>
+                                        </tr>
+                                    </tfoot>
+                                </table>
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<div id="OpenBanner" class="modal" style="z-index:1999 !important">
+    <div class="row" style="background-color:white;width:90%;margin-left:5%;margin-top:8%">
+        <div class="col-md-12">
+            <div class="alert">
+                <span onclick="$('#OpenBanner').slideUp(1000);" style="cursor:pointer;background-color:red;color:white;font-weight:bold;padding:5px;margin-top:-8px; margin-right:-17px" class="pull-right">X</span>
+                <img id="imgMainB" src="" style="width:100%;height:100%;display:none" />
+            </div>
+        </div>
+    </div>
+</div>
+<div id="OpenShop" class="modal" style="z-index:1999 !important">
+    <div class="modal-dialog modal-sm" style="">
+        <div class="row" style="background-color:white">
+            <span onclick="$('#OpenShop').slideUp(1000);" style="cursor:pointer;background-color:red;color:white;font-weight:bold;padding:5px;" class="pull-right">X</span>
+            <div class="alert alert-dismissable">
+                <img id="imgMainS" src="" style="display:none;margin-top:15px" />
+            </div>
+        </div>
+    </div>
+</div>
+@if(Model.list.Where(p=>p.IsActive==true).Count() == Model.list.Count())
+{
+    <script>
+        $("#checkALL").prop("checked", true);
+    </script>
+}
+<script>
+    $(document).ready(function () {
+        $("#tblrpt").dataTable();
+        $("#tblAppBnr").dataTable({
+            "iDisplayLength": 50
+        });
+        $("#drpSearch").change(function () {
+            var sel = $(this).val();
+            if (sel == "0") {
+                $('#tblAppBnr').dataTable().fnFilter('');
+            }
+            else if (sel == "1") {
+                $('#tblAppBnr').dataTable().fnFilter('Yes');
+            }
+            else {
+                $('#tblAppBnr').dataTable().fnFilter('No');
+            }
+        });
+        $("#tblAppBnr_filter").hide();
+        //$('select[name="tblAppBnr_length"]').val("100");
+        $('select[name="tblAppBnr_length"]').attr("disabled", "disabled");
+        $(".openBanner").click(function () {
+            var Type = $(this).attr("data-val");
+            if (Type == "Shop") {
+                $("#imgMainS").attr("src", $(this).attr("src"));
+                $("#imgMainB").hide();
+                $("#imgMainS").show();
+                $("#OpenShop").slideDown(1000);
+            } else {
+                $("#imgMainB").attr("src", $(this).attr("src"));
+                $("#imgMainS").hide();
+                $("#imgMainB").show();
+                $("#OpenBanner").slideDown(1000);
+            }
+        })
+        $("#checkALL").change(function () {
+            if ($("#checkALL").prop('checked') == true) {
+                $(".chkSingle").prop('checked', true);
+            } else {
+                $(".chkSingle").prop('checked', false);
+            }
+        })
+        $('.chkSingle').click(function () {
+            if ($(".chkSingle").length == $(".chkSingle:checked").length) {
+                $("#checkALL").prop("checked", true);
+            } else {
+                $("#checkALL").prop("checked", false);
+            }
+        });
+    })
+</script>
+

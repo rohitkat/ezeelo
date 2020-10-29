@@ -1,0 +1,339 @@
+﻿
+// Javascript for load products on scroll
+
+var pageIndex = 1;
+var pageCount = $("#PageCount").val();
+
+//$(window).scroll(function () {
+//    if ($(document).height() == ($(window).scrollTop() + $(window).height())) {
+//        //alert("1");
+//        $("#divLoadingImage").css("display", "block");
+//        GetRecords();
+//    }
+//});
+
+var height = $(window).height() + 300;
+var counter1 = 0;
+var counter2 = 1;
+
+$(window).scroll(function () {
+    if (counter1 > 1)
+        height = $(document).height() * (0.30);
+
+    if ($(window).scrollTop() >= ($(document).height() - height)) {// - $(window).height()) {
+        $("#divLoadingImage").css("display", "block");
+        setTimeout(GetRecords(), 5000);
+        counter1++;
+    }
+});
+
+function GetRecords() {
+
+    pageIndex++;
+
+    var mydata = {
+        "cityId": $("#CityID").val(),
+        "keyword": $("#Keyword").val(),
+        "shopId": $("#ShopID").val(),
+        "categoryId": $("#ParentCategory").val(),
+        "brands": $("#Brands").val(),
+        "colors": $("#Colors").val(),
+        "sizes": $("#Sizes").val(),
+        "dimensions": $("#Dimensions").val(),
+        "catDescID": $("#SpecificationIDs").val(),
+        "catDescValue": $("#SpecificationValues").val(),
+        "minPrice": $("#MinPrices").val(),
+        "maxPrice": $("#MaxPrices").val(),
+        "pageIndex": pageIndex,
+        "pageSize": 12
+    };
+
+    // alert(JSON.stringify(mydata));
+    //alert(pageCount);
+    if (pageIndex == 2 || pageIndex <= pageCount) {
+        //alert("1");
+        $.ajax({
+            type: "POST",
+            url: "/Product/GetProductOnScroll",
+            data: "{'myParam':" + JSON.stringify(mydata) + "}",
+            contentType: "application/json; charset = utf-8",
+            dataType: "json",
+            success: OnSuccess,
+            failure: function (response) {
+                $("#divLoadingImage").css("display", "none");
+            },
+            error: function (response) {
+                $("#divLoadingImage").css("display", "none");
+            }
+        });
+    }
+    else {
+        //alert("Hello");
+        $("#divLoadingImage").css("display", "none");
+    }
+}
+
+function OnSuccess(response) {
+    
+    $.each(response, function (j, dataVal) {
+        var li = $("[id*=ulProduct] li").eq(0).clone(true);
+        // alert(dataVal.ProductID);
+        $(".anchorRedirect", li).attr("href", "/PreviewItem?itemId=" + dataVal.ProductID);
+        $(".divimg", li).attr("src", dataVal.ProductThumbPath);
+
+        if (dataVal.MRP != dataVal.SaleRate) {
+            $(".lblMRP", li).html("<b>Rs. </b>" + "<del>" + dataVal.MRP + "</del>");
+            $(".offer-div", li)
+           
+            // Code for calculating offer percentage
+            var offerValue = ((parseFloat(dataVal.MRP) - parseFloat(dataVal.SaleRate)) / parseFloat(dataVal.MRP)) * 100;
+            var offerPercentage = Math.round(offerValue);
+
+            if (offerPercentage > 0) {
+                $(".offer-div", li).css("display", "block");
+                $(".offerPercentage", li).text(offerPercentage + " % OFF");
+            }
+            else {
+                $(".offer-div", li).css("display", "none");
+                $(".offerPercentage", li).text("");
+            }
+        }
+        else {
+            $(".offer-div", li).css("display", "none");
+            $(".offerPercentage", li).text("");
+        }
+        $(".lblSaleRate", li).html("<b class='fa fa-inr'> </b>" + "<b style='color: brown;'>"+dataVal.SaleRate+"</b>");
+
+        var shopId = $("#ShopID").val();
+
+        if (shopId == 0 || shopId == null) {
+            $(".btnView", li).attr("href", "/PreviewItem?itemId=" + dataVal.ProductID);
+            //$(".btnBuy", li).attr("href", "/PreviewItem?itemId=" + dataVal.ProductID + "&shopStockId=" + dataVal.ShopStockID);
+            //$(".btnBuy", li).attr("onclick", "AddProductToShppingCart(" + dataVal.ShopStockID + "," + dataVal.ProductID + ")");
+            $(".btnBuy", li).attr("onclick", "AddProductToShppingCart(" + dataVal.ShopStockID + "," + dataVal.ProductID + ")");
+        }
+        else {
+            $(".btnView", li).attr("href", "/PreviewItem?itemId=" + dataVal.ProductID + "&shopID=" + shopId);
+            //$(".btnBuy", li).attr("href", "/PreviewItem?itemId=" + dataVal.ProductID + "&shopStockId=" + dataVal.ShopStockID);
+            $(".btnBuy", li).attr("onclick", "AddProductToShppingCart(" + dataVal.ShopStockID + "," + dataVal.ProductID + ")");
+        }
+
+
+
+        //============= Tejaswee (24/6/2015) ====================
+        $(".hdnProductName", li).val(dataVal.Name);
+       var shortListHtml;
+        var VarientEdit = getCookie("ShortListCookie");
+        if (VarientEdit != null && VarientEdit != "") {
+            var cookRecView = VarientEdit;
+            //if ($.contains(cookRecView, dataVal.ProductID + "$")) {
+            // if (cookRecView.indexOf(dataVal.ProductID + "$" + dataVal.ShopStockID + "$" + dataVal.Name) >= 0) {
+            if (cookRecView.indexOf(dataVal.ProductID + "$" + dataVal.ShopStockID + "$") >= 0) {
+                $(".mif-star-full", li).attr("id", dataVal.ProductID);
+                $(".mif-star-full", li).addClass("activeListNew");
+                //shortListHtml = "<button id='" + dataVal.ProductID + "#" + dataVal.Name + "' title='Added To Shortlist' class='mif-star-full button activeListNew'>" +
+                //"</button>";
+            }
+            else {
+                $(".mif-star-full", li).attr("id", dataVal.ProductID);
+                $(".mif-star-full", li).attr("onclick", "AddProductToShortList(this)");
+                $(".mif-star-full", li).removeClass("activeListNew");
+            }
+        }
+        else {
+            $(".mif-star-full", li).attr("id", dataVal.ProductID);
+            $(".mif-star-full", li).attr("onclick", "AddProductToShortList(this)");
+            $(".mif-star-full", li).removeClass("activeListNew");
+        }
+        //============= Tejaswee (24/6/2015) ====================
+
+
+        if (dataVal.Name.length > 60)
+        {
+            $(".lablehead", li).html(dataVal.Name.substring(0,57)+"...");
+        }
+        else
+        {
+            $(".lablehead", li).html(dataVal.Name );
+        }
+       
+        $(".lableheadright v-align-bottom", li).html("<b>Rs. </b>" + dataVal.SaleRate);
+
+        $("[id*=ulProduct]").append(li);
+
+        var img = $(".divimg", li);
+
+        var loader = $("<img class = 'loader' src ='../../Content/Images/loader.gif' style='margin-top: 85px;' />");
+        img.after(loader);
+        img.hide();
+        img.attr("src", dataVal.ProductThumbPath);
+        img.load(function () {
+            $(this).parent().find(".loader").remove();
+            $(this).fadeIn();
+        });
+    });
+    $("#divLoadingImage").css("display", "none");
+}
+
+$(function () {
+    // Set cookie for checking which refinement is chedked
+    $(".brandCheckBox").click(function () {
+        setCookie("CheckCookie", "BRAND", 30);
+    });
+    $(".colorCheckBox").click(function () {
+        setCookie("CheckCookie", "COLOR", 30);
+    });
+    $(".sizeCheckBox").click(function () {
+        setCookie("CheckCookie", "SIZE", 30);
+    });
+    $(".dimensionCheckBox").click(function () {
+        setCookie("CheckCookie", "DIMENSION", 30);
+    });
+    $(".detailHeadCheckBox").click(function () {
+        setCookie("CheckCookie", "CDH", 30);
+    });
+    $(".priceCheckBox").click(function () {
+        setCookie("CheckCookie", "PRICE", 30);
+    });
+
+    // Set cookie for checking which refineement needs to be clear
+    // var model =@Html.Raw(Json.Encode(Model))
+
+    $(".clearBrand").click(function () {
+        setCookie("CheckCookie", "C_BRAND", 30);
+        $('#tblBrand input:checkbox').attr('checked', false);
+        $("form").submit();
+    });
+    $(".clearColor").click(function () {
+        setCookie("CheckCookie", "C_COLOR", 30);
+        $('#tblColor input:checkbox').attr('checked', false);
+        $("form").submit();
+    });
+    $(".clearSize").click(function () {
+        setCookie("CheckCookie", "C_SIZE", 30);
+        $('#tblSize input:checkbox').attr('checked', false);
+        $("form").submit();
+    });
+    $(".clearDimension").click(function () {
+        setCookie("CheckCookie", "C_DIMENSION", 30);
+        $('#tblDimension input:checkbox').attr('checked', false);
+        $("form").submit();
+    });
+    $(".clearDetailHead").click(function () {
+        setCookie("CheckCookie", "C_CDH", 30);
+        $(this).parent().parent().parent().find('#tblSubSpecification input:checkbox').attr('checked', false);
+        $("form").submit();
+    });
+    $(".clearPrice").click(function () {
+        setCookie("CheckCookie", "C_PRICE", 30);
+        $('#tblPrice input:checkbox').attr('checked', false);
+        $("form").submit();
+    });
+});
+
+function setCookie(c_name, value, expiredays) {
+    document.cookie = c_name + "=" + value;
+}
+
+function getCookie(name) {
+    var dc = document.cookie;
+    var prefix = name + "=";
+    var begin = dc.indexOf("; " + prefix);
+    if (begin == -1) {
+        begin = dc.indexOf(prefix);
+        if (begin != 0) return null;
+    } else {
+        begin += 2;
+    }
+    var end = document.cookie.indexOf(";", begin);
+    if (end == -1) {
+        end = dc.length;
+    }
+    return unescape(dc.substring(begin + prefix.length, end));
+}
+
+
+
+
+//========================================= Tejaswee ==========================================================
+
+function AddProductToShppingCart(shopStockId, itemId) {
+
+   
+
+    $.ajax({
+        type: "POST",
+        url: "/Product/AddProductInShoppingCart",
+        data: "{'shopStockId':" + shopStockId + ",'itemId':" + itemId + "}",
+        contentType: "application/json; charset = utf-8",
+        dataType: "json",
+        success: function (response) {
+            if (response == "2") {
+                //$("[id*=shoppingCartMessage]").text("Item is already added in your cart");
+                alert("Item Is Already Added In Your Cart!!!");
+            }
+            else {
+                var a = getCookie("ShoppingCartCookie");
+                $("[id*=spanShoppingCartCount]").text(a.split(',').length);
+            }
+
+            //if ($("[id*=spanShoppingCartCount]").text == "") {
+            //    $("[id*=spanShoppingCartCount]").text(1);
+            //}
+            //else {
+            //    var currentValue = $("[id*=spanShoppingCartCount]").text();
+            //    $("[id*=spanShoppingCartCount]").text(parseInt(currentValue) + 1);
+            //}
+        },
+        failure: function (response) {
+            // alert("hello failuer");
+        },
+        error: function (response) {
+            //alert("hello error");
+        }
+    });
+}
+
+function AddProductToShppingCartFromPreview(shopStockId, itemId, couponCode, couponAmount, couponPercent) {
+    
+    if (couponAmount == "") {
+        couponAmount = "0";
+    }
+    if (couponPercent == "") {
+        couponPercent = "0";
+    }
+    //alert("1");
+    $.ajax({
+        type: "POST",
+        url: "/Product/AddProductInShoppingCartFromPreview",
+        data: "{'shopStockId':" + shopStockId + ",'itemId':" + itemId + ",'couponCode':'" + couponCode + "','couponAmount':" + couponAmount + ",'couponPercent':" + couponPercent + "}",
+        contentType: "application/json; charset = utf-8",
+        dataType: "json",
+        success: function (response) {
+            if (response == "2") {
+                //$("[id*=shoppingCartMessage]").text("Item is already added in your cart");
+                alert("Item Is Already Added In Your Cart!!!");
+            }
+            else {
+                var a = getCookie("ShoppingCartCookie");
+                $("[id*=spanShoppingCartCount]").text(a.split(',').length);
+            }
+
+            //if ($("[id*=spanShoppingCartCount]").text == "") {
+            //    $("[id*=spanShoppingCartCount]").text(1);
+            //}
+            //else {
+            //    var currentValue = $("[id*=spanShoppingCartCount]").text();
+            //    $("[id*=spanShoppingCartCount]").text(parseInt(currentValue) + 1);
+            //}
+        },
+        failure: function (response) {
+            // alert("hello failuer");
+        },
+        error: function (response) {
+            //alert("hello error");
+        }
+    });
+}
+
+// End

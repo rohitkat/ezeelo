@@ -1,0 +1,115 @@
+﻿@model ModelLayer.Models.Charge
+
+@{
+    ViewBag.Title = "Edit";
+}
+<br />
+<div class="row-fluid">
+    <div class="box span12">
+        <div class="box-header">
+            <h2><i class="icon-edit"></i><span class="break"></span>Edit Charge</h2>
+        </div>
+        <div class="box-content">
+            <div class="form-horizontal">
+                @using (Html.BeginForm())
+                {
+                    @Html.AntiForgeryToken()
+                    @Html.ValidationSummary(true)
+        @Html.HiddenFor(model => model.ID)
+                    <fieldset>
+                        @if (ViewBag.Message != null)
+                        {
+                            <div>
+                                <span style="color:red; font-weight:bold;">@ViewBag.Message</span>
+                            </div>
+                        }
+                        <div class="control-group">
+                            <label class="control-label" for="focusedInput">Charge Stage</label>
+                            <div class="controls">
+                                @Html.DropDownList("ChargeStageID", String.Empty)
+                                @Html.ValidationMessageFor(model => model.ChargeStageID)
+                            </div>
+                        </div>
+                        <div class="control-group">
+                            <label class="control-label" for="focusedInput">Name</label>
+                            <div class="controls">
+                                @Html.EditorFor(model => model.Name)
+                                @Html.ValidationMessageFor(model => model.Name)
+                            </div>
+                        </div>
+                        <div class="control-group">
+                            <label class="control-label" for="optionsCheckbox2">Is Active</label>
+                            <div class="controls">
+                                <label class="checkbox">
+                                    @Html.EditorFor(model => model.IsActive)
+                                    @Html.ValidationMessageFor(model => model.IsActive)
+                                </label>
+                            </div>
+                        </div>
+
+                        <div class="form-actions">
+                            <input type="submit" value="Save" class="btn btn-success" />
+                            @Html.ActionLink("Back to List", "Index", null, new { @class="btn"})
+                        </div>
+                    </fieldset>
+
+                }
+            </div>
+        </div>
+    </div><!--/span-->
+
+</div>
+
+
+
+@*@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+    
+    <div class="form-horizontal">
+        <h4>Charge</h4>
+        <hr />
+        @Html.ValidationSummary(true)
+        @Html.HiddenFor(model => model.ID)
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.ChargeStageID, "ChargeStageID", new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.DropDownList("ChargeStageID", String.Empty)
+                @Html.ValidationMessageFor(model => model.ChargeStageID)
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Name, new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.Name)
+                @Html.ValidationMessageFor(model => model.Name)
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.IsActive, new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.IsActive)
+                @Html.ValidationMessageFor(model => model.IsActive)
+            </div>
+        </div>
+
+       
+
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="submit" value="Save" class="btn btn-default" />
+            </div>
+        </div>
+    </div>
+}
+
+<div>
+    @Html.ActionLink("Back to List", "Index")
+</div>*@
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}

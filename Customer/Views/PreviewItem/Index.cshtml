@@ -1,0 +1,843 @@
+﻿@{
+    string cityName = "";
+    int franchiseIDs = 0; //added
+
+    if (Request.Cookies["CityCookie"] != null && Request.Cookies["CityCookie"].Value != string.Empty)
+    {
+        cityName = Request.Cookies["CityCookie"].Value.Split('$')[1].ToLower();
+        franchiseIDs = Convert.ToInt32(Request.Cookies["CityCookie"].Value.Split('$')[2]);//added
+    }
+    Layout = "~/Views/Shared/_Layout_Internal.cshtml";////added for publish in iis
+}
+
+<style>
+    .product-labels {
+        position: absolute;
+        top: 10px;
+        left: 0;
+        z-index: 10;
+        list-style: none;
+        margin: 0;
+        padding: 0;
+        font-size: 11px;
+        text-transform: uppercase;
+        color: #fff;
+    }
+
+    #productGeneralSpecification table {
+        width: auto !important;
+    }
+
+    #divProductRating {
+        padding: 0px 10px 0px 10px;
+    }
+
+    #divShopRating {
+        padding: 0px 10px 0px 10px;
+    }
+
+    #newproductdiv {
+        text-align: center;
+        float: right;
+        padding-top: 0px;
+    }
+
+    #productGeneralSpecification object {
+    }
+
+    #productGeneralSpecification {
+        min-height: 10px;
+        max-height: 5000px;
+        padding: 0px 10px 0px 10px;
+    }
+
+        #productGeneralSpecification iframe {
+            height: 99%;
+        }
+
+    html, body {
+        margin: 0;
+        padding: 0;
+        height: 100%;
+    }
+
+    .pro-description span {
+        display: block;
+        font-size: 12px !important;
+        text-align: justify;
+        line-height: 20px;
+    }
+
+    .frame div {
+        font-family: Calibri !important;
+    }
+
+    .frame span {
+        font-family: Calibri !important;
+    }
+
+    .frame table td th {
+        font-family: Calibri !important;
+    }
+
+    .frame body {
+        font-family: Calibri !important;
+    }
+
+    #external-frame {
+        min-height: auto;
+        font-family: Calibri !important;
+    }
+
+        #external-frame body {
+            min-height: 50px;
+            max-height: 2000px;
+            font-family: Calibri !important;
+        }
+
+            #external-frame body, #external-frame body p, #external-frame body h1, h2, h3, h4, h5, h6, #external-frame body span, #external-frame body table tr td {
+                font-family: Calibri !important;
+            }
+
+    .btnExpressBuy:focus {
+        background: #fff url(../../Content/Images/submitLoader.gif) no-repeat 0 10px !important;
+        color: #036001 !important;
+        border: 1px solid #036001 !important;
+    }
+
+    .productSpeci {
+        position: relative;
+        z-index: 9;
+    }
+
+    .fb_reset {
+        margin-top: -4px !important;
+    }
+</style>
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('html, body').animate({ scrollTop: 0 }, 'slow', function () {
+        });
+    });
+</script>
+<script type="text/javascript">
+    $(document).ready(function () {
+        $(function () {
+            var iframe = document.getElementById('external-frame'),
+            height = $("#external-frame").parent().height(),
+            eh = document.getElementById('external-frame').scrollHeight + height + 'px',
+            def = document.getElementById('external-frame').scrollIntoView();
+        });
+    });
+</script>
+<!-- Google Code for Remarketing Tag Added by harshada on 13/01/2017-->
+
+<script type="text/javascript">
+    var google_tag_params = {
+        dynx_itemid: '@ViewBag.PID',
+        dynx_pagetype: 'offerdetail',
+
+    };
+
+</script>
+<script type="text/javascript">
+
+    var google_conversion_id = 950176197;
+    var google_custom_params = window.google_tag_params;
+    var google_remarketing_only = true;
+
+</script>
+<script type="text/javascript" src="//www.googleadservices.com/pagead/conversion.js">
+</script>
+<noscript>
+    <div style="display:inline;">
+        <img height="1" width="1" style="border-style:none;" alt="" src="//googleads.g.doubleclick.net/pagead/viewthroughconversion/950176197/?guid=ON&amp;script=0" />
+    </div>
+</noscript>
+<!-- End Google Code for Remarketing Tag Added by harshada on 13/01/2017-->
+@model ModelLayer.Models.ViewModel.PreviewItemViewModel
+@using (Html.BeginForm())
+{
+    if (ViewBag.SessionValue == null || ViewBag.SessionValue == 0)
+    {
+        @Html.Hidden("hdnSessionValue", "0")
+    }
+    else
+    {
+        @Html.Hidden("hdnSessionValue", (long)ViewBag.SessionValue)
+    }
+    @*Added by Tejaswee (5/12/2015)
+        this hidden field used only for loding varients
+        "SID" not used because its value get changed*@
+    if (ViewBag.shopID != null)
+    {
+        @Html.Hidden("hdnSimilarProductShopId", (long)ViewBag.shopID)
+        @Html.Hidden("hdnShopId", (long)ViewBag.shopID)
+    }
+    else
+    {
+        @Html.Hidden("hdnShopId", 0)
+        @Html.Hidden("hdnSimilarProductShopId", 0)
+    }
+
+    if (Request.QueryString["From"] != null)
+    {
+        @Html.Hidden("hdnFrom", Request.QueryString["From"].ToString())
+    }
+    else
+    {
+        @Html.Hidden("hdnFrom")
+    }
+    @Html.Hidden("PID")
+    @Html.Hidden("SID")
+    @Html.Hidden("CityID")
+    @Html.Hidden("FranchiseID")//added
+
+
+    //Tejaswee
+    if (Model.SimilarProducts != null && Model.SimilarProducts.SearchCount != null)
+    {
+        @Html.Hidden("SimilarPageCount", Model.SimilarProducts.SearchCount.PageCount)
+        @Html.Hidden("SimilarProductCount", Model.SimilarProducts.SearchCount.ProductCount)
+    }
+    else
+    {
+        @Html.Hidden("SimilarPageCount")
+        @Html.Hidden("SimilarProductCount")
+    }
+    if (Model.FrequentlyBuyedProducts != null && Model.FrequentlyBuyedProducts.SearchCount != null)
+    {
+        @Html.Hidden("FrequentlyBuyedPageCount", Model.FrequentlyBuyedProducts.SearchCount.PageCount)
+        @Html.Hidden("FrequentlyBuyedProductCount", Model.FrequentlyBuyedProducts.SearchCount.ProductCount)
+    }
+    else
+    {
+        @Html.Hidden("FrequentlyBuyedPageCount")
+        @Html.Hidden("FrequentlyBuyedProductCount")
+    }
+    <div class="wrap grid respMain">
+        <div id="divStockVarient">
+            @Html.Partial("_StockVarient", Model)
+        </div>
+        <div class="gap"></div>
+        <div class="tabbable product-tabs">
+            <ul class="nav nav-tabs" id="myTab">
+                <li class="active">
+                    <a href="#divProductSpecification" data-toggle="tab"><i class="fa fa-list nav-tab-icon"></i>Product Specification</a>
+                </li>
+                @*<li>
+                        <a href="#divShopRating" data-toggle="tab"><i class="fa fa-cogs nav-tab-icon"></i>Shop Review</a>
+                    </li>
+                    <li>
+                        <a href="#divProductRating" data-toggle="tab"><i class="fa fa-cogs nav-tab-icon"></i>Product Review</a>
+                    </li>*@
+            </ul>
+            <div class="tab-content" style="min-height: 30px;max-height: 300px;overflow: auto;">
+                <div class="tab-pane fade in active" id="divProductSpecification">
+                    <div class="row row-eq-height product-overview-section">
+                        <div class="col-md-12">
+                            @Html.Partial("_ProductSpecification", Model)
+                        </div>
+                    </div>
+                </div>
+                @*<div class="tab-pane fade" id="divShopRating">
+                        @if (Model.ShopReviews != null && Model.ShopReviews.AvgPoints != null && Model.ShopReviews.AvgPoints.AvgRatingPonts != null && Model.ShopReviews.AvgPoints.AvgRatingPonts > 0)
+                        {
+                            @Html.Partial("_ShopReviews", Model.ShopReviews)
+                        }
+                    </div>
+                    <div class="tab-pane fade" id="divProductRating">
+                        @if (Model.ProductReviews != null && Model.ProductReviews.AvgPoints != null && Model.ProductReviews.AvgPoints.AvgRatingPonts != null)
+                        {
+                            @Html.Partial("_ProductReviews", Model.ProductReviews)
+                        }
+                        else
+                        {
+                            <h4>Reviews Not Available For This Product!</h4>
+                        }
+
+                    </div>*@
+
+            </div>
+        </div>
+        <div class="gap"></div>
+
+        @if (Model.FrequentlyBuyedProducts != null && Model.FrequentlyBuyedProducts.SearchCount != null && Model.FrequentlyBuyedProducts.ProductList.Count() > 0)
+        {
+            <div class="row cells12">
+                <div id="divFrequentlyBuyedProducts" class="cell colspan12 mainCell">
+                    @Html.Partial("_FrequentlyBuyedProduct", Model.FrequentlyBuyedProducts)
+                </div>
+            </div>
+        }
+
+        <div class="">
+
+            @if (Model.SimilarProducts != null && Model.SimilarProducts.SearchCount != null && Model.SimilarProducts.ProductList.Count() > 0)
+            {
+                <div class="col-md-12">
+                    <div id="divSimilarProducts" class="cell colspan12 mainCell">
+                        @Html.Partial("_SimilarProducts", Model.SimilarProducts)
+                    </div>
+                </div>
+            }
+            <div class="col-md-4">
+                @Html.Partial("RecentlyViewedItemsPartial", Model)
+            </div>
+        </div>
+    </div>
+    @section itemScripts{
+        <script type="text/javascript">
+            $(function () {
+                $("#divProductRating[tabindex='-1']").focus();
+                var from = $("#hdnFrom").val();
+                if (from == "ProductRating") {
+                }
+            });
+        </script>
+        @*Js for loading stock varient*@
+        <script type="text/javascript">
+            function opr(a) {
+
+                $("#ajax_loading_message").css("display", "block");
+
+                var id = a.id;
+                var arr = id.split("+");
+                var colorID = 0, sizeID = 0, dimensionID = 0, materialID = 0;
+                if (arr[0] == "c") {
+                    colorID = arr[1];
+                    sizeID = 0;
+                    dimensionID = 0;
+                    materialID = 0;
+                }
+                else if (arr[0] == "s") {
+                    colorID = $("#ColorID").val();
+                    if (colorID <= 0)
+                        colorID = $("#SelectedColor").val();
+
+                    sizeID = arr[1];
+                    dimensionID = 0;
+                    materialID = 0;
+                }
+                else if (arr[0] == "d") {
+                    colorID = $("#ColorID").val();
+                    if (colorID <= 0)
+                        colorID = $("#SelectedColor").val();
+                    sizeID = $("#SizeID").val();
+                    if (sizeID <= 0)
+                        sizeID = $("#SelectedSize").val();
+                    dimensionID = arr[1];
+                    materialID = 0;
+                }
+                else if (arr[0] == "m") {
+                    colorID = $("#ColorID").val();
+                    if (colorID <= 0)
+                        colorID = $("#SelectedColor").val();
+                    sizeID = $("#SizeID").val();
+                    if (sizeID <= 0)
+                        sizeID = $("#SelectedSize").val();
+                    dimensionID = $("#DimensionID").val();
+                    if (dimensionID <= 0)
+                        dimensionID = $("#SelectedDimension").val();
+                    materialID = arr[1];
+                }
+                var itemID = $("#PID").val();
+                // alert(itemID);
+                var shopID = $("#hdnShopId").val();
+                var shopStockID = $("#ShopStockID").val();
+                // alert(shopStockID);
+                //-- Added for Dynamic Message Ashishg --//
+                var MinOrder = '@ViewBag.MinOrderBuyNow';/// $("#hdnMinOrderBuyNow").val();
+                var WishListStatus = '@ViewBag.WishListStatus'; //Added for adding varient for WishList Ashish
+                //alert(MinOrder);
+                $.ajax({
+                    url: '@Url.Action("RebindStockVarient", "PreviewItem")',
+                    data: { 'itemID': itemID, 'shopID': shopID, 'shopStockID': shopStockID, 'selectedType': arr[0], 'selectedID': arr[1], 'ColorID': colorID, 'SizeID': sizeID, 'DimensionID': dimensionID, 'MaterialID': materialID, 'MinOrder': MinOrder },//-- Added MinOrder for Dynamic Message --//
+                    type: "GET",
+                    cache: false,
+                    success: function (result) {
+                        //alert(result);
+                        $("#ajax_loading_message").css("display", "none");
+
+
+                        //window.parent.$("#divStockVarient").html(result);
+                        $("[id*=divStockVarient]").html(result);
+                        // alert($("#divStockVarient").html());
+                        if ($("#hdnOfferCount").val() > 0) {
+                            $("#spnOfferCount").text($("#hdnOfferCount").val() + " Offer");
+                            $("#divOfferCount").css("display", "block");
+                            $("#divOfferDiv").css("display", "block");
+                        }
+                        else {
+                            $("#divOfferCount").css("display", "none");
+                            $("#divOfferDiv").css("display", "none");
+                        }
+                        // Set size of payable amount
+                        if ($("#spanPayableMain").html() != "" && $("#spanPayableMain").html().length > 0) {
+                            $("#divSaleRate").removeClass("priceDiv");
+                            $("#spanPayableMain").addClass("priceDiv");
+                        }
+                    },
+                    failure: function (data) {
+                        //alert("Fail");
+                        $("#ajax_loading_message").css("display", "none");
+                    },
+                    error: function (data) {
+                        $("#ajax_loading_message").css("display", "none");
+                    }
+                });
+                var pincodeCookie = getCookie("DeliverablePincode");
+                //alert(pincodeCookie);
+                if (pincodeCookie != null && pincodeCookie != "") {
+                    $("[id=divPincodeLink]").css("display", "block");
+                    $("[id=divPincodeVerification]").css("display", "none");
+                }
+                else {
+                    $("[id=divPincodeLink]").css("display", "none");
+                    $("[id=divPincodeVerification]").css("display", "block");
+                }
+            }
+            function getCookie(name) {
+                var dc = document.cookie;
+                var prefix = name + "=";
+                var begin = dc.indexOf("; " + prefix);
+                if (begin == -1) {
+                    begin = dc.indexOf(prefix);
+                    if (begin != 0) return null;
+                } else {
+                    begin += 2;
+                }
+                var end = document.cookie.indexOf(";", begin);
+                if (end == -1) {
+                    end = dc.length;
+                }
+                return unescape(dc.substring(begin + prefix.length, end));
+            }
+        </script>
+        @*End*@
+        @*Js for loading Similar Products*@
+        <script type="text/javascript">
+            var productPageIndex = 1;
+            var productPageCount = $("#SimilarPageCount").val();
+
+            if (productPageCount == 1) {
+                $("#btnNext").attr("disabled", "disabled");
+            }
+            else {
+                $("#btnNext").removeAttr("disabled");
+            }
+
+            function GetSimilarProducts() {
+
+                if (productPageIndex == 0) {
+                    productPageIndex++;
+                }
+                // $("#loader").show();
+                //Yashaswi 21-02-2019 For TASK 1296 To display extra product in You Might Also Like Section 
+                //change pageSize from 3 to 5
+                var mydata = {
+                    "cityID": $("#CityID").val(),
+                    "franchiseID": $("#FranchiseID").val(),////added
+                    "categoryID": $("#CID").val(),
+                    "productID": $("#PID").val(),
+                    "shopID": $("#hdnSimilarProductShopId").val(),
+                    "franchiseID": $("#FranchiseID").val(),//added
+                    "pageIndex": productPageIndex,
+                    "pageSize": 5
+                };
+
+                if (productPageIndex > 0 || productPageIndex <= productPageCount) {
+                    $.ajax({
+                        type: "POST",
+                        url: "@Url.Action("BindSimilarProducts", "PreviewItem", new { city = cityName, franchiseId = franchiseIDs })",//added  franchiseId = franchiseIDs
+                        data: "{'myParam':" + JSON.stringify(mydata) + "}",
+                        contentType: "application/json; charset=utf-8",
+                        dataType: "json",
+                        success: function (response) {
+                            OnSuccessSimilarProducts(response);
+                        },
+                        failure: function (response) {
+
+
+                        },
+                        error: function (response) {
+
+                        }
+                    });
+                    // }
+                }
+            }
+            function OnSuccessSimilarProducts(response) {
+
+                if (productPageIndex == 1 && productPageIndex == productPageCount) {
+                    $("#btnNext").attr("disabled", "disabled");
+                }
+                else if (productPageIndex == productPageCount) {
+                    $("#btnNext").attr("disabled", "disabled");
+                    $("#btnPrevious").removeAttr("disabled");
+                }
+                else if (productPageIndex == 1 && productPageIndex < productPageCount) {
+                    $("#btnNext").removeAttr("disabled");
+                    $("#btnPrevious").attr("disabled", "disabled");
+                }
+                else if (productPageIndex < productPageCount) {
+                    $("#btnNext").removeAttr("disabled");
+                    $("#btnPrevious").removeAttr("disabled");
+                }
+                else {
+                    $("#btnNext").removeAttr("disabled");
+                    $("#btnPrevious").removeAttr("disabled");
+                }
+                $("#tableSimilarProduct").html("");
+
+                $.each(response, function (j, dataVal) {
+                    var pid = dataVal.ProductID;
+                    var prodName = "";
+                    var imgPath = "";
+                    var mrpSalerateString = "";
+                    if (dataVal.Name.length > 55) {
+                        // prodName = dataVal.Name.substring(0, 52) + "...";
+                        //***** SEO URL Structure RULE by Ashish 18/11/2016 ******//
+                        prodName = dataVal.Name.substring(0, 52).replace("+", " ") + "...";
+                    }
+                    else {
+                        // prodName = dataVal.Name;
+                        // alert(prodName);
+                        //***** SEO URL Structure RULE by Ashish 18/11/2016 ******//
+                        prodName = dataVal.Name.replace("+", " ");
+                    }
+                    if (dataVal.ProductThumbPath != null && dataVal.ProductThumbPath != "") {
+                        imgPath = dataVal.ProductThumbPath;
+                    }
+                    else {
+                        imgPath = "/Content/Images/no_image.png";
+                    }
+                    if (dataVal.MRP > dataVal.SaleRate) {
+                        mrpSalerateString = "<p><label style='display:inline-block;'><span>MRP </span> <span class='spnCross fa fa-inr' style='color:brown;'> " + parseFloat(dataVal.MRP) + "</span></label>" +
+                                            "<label style='display:inline-block;padding-left: 5px;'><span> Sale Rate </span><span class='fa fa-inr' style='color:brown;font-size:13px;'> " + parseFloat(dataVal.SaleRate) + "</span></label></p>";
+                    }
+                    else {
+                        mrpSalerateString = "<label style='display:inline-block;'><span>Sale Rate </span><span class='fa fa-inr' style='color:brown;font-size:13px;'> " + parseFloat(dataVal.SaleRate) + "</span></label></p>";
+                    }
+                    var itemName = "";
+                    if (dataVal.Name.length > 30) {
+                        itemName = dataVal.Name.substring(0, 30);
+                    }
+                    else {
+                        itemName = dataVal.Name;
+                        // alert(itemName);
+                        //itemName = dataVal.Name.Replace("+", " ");
+                    }
+
+                    itemName = itemName.toLowerCase().replace(/&/g, 'and').replace(/[\/\\#,+()$~%.'":*?<>{} ]/g, '-');
+                    var _url = '@Url.RouteUrl("pre-prod-name", new { itemID = "_pid_", city = cityName, itemName = "_itemName_", franchiseId = franchiseIDs })';//added  franchiseId = franchiseIDs
+                    _url = _url.replace("_pid_", pid).replace("_itemName_", itemName);
+                    $("#tableSimilarProduct").append(
+                    "<li>" +
+                    "<div class='divGallery' style='text-align: center;'>" +
+                             "<a href='" + _url + "'>" +
+                             "<div class='image-pro-div'><img src='" + imgPath + "' class='img-responsive' /></div>" +
+                                           "<div class='pro-rice-div price-pro'>" +
+
+                                            "<h2 style='height: 25px;'>" + prodName + "</h2>" +
+                                             mrpSalerateString +
+                                            "</div>" +
+
+                                     "</a>" +
+                                         "<div class='btn-group' style='margin-top:45px;'>" +
+                                                "<button class='btn text-white btn-primary'>" +
+
+"<a href='" + _url + "' style='color:white;'> View </a>" +
+                               " </button>" +
+                           "</div>" +
+                            "</div>" +
+                            "</li>"
+
+                            );
+                });
+
+            }
+            function setPrevious() {
+                if (productPageIndex > 1) {
+                    productPageIndex--;
+                }
+                else if (productPageIndex == 1) {
+                    productPageIndex = productPageCount;
+                }
+                GetSimilarProducts();
+            }
+
+            function setNext() {
+                productPageIndex++;
+                GetSimilarProducts();
+            }
+        </script>
+        @*End*@
+
+        @*Js for loading Frequently Buyed Products*@
+        <script type="text/javascript">
+            var fProductPageIndex = 1;
+            var fProductPageCount = $("#FrequentlyBuyedPageCount").val();
+
+            if (fProductPageCount == 1) {
+                $("#btnFNext").attr("disabled", "disabled");
+            }
+            else {
+                $("#btnFNext").removeAttr("disabled");
+            }
+
+            function GetFrequentlyBuyedProducts() {
+                if (fProductPageIndex == 0) {
+                    fProductPageIndex++;
+                }
+                var mydata = {
+                    "cityID": $("#CityID").val(),
+                    "franchiseID": $("#FranchiseID").val(),////added
+                    "categoryID": $("#CID").val(),
+                    "productID": $("#PID").val(),
+                    "shopID": $("#SID").val(),
+                    "categoryID": $("#CID").val(),
+                    "franchiseID": $("#FranchiseID").val(),//added
+                    "pageIndex": fProductPageIndex,
+                    "pageSize": 5
+                };
+                if (fProductPageIndex == 2 || fProductPageIndex <= fProductPageCount) {
+                    $.ajax({
+                        type: "POST",
+                        url: "@Url.Action("BindFrequentlyBuyedProducts", "PreviewItem", new { city = cityName ,  franchiseId = franchiseIDs })",//added  franchiseId = franchiseIDs
+                        data: "{'myParam':" + JSON.stringify(mydata) + "}",
+                        contentType: "application/json; charset=utf-8",
+                        dataType: "json",
+                        success: function (response) {
+                            OnSuccessFrequentlyBuyedProducts(response);
+                        },
+                        failure: function (response) {
+
+                        },
+                        error: function (response) {
+
+                        }
+                    });
+                }
+            }
+
+            function OnSuccessFrequentlyBuyedProducts(response) {
+
+                if (fProductPageIndex == fProductPageCount) {
+                    $("#btnFNext").attr("disabled", "disabled");
+                    $("#btnFPrevious").removeAttr("disabled");
+                }
+                else {
+                    $("#btnFNext").removeAttr("disabled");
+                    $("#btnFPrevious").attr("disabled", "disabled");
+                }
+
+                $("#tableFrequentlyProduct").html("");
+                $.each(response, function (j, dataVal) {
+                    var pid = dataVal.ProductID;
+                    var prodName = "";
+                    var imgPath = "";
+                    var mrpSalerateString = "";
+                    if (dataVal.Name.length > 55) {
+                        prodName = dataVal.Name.substring(0, 52) + "...";
+                    }
+                    else {
+                        prodName = dataVal.Name;
+                    }
+                    if (dataVal.ProductThumbPath != null && dataVal.ProductThumbPath != "") {
+                        imgPath = dataVal.ProductThumbPath;
+                    }
+                    else {
+                        imgPath = "/Content/Images/no_image.png";
+                    }
+                    if (dataVal.MRP > dataVal.SaleRate) {
+                        mrpSalerateString = "<p><label style='display:inline-block;'><span>MRP.</span> <span class='spnCross' style='color:brown;'>" + dataVal.MRP + "</span></label>" +
+                                            "<label style='display:inline-block;'><span>SaleRate</span> <span style='color:brown;'>" + dataVal.SaleRate + "</span></label></p>";
+                    }
+                    else {
+                        mrpSalerateString = "<label style='display:inline-block;'><span>SaleRate</span> <span style='color:brown;'>" + dataVal.SaleRate + "</span></label></p>";
+                    }
+                    var itemName = "";
+                    if (dataVal.Name.length > 30) {
+                        itemName = dataVal.Name.substring(0, 30);
+                    }
+                    else {
+                        itemName = dataVal.Name;
+                    }
+
+                    itemName = itemName.toLowerCase().replace(/&/g, 'and').replace(/[\/\\#,+()$~%.'":*?<>{} ]/g, '-');
+                    var _url = '@Url.RouteUrl("pre-prod-name", new { itemID = "_pid_", city = cityName, itemName = "_itemName_", franchiseId = franchiseIDs })';//added  franchiseId = franchiseIDs
+                    _url = _url.replace("_pid_", pid).replace("_itemName_", itemName);
+                    $("#tableFrequentlyProduct").append(
+                   "<li>" +
+                   "<div class='divGallery'>" +
+                            "<a href='" + _url + "'>" +
+                                  "<div class='viewImg'><img src='" + imgPath + "' class='img-responsive' /></div>" +
+                                          "<div class='pro-rice-div price-pro'>" +
+                                           "<h2 style='height: 25px;'>" + prodName + "</h2>" +
+                                           mrpSalerateString +
+                                           "</div>" +
+                                    "</a>" +
+                                    "<div class='btn-group'>" +
+                                           "<button class='button success primary text-white'>" +
+                                              "<a href='" + _url + "'> View </a>" +
+
+                          " </button>" +
+                       "</div>" +
+                           "</div>" +
+                           "</li>"
+
+                            );
+                });
+            }
+
+            function setFPrevious() {
+                if (fProductPageIndex > 1) {
+                    fProductPageIndex--;
+                    GetFrequentlyBuyedProducts();
+                }
+                else if (fProductPageIndex == 1) {
+                    fProductPageIndex = fProductPageCount;
+                    GetFrequentlyBuyedProducts();
+                }
+            }
+
+            function setFNext() {
+                fProductPageIndex++;
+                GetFrequentlyBuyedProducts();
+            }
+
+        </script>
+        @*End*@
+
+    }
+   <!--Recently Viewed Jquery-->
+    <script type="text/javascript">
+        var angle = 0;
+        function galleryspin(sign) {
+            spinner = document.querySelector("#spinner");
+            if (!sign) { angle = angle + 45; } else { angle = angle - 45; }
+            spinner.setAttribute("style", "-webkit-transform: rotateY(" + angle + "deg); -o-transform: rotateY(" + angle + "deg); -moz-transform: rotateY(" + angle + "deg); transform: rotateY(" + angle + "deg);");
+        }
+    </script>
+    <!--Safari browser support jquery-->
+    <script>
+        $(document).ready(function () {
+            if (navigator.userAgent.indexOf('Safari') != -1 && navigator.userAgent.indexOf('Chrome') == -1) {
+                var angle = 0;
+                function galleryspin(sign) {
+                    spinner = document.querySelector("#spinner");
+                    if (!sign) { angle = angle + 45; } else { angle = angle - 45; }
+                    spinner.setAttribute("style", "-webkit-transform: rotateY(" + angle + "deg); -o-transform: rotateY(" + angle + "deg); -moz-transform: rotateY(" + angle + "deg); transform: rotateY(" + angle + "deg);");
+                }
+            }
+        });
+    </script>
+    <style type="text/css">
+        .pro-shop .Shop-slider {
+            height: 240px !important;
+        }
+
+        .pro-rice-div h2 {
+            font-size: 12px !important;
+            margin-top: 10px;
+            margin-left: 0;
+        }
+
+        .pro-shop {
+            margin-left: 0px !important;
+            width: 100% !important;
+        }
+
+            .pro-shop .Shop-slider ul li {
+                max-width: 241px !important;
+                margin-right: 2%;
+                height: 237px;
+                -webkit-box-shadow: 0 3px 2px rgba(0,0,0,0.15), 0 0 1px rgba(0,0,0,0.15);
+                box-shadow: 0 3px 2px rgba(0,0,0,0.15), 0 0 1px rgba(0,0,0,0.15);
+                -webkit-border-radius: 4px;
+                border-radius: 4px;
+                padding: 4px 0px;
+                background: #fff;
+                -webkit-transition: 0.3s;
+                -moz-transition: 0.3s;
+                -o-transition: 0.3s;
+                -ms-transition: 0.3s;
+                transition: 0.3s;
+                position: relative;
+                border-top: 1px solid rgba(0,0,0,0.15);
+            }
+
+                .pro-shop .Shop-slider ul li:hover {
+                    -webkit-box-shadow: 0 3px 6px rgba(0,0,0,0.6), 0 0 1px rgba(0,0,0,0.6), 0 0 15px rgba(158,182,209,0.6);
+                    box-shadow: 0 3px 6px rgba(0,0,0,0.6), 0 0 1px rgba(0,0,0,0.6), 0 0 15px rgba(158,182,209,0.6);
+                }
+
+        .spnCross {
+            text-decoration: line-through;
+        }
+
+        .ajax-inner-loading-box {
+            display: none;
+            background: #FFF1A8 url("http://cdn.shopclues.com/skins/basic/customer/images/icons/ajax.gif") no-repeat scroll 5px center;
+            padding: 6px 6px 6px 26px;
+            color: #3F0000;
+            width: 7%;
+            margin: auto;
+            z-index: 100;
+            margin-top: 0px;
+            height: 30px;
+            padding-top: 2px;
+        }
+
+        .rating {
+            width: 100%;
+        }
+    </style>
+    <!--SIMILAR PRODUCT GALLERY-->
+
+    @*<link href="~/Content/css/main.css" rel="stylesheet" />*@
+    <script src="~/Content/js/lemmon-slider.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            // slider 1
+            $('#slider1').lemmonSlider({
+                infinite: true
+            });
+
+            // alert('OK');
+        });
+    </script>
+    <script type="text/javascript">
+        $(function () {
+            $('.shop-slider').glide({
+                autoplay: 3500,
+                hoverpause: true, // set to false for nonstop rotate
+                arrowRightText: '&rarr;',
+                arrowLeftText: '&larr;'
+            });
+        });
+    </script>
+    <script type="text/javascript">
+        jQuery(document).ready(function ($) {
+
+            if (window.history && window.history.pushState) {
+                window.history.pushState('forward', null, '');
+                $(window).on('popstate', function () {
+                    window.location.href = document.referrer;
+                });
+            }
+        });
+        function showTable() {
+            document.getElementById('tableDiv').style.display = "block";
+        }
+        function showTable2() {
+            document.getElementById('tableDiv2').style.display = "block";
+        }
+        $(".closeBtn").click(function () {
+            document.getElementById('tableDiv').style.display = "none";
+            document.getElementById('tableDiv2').style.display = "none";
+        });
+    </script>
+    @*End Jquery*@
+}

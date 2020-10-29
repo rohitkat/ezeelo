@@ -1,0 +1,50 @@
+﻿@model Gandhibagh.Controllers.DropDownListBag
+@{
+    string cityName = "";
+
+    if (Request.Cookies["CityCookie"] != null && Request.Cookies["CityCookie"].Value != "")
+    {
+        cityName = Request.Cookies["CityCookie"].Value.Split('$')[1].ToLower();
+    }
+}
+
+@using (Html.BeginForm("AddProductInCompareList", "ProductCompare", FormMethod.Post))
+{
+    <div class="boxCompare3">
+        @Html.HiddenFor(model => model.CategoryID)
+        @Html.DisplayFor(model => model.CategoryName)
+
+        @Html.DropDownList("Brand", (SelectList)ViewBag.Brand, "---Select Brand ---", new { @class = "select-box" })
+        @Html.DropDownList("ProductID", (SelectList)ViewBag.ProductID, new { @onchange = "this.form.submit();", @class = "select-box" })
+
+    </div>
+}
+
+<script>
+    $(document).ready(function () {
+
+        $("#Brand").change(function () {
+            var BrandID = $("#Brand option:Selected").val();
+            var CategoryID = $("#CategoryID").val();
+
+            $("#pageloaddiv").attr("display", "block");
+            $("#pageloaddiv").css("display", "block");
+
+            $.ajax({
+                url: '@Url.Action("ProductListByBrand", "ProductCompare")',
+                data: { 'BrandID': BrandID, 'CategoryID': CategoryID },
+                cache: false,
+                type: "POST",
+                success: function (msg) {
+                    $("#ProductID").empty();
+                    $('#ProductID').append('<option value=0> --- Select Product ---</option>');
+                    $.each(msg, function (index, item) {
+                        $('#ProductID').append('<option value=' + item.ProductID + '>' + item.ProductName + '</option>');
+                    }),
+                     $("#pageloaddiv").css('display', 'none');
+                    $("#pageloaddiv").fadeOut(1000);
+                },
+            });
+        });
+    });
+</script>

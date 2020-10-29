@@ -1,0 +1,188 @@
+﻿@using PagedList;
+@using PagedList.Mvc;
+@model IPagedList<Franchise.Models.ViewModel.OrderTrackViewModel>
+
+@{
+    ViewBag.Title = "List [ Order Track ]";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<style>
+    .input {
+        width: 80px;
+    }
+
+    select {
+        width: 100px;
+    }
+
+    #divtable {
+        width: 1100px;
+        margin-left: 37px;
+        border: 1px solid#ccc;
+    }
+
+        #divtable h3 {
+            background-color: #794F2B;
+            background-image: linear-gradient(hsla(0,0%,100%,.05), hsla(0,0%,0%,.05)), linear-gradient(-72deg, hsla(0,0%,100%,.05) 50%, transparent 50%);
+            box-shadow: inset 0 0 .25em hsla(0,0%,0%,.1), inset 0 0 1.5em hsla(0,0%,0%,.25);
+            border-bottom: 1px solid #d6d6d6;
+            color: #FAFAFA;
+            padding: 11px;
+        }
+    .widget {
+        padding:0px;
+        margin-bottom: 28px;
+        margin-top: -10px;
+    }
+    .widget-content{padding:10px;}
+    .btn {line-height: 18px;
+        border-radius: 4px !important;
+      }
+</style>
+<div class="row">
+    <div class="span12" id="divtable" style="margin-top:12px;">
+        <div class="widget">
+            <div class="widget-header">
+             
+                <h3><i class="icon-list-alt"></i> List [ Order Track ]</h3>
+            </div>
+            <!-- /widget-header -->
+            <div class="widget-content">
+                <div class="widget big-stats-container">
+                    <div class="widget-content matchdivheight">
+
+                        @using (Html.BeginForm("Index", "OrderTracking", FormMethod.Post))
+                        {   @Html.AntiForgeryToken()
+                            <div class="form-horizontal">
+                                <table>
+                                    <tr>
+                                        <td>From Date &nbsp;</td>
+                                        <td>@Html.TextBox("FromDate", null, new { @readonly = "readonly", @class = "input" }) &nbsp;</td>
+                                        <td>To Date &nbsp;</td>
+                                        <td>@Html.TextBox("ToDate", null, new { @readonly = "readonly", @class = "input" }) &nbsp;</td>
+                                        <td>Order Code &nbsp;</td>
+                                        <td>@Html.TextBox("SearchString", null, new { @class = "input" }) &nbsp;</td>
+                                        <td>Current Status &nbsp;</td>
+                                        <td>@Html.DropDownList("CurrentOrderStatus", "All")</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Shop &nbsp;</td>
+                                        <td>@Html.TextBox("Shop", null, new { ID = "Shop" })</td>
+                                        <td>Delivery &nbsp;</td>
+                                        <td>@Html.TextBox("Delivery", null, new { ID = "Delivery" })</td>
+                                        <td>
+                                            <button type="submit" value="Search" class="btn btn-small btn-warning1">
+                                                <span class="glyphicon glyphicon-search"></span> Search
+                                            </button>
+                                            <button type="button" class="btn btn-small btn-info1" id="btn_clear">Clear</button>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+                        }
+
+
+
+                        <table class="table table-bordered table-hover table-responsive table-striped">
+                            <tr>
+                                <th style="width:20px;">Sr.No</th>
+                                <th style="width:160px;">Shop Order</th>
+                                <th style="width:160px;">Current Status</th>
+                                <th>Shop</th>
+                                <th>Delivery</th>
+                                <th style="width:160px;">Order Date</th>
+                            </tr>
+
+                            @if (Model.Count() == 0)
+                            {
+                                <tr>
+                                    <td colspan="6" class="text-center"><h3>No Record Found...</h3></td>
+                                </tr>
+                            }
+                            else
+                            {
+                                int i = 1;
+                                foreach (var item in Model)
+                                {
+                                    <tr>
+                                        <td>@{int SrNo = ((ViewBag.PageNumber - 1) * ViewBag.PageSize) + i; i = i + 1; } @SrNo</td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.ShopOrderCode)
+                                        </td>
+                                        <td>
+                                            @*@Html.DisplayFor(modelItem => item.OrderStatus)*@
+                                            @Franchise.Common.Common.GetDeliveryStatus(item.OrderStatus)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.ShopName)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.DeliveryPartnerName)
+                                        </td>
+                                        <td>
+                                            @item.CreateDate.ToString("dd/MM/yyyy hh:mm:ss tt")
+                                        </td>
+                                    </tr>
+                                }
+                            }
+
+                        </table>
+                        <div class="pager">
+                            @Html.PagedListPager(Model, Page => Url.Action("Index", new
+                       {
+                           page = Page,
+                           SearchString = ViewBag.SearchString,
+                           FromDate = ViewBag.FromDate,
+                           ToDate = ViewBag.ToDate,
+                           Shop = ViewBag.Shop,
+                           Delivery = ViewBag.Delivery,
+                           CurrentOrderStatus = ViewBag.CurrentOrderStatus1
+                       }),
+                                                                    new PagedListRenderOptions()
+                                                                    {
+                                                                        Display = PagedListDisplayMode.IfNeeded
+                                                                    })
+                        </div>
+                    </div>
+                    <!-- /widget-content -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+<!-- /span12 -->
+</div>
+
+@section MyScripts{
+    <script>
+
+    //----------------------------------------------------------------------For datepicker---//
+    //<![CDATA[
+    $(window).load(function () {
+        //$('#DOB').datepicker('setDate', new Date());
+        $('#FromDate').datepicker('update');
+        $('#ToDate').datepicker('update');
+    });//]]>
+    </script>
+
+    <script>
+    @* $(function () {
+        var lShopName = $('#ShopName').val();
+        $.ajax({
+            url: '@Url.Action("GetShops", "OrderTracking")?ShopName=' + lShopName,
+            type: "GET",
+            success: function (result) {
+                alert(result);
+                availableTags = result;
+            },
+            error: function (data) {
+                alert('error');
+                //alert('Pincode : ' + lPincode + ' Dose Not Exist, please Contact to ADMIN');
+            }
+        });
+    });*@
+    </script>
+
+
+}
+

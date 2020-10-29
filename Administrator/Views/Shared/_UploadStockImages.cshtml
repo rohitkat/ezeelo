@@ -1,0 +1,135 @@
+﻿@model ModelLayer.Models.ViewModel.BulkStockViewModel 
+
+@using (Html.BeginForm("StockImages", "Bulk", FormMethod.Post, new { enctype = "multipart/form-data", id = "frmID" }))
+{
+        @Html.HiddenFor(i => i.ProductID)
+        @Html.HiddenFor(i => i.ColorName)
+        @Html.HiddenFor(i => i.ExcelRowID)   
+        @Html.HiddenFor(i => i.BulkLogID)   
+        @Html.HiddenFor(i => i.UploadFiles.FilesToBeUploaded)
+       
+
+    //onchange="changeMSG(this);"
+    <div id="uploaders" class="divInput">
+        <input type="file" id="fileToUpload_@Model.ExcelRowID" name="fileUpload" multiple data-preview-file-type="any" class="fu" style="float: left;" onchange="changeMSG(this);" />
+        <br />
+        <span id="spnFile_@Model.ExcelRowID" class="SpnFile"  style="float: left; color: #FF0000"></span>
+        @Html.ValidationMessage("File")
+        @Html.Hidden("hdnFileUpload")
+    </div>
+    <br />
+    <div class="col-lg-6">
+        <button class="btn btn-primary" id="btnStockImage_@Model.ExcelRowID"  type="submit" onclick="return CheckValidation(this);">Stock Image Uploading</button>
+    </div>
+    <div id="StockImageValidationMessage_@Model.ExcelRowID" class="validation-summary-errors"></div>
+    <div id="StockImageErrorMessage_@Model.ExcelRowID" style="color:red"></div>
+     <div id="StockImageSuccessMessage_@Model.ExcelRowID" style="color:green"></div>
+    <br />
+    <div class="control-section" style="padding: 0px;">
+        <div id="selectedFiles"></div>
+    </div>
+    <div id="pageloaddiv"></div>
+}
+
+
+
+<script src="~/Scripts/jquery-1.10.2.js"></script>
+
+
+<style type="text/css">
+    #pageloaddiv {
+        position: fixed;
+        left: 0px;
+        top: 0px;
+        width: 100%;
+        height: 100%;
+        z-index: 1000;
+        background: url('../Content/Images/ajax_loader.gif') no-repeat center center;
+        background-size: 100px;
+        display: none;
+    }
+    </style>
+
+<script>
+   
+    $(document).ready(function () {
+
+        $("#pageloaddiv").attr("display", "none");
+        $("#pageloaddiv").css("display", "none");       
+
+    });
+
+    function CheckValidation(input) {
+        var res = input.id.split("_");
+
+        var has_selected_file = $('#fileToUpload_' + res[1]).val();
+      // alert(has_selected_file);
+        var isAnyValidatonError = $.trim($("#StockImageValidationMessage_" + res[1]).html());
+
+        if (isAnyValidatonError.trim().length > 0 && has_selected_file == "") {
+
+            $("#pageloaddiv").attr("display", "none");
+            $("#pageloaddiv").css("display", "none");
+
+            setInterval(blinkerStock, 1000);
+
+            return false;
+
+        }
+        else {
+
+            if (has_selected_file != "") {
+                $("#pageloaddiv").attr("display", "block");
+                $("#pageloaddiv").css("display", "block");
+                return true;
+            }
+            else {
+                $("#StockImageValidationMessage_" + res[1]).html("Please select image files to be uploaded. Max size allowed for each file is 100Kb.")
+                $("#pageloaddiv").attr("display", "none");
+                $("#pageloaddiv").css("display", "none");
+
+                return false;
+
+            }
+        }
+    }
+
+    function blinkerStock() {
+     
+        $('.validation-summary-errors').fadeOut(800);
+        $('.validation-summary-errors').fadeIn(800);
+    }
+  
+    function changeMSG(input) {
+        
+        var res = input.id.split("_");
+        var fu = input.files[0];
+
+        $("StockImageErrorMessage_" + res[1]).html("");
+        $("StockImageSuccessMessage_" + res[1]).html("");
+        $("#StockImageValidationMessage_" + res[1]).html("");
+
+        for (var i = 0; i < input.files.length; ++i) {
+            var f = input.files[i]
+          
+            Size = 0;
+            if (f.size > 100 * 1024) {
+                $("#StockImageValidationMessage_" + res[1]).html("Max size for each image allowed is 100 Kb.");
+                break;
+            }
+            Size += f.size;
+
+        }
+
+        //3MB= 3145728
+        if (Size > 3145728) {
+          
+            $("#StockImageValidationMessage_" + res[1]).html("Total max Size allowed is 3 MB.");
+
+        }
+
+    };
+
+
+ </script>
+    

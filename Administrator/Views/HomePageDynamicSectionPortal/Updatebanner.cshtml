@@ -1,0 +1,102 @@
+﻿@model IEnumerable<ModelLayer.Models.HomePageDynamicSectionBanner>
+
+@{
+    ViewBag.Title = "Updatebanner";
+}
+
+<style>
+    .img_cat img {
+        width: 50px;
+        height: 50px;
+    }
+</style>
+
+<div id="content" class="span10">
+    <ul class="breadcrumb">
+        <li>
+            <div>HomePageDynamicSectionPortal</div>
+        </li>
+    </ul>
+
+    <div class="form-actions no-color">
+        <div class=" col-md-offset-2 col-md-10">
+
+            @Html.ActionLink("Back to List", "Index", null, new { @class = "btn btn-default" })
+        </div>
+    </div>
+
+    <div class="my_table">
+        <table class="table table-bordered table-striped ">
+            <thead>
+                <tr id="toptr">
+
+                    <th>
+                        @Html.DisplayNameFor(model => model.ImageName)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.StartDate)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.EndDate)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.SequenceOrder)
+                    </th>
+
+
+                    <th>
+                        @Html.DisplayNameFor(model => model.IsActive)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.IsBanner)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.IsCategory)
+                    </th>
+                    <th></th>
+
+
+                </tr>
+            </thead>
+
+            @*@for (int i = 0; i < Model.HomeDynamicBannersetsequence.Count(); i++)*@
+            @foreach (var item in Model)
+            {
+            <tr>
+
+                @*<td class="img_cat">
+            <img src="@Model.item.Imagename" onerror="this.src = '../../Content/Images/No_thumbnail.png'" />
+        </td>*@
+                <td class="img_cat">
+                    <img src="@Html.DisplayFor(modelItem => item.ImageName)" onerror="this.src = '../../Content/Images/No_thumbnail.png'" />
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.StartDate)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.EndDate)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.SequenceOrder)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.IsActive)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.IsBanner)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.IsCategory)
+                </td>
+                <td>
+                    @Html.ActionLink("Edit", "EditBanner", new { id = item.ID }, new { @class = "btn btn-small btn-primary margin10", style = "margin:5px;" })|
+                    @Html.ActionLink("Delete", "Deletebanner", new { id = item.ID }, new { @class = "btn btn-small btn-danger margin10", style = "margin:5px;" })
+                </td>
+
+            </tr>
+
+            }
+
+        </table>
+    </div>
+</div>

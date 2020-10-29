@@ -1,0 +1,202 @@
+﻿@{
+    Layout = null;
+}
+<script type="text/javascript">
+    function AddProduct(shopStockId, itemId) {
+        var _url = '@Url.Action("AddProductInShoppingCart", "Product")';
+        AddProductToShppingCartWithoutQuantity(shopStockId, itemId, _url);
+    }
+</script>
+<!--Create Parcial for only mobile device create date 06/11/2015 create by Gopal-->
+<style type="text/css">
+    .clr {
+        clear: both;
+    }
+
+    .mob-offer-cat ul li {
+        margin-bottom: 0.5%;
+        display: inline-block;
+        float: left;
+        width: 49%;
+    }
+
+        .mob-offer-cat ul li:nth-child(odd) {
+            margin-right: 0.5%;
+        }
+
+        .mob-offer-cat ul li img {
+            width: 100%;
+        }
+
+        .mob-offer-cat ul li a {
+            display: block;
+            position: relative;
+        }
+
+            .mob-offer-cat ul li a span {
+                display: block;
+                position: absolute;
+                bottom: 0;
+                left: 0;
+                width: 100%;
+                height: 30px;
+                padding: 4px;
+                color: #fff;
+                font-size: 14px;
+                background: rgba(153,144,137,0.7);
+            }
+
+    .mob-offer-cat .cat-heading {
+        font-size: 14px;
+        padding: 4px 6px;
+        color: #fff;
+        background: rgba(59,103,1,0.8);
+        clear: both;
+        line-height: 30px;
+    }
+
+    .festival-link {
+        background: rgba(212,35,0,0.6);
+        border: 1px solid #d42300;
+        text-align: center;
+        width: 98%;
+        margin: auto;
+    }
+
+        .festival-link a {
+            display: block;
+            line-height: 30px;
+        }
+
+            .festival-link a img {
+                display: inline-block;
+                padding: 5px;
+            }
+
+            .festival-link a span {
+                display: inline-block;
+                font-size: 15px;
+                color: #fff;
+                font-weight: 600;
+            }
+</style>
+@{
+    string cityName = "";
+    string city = "";
+    if (Request.Cookies["CityCookie"] != null && Request.Cookies["CityCookie"].Value != "")
+    {
+        cityName = Request.Cookies["CityCookie"].Value.Split('$')[1].ToLower();
+        city = Request.Cookies["CityCookie"].Value.Split('$')[0];
+    }
+}
+<div id="boxes">
+    <div style="top:25%; left:20%; display: none;position:fixed" id="dialog" class="window">
+        <div class="innerwindow">
+            <a href="#" class="windowclose"></a>
+            @Html.Partial("_ChangeCity")
+        </div>
+    </div>
+</div>
+<div id="main-wrap">
+    <div class="mob-offer-cat">
+        <div class="mob-offer">
+            <ul>
+                <li style="width: 100%; height: 200px"><a href="/Home/OfferPage" title="Hot Deal"><img style="height: 200px" src="/Content/mobile-img/hot_deal.jpg" /> @*<span>Hot Deal</span>*@</a></li>
+            </ul><div class="clr"></div>
+        </div>
+        <div class="mob-offer">
+            <ul>
+                <li><a href="@Url.RouteUrl("pre-prod-name", new { itemId = 43413, itemName = "Barbie Drama Queen Cake".ToLower().Replace(' ', '-'), city = cityName })" class="off-1"></a></li>
+                <li><a href="@Url.RouteUrl("pre-prod-name", new { itemId = 42845, itemName = "Best Grocery Deal".ToLower().Replace(' ', '-'), city = cityName })" class="off-2"></a></li>
+                <li><a href="@Url.RouteUrl("pre-prod-name", new { itemId = 40140, itemName = "Sai Chanduram Cookies Fest".ToLower().Replace(' ', '-'), city = cityName })" class="off-3"></a></li>
+                <li><a href="@Url.RouteUrl("pre-prod-name", new { itemId = 43171, itemName = "Bakers Delight Combo".ToLower().Replace(' ', '-'), city = cityName })" class="off-4"></a></li>
+            </ul><div class="clr"></div>
+        </div>
+        <div class="mob-cat">
+            <h2 class="cat-heading">CATEGORIES</h2>
+            <ul>
+                <li><a href='@Url.RouteUrl("SweetAndConfectionery", new { city = cityName })' class="cat-14"><span>Sweet  &amp; Confectionery</span></a></li>
+                @if (Request.Cookies["CityCookie"] != null)
+                {
+                    <li><a href='@Url.RouteUrl("Managed", new { city = cityName, ParentCatID = 1281, Level = 3, CatName = "Fruits".ToLower().Replace(' ', '-'), cityId = city })' class="cat-1"><span>Fruits &amp; Vegetables</span></a></li>
+                    <li><a href='@Url.RouteUrl("Managed", new { city = cityName, ParentCatID = 1075, Level = 2, CatName = "Grocery and Staples".ToLower().Replace(' ', '-'), cityId = city })' class="cat-3"><span>Food &amp; Groceries</span></a></li>
+                    <li><a href='@Url.RouteUrl("Managed", new { city = cityName, ParentCatID = 87, Level = 3, CatName = "Chicken".ToLower().Replace(' ', '-'), cityId = city })' class="cat-13"><span>Meat &amp; Poultry</span></a></li>
+                    <li><a href='@Url.RouteUrl("Managed", new { city = cityName, ParentCatID = 1314, Level = 2, CatName = "Bathing and Body Care".ToLower().Replace(' ', '-'), cityId = city })' class="cat-6"><span>Beauty &amp; Personal Care</span></a></li>
+                }
+                <li><a href='@Url.RouteUrl("HealthAndFitness", new { city = cityName })' class="cat-4"><span>Health &amp; Fitness</span></a></li>
+                <li><a href='@Url.RouteUrl("WinterWear", new { city = cityName })' class="cat-2"><span>Winter Collection</span></a></li>
+                <li><a href='@Url.RouteUrl("LifestyleAndFashionStreet", new { city = cityName })' class="cat-5" title="Lifestyle & Fashion"><span>Lifestyle &amp; Fashion</span></a></li>
+                <li><a href='@Url.RouteUrl("ElectronicsAvenue", new { city = cityName })' class="cat-7" title="Electronics"><span>Electronics</span></a></li>
+                <li><a href='@Url.RouteUrl("HomeAndKitchenAppliances", new { city = cityName })' class="cat-9" title="Home & Kitchen Appliances"><span>Home &amp; Kitchen Appliances</span></a></li>
+                <li><a href='@Url.RouteUrl("GoldMarket", new { city = cityName })' class="cat-8" title="Gold & Jewellery"><span>Gold &amp; Jewellery</span></a></li>
+                <li><a href='@Url.RouteUrl("FurnituresAndInteriors", new { city = cityName })' class="cat-10" title="Furniture & Interior"><span>Furniture &amp; Interior</span></a></li>
+                <li><a href='@Url.RouteUrl("ElectricalMarket", new { city = cityName })' class="cat-11" title="Electrical"><span>Electricals &amp; Lighting</span></a></li>
+                <li><a href='@Url.RouteUrl("BooksAndMedia", new { city = cityName })' class="cat-12" title="Books & Media Arcade"><span>Books &amp; Media Arcade</span></a></li>
+            </ul><div class="clr"></div>
+        </div>
+    </div>
+</div>
+<br />
+<br />
+
+<script src="~/Content/update(5-10)/js/jquery-1.11.2.min.js"></script>
+<script type="text/javascript">
+    $(window).ready(function () {
+        var img1 = $("<img />").attr('src', '../Content/mobile-img/offer_1.jpg').load(function () {
+            $(".off-1").append(img1);
+            // When the image has loaded, stick it in a div
+        });
+
+        var img2 = $("<img />").attr('src', '../Content/mobile-img/offer_2.jpg').load(function () {
+            $(".off-2").append(img2);
+        });
+        var img3 = $("<img />").attr('src', '../Content/mobile-img/offer_3.jpg').load(function () {
+            $(".off-3").append(img3);
+        });
+        var img4 = $("<img />").attr('src', '../Content/mobile-img/offer_4.jpg').load(function () {
+            $(".off-4").append(img4);
+        });
+        var img5 = $("<img />").attr('src', '../Content/mobile-img/mob-cat/cat12.png').load(function () {
+            $(".cat-1").append(img5);
+        });
+        var img6 = $("<img />").attr('src', '../Content/mobile-img/mob-cat/cat4.jpg').load(function () {
+            $(".cat-2").append(img6);
+        });
+        var img7 = $("<img />").attr('src', '../Content/mobile-img/mob-cat/cat5.png').load(function () {
+            $(".cat-3").append(img7);
+        });
+        var img8 = $("<img />").attr('src', '../Content/mobile-img/mob-cat/cat8.png').load(function () {
+            $(".cat-4").append(img8);
+        });
+        var img9 = $("<img />").attr('src', '../Content/mobile-img/mob-cat/cat11.png').load(function () {
+            $(".cat-5").append(img9);
+        });
+        var img10 = $("<img />").attr('src', '../Content/mobile-img/mob-cat/cat1.jpg').load(function () {
+            $(".cat-6").append(img10);
+        });
+        var img11 = $("<img />").attr('src', '../Content/mobile-img/mob-cat/cat2.png').load(function () {
+            $(".cat-7").append(img11);
+        });
+        var img12 = $("<img />").attr('src', '../Content/mobile-img/mob-cat/cat7.png').load(function () {
+            $(".cat-8").append(img12);
+        });
+        var img13 = $("<img />").attr('src', '../Content/mobile-img/mob-cat/cat10.jpg').load(function () {
+            $(".cat-9").append(img13);
+        });
+        var img14 = $("<img />").attr('src', '../Content/mobile-img/mob-cat/cat6.png').load(function () {
+            $(".cat-10").append(img14);
+        });
+        var img15 = $("<img />").attr('src', '../Content/mobile-img/mob-cat/cat3.png').load(function () {
+            $(".cat-11").append(img15);
+        });
+        var img16 = $("<img />").attr('src', '../Content/mobile-img/mob-cat/cat9.jpg').load(function () {
+            $(".cat-12").append(img16);
+        });
+        var img17 = $("<img />").attr('src', '../Content/mobile-img/mob-cat/meat_poultry.jpg').load(function () {
+            $(".cat-13").append(img17);
+        });
+        var img18 = $("<img />").attr('src', '../Content/mobile-img/mob-cat/sweet.png').load(function () {
+            $(".cat-14").append(img18);
+        });
+    });
+</script>

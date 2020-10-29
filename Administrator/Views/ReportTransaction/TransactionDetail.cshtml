@@ -1,0 +1,437 @@
+﻿@using PagedList;
+@using PagedList.Mvc;
+
+@model IPagedList<ModelLayer.Models.ViewModel.Report.Account.ReportTransactionInputViewModel>
+
+@{
+    ViewBag.Title = "TransactionDetail";
+}
+
+<style>
+    .tbl th {
+        border: solid 1px #808080 !important;
+    }
+
+    .tbl td {
+        border: solid 1px #808080 !important;
+    }
+</style>
+
+<h3>Transaction Detail 
+    <small>[ @if(Model.Count > 0)
+             {
+                <b>@Model.FirstOrDefault().ShopName</b>  
+             } 
+           ]</small>
+</h3>
+@using (Html.BeginForm("TransactionDetail", "ReportTransaction", new { SearchString = ViewBag.SearchString, pShopID = Request.QueryString["pShopID"] }, FormMethod.Post, null))
+{   @Html.AntiForgeryToken()
+    <div class="form-horizontal">
+
+        <table class="table table-bordered table-condensed table-hover table-responsive table-striped">
+            <tr>
+                <td style="width:100px;">@Html.TextBox("SearchString", ViewBag.SearchString as string, new { @class = "search" })</td>
+                <td>
+                    <input type="submit" value="Search" />
+                </td>
+                <td class="text-right"><a href="@Url.Action("ExportData", "ReportTransaction", new { pShopID = Request.QueryString["pShopID"], FromDate = TempData["FromDate"].ToString(), ToDate = TempData["ToDate"].ToString() })" class="btn btn-warning btn-sm">Export</a></td>
+            </tr>
+        </table>
+    </div>
+}
+
+<div class="row" style="width:100%; overflow-x:scroll; margin:5px;">
+    <table class="table table-bordered table-condensed table-hover table-responsive table-striped tbl">
+        <tr>
+            <th>Sr.No</th>
+            <th>
+                Order Code
+            </th>
+            <th>
+                Shop Order Code
+            </th>
+            <th>
+                Payment Mode
+            </th>
+            <th>
+                <span>    PlacedDate     </span>
+            </th>
+
+            <th>
+                <span>                                Product                                </span>
+            </th>
+            @*<th>
+                    @Html.DisplayNameFor(model => model.ShopStockID)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.ShopID)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.ShopName)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.ChannelPartnerID)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.MCOCustomerID)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.MCOShopID)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.MCODeliveryID)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.GBID)
+                </th>*@
+            <th>Weight</th>
+            <th>
+                Qty Asked By Customer
+            </th>
+            <th>
+                Qty Shop Out
+            </th>
+            <th>
+                MRP /Unit
+            </th>
+            <th>
+                SaleRate /Unit
+            </th>
+            <th>
+                Offer In % By Shop/ Unit
+            </th>
+            <th>
+                Offer In Rs By Shop/ Unit
+            </th>
+            <th>
+                Is Inclusive Of TAX
+            </th>
+            <th>
+                Service TAX
+            </th>
+            @*<th>
+                    @Html.DisplayNameFor(model => model.IsShopHandleOtherTAX)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.SumOfOtherTAX)
+                </th>*@
+            <th>
+                Landing Price By Shop/ Unit
+            </th>
+            <th>
+                Charge In % By GB/ Unit
+            </th>
+            @*<th>
+                    @Html.DisplayNameFor(model => model.CommisionInPercentMCOCustomer)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.CommisionInRsMCOCustomer)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.CommisionInPercentMCOShop)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.CommisionInRsMCOShop)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.CommisionInPercentMCODelivery)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.CommisionInRsMCODelivery)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.CommisionInPercentGB)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.CommisionInRsGB)
+                </th>*@
+
+            <th>
+                Total MRP
+            </th>
+            <th>
+                Total Sale Rate
+            </th>
+            <th>
+                Shop Total Offer
+            </th>
+            <th>
+                New Sale Rate After Offer
+            </th>
+            <th>
+                Total Shop Final Price
+            </th>
+            <th>
+                Shop Receivable
+            </th>
+            <th>
+                Is Shop Handle Other TAX
+            </th>
+            <th>
+                Other TAX Payable Receivable From Merchant
+            </th>
+            <th>
+                Sum Of Amount Shop Receivable After Other TAX
+            </th>
+            <th>
+                GB Receivable Amount
+            </th>
+            <th class="bg-aqua">
+                GB Transaction Fee
+            </th>
+            <th>
+                GB Service TAX On Transaction Fee
+            </th>
+            <th>
+                Final Shop Receivable After All Done
+            </th>
+            @*<th>
+                    @Html.DisplayNameFor(model => model.QtyMCO)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.MCOTotalMRP)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.MCOTotalSaleRate)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.MCOCustomerReceivable)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.MCOShopReceivable)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.MCODeliveryReceivable)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.AmountRemaining)
+                </th>*@
+            @*<th>
+                    @Html.DisplayNameFor(model => model.CustomerOrderDetailID)
+                </th>*@
+
+            @*<th>
+                    @Html.DisplayNameFor(model => model.CODCreateBy)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.CODModifyDate)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.CODModifyBy)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.CustomerOrderID)
+                </th>*@
+
+            @*<th>
+                    @Html.DisplayNameFor(model => model.CustomerUserLoginID)
+                </th>*@
+        </tr>
+        @{ int i = 1; }
+        @foreach (var item in Model.OrderBy(x => x.CODCreateDate))
+        {
+            <tr>
+                <td>@{int SrNo = ((ViewBag.PageNumber - 1) * ViewBag.PageSize) + i; i = i + 1; } @SrNo</td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.OrderCode)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ShopOrderCode)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.PaymentMode)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.CODCreateDate)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Product)
+                </td>
+                @*<td>
+                        @Html.DisplayFor(modelItem => item.ShopStockID)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.ShopID)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.ShopName)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.ChannelPartnerID)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.MCOCustomerID)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.MCOShopID)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.MCODeliveryID)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.GBID)
+                    </td>*@
+                <td>
+                    @Html.DisplayFor(modelItem => item.Size)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Qty)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.QtyShop)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.MRPPerUnit)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.SaleRatePerUnit)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.OfferInPercentByShopPerUnit)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.OfferInRsByShopPerUnit)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.IsInclusiveOfTAX)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ServiceTAX)
+                </td>
+                @*<td>
+                        @Html.DisplayFor(modelItem => item.IsShopHandleOtherTAX)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.SumOfOtherTAX)
+                    </td>*@
+                <td>
+                    @Html.DisplayFor(modelItem => item.LandingPriceByShopPerUnit)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ChargeINPercentByGBPerUnit)
+                </td>
+                @*<td>
+                        @Html.DisplayFor(modelItem => item.CommisionInPercentMCOCustomer)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.CommisionInRsMCOCustomer)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.CommisionInPercentMCOShop)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.CommisionInRsMCOShop)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.CommisionInPercentMCODelivery)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.CommisionInRsMCODelivery)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.CommisionInPercentGB)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.CommisionInRsGB)
+                    </td>*@
+                <td>
+                    @Html.DisplayFor(modelItem => item.TotalMRP)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.TotalSaleRate)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ShopTotalOffer)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.NewSaleRateAfterOffer)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.TotalShopFinalPrice)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ShopReceivable)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.IsShopHandleOtherTAX1)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.OtherTAXPayableReceivableFromMerchant)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.SumOfAmountShopReceivableAfterOtherTAX)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.GBReceivableAmount)
+                </td>
+                <td class="bg-aqua">
+                    @Html.DisplayFor(modelItem => item.GBTransactionFee)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.GBServiceTAXOnTransactionFee)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.FinalShopReceivableAfterAllDone)
+                </td>
+                @*<td>
+                        @Html.DisplayFor(modelItem => item.QtyMCO)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.MCOTotalMRP)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.MCOTotalSaleRate)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.MCOCustomerReceivable)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.MCOShopReceivable)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.MCODeliveryReceivable)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.AmountRemaining)
+                    </td>*@
+                @*<td>
+                        @Html.DisplayFor(modelItem => item.CustomerOrderDetailID)
+                    </td>*@
+
+                @*<td>
+                        @Html.DisplayFor(modelItem => item.CODCreateBy)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.CODModifyDate)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.CODModifyBy)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.CustomerOrderID)
+                    </td>*@
+                @*<td>
+                        @Html.DisplayFor(modelItem => item.CustomerUserLoginID)
+                    </td>*@
+            </tr>
+        }
+
+    </table>
+    <div class="pager">
+        @Html.PagedListPager(Model, Page => Url.Action("TransactionDetail", new
+                   {
+                       page = Page,
+                       SearchString = ViewBag.SearchString,
+                       //FromDate = ViewBag.FromDate,
+                       //ToDate = ViewBag.ToDate,
+                       //OrderStatus = Request.QueryString["OrderStatus"]
+                       pShopID = Request.QueryString["pShopID"]
+                   }),
+                                                                new PagedListRenderOptions()
+                                                                {
+                                                                    Display = PagedListDisplayMode.IfNeeded
+                                                                })
+    </div>
+</div>
+
+<a href="@Url.Action("TransactionByShopGroup", "ReportTransaction")">Back To List</a>

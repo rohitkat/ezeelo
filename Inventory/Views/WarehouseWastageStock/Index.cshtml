@@ -1,0 +1,199 @@
+﻿@model List<ModelLayer.Models.ViewModel.WastageEntry>
+
+<style type="text/css">
+    #msform1 fieldset:not(:first-of-type) {
+        display: none;
+    }
+
+    .field-validation-error {
+        color: #000000 !important;
+    }
+
+    .succes-msg {
+        color: #31A012;
+        font-size: 20px;
+    }
+
+    .beatpicker-clearButton button {
+        display: none;
+    }
+
+    .input-parent button {
+        display: none;
+    }
+
+    .textarea-adjust {
+        width: 85%;
+    }
+    /*Beatpicker Css*/
+    .beatpicker-clearButton button {
+        display: none;
+    }
+
+    .input-parent button {
+        display: none;
+    }
+
+    .header-navbar-button {
+        position: absolute !important;
+    }
+
+    .beatpicker .main-nav .current-indicator {
+        text-align: center !important;
+    }
+
+    .beatpicker .main-nav .prev1 {
+        left: 0 !important;
+        width: 14%;
+        padding: 0px 10px;
+        color: #fff;
+        font-size: 16px;
+    }
+
+    .beatpicker .main-nav .next1 {
+        right: 0 !important;
+        width: 9%;
+        color: #fff;
+        font-size: 16px;
+    }
+
+    .beatpicker .main-nav .prev1:hover {
+        left: 0 !important;
+        width: 14%;
+        padding: 0px 10px;
+        color: #fff;
+        font-size: 20px;
+        cursor: pointer !important;
+    }
+
+    .beatpicker .main-nav .next1:hover {
+        right: 0 !important;
+        width: 9%;
+        color: #fff;
+        font-size: 20px;
+        cursor: pointer !important;
+    }
+
+    #divImages .remove {
+        background: url(/Content/img/remove-icon.png) no-repeat 0px 0px #fff;
+        float: left;
+        font-size: 0 !important;
+        width: 23px !important;
+        padding: 2px 4px;
+    }
+    /*Beatpicker Css End*/
+    section.right_side_main_part .row-fluid .box.span11.right_side_up_part .box-content div#tblData_wrapper div#tblData_length label select {
+        border-radius: 5px !important;
+        margin: 0 5px 0 !important;
+    }
+    section.right_side_main_part .row-fluid .box.span11.right_side_up_part .box-content div#tblData_wrapper table#tblData tbody tr td a.btn.btn-small.btn-info {
+        border-radius: 5px !important;
+    }
+    section.right_side_main_part .row-fluid .box.span11.right_side_up_part .box-content div#tblData_wrapper div#tblData_filter label input[type="text"] {
+        border-radius: 5px !important;
+        margin: 0;
+    }
+    section.right_side_main_part .row-fluid .box.span11.right_side_up_part .box-content {
+        background: #fff;
+    }
+</style>
+
+
+<link href="~/Content/css/Site.css" rel="stylesheet" />
+<link href="~/Content/css/searching.css" rel="stylesheet" />
+<link href="~/Content/css/sortable.css" rel="stylesheet" />
+<script src="~/Content/js/jquery-1.11.1.min.js"></script>
+<script src="~/Content/js/jquery-1.9.1.min.js"></script>
+<script src="~/Content/js/jQuery-Table-Plugin.js"></script>
+<link href="~/Content/assets/css/font-awesome.min.css" rel="stylesheet" />
+
+<script src="~/Content/js/jquery-2.1.3.min.js"></script>
+<link href="~/Content/css/jquery.dataTables.css" rel="stylesheet" />
+<script src="~/Content/js/jquery.dataTables.js" language="jascript"></script>
+
+<script type="text/javascript" class="init">
+    $(document).ready(function () {
+        $('#tblData').DataTable({
+            dom: 'T<"clear">lfrtip',
+            "processing": true,
+            "serverSide": true,
+            "aaSorting": [],
+            "iDisplayLength": 20,    /// Added by Priti   to show 20 entires by default on date 14-11-2018
+        });
+    });
+</script>
+
+<section class="right_side_main_part">
+<div class="row-fluid">
+        <div class="box span12 right_side_up_part">
+        <div class="box-header">
+            <h2>
+                <i class="icon-list-alt"></i>
+                <span class="break"></span>
+                All Wastage Entry 
+            </h2>
+        </div>      
+
+        <div class="box-content">
+            <table id="tblData" class="table table-bordered table-striped table-condensed display" width="100%">
+                <thead>
+                    <tr>         
+                        <th>Sr. No</th>             
+                        <th>Item</th>
+                        <th>HSN Code</th>
+                        <th>Batch Code</th>
+                        <th>Waste Quantity</th>
+                        <th>Entry Date</th>
+                        <th>Reason</th>
+                        <th>Action</th>                        @*Yashaswi 17-3-108*@
+                    </tr>
+                </thead>
+               @{
+                   var i = 1;
+               }
+                 @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>                            
+                           @i
+                            @{
+                                i=i+1;
+                              }
+                        </td>
+                        <td class="table-shopping-cart-img" style="text-align: left;">
+                            @item.item_name
+                            <br />
+                            <figure>
+                                <img id=" imgproductimage" src="@item.item_image_Path" onerror="this.src = '/Content/Images/no_image.png'" style="width: 70px; height:70px;" alt=" eZeelo " />
+                            </figure>
+                        </td>
+                        <td>
+                            @item.HSNCode
+                        </td>
+                        <td style="text-align:center">
+                            @item.batch_code
+                        </td>
+                        <td style="text-align:center">
+                            @item.waste_qty
+                        </td>
+                        <td>
+                            @item.createdDate.ToString("dd/MM/yyyy")
+                        </td>
+                        <td style="text-align:center">
+                            @item.Remark
+                        </td>
+                        <td>
+                            @Html.ActionLink("Add Item To Stock", "Edit", new { id = item.waste_id }, new { @class = "btn btn-small btn-info" })
+                        </td>
+                       @*Yashaswi 17-3-108*@
+                    </tr>
+                }
+            </table>
+        </div>
+    </div>
+</div>
+    </section>
+
+
+
+

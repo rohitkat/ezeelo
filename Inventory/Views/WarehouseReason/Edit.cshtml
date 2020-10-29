@@ -1,0 +1,103 @@
+﻿@model ModelLayer.Models.WarehouseReason
+
+@{
+    ViewBag.Title = "Edit";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<script>
+    $(document).ready(function () {
+        $('.check').attr("readonly", "true");
+        $('.check').click(function (e) {
+            alert("You cant change category in edit mode.");
+            e.preventDefault();
+        });
+    })
+</script>
+
+<section class="right_side_main_part">
+    <div id="content" class="span10">
+
+        @using (Html.BeginForm("Edit", "WarehouseReason", new { id = Model.ID }, FormMethod.Post, new { id = "Form_" }))
+        {
+            @Html.AntiForgeryToken()
+
+            <div class="form-horizontal">
+
+                @Html.ValidationSummary(true)
+                @Html.HiddenFor(model => model.ID)
+                <div class="row-fluid">
+                    <div class="box span12 right_side_up_part">
+                        <div class="box-content">
+                            <div class="form-horizontal">
+                                <div class="box-header creatProduct clearfix" data-original-title="">
+                                    <h2>
+                                        <i class="icon-exclamation-sign"></i>
+                                        <span class="break"></span>
+                                        Edit Reason
+                                    </h2>
+                                </div>
+                                <div class="box-content nameDscrp">
+                                    <div class="form-horizontal">
+                                        <div class="NameDescription">
+                                            <div class="form-group">
+                                                <div class="col-sm-3">
+                                                    <label style="text-transform:none"> Category</label>
+                                                </div>
+                                                <div class="col-sm-6">
+                                                    @for (var i = 0; i < Model.CategoryList.Count; i++)
+                                                    {
+                                                        <table>
+                                                            <tr>
+                                                                <td>
+                                                                    @Html.CheckBoxFor(it => it.CategoryList[i].IsChecked, new { Style = "vertical-align:3px}", @class = "check" })
+                                                                </td>
+                                                                <td>
+                                                                    @Html.HiddenFor(it => it.CategoryList[i].ID)
+
+                                                                    @Html.DisplayFor(it => it.CategoryList[i].Category)
+                                                                </td>
+                                                            </tr>
+                                                        </table>
+
+                                                    }
+                                                </div>
+                                            </div>
+                                            <div class="control-group mrg-left">
+                                                <div class="col-sm-3">
+                                                    Reason
+                                                </div>
+
+                                                <div class="col-sm-6">
+                                                    <textarea id="Reason" name="Reason" style="width:30%;height:10%">@Model.Reason</textarea>
+                                                    @Html.ValidationMessageFor(model => model.Reason)
+                                                </div>
+
+                                            </div>
+                                            <div class="control-group mrg-left">
+                                                <div class="col-sm-3">
+                                                    Is Active
+                                                </div>
+
+                                                <div class="col-sm-6">
+                                                    @Html.EditorFor(model => model.IsActive)
+                                                    @Html.ValidationMessageFor(model => model.IsActive)
+                                                </div>
+
+                                            </div>
+                                            <p>
+                                                <input type="submit" value="Save" class="btn btn-success mrg-left mrg-top" />
+                                                @Html.ActionLink("Back to List", "Index", null, new { @class = "btn btn-default mrg-left mrg-top" })
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+
+</section>
+

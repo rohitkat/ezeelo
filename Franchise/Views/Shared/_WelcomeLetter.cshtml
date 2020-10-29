@@ -1,0 +1,488 @@
+﻿@model IEnumerable<BusinessLogicLayer.ApprovedMerchantListByFranchise>
+@using ModelLayer.Models
+
+@{
+    ViewBag.Title = "Index";
+}
+<style>
+    select, input[type="file"] {
+        margin-bottom: 0px;
+    }
+</style>
+@*<h2>Pending Request of Merchant Approval</h2>*@
+@using (@Html.BeginForm())
+{
+    <div id="content" class="span10" style="min-height: 403px;">
+        <div class="row-fluid">
+            <div class="box span12">
+                @*<div class="box-header">
+                        <h2><i class="halflings-icon user"></i><span class="break"></span>Approval Merchant Approval</h2>
+                    </div>*@
+                <div>
+                    @*@Html.DropDownList("franchiseID", (SelectList)ViewData["Franchise"], "Select Franchise", new { onchange = "this.form.submit();" })*@
+
+
+                </div>
+                <div class="box-content">
+                    <div id="pageloaddiv"></div>
+                    <table class="table table-striped table-bordered bootstrap-datatable datatable dataTable">
+                        @*<tr>
+                                <th>
+                                    Merchant Name
+                                </th>
+
+                                <th>Actions</th>
+                            </tr>*@
+                        @if (Model != null)
+                        {
+                            foreach (var item in Model)
+                            {
+                                <tr>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.ShopName)
+                                        @if (item.SendBy != 0)
+                                        {
+                                            <span style="font-size:12px; color:red;">( Letter Send On Dated : @Html.DisplayFor(modelItem => item.LetterDate) )</span>
+                                        }
+
+                                    </td>
+
+                                    <td>
+                                        @*@Html.ActionLink("Approve", "Approve", new { userLoginId = item.UserLoginID }, new { @class = "btn btn-primary" })*@
+                                        <a href="#" class="openClose  btn-small btn btn-primary" name=@(item.MerchantID) id=@item.UserLoginID>Welcome</a>
+                                    </td>
+                                </tr>
+                                <tr class="ShowHide" id='div@(item.UserLoginID)'>
+                                    <td colspan="2">
+                                        <div class="ShowDiv" style="padding-left:10px">
+                                            <a href="javascript:PrintGridData('container@(item.UserLoginID)');" class="btn  btn-small btn-default"> Print </a>
+                                            <input type="button" value="Send Mail" id=@(item.MerchantID) class="MailSend  btn-small btn btn-success" />
+                                            <span>
+                                                Merchant Plan Category : @Html.DropDownList("PlanCategory", (SelectList)ViewData["PlanCategory"], "Select Category")
+                                                <input type="button" value="Add Category" id="AddPlanCategory" class="btn  btn-small btn-success" />
+                                            </span>
+                                            <br />
+                                            <span id="span@(item.MerchantID)" style="color: #74DA00; font-weight:bold;"></span>
+                                            <div class='container1' id='container@(item.UserLoginID)' style="border: 2px solid #AEAEAE; width:80%; margin:10px auto;">
+                                                <br />
+                                                <br />
+                                                <br />
+                                                <br />
+                                                <br />
+                                                <div style=" width: 100%; margin: auto !important; min-height: 20.3cm; page-break-after: always;">
+                                                    <div class="divwidth" style="padding:10px;">
+                                                        <div class="address" style="float:left; width:300px">
+                                                            <label style="padding-top:20px; clear:both; padding:10px; font-size:13px;">
+                                                                @if (item.SendBy != 0)
+                                                                {
+                                                                    <span>
+                                                                        Date: @Html.DisplayFor(modelItem => item.LetterDate)
+                                                                    </span>
+                                                                }
+                                                                else
+                                                                {
+                                                                    <span>
+                                                                        Date: <span id='Datedemo@(item.UserLoginID)'></span>
+                                                                        <script>
+                                                                            var d = new Date();
+                                                                            document.getElementById('Datedemo@(item.UserLoginID)').innerHTML = d.toDateString();
+                                                                        </script>
+                                                                    </span>
+                                                                }
+                                                                <br />
+                                                                To<br />
+                                                                @Html.DisplayFor(modelItem => item.MerchantName),<br />
+                                                                M/S @Html.DisplayFor(modelItem => item.ShopName)<br />
+                                                                @Html.DisplayFor(modelItem => item.MerchantAddress),<br />
+                                                                @Html.DisplayFor(modelItem => item.CityName)-@Html.DisplayFor(modelItem => item.Pincode)
+                                                            </label>
+                                                        </div>
+                                                        @*<img src="~/images/gb-logo.png" width="150" height="70" style="float:right;" />*@
+                                                    </div>
+                                                    <div class="divwidth" style="padding-top:20px; clear:both; padding:10px;">
+                                                        <h3>Sub: Intimation of Registration at our portal eZeelo</h3>
+                                                    </div>
+                                                    <div style="text-align:justify; padding:10px; font-size:13px;">
+                                                        <span>Dear Sir,</span>
+                                                        <p style="text-indent:45px;">
+                                                            At the outset we congratulate you for the registration of your establishment at eZeelo under<u><b> @Html.DisplayFor(modelItem => item.PlanName)</b></u>. I take this opportunity to welcome you in our eZeelo family.
+                                                            You can now go ahead to create your eshop on our online market place.
+                                                        </p>
+                                                        <p style="text-indent:45px;">
+                                                            This unique collaboration of our technological and marketing platform with your offers and merchandise to suit the taste of customers will create an unmatched value for our customers. By using this platform proactively and sincerely, you will be achieving an exponential growth in your business by reaching out to a larger customer base and growing number of online shoppers.
+                                                            Please find enclosed your registration details as Annexure.
+                                                        </p>
+                                                        <p style="text-indent:45px;">
+                                                            We hope that your association with us will prove to be a turning point in your business and pave the way for next level of growth.
+                                                        </p>
+                                                        <p>With best regards</p>
+                                                        <p>Yours Sincerely</p>
+                                                        <br />
+                                                        <h4>Swetank Gupta</h4>
+                                                        <h3 style="line-height:0px;">CEO</h3>
+                                                    </div>
+
+                                                    <div class="ShowHide" style="display: none;padding-left:10px" id="AddmainCategoryDiv@(item.MerchantID)">
+                                                        <span>Main Category Name:- </span>    @Html.TextBox("mainCategory" + (item.MerchantID), null, new { @class = "mainCategory" })
+                                                        <input type="button" value="Add Category" id=@(item.MerchantID) class="AddmainCategory  btn-small btn btn-success" />
+                                                    </div>
+                                                    <div class="ShowHide" style="display: none; padding-left: 10px" id="AddCategoryDiv@(item.MerchantID)">
+                                                        <span>Sub Category Name:- </span>    @Html.TextBox("Category" + (item.MerchantID), null, new { @class = "DataEntry" })
+                                                        <span> Marketing Fees(%):- </span>     @Html.TextBox("commission" + (item.MerchantID), null, new { @class = "DataEntry" })
+                                                        <input type="button" value="Add Fees" id=@(item.MerchantID) class="AddCategory  btn-small btn btn-success" />
+                                                    </div>
+
+                                                    <div style="padding:10px; margin-top:5px;" class="AddCategoryDiv" id='CategoryTableDiv@(item.MerchantID)'>
+
+                                                        <h4>
+                                                            <a href="javascript:void(0);" id="@(item.MerchantID)" class="mainCategoryEntry plusanchor">+</a> &nbsp;&nbsp;&nbsp; Main Category  :
+
+                                                            <span id="mainCategoryspan@(item.MerchantID)"></span>
+                                                        </h4>
+
+
+                                                        <input type="hidden" name="CaltegoryList" id="CaltegoryList@(item.MerchantID)">
+                                                        <table id='CategoryTable@(item.MerchantID)' style="width: 100%; border-collapse: collapse; border-spacing: 1px; border:1px solid black; ">
+                                                            <tr><th style="border: 1px solid black; ">Sub Category Name <a href="javascript:void(0);" id="@(item.MerchantID)" class="CategoryEntry plusanchor">+</a></th><th style="border: 1px solid black; ">Marketing Fees(%)</th></tr>
+                                                        </table>
+                                                    </div>
+                                                </div>
+                                                @*<div class="termandcondition">*@
+                                                <div style=" width: 100%; margin-top: 1px; margin-bottom: 0px; min-height: 27.3cm; page-break-after: always;">
+                                                    <h3 style="line-height: 30px; text-align: center; background: rgba(174, 174, 174, 0.5); margin: 0px !important;">Terms and Conditions</h3>
+
+                                                    <div style="width:50%; float:left;">
+                                                        <ol style="padding: 5px; list-style-type: decimal; text-align: justify; list-style-type: none;">
+                                                            <li>1. All the fees and Charges are exclusive of Service Tax 14.5% which shall be charged extra.</li>
+                                                            <li>2. Registration of any establishment with eZeelo means that the Concerned Shop  owner has fully understood the Concept of eZeelo and has expressed his/her interest to create an eshop, to be subsequently hosted at eZeelo. </li>
+                                                            <li>3. Creation of eShop means the customization and creation of dynamic web page of the establishment into our Online market place which is a standard web-based software platform, developed and managed by us. </li>
+                                                            <li>4. eShops needs to have the information regarding the establishment and the products sold by, it to be visible to the general customers and also basic data of establishment, for the transaction between the establishment and the portal.</li>
+                                                            <li>5. Registration charges covers the cost of creation of eshop.</li>
+                                                            <li>6. The shop owner shall be provided a web based password protected control panel for the user to manage their eShop on regular basis.</li>
+                                                            <li>7. The shop owners need to furnish all the required details pertaining to their establishment in order to enable a smooth e-transaction between the buyers and sellers using the portal. </li>
+                                                            <li>8. The shop owners need to pay the registration fees before the commencement of the creation of their eshop.</li>
+                                                            <li>9. The shop owners should furnish the requisite details of the products to be sold through the portal so that the same  can be displayed in their eshop to the buyers visiting the portal.</li>
+                                                            <li>10. The creation of the eshop will need minimum 30 working days from the, date of registration and receipt of registration fees whichever is later. </li>
+                                                            <li>11. Registration fees are non-refundable.</li>
+                                                            <li>12. During the period of the development of eshop the shop owners are expected to extend their support to the operations team of the company by providing the complete product descriptions of their inventory along with the photographs so that the complete range of the product.</li>
+                                                            <li>13. The Format of the eshop shall be standard as designed by company from time to time depending upon the product category. </li>
+                                                        </ol>
+                                                    </div>
+                                                    <div style="width: 50%; float: left; ">
+                                                        <ol style="padding: 5px; list-style-type: decimal; text-align: justify; list-style-type: none;">
+                                                            <li>14. The shop owners’s inputs are needed for the banner design of their respective eshop which includes Logo, Photographs, Description of establishment and their  location Co-Ordinates.</li>
+                                                            <li>15. The eshop will be hosted at the portal after getting the acceptance from the side of shop owner in the approval form and the payment of the annual hosting charge whichever is later.</li>
+                                                            <li>16. Hosting charges shall be applicable from the date of hosting the eshop of an establishment on the portal. </li>
+                                                            <li>17. If the hosting charge is nod paid up to 6 months of the due date the registration stands cancelled.</li>
+                                                            <li>18. The shop owners or their authorized representative must undergo the mandatory training and orientation program organized by the company prior to hosting and from time to time.</li>
+                                                            <li>19. It shall be the responsibility of the shop owner to ensure the availability of the product at the displayed price at the time of the e-transaction/placing of the order.</li>
+                                                            <li>20. It shall be responsibility of the shop owners to follow the standard Operating Procedure established by the company in Packaging, Billing, dispatch etc maintained by us from time to time.</li>
+                                                            <li>21. It shall be responsibility of the shop owner to maintain the inventory and the prices in their respective eshop.</li>
+                                                            <li>22. The shop owners shall abide by the policies pertaining to Product display, Pricing, Billing, Payment, Service charges, delivery, Promotional, Exchange, Goods return, Servicing and Guarantee and Warrantee policy as designed by the company from time to time.</li>
+                                                            <li>23. Company reserves the right to Change the pricing, scope of services, policies from time to time.</li>
+                                                            <li>24. Company reserves the right to provide further value added services at a price to some or all of the registered shopkeepers and /or any other entity it deems fit so. </li>
+                                                            <li>25. All the payment shall be made through a crossed cheque or Pay Order Favoring M/S. eZeelo Emarketplace Pvt. Ltd.</li>
+                                                            <li>26. For any legal matter the jurisdiction shall be Nagpur court.</li>
+                                                        </ol>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                            }
+                        }
+
+                    </table>
+
+                </div>
+                <div class="control-actions">
+                    <div class="col-md-offset-2 col-md-10">
+                        @*@Html.ActionLink("Back to Franchise List", "ShowFranchiseList", "MerchantApproval", new { @class = "btn" })*@
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+<style type="text/css">
+    .ShowHide {
+        display: none;
+    }
+</style>
+<script src="~/Scripts/jquery-1.10.2.min.js"></script>
+<script language="javascript" type="text/javascript">
+    function PrintGridData(str) {
+        var gridInsideDiv = document.getElementById(str);
+        var printWindow = window.open('', '_blank', 'letf=50,top=50,width=800,height=500,toolbar=1,scrollbars=1,status=1');
+        printWindow.document.write(gridInsideDiv.innerHTML);
+        printWindow.document.close();
+        printWindow.focus();
+        printWindow.print();
+        printWindow.close();
+
+    }
+
+
+</script>
+<style type="text/css">
+    #pageloaddiv {
+        position: fixed;
+        left: 0px;
+        top: 0px;
+        width: 100%;
+        height: 100%;
+        z-index: 1000;
+        background: url('../Content/Images/ajax_loader.gif') no-repeat center center;
+        background-size: 100px;
+        display: none;
+    }
+
+    .CategoryEntry {
+        text-decoration: none;
+        font-size: 16px;
+    }
+
+        .CategoryEntry:hover, .CategoryEntry:focus {
+            text-decoration: none;
+        }
+
+    .mainCategoryEntry {
+        text-decoration: none;
+        font-size: 16px;
+    }
+
+        .mainCategoryEntry:hover, .CategoryEntry:focus {
+            text-decoration: none;
+        }
+</style>
+
+
+<script type="text/javascript">
+    var merchantID;
+
+    $(document).ready(function () {
+        $(".openClose").click(function () {
+            var identity = $(this).attr('id');
+            //alert(identity);
+            merchantID = $(this).attr('name');
+
+            $("[id*=div" + identity + "]").toggle("slow");
+
+            var count = 0;
+            $("#pageloaddiv").attr("display", "block");
+            $("#pageloaddiv").css("display", "block");
+            $.ajax({
+                type: "POST",
+                url: "/WelcomeLetter/MerchantCategory",
+                data: "{ MerchantID:'" + merchantID + "'}",
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                async: true,
+                cache: false,
+                success: function (msg) {
+
+                    $('#PlanCategory').empty();
+                    $('#PlanCategory').append('<option value=0>Select Category</option>');
+                    $.each(msg, function (index, item) {
+                        $('#PlanCategory').append('<option value=' + item.categoryID + '>' + item.categoryName + '</option>');
+                    });
+
+                    $("#pageloaddiv").css('display', 'none');
+                    $("#pageloaddiv").fadeOut(1000);
+                    // alert("success");
+                },
+                error: function (x, e) {
+                    alert("error");
+                    $("#pageloaddiv").css('display', 'none');
+                    $("#pageloaddiv").fadeOut(1000);
+                }
+
+            });
+
+
+        });
+
+        $("#AddPlanCategory").click(function () {
+            var categoryId = $("#PlanCategory option:selected").val();
+            var text = $("#CategoryTable" + merchantID).closest('tr').find('#' + categoryId).html();
+            //$("[id*=tableSimilarProduct]").find("#" + cid).css("background-color", "white");
+
+            if (text == null) {
+                $.ajax({
+                    type: "POST",
+                    url: "/WelcomeLetter/MerchantCategoryWise",
+                    data: "{ MerchantID:'" + merchantID + "',CategoryID:'" + categoryId + "'}",
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    async: true,
+                    cache: false,
+                    success: function (msg) {
+
+                        $("#CategoryTable" + merchantID).append("<tr id='" + msg.categoryID + "'>" +
+                       "<td style='border: 1px solid black; '>" + msg.categoryName + "</td>" +
+                       "<td style='border: 1px solid black; ' align='center'>" + msg.chargesInPercentage + "</td>" +
+                       //"<td style='border: 1px solid black; ' align='center'>" + msg.chargesInRs + "</td>" +
+                       "</tr>"
+                             );
+
+                    },
+                    error: function (x, e) {
+                        alert("error");
+                        $("#pageloaddiv").css('display', 'none');
+                        $("#pageloaddiv").fadeOut(1000);
+                    }
+
+                });
+            }
+            else {
+                alert("Category Already Added");
+            }
+
+        });
+
+    });
+
+
+    $(document).ready(function () {
+        $(".ShowTable").click(function () {
+            var identity = $(this).attr('id');
+            var tableData = $("#CategoryTable" + identity);
+            alert(tableData.html());
+        });
+    });
+    //To Send Email to Merchant
+    $(function () {
+        //MobileError
+        $('.MailSend').click(function (e) {
+            var merchantID = $(this).attr('id');
+            var identity = $(this).attr('id');
+            var tableData = $("#CategoryTableDiv" + identity);
+            //alert(merchantID);
+            $("#pageloaddiv").attr("display", "block");
+            $("#pageloaddiv").css("display", "block");
+            alert(merchantID);
+            alert(tableData);
+            $.ajax({
+                type: "POST",
+
+                url: "/WelcomeLetter/SendMailToMerchant_SelectedCategory",
+                data: "{ MerchantID:'" + merchantID + "',tableData:'" + tableData.html() + "'}",
+                //url: "/WelcomeLetter/SendMailToMerchant",
+                //  data: "{ MerchantID:'" + merchantID + "'}",
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                async: true,
+                cache: false,
+                success: function (msg) {
+                    $("#span" + merchantID).text(msg);
+                    $("#pageloaddiv").css('display', 'none');
+                    $("#pageloaddiv").fadeOut(1000);
+                },
+                error: function (x, e) {
+                    alert("unable to call Send mail ");
+                    $("#pageloaddiv").css('display', 'none');
+                    $("#pageloaddiv").fadeOut(1000);
+                }
+
+            });
+
+            //if ($("#pageloaddiv").css('display') == 'none') {
+            //    $("#pageloaddiv").css('display', 'block');
+            //    $("#pageloaddiv").fadeOut(1000);
+            //}
+        });
+    });
+
+
+    //to add Category and commission to the table
+
+    $(function () {
+        $('.AddCategory').click(function (e) {
+            var merchantID = $(this).attr('id');
+            var categoryName = $("#Category" + merchantID).val();
+            var commission = $("#commission" + merchantID).val();
+
+            if (categoryName == '') {
+                alert('Please Enter the Category Name');
+                return false;
+            }
+            if (commission == '') {
+                alert('Please Enter the Category Commission');
+                return false;
+            }
+
+            $("#CategoryTable" + merchantID).append("<tr>" +
+                            "<td style='border: 1px solid black; '>" + categoryName + "</td>" +
+                            "<td style='border: 1px solid black; ' align='center'>" + commission + "</td>" +
+                            "</tr>"
+                        );
+
+
+            $("#Category" + merchantID).val("");
+            $("#commission" + merchantID).val("");
+
+        });
+    });
+
+
+
+
+
+    //to Add main category to div
+    $(function () {
+        $('.AddmainCategory').click(function (e) {
+            var merchantID = $(this).attr('id');
+            var categoryName = $("#mainCategory" + merchantID).val();
+
+
+            if (categoryName == '') {
+                alert('Please Enter the Category Name');
+                return false;
+            }
+
+
+            $("#mainCategoryspan" + merchantID).text(categoryName);
+
+
+            $("#mainCategory" + merchantID).val("");
+
+
+        });
+    });
+    //hide and show + /- signe on link
+    $(document).ready(function () {
+        $(".CategoryEntry").click(function () {
+            var identity = $(this).attr('id');
+            //alert(identity);
+            $("[id*=AddCategoryDiv" + identity + "]").toggle();
+
+            if ($(".CategoryEntry").html() == '+') {
+                $(this).text('-');
+            } else {
+                $(this).text('+');
+            }
+
+
+        });
+    });
+
+    //hide and show + /- signe on link
+    $(document).ready(function () {
+        $(".mainCategoryEntry").click(function () {
+            var identity = $(this).attr('id');
+            //alert(identity);
+            $("[id*=AddmainCategoryDiv" + identity + "]").toggle();
+
+            if ($(".plusanchor").html() == '+') {
+                $(this).text('-');
+            } else {
+                $(this).text('+');
+            }
+
+
+        });
+
+    });
+</script>
+

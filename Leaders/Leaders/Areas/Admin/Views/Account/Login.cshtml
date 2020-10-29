@@ -1,0 +1,71 @@
+﻿@model ModelLayer.Models.ViewModel.LoginViewModel
+@{
+    if (Request.QueryString["callFrom"] != null)
+    {
+        Layout = "~/Views/Shared/_LayoutLogin.cshtml";
+    }
+}
+<link href="~/Content/css/site.css" rel="stylesheet" />
+<link id="base-style" href="~/Content/css/style.css" rel="stylesheet" />
+<link id="base-style" href="~/Content/css/style-responsive.css" rel="stylesheet" />
+<link href="~/Content/css/style-forms.css" rel="stylesheet" />
+
+@*<h2>Login</h2>*@
+@using (Html.BeginForm("Login", "Account"))
+{
+    @Html.AntiForgeryToken()
+
+    <div class="container-fluid-full">
+        <div class="row-fluid">
+            <div class="row-fluid">
+                <div class="extra-log  pull-right">
+                    <div class="login-box MainLogin box span12">
+                        <div class="icons span2">
+                            <div class="icon-login loginHead"> <i class="glyphicons-icon white lock"></i><span>Login</span></div>
+
+                        </div>
+                        <div class="example span10" data-text="">
+                            <div class="grid">
+                                @if (TempData["Message"] != null)
+                                {
+                                    <div class="breadcrumbs dark">
+                                        @TempData["Message"]
+                                    </div>
+                                }
+                                @Html.ValidationSummary(true)
+
+
+                                <div class="row">
+                                    <div class="mid-cont">
+                                        <div class="input-prepend" title="Username">
+                                            <span class="add-on"><i class="halflings-icon user"></i></span>
+                                            @Html.TextBoxFor(model => model.UserName, new { @Class = "input-large span10", @placeholder = "type username" })
+                                            @Html.ValidationMessageFor(model => model.UserName)
+
+                                        </div>
+
+                                        <div class="input-prepend" title="Username">
+                                            <span class="add-on"><i class="halflings-icon lock"></i></span>
+                                            @Html.PasswordFor(model => model.Password, new { @Class = "input-large span10", @placeholder = "type password" })
+                                            @Html.ValidationMessageFor(model => model.Password)
+
+                                        </div>
+                                        <div class="button-login">
+                                            <button type="submit" value="Login" class="button btn btn-primary">Login</button> @Html.ActionLink("Forgot Password", "ForgotPassword", "MerchantRegisterNow", null, new { @class = "link" })
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+
+
+@*@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}*@

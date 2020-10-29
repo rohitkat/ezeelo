@@ -1,0 +1,99 @@
+﻿@model ModelLayer.Models.CustomerRatingAndFeedback
+
+@{
+    Layout = "~/Views/Shared/_LayoutPartial.cshtml";
+}
+<style>
+    .control-label {
+        float: left;
+        width: 140px;
+        padding-top: 5px;
+        text-align: left !important;
+    }
+</style>
+<div class="row  margin_left_right_decress">
+    <div class="span4">
+        <div class="widget">
+            <div class="widget-header">
+                <i class="icon-list-alt"></i>
+                <h3> Edit Review </h3>
+            </div>
+            <!-- /widget-header -->
+            <div class="widget-content">
+                <div class="widget big-stats-container">
+                    <div class="widget-content matchdivheight">
+                        <p>
+                            <button class="btn btn-small btn-success" onclick="Back()">Back</button>
+                        </p>
+                        @using (Html.BeginForm())
+                        {
+                            @Html.AntiForgeryToken()
+
+                            <div class="form-horizontal">
+                                @Html.ValidationSummary(true)
+                                @Html.HiddenFor(model => model.ID)
+
+                                <div class="control-group">
+                                    <span class="control-label">Product</span>
+                                    <div>
+                                        @Html.TextBox("Product", null, new { disabled = "disabled" })
+                                    </div>
+                                </div>
+
+                                <div class="control-group">
+                                    <span class="control-label">Points</span>
+                                    <div>
+                                        @Html.TextBoxFor(model => model.Point, new { disabled = "disabled" })
+                                        @Html.ValidationMessageFor(model => model.Point)
+                                    </div>
+                                </div>
+
+                                <div class="control-group">
+                                    <span class="control-label">Comment</span>
+                                    <div>
+                                        @Html.TextBoxFor(model => model.Feedback, new { disabled = "disabled" })
+                                        @Html.ValidationMessageFor(model => model.Feedback)
+                                    </div>
+                                </div>
+                                
+                                <div class="control-group">
+                                    <span class="control-label">Date</span>
+                                    <div>
+                                        @Html.TextBoxFor(model => model.CreateDate, new { disabled = "disabled" })
+                                        @Html.ValidationMessageFor(model => model.CreateDate)
+                                    </div>
+                                </div>
+
+                                <div class="control-group">
+                                    @Html.LabelFor(model => model.IsApproved, new { @class = "control-label col-md-2" })
+                                    <div>
+                                        @Html.EditorFor(model => model.IsApproved)
+                                        @Html.ValidationMessageFor(model => model.IsApproved)
+                                    </div>
+                                </div>
+
+                                <div class="control-group">
+                                    <div style="float:right">
+                                        @*<input type="button" id="btnSave" class="btn btn-danger btn-small" value="create" />*@
+                                        <button id="btnSave" class="btn btn-danger btn-small">Save</button>
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                    </div>
+                </div>
+                <!-- /widget-content -->
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script>
+    function Back() {
+        window.parent.$("[id$=divtable]").removeClass('span8');
+        window.parent.$("[id$=divtable]").addClass('span12');
+        window.parent.$("[id$=Details]").hide();
+        $('#loader_img').hide();
+    }
+</script>

@@ -1,0 +1,175 @@
+﻿@model ModelLayer.Models.ViewModel.RoleManagerViewModel
+
+@using (Html.BeginForm("AddMore","RoleManagement"))
+{
+
+    <input type="submit" name="submit" id="btnSubmit" class="btn btn-success" />
+    
+    <table class="table table-striped table-bordered">
+        <thead>
+            <tr>
+                <th>
+                    Menu Name
+                </th>
+                <th>
+                    @Html.CheckBox("CanRead", new { @class = "chkBox" }) CanRead
+                </th>
+
+                <th>
+                    @Html.CheckBox("CanWrite", new { @class = "chkBox" }) CanWrite
+                </th>
+                <th>
+                    @Html.CheckBox("CanDelete", new { @class = "chkBox" }) CanDelete
+                </th>
+                <th>
+                    @Html.CheckBox("CanPrint", new { @class = "chkBox" }) CanPrint
+                </th>
+                <th>
+                    @Html.CheckBox("CanImport", new { @class = "chkBox" }) CanImport
+                </th>
+                <th>
+                    @Html.CheckBox("CanExport", new { @class = "chkBox" }) CanExport
+                </th>
+
+                <th>
+                    @Html.CheckBox("IsActive", new { @class = "chkBox" }) IsActive
+                </th>
+            </tr>
+        </thead>
+        @Html.Hidden("RoleList",(int)ViewBag.RoleList)
+            @for (int i = 0; i < Model.rolemenuCollection.Count(); i++)
+            {
+                <tr>
+                    <td>
+                        
+                        @Html.HiddenFor(x => x.rolemenuCollection[i].MenuID)
+                        @Html.DisplayFor(x => x.rolemenuCollection[i].MenuName)
+                    </td>
+                    <td>
+                        @Html.EditorFor(x => x.rolemenuCollection[i].CanRead)
+                        @Html.HiddenFor(x => x.rolemenuCollection[i].CanRead)
+                    </td>
+                    <td>
+                        @Html.EditorFor(x => x.rolemenuCollection[i].CanWrite)
+                        @Html.HiddenFor(x => x.rolemenuCollection[i].CanWrite)
+                    </td>
+                    <td>
+                        @Html.EditorFor(x => x.rolemenuCollection[i].CanDelete)
+                        @Html.HiddenFor(x => x.rolemenuCollection[i].CanDelete)
+                    </td>
+                    <td>
+                        @Html.EditorFor(x => x.rolemenuCollection[i].CanPrint)
+                        @Html.HiddenFor(x => x.rolemenuCollection[i].CanPrint)
+                    </td>
+                    <td>
+                        @Html.EditorFor(x => x.rolemenuCollection[i].CanImport)
+                        @Html.HiddenFor(x => x.rolemenuCollection[i].CanImport)
+                    </td>
+                    <td>
+                        @Html.EditorFor(x => x.rolemenuCollection[i].CanExport)
+                        @Html.HiddenFor(x => x.rolemenuCollection[i].CanExport)
+                    </td>
+                    <td>
+                        @Html.EditorFor(x => x.rolemenuCollection[i].IsActive)
+                        @Html.HiddenFor(x => x.rolemenuCollection[i].IsActive)
+                    </td>
+                </tr>
+            }
+            <tr></tr>
+</table>
+    
+}
+<div>
+    @Html.ActionLink("Back to List", "Index")
+</div>
+
+
+
+<script src="~/Scripts/jquery-1.10.2.min.js"></script>
+<script>
+    $(function () {
+        $("#btnSubmit").click(function () {
+            var selectedVal = $("#RoleList option:selected").val();
+            if (selectedVal == '') {
+                pMessage.textContent = 'Please select the role'
+                return false;
+            }
+        });
+    });
+
+    $(function () {
+        $("#RoleList").change(function () {
+            var selectedVal = $("#RoleList option:selected").val();
+            if (selectedVal > 0) {
+
+                $.ajax({
+                    type: "POST",
+                    url: "RoleExistOrNot",
+                    data: "{ id: '" + selectedVal + "'}",
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    async: "true",
+                    cache: "false",
+                    success: function (msg) {
+                        if (msg > 0) {
+                            pMessage.textContent = 'Role Already Exists'
+                            return false;
+                        }
+                        else {
+                            pMessage.textContent = ''
+                        }
+                    },
+                    Error: function (x, e) {
+                        pMessage.textContent = 'Error in Role Selection'
+                    }
+                });
+            }
+        });
+    });
+</script>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $("#CanRead").click(function () {
+            $("[id*=CanRead]").prop('checked', $(this).prop('checked'));
+        });
+    });
+
+
+
+    $(document).ready(function () {
+        $("#CanWrite").click(function () {
+            $("[id*=CanWrite]").prop('checked', $(this).prop('checked'));
+        });
+    });
+
+    $(document).ready(function () {
+        $("#CanDelete").click(function () {
+            $("[id*=CanDelete]").prop('checked', $(this).prop('checked'));
+        });
+    });
+
+    $(document).ready(function () {
+        $("#CanPrint").click(function () {
+            $("[id*=CanPrint]").prop('checked', $(this).prop('checked'));
+        });
+    });
+
+    $(document).ready(function () {
+        $("#CanExport").click(function () {
+            $("[id*=CanExport]").prop('checked', $(this).prop('checked'));
+        });
+    });
+
+    $(document).ready(function () {
+        $("#CanImport").click(function () {
+            $("[id*=CanImport]").prop('checked', $(this).prop('checked'));
+        });
+    });
+
+    $(document).ready(function () {
+        $("#IsActive").click(function () {
+            $("[id*=IsActive]").prop('checked', $(this).prop('checked'));
+        });
+    });
+</script>

@@ -1,0 +1,113 @@
+﻿@model IEnumerable<ModelLayer.Models.ViewModel.IndirectTaxSetting>
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<style>
+    .ui-widget-header {
+        border: 0px solid #aaaaaa;
+        background: #fafafa !important;
+    }
+</style>
+
+<script src="~/Content/js/bootstrap.js"></script>
+@*<script src="~/Content/js/jquery-1.9.1.min.js"></script>*@
+<script src="~/Content/js/jquery.dataTables.min.js"></script>
+<script src="~/Content/js/bootstrap.min.js"></script>
+<script type="text/javascript">
+    $(document).ready(function () {
+        $("#myTable").DataTable({
+            "bDestroy": true,
+            //"sPaginationType": "full_numbers",
+            "bJQueryUI": true,
+            "bInfo": false,
+            "scrollY": 700,
+            "scrollCollapse": true,
+            "bPaginate": false,
+            "iDisplayLength": 20,
+            "bAutoWidth": false,
+
+        });
+
+    });
+</script>
+
+
+<div id="content" class="span10">
+    <ul class="breadcrumb">
+        <li>
+            <a href="#">Index</a>
+        </li>
+    </ul>
+    <div class="row-fluid">
+        <div class="box span12">
+            <div class="box-header">
+                <h2><i class="icon-edit"></i><span class="break"></span>@Html.ActionLink("Create New", "Create")</h2>
+
+            </div>
+            <div class="box-content">
+                <table class="table" id="myTable">
+                    <thead>
+                    <tr>
+                        <th>
+                            Tax ON
+                        </th>
+                        <th>
+                            Franchise Name
+                        </th>
+                        <th>
+                            Taxation Name(Depend On)
+                        </th>                        
+                        <th>
+                            IN (%)
+                        </th>
+                        <th>
+                            IN (RS))
+                        </th>
+                        <th>
+                            IsInclude Sale Rate
+                        </th>
+                        <th>
+                            IsInclude Sum Of Tax
+                        </th>
+                        <th></th>
+                    </tr>
+                        </thead>
+
+                    @foreach (var item in Model) {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.TaxName)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.FranmchiseName)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.DependTaxName)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.TaxPercentage)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.TaxableAmount)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.IsIncludeSaleRate)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.IsOnTaxSum)
+                    </td>
+                    <td>
+                        @Html.ActionLink("Edit", "Edit", new { id = item.ID }, new { @class = "btn btn-small btn-success" })
+                        @Html.ActionLink("Details", "Details", new { id = item.ID }, new { @class = "btn btn-small btn-primary" })
+                        @*@Html.ActionLink("Delete", "Delete", new { id = item.ID }, new { @class = "btn btn-small btn-danger" })*@
+                    </td>
+                </tr>
+}
+
+                </table>
+                </div>
+            </div>
+        </div>
+        </div>

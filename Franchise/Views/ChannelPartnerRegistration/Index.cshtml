@@ -1,0 +1,114 @@
+﻿@model IEnumerable<ModelLayer.Models.ViewModel.MerchantPendingApprovalViewModel>
+@*@model IEnumerable<ModelLayer.Models.ViewModel.ChannelPartnerRegistration>*@
+@{
+    ViewBag.Title = "Index";
+}
+
+<style>
+    .breadcrumbs1 {
+        top: -36px;
+        background: none;
+        color: red;
+        z-index: 99;
+        font-size: 18px;
+        text-align: center;
+    }
+
+    .sorting_1 {
+        background: #f9f9f9 !important;
+    }
+    div.checker {
+        margin-top:0px !important;
+    }
+</style>
+<h2 style="text-align: center; font-size:19px; color: rgb(171, 143, 101);">Channel Partner Registration</h2>
+
+<div class="row-fluid">
+    <div class="box span12">
+        <div class="box-header" data-original-title="">
+            <h2><i class="icon-exclamation-sign"></i><span class="break"></span>@Html.ActionLink("Create New", "Create")</h2>
+        </div>
+        <div>
+            <div class="clearfix"></div>
+            @if (TempData["Message1"] != null)
+            {
+                <div class="breadcrumbs1 ">
+                    @TempData["Message1"]
+                </div>
+            }
+        </div>
+        @if(Model.Count()>0)
+        { 
+        <div class="box-content">
+            <table class="table table-striped bootstrap-datatable datatable forResponsive">
+                <thead>
+                    <tr>
+
+                        <th>
+                            @*@Html.DisplayNameFor(modelItem => item.UserLoginID)*@
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.Name)
+                        </th>
+                        <th>
+                            @*@Html.DisplayNameFor(model => model.OwnerId)*@
+                        </th>
+                        @*<th>
+                            @Html.DisplayNameFor(model => model.ShopName)
+                        </th>*@
+                        <th>
+                            @Html.DisplayNameFor(model => model.mobile)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.Email)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.IsLock)
+                        </th>
+                        <th></th>
+                    </tr>
+                </thead>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>
+                            @Html.HiddenFor(modelItem => item.UserLoginID)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Name)
+                        </td>
+                        <td>
+                            @Html.HiddenFor(modelItem => item.OwnerId)
+                        </td>
+                        @*<td>
+                            @Html.DisplayFor(modelItem => item.ShopName)
+                        </td>*@
+                        <td>
+                            @Html.DisplayFor(modelItem => item.mobile)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Email)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.IsLock)
+                        </td>
+
+                        <td>
+                            @*@Html.ActionLink("Edit","Edit", new { id = item.UserLoginID }, "MPersonalDetail")*@
+                            @if (item.IsLock == false)
+                            {
+                                @Html.ActionLink("Edit", "Edit", "ChannelPartnerRegistration", new { id = item.UserLoginID }, new { @class = "btn btn-small btn-success" })
+                            }
+                            else
+                            {
+                                @Html.Label("Not Approved", new { @class = "btn btn-primary btn-small" })
+                            }
+                        </td>
+                    </tr>
+                }
+
+            </table>
+        </div>
+        }
+    </div>
+</div>

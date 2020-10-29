@@ -1,0 +1,134 @@
+﻿@model ModelLayer.Models.ViewModel.ERPBonusPayoutViewModel
+
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_LeadersLayout.cshtml";
+}
+<style>
+    table {
+        border-collapse: separate;
+        border-spacing: 15px;
+    }
+</style>
+<div class="container">
+    <div id="progress" class="modal">
+        <div class="center">
+            <img src="~/img/ajax-loading-gif-transparent-background-8.gif" />
+        </div>
+    </div>
+    <div class="card" id="maindiv">
+        <div class="card-header"><strong>Promotional ERP Payout Process </strong></div>
+        <div class="card-body card-block">
+            @if (@Model.Level0PromotionalERPPayout != null)
+            {
+                @Html.ActionLink("Level 0 Freez Report", "PromotionalERPPayout", new { PromotionalERPPayoutId = @Model.Level0PromotionalERPPayout }, new { @class = "btn btn-warning" })
+            }
+            @if (@Model.Level1PromotionalERPPayout != null)
+            {
+                @Html.ActionLink("Level 1 Freez Report", "PromotionalERPPayout", new { PromotionalERPPayoutId = @Model.Level1PromotionalERPPayout }, new { @class = "btn btn-warning" })
+            }
+
+            @if (@Model.Level0PromotionalERPPayout == null || @Model.Level1PromotionalERPPayout == null)
+            {
+                using (Html.BeginForm())
+                {
+                    @Html.AntiForgeryToken()
+                    @Html.HiddenFor(model => model.EzeeMoneyPayoutId)
+                    <div class="form-horizontal">
+                        @Html.ValidationSummary(true)
+                        <table>
+                            @*Start Yashaswi 06/12/2018 Promo ERP*@
+                            <tr>
+                                <td>
+                                    Select city
+                                </td>
+                                <td>
+                                    @*@Html.HiddenFor(model => model.SelectedCities)*@
+
+                                    @*@Html.DropDownListFor(model => model.SelectedCities, Model.Cities, new { size = 5 })*@
+                                    @*  @Html.ListBoxFor(model => model.SelectedCities, "Cities", new { size = 5 })*@
+
+                                            @Html.DropDownList("City", new List<SelectListItem>
+                                        {
+                                           // new SelectListItem{ Text="Level 0", Value = "0" },
+                                            new SelectListItem{ Text="Kanpur", Value = "10909" },
+                                            new SelectListItem{ Text="Sonipat", Value = "21191" }
+                                        })
+                                </td>
+                            </tr>
+                            @*End Yashaswi 06/12/2018 Promo ERP*@
+
+                            <tr>
+                                <td>
+                                    Only Active User(According to Last Payout)
+                                </td>
+                                <td>
+                                    @Html.EditorFor(model => model.ActiveUser)
+                                    @Html.ValidationMessageFor(model => model.ActiveUser)
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    Level
+                                </td>
+                                <td>
+                                    @if (@Model.Level0PromotionalERPPayout != null)
+                                    {
+                                        @Html.DropDownList("Level", new List<SelectListItem>
+                                        {
+                                           // new SelectListItem{ Text="Level 0", Value = "0" },
+                                            new SelectListItem{ Text="Level 1", Value = "1" }
+                                        })
+                                    }
+                                    else if (@Model.Level1PromotionalERPPayout != null)
+                                    {
+                                        @Html.DropDownList("Level", new List<SelectListItem>
+                                        {
+                                            new SelectListItem{ Text="Level 0", Value = "0" },
+                                            //new SelectListItem{ Text="Level 1", Value = "1" }
+                                        })
+                                    }
+                                    else
+                                    {
+                                        @Html.DropDownList("Level", new List<SelectListItem>
+                                        {
+                                            new SelectListItem{ Text="Level 0", Value = "0" },
+                                            new SelectListItem{ Text="Level 1", Value = "1" }
+                                        })
+                                    }
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    ERP
+                                </td>
+                                <td>
+                                    @Html.EditorFor(model => model.ERP)
+                                    @Html.ValidationMessageFor(model => model.ERP)
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    Reference Text
+                                </td>
+                                <td>
+                                    @Html.EditorFor(model => model.ReferenceText)
+                                    @Html.ValidationMessageFor(model => model.ReferenceText)
+                                </td>
+                            </tr>
+
+                        </table>
+
+                        <div class="form-group">
+                            <div class="col-md-offset-2 col-md-10">
+                                <input type="submit" value="Get Report" class="btn btn-success" />
+                            </div>
+                        </div>
+
+                    </div>
+                }
+            }
+
+        </div>
+    </div>
+</div>

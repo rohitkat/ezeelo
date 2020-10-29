@@ -1,0 +1,135 @@
+﻿@model ModelLayer.Models.EWalletRefund_Table
+
+@{
+    ViewBag.Title = "Approval";
+    Layout = "~/Views/Shared/_LeadersLayout.cshtml";
+}
+
+<style>
+    .mw{
+        margin-top:20px;
+       
+    }
+</style>
+
+
+@using (Html.BeginForm()) 
+{
+    @Html.AntiForgeryToken()
+    
+<div class="form-horizontal">
+    <h4>EWalletRefund</h4>
+    <hr />
+    @Html.ValidationSummary(true)
+    <div class="row">
+
+        @Html.LabelFor(model => model.RefundAmt, htmlAttributes: new { @class = "control-label col-md-2" })
+        <div class="col-md-10">
+            @Html.EditorFor(model => model.RefundAmt)
+            <span id="RefundAmterror" style="font-weight:bold;color:red;"></span>
+            @*@Html.ValidationMessageFor(model => model.RefundAmt)*@
+        </div>
+
+    </div>
+
+    <div class="row">
+
+        @Html.LabelFor(model => model.Comment, htmlAttributes: new { @class = "control-label col-md-2 mw" })
+        <div class="col-md-10">
+            @*@Html.EditorFor(model => model.Comment, new { @class = "mw" })*@
+            <input type="text" id="Comment" name="Comment" class="mw" style=" width:80%;">
+            <span id="SequenceOrderErro" style="font-weight:bold;color:red;"></span>
+            @Html.ValidationMessageFor(model => model.Comment)
+        </div>
+    </div>
+
+    <div class="form-actions no-color" style="margin-top:10px;">
+        <div class=" col-md-offset-2 col-md-10" style="text-align:center;">
+            <input type="submit" value="Approved" class="btn btn-success" />
+
+            @Html.ActionLink("Back to List", "Index", null, new { @class = "btn-primary btn " })
+        </div>
+    </div>
+
+    @*<div class="form-group">
+        <div class="col-md-offset-2 col-md-10">
+           
+        </div>
+    </div>*@
+</div>
+}
+
+@*<div>
+    @Html.ActionLink("Back to List", "Index")
+</div>*@
+
+
+<script>
+  
+
+    $(document).ready(function () {
+
+        $(".btn-success").click(function () { //remain validation for image
+            debugger
+
+            var ErrorCount = 0;
+
+            var Refundamt = $("#RefundAmt").val();
+
+            if (Refundamt == "") {
+                $('#RefundAmterror').html('Return Amount Field is required');
+                ErrorCount = ErrorCount + 1;
+            }
+            else {
+                $('#RefundAmterror').html('');
+            }
+
+
+
+
+            if (Refundamt != "") {
+
+                var id = "@Html.Raw(@ViewBag.id)";
+                debugger
+
+                $.ajax({
+                    type: "Get",
+                    url: "/EWalletRefund/getrefundamount/?id=" + id + "&Refundamt=" + Refundamt,
+                    contentType: "application/json; charset=utf-8",
+                    //data: '{"id":"' + id + '","Refundamt":"' + Refundamt + '"}',
+                    dataType: "html",
+                    async: false,
+                    cache: false,
+
+                    success: function (data, status, xhr) {
+
+                        if (data != "") {
+                            ErrorCount = ErrorCount + 1;
+                            $('#RefundAmterror').html(data);
+                            return false;
+                        }
+                        else {
+                            $('#RefundAmterror').html('');
+                        }
+                    },
+                    error: function (xhr, status, error) {
+                        $('#RefundAmterror').html('');
+                    }
+                });
+
+
+
+
+                if (ErrorCount > 0) {
+                    return false;
+                }
+
+
+
+            }
+
+        });
+       
+    });
+
+    </script>

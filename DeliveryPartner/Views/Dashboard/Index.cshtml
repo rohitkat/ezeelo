@@ -1,0 +1,139 @@
+﻿@model DeliveryPartner.Models.ViewModel.DashBoardViewModel
+@{
+    ViewBag.Title = "Index";
+}
+<style>
+    .match_height {
+        height: 118px;
+    }
+    #big_stats .stat {
+        width: 16%;
+    }
+        #big_stats .stat:hover img {
+            color: #5891ba;
+        }
+</style>
+<div class="row">
+    <div class="span6">
+        <div class="widget widget-nopad">
+            <div class="widget-header">
+                <i class="icon-list-alt"></i>
+                <h3> Today's Order Status</h3>
+            </div>
+            <!-- /widget-header -->
+            <div class="widget-content">
+                <div class="widget big-stats-container">
+                    <div class="widget-content">
+                        <div id="big_stats" class="cf">
+                            @*Hide EPOD from Ashish for Live*@
+                            @*<div class="stat" ><img src="~/Content/img/assign.png" style="width: 97.86px; height: 30px; margin-top: -10px;" /> <span class="value">@Model.TodayStatus["OrderAssigned"]</span> </br> <span class="Text">Assign</span>  </div>*@
+                            <!-- .stat -->
+                            @*Hide EPOD from Ashish for Live*@
+                            @*<div class="stat"><img src="~/Content/img/unassign.png" style="width: 97.86px; height: 30px; margin-top: -10px;" /> <span class="value">@Model.TodayStatus["OrderUnassigned"]</span> </br> <span class="Text">Unassign</span>  </div>*@
+                            <!-- .stat -->
+
+                            <div class="stat"> <i class="icon-shopping-cart"></i><span class="value">@Model.TodayStatus["PendingOrder"]</span> </br> <span class="Text">Pending</span>  </div>
+                            <!-- .stat -->
+
+                            <div class="stat"> <i class=" icon-gift"></i> <span class="value">@Model.TodayStatus["OrderDelivered"]</span> </br> <span class="Text">Deliverd</span> </div>
+                            <!-- .stat -->
+
+                            <div class="stat"> <i class=" icon-undo"></i> <span class="value">@Model.TodayStatus["OrderReturned"]</span> </br> <span class="Text">Returned</span> </div>
+                            <!-- .stat -->
+
+                            <div class="stat"> <i class="icon-trash"></i> <span class="value">@Model.TodayStatus["OrderCancelled"]</span> </br> <span class="Text">Cancelled</span> </div>
+                            <!-- .stat -->
+
+
+                        </div>
+                    </div>
+                    <!-- /widget-content -->
+                </div>
+            </div>
+        </div>
+        <!-- /widget -->
+        <div class="widget">
+            <div class="widget-header">
+                <i class="icon-bookmark"></i>
+                <h3>Important Shortcuts</h3>
+            </div>
+            <!-- /widget-header -->
+            <div class="widget-content  match_height">
+                <div class="shortcuts">
+
+                    <a href="@Url.Action("Index", "DeliveryOrderDetail")" class="shortcut">
+                        <i class="shortcut-icon icon-truck"></i><span class="shortcut-label">Order Tracking</span>
+                    </a>
+                    <a href="@Url.Action("Index", "MyRegion")" class="shortcut">
+                        <i class="shortcut-icon icon-map-marker"></i><span class="shortcut-label">My Region</span>
+                    </a>
+                    <a href="@Url.Action("Index", "DeliveryWeightSlab")" class="shortcut">
+                        <i class="shortcut-icon icon-align-justify"></i><span class="shortcut-label">Weight Slab</span>
+                    </a>
+                    <a href="@Url.Action("Index", "DeliveryCashHandlingCharge")" class="shortcut">
+                        <i class="shortcut-icon icon-money"></i><span class="shortcut-label">Cash Handling</span>
+                    </a>
+
+                </div>
+                <!-- /shortcuts -->
+            </div>
+            <!-- /widget-content -->
+        </div>
+        <!-- /widget -->
+    </div>
+    <!-- /span6 -->
+    <div class="span6 activity">
+        <div class="widget">
+            <div class="widget-header">
+                <i class="icon-bar-chart"></i>
+                <h3>Order Activity</h3>
+            </div>
+            <!-- /widget-header -->
+            <div class="widget-content">
+                @*
+                    <canvas id="donut-chart" class="chart-holder" width="538" height="250">
+                    </canvas>
+                *@
+
+                <div id="donutchart" style="width: 628px; height: 340px; "></div>
+                <!-- /bar-chart -->
+            </div>
+            <!-- /widget-content -->
+        </div>
+        <!-- /widget -->
+
+    </div>
+    <!-- /span6 -->
+</div>
+<!-- /row -->
+@section MyScripts{
+    <script type="text/javascript" src="https://www.google.com/jsapi"></script>
+    <script type="text/javascript">
+        google.load("visualization", "1", { packages: ["corechart"] });
+        google.setOnLoadCallback(drawChart);
+        function drawChart() {
+            var data = google.visualization.arrayToDataTable([
+              ['Order', 'Value'],
+              ['Packed', @Model.DonutStatus["Packed"]],
+                   @*Hide EPOD from Ashish for Live*@
+              @*['Assign', @Model.DonutStatus["Assigned"]],
+              ['Unassign', @Model.DonutStatus["Unassigned"]],*@
+              ['Dispatched From Shop', @Model.DonutStatus["DispatchedFromShop"]],
+              ['In Godown', @Model.DonutStatus["InGodown"]],
+              ['Dispatched From Godown', @Model.DonutStatus["DispatchedFromGodown"]],
+              ['Delivered', @Model.DonutStatus["Delivered"]],
+              ['Returned', @Model.DonutStatus["Returned"]],
+              ['Cancelled', @Model.DonutStatus["Cancelled"]],
+            ]);
+
+            var options = {
+                title: '',
+                pieHole: 0.4,
+            };
+
+            var chart = new google.visualization.PieChart(document.getElementById('donutchart'));
+            chart.draw(data, options);
+        }
+    </script>
+}
+

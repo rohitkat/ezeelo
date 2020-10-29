@@ -1,0 +1,44 @@
+﻿@{
+    ViewBag.Title = "Contact";
+}
+@{
+
+    if (Request.Cookies["CityCookie"] != null && Request.Cookies["CityCookie"].Value != "")
+    {
+        @Html.Hidden("hidcityNameContactPage", Request.Cookies["CityCookie"].Value.Split('$')[1].ToLower()); //-- Added for Multiple MCO by Ashish --//
+    @Html.Hidden("hidhelplinenoContactPage", Request.Cookies["CityCookie"].Value.Split('$')[3].ToLower());//-- Added for Multiple MCO by Ashish --//
+    }
+}
+<div class="gap"></div>
+<div class="row box" data-gutter="15">
+
+    <img src="~/Content/Images/tags/contact.jpg" style="width:100%;margin-bottom:10px;" />
+    <br />
+    <div class="col-md-4">
+        <h4 style="padding: 5px; background: #e5e5e5;"><i class="fa fa-envelope"></i> Online Customer Support </h4>
+        <b>
+            Email us at : support@ezeelo.com
+        </b>
+    </div>
+    <div class="col-md-4">
+        <h4 style="padding: 5px; background: #e5e5e5;"><i class="fa fa-phone"></i> Phone Customer Support </h4>
+        <p id="liHelpLineContactPage" style="padding-left: 5px; text-transform: uppercase;font-weight:900;"></p>
+    </div>
+    <div class="col-md-4">
+        <h4 style="padding: 5px; background: #e5e5e5;"><i class="fa fa-map-marker"></i> Head Office Address </h4>
+        <p>
+            <b>eZeelo Consumer Services Private Limited.</b><br />
+            Block 9, 4th floor, J B wing, N.M.C Complex<br /> Mangawalri Bazar Road, Koradi Colony<br /> Nagpur, Maharashtra, 440001<br />
+            Phone : 9860890890
+        </p>
+    </div>
+</div>
+<div class="gap"></div>
+<script>
+    //-- Added for Multiple MCO by Ashish --//
+    var cityName = document.getElementById("hidcityNameContactPage").value;
+    var helplineno = document.getElementById("hidhelplinenoContactPage").value;
+    document.getElementById("liHelpLineContactPage").innerHTML = cityName + ' : ' + helplineno;
+    //-- End Added for Multiple MCO by Ashish --//
+</script>
+

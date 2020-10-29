@@ -1,0 +1,438 @@
+﻿@model ModelLayer.Models.BusinessDetail
+
+@{
+    ViewBag.Title = "Edit";
+    Layout = null;
+}
+
+
+
+<style>
+   
+    .dropdown-menu
+     .NameDescription control-group {
+        float: left;
+    }
+
+    .btn-busines {
+        margin-top: -7px !important;
+        height: 35px;
+    }
+
+    .discrip_box {
+        height: 156px !important;
+        width: 738px !important;
+    }
+
+    .btn-busn {
+        margin-top: 22px !important;
+    }
+
+    .field-validation-error {
+        color: #b94a48;
+    }
+
+    .succes-msg {
+        color: #125400;
+        font-size: 20px;
+    }
+
+    .beatpicker-clear {
+        display: none;
+    }
+
+    .addBus {
+        clear: both;
+    }
+</style>
+
+<script src="~/Content/js/jquery-1.9.1.min.js"></script>
+@*<script src="~/Content/js/jquery.easing.min.js"></script>*@
+<link href="http://www.jqueryscript.net/css/jquerysctipttop.css" rel="stylesheet" type="text/css">
+@*<link href="~/Content/assets/css/form-design.css" rel="stylesheet" />*@
+<script src="~/Content/js/fullcalendar.min.js"></script>
+<link href="~/Content/css/style-responsive.css" rel="stylesheet" />
+<link rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
+<script src="//code.jquery.com/jquery-1.10.2.js"></script>
+<script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
+<link rel="stylesheet" href="/resources/demos/style.css">
+<link href="~/Content/css/bootstrap.min.css" rel="stylesheet" />
+<link href="~/Content/css/Site.css" rel="stylesheet" />
+<link href="~/Content/css/style_asset.css" rel="stylesheet" />
+@*<link href="~/Content/assets/css/form-design.css" rel="stylesheet" />*@
+<link href="~/Content/css/style-forms.css" rel="stylesheet" />
+<link href="~/Content/css/glyphicons.css" rel="stylesheet" />
+<link href="~/Content/css/font-awesome.min.css" rel="stylesheet" />
+<style type="text/css">
+body {
+        background-color: transparent;
+    }
+    .mrg-left input {height:30px;
+    }
+    fieldset {width:82%!important;
+    }
+    .btn-busines {
+        background-color: #f98b3b!important; background-image:none!important;
+    }
+    .glyphicons-icon.calendar {
+        background-position: -236px -193px !important;
+        width: 41px;
+        height: 29px;
+        display: inline-block;
+        background-image: url(../Content/img/glyphicons.svg) !important;
+    }
+    [class^="icon-"], [class*=" icon-"] {
+        background-image:inherit!important;
+    }
+ 
+    .box-content {
+        margin-top: -75px;
+    }
+    .btn-busines {margin-left:-20px;
+    }
+   
+
+</style>
+
+
+
+
+
+
+<div id="content" class="span10">
+    <div style="margin-top:20px;">
+        @if (ViewBag.Message != null)
+        {
+            <span class="succes-msg" style="margin: 0 12px;">@ViewBag.Message</span>
+        }
+    </div>
+    @using (Html.BeginForm())
+    {
+        @Html.AntiForgeryToken()
+        <div class="row-fluid">
+            <div class="box span12">
+                <div class="box-content">
+
+                    <div class="form-horizontal" id="msform1">
+                        @Html.ValidationMessage("CustomError")
+                        @Html.ValidationSummary(true)
+                        @Html.HiddenFor(model => model.ID)
+
+                        <div class="control-group">
+                            @*@Html.LabelFor(model => model.UserLoginID, "UserLoginID", new { @class = " col-md-2" })*@
+                            <div class="">
+                                @*@Html.DropDownList("UserLoginID", String.Empty)*@
+                                @Html.HiddenFor(model => model.UserLoginID)
+                                @Html.ValidationMessageFor(model => model.UserLoginID)
+                            </div>
+                        </div>
+                        <div class="control-group mrg-btm clearfix">
+                            <div class="NameDescription">
+                                <div class="control-group mrg-left">
+                                    @Html.LabelFor(model => model.Name, new { @class = " col-md-2" })
+                                    <div class="">
+                                        @Html.TextBoxFor(model => model.Name, new { required = "required" })
+                                        @Html.ValidationMessageFor(model => model.Name)
+                                    </div>
+                                </div>
+
+                                <div class="control-group mrg-left">
+                                    @*@Html.LabelFor(model => model.BusinessTypeID, "BusinessTypeID", new { @class = " col-md-2" })*@
+                                    <div class="">
+                                        @*@Html.DropDownList("BusinessTypeID", String.Empty)*@
+                                        @Html.HiddenFor(model => model.BusinessTypeID)
+                                        @Html.ValidationMessageFor(model => model.BusinessTypeID)
+                                    </div>
+                                </div>
+
+                                <div class="control-group mrg-left">
+                                    @Html.LabelFor(model => model.ContactPerson)
+                                    <div class="">
+                                        @Html.TextBoxFor(model => model.ContactPerson, new { required = "required" })
+                                        @Html.ValidationMessageFor(model => model.ContactPerson)
+                                    </div>
+                                </div>
+                                <div class="control-group mrg-left">
+                                    @Html.LabelFor(model => model.Mobile)
+                                    <div class="">
+                                        @Html.TextBoxFor(model => model.Mobile, new { required = "required", @onkeydown = "return ValidateNumber(event);", @onchange = "return ValidateMobile(this);", @autocomplete = "off", maxlength = 10, minlength = 10 })
+                                        @Html.ValidationMessageFor(model => model.Mobile)
+                                        <div id="divMobileError" style="width:400px; display: none; padding:5px" class="alert-danger focused">  </div>
+                                    </div>
+                                </div>
+                                <div class="clr"></div>
+                            </div>
+                        </div>
+                        <div class="clr"></div>
+                        <div class="control-group mrg-btm clearfix">
+                            <div class="NameDescription">
+                                <div class="control-group mrg-left">
+                                    @Html.LabelFor(model => model.Email)
+                                    <div class="">
+                                        @Html.TextBoxFor(model => model.Email, new { required = "required", @onchange = "return ValidateEmail(this);", @autocomplete = "off" })
+                                        @Html.ValidationMessageFor(model => model.Email)
+                                        <div id="divEmailError" style="width:400px; display: none; padding:5px" class="alert-danger focused">  </div>
+                                    </div>
+                                </div>
+
+                                <div class="control-group mrg-left">
+                                    @Html.LabelFor(model => model.Landline1)
+                                    <div class="">
+                                        @Html.TextBoxFor(model => model.Landline1)
+                                        @Html.ValidationMessageFor(model => model.Landline1)
+                                    </div>
+                                </div>
+                                <div class="control-group mrg-left">
+                                    @Html.LabelFor(model => model.Landline2)
+                                    <div class="">
+                                        @Html.TextBoxFor(model => model.Landline2)
+                                        @Html.ValidationMessageFor(model => model.Landline2)
+                                    </div>
+                                </div>
+
+                                <div class="clr"></div>
+                            </div>
+                        </div>
+                        <div class="clr"></div>
+                        <div class="control-group mrg-btm clearfix">
+                            <div class="NameDescription">
+
+                                <div class="control-group mrg-left">
+                                    @Html.LabelFor(model => model.FAX)
+                                    <div class="">
+                                        @Html.EditorFor(model => model.FAX)
+                                        @Html.ValidationMessageFor(model => model.FAX)
+                                    </div>
+                                </div>
+                                <div class="control-group mrg-left">
+                                    @Html.LabelFor(model => model.Website, new { @class = " col-md-2" })
+                                    <div class="">
+                                        @Html.EditorFor(model => model.Website)
+                                        @Html.ValidationMessageFor(model => model.Website)
+                                    </div>
+                                </div>
+                                <div class="control-group mrg-left resFor">
+                                    @Html.LabelFor(model => model.YearOfEstablishment, new { @class = " col-md-2 dtPic" })
+                                    <div class="">
+                                        @*@Html.TextBoxFor(model => model.YearOfEstablishment, new { @class = "datepicker" })*@
+                                        @*@Html.TextBox("YOE", null, new { id = "YOE", @class = "datepicker" })*@
+                                        @Html.TextBox("YOE", null, new { @readonly = "readonly", @class = "input" })
+                                        @*<label for="YOE" class="dtPic"><i class="glyphicons-icon calendar"></i></label>*@
+                                        @*<input type="text" id="YOE" name="YOE" value="@ViewBag.YOE" data-beatpicker="true" data-beatpicker-position="['*','*']">*@
+                                        @Html.ValidationMessageFor(model => model.YearOfEstablishment)
+                                        <label for="YOE" class="dtPic resdt pull-right"><i class="glyphicons-icon calendar icon-dtpic"></i></label>
+                                    </div>
+                                </div>
+
+                                <div class="clr"></div>
+                            </div>
+                        </div>
+                        <div class="clr"></div>
+                        <div style="margin-top:20px" class="mrg-left">
+                            <div class="control-group addBus clearfix">
+                                @Html.LabelFor(model => model.Address, new { @class = "span2 add" })
+                                <div class="">
+                                    @Html.TextAreaFor(model => model.Address, new { @class = "discrip_box max-width" })
+                                    @Html.ValidationMessageFor(model => model.Address)
+                                </div>
+                            </div>
+                        </div>
+                        <div class="control-group mrg-btm clearfix">
+                            <div class="NameDescription">
+
+                                <div class="control-group mrg-left">
+                                    @Html.LabelFor(model => model.PincodeID, "Pincode ID")
+                                    <div class="">
+                                        @Html.TextBox("Pincode", null, new { @id = "Pincode", @class = "form-control-Widout-block", @placeholder = "Enter Pincode", @onkeypress = "return isValidPincode(event)" })
+                                        <img id="Pincode_loading" src="~/Content/img/ajax_loader.gif" style="height: 20px; margin-left: -39px;display: none" />
+                                        <div id="divPincodeError" style=" width: 165px; font-size: 11px; line-height: 11px; margin-top: -8px; color: rgb(255, 146, 146) !important" class="alert-danger focused">  </div>
+                                    </div>
+                                </div>
+
+                                <div class="control-group mrg-left">
+                                    @Html.LabelFor(model => model.SourceOfInfoID, "Source Of Info ID", new { @class = " " })
+                                    <div class="select-Maxwidth ">
+                                        @Html.DropDownList("SourceOfInfoID", String.Empty)
+                                        @Html.ValidationMessageFor(model => model.SourceOfInfoID)
+                                    </div>
+                                </div>
+
+                                <div class="control-group mrg-left">
+                                    @Html.LabelFor(model => model.SourcesInfoDescription, new { @class = " col-md-2" })
+                                    <div class="">
+                                        @Html.EditorFor(model => model.SourcesInfoDescription)
+                                        @Html.ValidationMessageFor(model => model.SourcesInfoDescription)
+                                    </div>
+                                </div>
+
+                                <div class="clr"></div>
+                            </div>
+                        </div>
+
+                        <div class="control-group mrg-btm">
+                            <div class="NameDescription">
+
+
+                                <div class="control-group mrg-left">
+                                    @*@Html.LabelFor(model => model.CreateDate, new { @class = " col-md-2" })*@
+                                    <div class="">
+                                        @*@Html.EditorFor(model => model.CreateDate)*@
+                                        @Html.HiddenFor(model => model.CreateDate)
+                                        @Html.ValidationMessageFor(model => model.CreateDate)
+                                    </div>
+                                </div>
+                                <div class="clr"></div>
+                            </div>
+                        </div>
+                        <div class="control-group mrg-btm">
+                            <div class="NameDescription">
+                                <div class="control-group mrg-left">
+                                    @*@Html.LabelFor(model => model.CreateBy, "CreateBy", new { @class = " col-md-2" })*@
+                                    <div class="">
+                                        @*@Html.DropDownList("CreateBy", String.Empty)*@
+                                        @Html.HiddenFor(model => model.CreateBy)
+                                        @Html.ValidationMessageFor(model => model.CreateBy)
+                                    </div>
+                                </div>
+                                <div class="clr"></div>
+                            </div>
+                        </div>
+
+                    </div>
+                    <div>
+                        <input type="submit" value="Save" class="btn btn-primary btn-busines" />
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+</div>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}
+<script type="text/javascript">
+    //alert("1");
+    var lPincode = $('#Pincode').val()
+    //alert("2");
+    $('#Pincode').bind('input propertychange', function () {
+        var lPincode = $('#Pincode').val()
+        $('#divPincodeError').hide();
+
+        if (lPincode.length == 6) {
+            $('#Pincode_loading').show();
+            $.ajax({
+                url: '@Url.Action("GetAddress", "BusinessDetail")?Pincode=' + lPincode,
+                type: "GET",
+                //success: function (result) {
+                //    //$('#divAddress').html(result);
+                //    $('#Pincode_loading').hide();
+                //    $('#divPincodeError').hide();
+                //    if (result == "1") {
+                //        $('#divPincodeError').show();
+                //        $('#divPincodeError').html('Pincode [' + lPincode + '] dose not exist, please Contact to ADMIN');
+                //        $('#Pincode').val('');
+                //    }
+                //},
+                //error: function (data) {
+                //    //alert('Pincode : ' + lPincode + ' Dose Not Exist, please Contact to ADMIN');
+                //    //$('#divAddress').empty();
+                //    //$('#Pincode_loading').hide();
+                //    $('#divPincodeError').hide();
+                //    //$('#divPincodeError').html('Pincode [' + lPincode + '] dose not exist, please Contact to ADMIN');
+                //    //$('#Pincode').val('');
+                //}
+                success: function (result) {
+                    $('#divAddress').html(result);
+                    $('#divAddress2').hide();
+                    $('#Pincode_loading').hide();
+                    $('#divPincodeError').hide();
+                },
+                error: function (data) {
+                    //alert('Pincode : ' + lPincode + ' Dose Not Exist, please Contact to ADMIN');
+                    $('#divAddress').empty();
+                    $('#Pincode_loading').hide();
+                    $('#divPincodeError').show();
+                    $('#divPincodeError').html('[' + lPincode + '] dose not exist,Contact to ADMIN');
+                    $('#Pincode').val('');
+                }
+            });
+        }
+    });
+
+
+
+    @*$("select#Pincode").bind('change', function () {
+
+        var Pincode = $("select#Pincode option:selected").val();
+
+        $.ajax({
+            type: "POST",
+            url: '@Url.Action("GetAreaIDByPincodeID", "Shop")',
+            data: { 'Pincode': Pincode },
+            //dataType: "json",
+            cache: false,
+            success: function (msg) {
+                $('#ddlArea').empty();
+                //$('#ddlCategoryLevel2').empty();
+                //$('#ddlProduct').empty();
+                $('#ddlArea').append('<option value=0>--Select--</option>');
+                //$('#ddlArea').append('<option value=0>--Select--</option>');
+                //$('#ddlProduct').append('<option value=0>--Select--</option>');
+                $.each(msg, function (index, item) {
+                    $('#ddlArea').append('<option value=' + item.ID + '>' + item.Name + '</option>');
+                });
+            },
+            error: function (x, e) {
+                //alert('Failure');
+                //alert("The call to the server side failed. " + x.responseText);
+            }
+        });
+
+        //}
+    });*@
+
+</script>
+
+@*<script type="text/javascript">
+    $(document).ready(function () {
+        var statusGenerator = function (text) {
+            var statusElem = $(".status-box");
+            var child = $("<span style='display: block'></span>").text(text);
+            statusElem.append(child);
+        };
+        myDatePicker.on("select", function (data) {
+            statusGenerator(data.string + " selected")
+        });
+        myDatePicker.on("change", function (data) {
+            statusGenerator("Date picker changed current date: " + data.string);
+        });
+        myDatePicker.on("show", function () {
+            statusGenerator("Date picker show")
+        });
+        myDatePicker.on("clear", function (data) {
+            statusGenerator("Date picker cleared. cleared date: " + data.string)
+        });
+        myDatePicker.on("hide", function () {
+            statusGenerator("Date picker hide")
+        });
+    })
+
+</script>*@
+
+<script src="~/Content/js/Validation.js"></script>
+
+@*<script src="~/Content/js/jquery-2.1.3.min.js"></script>*@
+<script src="~/Content/new-design-form/js/bootstrap-datepicker.js"></script>
+<link href="~/Content/css/datepicker.css" rel="stylesheet" />
+<script>
+
+    //----------------------------------------------------------------------For datepicker---//
+    //<![CDATA[
+
+
+    $(window).load(function () {
+        //$('#SDate').datepicker('update');
+        $('#YOE').datepicker('update');
+    });//]]>
+</script>

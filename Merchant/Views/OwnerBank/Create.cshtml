@@ -1,0 +1,195 @@
+﻿@model ModelLayer.Models.OwnerBank
+
+@{
+    ViewBag.Title = "Create";
+    Layout = null;
+}
+<style>
+    .margin-top {
+        margin-top: 22px;
+    }
+
+
+    .field-validation-error {
+        color: #000000 !important;
+    }
+
+    .succes-msg {
+        color: #31A012;
+        font-size: 20px;
+    }
+</style>
+<link href="~/Content/assets/css/style.css" rel="stylesheet" />
+<script src="~/Content/js/jquery-1.9.1.min.js"></script>
+@*<script src="~/Content/js/jquery.easing.min.js"></script>*@
+<link href="http://www.jqueryscript.net/css/jquerysctipttop.css" rel="stylesheet" type="text/css">
+<link href="~/Content/assets/css/form-design.css" rel="stylesheet" />
+<div id="content" class="span10">
+    <div style="margin-top:20px;">
+        @if (ViewBag.Message != null)
+        {
+            <span class="succes-msg" style="margin: 0 12px;">@ViewBag.Message</span>
+        }
+    </div>
+    @using (Html.BeginForm())
+    {
+        @Html.AntiForgeryToken()
+        <div class="row-fluid">
+            <div class="box span12">
+                <div class="box-content">
+
+                    <div class="form-horizontal" id="msform1">
+                        @Html.ValidationSummary(true)
+                        <div class="control-group mrg-btm clearfix">
+                            <div class="NameDescription">
+                                <div class="control-group  mrg-left">
+                                    @Html.LabelFor(model => model.AccountName, new { @class = " col-md-2" })
+                                    <div class="">
+                                        @Html.TextBoxFor(model => model.AccountName, new { required = "required" })
+                                        @Html.ValidationMessageFor(model => model.AccountName)
+                                    </div>
+                                </div>
+                                <div class="control-group mrg-left">
+
+                                    @Html.LabelFor(model => model.BankID, "BankID", new { @class = " col-md-2" })
+                                    <div class="">
+                                        @Html.DropDownList("BankID", String.Empty)
+                                        @Html.ValidationMessageFor(model => model.BankID)
+                                    </div>
+                                </div>
+
+                                <div class="control-group  mrg-left">
+                                    @Html.LabelFor(model => model.BranchName, new { @class = " col-md-2" })
+                                    <div class="">
+                                        @Html.TextBoxFor(model => model.BranchName, new { required = "required" })
+                                        @Html.ValidationMessageFor(model => model.BranchName)
+                                    </div>
+                                </div>
+
+                                <div class="control-group  mrg-left">
+                                    @Html.LabelFor(model => model.IFSCCode, new { @class = " col-md-2" })
+                                    <div class="">
+                                        @Html.TextBoxFor(model => model.IFSCCode, new { required = "required", maxlength = 11 })
+                                        @Html.ValidationMessageFor(model => model.IFSCCode)
+                                    </div>
+                                </div>
+
+                                <div class="control-group  mrg-left">
+                                    @Html.LabelFor(model => model.MICRCode, new { @class = " col-md-2" })
+                                    <div class="">
+                                        @Html.TextBoxFor(model => model.MICRCode, new { required = "required", maxlength = 15 })
+                                        @Html.ValidationMessageFor(model => model.MICRCode)
+                                    </div>
+                                </div>
+
+                                <div class="control-group  mrg-left">
+                                    @Html.LabelFor(model => model.AccountNumber, new { @class = " col-md-2" })
+                                    <div class="">
+                                        @Html.TextBoxFor(model => model.AccountNumber, new { required = "required", maxlength = 16 })
+                                        @Html.ValidationMessageFor(model => model.AccountNumber)
+                                    </div>
+                                </div>
+
+                                <div class="control-group  mrg-left">
+                                    @Html.LabelFor(model => model.BankAccountTypeID, "BankAccountTypeID", new { @class = " col-md-2" })
+                                    <div class="">
+                                        @*@Html.DropDownList("BankAccountTypeID", String.Empty)*@
+                                        @Html.DropDownList("BankAccountTypeID", null, "Select Account Type", new { required = "required" })
+                                        @Html.ValidationMessageFor(model => model.BankAccountTypeID)
+                                    </div>
+                                </div>
+                                <div class="control-group  mrg-left">
+
+                                    @*  @Html.LabelFor(model => model.BankAccountTypeID, "BankAccountTypeID", new { @class = " col-md-2" })*@
+                                    <div class="">
+                                        @Html.HiddenFor(model => model.DeviceID)
+                                    </div>
+
+                                </div>
+                                <div class="control-group  mrg-left">
+
+                                    @*  @Html.LabelFor(model => model.BankAccountTypeID, "BankAccountTypeID", new { @class = " col-md-2" })*@
+                                    <div class="">
+                                        @Html.HiddenFor(model => model.DeviceID)
+                                    </div>
+
+                                </div>
+                                @*  <div class="control-group">
+                                         @Html.LabelFor(model => model.IsActive, new { @class = " col-md-2" })
+                                         <div class="">
+                                             @Html.EditorFor(model => model.IsActive)
+                                             @Html.ValidationMessageFor(model => model.IsActive)
+                                         </div>
+                                     </div>
+
+                                    <div class="control-group">
+                                         @Html.LabelFor(model => model.CreateDate, new { @class = " col-md-2" })
+                                         <div class="">
+                                             @Html.EditorFor(model => model.CreateDate)
+                                             @Html.ValidationMessageFor(model => model.CreateDate)
+                                         </div>
+                                     </div>
+
+                                     <div class="control-group">
+                                         @Html.LabelFor(model => model.CreateBy, "CreateBy", new { @class = " col-md-2" })
+                                         <div class="">
+                                             @Html.DropDownList("CreateBy", String.Empty)
+                                             @Html.ValidationMessageFor(model => model.CreateBy)
+                                         </div>
+                                     </div>
+
+                                     <div class="control-group">
+                                         @Html.LabelFor(model => model.ModifyDate, new { @class = " col-md-2" })
+                                         <div class="">
+                                             @Html.EditorFor(model => model.ModifyDate)
+                                             @Html.ValidationMessageFor(model => model.ModifyDate)
+                                         </div>
+                                     </div>
+
+                                     <div class="control-group">
+                                         @Html.LabelFor(model => model.ModifyBy, "ModifyBy", new { @class = " col-md-2" })
+                                         <div class="">
+                                             @Html.DropDownList("ModifyBy", String.Empty)
+                                             @Html.ValidationMessageFor(model => model.ModifyBy)
+                                         </div>
+                                     </div>
+
+                                     <div class="control-group">
+                                         @Html.LabelFor(model => model.NetworkIP, new { @class = " col-md-2" })
+                                         <div class="">
+                                             @Html.EditorFor(model => model.NetworkIP)
+                                             @Html.ValidationMessageFor(model => model.NetworkIP)
+                                         </div>
+                                     </div>
+
+                                     <div class="control-group">
+                                         @Html.LabelFor(model => model.DeviceType, new { @class = " col-md-2" })
+                                         <div class="">
+                                             @Html.EditorFor(model => model.DeviceType)
+                                             @Html.ValidationMessageFor(model => model.DeviceType)
+                                         </div>
+                                     </div>
+
+                                     <div class="control-group">
+                                         @Html.LabelFor(model => model.DeviceID, new { @class = " col-md-2" })
+                                         <div class="">
+                                             @Html.EditorFor(model => model.DeviceID)
+                                             @Html.ValidationMessageFor(model => model.DeviceID)
+                                         </div>
+                                     </div>*@
+                            </div>
+                            <div class="form-group">
+                                <div class="col-md-offset-2 ">
+                                    <input type="submit" value="Save" class="btn btn-default btn-Ifrm-submit mrg-left margin-top" style="margin-top:26px;" />
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    }
+</div>
+

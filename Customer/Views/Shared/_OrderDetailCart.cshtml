@@ -1,0 +1,446 @@
+﻿@model ModelLayer.Models.ViewModel.ShopProductVarientViewModelCollection
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<style>
+    .marqnew {
+        color: red;
+        font-weight: 600;
+        font-size: 16px;
+    }
+
+    .table thead th {
+        color: #52677a;
+    }
+
+    .table thead tr th {
+        border: 1px solid rgba(174,172,172,.16);
+    }
+
+    .table > tbody > tr > td {
+        border: 1px solid #ddd;
+        word-wrap: break-word !important;
+        word-break: break-all;
+    }
+
+    .newcolor {
+        background-color: rgb(48, 144, 253);
+        color: white;
+    }
+
+    .table tbody td {
+        padding: 0.625rem 0.85rem;
+        font-size: 11px;
+    }
+
+    .mini-buttonnew {
+        font-size: 0.6rem !important;
+        padding: 0.2rem 0.625rem !important;
+        height: 1.4rem !important;
+    }
+
+    #txtQuantity {
+        width: 25px;
+        height: 24px;
+        border: 1px solid rgba(128, 128, 128, 0.51);
+        text-align: center;
+    }
+
+    .button_right {
+        float: right;
+        border-radius: 15px;
+    }
+
+    .bordernew {
+        border: none !important;
+    }
+
+    .borderleft {
+        border: none !important;
+    }
+
+    .cartdivmain {
+        background-color: white;
+    }
+
+    .carddivsub {
+        padding: 4px;
+    }
+
+    body {
+    }
+
+    .flotdivright {
+    }
+
+    .divline {
+        line-height: 16px;
+    }
+
+    .newtdstyle {
+        border: 1px rgba(153, 153, 153, 0.05) solid !important;
+    }
+
+    .messageDiv {
+        color: green;
+        padding: 10px;
+        text-align: center;
+    }
+
+    .newbackground {
+        color: white !important;
+        text-align: center;
+        font-weight: 600;
+    }
+
+    .lableheadright {
+        float: right;
+        color: brown;
+        font-size: 12px;
+    }
+
+    .lableheadright1 {
+        float: right;
+        color: brown;
+        font-size: 20px;
+    }
+
+    .newtdstylenew {
+        border: 1px rgba(153, 153, 153, 0.05) solid !important;
+        font-size: 12px !important;
+    }
+
+    .inputDiv input {
+        border: 1px solid #58be58;
+        height: 30px;
+        width: 28%;
+    }
+
+    .inputDiv1 {
+        width: 56% !important;
+    }
+</style>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>_OrderDetailCart</title>
+</head>
+<body>
+    <div>
+        <div>
+            <span style="color:red">@TempData["DelSchedChangeMsg"]</span>
+        </div>
+        <table class="table" style="width:100%">
+            <thead>
+            </thead>
+            <tbody>
+                @{
+                    if (Model != null)
+                    {
+                        if (Model.lShopProductVarientViewModel != null && Model.lShopProductVarientViewModel.Distinct().Count() > 0)
+                        {
+
+                            List
+                            <long>
+                                merId = Model.lShopProductVarientViewModel.Select(p => p.ShopID).Distinct().ToList();
+                            double subTotal = 0.0;
+                            double deliveryCharge = 0.0;
+                            double orderPayableAmount = 0.0;
+                            double totalCouponAmount = 0;
+                            decimal taxAmount = 0;
+                            decimal earnAmount = 0;
+                            decimal businessPointsTotal = 0; //Added by Zubair for MLM on 05-01-2018
+                            decimal EWalletAmountUsed = 0;//Added by Zubair for MLM on 05-01-2018
+                            //decimal remaiEarnAmt = 0;
+
+                            for (int i = 0; i < merId.Count; i++)
+                            {
+                                long orgId = merId[i];
+                                var orgProducts = Model.lShopProductVarientViewModel.Select(x => new
+                                {
+                                    x.CategoryID,
+                                    x.CategoryName,
+                                    x.ColorCode,
+                                    x.ColorID,
+                                    x.ColorName,
+                                    x.DimensionID,
+                                    x.DimensionName,
+                                    x.MaterialID,
+                                    x.MaterialName,
+                                    x.MRP,
+                                    x.PackSize,
+                                    x.PackUnitName,
+                                    x.ProductID,
+                                    x.ProductName,
+                                    x.ProductVarientID,
+                                    x.SaleRate,
+                                    x.ShopID,
+                                    x.ShopName,
+                                    x.ShopStockID,
+                                    x.SizeID,
+                                    x.SizeName,
+                                    x.StockQty,
+                                    x.StockThumbPath,
+                                    x.DeliveryCharge,
+                                    x.PurchaseQuantity,
+                                    x.Message,
+                                    x.CouponCode,
+                                    x.CouponValueRs,
+                                    x.CouponValuePercent,
+                                    x.lCalulatedTaxesRecord,
+                                    x.BusinessPointPerUnit //Added by Zubair for MLM on 05-01-2018
+                                })
+                                .Where(x => x.ShopID == orgId).ToList();
+                                @*<tr>
+                                    <td colspan="4" class="successnew"><b>@orgProducts[0].ShopName</b></td>
+                                </tr>*@
+                                double MerchantWiseSubTotal = 0.0;
+                                double merchantWiseDeliveryCharge = 0.0;
+                                double saleRate = 0.0;
+                                decimal businessPoints = 0; //Added by Zubair for MLM on 05-01-2018
+
+
+                                for (int j = 0; j < orgProducts.Count(); j++)
+                                {
+                                    decimal prodTaxAmt = 0;
+                                    <tr>
+                                        <span style="display:none"> @orgProducts[j].ProductID </span>
+                                        <td style="width: 10%; text-align: center; vertical-align: middle;"><img id=" imgproductimage" src="@Url.Content(string.IsNullOrEmpty(orgProducts[j].StockThumbPath) ? " />Content/Images/no_image.png" : orgProducts[j].StockThumbPath)" style="width: 45px; height:45px;" alt= "eZeelo" /></td>
+                                        <td style="width:30%">
+                                            @*Product Name: @orgProducts[j].ProductName<br />*@
+                                            @*//***** SEO URL Structure RULE by Ashish 18/11/2016 ******//*@
+                                            Product Name: @orgProducts[j].ProductName.Replace("+"," ")<br />
+
+                                            Pack Size: @orgProducts[j].PackSize ,
+                                            @if (!(orgProducts[j].ColorName == "N/A" || orgProducts[j].ColorName == "NA"))
+                                            {
+                                                <span>Color: @orgProducts[j].ColorName ,</span>
+                                            }
+
+                                            @if (!(orgProducts[j].SizeName == "N/A" || orgProducts[j].SizeName == "NA"))
+                                            {
+                                                <span>Size: @orgProducts[j].SizeName ,</span>
+                                            }
+                                            @if (!(orgProducts[j].DimensionName == "N/A" || orgProducts[j].DimensionName == "NA"))
+                                            {
+                                                <span>Dimension: @orgProducts[j].DimensionName </span>
+                                            }
+
+                                            <br />
+                                            @* ============ Taxation ================= *@
+
+                                            @if (orgProducts[j].lCalulatedTaxesRecord != null)
+                                            {
+                                                foreach (var item in orgProducts[j].lCalulatedTaxesRecord)
+                                                {
+                                                    if(@item.IsGSTInclusive==false) //Condition added by Zubair for GST on 06-07-2017
+                                                    { 
+                                                    <span>@item.TaxName : @item.TaxPercentage %</span>
+                                                    prodTaxAmt = prodTaxAmt + item.TaxableAmount;
+                                                    }
+                                                }
+                                            }
+                                            @* ============ Taxation ================= *@
+
+                                            <br />
+                                            @if (orgProducts[j].Message != null && orgProducts[j].Message != string.Empty)
+                                            {
+                                                <label id="lblUpdateQuantity" style="color:red;font-size:10px;">@orgProducts[j].Message</label>
+                                            }
+                                            @if (orgProducts[j].CouponCode != null && orgProducts[j].CouponCode != string.Empty)
+                                            {
+                                                <span>Coupon Code: </span>@orgProducts[j].CouponCode
+                                            }
+                                        </td>
+                                        <td style="width: 10%; text-align: center; vertical-align: middle;">
+                                            @*Condition added by Zubair for MLM on 04-01-2017*@
+                                            @*Yashaswi 2/5/2018 BP*@
+                                            <span>@( Convert.ToInt64(orgProducts[j].BusinessPointPerUnit * orgProducts[j].PurchaseQuantity))</span>
+                                        </td>
+                                        <td style="width: 30%; text-align: center; vertical-align: middle;">
+                                            <strong>
+                                                <span class="fa fa-inr" style="text-align: left; ">  @orgProducts[j].SaleRate *</span>
+
+                                                <span>@orgProducts[j].PurchaseQuantity</span>
+                                            </strong>
+                                        </td>
+
+                                        <td style=" width: 30%;vertical-align: middle;text-align:right">
+                                            <span><strong class="fa fa-inr"> @(orgProducts[j].SaleRate * orgProducts[j].PurchaseQuantity)</strong></span>
+                                            @if (prodTaxAmt > 0)
+                                            {
+                                                <br />
+                                                <span><strong>Tax <span class="fa fa-inr"> @(prodTaxAmt * orgProducts[j].PurchaseQuantity)</span></strong></span>
+                                            }
+                                            @{
+                                            double amount = 0, percent = 0;
+                                            double.TryParse(Convert.ToString(orgProducts[j].CouponValueRs), out amount);
+                                            double.TryParse(Convert.ToString(orgProducts[j].CouponValuePercent), out percent);
+                                            MerchantWiseSubTotal = MerchantWiseSubTotal + Convert.ToDouble(@orgProducts[j].SaleRate * @orgProducts[j].PurchaseQuantity);
+                                            if (Model.lShopWiseDeliveryCharges != null && Model.lShopWiseDeliveryCharges.Count() > 0)
+                                            {
+                                                merchantWiseDeliveryCharge = Convert.ToDouble(Model.lShopWiseDeliveryCharges[i].DeliveryCharge);
+                                            }
+
+                                            //Added by Zubair for MLM on 04-01-2017
+                                            businessPoints = @Convert.ToDecimal((orgProducts[j].BusinessPointPerUnit * orgProducts[j].PurchaseQuantity));
+
+                                            businessPointsTotal = Convert.ToDecimal(businessPointsTotal + businessPoints);
+                                    //End
+                                            }
+                                        </td>
+
+                                    </tr>
+                                }
+                                @*<tr>
+                                    <td colspan="4" style="text-align: right; background-color: rgba(217, 217, 217, 0.5);"><strong> Total </strong> <strong class="fa fa-inr"> @MerchantWiseSubTotal</strong></td>
+                                </tr>*@
+                                subTotal = subTotal + MerchantWiseSubTotal;
+
+                                deliveryCharge = deliveryCharge + merchantWiseDeliveryCharge;
+
+                                //*************** This Added on 20-3-2017 for Lucknow (20 delivery charge on below 250 Rs Order) By Ashish *****************
+                                string cityID = Request.Cookies["CityCookie"].Value.Split('$')[0].ToLower();
+
+                                if (cityID == "11187" && subTotal >= 250)
+                                {
+                                    deliveryCharge = 0;
+                                }
+                                else if (cityID == "11187" && subTotal < 250 && deliveryCharge == 0)
+                                {
+                                    deliveryCharge = 20;
+                                }
+                                //***************** End ************************
+                            }
+                            <tr>
+                                <td colspan="2" style="text-align:right"><b class="v-align-bottom">Retail Point Total</b></td>
+                                <td style="text-align: center"><b style="color: green;">@Convert.ToInt64(@businessPointsTotal)</b> </td>
+                                <td colspan="2">
+                                    @using (Html.BeginForm("ContinuePaymentProcess", "ShoppingCart", new { itemId = Model }, FormMethod.Post))
+                                    {
+
+
+                                    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12" style="padding: 0px; line-height: 20px;">
+                                        <b class="v-align-bottom">
+                                            Grand Total
+                                        </b> <span class="fa fa-inr v-align-bottom lableheadright" style="word-break: initial;">  <b>@Convert.ToDecimal(subTotal).ToString("0.00")</b></span>
+                                        <br />
+
+                                        @Html.Hidden("hdnOrderAmount", @subTotal)
+
+                                        @if (Session["OrderCouponAmount"] != null && Convert.ToDouble(Session["OrderCouponAmount"]) > 0)
+                                        {
+                                            totalCouponAmount = Convert.ToDouble(Session["OrderCouponAmount"]);
+
+                                        }
+                                        @* Tax calculation *@
+                                        @if (Model.lCalculatedTaxList != null && Model.lCalculatedTaxList.Count() > 0)
+                                        {
+                                            foreach (var item in Model.lCalculatedTaxList)
+                                            {
+                                                if (@item.IsGSTInclusive == false) //Condition added by Zubair for GST on 06-07-2017
+                                                {
+                                                    <span>
+                                                        <span class="v-align-bottom " style="float: left; line-height: 20px; "><strong> @item.TaxName </strong> </span>
+                                                        <span class=" fa fa-inr v-align-bottom lableheadright"><b> @item.Amount</b></span>
+                                                    </span>
+                                                    <br />
+                                                    taxAmount = taxAmount + item.Amount;
+                                                }
+                                            }
+                                        }
+                                        @* Tax calculation *@
+
+                                        @if (Model.lShoppingCartOrderDetails != null && Model.lShoppingCartOrderDetails.UsedEarnAmount > 0)
+                                        {
+                                            <div style="box-shadow: 4px 3px 3px #777; width: 200px; background: rgba(168, 207, 69, 0.75); ">
+                                                <b>
+                                                    <span> Used GB Wallet :</span>
+                                                    <label>
+                                                        <span class="fa fa-inr"><b> @Model.lShoppingCartOrderDetails.UsedEarnAmount</b></span>
+
+                                                    </label>
+                                                    <br />
+
+                                                    <span>Your Remaining Amount is : <span class="fa fa-inr"><b> @Model.lShoppingCartOrderDetails.RemainEarnAmt </b> </span></span>
+                                                    <br />
+
+                                                </b>
+                                            </div>
+                                            earnAmount = @Model.lShoppingCartOrderDetails.UsedEarnAmount;
+                                        }
+
+                                        @*Added by Zubair for MLM on 25-01-2018*@
+                                        @if (Model.lShoppingCartOrderDetails != null && Model.lShoppingCartOrderDetails.WalletAmountUsed > 0)
+                                        {
+                                            <div>
+                                                <b>
+                                                    <span><strong>Used E-Wallet Amount :</strong></span>
+                                                    <span class="fa fa-inr v-align-bottom lableheadright"><b> @Model.lShoppingCartOrderDetails.WalletAmountUsed</b></span>
+
+
+                                                </b>
+                                            </div>
+                                            EWalletAmountUsed = Convert.ToDecimal(@Model.lShoppingCartOrderDetails.WalletAmountUsed);
+                                        }
+
+
+                                        @if (deliveryCharge > 0)
+                                        {
+                                            <span class="v-align-bottom " style="float: left;line-height: 20px; "> <strong>Delivery Charges </strong></span>
+                                            <span></span><span class="fa fa-inr v-align-bottom lableheadright"> <b>@Convert.ToDecimal(deliveryCharge).ToString("0.00")</b></span>
+                                            <br />
+                                            if (totalCouponAmount > 0)
+                                            {
+                                                <strong class="v-align-bottom"> <span>coupon amount</span> </strong>
+                                                <span class="fa fa-inr v-align-bottom lableheadright">@Convert.ToDecimal(totalCouponAmount).ToString("0.00")</span><br />
+                                            }
+
+                                            double finalTotal = subTotal + deliveryCharge + Convert.ToDouble(taxAmount) - totalCouponAmount - Convert.ToDouble(earnAmount) - Convert.ToDouble(EWalletAmountUsed);//(EWalletAmountUsed)Added by Zubair for MLM on 04-01-2018*;
+                                            if (finalTotal < 0.0) { finalTotal = 0.0; }
+                                            <span><strong>You Pay</strong></span> <span class="fa fa-inr v-align-bottom lableheadright1"> @finalTotal</span>
+                                            orderPayableAmount = finalTotal;
+                                        }
+                                        else
+                                        {
+                                            if (totalCouponAmount > 0)
+                                            {
+                                                <span>Coupon Amount</span> <span class="v-align-bottom lableheadright">@Convert.ToDecimal(totalCouponAmount).ToString("0.00")</span>
+                                                double finalTotal = subTotal + Convert.ToDouble(taxAmount) - totalCouponAmount - Convert.ToDouble(earnAmount) - Convert.ToDouble(EWalletAmountUsed);<br />//(EWalletAmountUsed) Added by Zubair for MLM on 04-01-2018*;<br />
+                                                if (finalTotal < 0.0) { finalTotal = 0.0; }
+                                                <span class="v-align-bottom " style="float: left;line-height: 20px; ">You Pay </span><span class="fa fa-inr v-align-bottom lableheadright1"> @finalTotal</span>
+                                                orderPayableAmount = finalTotal;
+                                            }
+                                            else
+                                            {
+                                                orderPayableAmount = subTotal + Convert.ToDouble(taxAmount) - Convert.ToDouble(earnAmount) - Convert.ToDouble(EWalletAmountUsed);<br />//(EWalletAmountUsed) Added by Zubair for MLM on 04-01-2018*;<br />;
+
+                                                if (taxAmount > 0 || earnAmount > 0 || EWalletAmountUsed > 0)
+                                                {
+                                                    <span class="v-align-bottom " style="float: left;line-height: 20px; ">You Pay </span><span class=" fa fa-inr v-align-bottom lableheadright1"> @orderPayableAmount</span>
+                                                }
+
+                                            }
+                                        }
+
+                                    </div>
+
+                                        @Html.Hidden("hdnOrderPayableAmount", @orderPayableAmount)
+                                        @Html.Hidden("hdnBusinessPointsTotal", @businessPointsTotal)  //Added by Zubair for MLM on 04-01-2018*
+                                         @Html.Hidden("hdnWalletAmountUsed", @EWalletAmountUsed)//Added by Zubair for MLM on 04-01-2018*
+                                    }
+                                </td>
+
+                            </tr>
+
+                        }
+                    }
+                }
+            </tbody>
+        </table>
+
+    </div>
+</body>
+</html>

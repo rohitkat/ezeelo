@@ -1,0 +1,230 @@
+﻿@model IEnumerable<ModelLayer.Models.ViewModel.ProductComponentViewModel>
+
+@{
+    ViewBag.Title = "AddComponent";
+
+}
+
+<link href="~/Content/css/Site.css" rel="stylesheet" />
+
+<script src="~/Scripts/jquery-1.10.2.min.js"></script>
+<style>
+    .webGrid {
+        margin: 4px;
+        border-collapse: collapse;
+        width: 500px;
+        background-color: #FCFCFC;
+    }
+
+    .header {
+        background-color: #C1D4E6;
+        font-weight: bold;
+        color: #FFF;
+    }
+
+    .webGrid th, .webGrid td {
+        border: 1px solid #C0C0C0;
+        padding: 5px;
+    }
+
+    .alt {
+        background-color: #E4E9F5;
+        color: #000;
+    }
+
+    .gridHead a:hover {
+        text-decoration: underline;
+    }
+
+    .description {
+        width: auto;
+    }
+
+    .select {
+        background-color: #389DF5;
+    }
+    .back-list {float:right;
+    }
+     .comp-btn {
+        background-color: #BF8B46;
+        border: 1px solid#BF8B46;
+        color: #fff;
+        padding: 2px 7px;
+    }
+
+    .header th:nth-of-type(1) {
+    }
+
+    .header th:nth-of-type(2) {
+    }
+
+    .header th:nth-of-type(3) {
+        width: 100px;
+    }
+
+    .header th:nth-of-type(4) {
+        width: 100px;
+    }
+
+    .header th:nth-of-type(5) {
+        width: 100px;
+    }
+
+    .header th:nth-of-type(6) {
+        width: 100px;
+    }
+
+    .header th:nth-of-type(7) {
+        width: 100px;
+    }
+
+    .header th:nth-of-type(8) {
+        width: 100px;
+    }
+
+    .header th:nth-of-type(9) {
+        width: 207px;
+    }
+
+    .webgrid-row-style td:nth-of-type(1) {
+        width: 1px;
+    }
+
+    .webgrid-row-style td:nth-of-type(2) {
+        width: 1px;
+    }
+
+    .webgrid-row-style td:nth-of-type(3) {
+        width: 99px;
+    }
+
+    .webgrid-row-style td:nth-of-type(4) {
+        width: 99px;
+    }
+
+    .webgrid-row-style td:nth-of-type(5) {
+        width: 100px;
+    }
+
+    .webgrid-row-style td:nth-of-type(6) {
+        width: 100px;
+    }
+
+    .webgrid-row-style td:nth-of-type(7) {
+        width: 100px;
+    }
+
+    .webgrid-row-style td:nth-of-type(8) {
+        width: 100px;
+    }
+
+    .webgrid-row-style td:nth-of-type() {
+        width: 100px;
+    }
+
+</style>
+
+
+@{
+    ModelLayer.Models.ViewModel.ProductComponentViewModel component = new ModelLayer.Models.ViewModel.ProductComponentViewModel();
+}
+
+@{
+    var gridVarient = new WebGrid(Model);
+    gridVarient.Pager(WebGridPagerModes.All);
+}
+
+<div class="row-fluid sortable ui-sortable">
+    <div class="box span12">
+        <div data-original-title="" class="box-header">
+            <h2><i class="halflings-icon user"></i><span class="break"></span>Variant List</h2>
+            <div class="back-list">
+                @Html.ActionLink("Back To Product List", "Index", new { shopId = ViewBag.ShopID }, new { @class = "btn btn-small btn-ceate" })
+            </div>
+            <div class="box-icon">
+                @*<a class="btn-setting" href="#"><i class="halflings-icon wrench"></i></a>*@
+                <a class="btn-minimize" href="#"><i class="halflings-icon chevron-up"></i></a>
+                @*<a class="btn-close" href="#"><i class="halflings-icon remove"></i></a>*@
+            </div>
+        </div>
+        <div class="box-content product_Res">
+            @*<div class="back-list">
+                    @Html.ActionLink("Back To Product List", "Index", null, new { @class = "btn btn-small btn-ceate" })
+                </div>*@
+            <div id="gridContentComponent" style=" padding:0px;">
+                @gridVarient.GetHtml(
+             tableStyle: "webgrid-table table table-striped table-bordered bootstrap-datatable",
+    headerStyle: "header",
+    footerStyle: "webgrid-footer",
+    alternatingRowStyle: "alt",
+    selectedRowStyle: "select",
+    rowStyle: "webgrid-row-style",
+    mode: WebGridPagerModes.All,
+    columns:
+                gridVarient.Columns(
+                                     gridVarient.Column("", "", format:
+                                    @<text>
+                                        <input type="hidden" id="hdnProductVarientID" name="hdnProductVarientID" class="hdnProductVarientID" value="@item.ProductVarientID" />
+                                    </text>),
+                                    gridVarient.Column("", "", format:
+                                    @<text>
+                                        <input type="hidden" id="hdnShopStockID" name="hdnShopStockID" class="hdnShopStockID" value="@item.ShopStockID" />
+                                    </text>),
+
+                                    gridVarient.Column("ColorName", "Color"),
+                                    gridVarient.Column("SizeName", "Size"),
+                                    gridVarient.Column("DimensionName", "Dimension"),
+                                    gridVarient.Column("MaterialName", "Material"),
+                                    gridVarient.Column("Quantity", "Quantity"),
+                                    gridVarient.Column("MRP", "MRP", format:
+                                    @<text>
+                                        <span class="Mrp">@item.MRP</span>
+                                    </text>),
+
+
+
+                                 gridVarient.Column("Action", format:
+                                @<text>
+                                    <input id="btnAdd$@item.ShopStockID" class="comp-btn" type="button" value="Add Component" onclick="AddComponent(this.id);" />
+                                </text>, style: "col3Width", canSort: false)
+                                        ))
+
+
+            </div>
+        </div>
+    </div>
+</div>
+@*<div class="back-list">
+        @Html.ActionLink("Back To Product List", "Index", null, new { @class = "btn btn-small btn-ceate" })
+    </div>*@
+
+<div id="divPartialView">
+
+    @*@Html.Partial("_AddComponent", Model)*@
+
+</div>
+
+<div class="loader">
+    <img id="loader_img" src="~/Content/img/loader.gif" style="display: none" />
+</div>
+
+<script>
+    function AddComponent(id) {
+        $('#loader_img').show();
+        var ProductVarientID = $("[id*='" + id + "']").closest('tr').find('#hdnProductVarientID').val();
+        var ShopStockID = $("[id*='" + id + "']").closest('tr').find('#hdnShopStockID').val();
+        $.ajax({
+            url: '@Url.Action("AddComponent", "ProductUploadAproved")',
+            data: { 'ShopStockID': ShopStockID, 'ProductVarientID': ProductVarientID },
+            type: "Post",
+            cache: false,
+            success: function (data) {
+                $('#divPartialView').html(data);
+                $('#loader_img').hide();
+            },
+            error: function (data) {
+
+            }
+        });
+    }
+</script>

@@ -1,0 +1,86 @@
+﻿@*//-----------------------------------------------------------------------
+        // <copyright file="Index.cshtml" company="Ezeelo Consumer Services Pvt. Ltd.">
+        //     Copyright (c) Ezeelo Consumer Services Pvt. Ltd. All rights reserved.
+        //
+    </copyright>
+        // <author>Snehal Shende</author>
+        //-----------------------------------------------------------------------*@
+
+@model IEnumerable<ModelLayer.Models.ViewModel.MerchantPendingApprovalViewModel>
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<link href="~/Content/css/searching.css" rel="stylesheet" />
+<link href="~/Content/css/sortable.css" rel="stylesheet" />
+<script src="~/Content/js/jquery-1.11.1.min.js"></script>
+<script src="~~/Content/js/jQuery-Table-Plugin.js"></script>
+
+@*<h2>Pending Request of Merchant</h2>*@
+<style>
+    .dataTables_length {
+        margin-left: 0px;
+        margin-top: 7px;
+    }
+
+    .pagination {
+        margin: 0 40px;
+    }
+</style>
+<div id="content" class="span10" style="min-height: 400px;">
+    @*<ul class="breadcrumb">
+            <li>
+                <i class="icon-home"></i>
+                <a href="">Pending Request of Merchant</a>
+                <i class="icon-angle-right"></i>
+            </li>
+            @*<li><a href="#">Tables</a></li>
+        </ul>*@
+    <div class="row-fluid">
+        <div class="box span12">
+            <div class="box-header">
+                <h2><i class="halflings-icon user"></i><span class="break"></span>Pending Request of Merchant</h2>
+
+            </div>
+            <div class="box-content">
+                <div class="div_class">
+                    @*<div class="search_div">
+                            <input type="text" class="search_input" placeholder="Search..." />
+                            <a class="clearlink" title="Clear textbox"></a>
+                        </div>*@
+                    <table class="table table-striped table-bordered bootstrap-datatable datatable dataTable">
+                        <thead>
+                            <tr>
+                                <th>
+                                    Merchant Name
+                                </th>
+
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        @foreach (var item in Model)
+                        {
+                            <tr>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Name)
+                                </td>
+
+                                <td>
+                                    @Html.ActionLink("Apply Plan", "Index", "MerchantPlan", new { ownerId = item.OwnerId, franchiseID = ViewBag.FranchiseID }, new { @class = "btn btn-small btn-primary" })
+                                    @*| @Html.ActionLink("View Charge", "ViewCharge", "MerchantPlanCategoryCharge", new { ownerId = item.OwnerId }, new { @class = "btn btn-success" })*@
+                                    @*| @Html.ActionLink("Apply Charge", "Index", "MerchantPlanCategoryCharge", new { ownerId = item.OwnerId }, new { @class = "btn btn-success" })*@
+                                </td>
+                            </tr>
+                        }
+                    </table>
+                </div>
+            </div>
+            <div class="control-actions">
+                <div class="col-md-offset-2 col-md-10">
+                    @Html.ActionLink("Back to Franchise List", "ShowFranchiseList", "MerchantPendingApprovals", new { @class = "btn" })
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

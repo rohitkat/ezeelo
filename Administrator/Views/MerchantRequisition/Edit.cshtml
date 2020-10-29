@@ -1,0 +1,130 @@
+﻿@model ModelLayer.Models.ViewModel.MerchantRequisitionViewModel
+
+@{
+    ViewBag.Title = "Edit";
+}
+
+@*<h2>Edit</h2>*@
+<style>
+    div.checker {
+        margin-right: 25px;
+    }
+    select {
+        width: 220px;
+        border: 1px solid #ccc!important;
+    }
+    </style>
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+        <div class="span10" id="content">
+            <ul class="breadcrumb">
+                <li>
+                    <i class="icon-group"></i>
+                    <a href="#">Merchant Requisition</a>
+                    @*<i class="icon-angle-right"></i>*@
+                </li>
+            
+            </ul>
+            <div class="row-fluid">
+                <div class="box span12">
+                    <div class="box-header">
+                        <h2><i class="icon-edit"></i><span class="break"></span>Edit</h2>
+
+                    </div>
+                    <div class="box-content">
+                        <form class="form-horizontal">
+                            @*<h4>Merchant Requisition</h4>*@
+                            <hr />
+                            @Html.ValidationSummary(true)
+                            @Html.ValidationMessage("CustomError")
+                            @Html.HiddenFor(model => model.ShopID)
+                            @*<div class="form-group">
+                    @Html.LabelFor(model => model.ShopName, new { @class = "control-label col-md-2" })
+                    <div class="col-md-10">
+                        @Html.EditorFor(model => model.ShopName)
+                        @Html.ValidationMessageFor(model => model.ShopName)
+                    </div>
+                </div>*@
+
+                            <div class="control-group">
+                                @Html.LabelFor(model => model.MerchantName, new { @class = "control-label span2" })
+                                <div class="col-md-10">
+                                    @Html.TextBoxFor(model => model.MerchantName, new { @readonly = "readonly", @class = "readonlyTextBox" })
+                                    @Html.ValidationMessageFor(model => model.MerchantName)
+                                </div>
+                            </div>
+
+                            <div class="control-group">
+                                @Html.LabelFor(model => model.Mobile, new { @class = "control-label span2" })
+                                <div class="col-md-10">
+                                    @Html.TextBoxFor(model => model.Mobile, new { @readonly = "readonly", @class = "readonlyTextBox" })
+                                    @Html.ValidationMessageFor(model => model.Mobile)
+                                </div>
+                            </div>
+
+                            <div class="control-group">
+                                @Html.LabelFor(model => model.Email, new { @class = "control-label span2" })
+                                <div class="col-md-10">
+                                    @Html.TextBoxFor(model => model.Email, new { @readonly = "readonly", @class = "readonlyTextBox" })
+                                    @Html.ValidationMessageFor(model => model.Email)
+                                </div>
+                            </div>
+
+                            <div class="control-group">
+                                @Html.LabelFor(model => model.TIN, new { @class = "control-label span2" })
+                                <div class="col-md-10">
+                                    @Html.TextBoxFor(model => model.TIN, new { @readonly = "readonly", @class = "readonlyTextBox" })
+                                    @Html.ValidationMessageFor(model => model.TIN)
+                                </div>
+                            </div>
+
+                            <div class="control-group">
+                                @Html.LabelFor(model => model.Pincode, new { @class = "control-label span2" })
+                                <div class="col-md-10">
+                                    @Html.TextBoxFor(model => model.Pincode, new { @readonly = "readonly", @class = "readonlyTextBox" })
+                                    @Html.ValidationMessageFor(model => model.Pincode)
+                                </div>
+                            </div>
+
+                            <div class="control-group">
+                                @Html.LabelFor(model => model.FranchiseID, new { @class = "control-label span2" })
+                                <div class="col-md-10">
+                                    @Html.DropDownList("FranchiseID", null, new { style="pointer-events:none;" })
+                                    @Html.ValidationMessageFor(model => model.FranchiseID)
+                                </div>
+                            </div>
+
+                            <div class="control-group">
+                                @Html.Label("Payment Modes", new { @class = "control-label span2" })
+                                <div class="col-md-10">
+                                    @for (int i = 0; i < Model.PaymentModeList.Count(); i++)
+                                    {
+                                        @Html.HiddenFor(model => model.PaymentModeList[i].ID)
+                                        @Html.HiddenFor(model => model.PaymentModeList[i].Name)
+                                        @Html.DisplayFor(model => model.PaymentModeList[i].Name)
+                                        @Html.HiddenFor(model => model.PaymentModeList[i].IsSelected)
+                                        @*@Html.CheckBox("chkBox", Model.PaymentModeList[i].IsSelected)*@
+                                        <input type="checkbox" class="chkBox" name="chkBox" checked="@Model.PaymentModeList[i].IsSelected" value=@Model.PaymentModeList[i].ID>
+                                    }
+                                </div>
+                            </div>
+
+
+
+                            <div class="form-actions" style="padding-left:150px;">
+                                <div class="col-md-offset-2 col-md-10">
+                                    <input type="submit" value="Save" class="btn btn-primary" />
+                                    @Html.ActionLink("Back to List", "Index", new { franchiseID = Model.FranchiseID }, new { @class = "btn" })
+                                </div>
+                            </div>
+                        </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+}
+
+@*<div>
+    @Html.ActionLink("Back to List", "Index", new { franchiseID = Model.FranchiseID }, new { @class = "btn" })
+</div>*@

@@ -1,0 +1,64 @@
+﻿@model ModelLayer.Models.ViewModel.CategoryWiseOffersViewModel
+
+@{
+    string cityName = string.Empty;
+    int franchiseID = 0;////added
+    if (Request.Cookies["CityCookie"] != null)
+    {
+        cityName = Request.Cookies["CityCookie"].Value.Split('$')[1].ToLower();
+        franchiseID = Convert.ToInt32(Request.Cookies["CityCookie"].Value.Split('$')[2]);////added
+    }
+    else
+    {
+        Layout = "~/Views/Shared/_Layout_Internal.cshtml";
+    }
+
+    if (Session["UID"] != null)
+    {
+        @Html.Hidden("hdnSessionValue", (Session["UID"]))
+    }
+    else
+    {
+        @Html.Hidden("hdnSessionValue", 0)
+    }
+}
+@Html.Hidden("CityID", Request.Cookies["CityCookie"].Value)
+
+
+<div id="navbar">
+    <ol class="breadcrumb page-breadcrumb">
+        <li>
+            <a href="@Url.RouteUrl("Home", new { city = cityName })">Home</a>
+        </li>
+        <li><a href="#">Deals</a></li>
+    </ol>
+</div>
+
+<div class="tabbable product-tabs ">
+@if (Model != null)
+        {
+    <ul class="nav nav-tabs" id="myTab">
+        <li class="active">
+            <a href="#divProducts" data-toggle="tab">Deals</a>
+        </li>
+        <li>
+            <a href="#tab-2" data-toggle="tab">Deals By Category</a>
+        </li>
+    </ul>
+    <div class="tab-content">
+        <div class="tab-pane fade in active" id="divProducts">
+                @Html.Partial("_OfferProducts", Model)
+        </div>
+        <div class="tab-pane fade" id="tab-2">
+                @Html.Partial("_OfferCategory", Model)
+            <div id="divCatOfferProducts">
+
+            </div>
+        </div>
+    </div>
+}
+</div>
+    <div class="gap"></div>
+
+
+

@@ -1,0 +1,91 @@
+﻿@model IEnumerable<ModelLayer.Models.ViewModel.MenuViewModel>
+@using System.Text.RegularExpressions;
+@using System.Globalization;
+<link href="~/Content/css/Layout_HI.css" rel="stylesheet" />
+
+@{
+    string cityName = "";
+    string cityID = "";
+    int franchiseID = 0;////added
+    if (Request.Cookies["CityCookie"] != null && Request.Cookies["CityCookie"].Value != "")
+    {
+        cityName = Request.Cookies["CityCookie"].Value.Split('$')[1].ToLower();
+        cityID = Request.Cookies["CityCookie"].Value.Split('$')[0].Trim();
+        franchiseID = Convert.ToInt32(Request.Cookies["CityCookie"].Value.Split('$')[2]);////added
+    }
+}
+
+
+@{int i = 0; string categoryName = string.Empty;}
+@foreach (var item in Model)
+{
+    <ul class="vertical-menu-list">
+        <li>
+            @*Level - 1*@
+            @{
+    categoryName = Regex.Replace(item.CategoryName.Substring(0, Math.Min(item.CategoryName.Length, 30)), @"[\/\\#,+()$~%.':*?<>{} ]", "-").Replace("&", "and").ToLower();
+    <a class="parent" href="@Url.RouteUrl("CategoryPages", new { city = cityName,franchiseId=franchiseID, catName = categoryName, catID = item.ID })"><img class="icon-menu" alt= "eZeelo" src="@item.ImagePath" style="width:30px;height:20px;" onerror="this.src = '/Content/Images/no_image.png'">@CultureInfo.CurrentCulture.TextInfo.ToTitleCase(item.CategoryName.ToLower())<span class="icon_t fa fa-angle-right"></span></a>  @*////added franchiseId=franchiseID*@
+            }
+            @{string cl = "cat-" + i;}
+            <div class="vertical-dropdown-menu" id="@cl" style="width: 900px;">
+                <div class="vertical-groups col-sm-12 col-md-12 col-lg-12 col-xs-12">
+
+                    @*Level - 2*@
+                    @if (item.LevelTwoListing != null)
+                    {
+                        foreach (var ltwo in item.LevelTwoListing)
+                        {
+                            <div class="mega-group col-md-3 col-lg-3 col-sm-6 col-xs-6">
+                                <div class="mega-group col-sm-12 col-md-12 col-lg-12 col-xs-12">
+                                    <h4 class="mega-group-header"><span>@CultureInfo.CurrentCulture.TextInfo.ToTitleCase(ltwo.CategoryName.ToLower())</span></h4>
+                                    <ul class="group-link-default">
+                                        @*Level - 3*@
+                                        @{int lthreeCount = 0;}
+                                        @if (ltwo.LevelThreeListing != null)
+                                        {
+                                            foreach (var lthree in ltwo.LevelThreeListing)
+                                            {
+                                                if (lthreeCount < 8)
+                                                {
+                                                    string itemName = Regex.Replace(lthree.CategoryName.Substring(0, Math.Min(lthree.CategoryName.Length, 30)), @"[\/\\#,+()$~%.':*?<>{} ]", "-").Replace("&", "and").ToLower();
+                                                    <li>
+                                                        @if (!lthree.IsManaged)
+                                                        {
+                                                            <a href="@Url.RouteUrl("ProductsByCategory", new { item = itemName, parentCategoryId = lthree.ID, city = cityName, franchiseId = franchiseID })">@CultureInfo.CurrentCulture.TextInfo.ToTitleCase(lthree.CategoryName.ToLower())</a>  @*////added franchiseId=franchiseID*@
+                                                        }
+                                                        else
+                                                        {
+                                                            <a href="@Url.RouteUrl("Managed", new { CatName = itemName, ParentCatID = lthree.ID, Level = lthree.Level, cityId = cityID, city = cityName, franchiseId = franchiseID })">@CultureInfo.CurrentCulture.TextInfo.ToTitleCase(lthree.CategoryName.ToLower())</a>  @*////added franchiseId=franchiseID*@
+                                                        }
+                                                    </li>
+                                                        lthreeCount++;
+                                                }
+
+                                            }
+                                        }
+                                        <li>
+                                            @if (ltwo.LevelThreeListing.Count > 8)
+                                            {
+                                                if (!item.IsManaged)
+                                                {
+                                                    <a class="view_more" href="@Url.RouteUrl("CategoryPages", new { city = cityName,franchiseId=franchiseID, catName = categoryName, catID = item.ID })">View More>></a> @*////added franchiseId=franchiseID*@
+                                                }
+                                                else
+                                                { <a class="view_more" href="#">View More>></a>}
+                                            }
+                                        </li>
+
+                                    </ul>
+
+                                </div>
+                            </div>
+                        }
+                    }
+                </div>
+            </div>
+
+        </li>
+    </ul>
+                    i++;
+}
+

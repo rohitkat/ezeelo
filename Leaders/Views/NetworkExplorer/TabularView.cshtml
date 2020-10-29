@@ -1,0 +1,206 @@
+﻿@model IEnumerable<ModelLayer.Models.Network_Table>
+
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_LeaderUsersLayout.cshtml";
+}
+
+<link rel="stylesheet" href="~/Templates/UsersTemplate/css/material-design.minfd53.css">
+<link rel="stylesheet" href="~/Templates/UsersTemplate/css/style3.css">
+<link rel="stylesheet" href="~/Templates/UsersTemplate/css/dropify.minfd53.css">
+<link rel="stylesheet" href="~/Templates/UsersTemplate/css/custom.css">
+<link rel="stylesheet" href="~/Templates/UsersTemplate/css/tablesaw.css">
+<link rel="stylesheet" href="~/Templates/UsersTemplate/css/footable.minfd53.css">
+<link rel="stylesheet" href="~/Templates/UsersTemplate/css/site.minfd53.css.css">
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<title>leaders Ezeelo</title>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+
+<link href="//cdn.datatables.net/1.10.19/css/jquery.dataTables.min.css" rel="stylesheet" />
+<script src="//cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/responsive/2.2.3/js/dataTables.responsive.min.js"></script>
+<link href="https://cdn.datatables.net/responsive/2.2.3/js/responsive.bootstrap.min.js" rel="stylesheet">
+
+@*<script src="~/Content/js/jquery-2.1.3.min.js"></script>*@
+@*<script src="~/Content/js/jquery.dataTables.min.js"></script>*@
+
+@*<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<script src="~/Content/js/jquery.dataTables.min.js"></script>
+<script type="text/javascript" class="init">
+    $(document).ready(function () {
+        $('#tblData').DataTable({
+            dom: 'T<"clear">lfrtip',
+            "processing": true,
+            "serverSide": true,
+        });
+        // alert("1");
+    });
+</script>*@
+
+<section class="maintabularPageView">
+<h4 class="example-title">Network Tree</h4>
+<div class="maintabularPageView-child">
+<div class="maintabularPageView-heading">
+<h3 class="panel-title">Tabular List of Network</h3>
+<p><!-- <i class="fa fa-info"></i> --> Search within rows by Using Search bar</p>
+</div>
+<tr class="footable-filtering">
+                                                                <th colspan="9">
+                                                                    <form class="form-inline">
+                                                                        <div class="form-group">
+                                                                            <label class="sr-only">Status</label>
+                                                                            <select class="form-control">
+                                                                                <option>All Levels</option>
+                                                                                <option>Level: 1</option>
+                                                                                <option>Level: 2</option>
+                                                                                <option>Level: 3</option>
+                                                                                <option>Level: 4</option>
+                                                                            </select>
+                                                                        </div>
+                                                                        <div class="form-group footable-filtering-search">
+                                                                            <label class="sr-only">Search</label>
+                                                                            <div class="input-group">
+                                                                                <input type="text" class="form-control" placeholder="Search By">
+                                                                                <div class="dropdown input-group-btn ">
+                                                                                    <button type="button" class="btn btn-primary">
+                                                                                        <span class="fooicon fooicon-search">
+                                                                                            <i class="fa fa-search" aria-hidden="true"></i>
+                                                                                        </span>
+                                                                                    </button>
+                                                                                    <button type="button" class="btn btn-default dropdown-toggle SearchInList " onclick="SearchInList()">
+                                                                                        <span class="caret"></span>
+                                                                                    </button>
+                                                                                    <ul class="dropdown-menu dropdown-menu-right SearchInListDsplNN show" id="SearchInListDDBTN">
+                                                                                        <li class="dropdown-header">Search in:</li>
+                                                                                        <li>
+                                                                                            <a class="checkbox">
+                                                                                                <label>
+                                                                                                    <input type="checkbox" checked="checked">Name</label>
+                                                                                            </a>
+                                                                                        </li>
+                                                                                        <li>
+                                                                                            <a class="checkbox">
+                                                                                                <label>
+                                                                                                    <input type="checkbox" checked="checked">Referal ID</label>
+                                                                                            </a>
+                                                                                        </li>
+                                                                                        <li>
+                                                                                            <a class="checkbox">
+                                                                                                <label>
+                                                                                                    <input type="checkbox" checked="checked">E-Mail</label>
+                                                                                            </a>
+                                                                                        </li>
+                                                                                        <li>
+                                                                                            <a class="checkbox">
+                                                                                                <label>
+                                                                                                    <input type="checkbox" checked="checked">Joined Date</label>
+                                                                                            </a>
+                                                                                        </li>
+                                                                                        <li>
+                                                                                            <a class="checkbox">
+                                                                                                <label>
+                                                                                                    <input type="checkbox" checked="checked">Parent Name</label>
+                                                                                            </a>
+                                                                                        </li>
+                                                                                    </ul>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div id="activestat">
+                    <div class="checkbox-custom ml-10 d-inline checkbox-primary">
+                      <input type="checkbox" id="active" checked="checked">
+                      <label for="active">Active</label>
+                    </div>
+                    <div class="checkbox-custom ml-10 d-inline checkbox-primary">
+                      <input type="checkbox" id="inactive" checked="checked">
+                      <label for="inactive">InActive</label>
+                    </div>
+                  </div>
+
+                                                                    </form>
+                                                                </th>
+                                                            </tr>
+<table id="tblData" class="table table-striped table-bordered bootstrap-datatable datatable dataTable" width="100%">
+
+    <thead>
+
+        <tr>
+            <th>Name</th>
+            <th>Refferal Id</th>
+            <th>
+                Pts Pending
+            </th>
+
+            <th>
+                Email
+            </th>
+
+            <th>
+                Last Trx Date
+            </th>
+            <th>
+                Level
+            </th>
+            <th>
+                Parent Name
+            </th>
+            <th>
+                Status
+            </th>
+        </tr>
+    </thead>
+    @if (Model != null) { 
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @item.User_Name
+                </td>
+                <td>
+                    @item.Referal_ID
+                </td>
+                <td>
+                    @item.Pts_Pending
+                </td>
+                <td>
+                    @item.Email
+                </td>
+                <td>
+                    @Convert.ToString(string.Format("{0:dd/MM/yyyy}", item.Last_Trx))
+                </td>
+                <td>
+                    @item.Network_Level
+                </td>
+                <td>
+                    @item.Parent_Name
+                </td>
+                <td>
+                    @if (@item.Pts_Pending == 0)
+                    {
+                        <span style="background-color:#0ceb4a" class="badge badge-table badge-success">@Html.DisplayFor(model => item.Status)</span>
+                    }
+                    else
+                    {
+                        <span style="background-color:#b30707" class="badge badge-table badge-danger">@Html.DisplayFor(model => item.Status)</span>
+                    }
+                </td>
+            </tr>
+
+        }
+    </tbody>
+    }
+
+</table>
+</div>
+</section>
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('#tblData').DataTable();
+
+
+    });
+</script>
+

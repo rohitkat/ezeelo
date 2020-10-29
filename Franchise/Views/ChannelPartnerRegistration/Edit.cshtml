@@ -1,0 +1,432 @@
+﻿@model ModelLayer.Models.ViewModel.ChannelPartnerRegistration
+
+@{
+    ViewBag.Title = "Edit";
+}
+<style>
+    .set {
+        margin-top: 13px;
+    }
+
+    .control-first {
+        margin-left: 0px !important;
+    }
+    .highlight-div {
+        border: 1px solid #EFE5D7;
+        margin-top: 11px;
+        padding: 7px;
+        background: #FFFBF5;
+    }
+    .box-header h2 {
+        float: none;
+        text-align: center;
+    }
+</style>
+
+<link href="~/Content/css/main.css" rel="stylesheet" />
+<script src="~/Scripts/jquery-1.10.2.min.js"></script>
+
+
+<div class="span10 " id="content">
+    <div class="row-fluid">
+        <div class="box span12">
+            <div class="box-header" style="text-align: center;">
+                <h2 style="font-size: 24px; color: rgb(171, 143, 101);">
+                Channel Partner Registration</h2>
+            </div>
+                <main>
+                 
+
+                        @using (Html.BeginForm())
+                        {
+
+                            <fieldset>
+                                @Html.AntiForgeryToken()
+                                <legend>Personal Detail</legend>
+                                <div class="form-section">
+                                    @Html.ValidationSummary(true)
+                                    <div class="span12 ">
+
+                                        <div class="span2">
+                                            <div class="span12"><label>Select</label></div>
+                                            <div class="span12 control-first">
+                                                @Html.DropDownList("SalutationID", null, new { @class = "span12" })
+                                                @Html.ValidationMessageFor(model => model.personalDetail.SalutationID)
+                                            </div>
+                                        </div>
+                                        <div class="span10">
+                                            <div class="span12 clearfix">
+
+                                                <div class="span4">
+                                                    <div class="span12">@Html.LabelFor(model => model.personalDetail.FirstName, new { @class = "control-label col-md-2" })</div>
+                                                    <div class="span12 control-first">
+                                                        @Html.TextBoxFor(model => model.personalDetail.FirstName, new { @class = "span12" })
+                                                        @Html.ValidationMessageFor(model => model.personalDetail.FirstName)
+                                                    </div>
+
+                                                </div>
+                                                <div class="span4">
+                                                    <div class="span12">@Html.LabelFor(model => model.personalDetail.MiddleName, new { @class = "control-label span12" })</div>
+                                                    <div class="span12 control-first">
+                                                        @Html.TextBoxFor(model => model.personalDetail.MiddleName, new { @class = "span12" })
+                                                        @Html.ValidationMessageFor(model => model.personalDetail.MiddleName)
+                                                    </div>
+
+                                                </div>
+
+                                                <div class="span4">
+                                                    <div class="span12">@Html.LabelFor(model => model.personalDetail.LastName, new { @class = "control-label span12" })</div>
+                                                    <div class="span12 control-first">
+                                                        @Html.TextBoxFor(model => model.personalDetail.LastName, new { @class = "span12" })
+                                                        @Html.ValidationMessageFor(model => model.personalDetail.LastName)
+                                                    </div>
+
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+
+                                    <div class="span12 control-first ">
+                                        <div class="span4">
+                                            <div class="span12">@Html.LabelFor(model => model.personalDetail.DOB, new { @class = "control-label span12" })</div>
+                                            <div class="span12 control-first ">
+                                                @Html.TextBox("DOB1", null, new { @class = " datepicker span12" })
+                                                @Html.ValidationMessageFor(model => model.personalDetail.DOB)
+                                            </div>
+                                        </div>
+
+                                        <div class="span4">
+                                            <div class="span12">@Html.LabelFor(model => model.personalDetail.Gender, new { @class = "control-label span12" })</div>
+                                            <div class="span12 control-first ">
+                                                @Html.TextBoxFor(model => model.personalDetail.Gender, new { @class = "span12" })
+                                                @Html.ValidationMessageFor(model => model.personalDetail.Gender)
+                                            </div>
+                                        </div>
+                                        <div class="span4">
+                                            <div class="span12"><label>Pincode</label></div>
+                                            <div class="span12 control-first ">
+                                                @Html.TextBox("Pincode", null, new { @id = "Pincode", @class = "span12", @placeholder = "Enter Pincode", @onkeypress = "return isValidPincode(event)", required = "required" })
+                                                <img id="Pincode_loading" src="~/Content/img/ajax_loader.gif" style="width:20px; height:20px; display: none;margin-left:-21px; " />
+                                                <div id="divPincodeError" style=" display: none; font-size:12px;" class="alert-danger focused">  </div>
+                                            </div>
+                                        </div>
+
+
+                                    </div>
+
+
+                                    <div class="span12 control-first ">
+                                        <div class="span12">
+                                            <div class="span12">@Html.LabelFor(model => model.personalDetail.Address, new { @class = "control-label col-md-2" })</div>
+                                            <div class="span12 control-first ">
+                                                @Html.TextAreaFor(model => model.personalDetail.Address, new { @class = "span12" })
+                                                @Html.ValidationMessageFor(model => model.personalDetail.Address)
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="span12 control-first ">
+                                        <div class="span4">
+                                            <div class="span12">@Html.LabelFor(model => model.userLogin.Mobile, new { @class = "control-label col-md-2" })</div>
+                                            <div class="span12 control-first ">
+                                                @Html.TextBoxFor(model => model.userLogin.Mobile, new { @class = "span12 form-control-Widout-block form-control", @placeholder = "Enter Mobile", @onkeydown = "return ValidateNumber(event);", @onchange = "return ValidateMobile(this);", required = "required", maxlength = 10 })
+                                                @Html.ValidationMessageFor(model => model.userLogin.Mobile)
+                                                <div id="divMobileError" style="width: 229px;display: none;" class="alert-danger focused">  </div>
+                                            </div>
+                                        </div>
+                                        <div class="span4">
+                                            <div class="span12">@Html.LabelFor(model => model.userLogin.Email, new { @class = "control-label col-md-2" })</div>
+                                            <div class="span12 control-first ">
+                                                @Html.TextBoxFor(model => model.userLogin.Email, new { @class = "span12", placeholder = "Email", @onchange = "return ValidateEmail(this);", required = "required" })
+                                                @Html.ValidationMessageFor(model => model.userLogin.Email)
+                                                <div id="divEmailError" style="width: 278px; display: none;" class="alert-danger focused">  </div>
+                                            </div>
+                                        </div>
+
+                                    </div>
+
+                                </div>
+
+
+                            </fieldset>
+                            <fieldset>
+                                <legend>Business Details</legend>
+                                <div class="form-section">
+                                    <div class="span12 clearfix">
+                                        <div class="span3">
+                                            <div class="span12">@Html.LabelFor(model => model.businessDetail.Name, new { @class = "control-label col-md-2" })</div>
+                                            <div class="span12">
+                                                @Html.TextBoxFor(model => model.businessDetail.Name, new { required = "required", @class = "span12" })
+                                                @Html.ValidationMessageFor(model => model.businessDetail.Name)
+                                            </div>
+                                        </div>
+                                        <div class="">
+                                            @Html.HiddenFor(model => model.businessDetail.BusinessTypeID)
+                                        </div>
+                                        <div class="span3">
+                                            <div class="span12">@Html.LabelFor(model => model.businessDetail.Landline1)</div>
+                                            <div class="span12">
+                                                @Html.TextBoxFor(model => model.businessDetail.Landline1, new { @class = "span12" })
+                                                @Html.ValidationMessageFor(model => model.businessDetail.Landline1)
+                                            </div>
+
+                                        </div>
+                                        <div class="span3">
+                                            <div class="span12">@Html.LabelFor(model => model.businessDetail.FAX)</div>
+                                            <div class="span12">
+                                                @Html.TextBoxFor(model => model.businessDetail.FAX, new { @class = "span12" })
+                                                @Html.ValidationMessageFor(model => model.businessDetail.FAX)
+                                            </div>
+
+                                        </div>
+                                        <div class="span3">
+                                            <div class="span12">@Html.LabelFor(model => model.businessDetail.Website, new { @class = " col-md-2" })</div>
+                                            <div class="span12">
+                                                @Html.TextBoxFor(model => model.businessDetail.Website, new { @class = "span12" })
+                                                @Html.ValidationMessageFor(model => model.businessDetail.Website)
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                    <div class="span12 highlight-div control-first">
+                                        <div class="span6 clearfix">
+                                            <div class="span6">@Html.LabelFor(model => model.channelPartner.IsCODAllowed, "Allow Cash On Delivery", new { @class = "span12" })</div>
+                                            @Html.CheckBoxFor(model => model.channelPartner.IsCODAllowed, new { @class = "checkbox", style = "margin-top:18px" })
+                                            @Html.ValidationMessageFor(model => model.channelPartner.IsCODAllowed)
+
+                                        </div>
+                                        <div class="span6 control-first">
+                                            <div class="span6">@Html.LabelFor(model => model.channelPartner.MinimumCODRange, "Minimum Range Of COD ", new { @class = "span12" })</div>
+                                            <div class="span6">
+                                                @Html.TextBoxFor(model => model.channelPartner.MinimumCODRange, new { @class = "span12 checker" })
+                                                @Html.ValidationMessageFor(model => model.channelPartner.MinimumCODRange)
+                                            </div>
+                                        </div>
+
+                                    </div>
+
+                                </div>
+
+                            </fieldset>
+
+
+                            <fieldset>
+                                <legend>Bank Details</legend>
+                                <div class="form-section">
+                                    <div class="span12">
+                                        <div class="span12 control-first">
+                                            <div class="span4 ">
+                                                <div class="span12">@Html.LabelFor(model => model.ownerBank.AccountName, new { @class = "span12" })</div>
+                                                <div class="span12 control-first">
+                                                    @Html.TextBoxFor(model => model.ownerBank.AccountName, new { @class = "span12" })
+                                                    @Html.ValidationMessageFor(model => model.ownerBank.AccountName)
+                                                </div>
+                                            </div>
+
+                                            <div class="span4">
+                                                <div class="span12">
+                                                    @Html.LabelFor(model => model.ownerBank.BankID, "BankID", new { @class = "span12" })
+                                                </div>
+                                                <div class="span12 control-first">
+                                                    @Html.DropDownList("BankID", null, String.Empty, new { @class = "span12" })
+                                                    @Html.ValidationMessageFor(model => model.ownerBank.BankID)
+                                                </div>
+                                            </div>
+                                            <div class="span4">
+                                                <div class="span12"> @Html.LabelFor(model => model.ownerBank.BranchName, new { @class = "span12" })</div>
+                                                <div class="span12 control-first">
+                                                    @Html.TextBoxFor(model => model.ownerBank.BranchName, new { required = "required", @class = "span12" })
+                                                    @Html.ValidationMessageFor(model => model.ownerBank.BranchName)
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="span12 control-first">
+
+                                            <div class="span4">
+                                                <div class="span12">
+                                                    @Html.LabelFor(model => model.ownerBank.IFSCCode, new { @class = "span12" })
+                                                </div>
+                                                <div class="span12 control-first">
+                                                    @Html.TextBoxFor(model => model.ownerBank.IFSCCode, new { required = "required", @maxlength = 11, @class = "span12" })
+                                                    @Html.ValidationMessageFor(model => model.ownerBank.IFSCCode)
+                                                </div>
+                                            </div>
+                                            <div class="span4">
+                                                <div class="span12"> @Html.LabelFor(model => model.ownerBank.MICRCode, new { @class = "span12", @maxlength = 50 })</div>
+                                                <div class="span12 control-first">
+                                                    @Html.TextBoxFor(model => model.ownerBank.MICRCode, new { @class = "span12" })
+                                                    @Html.ValidationMessageFor(model => model.ownerBank.MICRCode)
+                                                </div>
+                                            </div>
+                                            <div class="span4">
+                                                <div class="span12">
+                                                    @Html.LabelFor(model => model.ownerBank.AccountNumber, new { @class = "span12" })
+                                                </div>
+                                                <div class="span12 control-first">
+                                                    @Html.TextBoxFor(model => model.ownerBank.AccountNumber, new { required = "required", @maxlength = 20, @class = "span12" })
+                                                    @Html.ValidationMessageFor(model => model.ownerBank.AccountNumber)
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="span4 control-first">
+                                            <div class="span12">@Html.LabelFor(model => model.ownerBank.BankAccountTypeID, "BankAccountTypeID", new { @class = "span12" })</div>
+                                            <div class="span12 control-first">
+                                                @Html.DropDownList("BankAccountTypeID", null, String.Empty, new { @class = "span12" })
+                                                @Html.ValidationMessageFor(model => model.ownerBank.BankAccountTypeID)
+                                            </div>
+                                        </div>
+                                    </div>
+                                 
+                                </div>
+                            </fieldset>
+
+                            @Html.ValidationSummary(true)
+                            <div class="form-group">
+                                <div class="span12" style=" text-align: center; background: #fafafa; padding: 10px">
+                                    @*<input type="submit" value="Create" class="btn btn-default" />*@
+                                    <button type="submit" id="Save" value="Save" class="btn btn-success " name=" action">SUBMIT</button>
+                                    @Html.ActionLink("Back to List", "Index", string.Empty, new { @class = "btn btn-primary" })
+
+                                </div>
+                            </div>
+
+                        }
+</main>
+           
+            
+        </div>
+    </div>
+</div>
+
+
+<script type="text/javascript">
+    //alert("1");
+    var lPincode = $('#Pincode').val()
+    //alert("2");
+    $('#Pincode').bind('input propertychange', function () {
+        var lPincode = $('#Pincode').val()
+        $('#divPincodeError').hide();
+
+        if (lPincode.length == 6) {
+            $('#Pincode_loading').show();
+            $.ajax({
+                url: '@Url.Action("GetAddress", "ChannelPartnerRegistration")?Pincode=' + lPincode,
+                type: "GET",
+                success: function (result) {
+                    //$('#divAddress').html(result);
+                    $('#Pincode_loading').hide();
+                    $('#divPincodeError').hide();
+                    if (result == "1") {
+                        $('#divPincodeError').show();
+                        $('#divPincodeError').html('[' + lPincode + '] dose not exist,Contact to ADMIN');
+                        $('#Pincode').val('');
+                    }
+                },
+                error: function (data) {
+                    //alert('Pincode : ' + lPincode + ' Dose Not Exist, please Contact to ADMIN');
+                    //$('#divAddress').empty();
+                    //$('#Pincode_loading').hide();
+                    $('#divPincodeError').hide();
+                    //$('#divPincodeError').html('Pincode [' + lPincode + '] dose not exist, please Contact to ADMIN');
+                    //$('#Pincode').val('');
+                }
+            });
+        }
+    });
+
+</script>
+<script type="text/javascript">
+
+    function ValidateNumber(e) {
+        var evt = (e) ? e : window.event;
+        var charCode = (evt.keyCode) ? evt.keyCode : evt.which;
+        if ((charCode > 45 && charCode < 58) || (charCode > 95 && charCode < 106) || charCode == 8 || charCode == 127 || charCode == 37 || charCode == 39) { // (charCode > 31 && (charCode < 48 || charCode > 57)) {
+            return true;
+        }
+        else if (charCode == 9) {
+            SendKeys("{tab}");
+            return true;
+        }
+        return false;
+    };
+
+    function ValidateEmail(obj) {
+        var email = $(obj).val();
+        var filter = /^([\w-\.]+@@([\w-]+\.)+[\w-]{2,4})?$/;
+        $('#divEmailError').hide();
+        if (filter.test(email)) {
+            return true;
+        }
+        else {
+            $('#divEmailError').show();
+            $('#divEmailError').html('Invalid Email [' + email + ']');
+            $('#userLogin_Email').val('');
+            $('#userLogin_Email').focus();
+            return false;
+        }
+    }
+
+    function ValidateMobile(obj) {
+        var mobile = $(obj).val();
+        var filter = /^[7-9]{1}[0-9]{9}$/;
+        $('#divMobileError').hide();
+        if (filter.test(mobile)) {
+            return true;
+        }
+        else {
+            $('#divMobileError').show();
+            $('#divMobileError').html('Invalid Mobile [' + mobile + ']');
+            $('#Mobile').val('');
+            $('#Mobile').focus();
+            return false;
+        }
+    }
+
+    function ValidatePincode() {
+        var pin = $('#Pincode').val();
+        var filter = /\d{6}/;
+        $('#divPincodeError').hide();
+        if (filter.test(pin)) {
+            return true;
+        }
+        else {
+            $('#divPincodeError').show();
+            $('#divPincodeError').html('Invalid Pincode [' + pin + ']');
+            $('#Pincode').val('');
+            $('#Pincode').focus();
+            return false;
+        }
+    }
+
+    function ValidateConfirmPassword(obj) {
+        var pwd = $('#userLogin_Password').val();
+        var cpwd = $('#ConfirmPassword').val();
+        $('#divPwdError').hide();
+        if (pwd == cpwd)
+        { return true; }
+        else
+        {
+            $('#divPwdError').show();
+            $('#divPwdError').html('Invalid Confirm Password');
+            $(obj).val('');
+            //$(obj).select();
+            $(obj).focus();
+            return false;
+        }
+    };
+
+    function setFocus() {
+        var pwd = $('#userLogin_Password').val();
+        $('#divPwdError').hide();
+        if (pwd == '') {
+            $('#ConfirmPassword').val('');
+            $('#userLogin_Password').focus();
+        }
+        else {
+            $('#ConfirmPassword').val('');
+            $('#ConfirmPassword').focus();
+        }
+    };
+
+</script>

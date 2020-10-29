@@ -1,0 +1,360 @@
+﻿@model ModelLayer.Models.ViewModel.FVSaleMarginOrderWiseReportViewModelList
+
+@{
+    ViewBag.Title = "FV Sale Margin Order_WiseReport";
+}
+<script src="~/Content/js/jquery-1.9.1.min.js"></script>
+
+
+@*<script src="~/Scripts/jquery-1.10.2.min.js"></script>
+    <link href="~/Content/css/datepicker.css" rel="stylesheet" />
+    <script src="~/Content/js/jquery-ui-1.10.0.custom.min.js"></script>
+    <link href="~/Content/css/jquery-ui-1.8.21.custom.css" rel="stylesheet" />*@
+
+<style>
+    .ClaimAmtList table {
+        border-collapse: separate;
+        width: 800px;
+        max-width: 800px;
+        overflow-x: scroll;
+        display: block;
+    }
+
+    .ClaimAmtList thead, .ClaimAmtList tfoot {
+        background-color: #EFEFEF;
+    }
+
+    .ClaimAmtList thead, .ClaimAmtList tbody, .ClaimAmtList tfoot {
+        display: block;
+    }
+
+    .ClaimAmtList tbody {
+        overflow-y: scroll;
+        overflow-x: auto;
+        max-height: 350px;
+    }
+
+    .ClaimAmtList td, .ClaimAmtList th {
+        padding: 5px;
+        min-width: 80px;
+        height: 25px;
+        border: inset 1px lightblue;
+        /*overflow: hidden;*/
+        text-overflow: ellipsis;
+        max-width: 80px;
+        /*word-break: break-all;*/
+        text-align: center;
+    }
+</style>
+
+<script src="~/Content/js/jquery-ui-1.10.0.custom.min.js"></script>
+<link href="~/Content/css/datepicker.css" rel="stylesheet" />
+<link href="~/Content/css/jquery-ui-1.8.21.custom.css" rel="stylesheet" />
+
+
+
+
+@*<link href="~/Content/css/bootstrap-datetimepicker.min.css" rel="stylesheet" />
+    <link href="~/Content/css/bootstrap-datetimepicker.css" rel="stylesheet" />
+    <link href="~/Content/assets/css/font-awesome.min.css" rel="stylesheet" />
+    <link href="~/Content/assets/css/form-design.css" rel="stylesheet" />*@
+
+
+
+
+
+<div class="row-fluid">
+    @using (Html.BeginForm("Index", "FVSaleMarginOrderWiseReport", new { enctype = "multipart/form-data" }, FormMethod.Post, new { id = "Form_" }))
+    {
+        @Html.ValidationSummary(true)
+
+        <div class="box span12">
+            <div class="box-header creatProduct clearfix">
+                <h2>
+                    <i class="icon-list-alt"></i>
+                    <span class="break"></span>
+                    FV Sale Margin Order Wise Report
+                </h2>
+            </div>
+            <div class="box-content nameDscrp">
+                <div class="form-horizontal">
+                    <div class="NameDescription">
+                        <div class="control-group mrg-left">
+                            <div class="col-sm-3">
+                                Filter by Frenchise
+                            </div>
+                            @*@Html.DropDownListFor(model => model.WarehouseID, Model.WarehouseList)*@
+                            @*<div class="col-sm-6">
+                                         @if (ViewBag.PossibleSuppliers != null)
+                                         {
+                                             @Html.DropDownListFor(model => model.SupplierID, ((IEnumerable<ModelLayer.Models.Supplier>)ViewBag.PossibleSuppliers).Select(option => new SelectListItem
+                                {
+                                    Text = (option == null ? "None" : option.Name),
+                                    Value = option.ID.ToString(),
+                                    Selected = (Model != null) && (option.ID == Model.SupplierID)
+                                }), "--All Suppliers--")
+                                         }
+                                     </div>*@
+                        </div>
+
+                        <div class="control-group mrg-left">
+                            <div class="col-sm-3">
+                                From Date
+                            </div>
+                            <div class="col-sm-6">
+                                @*@Html.TextBox("FromDate", null, new { @readonly = "readonly", @class = "search", placeholder = "From" })*@
+                                @Html.TextBoxFor(model => model.FromDate, new { @readonly = "readonly", @required = "required" })
+                                @Html.HiddenFor(model => model.FromDate)
+                            </div>
+                        </div>
+                        <div class="control-group mrg-left">
+                            <div class="col-sm-3">
+                                To Date
+                            </div>
+                            <div class="col-sm-6">
+                                @*@Html.TextBox("ToDate", null, new { @readonly = "readonly", @class = "search", placeholder = "To" })*@
+                                @Html.TextBoxFor(model => model.ToDate, new { @readonly = "readonly", @required = "required" })
+                                @Html.HiddenFor(model => model.ToDate)
+                            </div>
+                        </div>
+
+                        <div class="control-group mrg-left">
+                            <div class="col-sm-3">
+                                Export In
+                            </div>
+                            <div class="col-sm-6">
+                                @Html.DropDownList("ExportOption", new List<SelectListItem>
+                         {
+                                 new SelectListItem{ Text="Excel", Value = "1" },
+                                 new SelectListItem{ Text="Csv", Value = "2" },
+                                 new SelectListItem{ Text="Pdf", Value = "3" }
+                        })
+                            </div>
+                        </div>
+                        <div class="clr"></div>
+                        <button value="Search" type="submit" class="btnRemove btn btn-warning">Search</button>
+                        
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+
+    <center>  <button id="Export" value="Export" type="submit" class="btn btn-success">Export</button>  </center>
+
+
+
+
+
+    <div class="box">
+        <div class="box-content">
+            <div class="NameDescription">
+                <div style="overflow-x: scroll; overflow-y: scroll; width:1150px; height: 500px; background: #ffffff; " id="divToPrint">
+                    <table id="headerTable" class="ClaimAmtList" border="1" cellpadding="2" cellspacing="0">
+                        <thead>
+                            <tr><td style="text-align:center" colspan="12"><h2>FV Sale Margin Order Wise Report </h2></td></tr>
+                            <tr>
+                                <th style="min-width: 50px; max-width: 50px; word-break: break-all">Sr.No.</th>
+
+
+
+                                <th style="min-width: 75px; max-width: 75px; word-break: break-all">Order  Date</th>
+                                <th style="min-width: 130px; max-width: 130px; word-break: break-all">
+                                    Order Number
+                                </th>
+                                <th style="text-align:right">Order Delivery Date</th>
+
+
+                                <th style="min-width:100px; max-width:100px; text-align: left">
+                                    Customer Name
+                                </th>
+                                <th style="text-align:right">Payment Mode</th>
+                                <th style="text-align:right"> Product Total Amount </th>
+                                <th style="min-width: 100px; max-width: 100px; word-break: break-all "> DeliveryCharge</th>
+                                <th style="min-width: 160px; max-width: 160px; word-break: break-all">WalletAmountUsed</th>
+
+
+
+                                @*<th style="text-align:right"> PurchaseAmount </th>*@
+
+                                <th style="text-align:right">TotalMargin </th>
+
+
+
+                                <th style="min-width: 100px; max-width: 100px; word-break: break-all ">RetailPointsonOrder</th>
+
+                                @*<th style="text-align:right"> Status </th>*@
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @{
+                                var i = 1;
+                            }
+                            @*@foreach (var item in Model)*@
+
+                            @foreach (var item in Model.lFVSaleMarginOrderWiseReportViewModel)
+                            {
+                            <tr>
+                                <td style="text-align: center; min-width: 50px; max-width: 50px; word-break: break-all">
+                                    @i
+                                    @{
+                                        i = i + 1;
+                                    }
+                                </td>
+
+
+                                <td style="min-width: 75px; max-width: 75px; word-break: break-all">@item.OrderPlacedDate.ToString("dd/MM/yyyy hh:mm:ss tt")</td>
+                                <td style="min-width: 130px; max-width: 130px; word-break: break-all">
+                                    @item.OrderCode
+                                </td>
+                                <td style="text-align:right">@item.DeliveryDate.GetValueOrDefault().ToString("dd/MM/yyyy")</td>
+
+
+                                <td style="min-width:100px; max-width:100px; text-align: left">
+                                    @item.Customer
+                                </td>
+                                <td style="text-align:right">@item.PaymentMode</td>
+                                <td style="text-align:right"> @item.PayableAmount </td>
+                                <td style="min-width: 100px; max-width: 100px; word-break: break-all "> @item.DeliveryCharge</td>
+                                <td style="min-width: 160px; max-width: 160px; word-break: break-all">@item.WalletAmountUsed</td>
+
+
+
+                                @*<td style="text-align:right"> @item.PurchaseAmount </td>*@
+
+                                <td style="text-align:right"> @item.MarginAmount </td>
+
+
+
+                                <td style="min-width: 100px; max-width: 100px; word-break: break-all "> @item.RetailPointsonOrder</td>
+
+                                @*<td style="text-align:right"> @item.OrderStatus </td>*@
+
+                            </tr>
+
+
+
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        $(document).ready(function () {
+            $("#ToDate").datepicker({
+                dateFormat: 'dd/mm/yy',//check change
+                changeMonth: true,
+                changeYear: true
+            });
+            $("#FromDate").datepicker({
+                dateFormat: 'dd/mm/yy',//check change
+                changeMonth: true,
+                changeYear: true
+            });
+
+            //$("#FromDate").val(twoDigitDate + "/" + twoDigitMonth + "/" + (fullDate.getFullYear() - 1) + ", " + hour + ":" + minute + " " + ampm);
+            //$("#ToDate").val(twoDigitDate + "/" + twoDigitMonth + "/" + fullDate.getFullYear() + ", " + hour + ":" + minute + " " + ampm);
+
+            //var toDate = $('#txtToDate').val();
+            //var fromDate = $('#txtFromDate').val();
+
+            $("#Export").on('click', function () {
+
+                var print = 0;
+                var option = 0;
+                var supplierID = 0
+
+                //if ($("select#SupplierID option:selected").val() > 0) {
+                //    supplierID = $("select#SupplierID option:selected").val();
+                //}
+
+                //if ($("select#ExportOption option:selected").val() > 0) {
+                //    option = $("select#ExportOption option:selected").val();
+                //}
+                var toDate = $('#ToDate').val();
+                var fromDate = $('#FromDate').val();
+
+                window.location.href = "/FVSaleMarginOrderWiseReport/Export?&FromDate=" + fromDate + "&ToDate=" + toDate + "&option=" + option;
+
+            });
+        });
+
+    </script>
+    <script type="text/javascript">
+
+
+        $("#Export").on('click', function () {
+
+            var print = 0;
+            var option = 1;
+            var supplierID = 0
+
+            if ($("select#SupplierID option:selected").val() > 0) {
+                supplierID = $("select#SupplierID option:selected").val();
+            }
+
+            if ($("select#ExportOption option:selected").val() > 0) {
+                option = $("select#ExportOption option:selected").val();
+            }
+            var toDate = $('#ToDate').val();
+            var fromDate = $('#FromDate').val();
+
+            window.location.href = "/FVSaleMarginOrderWiseReport/Export?&FromDate=" + fromDate + "&ToDate=" + toDate + "&option=" + 1 + "&SupplierID=" + FrenchiseID;
+
+        });
+
+    </script>
+
+
+    <script type="text/javascript">
+
+
+        function fnExcelReport() {
+            var tab_text = "<table border='2px'><tr bgcolor='#87AFC6'>";
+            var textRange; var j = 0;
+            tab = document.getElementById('headerTable'); // id of table
+
+
+            for (j = 0; j < tab.rows.length; j++) {
+                tab_text = tab_text + tab.rows[j].innerHTML + "</tr>";
+                //tab_text=tab_text+"</tr>";
+            }
+
+            tab_text = tab_text + "</table>";
+            tab_text = tab_text.replace(/<A[^>]*>|<\/A>/g, "");//remove if u want links in your table
+            tab_text = tab_text.replace(/<img[^>]*>/gi, ""); // remove if u want images in your table
+            tab_text = tab_text.replace(/<input[^>]*>|<\/input>/gi, ""); // reomves input params
+
+            var ua = window.navigator.userAgent;
+            var msie = ua.indexOf("MSIE ");
+
+            if (msie > 0 || !!navigator.userAgent.match(/Trident.*rv\:11\./))      // If Internet Explorer
+            {
+                txtArea1.document.open("txt/html", "replace");
+                txtArea1.document.write(tab_text);
+                //txtArea1.document.AddHeader("PURCHASE ORDER HISTORY")
+                txtArea1.document.close();
+                txtArea1.focus();
+                sa = txtArea1.document.execCommand("SaveAs", true, "Say Thanks to Sumit.xls");
+            }
+            else                 //other browser not tested on IE 11
+                sa = window.open('data:application/vnd.ms-excel,' + 'filename=PurchaseOrderHistory.xls,' + encodeURIComponent(tab_text));
+
+            return (sa);
+        }
+
+    </script>
+
+    <script type="text/javascript">
+        $(function () {
+            $("#Search").click(function () {
+                var FrenchiseID = $("select#WarehouseID option:selected").val();
+                //window.location = "/WastageReport/WastageReportNotePrint?WarehouseID=" + WarehouseID;
+                window.location = "/FVSaleMarginOrderWiseReport/Indext?FrenchiseID =" + FrenchiseID;
+            });
+        });
+
+    </script>
+

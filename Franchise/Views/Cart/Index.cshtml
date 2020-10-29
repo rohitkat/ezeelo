@@ -1,0 +1,318 @@
+﻿@using PagedList;
+@using PagedList.Mvc;
+@model IPagedList<ModelLayer.Models.ViewModel.CartViewModel>
+
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout_franchise2.cshtml";
+}
+
+<style>
+    .input {
+        width: 80px;
+    }
+
+    select {
+        width: 100px;
+    }
+
+    #divtable {
+        width: 1100px;
+        margin-left: 37px;
+        border: 1px solid#ccc;
+    }
+
+        #divtable h3 {
+            background-color: #794F2B;
+            background-image: linear-gradient(hsla(0,0%,100%,.05), hsla(0,0%,0%,.05)), linear-gradient(-72deg, hsla(0,0%,100%,.05) 50%, transparent 50%);
+            box-shadow: inset 0 0 .25em hsla(0,0%,0%,.1), inset 0 0 1.5em hsla(0,0%,0%,.25);
+            border-bottom: 1px solid #d6d6d6;
+            color: #FAFAFA;
+            padding: 11px;
+        }
+
+    .widget {
+        padding: 0px;
+        margin-bottom: 28px;
+        margin-top: -10px;
+    }
+
+    .widget-content {
+        padding: 10px;
+    }
+
+    .btn {
+        line-height: 18px;
+        border-radius: 4px !important;
+    }
+
+    .PENDING {
+        background-color: rgba(255, 216, 0, 0.36) !important;
+        font-weight: bold;
+        text-align: center;
+        border: solid 1px #808080;
+    }
+
+    .PLACED {
+        background-color: rgba(167, 203, 78, 0.53) !important;
+        font-weight: bold;
+        text-align: center;
+        border: solid 1px #808080;
+    }
+
+    .CANCELLED {
+        background-color: rgba(255, 0, 0, 0.37) !important;
+        font-weight: bold;
+        text-align: center;
+        border: solid 1px #808080;
+    }
+
+    .warningbell {
+        color: #ff0000 !important;
+        height: 20px;
+        font-weight: bolder;
+    }
+</style>
+
+<div class="row">
+    <div class="span12" id="divtable">
+
+    </div>
+    <!-- /span12 -->
+</div>
+<div class="widget">
+    <div class="widget-header">
+
+        <h3><i class="icon-list-alt"></i> List [ Abandoned Cart ]</h3>
+    </div>
+    <!-- /widget-header -->
+    <div class="widget-content">
+        <div class="widget big-stats-container">
+            <div class="widget-content matchdivheight">
+                @using (Html.BeginForm("Index", "Cart", FormMethod.Post))
+                {   @Html.AntiForgeryToken()
+                    <div class="form-horizontal">
+                        <table>
+                            <tr>
+                                <td>From Date &nbsp;</td>
+                                <td>@Html.TextBox("FromDate", null, new { @readonly = "readonly", @class = "input" }) &nbsp;</td>
+                                <td>To Date &nbsp;</td>
+                                <td>@Html.TextBox("ToDate", null, new { @readonly = "readonly", @class = "input" }) &nbsp;</td>
+                                <td>Cart ID &nbsp;</td>
+                                <td>@Html.TextBox("CartID", null, new { @class = "input" }) &nbsp;</td>
+                                <td>User &nbsp;</td>
+                                <td>@Html.TextBox("User", null, new { ID = "User", placeholder = "name, mobile, email" }) &nbsp;</td>
+                                <td>Status &nbsp;</td>
+                                <td>@Html.DropDownList("Status", "Select Status") &nbsp;</td>
+                                <td>Stage &nbsp;</td>
+                                <td>@Html.DropDownList("Stage", "Select Stage") &nbsp;</td>
+                            </tr>
+                            <tr>
+                                <td colspan="20" style="text-align:right">
+                                    <button type="submit" value="Search" class="btn btn-warning">
+                                        <span class="glyphicon glyphicon-search"></span> Search
+                                    </button>
+                                    <button type="button" class="btn btn-info" id="btn_clear">Clear</button>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                }
+                <table class="table table-bordered table-hover table-responsive table-striped" id="tblData">
+                    <thead>
+                        <tr>
+                            <th style="width:20px;">SNo</th>
+                            <th style="width:170px;">
+                                Cart ID
+                            </th>
+                            <th style="width:110px;">
+                                User
+                            </th>
+                            <th style="width:80px;">
+                                Amount
+                            </th>
+                            <th style="width:100px;">
+                                Status
+                            </th>
+                            <th style="width:140px;">
+                                Stage
+                            </th>
+                            <th style="width:140px;">
+                                Date Time
+                            </th>
+                            <th style="width:70px;">
+                                Actions
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (Model.Count() == 0)
+                        {
+                            <tr>
+                                <td colspan="6" class="text-center"><h3>No Record Found...</h3></td>
+                            </tr>
+                        }
+                        else
+                        {
+                            <tr>
+                                <td colspan=" 11" style="padding:0;">
+                                    <div class="accordion" id="accordion2">
+                                        @{ int i = 1; }
+                                        @foreach (var item in Model)
+                                        {
+                                            <div class="accordion-group" style="height: auto !important;">
+                                                <div class="accordion-heading">
+                                                    <table class="table table-bordered" style="margin-bottom:0px;">
+                                                        <tr>
+                                                            <td style=" width:20px">
+                                                                @{int SrNo = ((ViewBag.PageNumber - 1) * ViewBag.PageSize) + i; i = i + 1; } @SrNo
+                                                            </td>
+                                                            <td style="width:170px">
+                                                                @Html.DisplayFor(modelItem => item.CartName)
+                                                                @if (item.IsActive == true)
+                                                                {
+                                                                    @*<a href="@Url.Action("Index", new { CartID = item.ID.ToString(), pUnlockCart = true })" class="CANCELLED btn btn-sm"><span class="icon icon-lock"></span></a>*@
+                                                                    string lUnlockCartID = "UnlockCart" + item.ID;
+                                                                    <button id="@lUnlockCartID" class="CANCELLED" onclick="unloakMe(@item.ID)"><span class="icon icon-lock"></span></button>
+                                                                }
+                                                                @if (item.IsPlacedByCustomer == true)
+                                                                {
+                                                                    @*<img src="~/Content/Images/user.jpg" />*@
+                                                                    <button class="PLACED" style="cursor:default;"><span class="icon icon-user"></span></button>
+                                                                }
+                                                            </td>
+                                                            <td style="width:110px;">
+                                                                @Html.DisplayFor(modelItem => item.CustomerName)
+                                                            </td>
+                                                            <td style="width:80px">
+                                                                @Html.DisplayFor(modelItem => item.CartAmount)
+                                                            </td>
+                                                            <td style="width:100px">
+                                                                <p class="@item.StatusVal">
+                                                                    @Html.DisplayFor(modelItem => item.StatusVal)
+                                                                </p>
+                                                            </td>
+                                                            <td style="width:140px">
+                                                                @Html.DisplayFor(modelItem => item.CartStage)
+                                                            </td>
+                                                            <td style="width:140px">
+                                                                @*<span class="createTime">@Html.DisplayFor(modelItem => item.CreateDate)</span>*@
+                                                                <span class="createTime">@item.CreateDate.ToString("MM/dd/yyyy hh:mm:ss tt")</span>
+                                                                <span class="elapsedTime"></span>
+                                                                <span class="hidden warningbell icon icon-bell"></span>
+                                                                @*<img class="hidden warningbell" src="~/Content/Images/bell.gif" />*@
+                                                            </td>
+                                                            <td style="width:70px">
+                                                                <a class="accordion-toggle margin_padding_zero" data-toggle="collapse" data-parent="#accordion2" href="#@item.ID"><span class="btn btn-small btn-primary">Details</span></a>
+                                                            </td>
+                                                        </tr>
+                                                    </table>
+                                                </div>
+                                                <div id="@item.ID" class="accordion-body collapse">
+                                                    <iframe id="frameCreate_@item.ID" name="frameCreate_@item.ID" src='@Url.Action("TrackCart", "Cart", new { CartID = item.ID })' width="100%" height="600px" frameborder="0"></iframe>
+                                                </div>
+                                            </div>
+                                        }
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+
+
+                <div class="pager">
+                    @Html.PagedListPager(Model, Page => Url.Action("Index", new
+                       {
+                           page =Page,
+                           SearchString = ViewBag.SearchString,
+                           FromDate = ViewBag.FromDate,
+                           ToDate = ViewBag.ToDate,
+                           Shop = ViewBag.Shop,
+                           Delivery = ViewBag.Delivery,
+                           CurrentOrderStatus = ViewBag.CurrentOrderStatus1,
+                           CartID =   ViewBag.CartID,
+                           User =  ViewBag.User,
+                           Amount =  ViewBag.Amount,
+                           Status =  ViewBag.SelectedStatus,
+                           Stage =  ViewBag.SelectedStage,
+                       }),
+                                                                    new PagedListRenderOptions()
+                                                                    {
+                                                                        Display = PagedListDisplayMode.IfNeeded
+                                                                    })
+                </div>
+            </div>
+            <!-- /widget-content -->
+        </div>
+    </div>
+</div>
+
+<script src="~/Scripts/jquery-1.10.2.min.js"></script>
+<script src="http://momentjs.com/downloads/moment.js"></script>
+
+@section Myscripts{
+    <script type="text/javascript">
+
+        //----------------------------------------------------------------------For datepicker---//
+        //<![CDATA[
+        $(window).load(function () {
+            //$('#DOB').datepicker('setDate', new Date());
+            $('#FromDate').datepicker('update');
+            $('#ToDate').datepicker('update');
+        });//]]>
+
+
+
+
+        function unloakMe(id) {
+            if (confirm("Are you sure to Unlock Cart. Some might processing this cart.")) {
+                var lCartid = id;
+                $.ajax({
+                    url: '@Url.Action("UnlockCart", "Cart")?ID=' + lCartid,
+                    type: "GET",
+                    success: function (result) {
+                        $('#UnlockCart' + id).addClass("hidden");
+                    },
+                    error: function (data) {
+                        //$('#CartPassword').val('');
+                    }
+                });
+            }
+
+        }
+        elapsedTime();
+        setInterval(elapsedTime, 60000);
+        function elapsedTime() {
+            $(".createTime").each(function (index) {
+                if ($(this).parent().parent().find('.PENDING').html() != null) {
+                    //alert(index + ": " + $(this).text());
+                    var lServerCreateTime = $(this).html();
+                    var lCreateDateTime = moment(lServerCreateTime).format('DD/MM/YYYY HH:mm:ss');
+                    var lCurrentDatTime = moment(Date.now()).format('DD/MM/YYYY HH:mm:ss');
+
+                    //moment.utc(moment(now, "DD/MM/YYYY HH:mm:ss").diff(moment(then, "DD/MM/YYYY HH:mm:ss"))).format("HH:mm:ss")
+                    var lElaspsedTime = moment.utc(moment(lCurrentDatTime, "DD/MM/YYYY HH:mm:ss").diff(moment(lCreateDateTime, "DD/MM/YYYY HH:mm:ss"))).format("HH:mm");
+                    var tt = lElaspsedTime.split(":");
+                    var hh = tt[0];
+                    var mm = tt[1];
+                    var lwarningTime = (parseInt(tt) * 60) + parseInt(mm);
+                    //alert(lwarningTime);
+                    if (lwarningTime >= 30) {
+                        var lSD = moment(lServerCreateTime).format('DD/MM/YYYY');
+                        var lCD = moment(Date.now()).format('DD/MM/YYYY');
+                        if (lSD == lCD) {
+                            $(this).parent().find('.warningbell').removeClass('hidden');
+                        }
+                        else {
+                            $(this).parent().find('.elapsedTime').addClass('hidden');
+                        }
+                    }
+                    $(this).parent().find('.elapsedTime').html(lElaspsedTime);
+                    $(this).parent().find('.elapsedTime').addClass('btn btn-warning btn-small');
+                }
+            });
+        }
+
+    </script>
+}

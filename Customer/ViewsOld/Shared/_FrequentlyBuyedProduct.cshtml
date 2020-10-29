@@ -1,0 +1,60 @@
+﻿@model ModelLayer.Models.ViewModel.RelatedProductsViewModel
+@using System.Text.RegularExpressions;
+
+<div id="divFrequentlyBuyedProducts">
+    <h2 class="pro-heading">Frequently Bought</h2>
+    <div class="pro-shop">
+        <div class="pro-shop">
+            <div id="slider1" class="Shop-slider">
+                <ul id="tableFrequentlyProduct">
+                    @{
+                        for (int i = 0; i < Model.ProductList.Count(); i++)
+                        {
+                            <li>
+                                <div class="divGallery">
+                                    <a href="@Url.RouteUrl("pre-prod-name", new
+                                        {
+                                            city = Request.Cookies["CityCookie"].Value.Split('$')[1],
+                                            franchiseId = Convert.ToInt32(Request.Cookies["CityCookie"].Value.Split('$')[2]),////added
+                                            itemID = Model.ProductList[i].ProductID,
+                                            itemName = Regex.Replace(Model.ProductList[i].Name.Substring(0, Math.Min(Model.ProductList[i].Name.Length, 30)), @"[\/\\#,+()$~%.':*?<>{} ]", "-").Replace("&", "and").ToLower()
+                                        })">
+
+                                        <div class="image-pro-div">
+                                            <img src="@Url.Content(string.IsNullOrEmpty(Model.ProductList[i].ProductThumbPath) ? "/Content/Images/no_image.png" : Model.ProductList[i].ProductThumbPath)" class="img-responsive" alt="@Model.ProductList[i].Name" />
+                                        </div>
+                                        <div class="viewContent pro-rice-div price-pro">
+                                            <h2>@Model.ProductList[i].Name</h2>
+                                            <p>
+                                                <label style="display:inline-block;">
+                                                    <span style="font-size:13px;">Rs.</span> <span class="spnCross" style="color:brown; font-size:13px;">@Model.ProductList[i].MRP </span>
+                                                </label>
+                                                <label style="display:inline-block;"><span style="font-size:13px;">Rs.</span> <span style="color: brown; font-size: 13px;">@Model.ProductList[i].SaleRate </span></label>
+                                            </p>
+                                        </div>
+                                    </a>
+                                    <div class="btn-group">
+                                        @Html.RouteLink("View", "pre-prod-name", new
+                       {
+                           city = Request.Cookies["CityCookie"].Value.Split('$')[1],
+                           franchiseId = Convert.ToInt32(Request.Cookies["CityCookie"].Value.Split('$')[2]),////added
+                           itemID = Model.ProductList[i].ProductID,
+                           itemName = Regex.Replace(Model.ProductList[i].Name.Substring(0, Math.Min(Model.ProductList[i].Name.Length, 30)), @"[\/\\#,+()$~%.':*?<>{} ]", "-").Replace("&", "and").ToLower()
+                       }, new { @class = "button-warning btnbuy button success primary text-white btnaddtocart" })
+                                    </div>
+                                </div>
+                            </li>
+                        }
+                    }
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<input id="btnFPrevious" type="button" onclick="setFPrevious();" disabled="disabled" class="previousBtn" />
+<input id="btnFNext" type="button" onclick="setFNext();" class="nextBtn" />
+
+
+

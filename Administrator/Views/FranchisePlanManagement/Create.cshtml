@@ -1,0 +1,119 @@
+﻿@model ModelLayer.Models.ViewModel.PlanBindManagement
+
+@{
+    ViewBag.Title = "Create";
+}
+
+@using (Html.BeginForm("Create", "FranchisePlanManagement", null, FormMethod.Post))
+{
+    <div class="row-fluid " style="margin-top:20px;margin-left:15px;">
+        <div class="box span12">
+            <div class="box-header">
+                <h2><i class="icon-edit"></i><span class="break"></span>Franchise Plan Management</h2>
+
+            </div>
+                    @Html.ValidationSummary(false)
+
+                    <div class="box-content">
+                        <div class="span12">
+                            <div class="control-group span4">
+                                <span class="control-label">Select Master Plan</span>
+                                @Html.DropDownList("MasterPlan", "Select Plan")
+                                <span id="pMessage"></span>
+                            </div>
+                            <div class="control-group span3">
+                                @Html.RadioButton("type", 1, true) Included
+                                @Html.RadioButton("type", 2) Excluded
+                            </div>
+                            <div class="span5 mrgBtm">
+                                <input type="submit" id="btnSubmit" class="btn btn-success" />
+                            </div>
+                        </div>
+                        
+                        <table class="table table-striped table-bordered ">
+                            <thead>
+                                <tr>
+
+                                    <th>Category ID</th>
+                                    <th>Name</th>
+                                    <th>Select </th>
+
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @for (int i = 0; i < Model.planCommission.Count(); i++)
+                    {
+                    <tr>
+                        <td class="center">
+
+                            @Html.HiddenFor(x => x.planCommission[i].CategoryID)
+                            @Html.DisplayFor(x => x.planCommission[i].CategoryID)
+                        </td>
+                        <td class="center">
+                            @Html.HiddenFor(x => x.planCommission[i].CategoryName)
+                            @Html.DisplayFor(x => x.planCommission[i].CategoryName)
+                        </td>
+                        <td class="center">@Html.CheckBoxFor(x => x.planCommission[i].isSelect, new { @class = "chkBox" })</td>
+                    </tr>
+                    }
+                            </tbody>
+                        </table>
+                    </div>
+
+        </div>
+    </div>
+}
+<div class="form-actions">
+
+    @Html.ActionLink("Back to List", "Index", null, new { @class="btn"})
+</div>
+
+<script src="~/Scripts/jquery-1.10.2.min.js"></script>
+<script>
+    $(function () {
+        $("#btnSubmit").click(function () {
+            var selectedVal = $("#MasterPlan option:selected").text();
+
+            if (selectedVal == 'Select Plan') {
+                pMessage.textContent = 'Please select the Plan'
+                return false;
+            }
+
+        });
+    });
+
+    $(function () {
+        $("#MasterPlan").change(function () {
+            var selectedVal = $("#MasterPlan option:selected").val();
+
+            if (selectedVal > 0) {
+
+                $.ajax({
+                    type: "POST",
+                    url: "/FranchisePlanManagement/PlanExistOrnot",
+                    data: "{ id: '" + selectedVal + "'}",
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+
+                    success: function (msg) {
+
+                        if (msg > 0) {
+
+                            pMessage.textContent = 'Plan Already Exists'
+                            return false;
+                        }
+
+                    },
+                    failure: function (x, e) {
+                        alert('2');
+                    },
+                    Error: function (x, e) {
+                        alert('3');
+                        pMessage.textContent = 'Error in Plan Selection'
+                    }
+
+                });
+            }
+        });
+    });
+</script>

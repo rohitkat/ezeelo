@@ -1,0 +1,135 @@
+﻿@*//-----------------------------------------------------------------------
+        // <copyright file="Create.cshtml" company="Ezeelo Consumer Services Pvt. Ltd.">
+        //     Copyright (c) Ezeelo Consumer Services Pvt. Ltd. All rights reserved.
+        //
+    </copyright>
+        // <author>Snehal Shende</author>
+        //-----------------------------------------------------------------------*@
+@model ModelLayer.Models.OwnerPlan
+
+@{
+    ViewBag.Title = "Create";
+}
+<style>
+    #SDate {
+        width: 186px;
+    }
+</style>
+@using (Html.BeginForm("Create", "MerchantPlan", Model, FormMethod.Post))
+{
+    @Html.AntiForgeryToken()
+
+    <div class="span10" id="content">
+        <div class="row-fluid">
+            <div class="box span12">
+                <div class="box-header">
+                    <h2><i class="icon-edit"></i><span class="break"></span>Create</h2>
+                </div>
+                <div class="box-content">
+
+                    <form class="form-horizontal">
+                        @Html.ValidationMessage("CustomError")
+                        @Html.ValidationSummary(true)
+
+                        <div class="control-group">
+                            @Html.LabelFor(model => model.PlanID, "Plan", new { @class = "control-label span2" })
+                            <div class="controls">
+                                @Html.DropDownList("PlanID", "Select Plan")
+                                @Html.ValidationMessageFor(model => model.PlanID)
+                            </div>
+                        </div>
+
+                        <div class="control-group">
+                            @Html.LabelFor(model => model.OwnerID,"Owner", new { @class = "control-label span2" })
+                            <div class="controls">
+                                @Html.DropDownList("OwnerID", null, "Select Merchant", new { @readonly = "readonly" })
+                                @Html.ValidationMessageFor(model => model.OwnerID)
+                            </div>
+                        </div>
+
+                        <div class="control-group icon-dt">
+                            @Html.LabelFor(model => model.StartDate, "Start Date", new { @class = "control-label span2" })
+                            <div class="controls">                               
+                                @*<input type="text" id="SDate" name="SDate" value="@ViewBag.SDate" data-beatpicker="true" data-beatpicker-position="['*','*']" />*@
+                                @Html.TextBox("SDate", null, new { @*@readonly = "readonly",*@ @class = "input" }) 
+                                @Html.ValidationMessageFor(model => model.StartDate)
+                                <label for="SDate" class="dtPic"><i class="glyphicons-icon calendar"></i></label>
+                            </div>
+                        </div>
+
+                        @*<div class="form-group">
+                                @Html.LabelFor(model => model.EndDate, new { @class = "control-label col-md-2" })
+                                <div class="col-md-10">
+                                    @Html.EditorFor(model => model.EndDate)
+                                    @Html.ValidationMessageFor(model => model.EndDate)
+                                </div>
+                            </div>*@
+
+                        @*<div class="control-group">
+                            @Html.LabelFor(model => model.IsActive,"Is Active", new { @class = "control-label span2" })
+                            <div class="controls">
+                                @Html.EditorFor(model => model.IsActive)
+                                @Html.ValidationMessageFor(model => model.IsActive)
+                            </div>
+                        </div>*@
+
+                        <div class="form-actions">
+                            <div class="col-md-offset-2 col-md-10">
+                                <input type="submit" value="Create" class="btn btn-primary btn-small" />
+                                @if (ViewBag.PlanType == "GBMR")
+                                 {
+                                    @Html.ActionLink("Back to List", "Index", "MerchantPendingApprovals", null, new { @class = "btn btn-small" })
+                                 }
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+@*<div>
+        @if (ViewBag.PlanType == "GBMR")
+        {
+            @Html.ActionLink("Back to List", "Index", "MerchantPendingApprovals")
+        }
+    </div>*@
+
+@*<script type="text/javascript">
+    $(document).ready(function () {
+        var statusGenerator = function (text) {
+            var statusElem = $(".status-box");
+            var child = $("<span style='display: block'></span>").text(text);
+            statusElem.append(child);
+        };
+        myDatePicker.on("select", function (data) {
+            statusGenerator(data.string + " selected")
+        });
+        myDatePicker.on("change", function (data) {
+            statusGenerator("Date picker changed current date: " + data.string);
+        });
+        myDatePicker.on("show", function () {
+            statusGenerator("Date picker show")
+        });
+        myDatePicker.on("clear", function (data) {
+            statusGenerator("Date picker cleared. cleared date: " + data.string)
+        });
+        myDatePicker.on("hide", function () {
+            statusGenerator("Date picker hide")
+        });
+    })
+
+</script>*@
+
+<script src="~/Content/js/jquery-2.1.3.min.js"></script>
+<script>
+
+    //----------------------------------------------------------------------For datepicker---//
+    //<![CDATA[
+
+
+    $(window).load(function () {
+        $('#SDate').datepicker('update');      
+    });//]]>
+</script>

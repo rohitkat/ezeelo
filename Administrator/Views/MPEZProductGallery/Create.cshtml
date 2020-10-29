@@ -1,0 +1,223 @@
+﻿@model ModelLayer.Models.MarketPlaceEZProductGallery
+@{
+    ViewBag.Title = "Create";
+    Layout = "~/Views/Shared/_LayoutMarketPlace.cshtml";
+}
+<style>
+    .VarientList {
+        width: 150px;
+    }
+
+    .TblText {
+        width: 80px;
+    }
+</style>
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js" type="text/javascript">
+    $.noConflict();
+</script>
+<div class="span10 " id="content">
+    @using (Html.BeginForm("Create", "MPEZProductGallery", FormMethod.Post, new { enctype = "multipart/form-data" }))
+    {
+        <div class="row-fluid">
+            <div class="box span12">
+                <div class="box-header creatProduct clearfix" data-original-title="">
+                    <h2><i class="icon-exclamation-sign"></i><span class="break"></span>Add a product</h2>
+                </div>
+                <div class="box-content form-horizontal">
+                    <div class="span12">
+                        <div class="span12">
+                            <div class="nameDscrp">
+
+                                <div class="control-group">
+                                    @Html.LabelFor(model => model.ProductName, "Product Name", new { @for = "typeahead" })
+                                    <div>
+                                        @Html.TextBoxFor(model => model.ProductName, new { @class = "span12 typeahead", @requird = "requird", @style = "z-index:-5 " })
+                                    </div>
+                                </div>
+                                <div class="control-group ">
+                                    @Html.LabelFor(model => model.SearchKeyword, "Search Keyword")
+                                    <div class="">
+                                        @Html.TextBoxFor(model => model.SearchKeyword, new { @class = "span12 back_searchIco", @style = "padding-right: 41px;" })
+                                        @Html.ValidationMessageFor(model => model.SearchKeyword)
+                                    </div>
+                                </div>
+                                <div class="control-group  span3 DivSmall1 ">
+                                    @Html.LabelFor(model => model.HSNCode, "HSN Code")
+                                    <div>
+                                        @Html.TextBoxFor(model => model.HSNCode, new { @class = "txt-adjWidth1" })
+                                        @Html.ValidationMessageFor(model => model.HSNCode)
+                                    </div>
+                                </div>
+                                <div class="control-group  span3 DivSmall1 ">
+                                    @Html.LabelFor(model => model.EANCode, "EAN Code")
+                                    <div>
+                                        @Html.TextBoxFor(model => model.EANCode, new { @class = "txt-adjWidth1" })
+                                        @Html.ValidationMessageFor(model => model.EANCode)
+                                    </div>
+                                </div>
+                                <div class="control-group">
+                                    @Html.LabelFor(model => model.Category, "Category")
+                                    <div>
+                                        @Html.TextBoxFor(model => model.Category, new { @class = "span6" })
+                                        @Html.ValidationMessageFor(model => model.Category)
+                                    </div>
+                                </div>
+                            </div>
+                            <br />
+                            <div class="nameDscrp">
+                                <div class="control-group mrg-top">
+                                    @Html.LabelFor(model => model.ShortDescription, "Short Description")
+                                    <div class="">
+                                        @Html.TextAreaFor(model => model.ShortDescription, new { @class = "discrip_box1 span12 cleditor", @requird = "requird" })
+                                        @Html.ValidationMessageFor(model => model.ShortDescription)
+                                    </div>
+                                </div>
+                                <div class="control-group mrg-top">
+                                    @Html.LabelFor(model => model.GeneralDescription, "General Description")
+                                    <div class="">
+                                        @Html.TextAreaFor(model => model.GeneralDescription, new { @class = "discrip_box1 span12 cleditor", @requird = "requird" })
+                                        @Html.ValidationMessageFor(model => model.GeneralDescription)
+                                    </div>
+                                </div>
+                            </div>
+                            <br />
+                            <div class="nameDscrp">
+                                <label>Varient List</label>
+                                <div class="text-deco"><a href="#" id="addNew">Add New</a></div>
+                                <div class="table-responsive">
+                                    <table id="VarientTbl" class="table table-bordered">
+                                        <thead>
+                                            <tr>
+                                                <td>SrNo</td>
+                                                <td>Image</td>
+                                                <td>Varient</td>
+                                                <td>MRP</td>
+                                                <td>Sale Rate</td>
+                                                <td>GST</td>
+                                                <td>IsActive</td>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @{
+                                                int i = 0;
+                                                for (i = 0; i < Model.VarientList.Count(); i++)
+                                                {
+                                                    <tr id="@i">
+                                                        <td>@i</td>
+                                                        <td><input class="btn btn-sm btn-primary" type="button" value="Select" /><input style="display:none;" name="file_@i" type="file" /></td>
+                                                        <td>@Html.DropDownListFor(model => model.VarientList[i].SizeId, Model.VarientList[i].size, new { @Class = "VarientList" })</td>
+                                                        <td>@Html.TextBoxFor(a => a.VarientList[i].MRP, new { @Class = "TblText" })</td>
+                                                        <td>@Html.TextBoxFor(a => a.VarientList[i].SaleRate, new { @Class = "TblText" })</td>
+                                                        <td>@Html.TextBoxFor(a => a.VarientList[i].GST, new { @Class = "TblText" })</td>
+                                                        <td>@Html.TextBoxFor(a => a.VarientList[i].IsActive)</td>
+                                                    </tr>
+                                                }
+                                            }
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                            <br />
+                            <div class="nameDscrp">
+                                <input class="btn btn-sm btn-success" type="submit" value="submit" />
+                                <input type="button" class="btn btn-sm btn-warning" value="Back to list" />
+                            </div>
+                            <br />
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+</div>
+<script>
+    $(document).ready(function () {
+        $("#addNew").click(function (e) {
+
+            e.preventDefault();
+            var $tableBody = $("#VarientTbl");
+            var $trLast = $tableBody.find("tr:last");
+            var $trNew = $trLast.clone();
+            var suffix = $trNew.attr('id');
+            //$trNew.find("td:first").attr('id', 'divPreview_' + (parseInt(suffix) + 1));
+            //$trNew.find("td:first").css('pointer-events', 'none');
+            //$trNew.find('td:last').html("<div class='openPopupUpload'>" +
+            //    "<div class='kv-main'>" +
+            //    "<h2 class='selectImg'>Select Image<span><a href='#' id='save' class='save'>X</a></span></h2>" +
+            //    "<div class='form-group input-group mainInput'>" +
+            //    "<input id='img_' name='files_' class='file' type='file' multiple='multiple' data-preview-file-type='any' data-upload-url='#' onchange='ClearImages(this); readURL1(this,this.id);' />" +
+            //    "</div>" +
+            //    "</div>" +
+            //    "</div>");
+            //$trNew.find("td:first").html("<img src='' id='img_' class='addProduct' alt='BROWSE' width='60' height='45' style='display:none;' onerror='this.src ='../../Content/Images/No_thumbnail.png''/>");
+            //$trNew.find("td:nth-child(15)").html('<a href="#" class="remove"><img src="/Content/Images/remove-icon.png" /></a>');
+
+            //var newColor = $trNew.find("td:nth-child(2)");
+            //$(newColor).find('select').attr('id', 'Color_' + (parseInt(suffix) + 1));
+
+            //var newSize = $trNew.find("td:nth-child(3)");
+            //$(newSize).find('select').attr('id', 'NewProductVarientS_' + (parseInt(suffix) + 1) + '__SizeID');
+
+            //var newDimension = $trNew.find("td:nth-child(4)");
+            //$(newDimension).find('select').attr('id', 'NewProductVarientS_' + (parseInt(suffix) + 1) + '__DimensionID');
+
+            //var newMaterial = $trNew.find("td:nth-child(5)");
+            //$(newMaterial).find('select').attr('id', 'NewProductVarientS_' + (parseInt(suffix) + 1) + '__MaterialID');
+
+            //var newPacksize = $trNew.find("td:nth-child(6)");
+            //$(newPacksize).find('input').attr('id', 'NewProductVarientS_' + (parseInt(suffix) + 1) + '__PackSize');
+            //var newQuantity = $trNew.find("td:nth-child(7)");
+            //$(newQuantity).find('input').attr('id', 'NewProductVarientS_' + (parseInt(suffix) + 1) + '__Qty');
+            //var newReorderLevel = $trNew.find("td:nth-child(8)");
+            //$(newReorderLevel).find('input').attr('id', 'NewProductVarientS_' + (parseInt(suffix) + 1) + '__ReorderLevel');
+            //var newMRP = $trNew.find("td:nth-child(10)");
+            //$(newMRP).find('input').attr('id', 'NewProductVarientS_' + (parseInt(suffix) + 1) + '__MRP');
+            //var newSaleRate = $trNew.find("td:nth-child(11)");
+            //$(newSaleRate).find('input').attr('id', 'NewProductVarientS_' + (parseInt(suffix) + 1) + '__RetailerRate');
+            //var newLandingPrice = $trNew.find("td:nth-child(14)");
+            //$(newLandingPrice).find('input').attr('id', 'NewProductVarientS_' + (parseInt(suffix) + 1) + '__WholeSaleRate');
+
+
+            //var $newIn = $trNew.find('input.file');
+            //var $newIMG = $trNew.find('img.addProduct');
+            //var $newLink = $trNew.find('a.addProduct');
+            //var newColor = $trNew.find("td:nth-child(2)");
+            //$(newColor).find('select').attr('id', 'Color_' + (parseInt(suffix) + 1));
+            ////var rowId = parseInt(suffix) + 1;
+
+
+            //var newTax = $trNew.find("td:nth-child(13)");
+            //var newInclusiveTax = $trNew.find("td:nth-child(12)");
+            //var taxTd = $trNew.find('.taxTd');
+            //$(newTax).find('select').attr('id', 'Tax' + (parseInt(suffix) + 1));
+            //$(newTax).find('select').attr('onblur', "CheckTaxSelection(" + (parseInt(suffix) + 1) + ")");
+            //$(newTax).find('.white_content').attr('id', 'light_' + (parseInt(suffix) + 1));
+            //$(newTax).find('a').attr("onclick", "document.getElementById('light_" + (parseInt(suffix) + 1) + "').style.display='block';document.getElementById('fade').style.display='block'");
+            ///**/
+            //$(newTax).find('.tax_close').attr("onclick", "document.getElementById('light_" + (parseInt(suffix) + 1) + "').style.display='none';document.getElementById('fade').style.display='none';CheckTaxSelection(" + (parseInt(suffix) + 1) + ")");
+            ///**/
+            //$(taxTd).attr('id', 'TaxTd_' + (parseInt(suffix) + 1));
+            //$(newInclusiveTax).find('.chkBoxNew').attr('id', 'InclusiveTax_' + (parseInt(suffix) + 1));
+            //$('.trMain-createId').each(function (i) {
+            //    //$(this).attr('id', 'MainTr_'(i + 1));
+            //    $newIMG.attr('id', 'img_' + (i + 1));
+            //    $trNew.attr('id', 'MainTr_' + (i + 1));
+            //    $newIn.attr('id', 'img_' + (i + 1));
+            //    $newIn.attr('name', 'files_' + (i + 1));
+            //    $newLink.attr('id', 'img_' + (i + 1));
+
+            //});
+
+            //$.each($trNew.find(':input'), function (i, val) {
+            //    // Replaced Name
+            //    var oldN = $(this).attr('name');
+            //    var newN = oldN.replace('[' + suffix + ']', '[' + (parseInt(suffix) + 1) + ']');
+            //    $(this).attr('name', newN);
+
+            //    $(this).attr('value', '');
+            //});
+            $trLast.after($trNew);
+
+        });
+    })
+</script>

@@ -1,0 +1,271 @@
+﻿@model IEnumerable<ModelLayer.Models.ViewModel.DashboardGrowthViewModel>
+
+@{
+    ViewBag.Title = "Growth Report";
+}
+<h2 style=" margin-top: 0px;">Growth Report</h2>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+<script>
+    $(document).ready(function () {
+        $('#Custom').click(function () {
+            $('#CustomDiv').removeClass('hidden');
+        });
+        $('#CustomMCO').click(function () {
+            $('#CustomMCODiv').removeClass('hidden');
+        });
+        
+    });
+    
+</script>
+<div>
+    @using (Html.BeginForm("GetReport", "Growth", FormMethod.Post))
+    {
+    <h4 class="bg-blue" style="padding:5px;">All MCO View</h4>
+
+    <div class="row">
+        <div class="col-md-3 tomargin">
+            <input type="submit" name="submit" value="Month" id="Month" class="btn btn-primary" />
+            <input type="button" name="Custom" value="Custom" id="Custom" class="btn btn-primary" />
+        </div>
+        <div class="col-md-9 tomargin hidden" id="CustomDiv">
+            <div class="col-md-3">
+                @Html.DropDownList("Year", (SelectList)ViewBag.Years, " -- Select Year -- ", new { @class = "form-control" })
+            </div>
+            <div class="col-md-3">
+                @Html.DropDownList("FromMonth", (SelectList)ViewBag.Months, " -- Select From Month -- ", new { @class = "form-control col-md-3" })
+            </div>
+            <div class="col-md-3">
+                @Html.DropDownList("ToMonth", (SelectList)ViewBag.Months, " -- Select To Month -- ", new { @class = "form-control col-md-3" })
+            </div>
+            <div class="col-md-3">
+                <input type="submit" name="submit" value="Search" id="Search" class="btn btn-primary" />
+            </div>
+        </div>
+    </div>
+
+    @*<div id="CustomDiv" class="hidden">
+
+    </div>*@
+
+        if (ViewBag.ReqTypeAll == "All")
+        {
+
+    <div id="DivOverall">
+        @if (Model != null)
+                {
+
+                @Html.Partial("GetReport", Model)
+                    if (ViewBag.ThisMonth == 1)
+                    {
+                <input type="hidden" id="submit" name="submit" value="Month" />
+                    }
+                }
+    </div>
+
+
+        }
+    }
+</div>
+<div>
+    @using (Html.BeginForm("GetReportIndividualMCO", "Growth", FormMethod.Post))
+    {
+        <h4 class="bg-blue" style="padding:5px;">Individual MCO View</h4>
+        <div class="row">
+            <div class="col-md-3 tomargin">
+                @Html.DropDownList("FranchisesID", (SelectList)ViewBag.FranchisesID, "--All Franchise--", new { @class = "form-control" })
+            </div>
+            <div class="col-md-3 tomargin">
+                <input type="submit" name="submit" value="Month" id="MonthMCO" class="btn btn-primary"/>
+                <input type="button" name="CustomMCO" value="Custom" id="CustomMCO" class="btn btn-primary" />
+            </div>
+            <div class="col-md-6 tomargin hidden" id="CustomMCODiv">
+                <div class="col-md-5">
+                    @Html.DropDownList("Year", (SelectList)ViewBag.Years, " -- Select Year -- ", new { @class = "form-control" })
+                </div>
+                <div class="col-md-5">
+                    @Html.DropDownList("FromMonth", (SelectList)ViewBag.Months, " -- Select Month -- ", new { @class = "form-control" })
+                </div>
+                <div class="col-md-2">
+                    <input type="submit" name="submit" value="Search" id="Search" class="btn btn-primary" />
+                </div>
+            </div>
+        </div>
+        <div>
+                @*<div id="CustomMCODiv" class="hidden">
+
+                </div>*@
+        </div>
+        if (ViewBag.ReqTypeAll == "MCOWise")
+        {
+            <div id="DivResult" class="box" style="height:auto;overflow:auto;min-height:300px;max-height:300px;">
+                <div class="box-body">
+                    @{int i = 0;}
+                    @if (Model != null)
+                    {
+
+                        @*if (ViewBag.ThisMonth == 1)
+                        {
+
+
+                            <table class="table table-bordered">
+                                <tr>
+                                    <th>Sr.No.</th>
+                                    <th>Date</th>
+                                    <th>Order Target</th>
+                                    <th>Actual Order</th>
+                                    <th>Short Access Order</th>
+                                    <th>GMV Target</th>
+                                    <th>Actual GMV</th>
+                                    <th>Short Access GMV</th>
+                                </tr>
+
+                                @foreach (var item in Model)
+                                {
+                                    i = i + 1;
+                                    <tr>
+                                        <td>@i</td>
+                                        <td>@item.Date</td>
+                                        <td>@item.OrderTarget</td>
+                                        <td>@item.ActualOrder</td>
+                                        <td>@item.ShortAccessOrderMCO</td>
+                                        <td>@item.GMVTargetMCO</td>
+                                        <td>@item.ActualGMVMCO</td>
+                                        <td>@item.ShortAccessGMVMCO</td>
+                                    </tr>
+                                }
+
+                                @{ var cnt = Model.Count();}
+                                @{int ItemCounter = 0;}
+                                @foreach (var item in Model)
+                                {
+                                    if (ItemCounter == cnt - 1)
+                                    {
+                                        <tr>
+                                            <td><b>Total</b></td>
+                                            <td></td>
+                                            <td><b>@item.OrderTarget</b></td>
+                                            <td><b>@item.ActualOrder</b></td>
+                                            <td><b>@item.ShortAccessOrderMCO</b></td>
+                                            <td><b>@item.GMVTargetMCO</b></td>
+                                            <td><b>@item.ActualGMVMCO</b></td>
+                                            <td><b>@item.ShortAccessGMVMCO</b></td>
+                                        </tr>
+
+                                    }
+                                    ItemCounter = ItemCounter + 1;
+                                }
+                            </table>
+                            <br /><br />
+                            <table class="table table-bordered">
+                                <tr>
+                                    <th>Average Order Target</th>
+                                    <th>Average GMV Target</th>
+                                    <th>Average Order Target Achieved</th>
+                                    <th>Average GMV Target Achieved</th>
+
+                                </tr>
+                                <tr>
+                                    @{int J = 0;}
+                                    @foreach (var item in Model)
+                                    {
+                                        if (J < 1)
+                                        {
+                                            J = J + 1;
+                                            <td>@item.AvgOrderTarget</td>
+                                            <td>@item.AvgGMVTarget</td>
+                                            <td>@item.AvgOrder</td>
+                                            <td>@item.AvgGMV</td>
+                                        }
+                                    }
+                                </tr>
+                            </table>
+                        }
+                        else
+                        {*@
+                            <table class="table table-bordered">
+                                <tr>
+                                    <th>Sr.No.</th>
+                                    <th>Date</th>
+                                    <th>Running Order Target</th>
+                                    <th>Actual Order</th>
+                                    <th>Running Actual Order</th>
+                                    <th>Short Access Order</th>
+                                    <th>Running GMV Target</th>
+                                    <th>Actual GMV</th>
+                                    <th>Running Actual GMV</th>
+                                    <th>Short Access GMV</th>
+                                </tr>
+                                @foreach (var item in Model)
+                                {
+                                    i = i + 1;
+                                    <tr>
+                                        <td>@i</td>
+                                        <td>@item.Date</td>
+                                        <td>@item.RunningOrderTarget</td>
+                                        <td>@item.ActualOrder</td>
+                                        <td>@item.RunningActualOrder</td>
+                                        <td>@item.ShortAccessOrderMCO</td>
+                                        <td>@item.RunningGMVTarget</td>
+                                        <td>@item.ActualGMVMCO</td>
+                                        <td>@item.RunningActualGMV</td>
+                                        <td>@item.ShortAccessGMVMCO</td>
+                                    </tr>
+                                }
+                                @{ var cnt = Model.Count();}
+                                @{int ItemCounter = 0;}
+                                @foreach (var item in Model)
+                                {
+                                    if (ItemCounter == cnt - 1)
+                                    {
+                                        <tr>
+                                            <td><b>Total</b></td>
+                                            <td></td>
+                                            <td><b>@item.RunningOrderTarget</b></td>
+                                            <td><b>@item.RunningActualOrder</b></td>
+                                            <td><b>@item.RunningActualOrder</b></td>
+                                            <td><b>@item.ShortAccessOrderMCO</b></td>
+                                            <td><b>@item.RunningGMVTarget</b></td>
+                                            <td><b>@item.RunningActualGMV</b></td>
+                                            <td><b>@item.RunningActualGMV</b></td>
+                                            <td><b>@item.ShortAccessGMVMCO</b></td>
+                                        </tr>
+
+                                    }
+                                    
+                                    ItemCounter = ItemCounter + 1;
+                                }
+                            </table>
+                            <br /><br />
+                            <table class="table table-bordered">
+                                <tr>
+                                    <th>Average Order Target</th>
+                                    <th>Average GMV Target</th>
+                                    <th>Average Order Target Achieved</th>
+                                    <th>Average GMV Target</th>
+
+                                </tr>
+                                <tr>
+                                    @{int J = 0;}
+                                    @foreach (var item in Model)
+                                    {
+                                        if (J < 1)
+                                        {
+
+                                            J = J + 1;
+                                            <td>@item.AvgOrderTarget</td>
+                                            <td>@item.AvgGMVTarget</td>
+                                            <td>@item.AvgOrder</td>
+                                            <td>@item.AvgGMV</td>
+                                        }
+                                    }
+                                </tr>
+                            </table>
+                      //  }
+                  }
+                </div>
+            </div>
+        }
+    }
+</div>
+<br />
+<br />

@@ -1,0 +1,157 @@
+﻿@model ModelLayer.Models.SchemeBudget
+
+@{
+    ViewBag.Title = "Create";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="row-fluid" style="margin-top:20px;margin-left:15px;">
+    <div class="box span12">
+        <div class="box-header">
+            <h2><i class="icon-edit"></i><span class="break"></span>Create Scheme Budget</h2>
+        </div>
+        <div class="box-content">
+            @using (Html.BeginForm())
+            {
+                @Html.AntiForgeryToken()
+
+                <div class="form-horizontal">
+                    @Html.ValidationSummary(true)
+                    <span style="color:red"> @ViewBag.Msg</span>
+
+                    @*<div class="form-group">
+                            @Html.LabelFor(model => model.ID, new { @class = "control-label col-md-2" })
+                            <div class="col-md-10">
+                                @Html.EditorFor(model => model.ID)
+                                @Html.ValidationMessageFor(model => model.ID)
+                            </div>
+                        </div>*@
+
+                    <div class="control-group">
+                        <label class="control-label">Scheme Name</label>
+                        <div class="controls">
+                            @*@Html.DropDownList("ReferAndEarnSchemaID", String.Empty)*@
+                            @Html.DropDownList("ReferAndEarnSchemaID", null, "Select Scheme", new { @class = "form-control", required = "required" })
+                            @Html.ValidationMessageFor(model => model.ReferAndEarnSchemaID)
+                        </div>
+                    </div>
+
+                    <div class="control-group">
+                        <label class="control-label">Budget Amount</label>
+                        <div class="controls">
+                            @Html.TextBoxFor(model => model.BudgetAmount, new { required = "required" })
+                            @Html.ValidationMessageFor(model => model.BudgetAmount)
+                        </div>
+                    </div>
+
+                    @*<div class="form-group">
+                            @Html.LabelFor(model => model.PreRemainingAmt, new { @class = "control-label col-md-2" })
+                            <div class="col-md-10">
+                                @Html.EditorFor(model => model.PreRemainingAmt)
+                                @Html.ValidationMessageFor(model => model.PreRemainingAmt)
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.PreUsedAmt, new { @class = "control-label col-md-2" })
+                            <div class="col-md-10">
+                                @Html.EditorFor(model => model.PreUsedAmt)
+                                @Html.ValidationMessageFor(model => model.PreUsedAmt)
+                            </div>
+                        </div>*@
+
+                    <div class="control-group">
+                        <label class="control-label">Expiry Date</label>
+                        <div class="controls">
+                            @*@Html.EditorFor(model => model.ExpiryDate)*@
+                            @Html.TextBox("ExpiryDate1", null, new { id = "ExpiryDate1", @class = "datepicker glyphicons-iconcalendar", required = "required" })
+                            @Html.ValidationMessageFor(model => model.ExpiryDate)
+                        </div>
+                    </div>
+
+                    <div class="control-group">
+                        @*  @Html.LabelFor(model => model.ActionStatus, new { @class = "control-label col-md-2" })*@
+                        <label class="control-label">Increment/Decrement</label>
+                        <div class="controls">
+                            @Html.EditorFor(model => model.ActionStatus)
+                            @Html.ValidationMessageFor(model => model.ActionStatus)
+                        </div>
+                    </div>
+
+                    @*<div class="form-group">
+                            @Html.LabelFor(model => model.CreateDate, new { @class = "control-label col-md-2" })
+                            <div class="col-md-10">
+                                @Html.EditorFor(model => model.CreateDate)
+                                @Html.ValidationMessageFor(model => model.CreateDate)
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.CreateBy, new { @class = "control-label col-md-2" })
+                            <div class="col-md-10">
+                                @Html.EditorFor(model => model.CreateBy)
+                                @Html.ValidationMessageFor(model => model.CreateBy)
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.ModifyDate, new { @class = "control-label col-md-2" })
+                            <div class="col-md-10">
+                                @Html.EditorFor(model => model.ModifyDate)
+                                @Html.ValidationMessageFor(model => model.ModifyDate)
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.ModifyBy, new { @class = "control-label col-md-2" })
+                            <div class="col-md-10">
+                                @Html.EditorFor(model => model.ModifyBy)
+                                @Html.ValidationMessageFor(model => model.ModifyBy)
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.NetworkIP, new { @class = "control-label col-md-2" })
+                            <div class="col-md-10">
+                                @Html.EditorFor(model => model.NetworkIP)
+                                @Html.ValidationMessageFor(model => model.NetworkIP)
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.DeviceType, new { @class = "control-label col-md-2" })
+                            <div class="col-md-10">
+                                @Html.EditorFor(model => model.DeviceType)
+                                @Html.ValidationMessageFor(model => model.DeviceType)
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.DeviceID, new { @class = "control-label col-md-2" })
+                            <div class="col-md-10">
+                                @Html.EditorFor(model => model.DeviceID)
+                                @Html.ValidationMessageFor(model => model.DeviceID)
+                            </div>
+                        </div>*@
+
+                    <div class="form-actions">
+                        <input type="submit" value="Create" class="btn btn-success" />
+                        @Html.ActionLink("Back to List", "Index", null, new { @class = "btn" })
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-offset-2 col-md-10">
+
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+
+
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}

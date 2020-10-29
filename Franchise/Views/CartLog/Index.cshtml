@@ -1,0 +1,24 @@
+﻿@model IEnumerable<ModelLayer.Models.ViewModel.CartLogViewModel>
+@{
+    Layout = "~/Views/Shared/_LayoutPartial.cshtml";
+}
+@{
+    ViewBag.Title = "Index";
+    var Status = from ModelLayer.Models.Enum.ORDER_STATUS d in Enum.GetValues(typeof(ModelLayer.Models.Enum.ORDER_STATUS))
+                 select new { ID = (int)d, Name = d.ToString() };
+}
+<table class="table">
+@foreach (var item in Model) {
+    <tr>
+        <td style="text-align:center; width:100px;">
+            <img src="~/Content/Images/user.jpg" style="height:40px;" />
+            <br />@Html.DisplayFor(modelItem => item.CreateByUsername)
+            <br />@Html.DisplayFor(modelItem => item.CreateByPersonName)
+        </td>
+        <td>
+            <b>[@Status.FirstOrDefault(x => x.ID == item.Status).Name] [@Html.DisplayFor(modelItem => item.CreateDate)]</b>
+            <br />@Html.DisplayFor(modelItem => item.Description)
+        </td>
+    </tr>
+}
+</table>

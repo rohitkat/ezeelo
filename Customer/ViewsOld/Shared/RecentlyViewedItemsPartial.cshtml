@@ -1,0 +1,195 @@
+﻿@model ModelLayer.Models.ViewModel.PreviewItemViewModel
+@using System.Text.RegularExpressions;
+@*<link href="~/Content/css/Site.css" rel="stylesheet" />*@
+<link href="~/Content/css/Site.css" rel="stylesheet" />
+@{
+    string cityName = "";
+    int franchiseID = 0;////added
+    if (Request.Cookies["CityCookie"] != null && Request.Cookies["CityCookie"].Value != "")
+    {
+        cityName = Request.Cookies["CityCookie"].Value.Split('$')[1].ToLower();
+        franchiseID = Convert.ToInt32(Request.Cookies["CityCookie"].Value.Split('$')[2]);////added
+    }
+}
+<style>
+    .slide {
+        width: 80%;
+        min-height: 262px;
+        max-height: 262px;
+        line-height: 30px;
+        position: absolute;
+        opacity: 0;
+        font-size: 14px;
+        color: #eee;
+        left: 0;
+        -webkit-transition: 0.7s all cubic-bezier(0.260, 0.860, 0.440, 0.985);
+        transition: 0.7s all cubic-bezier(0.260, 0.860, 0.440, 0.985);
+        -webkit-transform: translateZ(0);
+        transform: translateZ(0);
+        background: rgba(0,0,0,0.5);
+        border-radius: 3px;
+        box-shadow: 0 0 2px 1px #000;
+        box-sizing: border-box;
+        padding: 10px;
+        overflow: hidden;
+        margin-top: 0px;
+        margin-left: 25px;
+    }
+</style>
+@if (Model.RecentlyViewedItems != null && Model.RecentlyViewedItems.lRecentlyViewedCollectionViewModel != null)
+{
+    <h2 class="pro-heading">Recently Viewed</h2>
+    <div id="ulRecentlyViewed">
+        <ul id="slideShow" class="slides-wrapper">
+            @for (var i = 0; i < Model.RecentlyViewedItems.lRecentlyViewedCollectionViewModel.Count(); i++)
+            {
+                <li class="slide">
+                    <div class="content">
+                        <div class='PRODUCT-IMAGE' style="width:100%"><img src="@Url.Content(string.IsNullOrEmpty(Model.RecentlyViewedItems.lRecentlyViewedCollectionViewModel[i].ImageUrl) ? "/Content/Images/no_image.png" : Model.RecentlyViewedItems.lRecentlyViewedCollectionViewModel[i].ImageUrl)" class="img-responsive divimg" alt="@Model.RecentlyViewedItems.lRecentlyViewedCollectionViewModel[i].Name" style="height: 160px;" /></div>
+
+                         @if (Model.RecentlyViewedItems.lRecentlyViewedCollectionViewModel[i].Name.Length > 35)
+{
+    <div class='PRODUCT-NAME' style="margin-top: 10px;"><h2>@Model.RecentlyViewedItems.lRecentlyViewedCollectionViewModel[i].Name.Substring(0, 32)...</h2></div>
+
+}
+else
+{
+                            <div class='PRODUCT-NAME' style="margin-top: 10px;"><h2>@Model.RecentlyViewedItems.lRecentlyViewedCollectionViewModel[i].Name</h2></div>
+
+                         }
+                        <div class="">
+                            @Html.RouteLink("View", "preview-stock", new
+                       {
+                           itemID = Model.RecentlyViewedItems.lRecentlyViewedCollectionViewModel[i].ItemID,
+                           shopStockID = Model.RecentlyViewedItems.lRecentlyViewedCollectionViewModel[i].ShopStockID,
+                          //// itemName = Regex.Replace(Model.RecentlyViewedItems.lRecentlyViewedCollectionViewModel[i].Name.Substring(0, Math.Min(Model.RecentlyViewedItems.lRecentlyViewedCollectionViewModel[i].Name.Length, 30)), @"[\/\\#,+()$~%.':*?<>{} ]", "-").Replace("&", "and").ToLower(),//hide
+                           //***** SEO URL Structure RULE by Ashish 18/11/2016 ******//
+                           itemName = Model.RecentlyViewedItems.lRecentlyViewedCollectionViewModel[i].URLStructureName.ToLower(),
+                           
+                           shopID = 0,
+                           city = cityName,
+                           franchiseId = franchiseID ////added ,franchiseId = franchiseID
+                       }, new { @class = "text-white btn btn-primary" })
+                        </div>
+                        <div class="clr"></div>
+                    </div>
+                </li>
+            }
+        </ul>
+        <div class="clr"></div>
+        <div id="nextPrev"></div>
+    </div>
+}
+
+
+<script src="~/Scripts/Products.js"></script>
+
+<script>
+    var myPresentation = function () {
+        var wrapper = null;
+        var defClass = null;
+        var slides = null;
+        var slidesNum = null;
+        var nextButton = document.createElement('a');
+        var prevButton = document.createElement('a');
+        var currentSlide = 0;//parseInt(window.location.hash.replace('#', '') || 0);
+        //nextrece
+        //prevrece
+        function config(_params) {
+            var params = _params || {};
+            wrapper = params.wrapper || document.getElementById('slideShow');
+            slides = params.slides || wrapper.getElementsByClassName('slide');
+            slidesNum = slides.length;
+            defClass = params.defClass || 'slide';
+        }
+
+        function init() {
+            if (!wrapper) {
+                config();
+            }
+            document.getElementById('nextPrev').appendChild(nextButton);
+            document.getElementById('nextPrev').appendChild(prevButton);
+            nextButton.className = 'next nav-button';
+            prevButton.className = 'prev nav-button';
+            nextButton.id = 'nextrece';
+            prevButton.id = 'prevrece';
+
+            cb_addEventListener(nextButton, 'click', goNext);
+            cb_addEventListener(prevButton, 'click', goBack);
+            cb_addEventListener(document, 'keyup', keyUpEv);
+            showSlide(currentSlide);
+            checkButtons()
+        }
+
+        function goNext() {
+            if (slides[currentSlide + 1]) {
+                ++currentSlide;
+                step();
+            }
+        }
+
+        function goBack() {
+            if (slides[currentSlide - 1]) {
+                --currentSlide;
+                step();
+            }
+        }
+
+        function step() {
+            showSlide(currentSlide);
+            //window.location.hash = currentSlide;
+            checkButtons();
+            return false;
+        }
+
+        function keyUpEv(event) {
+            if (event.keyCode === 37) {
+                goBack();
+            }
+            else if (event.keyCode === 39) {
+                goNext();
+            }
+        }
+
+        function showSlide(step) {
+            var i = slidesNum;
+            if (-1 < step && step < i) {
+                while (i--) {
+                    slides[i].className = defClass;
+                }
+                slides[step].className += ' current';
+
+                if (step > 0) {
+                    slides[step - 1].className += ' prev';
+                }
+                if (step + 1 < slidesNum) {
+                    slides[step + 1].className += ' next';
+                }
+            }
+            else {
+                return false;
+            }
+        }
+
+        return {
+            config: config,
+            init: init
+        };
+    }();
+    function cb_addEventListener(obj, evt, fnc) {
+        if (obj && obj.addEventListener) {
+            obj.addEventListener(evt, fnc, false);
+            return true;
+        }
+        else if (obj && obj.attachEvent) {
+            return obj.attachEvent('on' + evt, fnc);
+        }
+        return false;
+    };
+
+    myPresentation.config({
+        wrapper: document.getElementById('slideShow')
+    });
+    myPresentation.init();
+</script>
+

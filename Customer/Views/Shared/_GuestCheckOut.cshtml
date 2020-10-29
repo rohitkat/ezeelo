@@ -1,0 +1,77 @@
+﻿@model ModelLayer.Models.ViewModel.GuestCheckoutViewModel
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+
+    <div class="form-horizontal">
+        @if (TempData["MessageGuest"] != null)
+        {
+            <div class="breadcrumbs dark">
+                @TempData["MessageGuest"]
+            </div>
+        }
+        @Html.ValidationSummary(true)
+        <div class="example" data-text="">
+            <div class="grid">
+
+                <div class="row cells2">
+                    <div class="cell">
+                        <label>Email Id </label>
+                        <div class="input-control text full-size">
+                            @Html.TextBoxFor(model => model.EmailID, new { @class = "emailID", placeholder = "Enter your email id", maxlength = 150 })
+                            @Html.ValidationMessageFor(model => model.EmailID)
+                        </div>
+                        <label>Mobile No </label>
+                        <div class="input-control text full-size">
+                            @Html.TextBoxFor(model => model.MobileNo, new { @class = "mobileNo", placeholder = "Enter your mobile no", maxlength = 10 })
+                            @Html.ValidationMessageFor(model => model.MobileNo)
+                        </div>
+                    </div>
+
+                    <div class="cell">
+                        <h4>Advantages Of Register</h4>
+                        <div>
+                            <div>
+                                <span class="mif-truck "></span>
+                                <span>
+                                    Manage your Orders
+                                    Easily Track Orders, Hassle free Returns
+                                </span>
+                            </div>
+                            <div>
+                                <span class="mif-bell"></span>
+                                <span>
+                                    Make Informed Decisions
+                                    Get Relevant Alerts and Recommendations
+                                </span>
+                            </div>
+                            <div>
+                                <span class="mif-heart"></span>
+                                <span>
+                                    Engage Socially
+                                    With wish lists, Reviews, Ratings
+                                </span>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+                <div class="row cells2">
+                    <input type="submit" value="Submit" class="newsuccessbtn" />
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+@section Scripts{
+    @Scripts.Render("~/bundles/jqueryval")
+}
+<style>
+    .newsuccessbtn {
+        background: #60A917 none repeat scroll 0% 0% !important;
+        color: #FFF !important;
+        border-color: #60A917 !important;
+    }
+</style>

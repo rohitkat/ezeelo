@@ -1,0 +1,361 @@
+﻿@using PagedList;
+@using PagedList.Mvc;
+
+@*@model IPagedList<ModelLayer.Models.DeliveryOrderDetail>*@
+
+@model IPagedList<DeliveryPartner.Models.ViewModel.DeliveryIndexViewModel>
+
+@{
+    ViewBag.Title = "List [ Order Tracking ]";
+}
+<style>
+    .a_white {
+        color: #ffffff !important;
+    }
+
+    .close {
+        float: right;
+        font-size: 20px;
+        font-weight: bold;
+        line-height: 18px;
+        color: #000000;
+        text-shadow: 0 1px 0 #ffffff;
+        opacity: 1 !important;
+        filter: alpha(opacity=100) !important;
+    }
+
+    .modal1.fade.in {
+        top: 10% !important;
+        width: auto;
+        bottom: 10% !important;
+    }
+
+    .modal1 {
+        position: fixed;
+        top: 50%;
+        /* left: 50%; */
+        z-index: 1050;
+        overflow: auto;
+        width: 560px;
+        margin: 0px 0 0 0px !important;
+        background-color: #ffffff;
+        border: 1px solid #999;
+        border: 1px solid rgba(0, 0, 0, 0.3);
+        -webkit-border-radius: 6px;
+        -moz-border-radius: 6px;
+        border-radius: 6px;
+        -webkit-box-shadow: 0 3px 7px rgba(0, 0, 0, 0.3);
+        -moz-box-shadow: 0 3px 7px rgba(0, 0, 0, 0.3);
+        box-shadow: 0 3px 7px rgba(0, 0, 0, 0.3);
+        -webkit-background-clip: padding-box;
+        -moz-background-clip: padding-box;
+        background-clip: padding-box;
+    }
+
+    .modal1-body {
+        overflow-y: auto;
+        max-height: 400px;
+        padding: 15px;
+        overflow-x: hidden;
+    }
+
+    input {
+        width: 80px;
+    }
+
+    .accordion-group {
+        margin-bottom: -18px;
+        border: 1px solid #e5e5e5;
+        -webkit-border-radius: 4px;
+        -moz-border-radius: 4px;
+        border-radius: 4px;
+    }
+</style>
+<div class="row">
+    <div class="span12" id="divtable1">
+        <div class="widget">
+            <div class="widget-header">
+                <i class="icon-list-alt"></i>
+                <h3> List [ Order Tracking ]</h3>
+            </div>
+            <!-- /widget-header -->
+            <div class="widget-content" style="padding:0px;">
+                <div class="widget big-stats-container">
+                    <div class="widget-content" style="overflow-x:auto;">
+                        @using (Html.BeginForm("Index", "EmployeeAssignment", FormMethod.Post))
+                        {   @Html.AntiForgeryToken()
+                            <div class="form-horizontal">
+                                <div class="box-header">
+                                    <h2><i class="halflings-icon user"></i><span class="break"></span>Search:</h2>
+                                </div>
+                                <div class="box-content" style="border: 1px solid #D3D3D3; background: #F9F9F9; padding: 5px;" id="Searchbox">
+                                    <table>
+                                        <tr>
+                                            <td>From Date</td>
+                                            <td>@Html.TextBox("FromDate", null, new { @readonly = "readonly", id = "FromDate" })</td>
+                                            <td>To Date</td>
+                                            <td>@Html.TextBox("ToDate", null, new { @readonly = "readonly", id = "ToDate" })</td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                        </tr>
+                                        <tr>
+                                            <td>Employee List</td>
+                                            <td>@Html.DropDownList("EmployeeListSearch", "Select") </td>
+                                            <td>Assignment Status</td>
+                                            <td>@Html.DropDownList("AssignStatus", "All")</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Delivery Type</td>
+                                            <td>@Html.DropDownList("DeliveryType", "All") </td>
+                                            <td>Order Status</td>
+                                            <td>@Html.DropDownList("DeliveryStatus", "All")</td>
+                                            <td>Order Code</td>
+                                            <td>@Html.TextBox("SearchString", ViewBag.SearchString as string, new { @class = "search" })</td>
+                                            @*<td>@Html.CheckBox("Delivered")</td>
+                                            <td>Delivered</td>*@
+                                            <td>
+                                                <button type="submit" id="btnSearch" value="Search" class="btn btn-small btn-warning">
+                                                    <span class="glyphicon glyphicon-search"></span> Search
+                                                </button>
+                                                <button type="button" class="btn btn-small btn-info" id="btnSearchClear">Clear</button>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </div>
+                            </div>
+                            <div class="form-horizontal">
+                                <div class="box-header">
+                                    <h2><i class="halflings-icon user"></i><span class="break"></span>Assignment:</h2>
+                                </div>
+                                <div class="box-content" style="border: 1px solid #D3D3D3; background: #F9F9F9; padding: 5px;" id="Assignmentbox">
+                                    <table>
+                                        <tr>
+                                            @*<td><input type="checkbox" id="chkReturned" />Returned</td>*@
+                                        </tr>
+                                        <tr>
+                                            <td>Employee List</td>
+                                            <td>@Html.DropDownList("EmployeeList", "Select")</td>
+                                            @*<td>Deliver To</td>*@
+                                            <td>Task Type</td>
+                                            <td>@Html.DropDownList("DeliverTo", "Select")</td>
+                                            <td>
+                                                <button type="submit" value="Search" id="btnAssign" class="btn btn-small btn-warning">
+                                                    <span class="glyphicon glyphicon-search"></span> Assign
+                                                </button>
+                                                <button type="submit" value="Search" id="btnUnAssign" class="btn btn-small btn-warning">
+                                                    <span class="glyphicon glyphicon-search"></span> UnAssign
+                                                </button>
+                                                @*<button type="button" class="btn btn-small btn-warning" id="btnAssign">Assign</button>
+                                                    <button type="button" class="btn btn-small btn-warning" id="btnUnAssign">UnAssign</button>*@
+                                                <button type="button" class="btn btn-small btn-info" id="btnAssignClear">Clear</button>
+                                                @*<input type="button" id="btnAssign1" class="btn btn-small btn-warning" value="Assign" />*@
+                                            </td>
+                                            @*<td><label id="lblAssign"></label></td>*@
+                                        </tr>
+                                    </table>
+                                </div>
+                            </div>
+                        }
+                        <td><label id="lblAssign"></label></td>
+                        <table class="table table-bordered table-hover table-responsive table-striped">
+                            @*table table-striped table-bordered bootstrap-datatable datatable*@
+                            @*table table-bordered table-hover table-responsive table-striped*@
+                            <tr>
+                             
+                                @if (ViewBag.DeliveryStatus1 == 7)
+                                {
+                                    <th style="width: 20px !important;">
+                                        <input type="checkbox" id="CheckAll" disabled="disabled" />
+                                    </th>
+                                }
+                                else
+                                {
+                                     <th style="width: 20px !important;">
+                                        <input type="checkbox" id="CheckAll" />
+                                     </th>
+                                }
+                                <th style="width: 30px !important; word-break: break-all;">Sr.No</th>
+
+                                <th style="width: 115px;">
+                                    eZeelo Order Code
+                                </th>
+                                <th style="width:100px;">
+                                    Order Code
+                                </th>
+                                <th style="width:60px;">
+                                    Weight
+                                </th>
+                                <th style="width:100px;">
+                                    Order Amount
+                                </th>
+                                <th style="width:80px;">
+                                    Delivery Charge
+                                </th>
+                                <th style="width:100px;">
+                                    Delivery Type
+                                </th>
+                                <th style="width:160px;">
+                                    Create Date
+                                </th>
+                                @*Tejaswee 26-11-2015*@
+                                <th style="width:140px;">
+                                    Delivery Date
+                                </th>
+                                <th style="width:160px;">
+                                    Delivery Slot
+                                </th>
+                                @*<th style="width:130px;">Delivery Memo</th>*@
+                                <th style="width:130px;">Status</th>
+                                <th style="width:80px;">Assignment</th>
+                                @*<th style="width:80px;">Logs</th>*@
+
+
+
+
+                            </tr>
+                        </table>
+                        @if (Model.Count() == 0)
+                        {
+                            <tr>
+                                <td colspan="6" class="text-center"><h3>No Record Found...</h3></td>
+                            </tr>
+                        }
+                        else
+                        {
+                            <div class="accordion" id="accordion2">
+                                @{ int i = 1; }
+                                @foreach (var item in Model)
+                                {
+                                    var tmp = "[" + i + "].ints";
+                                    <div class="accordion-group" style="height: auto; !important; ">
+                                        <div class="accordion-heading">
+
+                                            <table class="table table-bordered table-hover table-responsive table-striped">
+                                                <tr>
+                                                    @if (ViewBag.DeliveryStatus1 == 7)
+                                                    {
+                                                         <td style="width: 14px;">
+                                                            <input name="TaskToAssign" type="checkbox" id="Assign_UnAssign" disabled="disabled" class="chkclass" value="@item.ShopOrderCode|@Enum.GetName(typeof(DeliveryPartner.Common.Constant.ORDER_STATUS), item.OrderStatus)|@item.Assignment" />
+                                                         </td>
+                                                    }
+                                                    else { 
+                                                        <td style="width: 14px;">
+                                                            <input name="TaskToAssign" type="checkbox" id="Assign_UnAssign" class="chkclass" value="@item.ShopOrderCode|@Enum.GetName(typeof(DeliveryPartner.Common.Constant.ORDER_STATUS), item.OrderStatus)|@item.Assignment" />
+                                                        </td>
+                                                    }
+                                                    <td style="width: 20px;">@{int SrNo = ((ViewBag.PageNumber - 1) * ViewBag.PageSize) + i; i = i + 1; } @SrNo </td>
+                                                    <td style="width: 93px; word-break: break-all; ">
+                                                        @Html.DisplayFor(modelItem => item.GandhibaghOrderCode)
+                                                    </td>
+                                                    <td style="width: 67px; word-break: break-all; ">
+                                                        @Html.DisplayFor(modelItem => item.ShopOrderCode)
+                                                    </td>
+                                                    <td style="width: 50px!important; word-break: break-all; ">
+                                                        @Html.DisplayFor(modelItem => item.Weight)
+                                                    </td>
+                                                    <td style="width: 74px !important; word-break: break-all; ">
+                                                        <span class="indian_currency"></span>@Html.DisplayFor(modelItem => item.OrderAmount)
+                                                    </td>
+                                                    <td style="width: 65px !important; word-break: break-all; ">
+                                                        @*<span class="indian_currency"></span>@Html.DisplayFor(modelItem => item.DeliveryCharge)*@
+                                                        <span class="indian_currency"></span>@Html.DisplayFor(modelItem => item.GandhibaghCharge)
+                                                    </td>
+                                                    <td style="width: 74px !important; word-break: break-all; ">
+                                                        @Html.DisplayFor(modelItem => item.DeliveryType)
+                                                    </td>
+                                                    <td style="width: 97px !important; word-break: break-all; ">
+                                                        @Html.DisplayFor(modelItem => item.CreateDate)
+                                                    </td>
+                                                    @*Tejaswee (26-11-2015) Display expected delivery time and date*@
+                                                    <td style="width: 96px; word-break: break-all; ">
+                                                        @if (item.DeliveryDate != null)
+                                                        {
+                                                            @*@Html.DisplayFor(modelItem => item.DeliveryDate.Value.Date.ToString("dd/mm/yy"))*@
+                                                            <span>@item.DeliveryDate.Value.ToString("dd / MM / yyyy")</span>
+                                                        }
+                                                    </td>
+                                                    <td style="width: 106px !important; word-break: break-all;">
+                                                        @Html.DisplayFor(modelItem => item.DeliveryScheduleName)
+                                                    </td>
+
+                                                    @*<td style="width:130px; text-align:center;">
+                                                            <a href="#myModal" role="button" class="btn btn-small btn-primary" data-toggle="modal" onclick="Details(@item.ID)">Delivery Memo</a>
+                                                        </td>*@
+                                                    <td style="width: 86px; text-align: center; word-wrap: break-word; word-break: break-all; ">
+                                                        @*@item.CustomerOrderStatus*@
+                                                        @Enum.GetName(typeof(DeliveryPartner.Common.Constant.ORDER_STATUS), item.OrderStatus)
+                                                    </td>
+                                                    <td style="width: 71px; word-wrap: break-word; word-break: break-all; ">
+                                                        @Html.DisplayFor(modelItem => item.Assignment)
+                                                    </td>
+                                                    @*<td style="width:60px;">
+                                                            <a href="@Url.Action("Index", "DeliveryDetailLog", new { DeliveryOrderDetailID = item.ID })" onclick="Logs()" target="frameLog" class="btn btn-small btn-success a_white">Logs</a>
+                                                        </td>*@
+                                                </tr>
+                                            </table>
+
+                                        </div>
+                                        @*<div id="@item.ID" class="accordion-body collapse">
+                                                <div class="widget-content">
+                                                    <a href="#myModal" role="button" class="btn btn-small btn-primary" data-toggle="modal" onclick="Details(@item.ID)">Delivery Memo</a>
+                                                    <iframe id="frameCreate_@item.ID" name="frameCreate_@item.ID" src='@Url.Action("Edit", "DeliveryOrderDetail", new { id = item.ID })' width="100%" height="220px" frameborder="0"></iframe>
+                                                </div>
+                                            </div>*@
+                                    </div>
+                                }
+                            </div>
+                        }
+
+
+
+                        <div class="pager">
+                            @Html.PagedListPager(Model, Page => Url.Action("Index", new
+                       {
+                           page = Page,
+                           SearchString = ViewBag.SearchString,
+                           FromDate = ViewBag.FromDate,
+                           ToDate = ViewBag.ToDate,
+                           DeliveryStatus = ViewBag.DeliveryStatus1,
+                           DeliveryType = ViewBag.DeliveryType1,
+                           EmployeeCode = ViewBag.EmployeeCode1, //Added
+                           AssignStatus = ViewBag.AssignStatus1 //Added
+                       }),
+                                                                new PagedListRenderOptions()
+                                                                {
+                                                                    Display = PagedListDisplayMode.IfNeeded
+                                                                })
+                        </div>
+                    </div>
+                    <!-- /widget-content -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="loader">
+        <img id="loader_img" src="~/Content/img/loader.gif" style="display: none" />
+    </div>
+
+</div>
+
+<script type="text/javascript" src="~/Scripts/js/jquery-1.7.2.min.js"></script>
+<script src="~/Content/js/DPViewEvent.min.js"></script>
+
+
+@section MyScripts{
+    <script>
+
+        //----------------------------------------------------------------------For datepicker---//
+        //<![CDATA[
+        $(window).load(function () {
+            //$('#DOB').datepicker('setDate', new Date());
+            $('#FromDate').datepicker('update');
+            $('#ToDate').datepicker('update');
+        });//]]>
+
+    </script>
+}
+
+
+

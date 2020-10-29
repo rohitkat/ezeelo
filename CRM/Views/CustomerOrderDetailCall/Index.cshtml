@@ -1,0 +1,64 @@
+﻿@model IEnumerable<ModelLayer.Models.CustomerOrderDetailCall>
+
+
+@{
+    Layout = "~/Views/Shared/_LayoutPartial.cshtml";
+}
+<style>
+    .margin_left_right_decress {
+        margin-left: -20px;
+        margin-right: -20px;
+    }
+    .margin_left_zero{
+        margin-left:0px;
+    }
+</style>
+@{
+    Dictionary<long, string> CallTo = ViewBag.CallToList;
+}
+<div class="row margin_left_zero">
+    <div id="divtable">
+        <div class="widget">
+            <div class="widget-header">
+                <i class="icon-list-alt"></i>
+                <h3> List Call Logs [ @Request.QueryString["ShopOrderCode"] ]</h3>
+            </div>
+            <!-- /widget-header -->
+            <div class="widget-content">
+                <div class="widget big-stats-container">
+                    <div class="widget-content matchdivheight">
+                        <p>
+                            <button class="btn btn-small btn-success" onclick="Back()">Back</button>
+                            @Html.ActionLink("Write Log", "Create", new { ShopID = Request.QueryString["ShopID"], DeliveryPartnerID = Request.QueryString["DeliveryPartnerID"], OrderStatus = Request.QueryString["OrderStatus"], ShopOrderCode = Request.QueryString["ShopOrderCode"], PaymentMode = Request.QueryString["PaymentMode"], OrderCode = Request.QueryString["OrderCode"] }, new { @class = "btn btn-small btn-primary" })
+                        </p>
+                        <ul class="messages_layout">
+                            @foreach (var item in Model)
+                            {
+                                <li class="from_user" style="width:100%">
+                                    <div class="message_wrap" style="width:94%">
+                                        <span class="arrow"></span>
+                                        <div class="info">
+                                            <a class="name">@item.PersonalDetail.FirstName Calls on [ @item.CreateDate ]</a>
+                                        </div>
+                                        <div class="info">
+                                            <a class="name">To : [ @CallTo[item.ID] ]</a>
+                                        </div>
+                                        <div class="text">@item.Description</div>
+                                    </div>
+                                </li>
+                            }
+                        </ul>
+                    </div>
+                    <!-- /widget-content -->
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    function Back() {
+        window.parent.$("[id$=divLog]").hide();
+    }
+</script>
+ 
+

@@ -1,0 +1,172 @@
+﻿@model ModelLayer.Models.WalletPayBackViewModel
+
+
+
+<script src="~/Content/js/jquery.dataTables.min.js"></script>
+
+<script type="text/javascript" class="init">
+    $(document).ready(function () {
+        $('#tblData').DataTable({
+            dom: 'T<"clear">lfrtip',
+            "processing": true,
+            "serverSide": true,
+        });
+        if ($("#callType").val() == "0") {
+            $("#btnAcceptTop").show();
+            $("#btnApproveTop").hide();
+        } else if ($("#callType").val() == "1") {
+            $("#btnAcceptTop").hide();
+            $("#btnApproveTop").show();
+        }
+        else {
+            $("#btnAcceptTop").hide();
+            $("#btnApproveTop").hide();
+        }
+        if ('@ViewBag.StatusHeading' == '0') {
+            $("#spStatus").text(" Pending ");
+        }
+        else if ('@ViewBag.StatusHeading' == '1') {
+            $("#spStatus").text(" Accepted ");
+        }
+        else if ('@ViewBag.StatusHeading' == '2') {
+            $("#spStatus").text(" Approved ");
+        }
+        else {
+            $("#spStatus").text(" Pending ");
+        }
+        if ('@ViewBag.Message' != "") {
+            alert('@ViewBag.Message');
+        }
+    });
+</script>
+<style>
+    #tblData_length {
+        display: none;
+    }
+</style>
+
+@using (Ajax.BeginForm("AcceptPayBack", "LeadersWalletPayBack", new AjaxOptions { LoadingElementId = "progress", UpdateTargetId = "ReportDiv" }))
+{
+    @Html.HiddenFor(p => p.FromDate)
+    @Html.HiddenFor(p => p.ToDate)
+    @Html.HiddenFor(p => p.callType)
+    <input id="btnAccept" type="submit" value="Accept" style="display:none" />
+    <table id="tblData" class="table table-striped table-bordered bootstrap-datatable datatable dataTable">
+        <thead>
+            <tr>
+                <th>
+                    @if (Model.callType == 0)
+                    {
+                        <span>Accept</span>
+                    }
+                    else if (Model.callType == 1)
+                    {
+                        <span>Approve</span>
+                    }
+                    else
+                    {
+                        <span>Sr No</span>
+                    }
+                </th>
+                <th>OrderCode</th>
+                <th>User Name</th>
+                <th>
+                    PhoneNo
+                </th>
+                <th>
+                    Order Amount
+                </th>
+
+                <th>
+                    Retail Points
+                </th>
+                <th>
+                    Wallet Amount Used
+                </th>
+                <th>
+                    Status
+                </th>
+                <th>
+                    Trans Date
+                </th>
+                <th>
+                    Return Amount
+                </th>
+
+            </tr>
+        </thead>
+        @for (int i = 0; i < Model.list.Count; i++)
+        {
+            <tr>
+                <td>
+                    @if (Model.callType == 0 || Model.callType == 1)
+                    {
+                        @Html.CheckBoxFor(model => model.list[i].IsChecked)
+                    }
+                    else
+                    {
+                        <span>
+                            @{
+                        var j = i;
+                        j = j + 1;
+                            }
+                            @j
+                        </span>
+                    }
+                    @Html.HiddenFor(model => model.list[i].MLMWalletTransactionId)
+                    @Html.HiddenFor(model => model.list[i].UserLoginID)
+                </td>
+                <td>
+                    @Model.list[i].OrderCode
+                    @Html.HiddenFor(model => model.list[i].OrderCode)
+                </td>
+                <td>
+                    @Model.list[i].Name
+                    @Html.HiddenFor(model => model.list[i].Name)
+                </td>
+                <td>
+                    @Model.list[i].MobilNo
+                    @Html.HiddenFor(model => model.list[i].MobilNo)
+                </td>
+                <td>
+                    @Model.list[i].OrderAmount
+                    @Html.HiddenFor(model => model.list[i].OrderAmount)
+                </td>
+                <td>
+                    @Model.list[i].RetailPoints
+                    @Html.HiddenFor(model => model.list[i].RetailPoints)
+                </td>
+                <td>
+                    @Model.list[i].WalletAmountUsed
+                    @Html.HiddenFor(model => model.list[i].WalletAmountUsed)
+                </td>
+                <td>
+                    @if (Model.list[i].Status == 9)
+                    {
+                        <span>Cancel</span>
+                    }
+                    else if (Model.list[i].Status == 8)
+                    {
+                        <span>Return</span>
+                    }
+                    else
+                    {
+                        <span>Partial Return</span>
+                    }
+                    @Html.HiddenFor(model => model.list[i].Status)
+                </td>
+                <td>
+                    @Model.list[i].TranDate.ToString("dd MMM yyyy")
+                    @Html.HiddenFor(model => model.list[i].TranDate)
+                </td>
+                <td>
+                    @Model.list[i].ReturnAmount
+                    @Html.HiddenFor(model => model.list[i].ReturnAmount)
+                </td>
+
+            </tr>
+        }
+
+
+    </table>
+}

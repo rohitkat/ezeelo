@@ -1,0 +1,728 @@
+﻿@model ModelLayer.Models.HomePageDynamicSectionProduct
+
+@{
+
+    ViewBag.Title = "AddProducts";
+}
+
+<style>
+    .CategoryDiv {
+        width: 233px;
+        float: left;
+        padding: 10px;
+    }
+
+        .CategoryDiv span {
+            display: block;
+            font-size: 15px;
+            font-weight: 600;
+        }
+
+        .CategoryDiv label {
+            display: block;
+            font-size: 15px;
+            font-weight: 600;
+            text-align: left !important;
+        }
+
+        .CategoryDiv select {
+            display: block;
+        }
+
+    .form-horizontal .form-actions {
+        padding-left: 10px !important;
+    }
+
+    .textDiv {
+        margin-left: 10px;
+        width: 100%;
+        float: left;
+    }
+
+    #Content {
+    }
+
+    .uploader {
+        width: 195px !important;
+    }
+
+    .action {
+        border: 1px solid#ccc;
+        color: #fff;
+        background-color: #2271D2;
+        text-shadow: none !important;
+        cursor: pointer !important;
+    }
+
+    div.uploader span.filename {
+        border-right: none;
+    }
+
+    #dvPreview {
+        /*float: left;*/
+        width: 120px;
+    }
+
+    .uploader {
+        margin-top: 35px;
+    }
+
+    #dvPreview img {
+        border: 3px solid#CEC4C4;
+        margin-bottom: 10px;
+        height: 124px;
+    }
+
+    div.uploader {
+        left: -12px;
+        top: 121px;
+    }
+
+    .top_cat {
+        margin-top: 2px; /*margin-bottom:45px;*/
+        border: 1px solid #ccc;
+        width: 173px;
+        height: 135px;
+    }
+
+    #dvPreview {
+        margin-top: -60px;
+        width: 164px;
+        padding: 0px 1px;
+    }
+
+    .beatpicker-clear {
+        display: none;
+    }
+
+    #pageloaddiv {
+        position: fixed;
+        left: 0px;
+        top: 0px;
+        width: 100%;
+        height: 100%;
+        z-index: 1000;
+        background: url('../../Content/Images/ajax_loader.gif') no-repeat center center;
+        background-size: 100px;
+        display: none;
+    }
+</style>
+
+
+
+<div id="content" class="span10">
+    <ul class="breadcrumb">
+        <li>
+            <div> HomePageDynamicSectionMobile </div>
+        </li>
+    </ul>
+
+    <div class="row-fluid">
+
+        <div class="box span12">
+            <div class="box-header">
+                <h2><i class="icon-edit"></i><span class="break"></span>Product Gallery</h2>
+            </div>
+            @using (Html.BeginForm("AddProduct", "HomePageDynamicSectionMobile", null, FormMethod.Post))
+            {
+                @Html.AntiForgeryToken()
+                @Html.Hidden("HomepageDynamicSectionID")
+                @Html.Hidden("FranchiseID")
+                <div class="box span6 gridBox">
+                    <div class="box-content">
+                        <div class="form-horizontal">
+                            @Html.ValidationSummary(true)
+
+                            <div class="CategoryDiv span6">
+                                <span>Select Franchise Name:</span>
+                                @ViewBag.FranchiseName
+
+                            </div>
+                            <div class="CategoryDiv span6">
+                                <span>Select Section Display Name:</span>
+                                @ViewBag.SectionDisplayName
+                            </div>
+                            <div class="CategoryDiv span6">
+                                <span class=" control-label">Auto list</span>
+                                @*@Html.LabelFor(model => model.IsActive, new { @class = "control-label " })*@
+                                <div class="col-md-10 controls">
+
+                                    <input type="checkbox" id="IsActive" name="IsActive" onclick="OnCheckFunction()">
+                                    @*@Html.EditorFor(model => model.IsActive)*@
+                                    @*@Html.ValidationMessageFor(model => model.IsActive)*@
+                                    <span id="IsActiveErro" style="font-weight:bold;color:red;"></span>
+                                </div>
+
+
+
+
+                            </div>
+                            <div class="pull-left" id="Offerdropmenu" style="display: none;">
+                                <label class="control-label col-md-2">select Offer</label>
+                                <div class="col-md-10 controls">
+                                    @Html.DropDownList("Offername", "Select category")
+
+                                    <br /> <span id="fieldo" style="font-weight:bold;color:red;"></span>
+                                </div>
+
+                            </div>
+                            <div id="catlist" style="display:block">
+                              
+                                <div class="CategoryDiv span12">
+                                    <span>Search Product</span>
+                                    <input type="text" id="productname">
+                                    <input type="button" value="Search" onclick="myFunction()" class="btn btn-primary">
+
+                                </div>
+                                <div class="CategoryDiv span12">
+                                    <span>Select Category</span>
+                                    @Html.DropDownList("CategoryList", "Select Category")
+
+                                </div>
+                                <div class="CategoryDiv span12">
+                                    <span>Select Level Two Category</span>
+                                    @Html.DropDownList("LevelTwoCategoryList", "Select Category")
+                                </div>
+                                <div class="CategoryDiv span12">
+                                    <span>Select Level Three Category</span>
+                                    @Html.DropDownList("LevelThreeCategoryList", "Select Category")
+                                    <span id="CategoryErro" style="font-weight:bold;color:red;"></span>
+                                </div>
+                            </div>
+                            <div class="clr"></div>
+
+                            <div id="pageloaddiv"></div>
+                            <div id="divSpecification"></div>
+
+                        </div>
+                        </div>
+                </div>
+                <div class="box span6 gridBox">
+                    <div class="box-content">
+                        <div class="span12">
+                            <div class="">
+                                <span id="pMessage"> </span>
+                            </div>
+                            <div class="clr"></div>
+                            <div class="CategoryDiv span6">
+                                <span>Select Start Date</span>
+                                @*@Html.TextBox("SDate", null, new { @class = "input" })*@
+                                <div class="">
+                                    <input type="text" id="SDate" name="SDate" value="@ViewBag.SDate" class="datepicker" />
+                                    @*@Html.ValidationMessageFor(model => model.StartDate)*@
+                                </div>
+                                <span id="SDateErro" style="font-weight:bold;color:red;"></span>
+                            </div>
+                            <div class="CategoryDiv span6">
+                                <span>Select End Date</span>
+                                @*@Html.TextBox("EDate", null, new { @class = "input" })*@
+                                <input type="text" id="EDate" name="EDate" value="@ViewBag.EDate" class="datepicker" />
+                                @*@Html.ValidationMessageFor(model => model.EndDate)*@
+                                <span id="EDateErro" style="font-weight:bold;color:red;"></span>
+                            </div>
+                            <span id="DateErro" style="font-weight:bold;color:red;"></span>
+                            <div class="span12">
+                                <a id="btnView" class="btn btn-primary" onclick="GetAddedProducts(@ViewBag.HomepageDynamicSectionID);">View Added Products</a>
+                            </div>
+                            <div class="span12" style="margin-top:10px;">
+                                @*<input type="submit" value="Create" class="btn btn-default" style="float:left;" />*@
+                                <input id="btnSubmit" type="submit" name="btnSubmit" class="btn btn-success" style="float:left;" />
+                                @if (ViewBag.Message != null)
+                                {
+                                    <div style="font-weight: bold; color: red; float: left; margin: 5px 5px;">@ViewBag.Message</div>
+                                }
+                            </div>
+                        </div>
+                        <div class="span12 gridBox2" style="overflow-y:scroll; height:550px;">
+                            <span id="ProdErro" style="font-weight:bold;color:red;"></span>
+                            <table class="table table-striped table-bordered" id="thirdLevelCategory">
+                                <thead>
+                                    <tr>
+                                        <th>
+                                            ID
+                                        </th>
+                                        <th>
+                                            Name
+                                        </th>
+                                        <th></th>
+                                    </tr>
+                                </thead>
+                            </table>
+
+                            <input type="hidden" name="ProductList" id="ProductList">
+                            <input type="hidden" name="RemoveIDList" id="RemoveIDList">
+
+                        </div>
+
+                    </div>
+                </div>
+            }
+
+            <div class="form-actions" style="clear:both;">
+                @Html.ActionLink("Back to List", "Index", null, new { @class = "btn btn-brown" })
+            </div>
+        </div>
+        @* }*@
+    </div>
+</div>
+<script src="~/Scripts/jquery-1.10.2.min.js"></script>
+
+
+<script>
+
+    $(document).ready(function () {
+
+        $(".btn-success").click(function () {
+            var ErrorCount = 0;
+          
+            var startate = $("#SDate").val();
+            var endDate = $("#EDate").val();
+            var productList = ($("#thirdLevelCategory tr").length)-1;
+            
+            if (startate == '') {
+                $('#SDateErro').html('Please Select Start Date');
+                ErrorCount = ErrorCount + 1;
+            }
+            else {
+                $('#SDateErro').html('');
+            }
+            if (endDate == '') {
+                $("#EDateErro").html('Please Select End Date');
+                ErrorCount = ErrorCount + 1;
+            }
+            else {
+                $("#EDateErro").html('');
+            }
+            if (productList == 0) {
+                $("#ProdErro").html('Please Add Product');
+                ErrorCount = ErrorCount + 1;
+            }
+            else {
+                $("#ProdErro").html('');
+            }
+
+            if (startate != '' && endDate != '') {
+
+                var sdate = startate.split("/");   //date present in dd/MM/yyyy format
+                var edate = endDate.split("/");    //date present in dd/MM/yyyy format
+
+                if (new Date(sdate[2], sdate[1], sdate[0]) > new Date(edate[2], edate[1], edate[0])) {     //date in yyyy mm dd format
+                    $("#DateErro").html('Please Select Start Date Less than End Date');
+                    ErrorCount = ErrorCount + 1;
+                }
+                else {
+                    $("#DateErro").html('');
+                }
+            }
+
+            if (ErrorCount > 0) {
+                return false;
+            }
+        });
+
+        $("#CategoryList").change(function () {
+            /* Get the selected value of dropdownlist */
+            var selectedID = $(this).val();
+            var FranchiseID = $("[id=FranchiseID]").val();
+            var level = 1;
+
+
+            /*Processing Image*/
+            $("#pageloaddiv").css('display', 'block');
+            //$("#pageloaddiv").fadeOut(1000);
+
+
+            $.ajax({
+                type: "POST",
+                url: "/HomePageDynamicSectionMobile/SelectCategory?ParentCategory=" + selectedID + "&level=2",
+                dataType: "json",
+                async: true,
+                cache: false,
+                success: function (msg) {
+                    $('#LevelTwoCategoryList').empty();
+                    $('#LevelTwoCategoryList').append('<option value=0>Select Category</option>');
+                    $.each(msg, function (index, item) {
+                        $('#LevelTwoCategoryList').append('<option value=' + item.ID + '>' + item.Name + '</option>');
+                    });
+                    $("#pageloaddiv").css('display', 'none');
+                    $("#pageloaddiv").fadeOut(1000);
+                },
+                error: function (x, e) {
+                    alert("Sorry No Such Type of Category Is available. ");
+                    $("#pageloaddiv").css('display', 'none');
+                    $("#pageloaddiv").fadeOut(1000);
+                }
+            });
+        });
+
+        $("#LevelTwoCategoryList").change(function () {
+            /* Get the selected value of dropdownlist */
+            var selectedID = $(this).val();
+            var FranchiseID = $("[id=FranchiseID]").val();
+            var level = 2;
+
+            /*Processing Image*/
+            $("#pageloaddiv").css('display', 'block');
+           // $("#pageloaddiv").fadeOut(1000);
+
+
+            $.ajax({
+                type: "POST",
+                url: "/HomePageDynamicSectionMobile/SelectCategory/?ParentCategory=" + selectedID + "&level=3",
+                //url: "/ShopPriority/ParentCategory",
+                //data: "{ ParentCategory: " + id + ",level:"+ 2 +"}",
+                dataType: "json",
+                async: true,
+                cache: false,
+                success: function (msg) {
+
+                    $('#LevelThreeCategoryList').empty();
+                    $('#LevelThreeCategoryList').append('<option value=0>Select Category</option>');
+                    $.each(msg, function (index, item) {
+                        $('#LevelThreeCategoryList').append('<option value=' + item.ID + '>' + item.Name + '</option>');
+                    });
+                    $("#pageloaddiv").css('display', 'none');
+                  //  $("#pageloaddiv").fadeOut(1000);
+                },
+                error: function (x, e) {
+
+                    alert("Sorry No Such Type of Category Is available. ");
+                    $("#pageloaddiv").css('display', 'none');
+                    $("#pageloaddiv").fadeOut(1000);
+                }
+            });
+        });
+
+        $("#LevelThreeCategoryList").change(function () {
+           
+            /* Get the selected value of dropdownlist */
+            var selectedID = $(this).val();
+            var FranchiseID = $("[id=FranchiseID]").val();
+            var HomepageDynamicSectionID = $("[id=HomepageDynamicSectionID]").val();
+            var level = 3;
+            /*Check Condition*/
+            $('#divSpecification').html(null);
+
+            /*Processing Image*/
+            $("#pageloaddiv").css('display', 'block');
+            //$("#pageloaddiv").fadeOut(1000);
+
+            /* Request the partial view with .get request. */
+            //$.get('/ShopPriority/ShopPriorityList/?HomepageDynamicSectionID=' + FranchiseID + '&CategoryList=' + selectedID, function (data) {
+            $.post('/HomePageDynamicSectionMobile/GetProductList/?FranchiseID=' + FranchiseID + '&HomepageDynamicSectionID=' + HomepageDynamicSectionID + '&CategoryID=' + selectedID, function (data) {
+                /* data is the pure html returned from action method, load it to your page */
+
+                $('#divSpecification').html(data);
+
+                /* little fade in effect */
+                $('#divSpecification').fadeIn('fast');
+                $("#pageloaddiv").css('display', 'none');
+            });
+
+          
+            //$("#pageloaddiv").fadeOut(1000);
+
+        });
+    });
+
+
+    var RemoveIDList = [];
+
+    function Callme(e) {
+      
+        e.parentNode.parentNode.parentNode.removeChild(e.parentNode.parentNode);
+        RemoveIDList.push(e.id);
+        $("[id*=RemoveIDList]").val(RemoveIDList);
+    }
+
+
+    function GetAddedProducts(HomepageDynamicSectionID) {
+        
+        var sDate = $("#SDate").val();
+        var eDate = $("#EDate").val();
+
+        if (sDate != '' && eDate != '') {
+
+            /*Processing Image*/
+            $("#pageloaddiv").css('display', 'block');
+          //  $("#pageloaddiv").fadeOut(1000);
+
+            $.ajax({
+                type: "POST",
+                url: "/HomePageDynamicSectionMobile/GetAddedProducts?HomepageDynamicSectionID=" + HomepageDynamicSectionID + "&SDate=" + sDate + "&EDate=" + eDate,
+                //data: "{ ParentCategory: " + id + ",level:"+ 2 +"}",
+                dataType: "json",
+                async: true,
+                cache: false,
+                success: function (msg) {
+                    $('#thirdLevelCategory tbody').empty();
+                    $.each(msg, function (index, item) {
+                        $("#thirdLevelCategory").append("<tr>" +
+                            "<td>" + item.ID + "</td>" +
+                            "<td>" + item.Name + "</td>" +
+                            "<td>" + "<a id=" + item.ID + " onclick='Callme(this)' href='#noname'>Remove</a>" +
+                             "</td> </tr>"
+
+                        );
+                        count = count + 1;
+                    });
+                    //$("#tableSimilarProduct .btnAdd").click(function () {
+                    //    $(this).parent().parent().css('background-color', '#c4eccc');
+                    //});
+                    $("#pageloaddiv").css('display', 'none');
+                   // $("#pageloaddiv").fadeOut(1000);
+                },
+                error: function (x, e) {
+                    alert("Sorry No Such Type of Category Is available. ");
+                    $("#pageloaddiv").css('display', 'none');
+                    $("#pageloaddiv").fadeOut(1000);
+                }
+            });
+        }
+        else {
+            alert("Please select start date & end date !!");
+        }
+    }
+
+    var ProductIDList = [];
+    var count = 1;
+
+    function AddRowToTable(id) {
+        /* To set color of added row*/
+        $("[id*=" + id + "]").css('background-color', '#c4eccc');
+        /*Disable Add Button*/
+        $("[id*=" + id + "]").css('pointer-events', 'none');
+        $("[id*=" + id + "]").css('cursor', 'default');
+
+        var tRow = $("[id*=" + id + "]").html();
+        $("#thirdLevelCategory tr:first").after("<tr>" + tRow + "</tr>");
+        // $("[id*=thirdLevelCategory]").append("<tr>" + tRow + "</tr>");
+        $("#thirdLevelCategory tr td a").replaceWith("<a href='#noname'>Remove</a>");
+        ProductIDList.push(id);
+        $("[id*=ProductList]").val(ProductIDList);
+
+        $("#thirdLevelCategory tr td a").click(function () {
+            $(this).parent().parent().remove();
+            var cid = $(this).parent().parent().children("td:first").html();
+
+            ProductIDList.splice(ProductIDList.indexOf(parseInt(cid)), 1);
+
+            $("[id*=ProductList]").val(ProductIDList);
+
+            //alert(ProductIDList.indexOf(parseInt(cid)));
+
+            $("[id*=" + cid + "]").css("background-color", "white");
+            /*Enable Add Button*/
+            $("[id*=" + cid + "]").css('pointer-events', 'auto');
+            $("[id*=" + cid + "]").css('cursor', 'pointer');
+        });
+    }
+
+    function OnCheckFunction() {
+       debugger
+        var checkBox = document.getElementById("IsActive");
+        var text = document.getElementById("catlist");
+
+        var FranchiseID = $("#FranchiseID").val();
+        var HomepageDynamicSectionID = $("#HomepageDynamicSectionID").val();
+
+
+
+        $("#catlist").css('display', 'block');
+
+        $("#Offerdropmenu").css('display', 'none');
+
+
+
+        if (checkBox.checked == true) {
+            
+            $("#catlist").css('display', 'none');
+            $("#Offerdropmenu").css('display', 'block');
+            $.ajax({
+                type: "POST",
+                url: "/HomePageDynamicSectionMobile/Getofferlist?FranchiseID=" + FranchiseID,
+                dataType: "json",
+                async: true,
+                cache: false,
+                success: function (data) {
+
+                    debugger
+                    $('#Offername').empty();
+                    $('#Offername').append('<option value=0>Select Offer Name</option>');
+
+                    $.each(data, function (index, item) {
+                        $('#Offername').append('<option value=' + item.Id + '>' + item.Name + '</option>');
+                    });
+
+
+                },
+                error: function (x, e) {
+
+                    $("#dropmenu").css('display', 'none');
+                    $("#pageload").css('display', 'none');
+                    $("#pageload").fadeOut(1000);
+                }
+            });
+
+
+
+            //text.style.display = "none";
+
+            //$('#divSpecification').html(null);
+
+            ///*Processing Image*/
+            //$("#pageloaddiv").css('display', 'block');
+            //$("#pageloaddiv").fadeOut(1000);
+
+
+            //$.post('/HomePageDynamicSectionMobile/AutomateProductList/?FranchiseID=' + FranchiseID + '&HomepageDynamicSectionID=' + HomepageDynamicSectionID, function (data) {
+            //    /* data is the pure html returned from action method, load it to your page */
+
+            //    $('#divSpecification').html(data);
+
+            //    /* little fade in effect */
+            //    $('#divSpecification').fadeIn('fast');
+            //});
+
+            //$("#pageloaddiv").css('display', 'none');
+            //$("#pageloaddiv").fadeOut(1000);
+            //} else {
+            //    text.style.display = "block";
+
+            //    $('#divSpecification').html(null);
+
+            //}
+
+        }
+    }
+
+
+
+        $("#Offername").change(function () {
+        debugger
+        var selectedVal = $(this).val();
+        var FranchiseID = $("#FranchiseID").val();
+        var HomepageDynamicSectionID = $("#HomepageDynamicSectionID").val();
+
+        //text.style.display = "none";
+
+        $('#divSpecification').html(null);
+
+        /*Processing Image*/
+        $("#pageloaddiv").css('display', 'block');
+        //$("#pageloaddiv").fadeOut(1000);
+
+
+        $.post('/HomePageDynamicSectionMobile/Autolist/?FranchiseID=' + FranchiseID + '&HomepageDynamicSectionID=' + HomepageDynamicSectionID + '&offerID=' + selectedVal , function (data) {
+            /* data is the pure html returned from action method, load it to your page */
+
+            $('#divSpecification').html(data);
+
+            /* little fade in effect */
+            $('#divSpecification').fadeIn('fast');
+            $("#pageloaddiv").css('display', 'none');
+           // $("#pageloaddiv").fadeOut(1000);
+        });
+
+        //$("#pageloaddiv").css('display', 'none');
+        //$("#pageloaddiv").fadeOut(1000);
+
+
+
+
+    });
+
+    function myFunction() {
+        debugger
+        var product = $("#productname").text();
+        var product = document.getElementById("productname").value;
+
+        var FranchiseID = $("#FranchiseID").val();
+        var HomepageDynamicSectionID = $("#HomepageDynamicSectionID").val();
+        $('#divSpecification').html(null);
+
+        /*Processing Image*/
+        $("#pageloaddiv").css('display', 'block');
+        //$("#pageloaddiv").fadeOut(1000);
+
+
+        $.post('/HomePageDynamicSectionMobile/searchproduct/?FranchiseID=' + FranchiseID + '&HomepageDynamicSectionID=' + HomepageDynamicSectionID + '&product=' + product, function (data) {
+            /* data is the pure html returned from action method, load it to your page */
+
+            $('#divSpecification').html(data);
+
+            /* little fade in effect */
+            $('#divSpecification').fadeIn('fast');
+            $("#pageloaddiv").css('display', 'none');
+        });
+
+       
+       // $("#pageloaddiv").fadeOut(1000);
+    }
+
+    //else {
+    //            text.style.display = "block";
+
+    //            $('#divSpecification').html(null);
+
+    //        }
+
+    function AddAllRow() {
+        debugger
+        var table = document.getElementById('myTable');
+        //var table1 = $("#myTable table tbody");
+        var data = [];
+
+        // Counter
+        var i = 0;
+
+        // Cycle through each of the table body's rows
+        $('#myTable tbody tr').each(function (index, tr) {
+            var tds = $(tr).find('td');
+            $('#myTable tbody tr').css('background-color', '#c4eccc');
+            /*Disable Add Button*/
+            $('#myTable tbody tr').css('pointer-events', 'none');
+            $('#myTable tbody tr').css('cursor', 'default');
+            // Check we've got two <td>s
+            if (tds.length > 1) {
+                //$('tr').css('background-color', '#c4eccc');
+                // If we do, get their text content and add it to the data array
+                var productId = tds[0].textContent;
+                var productName = tds[1].textContent;
+                ProductIDList.push(productId);
+                $("[id*=ProductList]").val(ProductIDList);
+                var row = $("<tr><td>" + productId + "</td><td>" + productName + "</td><td><a>Remove</a></td></tr>");
+                $("[id*=thirdLevelCategory]").append(row);
+                //$("#thirdLevelCategory tr:first").after("<tr>" + tRow + "</tr>");
+                //// $("[id*=thirdLevelCategory]").append("<tr>" + tRow + "</tr>");
+                $("#thirdLevelCategory tr td a").replaceWith("<a>Remove</a>");
+            }
+        });
+
+        $("#thirdLevelCategory tr td a").click(function () {
+            debugger
+            $(this).parent().parent().remove();
+            var cid = $(this).parent().parent().children("td:first").html();
+
+
+
+            ProductIDList = ProductIDList.filter(function (item) {
+                return item !== cid
+            })
+
+            // ProductIDList.splice(ProductIDList.indexOf(parseInt(cid)), 1);
+
+
+            $("[id*=ProductList]").val(ProductIDList);
+
+            //alert(ProductIDList.indexOf(parseInt(cid)));
+
+            $("[id*=" + cid + "]").css("background-color", "white");
+            /*Enable Add Button*/
+            $("[id*=" + cid + "]").css('pointer-events', 'auto');
+            $("[id*=" + cid + "]").css('cursor', 'pointer');
+        });
+    }
+
+</script>
+

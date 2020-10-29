@@ -1,0 +1,280 @@
+﻿@model IEnumerable<ModelLayer.Models.ViewModel.WarehouseStockViewModel>
+
+<style type="text/css">
+    #msform1 fieldset:not(:first-of-type) {
+        display: none;
+    }
+
+    .field-validation-error {
+        color: #000000 !important;
+    }
+
+    .succes-msg {
+        color: #31A012;
+        font-size: 20px;
+    }
+
+    .beatpicker-clearButton button {
+        display: none;
+    }
+
+    .input-parent button {
+        display: none;
+    }
+
+    .textarea-adjust {
+        width: 85%;
+    }
+    /*Beatpicker Css*/
+    .beatpicker-clearButton button {
+        display: none;
+    }
+
+    .input-parent button {
+        display: none;
+    }
+
+    .header-navbar-button {
+        position: absolute !important;
+    }
+
+    .beatpicker .main-nav .current-indicator {
+        text-align: center !important;
+    }
+
+    .beatpicker .main-nav .prev1 {
+        left: 0 !important;
+        width: 14%;
+        padding: 0px 10px;
+        color: #fff;
+        font-size: 16px;
+    }
+
+    .beatpicker .main-nav .next1 {
+        right: 0 !important;
+        width: 9%;
+        color: #fff;
+        font-size: 16px;
+    }
+
+    .beatpicker .main-nav .prev1:hover {
+        left: 0 !important;
+        width: 14%;
+        padding: 0px 10px;
+        color: #fff;
+        font-size: 20px;
+        cursor: pointer !important;
+    }
+
+    .beatpicker .main-nav .next1:hover {
+        right: 0 !important;
+        width: 9%;
+        color: #fff;
+        font-size: 20px;
+        cursor: pointer !important;
+    }
+
+    #divImages .remove {
+        background: url(/Content/img/remove-icon.png) no-repeat 0px 0px #fff;
+        float: left;
+        font-size: 0 !important;
+        width: 23px !important;
+        padding: 2px 4px;
+    }
+    /*Beatpicker Css End*/
+</style>
+
+<script src="~/Content/js/jquery-2.1.3.min.js"></script>
+<link href="~/Content/css/jquery.dataTables.css" rel="stylesheet" />
+<script src="~/Content/js/jquery.dataTables.js" language="jascript"></script>
+@*<link href="~/Content/assets/css/font-awesome.min.css" rel="stylesheet" />*@
+@*<link href="~/Content/bootstrap.min.css" rel="stylesheet" />*@
+@*<link href="~/Content/bootstrap.css" rel="stylesheet" />*@
+<script type="text/javascript" class="init">
+    $(document).ready(function () {
+        $('#tblData').DataTable({
+            dom: 'T<"clear">lfrtip',
+            "processing": true,
+            "serverSide": true,
+            "aaSorting": []
+        });
+        // alert("1");
+    });
+</script>
+
+@*@using (Html.BeginForm("StockBatchwise", "BatchAllotment", null, FormMethod.Post, new { id = "Form_" }))
+{*@
+<section class="right_side_main_part">
+    <div class="row-fluid">
+        <div class="box span11">
+            <div class="box-header">
+                <h2>
+                    <i class="icon-list-alt"></i>
+                    <span class="break"></span>
+                    ACTIVE BATCH IN SHOP (@ViewBag.ShopName)
+                </h2>
+            </div>
+            <div class="box-content">
+                <div>
+                    <img id=" imgproductimage" src="@Model.ElementAt(0).StockThumbPath" onerror="this.src = '/Content/Images/no_image.png'" style="width: 100px; height:100px;" alt=" eZeelo " />
+                    <b> @Model.ElementAt(0).ItemName </b>
+                </div>
+
+                <table id="tblData" class="table border-table display" width="100%">
+                    <thead>
+                        <tr>
+                            @*<th>Sr. No.</th>*@
+                            <th>Action</th>
+                            <th>Active Batch</th>
+                            <th>
+                                Batch
+                            </th>
+                            <th>MRP</th>
+                            <th style="text-align:center">
+                                PurchaseRate
+                                PerUnit
+                            </th>
+                            <th>Sale Rate</th>
+                            <th style="text-align:center">
+                                Purchased Qty
+                            </th>
+                            <th style="text-align:center">
+                                Available Qty
+                            </th>
+                            <th>
+                                InShop
+                            </th>
+                            <th style="text-align:center">
+                                Pending Qty
+                            </th>
+                            <th style="text-align:center">
+                                Placed Qty
+                            </th>
+                            <th style="text-align:center">ActualQty to Allot</th>
+                            <th style="text-align:center">
+                                Expiry Date
+                            </th>
+
+                            @*<th></th>*@
+                        </tr>
+                    </thead>
+                    @*@{
+                        var i = 1;
+                                    }*@
+                    @*@foreach (var item in Model)*@
+                    @for (int i = 0; i < @Model.Count(); i++)
+                    {
+                    <tr>
+                        @*<td style="text-align:center">
+                @i
+            @{
+            i = i + 1;
+            }
+        </td>*@
+                        <td>
+                            @Html.ActionLink("Apply", "ApplyActiveBatch", new { WarehouseStockID = Model.ElementAt(i).ID, ShopStockID = Model.ElementAt(i).ShopStockID, ReorderLevelID = ViewBag.WarehouseReorderLevelID }, new { id = "Apply_" + i, @class = "btn btn-small btn-default", onclick = "return confirm('Are you sure you wish to alot this Batch " + @Model.ElementAt(i).BatchCode + "?');" })
+                        </td>
+                        <td style="text-align:center">
+                            @Html.RadioButtonFor(model => Model.ElementAt(i).WarehouseStockID, Model.ElementAt(i).ID, new { @class = "rdo", @text = Model.ElementAt(i).isAllottedToShop, id = "rdo_" + i })
+                            @Html.HiddenFor(model => Model.ElementAt(i).ID)
+                            @Html.HiddenFor(model => Model.ElementAt(i).ShopStockID)
+                        </td>
+                        <td>
+                            @if (Model.ElementAt(i).isAllottedToShop == true)
+                            {
+                                <label class="pdsa-radiobutton btn btn-success active">
+                                    <span style="font-weight: bold; background-color: green; color: white"> @Html.DisplayFor(modelItem => Model.ElementAt(i).BatchCode)</span>
+                                </label>
+                            }
+                            else
+                            {
+                                <label class="pdsa-radiobutton btn btn-primary">
+                                    <span> @Html.DisplayFor(modelItem => Model.ElementAt(i).BatchCode)</span>
+                                </label>
+                            }
+                        </td>
+
+                        @*<td class="table-shopping-cart-img" style="text-align: left;">
+            <img id=" imgproductimage" src="@Model.ElementAt(i).StockThumbPath" onerror="this.src = '/Content/Images/no_image.png'" style="width: 50px; height:50px;" alt=" eZeelo " />
+        </td>
+        <td>
+            @Model.ElementAt(i).ItemName
+        </td>*@
+                        <td style="text-align: center">
+                            <span>@Html.DisplayFor(modelItem => Model.ElementAt(i).MRP) </span>
+                        </td>
+                        <td style="text-align: center">
+                            <span>@Html.DisplayFor(modelItem => Model.ElementAt(i).BuyRatePerUnit) </span>
+                        </td>
+                        <td style="text-align: center">
+                            <span>@Html.DisplayFor(modelItem => Model.ElementAt(i).SaleRatePerUnit) </span>
+                        </td>
+
+                        <td style="text-align:center">
+                            @Html.DisplayFor(modelItem => Model.ElementAt(i).InitialQuantity)
+                        </td>
+                        <td style="text-align:center">
+                            @Html.DisplayFor(modelItem => Model.ElementAt(i).AvailableQuantity)
+                        </td>
+                        <td style="text-align:center">
+                            @if (Model.ElementAt(i).isAllottedToShop == true)
+                            {
+                                @Html.DisplayFor(modelItem => Model.ElementAt(i).InShopQty)
+                            }
+                        </td>
+                        <td style="text-align:center">
+                            @Html.DisplayFor(modelItem => Model.ElementAt(i).PendingQty)
+                        </td>
+                        <td style="text-align:center">
+                            @Html.DisplayFor(modelItem => Model.ElementAt(i).PlacedQty)
+                        </td>
+                        <td style="text-align:center; font-weight:bold;color:green">
+                            @Html.DisplayFor(modelItem => Model.ElementAt(i).InStockQty)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => Model.ElementAt(i).ExpiryDate)
+                        </td>
+                        @*<td>
+            @Html.ActionLink("Allot to Shop", "ShopAllotment", new { ID = item.ID }, new { @class = "btn btn-small btn-success" })
+        </td>*@
+                    </tr>
+                    }
+                </table>
+                <br />
+                @Html.ActionLink("Back to Stock", "Stock", null, new { @class = "btn btn-default mrg-left mrg-top" })
+                @*<input type="submit" value="Save" class="btn btn-success mrg-left mrg-top" />*@
+            </div>
+        </div>
+    </div>
+    </section>
+
+
+    <script type="text/javascript">
+
+        $(document).ready(function () {
+            var table = document.getElementById('tblData');
+            var rowLength = table.rows.length;
+            //alert(rowLength);
+
+            for (var i = 0; i < rowLength; i++) {
+                $('.table #Apply_' + i).attr('onclick', 'javascript:return false');
+            }
+
+            $('.rdo').click(function (e) {
+                var id = e.target.id;
+                var idSplit = id.split('_');
+                var indexNumber = idSplit[1];
+                for (var i = 0; i < rowLength; i++) {
+                    if (i == indexNumber) {
+                        $('.table #Apply_' + indexNumber).attr('onclick', 'return confirm(' + "'" + 'Are you sure you wish to alot this Batch?' + "'" + ')');
+                        $('.table #Apply_' + indexNumber).attr('class', 'btn btn-small btn-success');
+                    }
+                    else {
+                        $('.table #Apply_' + i).attr('onclick', 'javascript:return false');
+                        $('.table #Apply_' + i).attr('class', 'btn btn-small btn-default');
+                    }
+                }
+            });
+        });
+
+    </script>

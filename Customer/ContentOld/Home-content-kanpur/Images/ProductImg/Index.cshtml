@@ -1,0 +1,830 @@
+﻿@{
+    Layout = "~/Views/Shared/_Layout11.cshtml";
+}
+<link href="~/Content/Home-content/themes/css/bootstrappage.css" rel="stylesheet" />
+<link href="~/Content/Home-content/themes/css/flexslider.css" rel="stylesheet" />
+<link href="~/Content/Home-content/themes/css/jquery.fancybox.css" rel="stylesheet" />
+<link href="~/Content/Home-content/themes/css/main.css" rel="stylesheet" />
+<script src="~/Content/Home-content/bootstrap/js/bootstrap.min.js"></script>
+<script src="~/Content/Home-content/bootstrap/js/bootstrap.js"></script>
+<link href="~/Content/Home-content/bootstrap/css/bootstrap-responsive.css" rel="stylesheet" />
+<link href="~/Content/Home-content/bootstrap/css/bootstrap.min.css" rel="stylesheet" />
+<link href="~/Content/Home-content/bootstrap/css/bootstrap-responsive.min.css" rel="stylesheet" />
+
+<script src="~/Content/js/jssor.js"></script>
+<script src="~/Content/js/jssor.slider.js"></script>
+<script>
+    jQuery(document).ready(function ($) {
+        var options = {
+            $AutoPlay: true,                                    //[Optional] Whether to auto play, to enable slideshow, this option must be set to true, default value is false
+            $AutoPlayInterval: 4000,                            //[Optional] Interval (in milliseconds) to go for next slide since the previous stopped if the slider is auto playing, default value is 3000
+            $PauseOnHover: 1,                                   //[Optional] Whether to pause when mouse over if a slider is auto playing, 0 no pause, 1 pause for desktop, 2 pause for touch device, 3 pause for desktop and touch device, 4 freeze for desktop, 8 freeze for touch device, 12 freeze for desktop and touch device, default value is 1
+
+            $ArrowKeyNavigation: true,   			            //[Optional] Allows keyboard (arrow key) navigation or not, default value is false
+            $SlideDuration: 800,                                //[Optional] Specifies default duration (swipe) for slide in milliseconds, default value is 500
+            $MinDragOffsetToSlide: 20,                          //[Optional] Minimum drag offset to trigger slide , default value is 20
+            //$SlideWidth: 600,                                 //[Optional] Width of every slide in pixels, default value is width of 'slides' container
+            //$SlideHeight: 300,                                //[Optional] Height of every slide in pixels, default value is height of 'slides' container
+            $SlideSpacing: 0, 					                //[Optional] Space between each slide in pixels, default value is 0
+            $DisplayPieces: 1,                                  //[Optional] Number of pieces to display (the slideshow would be disabled if the value is set to greater than 1), the default value is 1
+            $ParkingPosition: 0,                                //[Optional] The offset position to park slide (this options applys only when slideshow disabled), default value is 0.
+            $UISearchMode: 1,                                   //[Optional] The way (0 parellel, 1 recursive, default value is 1) to search UI components (slides container, loading screen, navigator container, arrow navigator container, thumbnail navigator container etc).
+            $PlayOrientation: 1,                                //[Optional] Orientation to play slide (for auto play, navigation), 1 horizental, 2 vertical, 5 horizental reverse, 6 vertical reverse, default value is 1
+            $DragOrientation: 1,                                //[Optional] Orientation to drag slide, 0 no drag, 1 horizental, 2 vertical, 3 either, default value is 1 (Note that the $DragOrientation should be the same as $PlayOrientation when $DisplayPieces is greater than 1, or parking position is not 0)
+
+            $ArrowNavigatorOptions: {                       //[Optional] Options to specify and enable arrow navigator or not
+                $Class: $JssorArrowNavigator$,              //[Requried] Class to create arrow navigator instance
+                $ChanceToShow: 1,                               //[Required] 0 Never, 1 Mouse Over, 2 Always
+                $AutoCenter: 2,                                 //[Optional] Auto center arrows in parent container, 0 No, 1 Horizontal, 2 Vertical, 3 Both, default value is 0
+                $Steps: 1                                       //[Optional] Steps to go for each navigation request, default value is 1
+            },
+
+            $ThumbnailNavigatorOptions: {
+                $Class: $JssorThumbnailNavigator$,              //[Required] Class to create thumbnail navigator instance
+                $ChanceToShow: 2,                               //[Required] 0 Never, 1 Mouse Over, 2 Always
+
+                $ActionMode: 1,                                 //[Optional] 0 None, 1 act by click, 2 act by mouse hover, 3 both, default value is 1
+                $AutoCenter: 0,                                 //[Optional] Auto center thumbnail items in the thumbnail navigator container, 0 None, 1 Horizontal, 2 Vertical, 3 Both, default value is 3
+                $Lanes: 1,                                      //[Optional] Specify lanes to arrange thumbnails, default value is 1
+                $SpacingX: 3,                                   //[Optional] Horizontal space between each thumbnail in pixel, default value is 0
+                $SpacingY: 3,                                   //[Optional] Vertical space between each thumbnail in pixel, default value is 0
+                $DisplayPieces: 9,                              //[Optional] Number of pieces to display, default value is 1
+                $ParkingPosition: 260,                          //[Optional] The offset position to park thumbnail
+                $Orientation: 1,                                //[Optional] Orientation to arrange thumbnails, 1 horizental, 2 vertical, default value is 1
+                $DisableDrag: false                            //[Optional] Disable drag or not, default value is false
+            }
+        };
+
+        var jssor_slider1 = new $JssorSlider$("slider1_container", options);
+
+        //responsive code begin
+        //you can remove responsive code if you don't want the slider scales while window resizes
+        function ScaleSlider() {
+            var bodyWidth = document.body.clientWidth;
+            if (bodyWidth)
+                jssor_slider1.$ScaleWidth(Math.min(bodyWidth, 1400));
+            else
+                window.setTimeout(ScaleSlider, 30);
+        }
+        ScaleSlider();
+
+        $(window).bind("load", ScaleSlider);
+        $(window).bind("resize", ScaleSlider);
+        $(window).bind("orientationchange", ScaleSlider);
+        //responsive code end
+    });
+</script>
+@*<script type="text/javascript">
+        $(document).ready(function () {
+            if ($(window).width() < 1400) {
+                $("#slider1_container").css('width', '1400px!important');
+            } else {
+            }
+        });
+    </script>*@
+<link href="~/Content/BannerCss/fractionslider.css" rel="stylesheet" />
+
+<style>
+    .dropdown-toggle {
+        position: relative;
+        cursor: pointer;
+        color: white;
+    }
+
+        .dropdown-toggle:hover {
+            position: relative;
+            cursor: pointer;
+            color: white;
+        }
+
+    .tile-area {
+        width: 100% !important;
+        height: auto;
+        position: relative;
+        padding: 25px 0 0 0;
+        overflow: hidden;
+        background: #16499a !important;
+    }
+
+    .product-box img {
+        width: 300px;
+        height: 300px;
+    }
+
+    .divheading {
+        color: black;
+        padding: 3px;
+        position: absolute;
+        z-index: 0;
+        top: 0;
+    }
+
+    .divmainctg {
+        color: #ffffff;
+        font-size: 20px;
+        line-height: 20px;
+        position: absolute;
+        top: 5px;
+        left: 0;
+    }
+
+    .divborder {
+        border: 1px solid rgba(128, 128, 128, 0.21);
+    }
+
+    body {
+        background-color: white;
+    }
+
+    .container {
+        width: 95%;
+    }
+
+    .containernew {
+        margin: 10px auto !important;
+    }
+
+    .firstdiv {
+        width: 146px;
+        height: 150px;
+        padding: 1px;
+        border: 1px solid rgba(128, 128, 128, 0.14);
+        float: left;
+        background: #E6BF8E;
+    }
+
+        .firstdiv img {
+            width: 145px;
+            height: 145px;
+            z-index: 1;
+        }
+
+        .firstdiv :hover {
+            border: 1px solid gray;
+        }
+
+    .Seconddiv {
+        width: 289px;
+        height: 150px;
+        margin: 1px;
+        padding: 1px;
+        border: 1px solid rgba(128, 128, 128, 0.14);
+        float: left;
+        background: #E6BF8E;
+    }
+
+        .Seconddiv img {
+            width: 295px;
+            height: 145px;
+            z-index: 1;
+        }
+
+        .Seconddiv :hover {
+            border: 1px solid gray;
+        }
+
+    .thirddiv {
+        width: 289px;
+        height: 303px;
+        padding: 1px;
+        border: 1px solid rgba(128, 128, 128, 0.14);
+        float: left;
+        background: #746B62;
+    }
+
+        .thirddiv img {
+            width: 292px;
+            height: 298px;
+            z-index: 1;
+        }
+
+        .thirddiv :hover {
+            border: 1px solid gray;
+        }
+
+    .fourdiv {
+        width: 150px;
+        height: 300px;
+        padding: 1px;
+        border: 1px solid rgba(128, 128, 128, 0.14);
+        float: left;
+    }
+
+        .fourdiv img {
+            width: 145px;
+            height: 295px;
+            z-index: 1;
+        }
+
+        .fourdiv :hover {
+            border: 1px solid gray;
+        }
+
+    .divfirst {
+        width: 292px;
+        height: 300px;
+        float: left;
+        margin-bottom: 30px;
+    }
+
+    .divsecond {
+        width: 300px;
+        height: 450px;
+        float: left;
+        margin-bottom: 30px;
+    }
+
+    .divthird {
+        width: 300px;
+        height: 600px;
+        float: left;
+        margin-bottom: 30px;
+    }
+
+    h5 {
+        margin-top: 0;
+        margin-left: 10px;
+        z-index: 2;
+        position: absolute;
+    }
+
+    .cat-decoDiv {
+        border: 1px solid #eaeaea;
+        padding: 10px 15px;
+        color: #FFFCF8;
+        font-size: 15px;
+        margin: 4px 0px;
+        border-radius: 3px 14px 0px 10px;
+        height: 40px;
+        width: 201px;
+        background-color: rgba(0, 0, 0, 0.42);
+        box-shadow: 0px -1px 0px #000;
+        text-align: center;
+    }
+
+    .cat-mainDiv {
+        position: absolute;
+        top: 110px;
+        width: 212px;
+        margin-left: 33px;
+    }
+
+    .cat-decoDiv a {
+        text-decoration: none;
+        color: #FFFCF8;
+        font-size: 15px;
+    }
+
+        .cat-decoDiv a:hover {
+            text-decoration: none;
+            color: #FFA500;
+            font-size: 15px;
+        }
+    /* entire container, keeps perspective */
+    .flip-container {
+        perspective: 1000;
+    }
+        /* flip the pane when hovered */
+        .flip-container:hover .flipper, .flip-container.hover .flipper {
+            transform: rotateY(180deg);
+        }
+
+    .flip-container, .front, .back {
+    }
+
+    /* flip speed goes here */
+    .flipper {
+        transition: 0.6s;
+        transform-style: preserve-3d;
+        position: relative;
+    }
+
+    /* hide back of pane during swap */
+    .front, .back {
+        backface-visibility: hidden;
+        position: absolute;
+        top: 0;
+        left: 0;
+    }
+
+    /* front pane, placed above back */
+    .front {
+        padding-left: 57px;
+        transform: rotateY(0deg);
+        padding-top: 7px;
+        font-size: 22px;
+        color: #5A3D23;
+    }
+
+    /* back, initially hidden pane */
+    .back {
+        background: /*url("../../Content/Images/4.jpg") no-repeat 0px 0px;*/ #ffd800;
+        transform: rotateY(180deg);
+    }
+
+    .productBox1 img {
+        border: 1px solid rgba(204, 204, 204, 0.72);
+    }
+
+    .divfirst a:hover {
+        text-decoration: none;
+        border: none;
+    }
+    #divheading h1 {
+        text-shadow: 0px 1px 1px #4d4d4d;
+        color: #222;
+        font: 20px 'ChunkFiveRegular';
+    }
+    .newoffertag {
+        background: url(../Images/newoffers1.png);
+        width: 70px;
+        height: 70px;
+        position: absolute;
+        color: red;
+        font-weight: 700;
+        font-size: 15px;
+        padding-top: 15px;
+        font-family:Calibri;
+        font-style:italic;
+        cursor:pointer;
+    }
+</style>
+<div class="container-body">
+    <div class="bannerMain">
+        <div class="slideWrap">
+            <!-- Jssor Slider Begin -->
+            <div id="slider1_container">
+                <!-- Loading Screen -->
+                <!-- Slides Container -->
+                <div u="slides" class="parentDiv">
+                    <div>
+                        <a href="http://www.gandhibagh.com/Product/Products?shopID=285&shopName=Raj%20Bhandar">
+                            <img src="~/Content/Home-content/Banner/ganesha.jpg" width="100%" style="position: absolute; top: 0px; left:0px;" />
+                        </a>
+                        <img u="thumb" src="~/Content/Home-content/Banner/ganesha.jpg" />
+                        </div>
+                    <div>
+
+                        <img src="~/Content/Home-content/Banner/all_product.jpg" width="100%" style="position: absolute; top: 0px; left:0px;" />
+                        <img u="thumb" src="~/Content/Home-content/Banner/all_product.jpg" />
+                    </div>
+                    <div>
+                        <img src="~/Content/Home-content/Banner/Fruit_Basket.jpg" width="100%" style="position: absolute; top: 0px; left:0px;" />
+                        <img u="thumb" src="~/Content/Home-content/Banner/Fruit_Basket.jpg" />
+                    </div>
+                    <div>
+                        <img src="~/Content/Home-content/Banner/fruit_banner.jpg" width="100%" style="position: absolute; top: 0px; left:0px;" />
+                        <img u="thumb" src="~/Content/Home-content/Banner/fruit_bannerThumb.jpg" />
+                    </div>
+                    <div>
+                        <img src="~/Content/Home-content/Banner/new_groceries.jpg" width="100%" style="position: absolute; top: 0px; left:0px;" />
+                        <img u="thumb" src="~/Content/Home-content/Banner/new_groceriesThumb.jpg" />
+                    </div>
+                    <div u="thumbnavigator" class="jssort04">
+                        <!-- Thumbnail Item Skin Begin -->
+                        <div u="slides" class="thumbDiv">
+                            <div u="prototype" class="p">
+                                <div class=w><div u="thumbnailtemplate" class="t"></div></div>
+                                <div class=c></div>
+                            </div>
+                        </div>
+                        <!-- Thumbnail Item Skin End -->
+                    </div>
+                </div>
+
+                <!--#region Arrow Navigator Skin Begin -->
+                <!-- Arrow Left -->
+                <span u="arrowleft" class="jssora07l" style="top: 123px; left: 8px;">
+                </span>
+                <!-- Arrow Right -->
+                <span u="arrowright" class="jssora07r" style="top: 123px; right: 8px;">
+                </span>
+                <!--#endregion Arrow Navigator Skin End -->
+                <!--#region Thumbnail Navigator Skin Begin -->
+                <!-- thumbnail navigator container -->
+                <!--#endregion Thumbnail Navigator Skin End -->
+
+            </div>
+            <!-- Jssor Slider End -->
+        </div>
+    </div>
+</div>
+@*<img src="~/Content/Home-content/Banner/strip.png" style="width: 100%; margin-top: 5px;" />*@
+<div class="container containernew" id="page">
+    
+    <div class="span12">
+        <div class="row">
+            <div class="span12">
+                <h4 class="title">
+                    <span class="pull-left"><span class="text"><span class="line">Offers<strong> For you</strong></span></span></span>
+                </h4>
+                <div style="width:100%">
+
+                    <div class="divfirst">
+                        <div class="thirddiv">
+                            <a href="~/PreviewItem/Index?itemId=1582">
+                                <img src="~/Content/Home-content/Images/offerImg/Sweet%20Lime(Mosambi)%201%20kg.jpg" />
+                            </a>
+                        </div>
+                    </div>
+                    <div class="divfirst">
+                        <div class="thirddiv">
+                            <a href="~/PreviewItem/Index?itemId=13752">
+                                <img src="~/Content/Home-content/Images/offerImg/bulb.jpg" />
+                            </a>
+                        </div>
+                    </div>
+                    <div class="divfirst">
+                        <div class="thirddiv">
+                            <a href="~/PreviewItem/Index?itemId=5189">
+                                <img src="~/Content/Home-content/Images/offerImg/gadget_den.jpg" />
+                            </a>
+                        </div>
+                    </div>
+                    <div class="divfirst">
+                        <div class="thirddiv">
+                            <a href="~/PreviewItem/Index?itemId=19312">
+                                <img src="~/Content/Home-content/Images/offerImg/ved_footwear.jpg" />
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="span12">
+        <div class="row">
+            <div class="span12">
+                <h4 class="title">
+                    <span class="pull-left"><span class="text"><span class="line">Best<strong> Offers</strong></span></span></span>
+                    <span class="pull-right">
+                        <a class="left button" href="#myCarousel-2" data-slide="prev"></a><a class="right button" href="#myCarousel-2" data-slide="next"></a>
+                    </span>
+                </h4>
+                <div id="myCarousel-2" class="myCarousel carousel slide">
+                    <div class="carousel-inner">
+                        <div class="item">
+                            <ul class="thumbnails">
+                                <li class="span3">
+                                    <div class="product-box">
+                                        <span class="sale_tag"></span>
+                                        <p>
+                                            <a href="~/PreviewItem/Index?itemId=1582">
+                                                <img src="~/Content/Home-content/Images/ProductImg/5-min.jpg" />
+                                            </a>
+                                        </p>
+                                        <a href="~/PreviewItem/Index?itemId=1582" class="title">Sweet Lime(Mosambi) </a><br>
+                                        <a href="~/PreviewItem/Index?itemId=1582" class="category">At Only </a>
+                                        <p class="price">Rs.30/- (1kg)</p>
+                                    </div>
+                                </li>
+                                <li class="span3">
+                                    <div class="product-box">
+                                        <span class="sale_tag"></span>
+                                        <p>
+                                            <a href="~/PreviewItem/Index?itemId=13812">
+                                                <img src="~/Content/Home-content/Images/ProductImg/6-min.jpg" />
+                                            </a>
+                                        </p>
+                                        <a href="~/PreviewItem/Index?itemId=13812" class="title">Bajara (Millet)</a><br>
+                                        <a href="~/PreviewItem/Index?itemId=13812" class="category"> Only at </a>
+                                        <p class="price">Rs.23/- (1kg)</p>
+                                    </div>
+                                </li>
+                                <li class="span3">
+                                    <div class="product-box">
+                                        <p>
+                                            <a href="~/PreviewItem/Index?itemId=7480">
+                                                <img src="~/Content/Home-content/Images/ProductImg/7-min.jpg" />
+                                            </a>
+                                        </p>
+                                        <a href="~/PreviewItem/Index?itemId=7480" class="title">Apple Shelf -1</a><br>
+                                        <a href="~/PreviewItem/Index?itemId=7480" class="category">At Only</a>
+                                        <p class="price">Rs.900/-</p>
+                                    </div>
+                                </li>
+                                <li class="span3">
+                                    <div class="product-box">
+                                        <p>
+                                            <a href="~/PreviewItem/Index?itemId=9646">
+                                                <img src="~/Content/Home-content/Images/ProductImg/8-min.jpg" />
+                                            </a>
+                                        </p>
+                                        <a href="~/PreviewItem/Index?itemId=9646" class="title">Assure Natural Lather </a><br>
+                                        <a href="~/PreviewItem/Index?itemId=9646" class="category">(Shaving Gel-50g)</a>
+                                        <p class="price">Rs.85/- </p>
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="item active">
+                            <ul class="thumbnails">
+                                <li class="span3">
+                                    <div class="product-box">
+                                        <p>
+                                            <a href="~/PreviewItem/Index?itemId=24398">
+                                                @*<span class="newoffertag" style="">30 % <br />OFF</span>*@
+                                                <img src="~/Content/Home-content/Images/ProductImg/1-min.jpg" />
+                                            </a>
+                                        </p>
+
+                                        <a href="~/PreviewItem/Index?itemId=24398" class="title">Kissan Mix Fruit Jam</a><br>
+                                        <a href="~/PreviewItem/Index?itemId=24398" class="category">At Only</a>
+                                        <p class="price">Rs.41/- </p>
+                                    </div>
+                                </li>
+                                <li class="span3">
+                                    <div class="product-box">
+                                        <span class="sale_tag"></span>
+                                        <p>
+                                            <a href="~/PreviewItem/Index?itemId=1369">
+                                                @*<span class="newoffertag" style="">40 % <br />OFF</span>*@
+                                                <img src="~/Content/Home-content/Images/ProductImg/2-min.jpg" />
+                                            </a>
+                                        </p>
+                                        <a href="~/PreviewItem/Index?itemId=1369" class="title">Chocolate Cake 019 </a><br>
+                                        <a href="~/PreviewItem/Index?itemId=1369" class="category"> At Only</a>
+                                        <p class="price">Rs.580/-</p>
+                                    </div>
+                                </li>
+                                <li class="span3">
+                                    <div class="product-box">
+                                        <p>
+                                            <a href="~/PreviewItem/Index?itemId=17480">
+                                                <span class="newoffertag" style="">50 % <br />OFF</span>
+                                                <img src="~/Content/Home-content/Images/ProductImg/3-min.jpg" />
+                                            </a>
+                                        </p>
+                                        <a href="~/PreviewItem/Index?itemId=17480" class="title">Chicken Tikka Sizzler</a><br>
+                                        <a href="~/PreviewItem/Index?itemId=17480" class="category">Only at </a>
+                                        <p class="price">Rs.350/-</p>
+                                    </div>
+                                </li>
+                                <li class="span3">
+                                    <div class="product-box">
+                                        <p>
+                                            <a href="~/PreviewItem/Index?itemId=1929">
+                                                <img src="~/Content/Home-content/Images/ProductImg/4-min.jpg" />
+                                            </a>
+                                        </p>
+                                        <a href="~/PreviewItem/Index?itemId=1929" class="title">Lady Finger (Bhindi)</a><br>
+                                        <a href="~/PreviewItem/Index?itemId=1929" class="category">At Only</a>
+                                        <p class="price">Rs.10/- (250gm)</p>
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="span12">
+                <h4 class="title">
+                    <span class="pull-left">@*<span class="text"><span class="line">Daily<strong> Needs</strong></span></span>*@</span>
+                    <span class="pull-right">
+                        <a class="left button" href="#myCarousel" data-slide="prev"></a><a class="right button" href="#myCarousel" data-slide="next"></a>
+                    </span>
+                </h4>
+                <div id="myCarousel" class="myCarousel carousel slide">
+                    <div class="carousel-inner">
+                        <div class="item">
+                            <ul class="thumbnails">
+                                <li class="span3">
+                                    <div class="product-box">
+                                        <span class="sale_tag"></span>
+                                        <p>
+                                            <a href="~/PreviewItem/Index?itemId=22454">
+                                                <img src="~/Content/Home-content/Images/ProductImg/13-min.jpg" />
+                                            </a>
+                                        </p>
+                                        <a href="~/PreviewItem/Index?itemId=22454" class="title">Kundan Earring No.0011</a><br>
+                                        <a href="~/PreviewItem/Index?itemId=22454" class="category">At Only</a>
+                                        <p class="price">Rs.250/-</p>
+                                    </div>
+                                </li>
+                                <li class="span3">
+                                    <div class="product-box">
+                                        <span class="sale_tag"></span>
+                                        <p>
+                                            <a href="~/PreviewItem/Index?itemId=18317">
+                                                <img src="~/Content/Home-content/Images/ProductImg/14-min.jpg" />
+                                            </a>
+                                        </p>
+                                        <a href="~/PreviewItem/Index?itemId=18317" class="title">Awesum One Wallet</a><br>
+                                        <a href="~/PreviewItem/Index?itemId=18317" class="category">At Only</a>
+                                        <p class="price">Rs.270/-</p>
+                                    </div>
+                                </li>
+                                <li class="span3">
+                                    <div class="product-box">
+                                        <p>
+                                            <a href="~/PreviewItem/Index?itemId=2323">
+                                                <img src="~/Content/Home-content/Images/ProductImg/15-min.jpg" />
+                                            </a>
+                                        </p>
+                                        <a href="~/PreviewItem/Index?itemId=2323" class="title">Asian Sport Shoe</a><br>
+                                        <a href="~/PreviewItem/Index?itemId=2323" class="category">At Only</a>
+                                        <p class="price">Rs.899/-</p>
+                                    </div>
+                                </li>
+                                <li class="span3">
+                                    <div class="product-box">
+                                        <p>
+                                            <a href="~/PreviewItem/Index?itemId=16094">
+                                                <img src="~/Content/Home-content/Images/ProductImg/16-min.jpg" />
+                                            </a>
+                                        </p>
+                                        <a href="~/PreviewItem/Index?itemId=16094" class="title">Bajaj Majesty HB 04 </a><br>
+                                        <a href="~/PreviewItem/Index?itemId=16094" class="category">Hand Blender</a>
+                                        <p class="price">Rs.931/-</p>
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="item active">
+                            <ul class="thumbnails">
+                                <li class="span3">
+                                    <div class="product-box">
+                                        <p>
+                                            <a href="~/PreviewItem/Index?itemId=1427">
+                                                <img src="~/Content/Home-content/Images/ProductImg/10-min.jpg" />
+                                            </a>
+                                        </p>
+                                        <a href="~/PreviewItem/Index?itemId=1427" class="title">Charu Boutique Sky Blue Denim </a><br>
+                                        <a href="~/PreviewItem/Index?itemId=1427" class="category">Long Cotton Kurti</a>
+                                        <p class="price">Rs.599/-</p>
+                                    </div>
+                                </li>
+                                <li class="span3">
+                                    <div class="product-box">
+                                        <span class="sale_tag"></span>
+                                        <p>
+                                            <a href="~/PreviewItem/Index?itemId=906">
+                                                <img src="~/Content/Home-content/Images/ProductImg/9-min.jpg" />
+                                            </a>
+                                        </p>
+                                        <a href="~/PreviewItem/Index?itemId=906" class="title">Fastrack P222BR2 Sunglasses</a><br>
+                                        <a href="~/PreviewItem/Index?itemId=906" class="category">At Only</a>
+                                        <p class="price">Rs.850/-</p>
+                                    </div>
+                                </li>
+                                <li class="span3">
+                                    <div class="product-box">
+                                        <p>
+                                            <a href="~/PreviewItem/Index?itemId=23614">
+                                                <img src="~/Content/Home-content/Images/ProductImg/11-min.jpg" />
+                                            </a>
+                                        </p>
+                                        <a href="~/PreviewItem/Index?itemId=23614" class="title">Lakme Face Flawless Matte Compact Almond</a><br>
+                                        <a href="~/PreviewItem/Index?itemId=23614" class="category"></a>
+                                        <p class="price">Rs.375/-</p>
+                                    </div>
+                                </li>
+                                <li class="span3">
+                                    <div class="product-box">
+                                        <p>
+                                            <a href="~/PreviewItem/Index?itemId=25124">
+                                                <img src="~/Content/Home-content/Images/ProductImg/12-min.jpg" />
+                                            </a>
+                                        </p>
+                                        @*<a href="~/Product/Products?parentCategoryId=940&item=dal" class="title">24 Mantra Bengalgram Dal </a><br>
+                                            <a href="~/Product/Products?parentCategoryId=940&item=dal" class="category">1Kg</a>*@
+                                        <a href="~/PreviewItem/Index?itemId=25124" class="title">Red Photo Frame 064</a><br>
+                                        <a href="~/PreviewItem/Index?itemId=25124" class="category">At Only</a>
+                                        <p class="price">Rs.271/-</p>
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="span12">
+                <h4 class="title">
+                    <span class="pull-left"><span class="text">@*<span class="line">home<strong> appliances</strong></span>*@</span></span>
+                    <span class="pull-right">
+                        <a class="left button" href="#mycarousel-2" data-slide="prev"></a><a class="right button" href="#mycarousel-2" data-slide="next"></a>
+                    </span>
+                </h4>
+                <div id="mycarousel-2" class="mycarousel carousel slide">
+                    <div class="carousel-inner">
+                        <div class="item">
+                            <ul class="thumbnails">
+                                <li class="span3">
+                                    <div class="product-box">
+                                        <span class="sale_tag"></span>
+                                        <p>
+                                            <a href="~/PreviewItem/Index?itemId=15907">
+                                                <img src="~/Content/Home-content/Images/ProductImg/21-min.jpg" />
+                                            </a>
+                                        </p>
+                                        <a href="~/PreviewItem/Index?itemId=15907" class="title">Toy Kraft 39496</a><br>
+                                        <a href="~/PreviewItem/Index?itemId=15907" class="category">Wooden Rag Dolls</a>
+                                        <p class="price">Rs.449/-</p>
+                                    </div>
+                                </li>
+                                <li class="span3">
+                                    <div class="product-box">
+                                        <span class="sale_tag"></span>
+                                        <p>
+                                            <a href="~/PreviewItem/Index?itemId=18291">
+                                                <img src="~/Content/Home-content/Images/ProductImg/23-min.jpg" />
+                                            </a>
+                                        </p>
+                                        <a href="~/PreviewItem/Index?itemId=18291" class="title">iball Slide Wq32 </a><br>
+                                        <a href="~/PreviewItem/Index?itemId=18291" class="category">Wifi+3G Tablet</a>
+                                        <p class="price">Rs.10900/-</p>
+                                    </div>
+                                </li>
+                                <li class="span3">
+                                    <div class="product-box">
+                                        <span class="sale_tag"></span>
+                                        <p>
+                                            <a href="~/PreviewItem/Index?itemId=6136">
+                                                <img src="~/Content/Home-content/Images/ProductImg/22-min.jpg" />
+                                            </a>
+                                        </p>
+                                        <a href="~/PreviewItem/Index?itemId=6136" class="title">Milton Legend Thermosteel </a><br>
+                                        <a href="~/PreviewItem/Index?itemId=6136" class="category">Lunch Boxwith 3 Containers</a>
+                                        <p class="price">Rs.642/-</p>
+                                    </div>
+                                </li>
+                                <li class="span3">
+                                    <div class="product-box">
+                                        <span class="sale_tag"></span>
+                                        <p>
+                                            <a href="~/PreviewItem/Index?itemId=17742">
+                                                <img src="~/Content/Home-content/Images/ProductImg/24-min.jpg" />
+                                            </a>
+                                        </p>
+                                        <a href="~/PreviewItem/Index?itemId=17742" class="title">System Analysis And Design </a><br>
+                                        <a href="~/PreviewItem/Index?itemId=17742" class="category">By Preeti Gupta</a>
+                                        <p class="price">Rs.375/-</p>
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="item active">
+                            <ul class="thumbnails">
+                                <li class="span3">
+                                    <div class="product-box">
+                                        <p>
+                                            <a href="~/PreviewItem/Index?itemId=3008">
+                                                <img src="~/Content/Home-content/Images/ProductImg/17-min.jpg" />
+                                            </a>
+                                        </p>
+                                        <a href="~/PreviewItem/Index?itemId=3008" class="title">Back Panel Cover for Samsung </a><br>
+                                        <a href="~/PreviewItem/Index?itemId=3008" class="category">Galaxy Grand 2 G7102 (Gold)</a>
+                                        <p class="price">Rs.350/-</p>
+                                    </div>
+                                </li>
+                                <li class="span3">
+                                    <div class="product-box">
+                                        <span class="sale_tag"></span>
+                                        <p>
+                                            <a href="~/PreviewItem/Index?itemId=10809">
+                                                <img src="~/Content/Home-content/Images/ProductImg/18-min.jpg" />
+                                            </a>
+                                        </p>
+                                        <a href="~/PreviewItem/Index?itemId=10809" class="title">BPL Rechargeable </a><br>
+                                        <a href="~/PreviewItem/Index?itemId=10809" class="category">FL Lantern L650</a>
+                                        <p class="price">Rs.1100/-</p>
+                                    </div>
+                                </li>
+                                <li class="span3">
+                                    <div class="product-box">
+                                        <p>
+                                            <a href="~/PreviewItem/Index?itemId=10842">
+                                                <img src="~/Content/Home-content/Images/ProductImg/19-min.jpg" />
+                                            </a>
+                                        </p>
+                                        <a href="~/PreviewItem/Index?itemId=10842" class="title">Prestige 3 Ltrs Nakshatra Plus </a><br>
+                                        <a href="~/PreviewItem/Index?itemId=10842" class="category">HA Pressure Handi</a>
+                                        <p class="price">Rs.1575/-</p>
+                                    </div>
+                                </li>
+                                <li class="span3">
+                                    <div class="product-box">
+                                        <p>
+                                            <a href="~/PreviewItem/Index?itemId=12574">
+                                                <img src="~/Content/Home-content/Images/ProductImg/20-min.jpg" />
+                                            </a>
+                                        </p>
+                                        <a href="~/PreviewItem/Index?itemId=12574" class="title">LG 22LB454A 55 cm (22) HD </a><br>
+                                        <a href="~/PreviewItem/Index?itemId=12574" class="category">Ready LED Television</a>
+                                        <p class="price">Rs.12300/-</p>
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        </div>
+</div>
+<br />

@@ -1,0 +1,98 @@
+﻿@model ModelLayer.Models.CategoryDimension
+
+@{
+    ViewBag.Title = "Edit";
+}
+
+
+
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+  <div id="content" class="span10">
+<ul class="breadcrumb">
+        <li>
+         
+            <a href="index.html">CategoryDimension</a>
+          
+        </li>
+      
+    </ul>
+        <div class="row-fluid">
+            <div class="box span12">
+                <div class="box-header">
+                    <h2><i class="halflings-icon edit"></i><span class="break"></span>Category Dimension/Edit</h2>
+
+                </div>
+                <div class="box-content">
+                    <div class="form-horizontal">
+                        @if (ViewBag.Messaage != null)
+                        {
+                            @Html.Label("Messaage", (string)ViewBag.Messaage, new { @class = "deleteMsg" })
+                        }
+                        else
+                        {
+                            @Html.Label("Messaage", "", new { @class = "deleteMsg" })
+                        }
+                        @Html.ValidationSummary(true)
+                        @Html.HiddenFor(model => model.ID)
+                        <fieldset>
+                            <div class="control-group">
+                                @Html.LabelFor(model => model.CategoryID, "CategoryID", new { @class = "control-label col-md-2" })
+                                <div class="controls">
+                                    @Html.DropDownList("CategoryID", String.Empty)
+                                    @Html.ValidationMessageFor(model => model.CategoryID)
+                                </div>
+                            </div>
+
+                            <div class="control-group">
+                                @Html.LabelFor(model => model.DimensionID, "DimensionID", new { @class = "control-label col-md-2" })
+                                <div class="controls">
+                                    @Html.DropDownList("DimensionID", String.Empty)
+                                    @Html.ValidationMessageFor(model => model.DimensionID)
+                                </div>
+                            </div>
+
+                            @*<div class="control-group">
+                                @Html.LabelFor(model => model.IsActive, new { @class = "control-label col-md-2" })
+                                <div class="controls">
+                                    @Html.EditorFor(model => model.IsActive)
+                                    @Html.ValidationMessageFor(model => model.IsActive)
+                                </div>
+                            </div>*@
+                            <div class="control-group">
+
+                                <div class="controls">
+                                    <label class="checkbox">
+                                        <div id="uniform-optionsCheckbox2" class="checker">
+                                        <span>
+                                           @Html.EditorFor(model => model.IsActive)
+                                           @Html.ValidationMessageFor(model => model.IsActive)
+                                         </span></div>
+                                        @Html.LabelFor(model => model.IsActive, new { @class = "CheckBoxMargin" })
+                                    </label>
+                                </div>
+                            </div>
+
+
+
+                            <div class="form-actions">
+                                <div class="col-md-offset-2 col-md-10">
+                                    <input type="submit" value="Save" class="btn btn-primary" />
+                                    @Html.ActionLink("Back to List", "Index", null, new { @class="btn"})
+                                </div>
+                            </div>
+                        </fieldset>
+                    </div>
+                </div>
+            </div>
+        </div>
+       
+
+       
+    </div>
+}
+    @section Scripts {
+        @Scripts.Render("~/bundles/jqueryval")
+    }

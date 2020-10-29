@@ -1,0 +1,66 @@
+﻿@model ModelLayer.Models.MailReceiver
+
+@{
+    ViewBag.Title = "DisableMailReceiver";
+}
+<script src="~/Scripts/jquery-1.10.2.min.js"></script>
+<script>
+    $(document).ready(function () {
+        $("#EmailID").attr("disabled", "disbled");
+    });
+</script>
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+    <div class="span10" id="content">
+        <ul class="breadcrumb">
+            <li>
+                <i class="icon-home"></i>
+                @Html.ActionLink("Home", "MailReceiver")
+                <i class="icon-angle-right"></i>
+            </li>
+            <li><a href="#">Remove EMail ID</a></li>
+        </ul>
+        <div class="row-fluid">
+            <div class="box span6">
+                <div class="box-header">
+                    <h2><i class="halflings-icon user"></i><span class="break"></span>Diasable EmailID</h2>
+
+                </div>
+                <div class="box-content">
+                    <div class="form-horizontal">                      
+                        @Html.ValidationSummary(true)
+                        @Html.HiddenFor(model => model.ID)
+
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.EmailID, new { @class = "control-label col-md-2" })
+                            <div class="col-md-10">
+                                @Html.TextBoxFor(model => model.EmailID, new { })
+                                @Html.ValidationMessageFor(model => model.EmailID)
+                            </div>
+                        </div>
+
+                        <div class="form-actions">
+                            <div class="col-md-offset-2 col-md-10">
+                                <input type="submit" value="Remove" class="btn btn-danger" />
+                                @Html.ActionLink("Back to List", "MailReceiver", string.Empty, new { @class = "btn " })
+                            </div>                            
+                        </div>
+                       
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+}
+
+<div>
+    @Html.ActionLink("Back to List", "MailReceiver")
+</div>
+
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}

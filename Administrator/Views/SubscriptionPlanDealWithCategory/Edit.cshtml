@@ -1,0 +1,91 @@
+﻿@model ModelLayer.Models.SubscriptionPlanDealWithCategory
+
+@{
+    ViewBag.Title = "Edit";
+}
+<div id="content" class="span10">
+    <ul class="breadcrumb">
+        <li>
+            <a href="#">Subscription Plan Deal With Category</a>
+        </li>
+    </ul>
+    <div class="row-fluid">
+        <div class="box span12">
+            <div class="box-header">
+                <h2><i class="icon-edit"></i><span class="break"></span>Edit</h2>
+            </div>
+            <div class="box-content">
+                
+                @using (Html.BeginForm())
+                {
+                    @Html.AntiForgeryToken()
+
+                    <div class="form-horizontal">
+                        
+                        @Html.ValidationSummary(true)
+                        @Html.HiddenFor(model => model.ID)
+
+                        <div class="control-group">
+                            @Html.LabelFor(model => model.SubscriptionPlanID, "SubscriptionPlanID", new { @class = "control-label" })
+                            <div class="controls">
+                                @Html.DropDownList("SubscriptionPlanID", String.Empty)
+                                @Html.ValidationMessageFor(model => model.SubscriptionPlanID)
+                            </div>
+                        </div>
+
+                        <div class="control-group">
+                            @Html.LabelFor(model => model.CategoryID, new { @class = "control-label" })
+                            <div class="controls">
+                                @*@Html.EditorFor(model => model.CategoryID)*@
+                                @Html.DropDownList("CategoryID", String.Empty)
+                                @Html.ValidationMessageFor(model => model.CategoryID)
+                            </div>
+                        </div>
+
+                        <div class="control-group">
+                            @Html.LabelFor(model => model.MinimumAmount, new { @class = "control-label" })
+                            <div class="controls">
+                                @Html.EditorFor(model => model.MinimumAmount)
+                                @Html.ValidationMessageFor(model => model.MinimumAmount)
+                            </div>
+                        </div>
+
+                        <div class="control-group">
+                            @Html.LabelFor(model => model.DiscountInRs, new { @class = "control-label" })
+                            <div class="controls">
+                                @Html.EditorFor(model => model.DiscountInRs)
+                                @Html.ValidationMessageFor(model => model.DiscountInRs)
+                            </div>
+                        </div>
+
+                        <div class="control-group">
+                            @Html.LabelFor(model => model.DiscountInPer, new { @class = "control-label" })
+                            <div class="controls">
+                                @Html.EditorFor(model => model.DiscountInPer)
+                                @Html.ValidationMessageFor(model => model.DiscountInPer)
+                            </div>
+                        </div>
+
+                        <div class="control-group">
+                            @Html.LabelFor(model => model.IsActive, new { @class = "control-label" })
+                            <div class="controls">
+                                @Html.EditorFor(model => model.IsActive)
+                                @Html.ValidationMessageFor(model => model.IsActive)
+                            </div>
+                        </div>
+
+                        <div class="form-actions">
+                                <input type="submit" value="Save" class="btn btn-success" />
+                            @Html.ActionLink("Back to List", "Index", null, new { @class = "btn" })
+                        </div>
+                    </div>
+                }
+
+
+                @section Scripts {
+                    @Scripts.Render("~/bundles/jqueryval")
+                }
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,79 @@
+﻿@model List<ModelLayer.Models.MarginDivision>
+
+<style>
+    .box.span12.right_side_up_part .box-content table.table.border-table.display tbody tr td input {
+        border-radius: 5px !important;
+    }
+</style>
+<section class="right_side_main_part">
+    <div id="content" class="span10" style="min-height: 403px;">
+        @using (Html.BeginForm("SaveMarginDivision", "Warehouses", FormMethod.Post))
+        {
+            <div class="content">
+
+                <p>
+                    <input type="submit" value="Save" class="btn btn-success" />
+                </p>
+                <div class="row-fluid">
+                    <div class="box span12 right_side_up_part">
+                        <div class="box-header">
+                            <h2>
+                                <i class="icon-list-alt"></i>
+                                <span class="break"></span>
+                                Ezeelo Margin Division List
+                            </h2>
+                        </div>
+                        <div class="box-content">
+                            <center>
+                                <span id="lblmsg" style="color:#bc0707;font-weight:bold"> *Sum of Margin in % value should be 100.</span>
+                            </center>
+                            <table class="table border-table display">
+                                <tr>
+                                    <th>
+                                        Code
+                                    </th>
+                                    <th>
+                                        MarginFor
+                                    </th>
+                                    <th>
+                                        Margin %
+                                    </th>
+
+                                </tr>
+
+                                @for (var i = 0; i < Model.Count; i++)
+                                {
+                                    <tr>
+                                        <td>
+                                            @Html.DisplayFor(model => model[i].Code)
+                                            @Html.HiddenFor(model => model[i].Code)
+                                            @Html.HiddenFor(model => model[i].ID)
+                                        </td>
+                                        <td>
+                                            @Html.TextBoxFor(model => model[i].MarginFor, new { style = "width:200px" })
+                                        </td>
+                                        <td style="">
+                                            @Html.TextBoxFor(model => model[i].MarginInPercentage, new { style = "width:40px;text-align:right;", onkeyup = "if (/\\D/g.test(this.value)) this.value = this.value.replace(/\\D/g,'')" })
+                                        </td>
+
+                                    </tr>
+                                }
+
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+
+</section>
+
+<script>
+    $(document).ready(function () {
+        if ('@ViewBag.ErrorMsg' != '') {
+            $("#lblmsg").addClass('animated infinite flash');
+        }
+       
+    })
+</script>

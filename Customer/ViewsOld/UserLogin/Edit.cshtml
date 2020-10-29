@@ -1,0 +1,118 @@
+﻿@*-----------------------------------------------------------------------
+    <copyright file="Edit.cshtml" company="NSP Futuretech Pvt. Ltd.">
+      Copyright (c) NSP Futuretech Pvt. Ltd. All rights reserved.
+
+    </copyright>
+     <author>Gaurav Dixit</author>
+    -----------------------------------------------------------------------*@
+
+@model ModelLayer.Models.ViewModel.ChangePasswordViewModel
+
+@{
+    ViewBag.Title = "eZeelo: Buy Online Electronics, Jewellaries, cloths, collectibles";
+    string cityName = "";
+    int franchiseID = 0;////added
+    if (Request.Cookies["CityCookie"] != null && Request.Cookies["CityCookie"].Value != "")
+    {
+        cityName = Request.Cookies["CityCookie"].Value.Split('$')[1].ToLower();
+        franchiseID = Convert.ToInt32(Request.Cookies["CityCookie"].Value.Split('$')[2]);////added
+    }
+}
+<style>
+    .streamer {
+        position: relative;
+        display: block;
+        width: 16%;
+        overflow: hidden;
+        float: left;
+    }
+
+    .neweditdiv {
+        width: 82%;
+        float: left;
+        min-height: 450px !important;
+    }
+
+    .btncolor {
+        background-color: #60a917 !important;
+        color: white !important;
+    }
+
+    .atagelink {
+        position: fixed !important;
+        margin-top: -38px;
+        z-index: 10;
+        background-color: #EFEFEF;
+        color: white !important;
+    }
+
+    .ahomelink {
+        background-image: url(/Content/Images/arrowright.png) !important;
+        padding-bottom: 0px;
+        float: left;
+        background-position: right center;
+        background-repeat: no-repeat;
+        padding-right: 24px;
+        padding-top: 0px;
+        padding-left: 2px;
+        color: #000 !important;
+    }
+
+    #navbar {
+        left: 350px;
+    }
+</style>
+<div id="navbar">
+    <ol class="breadcrumb page-breadcrumb">
+        <li>
+            @Html.RouteLink("Home", "Home", new { city = cityName, franchiseId = franchiseID })
+        </li>
+        <li>@Html.RouteLink("My Account", "CustomerOrder/myorders", new { city = cityName, franchiseId = franchiseID })</li>
+        <li class="active">Change Password</li>
+    </ol>
+</div>
+@Html.Partial("_CustomerDashboardMenu")
+<div class="gap"></div>
+<div class="row box" data-gutter="15">
+    @using (Html.BeginForm())
+    {
+        @Html.AntiForgeryToken()
+
+        if (TempData["Title"] != null)
+        {
+            <div class="breadcrumbs dark" style="color:red;">
+                @TempData["Title"]
+            </div>
+        }
+        <div class="col-md-12">
+            <h3>Change Password</h3>
+            <div class="col-md-6">
+                @Html.HiddenFor(model => model.ID)
+                @if (Request.QueryString["pUserLoginID"] == null)
+                {
+                    <div class="form-group">
+                        @Html.PasswordFor(model => model.OldPassword, new { @class = "form-control", placeholder = "Old Password" })
+                        @Html.ValidationMessageFor(model => model.OldPassword)
+                    </div>
+                }
+            </div>
+            <div class="col-md-6">
+                <div class="form-group">
+                    @Html.PasswordFor(model => model.NewPassword, new { @class = "form-control", placeholder = "New Password" })
+                    @Html.ValidationMessageFor(model => model.NewPassword)
+                </div>
+            </div>
+            <div class="col-md-6">
+                @Html.PasswordFor(model => model.ReTypeNewPassword, new { @class = "form-control", placeholder = "Re Type New Password" })
+                @Html.ValidationMessageFor(model => model.ReTypeNewPassword)
+            </div>
+            <div class="col-md-12">
+                <br />
+                <input type="submit" value="Save" class="btn btn-success" />
+            </div>
+        </div>
+
+    }
+
+</div>
+<div class="gap"></div>

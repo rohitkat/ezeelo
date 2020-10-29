@@ -1,0 +1,101 @@
+﻿@model ModelLayer.Models.LeadersSubstractDaysForPayoutMonth
+
+@{
+    ViewBag.Title = "Update";
+    Layout = "~/Views/Shared/_LeadersLayout.cshtml";
+}
+
+<script src="~/Scripts/jquery-1.12.4.min.js"></script>
+<script src="~/Scripts/jquery-ui-1.12.1.min.js"></script>
+<link href="~/Content/css/datepicker.css" rel="stylesheet" />
+<link href="~/Content/css/jquery-ui-1.8.21.custom.css" rel="stylesheet" />
+
+
+<link href="https://cdn.datatables.net/1.10.19/css/jquery.dataTables.min.css" rel="stylesheet" />
+
+<script src="https://code.jquery.com/jquery-3.3.1.js"></script>
+<script src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
+
+@if (TempData["Alert"] == "Add")
+{
+    <div class="col-sm-12">
+        <div class="alert  alert-success alert-dismissible fade show" role="alert">
+
+            <span class="badge badge-pill badge-success">Success</span> You successfully Added  Rate!!.
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+    </div>
+}
+else if (TempData["Alert"] == "Update")
+{
+    <div class="col-sm-12">
+        <div class="alert  alert-primary alert-dismissible fade show" role="alert">
+
+            <span class="badge badge-pill badge-success">Success</span> You successfully Updated Rate!!.
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+    </div>
+}
+else if (TempData["Alert"] == "Delete")
+{
+    <div class="col-sm-12">
+        <div class="alert  alert-danger alert-dismissible fade show" role="alert">
+
+            <span class="badge badge-pill badge-success">Success</span> You successfully Updated Rate!!.
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+    </div>
+}
+
+<div class="container">
+    @using (Html.BeginForm())
+    {
+        @Html.AntiForgeryToken()
+
+        <div class="card">
+            @*<div class="form-horizontal">*@
+            <div class="card-header"><strong>Add</strong><small> Form</small></div>
+            <div class="card-body card-block">
+                <h4>Add Coin Rate</h4>
+                <hr />
+                @Html.ValidationSummary(true)
+
+                <div class="form-group">
+                    <label for="company" class=" form-control-label">Start Date</label>
+                   
+                </div>
+
+                <div class="form-group">
+                    <label for="company" class=" form-control-label">End Date</label>
+
+                    @*<input type="date" name="endDate" id="txtEndDate" />*@
+                    @Html.EditorFor(model => model.SubstractNoDays)
+                   
+
+                </div>
+
+                <div class="form-group">
+                    <label for="company" class=" form-control-label">Coin Rate</label>
+
+                    @Html.EditorFor(model => model.SubstractNoDays)
+                   
+
+                </div>
+
+
+                <div class="form-group">
+                    <div class="col-md-offset-2 col-md-10">
+                        <input type="submit" value="Update" class="btn btn-primary" />
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+    }

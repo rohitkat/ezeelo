@@ -1,0 +1,52 @@
+﻿<!DOCTYPE html>
+@using ModelLayer.Models.ViewModel;
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>@ViewBag.Title</title>
+</head>
+<body>
+    @{
+        BestDealHeadingCollection bdhc = ViewBag.offerHeadings;
+    }
+    @using (Html.BeginForm())
+    {
+        <div class="grid mainGrid">
+            <div class="row cells12">
+                <div class="cell colspan12 headerWrapper">
+                    <div class="offerHeader">
+                        <ul id="ulRecentlyViewed" class="row cells12">
+                            @foreach (var item in bdhc.bestDealHeadingsCollection)
+                            {
+                                <li class="cell colspan4"><span class="mif-gift"></span> @Html.ActionLink(item.OfferName, "GetProducts", new { item.OfferID, item.OfferType }, null)</li>
+                            }
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="grid">
+            @RenderBody()
+        </div>
+    }
+    @RenderSection("MyBestDealScripts", required: false)
+    @RenderSection("MyWishListScripts", required: false)
+    <script type="text/javascript">
+        jQuery(document).ready(function () {
+            jQuery(window).scroll(function () {
+                var SCROLL = jQuery(window).scrollTop();
+                if (SCROLL > 500) {
+                    jQuery('.offerHeader').addClass('headerScroll');
+                    jQuery('#ulRecentlyViewed li').removeClass('colspan3');
+                    jQuery('#ulRecentlyViewed li').addClass('colspan2');
+                } else if (SCROLL < 300) {
+                    jQuery('.offerHeader').removeClass('headerScroll');
+                    jQuery('#ulRecentlyViewed li').addClass('colspan3');
+                    jQuery('#ulRecentlyViewed li').removeClass('colspan2');
+                }
+            });
+        });
+
+    </script>
+</body>
+</html>

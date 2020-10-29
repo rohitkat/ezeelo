@@ -1,0 +1,2100 @@
+﻿<!DOCTYPE html>
+<html>
+<head lang="en">
+
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="description" content="Gandhibagh.com - India's leading online store for Varanasi consumers to buy a wide range of products including Electronics, Fashion, Accessories, Grocery and vegetables">
+    <meta name="keywords" content="shop online, Varanasi online store, fashion store online, buy online vegetables in Varanasi, fresh fruits online, electronics and mobile accessories">
+    <meta name="author" content="Sergey Pimenov and Metro UI CSS contributors">
+
+    @*google login client reference for gandhibagh.com
+        Dated 20-01-2015
+        Developer:- Pradnyakar Badge
+    *@
+    <meta name="google-signin-scope" content="profile email">
+    <meta name="google-signin-client_id" content="603459852099-ks007ko6krf4tkmvgqogmgu71j8mcl02.apps.googleusercontent.com">
+    @*end of googla login reference*@
+
+
+    <link type="text/css" href="~/Content/css/Layout1.css" rel="stylesheet" />
+    <link href="~/Content/update(5-10)/css/animate.css" rel="stylesheet" />
+    <link href="~/Content/update(5-10)/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="~/Content/update(5-10)/css/font-awesome.min.css" rel="stylesheet" />
+    <link href="~/Content/update(5-10)/css/jquery-ui.css" rel="stylesheet" />
+    <link href="~/Content/update(5-10)/css/jquery.bxslider.css" rel="stylesheet" />
+    <link href="~/Content/update(5-10)/css/option2.css" rel="stylesheet" />
+    <link href="~/Content/update(5-10)/css/owl.carousel.css" rel="stylesheet" />
+    <link href="~/Content/update(5-10)/css/reset.css" rel="stylesheet" />
+    <link href="~/Content/update(5-10)/css/responsive.css" rel="stylesheet" />
+    <link href="~/Content/update(5-10)/css/select2.min.css" rel="stylesheet" />
+    <link href="~/Content/update(5-10)/css/style.css" rel="stylesheet" />
+    <link href="~/Content/update(5-10)/Site.css" rel="stylesheet" />
+    <link href="~/Content/css/metro.css" rel="stylesheet" />
+    <link href="~/Content/css/metro-icons.css" rel="stylesheet" />
+    @if (ViewData["MetaData"] != null)
+    {
+        @Html.Raw(ViewData["MetaData"])
+    }
+
+
+    <script type="application/ld+json">
+        {
+        "@@context": "http://schema.org",
+        "@@type": "WebSite",
+        "url": "http://gandhibagh.com",
+        "potentialAction": {
+        "@@type": "SearchAction",
+        "target": "http://gandhibagh.com/Product/Products?item={search_term}",
+        "query-input": "required name=search_term"
+        }
+        }
+    </script>
+    <script>
+        (function (i, s, o, g, r, a, m) {
+            i['GoogleAnalyticsObject'] = r; i[r] = i[r] || function () {
+                (i[r].q = i[r].q || []).push(arguments)
+            }, i[r].l = 1 * new Date(); a = s.createElement(o),
+            m = s.getElementsByTagName(o)[0]; a.async = 1; a.src = g; m.parentNode.insertBefore(a, m)
+        })(window, document, 'script', '//www.google-analytics.com/analytics.js', 'ga');
+
+        ga('create', 'UA-62659942-1', 'auto');
+        ga('send', 'pageview');
+
+    </script>
+
+    <!-- Facebook Conversion Code for Add To Cart -->
+    <script>
+        (function () {
+            var _fbq = window._fbq || (window._fbq = []);
+            if (!_fbq.loaded) {
+                var fbds = document.createElement('script');
+                fbds.async = true;
+                fbds.src = '//connect.facebook.net/en_US/fbds.js';
+                var s = document.getElementsByTagName('script')[0];
+                s.parentNode.insertBefore(fbds, s);
+                _fbq.loaded = true;
+            }
+        })();
+        window._fbq = window._fbq || [];
+        window._fbq.push(['track', '6027639901250', { 'value': '0.01', 'currency': 'INR' }]);
+    </script>
+    <noscript><img height="1" width="1" alt="" style="display:none" src="https://www.facebook.com/tr?ev=6027639901250&amp;cd[value]=0.01&amp;cd[currency]=INR&amp;noscript=1" /></noscript>
+
+    @*<script>
+            window.onload = function () {
+                //$(function () {
+                if ($("#ShoppingCartCookieValue").val() != 0) {
+                    var cnt = $("#ShoppingCartCookieValue").val().split(",").length;
+                    $("#spanShoppingCartCount").text(cnt);
+                }
+                else {
+                    $("#spanShoppingCartCount").text(0);
+                }
+                //});
+            }
+
+        </script>*@
+
+
+
+    <link rel='shortcut icon' type='image/x-icon' href='~/Images/logo.png' />
+    @*<title>Gandhibagh: Nagpur's Largest Online Shopping store For All Types Of Products</title>*@
+    @if (Request.Cookies["CityCookie"] != null)
+    {
+        string city = Request.Cookies["CityCookie"].Value.Split('$')[1];
+        <title>@ViewBag.Title | @city</title>
+    }
+    else
+    {
+        <title>@ViewBag.Title</title>
+    }
+    @*@{
+            <title>@ViewBag.Title</title>
+        }*@
+    <link href="~/Content/css/metro.css" rel="stylesheet" />
+    <link href="~/Content/css/metro-icons.css" rel="stylesheet">
+    <link href="~/Content/css/docs.css" rel="stylesheet" />
+    <link href="~/Content/css/Site.css" rel="stylesheet" />
+    <link href="~/Content/smoothproducts.css" rel="stylesheet" />
+    <link href="~/Content/css/category.css" rel="stylesheet" />
+
+
+    <script>
+
+        // When the document is loaded...
+        $(document).ready(function () {
+
+            // Hide the toTop button when the page loads.
+            $("#toTop").css("display", "none");
+
+            // This function runs every time the user scrolls the page.
+            $(window).scroll(function () {
+
+                // Check weather the user has scrolled down (if "scrollTop()"" is more than 0)
+                if ($(window).scrollTop() > 0) {
+
+                    // If it's more than or equal to 0, show the toTop button.
+                    console.log("is more");
+                    $("#toTop").fadeIn("slow");
+
+                }
+                else {
+                    // If it's less than 0 (at the top), hide the toTop button.
+                    console.log("is less");
+                    $("#toTop").fadeOut("slow");
+
+                }
+            });
+
+            // When the user clicks the toTop button, we want the page to scroll to the top.
+            $("#toTop").click(function () {
+
+                // Disable the default behaviour when a user clicks an empty anchor link.
+                // (The page jumps to the top instead of // animating)
+                event.preventDefault();
+
+                // Animate the scrolling motion.
+                $("html, body").animate({
+                    scrollTop: 0
+                }, "slow");
+
+            });
+
+        });
+    </script>
+    <script>
+        (function ($) {
+            $.StartScreen = function () {
+                var plugin = this;
+                var width = (window.innerWidth > 0) ? window.innerWidth : screen.width;
+
+                plugin.init = function () {
+                    setTilesAreaSize();
+                    if (width > 640) addMouseWheel();
+                };
+
+                var setTilesAreaSize = function () {
+                    var groups = $(".tile-group");
+                    var tileAreaWidth = 80;
+                    $.each(groups, function (i, t) {
+                        if (width <= 640) {
+                            tileAreaWidth = width;
+                        } else {
+                            tileAreaWidth += $(t).outerWidth() + 80;
+                        }
+                    });
+                    $(".tile-area").css({
+                        width: tileAreaWidth
+                    });
+                };
+
+                var addMouseWheel = function () {
+                    $("body").mousewheel(function (event, delta, deltaX, deltaY) {
+                        var page = $(document);
+                        var scroll_value = delta * 50;
+                        page.scrollLeft(page.scrollLeft() - scroll_value);
+                        return false;
+                    });
+                };
+
+                plugin.init();
+            }
+        })(jQuery);
+
+        $(function () {
+            $.StartScreen();
+
+            var tiles = $(".tile, .tile-small, .tile-sqaure, .tile-wide, .tile-large, .tile-big, .tile-super");
+
+            $.each(tiles, function () {
+                var tile = $(this);
+                setTimeout(function () {
+                    tile.css({
+                        opacity: 1,
+                        "-webkit-transform": "scale(1)",
+                        "transform": "scale(1)",
+                        "-webkit-transition": ".3s",
+                        "transition": ".3s"
+                    });
+                }, Math.floor(Math.random() * 500));
+            });
+
+            $(".tile-group").animate({
+                left: 0
+            });
+        });
+
+        function setSearchPlace(el) {
+            var a = $(el);
+            var text = a.text();
+            var toggle = a.parents('label').children('.dropdown-toggle');
+
+            toggle.text(text);
+        }
+
+        $(function () {
+            var current_tile_area_scheme = localStorage.getItem('tile-area-scheme') || "tile-area-scheme-dark";
+            $(".tile-area").removeClass(function (index, css) {
+                return (css.match(/(^|\s)tile-area-scheme-\S+/g) || []).join(' ');
+            }).addClass(current_tile_area_scheme);
+
+            $(".schemeButtons .button").hover(
+                    function () {
+                        var b = $(this);
+                        var scheme = "tile-area-scheme-" + b.data('scheme');
+                        $(".tile-area").removeClass(function (index, css) {
+                            return (css.match(/(^|\s)tile-area-scheme-\S+/g) || []).join(' ');
+                        }).addClass(scheme);
+                    },
+                    function () {
+                        $(".tile-area").removeClass(function (index, css) {
+                            return (css.match(/(^|\s)tile-area-scheme-\S+/g) || []).join(' ');
+                        }).addClass(current_tile_area_scheme);
+                    }
+            );
+
+            $(".schemeButtons .button").on("click", function () {
+                var b = $(this);
+                var scheme = "tile-area-scheme-" + b.data('scheme');
+
+                $(".tile-area").removeClass(function (index, css) {
+                    return (css.match(/(^|\s)tile-area-scheme-\S+/g) || []).join(' ');
+                }).addClass(scheme);
+
+                current_tile_area_scheme = scheme;
+                localStorage.setItem('tile-area-scheme', scheme);
+
+                showSettings();
+            });
+        });
+    </script>
+    <script>
+        function showDialog(id) {
+            var dialog = $("#" + id).data('dialog');
+            if (!dialog.element.data('opened')) {
+                dialog.open();
+            } else {
+                dialog.close();
+            }
+        }
+    </script>
+    <script>
+        function showSearch() {
+            var charm = $("#charmSearch");
+            if (charm.data('hidden') == undefined) { charm.data('hidden', true); }
+
+            if (!charm.data('hidden')) {
+                charm.animate({
+                    right: -300
+                });
+                $("#showSearch").animate({ right: 0 });
+                charm.data('hidden', true);
+            }
+            else {
+                charm.animate({
+                    right: 0
+                });
+                $("#showSearch").animate({ right: 285 });
+                charm.data('hidden', false);
+            }
+        }
+    </script>
+    <!-- Facebook Conversion Code for Shop Now -->
+    @*<script type="text/javascript">
+            (function () {
+                var _fbq = window._fbq || (window._fbq = []);
+                if (!_fbq.loaded) {
+                    var fbds = document.createElement('script');
+                    fbds.async = true;
+                    fbds.src = '//connect.facebook.net/en_US/fbds.js';
+                    var s = document.getElementsByTagName('script')[0];
+                    s.parentNode.insertBefore(fbds, s);
+                    _fbq.loaded = true;
+                }
+            })();
+            window._fbq = window._fbq || [];
+            window._fbq.push(['track', '6027064444250', { 'value': '0.01', 'currency': 'INR' }]);
+        </script>*@
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.10.4/jquery-ui.min.js"></script>
+    @*<script>
+        $(window).scroll(function () {
+            //if (window.screenTop > 0) {
+
+            //}
+            if ($(this).scrollTop() > 0) {
+
+                // $('.topdivnew').fadeOut();
+                //$('.atagelink').fadeOut();
+                $('.topdiv').fadeOut();
+                $(".headdivlogo").css({ "top": "0", "box-shadow": "rgba(95, 92, 93, 0.73) !important" });
+                $(".navigation").css({ "top": "65px", });
+
+                $(".form-inline").css('position', 'fixed');
+                $(".form-inline").css('left', '300px');
+                $(".form-inline").css('top', '4px');
+                $(".form-inline").css('z-index', '120');
+                $(".form-inline").css('width', '45%');
+                $(".logo").css('width', '8%');
+                $(".logo").css('position', 'fixed');
+                $(".logo").css('top', '0');
+                $(".logo").css('left', '130px');
+                $(".logo").css('z-index', '120');
+                $(".cart-right").css('position', 'fixed');
+                $(".cart-right").css('top', '4px');
+                $(".cart-right").css('right', '50px');
+                $(".cart-right").css('z-index', '120');
+                $(".cart-right").css('background', 'rgba(255,255,255,0.8)');
+                $('.festival-logo').css('height', '50px');
+            }
+            else {
+                // $('.topdivnew').fadeIn();
+                //$('.atagelink').fadeIn();
+                $('.topdiv').fadeIn();
+                $(".headdivlogo").css({ "top": "25px", "box-shadow": "none" });
+                $(".navigation").css({ "top": "90px", });
+
+                $(".form-inline").removeAttr('style');
+                $(".logo").removeAttr('style');
+                $(".cart-right").removeAttr('style');
+                $('.festival-logo').removeAttr('style');
+            }
+        });
+    </script>*@
+    <script type="text/javascript">
+        $(document).ready(function () {
+            //$(".box-vertical-megamenus h4").click(function () {
+            //    $(".vertical-menu-content").toggle();
+            //});
+            //$(".box-vertical-megamenus h4 span").click(function () {
+            //    $(".vertical-menu-content").slideToggle();
+            //    $(".is-home").slideToggle();
+            //});
+            $(".openCity").click(function () {
+                $(".openCity ul").toggle();
+            });
+            if ($(".box-vertical-megamenus h4").hasClass("active")) {
+                $(".is-home").css('display', 'block');
+            } else {
+                $(".is-home").css('display', 'none');
+            }
+        });
+    </script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('#cart > .heading a').click(function () {
+                $('#cart').addClass('active');
+                $('#cart').mouseleave(function () {
+                    $(this).removeClass('active');
+                });
+            });
+        });
+    </script>
+
+    <script>
+        function OpenChangeCityhide() {
+            $(".window").hide();
+            $("#mask").hide();
+        }
+    </script>
+
+    <style>
+        .support-link a:visited {
+            color: #FFF;
+        }
+
+        .ChangeCityTest {
+            width: 95%;
+            margin: auto;
+            padding-top: 25px;
+        }
+
+        .windowclose {
+        }
+
+        #mask {
+            width: 100%;
+            height: 100%;
+            position: fixed;
+            left: 0;
+            top: 0;
+            background: rgba(0,0,0,0.7);
+            display: none;
+            z-index: 99991;
+        }
+
+        .closeTag {
+            position: absolute;
+            right: -12px;
+            top: -12px;
+            display: block;
+            width: 25px;
+            height: 25px;
+            background: url(../Images/tags/crossbutton.png) no-repeat 0 0;
+            cursor: pointer;
+        }
+
+        .vertical-dropdown-menu {
+            top: -3px;
+        }
+    </style>
+
+
+    <script src="~/Content/js/classie.js" defer="defer"></script>
+    <script>
+        function init() {
+            window.addEventListener('scroll', function (e) {
+                var distanceY = window.pageYOffset || document.documentElement.scrollTop,
+                    shrinkOn = 300,
+                    header = document.querySelector("#smallHeader");
+                topHeader = document.querySelector(".top-header");
+                categoryMenu = document.querySelector(".box-vertical-megamenus");
+                if (distanceY > shrinkOn) {
+                    classie.add(header, "smaller");
+                    classie.add(topHeader, "smallerTop");
+                    classie.add(categoryMenu, "smallerCategory")
+                } else {
+                    if (classie.has(header, "smaller")) {
+                        classie.remove(header, "smaller");
+                        classie.remove(topHeader, "smallerTop");
+                        classie.remove(categoryMenu, "smallerCategory")
+                    }
+                }
+            });
+        }
+        window.onload = init();
+    </script>
+</head>
+<body class="home option2">
+
+    <!-- Google Tag Manager -->
+
+    <noscript>
+        <iframe src="//www.googletagmanager.com/ns.html?id=GTM-TLD8V2"
+                height="0" width="0" style="display:none;visibility:hidden"></iframe>
+    </noscript>
+
+    <script>
+        (function (w, d, s, l, i) {
+            w[l] = w[l] || []; w[l].push({
+                'gtm.start':
+
+                new Date().getTime(), event: 'gtm.js'
+            }); var f = d.getElementsByTagName(s)[0],
+
+            j = d.createElement(s), dl = l != 'dataLayer' ? '&l=' + l : ''; j.async = true; j.src =
+
+            '//www.googletagmanager.com/gtm.js?id=' + i + dl; f.parentNode.insertBefore(j, f);
+
+        })(window, document, 'script', 'dataLayer', 'GTM-TLD8V2');</script>
+    <!-- End Google Tag Manager -->
+
+    <noscript><img height="1" width="1" alt="" style="display:none" src="https://www.facebook.com/tr?ev=6027064444250&;cd[value]=0.01&cd[currency]=INR&noscript=1" /></noscript>
+    <noscript style="font-size: medium; font-weight: bold; padding-top: 10px; text-align: center; position: absolute; top: 72px; right: 20%; border: 2px solid red; background: rgba(255, 255, 255, 1); z-index: 12; padding: 8px; ">
+        JavaScript has been disabled on your Browser, to explore the full functionality of <a href="/Home/index" target="_blank">gandhibagh.com</a> enable JavaScript. <br>
+        You can find help how to enable JavaScript by following <a href="http://www.enable-javascript.com/" target="_blank">this link (click here)</a>.
+    </noscript>
+    <div id="boxes">
+        <div style="top: 25%; left: 20%; display: none; position: fixed; z-index: 99992;" id="dialog" class="window">
+            <span class="closeTag" style="display:none"></span>
+            <div class="innerwindow">
+                <a href="#" class="windowclose" onclick="OpenChangeCityhide()"></a>
+                @Html.Partial("_ChangeCity")
+            </div>
+        </div>
+    </div>
+    @{
+        string cityName = "";
+        if (Request.Cookies["CityCookie"] != null && Request.Cookies["CityCookie"].Value != "")
+        {
+            cityName = Request.Cookies["CityCookie"].Value.Split('$')[1].ToLower();
+        }
+    }
+    <div id="mask"></div>
+    <div id="header" class="header">
+        <div class="top-header">
+            <div class="container">
+
+                @*<div class="language ">
+
+                        <a class="headersubul atag" href="#" onclick="showDialog('dialog9')" title="Change City">
+                            <span id="SpanChangeCity" class="mif-pencil">
+                                @if (Request.Cookies["CityCookie"] != null)
+                                {
+                                @Html.Hidden("CityID", Request.Cookies["CityCookie"].Value)
+
+                                }
+                                else
+                                {
+                                    Response.Cookies["CityCookie"].Value = "4968$Nagpur";
+                                @Html.Hidden("CityID", "4968$Nagpur")
+                                }
+                            </span>
+                        </a>
+                    </div>*@
+                <div class="support-link">
+                    <div class="language" style="float:left;">
+                        <div class="toplink">
+                            <a class="headersubul atag" href="#" title="Change City">
+                                <span class="mif-pencil"></span>
+                                <span id="SpanChangeCity">
+                                    @if (Request.Cookies["CityCookie"] != null)
+                                    {
+                                        @Html.Hidden("CityID", Request.Cookies["CityCookie"].Value)
+
+                                    }
+                                    else
+                                    {
+                                        @*Response.Cookies["CityCookie"].Value = "4968$Nagpur";
+                                            @Html.Hidden("CityID", "4968$Nagpur")*@
+
+                                        @Html.Hidden("CityID", "")
+                                    }
+                                </span>
+                            </a>
+
+                        </div>
+                        @*<div class="dropdown openCity">
+                                <a class="current-open" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" href="#">
+                                    Nagpur
+                                </a>
+                                <ul class="dropdown-menu changeCity" role="menu" style="display: none;">
+                                    <li><a href="@Url.Action("Index", "ChangeCity", new { CityID=7489,CityName="Varanasi" })" class="listDrop">Varanasi</a></li>
+                                    <li><a href="@Url.Action("Index", "ChangeCity", new { CityID = 3480, CityName = "Kanpur" })" class="listDrop">Kanpur</a></li>
+                                </ul>
+                            </div>*@
+                    </div>
+                    @*<a href="/Allshops/index">All Shop</a>*@
+                    @*<a href="@Url.Action("myorders", "CustomerOrder" , new { trackorder="true" })">Track Order</a>*@
+                    <a href="@Url.RouteUrl("AllShops", new { city = cityName })" class="all-shop-mobile">All Shop</a>
+                    <a href="@Url.RouteUrl("CustomerOrder/myorders", new { trackorder = "true", city = cityName })">Track Order</a>
+                    <a href="https://play.google.com/store/apps/details?id=onlineshopping.gandhibagh.shoppingapp&hl=en">Download App</a>
+                    @if (Session["UID"] == null)
+                    {
+                        <div style="border:none; display:inline-block;">
+                            @*<a class="atag" href="@Url.Action("create", "Customer")" title="Register">Register</a>*@
+                            <a class="atag" href="@Url.RouteUrl("cust-reg", new { city = cityName })" title="Register">Register</a>
+                        </div>
+                    }
+                    @if (Session["UID"] == null)
+                    {
+                        <div style="width: 55px; text-align: center; margin-right: 10px; display:inline-block;">
+                            @*<a href="@Url.Action("login", "Login" , new { returnUrl=Request.Url.ToString() })" title="login">*@
+                            <a href="@Url.RouteUrl("Login")" title="login">
+                                @*<img src="~/Images/login.gif" style="width:35px;" />*@ Login
+                            </a>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="inline-block">
+                            <a class="dropdown-toggle logintext">Welcome:<text class="logintext"> @Session["UserName"].ToString() </text></a>
+                            <ul class="split-content d-menu1 newpopup" data-role="dropdown">
+                                @*<li>@Html.ActionLink("My Profile", "Edit", "Customer", new { id = @Session["UID"] }, null)</li>*@
+                                <li>@Html.RouteLink("My Profile", "my-profile", new { id = @Session["UID"], city = cityName }, null)</li>
+                                @*<li>@Html.ActionLink("Logout", "Logout", "Customer")</li>*@
+                                <li>@Html.ActionLink("Logout", "Logout", new { city = cityName })</li>
+                            </ul>
+                        </div>
+                    }
+
+
+
+                </div>
+            </div>
+        </div>
+        <div class="container main-header">
+            <header id="smallHeader">
+                <div class="row container">
+                    <div class="col-xs-12 col-sm-2 logo">
+                       <a href="http://www.gandhibagh.com/"><img alt="Gandhibagh.com" src="~/Content/update(5-10)/images/logo2.png"></a>
+                        @*<img src="~/Content/Images/offer.gif" style=" width: 66px; height: 74px; position: absolute; top: -14px; left: 34%;" />*@
+                        @*<a href="http://www.gandhibagh.com"><img src="~/Content/Fastival/NewYear/valenetines-day.gif" class="festival-logo" alt="gandhibagh.com" /></a>*@
+    </div>
+    <div class="col-xs-7 col-sm-8 header-search-box">
+        @Html.Partial("_SearchPartial")
+    </div>
+    <div class="col-xs-5 col-sm-2 group-button-header">
+
+        <div id="search_block_top" class="col-md-2 col-sm-4 col-xs-12 pull-right">
+            <div id="cart" class="cart-right pull-right">
+
+                <div class="heading">
+                    <div class="pav-cart-title pull-left">
+                        @*<a href="~/ShoppingCart/Index" title="Cart">*@
+                                        <a href="@Url.RouteUrl("cart", new { city = cityName })" title="Cart">
+                                            @if (Request.Cookies["ShoppingCartCookie"] != null)
+                                            {
+                                                @Html.Hidden("ShoppingCartCookieValue", Request.Cookies["ShoppingCartCookie"].Value)
+
+                                            }
+                                            else
+                                            {
+                                                @Html.Hidden("ShoppingCartCookieValue", 0)
+                                            }
+                                            <h3><img id="cart" src="~/Content/update(5-10)/images/shoppingcart.png" class="shopping-cart" /> Cart <span id="spanShoppingCartCount">0</span></h3>
+                                        </a>
+                                        @*<a class="total-cart"><span id="spanShoppingCartCount">0 item</span></a>*@
+
+                                    </div>
+                                </div>
+                                @*<div class="contentCart">
+                            <a href="~/ShoppingCart/Index" title="Cart">View Cart</a>
+                            <div class="empty">Your shopping cart is empty!</div>
+                            <p class="closecart">
+                                <button onclick="$('#cart').removeClass('active');" class="btn-small">Close</button>
+                            </p>
+                        </div>*@
+                            </div>
+                            @*<div class="cart-right pull-right">
+                        <div class="pull-left">
+
+                            <div class="cartmargin">
+                                <a href="~/ShoppingCart/Index" style="color:white" title="Cart">
+                                    <img id="cart" src="~/Content/update(5-10)/images/shoppingcart.png" class="shopping-cart" />
+
+                                    @if (Request.Cookies["ShoppingCartCookie"] != null)
+                                {
+                                @Html.Hidden("ShoppingCartCookieValue", Request.Cookies["ShoppingCartCookie"].Value)
+
+                                }
+                                else
+                                {
+                                @Html.Hidden("ShoppingCartCookieValue", 0)
+                                }
+                                </a>
+                            </div>
+                        </div>
+                        <div class="pull-right" style="margin-top: 4px; margin-left: 6px; ">
+                            <span>Cart</span>
+                            <span id="spanShoppingCartCount" class="textcircleorang">0 Item</span>
+                        </div>
+                    </div>*@
+
+                        </div>
+                    </div>
+                </div>
+            </header>
+        </div>
+        <div id="nav-top-menu" class="nav-top-menu">
+            <img src="~/Content/Home-content-varanasi/Banners/helpvaranasi.png" style="float: right; position: fixed; width: 75px; z-index: 100000; right: 0; top: 75px; " />
+            <div class="container">
+                <div class="row">
+                    <div class="col-sm-3" id="box-vertical-megamenus">
+                        <div class="box-vertical-megamenus">
+                            <h4 class="title">
+                                <span class="title-menu">Categories@*<img src="~/Content/update(5-10)/images/glyphicons-halflings.png" />*@</span>
+                                <span class="btn-open-mobile pull-right home-page"><i class="fa fa-bars"></i></span>
+                            </h4>
+                            <div class="vertical-menu-content is-home">
+                                <ul class="vertical-menu-list">
+                                    <li>
+                                        <a class="parent" href='@Url.RouteUrl("SweetAndConfectionery", new { city = cityName })'><img class="icon-menu" alt="Funky roots" src="~/Content/update(5-10)/images/28.png">Sweet & Confectionery<span class="icon_f fa fa-angle-right"></span></a>
+                                        <div class="vertical-dropdown-menu menu-fresh-market" style="width: 900px;">
+                                            <div class="vertical-groups col-sm-12">
+                                                @*<div class="mega-group col-sm-4">
+                                                    <h4 class="mega-group-header"><span>Indian Food</span></h4>
+                                                    <ul class="group-link-default">
+                                                    <li>
+                                                    <a href="@Url.RouteUrl("ProductsByCategory", new { item = "sweets", parentCategoryId = 223, city = cityName })" target="_blank">Sweets</a>
+                                                    </li>
+                                                    </ul>
+                                                    </div>*@
+                                                <div class="mega-group col-sm-4">
+                                                    <h4 class="mega-group-header"><span>Sweets &amp; Namkeen</span></h4>
+                                                    <ul class="group-link-default">
+                                                        @*<li><a href="~/Product/Products?shopID=10429&shopName=Kubeer%20Sweets">Kubeer Sweet </a></li>
+                                                        <li><a href="~/Product/Products?shopID=10462&shopName=Om%20Sai%20Traders">Om Sai Traders</a></li>*@
+                                                        <li><a href="@Url.RouteUrl("ShopSearch2", new { city = cityName, shopName = "Kubeer Sweets".ToLower().Replace(" ", "-"), shopID = 10429 })">Kubeer Sweet </a></li>
+                                                        <li><a href="@Url.RouteUrl("ShopSearch2", new { city = cityName, shopName = "Om Sai Traders".ToLower().Replace(" ", "-"), shopID = 10462 })">Om Sai Traders </a></li>
+                                                        <li><a href="@Url.RouteUrl("ShopSearch2", new { city = cityName, shopName = "Shree Ram Bhandar".ToLower().Replace(" ", "-"), shopID = 10489 })">Shree Ram Bhandar </a></li>
+                                                     
+                                                    </ul>
+                                                </div>
+                                                <div class="mega-group col-sm-4">
+                                                    <h4 class="mega-group-header"><span>Cake & Pastry</span></h4>
+                                                    <ul class="group-link-default">
+                                                        @*<li><a href="~/Product/Products?shopID=10418&shopName=Cake%20Parlour">Cake Parlour</a></li>*@
+                                                        <li><a href="@Url.RouteUrl("ShopSearch2", new { city = cityName, shopName = "Cake Parlour".ToLower().Replace(" ", "-"), shopID = 10418 })">Cake Parlour </a></li>
+                                                        <li><a href="@Url.RouteUrl("ShopSearch2", new { city = cityName, shopName = "Chestnuts".ToLower().Replace(" ", "-"), shopID = 10475 })">Chestnuts</a></li>
+                                                    </ul>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </li>
+                                    <li>
+                                        <a class="parent" href="#" @*~/Product/Products?shopID=10417&shopName=Anjaney%20Fresh%20Fruits%20&%20Vegetable*@><img class="icon-menu" alt="Funky roots" src="~/Content/update(5-10)/images/9.png">Fruits & Vegetable<span class="icon_f fa fa-angle-right">@*<img src="~/Content/update(5-10)/images/icon1.png" />*@</span></a>
+                                        <div class="vertical-dropdown-menu menu-fresh-market" style="width:900px;">
+                                            <div class="vertical-groups col-sm-12">
+                                                <div class="mega-group col-sm-4">
+                                                    <h4 class="mega-group-header"><span>Fruits</span></h4>
+                                                    <ul class="group-link-default">
+                                                        @if (Request.Cookies["CityCookie"] != null)
+                                                        {
+                                                            string city = Request.Cookies["CityCookie"].Value.Split('$')[0];
+                                                            <li>@*<a href="http://foodbagh.gandhibagh.com/#/products?ParentCatID=1281&Level=3&CatName=Fruits&cityId=@city" target="_blank">*@
+                                                                <a href="@Url.RouteUrl("Managed", new { city = cityName, ParentCatID = 1281, Level = 3, CatName = "All Fruits".ToLower().Replace(' ', '-'), cityId = city })">All Fruits</a></li>
+
+                                                        }
+                                                    </ul>
+                                                </div>
+                                                <div class="mega-group col-sm-4">
+                                                    <h4 class="mega-group-header"><span>Vegetables</span></h4>
+                                                    <ul class="group-link-default">
+                                                        @if (Request.Cookies["CityCookie"] != null)
+                                                        {
+                                                            string city = Request.Cookies["CityCookie"].Value.Split('$')[0];
+                                                            <li>@*<a href="http://foodbagh.gandhibagh.com/#/products?ParentCatID=1282&Level=3&CatName=vegetable&cityId=@city" target="_blank">*@
+                                                                <a href="@Url.RouteUrl("Managed", new { city = cityName, ParentCatID = 1282, Level = 3, CatName = "All Vegetables".ToLower().Replace(' ', '-'), cityId = city })">All Vegetables</a></li>
+                                                        }
+                                                    </ul>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </li>
+                                    <li>
+                                        <a class="parent" href="#"><img class="icon-menu" alt="Funky roots" src="~/Content/update(5-10)/images/2.png">Daily Needs &amp; Groceries<span class="icon_f fa fa-angle-right">@*<img src="~/Content/update(5-10)/images/icon1.png" />*@</span></a>
+                                        <div class="vertical-dropdown-menu menu-food-groceries" style="width: 900px;">
+                                            <div class="vertical-groups col-sm-12">
+                                                <div class="mega-group col-sm-4">
+                                                    <h4 class="mega-group-header"><span>Grocery &amp; Staples</span></h4>
+                                                    <ul class="group-link-default">
+                                                        @if (Request.Cookies["CityCookie"] != null)
+                                                        {
+                                                            string city = Request.Cookies["CityCookie"].Value.Split('$')[0];
+                                                            <li>@*<a href="http://foodbagh.gandhibagh.com/#/products?ParentCatID=1112&Level=3&CatName=Atta%20&%20Flour&cityId=@city" target="_blank">*@
+                                                                <a href="@Url.RouteUrl("Managed", new { city = cityName, ParentCatID = 1112, Level = 3, CatName = "Atta & Flours".ToLower().Replace(' ', '-').Replace("&","and"), cityId = city })">Atta & Flours</a></li>
+                                                            <li>@*<a href="http://foodbagh.gandhibagh.com/#/products?ParentCatID=1136&Level=3&CatName=Other%20Grocery&cityId=@city" target="_blank">*@
+                                                                <a href="@Url.RouteUrl("Managed", new { city = cityName, ParentCatID = 1136, Level = 3, CatName = "Other Grocery".ToLower().Replace(' ', '-'), cityId = city })">Other Grocery</a></li>
+                                                            <li>@*<a href="http://foodbagh.gandhibagh.com/#/products?ParentCatID=1137&Level=3&CatName=Spices%20&%20Seeds&cityId=@city" target="_blank">*@
+                                                                <a href="@Url.RouteUrl("Managed", new { city = cityName, ParentCatID = 1137, Level = 3, CatName = "Spices & Seeds".ToLower().Replace(' ', '-').Replace("&","and"), cityId = city })">Spices & Seeds</a></li>
+                                                            <li>@*<a href="http://foodbagh.gandhibagh.com/#/products?ParentCatID=1114&Level=3&CatName=Wheat%20Pulses%20&%20Rice&cityId=@city" target="_blank">*@
+                                                                <a href="@Url.RouteUrl("Managed", new { city = cityName, ParentCatID = 1114, Level = 3, CatName = "Wheat, Pulses & Rice".ToLower().Replace(' ', '-').Replace("&", "and").Replace(',', '-'), cityId = city })">Wheat, Pulses & Rice</a></li>
+                                                            <li>@*<a href="http://foodbagh.gandhibagh.com/#/products?ParentCatID=1110&Level=3&CatName=Oils%20&%20Ghee&cityId=@city" target="_blank">*@
+                                                                <a href="@Url.RouteUrl("Managed", new { city = cityName, ParentCatID = 1110, Level = 3, CatName = "Oil & Ghee".ToLower().Replace(' ', '-').Replace("&", "and"), cityId = city })">Oil & Ghee</a></li>
+                                                            <li>@*<a href="http://foodbagh.gandhibagh.com/#/products?ParentCatID=1113&Level=3&CatName=Salt&cityId=@city" target="_blank">*@
+                                                                <a href="@Url.RouteUrl("Managed", new { city = cityName, ParentCatID = 1113, Level = 3, CatName = "Salt".ToLower().Replace(' ', '-'), cityId = city })">Salt</a></li>
+                                                            <li>
+                                                                <a href="@Url.RouteUrl("Managed", new { city = cityName, ParentCatID = 1141, Level = 3, CatName = "Papad".ToLower().Replace(' ', '-'), cityId = city })">Papad</a></li>
+                                                            <li>
+                                                                <a href="@Url.RouteUrl("Managed", new { city = cityName, ParentCatID = 1130, Level = 3, CatName = "Sugar & Jaggery".ToLower().Replace(' ', '-').Replace("&", "and"), cityId = city })"> Sugar & Jaggery</a></li>
+
+
+                                                        }
+                                                    </ul>
+                                                </div>
+
+                                                <div class="mega-group col-sm-4">
+                                                    <h4 class="mega-group-header"><span>Beverages &amp; Syrups</span></h4>
+                                                    <ul class="group-link-default">
+                                                        @if (Request.Cookies["CityCookie"] != null)
+                                                        {
+                                                            string city = Request.Cookies["CityCookie"].Value.Split('$')[0];
+                                                            <li>@*<a href="http://foodbagh.gandhibagh.com/#/products?ParentCatID=1090&Level=3&CatName=Tea%20&%20Coffee&cityId=@city" target="_blank">*@
+                                                                <a href="@Url.RouteUrl("Managed", new { city = cityName, ParentCatID = 1090, Level = 3, CatName = "Tea and Coffee".ToLower().Replace(' ', '-').Replace("&", "and"), cityId = city })">Tea and Coffee</a></li>
+                                                            <li>@*<a href="http://foodbagh.gandhibagh.com/#/products?ParentCatID=1093&Level=3&CatName=Health%20Drink%20&%20Powder&cityId=@city" target="_blank">*@
+                                                                <a href="@Url.RouteUrl("Managed", new { city = cityName, ParentCatID = 1093, Level = 3, CatName = "Health Drink & Powder".ToLower().Replace(' ', '-').Replace("&", "and"), cityId = city })">Health Drink & Powder</a></li>
+                                                            <li>@*<a href="http://foodbagh.gandhibagh.com/#/products?ParentCatID=1096&Level=3&CatName=Soft%20Drinks&cityId=@city" target="_blank">*@
+                                                                <a href="@Url.RouteUrl("Managed", new { city = cityName, ParentCatID = 1096, Level = 3, CatName = "Soft Drinks".ToLower().Replace(' ', '-').Replace("&", "and"), cityId = city })">Soft Drinks</a></li>
+
+                                                        }
+                                                    </ul>
+                                                </div>
+                                                <div class="mega-group col-sm-4">
+                                                    <h4 class="mega-group-header"><span>Dry Fruits</span></h4>
+                                                    <ul class="group-link-default">
+                                                        @if (Request.Cookies["CityCookie"] != null)
+                                                        {
+                                                            string city = Request.Cookies["CityCookie"].Value.Split('$')[0];
+                                                            <li>@*<a href="http://foodbagh.gandhibagh.com/#/products?ParentCatID=1183&Level=3&CatName=Lotus%20Seeds%20Pop(Makhana)&cityId=@city" target="_blank">*@
+                                                                <a href="@Url.RouteUrl("Managed", new { city = cityName, ParentCatID = 1183, Level = 3, CatName = "Anand Makhana".ToLower().Replace(' ', '-').Replace("&", "and"), cityId = city })">Anand Makhana</a></li>
+                                                            <li>@*<a href="http://foodbagh.gandhibagh.com/#/products?ParentCatID=1173&Level=3&CatName=Almond%20Nut(Badam)&cityId=@city" target="_blank">*@
+                                                                <a href="@Url.RouteUrl("Managed", new { city = cityName, ParentCatID = 1173, Level = 3, CatName = "Almond(Badam)".ToLower().Replace(' ', '-').Replace("&", "and"), cityId = city })">Almond(Badam)</a></li>
+                                                            <li>@*<a href="http://foodbagh.gandhibagh.com/#/products?ParentCatID=1381&Level=3&CatName=Charoli%20Nuts&cityId=@city" target="_blank">*@
+                                                                <a href="@Url.RouteUrl("Managed", new { city = cityName, ParentCatID = 1381, Level = 3, CatName = "Charoli Nuts".ToLower().Replace(' ', '-').Replace("&", "and"), cityId = city })">Charoli Nuts</a></li>
+                                                            <li>@*<a href="http://foodbagh.gandhibagh.com/#/products?ParentCatID=1172&Level=3&CatName=Cashew(Kaju)&cityId=@city" target="_blank">*@
+                                                                <a href="@Url.RouteUrl("Managed", new { city = cityName, ParentCatID = 1172, Level = 3, CatName = "Cashew (Kaju)".ToLower().Replace(' ', '-').Replace("&", "and"), cityId = city })">Cashew (Kaju)</a></li>
+                                                            <li>@*<a href="http://foodbagh.gandhibagh.com/#/products?ParentCatID=1180&Level=3&CatName=Currant%2FRaisin(Kishmish)&cityId=@city" target="_blank">*@
+                                                                <a href="@Url.RouteUrl("Managed", new { city = cityName, ParentCatID = 1180, Level = 3, CatName = "Currant-Raisin (Kishmish)".ToLower().Replace(' ', '-').Replace("&", "and"), cityId = city })">Currant / Raisin (Kishmish)</a></li>
+                                                            <li>@*<a href="http://foodbagh.gandhibagh.com/#/products?ParentCatID=1181&Level=3&CatName=Dates(Kajur)&cityId=@city" target="_blank">*@
+                                                                        <a href="@Url.RouteUrl("Managed", new { city = cityName, ParentCatID = 1181, Level = 3, CatName = "Dates(Kajur)".ToLower().Replace(' ', '-').Replace("&", "and"), cityId = city })">Dates(Kajur)</a></li>
+                                                        }
+
+
+                                                    </ul>
+                                                </div>
+
+
+                                                <div class="mega-group col-sm-4">
+                                                    <h4 class="mega-group-header"><span>Home & Hygiene</span></h4>
+                                                    <ul class="group-link-default">
+                                                        @if (Request.Cookies["CityCookie"] != null)
+                                                        {
+                                                            string city = Request.Cookies["CityCookie"].Value.Split('$')[0];
+                                                            <li>@*<a href="http://foodbagh.gandhibagh.com/#/products?ParentCatID=1125&Level=3&CatName=Fabric%20Care&cityId=@city" target="_blank">*@
+                                                                <a href="@Url.RouteUrl("Managed", new { city = cityName, ParentCatID = 1125, Level = 3, CatName = "Fabric Care".ToLower().Replace(' ', '-').Replace("&", "and"), cityId = city })">Fabric Care</a></li>
+                                                            <li>@*<a href="http://foodbagh.gandhibagh.com/#/products?ParentCatID=1126&Level=3&CatName=Kitchen%20Care&cityId=@city" target="_blank">*@
+                                                                <a href="@Url.RouteUrl("Managed", new { city = cityName, ParentCatID = 1126, Level = 3, CatName = "Kitchen Care".ToLower().Replace(' ', '-').Replace("&", "and"), cityId = city })">Kitchen Care</a></li>
+                                                            <li>@*<a href="http://foodbagh.gandhibagh.com/#/products?ParentCatID=1116&Level=3&CatName=Home%20Care&cityId=@city" target="_blank">*@
+                                                                <a href="@Url.RouteUrl("Managed", new { city = cityName, ParentCatID = 1116, Level = 3, CatName = "Home Care".ToLower().Replace(' ', '-').Replace("&", "and"), cityId = city })">Home Care</a></li>
+                                                        }
+                                                    </ul>
+                                                </div>
+                                                <div class="mega-group col-sm-4">
+                                                    <h4 class="mega-group-header"><span> Bakery & Dairy Products</span></h4>
+                                                    <ul class="group-link-default">
+                                                        @if (Request.Cookies["CityCookie"] != null)
+                                                        {
+                                                            string city = Request.Cookies["CityCookie"].Value.Split('$')[0];
+                                                            <li>@*<a href="http://foodbagh.gandhibagh.com/#/products?ParentCatID=1089&Level=3&CatName=Butter%20&%20Cheese&cityId=@city" target="_blank">*@
+                                                                <a href="@Url.RouteUrl("Managed", new { city = cityName, ParentCatID = 1089, Level = 3, CatName = "Home Care".ToLower().Replace(' ', '-').Replace("&", "and"), cityId = city })">Butter & Cheese</a></li>
+                                                            <li>@*<a href="http://foodbagh.gandhibagh.com/#/products?ParentCatID=1163&Level=3&CatName=Cake&cityId=@city" target="_blank">*@
+                                                                <a href="@Url.RouteUrl("Managed", new { city = cityName, ParentCatID = 1163, Level = 3, CatName = "Home Care".ToLower().Replace(' ', '-').Replace("&", "and"), cityId = city })">Cake</a></li>
+                                                            <li>@*<a href="http://foodbagh.gandhibagh.com/#/products?ParentCatID=1169&Level=3&CatName=Eggless%20Cake&cityId=@city" target="_blank">*@
+                                                                <a href="@Url.RouteUrl("Managed", new { city = cityName, ParentCatID = 1169, Level = 3, CatName = "Home Care".ToLower().Replace(' ', '-').Replace("&", "and"), cityId = city })">Eggless Cake</a></li>
+                                                            <li>@*<a href="http://foodbagh.gandhibagh.com/#/products?ParentCatID=1165&Level=3&CatName=Pastry&cityId=@city" target="_blank">*@
+                                                                <a href="@Url.RouteUrl("Managed", new { city = cityName, ParentCatID = 1165, Level = 3, CatName = "Home Care".ToLower().Replace(' ', '-').Replace("&", "and"), cityId = city })">Pastry</a></li>
+                                                        }
+                                                    </ul>
+                                                </div>
+                                                <div class="mega-group col-sm-4">
+                                                    <h4 class="mega-group-header"><span>Bottles Cans & Packets </span></h4>
+                                                    <ul class="group-link-default">
+                                                        @if (Request.Cookies["CityCookie"] != null)
+                                                        {
+                                                            string city = Request.Cookies["CityCookie"].Value.Split('$')[0];
+                                                          
+                                                            @*<li><a href="http://foodbagh.gandhibagh.com/#/products?ParentCatID=1157&Level=3&CatName=Snacks%20&%20Wafers&cityId=@city" target="_blank">Snacks & Wafers</a></li>*@
+                                                             <li><a href='@Url.RouteUrl("Managed", new { city = cityName, ParentCatID = 1157, Level = 3, CatName = "Snacks & Wafers".ToLower().Replace(' ', '-').Replace("&", "and"), cityId = city })'>Snacks & Wafers</a></li>
+                                                            @*<li><a href="http://foodbagh.gandhibagh.com/#/products?ParentCatID=1139&Level=3&CatName=Biscuits&cityId=@city" target="_blank">Biscuits</a></li>*@
+                                                             <li><a href='@Url.RouteUrl("Managed", new { city = cityName, ParentCatID = 1139, Level = 3, CatName = "Biscuits".ToLower().Replace(' ', '-').Replace("&", "and"), cityId = city })'>Biscuits</a></li>
+                                                            @*<li><a href="http://foodbagh.gandhibagh.com/#/products?ParentCatID=1108&Level=3&CatName=Jam%20&%20Spreads&cityId=@city" target="_blank">Jam & Spreads</a></li>*@
+                                                             <li><a href='@Url.RouteUrl("Managed", new { city = cityName, ParentCatID = 1108, Level = 3, CatName = "Jam & Spreads".ToLower().Replace(' ', '-').Replace("&", "and"), cityId = city })'>Jam & Spreads</a></li>
+                                                            @*<li><a href="http://foodbagh.gandhibagh.com/#/products?ParentCatID=1159&Level=3&CatName=Ready%20&%20Instant%20Mixes&cityId=@city" target="_blank">Ready & Instant Mixes</a></li>*@
+                                                             <li><a href='@Url.RouteUrl("Managed", new { city = cityName, ParentCatID = 1159, Level = 3, CatName = "Ready & Instant Mixes".ToLower().Replace(' ', '-').Replace("&", "and"), cityId = city })'>Ready & Instant Mixes</a></li>
+                                                            @*<li><a href="http://foodbagh.gandhibagh.com/#/products?ParentCatID=1170&Level=3&CatName=Chocolate%20&%20Candy&cityId=@city" target="_blank">Chocolate & Candy</a></li>*@
+                                                             <li><a href='@Url.RouteUrl("Managed", new { city = cityName, ParentCatID = 1170, Level = 3, CatName = "Chocolate & Candy".ToLower().Replace(' ', '-').Replace("&", "and"), cityId = city })'>Chocolate & Candy</a></li>
+                                                        }
+                                                    </ul>
+                                                </div>
+
+                                            </div>
+                                        </div>
+                                    </li>
+                                    <li>
+                                        <a class="parent" href="#"><img class="icon-menu" alt="Funky roots" src="~/Content/update(5-10)/images/26.png">Meat & Poultry<span class="icon_f fa fa-angle-right"></span></a>
+                                        <div class="vertical-dropdown-menu menu-food-groceries" style="width: 900px;">
+                                            <div class="vertical-groups col-sm-12">
+                                                <div class="mega-group col-sm-4">
+                                                    <h4 class="mega-group-header"><span>Meat</span></h4>
+                                                    <ul class="group-link-default">
+                                                        @if (Request.Cookies["CityCookie"] != null)
+                                                        {
+                                                            string city = Request.Cookies["CityCookie"].Value.Split('$')[0];
+                                                             @*<li><a href="http://foodbagh.gandhibagh.com/#/products?ParentCatID=88&Level=3&CatName=Mutton&cityId=@city" target="_blank">Lamb & Mutton</a></li>*@
+                                                            <li><a href='@Url.RouteUrl("Managed", new { city = cityName, ParentCatID = 88, Level = 3, CatName = "Lamb & Mutton".ToLower().Replace(' ', '-').Replace("&", "and"), cityId = city })'>Lamb & Mutton</a></li>
+                                                            @*<li><a href="http://foodbagh.gandhibagh.com/#/products?ParentCatID=87&Level=3&CatName=Chicken&cityId=@city" target="_blank">Chicken</a></li>*@
+                                                            <li><a href='@Url.RouteUrl("Managed", new { city = cityName, ParentCatID = 87, Level = 3, CatName = "Chicken".ToLower().Replace(' ', '-').Replace("&", "and"), cityId = city })'>Chicken</a></li>
+                                                        }
+                                                    </ul>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </li>
+                                    <li>
+                                        <a class="parent" href="#"><img class="icon-menu" alt="Funky roots" src="~/Content/update(5-10)/images/3.png">Beauty & Personal<span class="icon_f fa fa-angle-right">@*<img src="~/Content/update(5-10)/images/icon1.png" />*@</span></a>
+                                        <div class="vertical-dropdown-menu menu-fresh-market" style="width: 900px;">
+                                            <div class="vertical-groups col-sm-12">
+                                                <div class="mega-group col-sm-4">
+                                                    <h4 class="mega-group-header"><span>Bathing & Body Care</span></h4>
+                                                    <ul class="group-link-default">
+                                                        @if (Request.Cookies["CityCookie"] != null)
+                                                        {
+                                                            string city = Request.Cookies["CityCookie"].Value.Split('$')[0];
+                                                            @*<li><a href="http://foodbagh.gandhibagh.com/#/products?ParentCatID=1155&Level=3&CatName=Facewash&cityId=@city" target="_blank">Facewash</a></li>*@
+                                                             <li>@*<a href='@Url.RouteUrl("Managed", new { city = cityName, ParentCatID = 1155, Level = 3, CatName = "Facewash".ToLower().Replace(' ', '-').Replace("&", "and"), cityId = city })'>*@
+                                                                 <a href='@Url.RouteUrl("Managed", new { city = cityName, ParentCatID = 1155, Level = 3, CatName = "Facewash".ToLower().Replace(' ', '-').Replace("&", "and"), cityId = city })'>Facewash</a></li>
+                                                            <li>@*<a href="http://foodbagh.gandhibagh.com/#/products?ParentCatID=1129&Level=3&CatName=Soap&cityId=@city" target="_blank">*@
+                                                                <a href='@Url.RouteUrl("Managed", new { city = cityName, ParentCatID = 1129, Level = 3, CatName = "Soap & Sanitizers".ToLower().Replace(' ', '-').Replace("&", "and"), cityId = city })'>Soap & Sanitizers</a></li>
+                                                        }
+                                                    </ul>
+                                                </div>
+                                                <div class="mega-group col-sm-4">
+                                                    <h4 class="mega-group-header"><span>Deo &amp; Perfume</span></h4>
+                                                    <ul class="group-link-default">
+                                                        @if (Request.Cookies["CityCookie"] != null)
+                                                        {
+                                                            string city = Request.Cookies["CityCookie"].Value.Split('$')[0];
+                                                             <li>@*<a href="http://foodbagh.gandhibagh.com/#/products?ParentCatID=1149&Level=3&CatName=Men%20Deo&cityId=@city" target="_blank">*@
+                                                                <a href='@Url.RouteUrl("Managed", new { city = cityName, ParentCatID = 1149, Level = 3, CatName = "Men's Deo".ToLower().Replace(' ', '-').Replace("&", "and"), cityId = city })'>Men's Deo</a></li>
+                                                            @*<li><a href="http://foodbagh.gandhibagh.com/#/products?ParentCatID=1149&Level=3&CatName=Men%20Deo&cityId=@city" target="_blank">Men's Perfume</a></li>*@
+                                                            <li>@*<a href="http://foodbagh.gandhibagh.com/#/products?ParentCatID=1326&Level=3&CatName=Women%20Deo&cityId=@city" target="_blank">*@
+                                                                <a href='@Url.RouteUrl("Managed", new { city = cityName, ParentCatID = 1326, Level = 3, CatName = "Women's Deo".ToLower().Replace(' ', '-').Replace("&", "and"), cityId = city })'>Women's Deo</a></li>
+                                                        }
+                                                    </ul>
+                                                </div>
+                                                <div class="mega-group col-sm-4">
+                                                    <h4 class="mega-group-header"><span>Oral Care</span></h4>
+                                                    <ul class="group-link-default">
+                                                        @if (Request.Cookies["CityCookie"] != null)
+                                                        {
+                                                            string city = Request.Cookies["CityCookie"].Value.Split('$')[0];
+                                                            <li>@*<a href="http://foodbagh.gandhibagh.com/#/products?ParentCatID=1330&Level=3&CatName=Toothpaste&cityId=@city" target="_blank">*@
+                                                                <a href='@Url.RouteUrl("Managed", new { city = cityName, ParentCatID = 1330, Level = 3, CatName = "Toothpaste".ToLower().Replace(' ', '-').Replace("&", "and"), cityId = city })'>Toothpaste</a></li>
+                                                            <li>@*<a href="http://foodbagh.gandhibagh.com/#/products?ParentCatID=1143&Level=3&CatName=Toothbrush&cityId=@city" target="_blank">*@
+                                                                <a href='@Url.RouteUrl("Managed", new { city = cityName, ParentCatID = 1143, Level = 3, CatName = "Toothbursh".ToLower().Replace(' ', '-').Replace("&", "and"), cityId = city })'>Toothbursh</a></li>
+                                                            <li>@*<a href="http://foodbagh.gandhibagh.com/#/products?ParentCatID=1329&Level=3&CatName=Other%20Oral%20Care&cityId=@city" target="_blank">*@
+                                                                <a href='@Url.RouteUrl("Managed", new { city = cityName, ParentCatID = 1329, Level = 3, CatName = "Other Oral Care".ToLower().Replace(' ', '-').Replace("&", "and"), cityId = city })'>Other Oral Care</a></li>
+                                                        }
+                                                    </ul>
+                                                </div>
+                                                <div class="mega-group col-sm-4">
+                                                    <h4 class="mega-group-header"><span>Makeup</span></h4>
+                                                    <ul class="group-link-default">
+                                                        @if (Request.Cookies["CityCookie"] != null)
+                                                        {
+                                                            string city = Request.Cookies["CityCookie"].Value.Split('$')[0];
+                                                            <li>@*<a href="http://foodbagh.gandhibagh.com/#/products?ParentCatID=1323&Level=3&CatName=Lipstick%20&%20Lip%20Balm&cityId=@city" target="_blank">*@
+                                                                <a href='@Url.RouteUrl("Managed", new { city = cityName, ParentCatID = 1323, Level = 3, CatName = "Lipstick & Lip Balm".ToLower().Replace(' ', '-').Replace("&", "and"), cityId = city })'>Lipstick & Lip Balm </a></li>
+                                                            <li>@*<a href="http://foodbagh.gandhibagh.com/#/products?ParentCatID=1324&Level=3&CatName=Nail%20Care&cityId=@city" target="_blank">*@
+                                                                <a href='@Url.RouteUrl("Managed", new { city = cityName, ParentCatID = 1324, Level = 3, CatName = "Nail Care".ToLower().Replace(' ', '-').Replace("&", "and"), cityId = city })'>Nail Care</a></li>
+                                                            <li>@*<a href="http://foodbagh.gandhibagh.com/#/products?ParentCatID=1325&Level=3&CatName=Face%20&%20Skin%20Care&cityId=@city" target="_blank">*@
+                                                                <a href='@Url.RouteUrl("Managed", new { city = cityName, ParentCatID = 1325, Level = 3, CatName = "Face & Skin Care".ToLower().Replace(' ', '-').Replace("&", "and"), cityId = city })'>Face & Skin Care</a></li>
+                                                        }
+                                                    </ul>
+                                                </div>
+                                                <div class="mega-group col-sm-4">
+                                                    <h4 class="mega-group-header"><span>Hair Care</span></h4>
+                                                    <ul class="group-link-default">
+                                                        @if (Request.Cookies["CityCookie"] != null)
+                                                        {
+                                                            string city = Request.Cookies["CityCookie"].Value.Split('$')[0];
+                                                           <li>@*<a href="http://foodbagh.gandhibagh.com/#/products?ParentCatID=1117&Level=3&CatName=Hair%20Oil&cityId=@city" target="_blank">*@
+                                                                <a href='@Url.RouteUrl("Managed", new { city = cityName, ParentCatID = 1117, Level = 3, CatName = "Hair Oil".ToLower().Replace(' ', '-').Replace("&", "and"), cityId = city })'>Hair Oil</a></li>
+                                                            <li>@*<a href="http://foodbagh.gandhibagh.com/#/products?ParentCatID=1331&Level=3&CatName=Shampoo%20&%20Conditioner&cityId=@city" target="_blank">*@
+                                                                <a href='@Url.RouteUrl("Managed", new { city = cityName, ParentCatID = 1331, Level = 3, CatName = "Shampoo & Conditioner".ToLower().Replace(' ', '-').Replace("&", "and"), cityId = city })'>Shampoo & Conditioner</a></li>
+                                                            
+
+                                                        }
+                                                    </ul>
+                                                </div>
+                                                <div class="mega-group col-sm-4">
+                                                    <h4 class="mega-group-header"><span>Hygiene Related Product</span></h4>
+                                                    <ul class="group-link-default">
+                                                        @if (Request.Cookies["CityCookie"] != null)
+                                                        {
+                                                            string city = Request.Cookies["CityCookie"].Value.Split('$')[0];
+                                                            <li>@*<a href="http://foodbagh.gandhibagh.com/#/products?ParentCatID=1301&Level=3&CatName=Sanitary%20Pads&cityId=@city" target="_blank">*@
+                                                                <a href='@Url.RouteUrl("Managed", new { city = cityName, ParentCatID = 1301, Level = 3, CatName = "Sanitary Pads".ToLower().Replace(' ', '-').Replace("&", "and"), cityId = city })'>Sanitary Pads</a></li>
+                                                             <li><a href='@Url.RouteUrl("Managed", new { city = cityName, ParentCatID = 1392, Level = 3, CatName = "Adult Diaper".ToLower().Replace(' ', '-').Replace("&", "and"), cityId = city })'>Adult Diaper</a></li>
+                                                        }
+                                                    </ul>
+                                                </div>
+
+
+                                            </div>
+                                        </div>
+                                    </li>
+                                    <li>
+                                        <a class="parent" href='@Url.RouteUrl("HealthAndFitness", new { city = cityName })'><img class="icon-menu" alt="Funky roots" src="~/Content/update(5-10)/images/6.png">Health & Fitness<span class="icon_f fa fa-angle-right">@*<img src="~/Content/update(5-10)/images/icon1.png" />*@</span></a>
+                                        <div class="vertical-dropdown-menu menu-fresh-market" style="width: 900px;">
+                                            <div class="vertical-groups col-sm-12">
+                                                <div class="mega-group col-sm-4">
+                                                    <h4 class="mega-group-header"><span>Diagnostic Equipment</span></h4>
+                                                    <ul class="group-link-default">
+                                                        <li><a href="@Url.RouteUrl("ProductsByCategory", new { item = "bp-monitors", parentCategoryId = 374, city = cityName })">B.P Monitors</a></li>
+                                                    </ul>
+                                                </div>
+                                                <div class="mega-group col-sm-4">
+                                                    <h4 class="mega-group-header"><span>Medical</span></h4>
+                                                    <ul class="group-link-default">
+                                                        <li><a href="@Url.RouteUrl("ProductsByCategory", new { item = "bandages-dressing-disposables", parentCategoryId = 1439, city = cityName })">Bandages & Dressing Disposables</a></li>
+
+                                                    </ul>
+                                                </div>
+                                                <div class="mega-group col-sm-4">
+                                                    <h4 class="mega-group-header"><span>Surgical Equipment</span></h4>
+                                                    <ul class="group-link-default">
+                                                        <li><a href="@Url.RouteUrl("ProductsByCategory", new { item = "other-health-machines", parentCategoryId = 1388, city = cityName })">Other Health Machines</a></li>
+                                                    </ul>
+                                                </div>
+
+
+                                            </div>
+                                        </div>
+                                    </li>
+                                    <li>
+                                        @*<a class="parent" href="~/Home/WinterWearVaranasi">*@
+                                        <a class="parent" href='@Url.RouteUrl("WinterWear", new { city = cityName })'><img class="icon-menu" alt="Funky roots" src="~/Content/update(5-10)/images/w1.png">Winter Wear<span class="icon_f fa fa-angle-right">@*<img src="~/Content/update(5-10)/images/icon1.png" />*@</span></a>
+                                        <div class="vertical-dropdown-menu menu1" style="width: 900px;">
+                                            <div class="vertical-groups col-sm-12">
+                                                <div class="mega-group col-sm-4">
+                                                    <h4 class="mega-group-header"><span>Winter Wear Men</span></h4>
+                                                    <ul class="group-link-default">
+                                                        <li>
+                                                            @*<a href="~/Product/Products?parentCategoryId=1406">*@
+                                                            <a href="@Url.RouteUrl("ProductsByCategory", new { item = "men's-thermal-wear", parentCategoryId = 1406, city = cityName })">Mens Thermal wear</a>
+                                                        </li>
+                                                        <li>
+                                                            @*<a href="~/Product/Products?parentCategoryId=1400">*@
+                                                            <a href="@Url.RouteUrl("ProductsByCategory", new { item = "men's-sweater", parentCategoryId = 1400, city = cityName })">Mens Sweater</a>
+                                                        </li>
+                                                        <li><a href="@Url.RouteUrl("ProductsByCategory", new { item = "mens-jackets", parentCategoryId = 1401, city = cityName })">Mens Jackets</a></li>
+                                                    </ul>
+                                                </div>
+                                                <div class="mega-group col-sm-4">
+                                                    <h4 class="mega-group-header"><span>Winter Wear Women</span></h4>
+                                                    <ul class="group-link-default">
+                                                        <li>
+                                                            @*<a href="~/Product/Products?parentCategoryId=1418">*@
+                                                            <a href="@Url.RouteUrl("ProductsByCategory", new { item = "women-thermal-wear", parentCategoryId = 1418, city = cityName })">Women Thermal wear</a>
+                                                        </li>
+                                                    </ul>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </li>
+                                    <li>
+                                        @*<a class="parent" href="~/Home/LifestyleAndFashionStreetVaranasi">*@
+                                        <a class="parent" href='@Url.RouteUrl("LifestyleAndFashionStreet", new { city = cityName })'><img class="icon-menu" alt="Funky roots" src="~/Content/update(5-10)/images/1.png"> Fashion &amp; Lifestyle<span class="icon_f fa fa-angle-right">@*<img src="~/Content/update(5-10)/images/icon1.png" />*@</span></a>
+                                        <div class="vertical-dropdown-menu menu-health" style="width: 900px;">
+                                            <div class="vertical-groups col-sm-12">
+                                                <div class="mega-group col-sm-4">
+                                                    <h4 class="mega-group-header"><span>Women Wear</span></h4>
+                                                    <ul class="group-link-default">
+                                                        <li>
+                                                            @*<a href="~/Product/Products?parentCategoryId=744">*@
+                                                            <a href="@Url.RouteUrl("ProductsByCategory", new { item = "salwar-suits", parentCategoryId = 744, city = cityName })">Salwar Suits</a>
+                                                        </li>
+                                                        <li>
+                                                            @*<a href="~/Product/Products?parentCategoryId=735">*@
+                                                            <a href="@Url.RouteUrl("ProductsByCategory", new { item = "kurtis", parentCategoryId = 735, city = cityName })">Kurtis</a>
+                                                        </li>
+                                                    </ul>
+                                                </div>
+                                                <div class="mega-group col-sm-4">
+                                                    <h4 class="mega-group-header"><span>Men Clothing</span></h4>
+                                                    <ul class="group-link-default">
+                                                        <li>
+                                                            @*<a href="~/Product/Products?parentCategoryId=1017">*@
+                                                            <a href="@Url.RouteUrl("ProductsByCategory", new { item = "jeans-jackets-and-t-Shirts", parentCategoryId = 1017, city = cityName })">Jeans, Jackets & T-Shirts</a>
+                                                        </li>
+                                                        @*<li><a href="~/Product/Products?shopID=10396&selectedCategoryId=997">Casual Shoes</a></li>*@
+                                                    </ul>
+                                                </div>
+                                                <div class="mega-group col-sm-4">
+                                                    <h4 class="mega-group-header"><span>Eyewear</span></h4>
+                                                    <ul class="group-link-default">
+                                                        <li>
+                                                            <a href="@Url.RouteUrl("ProductsByCategory", new { item = "men-eyewear", parentCategoryId = 790, city = cityName })">Men Eyewear</a>
+                                                        </li>
+                                                        <li>
+                                                            <a href="@Url.RouteUrl("ProductsByCategory", new { item = "women-eyewear", parentCategoryId = 788, city = cityName })">Women Eyewear</a>
+                                                        </li>
+                                                        <li>
+                                                            <a href="@Url.RouteUrl("ProductsByCategory", new { item ="unisex-eyewear", parentCategoryId = 791, city = cityName })">Unisex Eyewear</a>
+                                                        </li>
+
+                                                    </ul>
+                                                </div>
+                                                <div class="mega-group col-sm-4">
+                                                    <h4 class="mega-group-header"><span>Men Footwear</span></h4>
+                                                    <ul class="group-link-default">
+                                                        <li><a href="@Url.RouteUrl("ProductsByCategory", new { item = "sports-shoes", parentCategoryId = 1004, city = cityName })">Sports Shoes</a></li>
+                                                        <li><a href="@Url.RouteUrl("ProductsByCategory", new { item = "casual-shoes", parentCategoryId = 997, city = cityName })">Casual Shoes</a> </li>
+                                                        <li><a href="@Url.RouteUrl("ProductsByCategory", new { item = "sandals-and-slippers", parentCategoryId = 1001, city = cityName })">Sandals & Slippers</a></li>
+                                                        <li><a href="@Url.RouteUrl("ProductsByCategory", new { item = "formal-shoes", parentCategoryId = 999, city = cityName })">Formal Shoes</a></li>
+                                                    </ul>
+                                                </div>
+                                                <div class="mega-group col-sm-4">
+                                                    <h4 class="mega-group-header"><span>Gifting Ideas</span></h4>
+                                                    <ul class="group-link-default">
+                                                        <li>
+                                                            @*<a href="~/Product/Products?parentCategoryId=777">*@
+                                                            <a href="@Url.RouteUrl("ProductsByCategory", new { item = "gifts", parentCategoryId = 777, city = cityName })">Gifts</a>
+                                                        </li>
+                                                        <li>
+                                                            @*<a href="~/Product/Products?parentCategoryId=773">*@
+                                                            <a href="@Url.RouteUrl("ProductsByCategory", new { item = "flowers-bouquet", parentCategoryId = 773, city = cityName })">Flowers Bouquet</a>
+                                                        </li>
+                                                    </ul>
+                                                </div>
+                                                <div class="mega-group col-sm-4">
+                                                    <h4 class="mega-group-header"><span>Kids Section</span></h4>
+                                                    <ul class="group-link-default">
+                                                        <li>
+                                                            @*<a href="~/Product/Products?parentCategoryId=833">*@
+                                                            <a href="@Url.RouteUrl("ProductsByCategory", new { item = "toys-and-games", parentCategoryId = 833, city = cityName })">Toys & Games</a>
+                                                        </li>
+                                                        <li>
+                                                            @*<a href="~/Product/Products?parentCategoryId=798">*@
+                                                            <a href="@Url.RouteUrl("ProductsByCategory", new { item = "diapers-and-other-utility-items", parentCategoryId = 798, city = cityName })">Diapers & Other Utility Items	</a>
+                                                        </li>
+                                                    </ul>
+                                                </div>
+                                                @*<div class="mega-group col-sm-4">
+                                                        <h4 class="mega-group-header"><span>Festival</span></h4>
+                                                        <ul class="group-link-default">
+                                                            <li><a href="~/Home/FastivalVaranasi">Christmas</a></li>
+                                                        </ul>
+                                                    </div>*@
+                                            </div>
+                                        </div>
+                                    </li>
+                                    <li>
+                                        @*<a class="parent" href="~/Home/ElectronicsAvenueVaranasi">*@
+                                        <a class="parent" href='@Url.RouteUrl("ElectronicsAvenue", new { city = cityName })'><img class="icon-menu" alt="Funky roots" src="~/Content/update(5-10)/images/4.png">Electronics<span class="icon_f fa fa-angle-right">@*<img src="~/Content/update(5-10)/images/icon1.png" />*@</span></a>
+                                        <div class="vertical-dropdown-menu menu-life" style="width: 900px;">
+                                            <div class="vertical-groups col-sm-12">
+                                                <div class="mega-group col-sm-4">
+                                                    <h4 class="mega-group-header"><span>Audio &amp; Video</span></h4>
+                                                    <ul class="group-link-default">
+                                                        <li>
+                                                            @*<a href="~/Product/Products?parentCategoryId=583">*@
+                                                            <a href="@Url.RouteUrl("ProductsByCategory", new { item = "speakers", parentCategoryId = 583, city = cityName })">Speakers</a>
+                                                        </li>
+                                                    </ul>
+                                                </div>
+                                                <div class="mega-group col-sm-4">
+                                                    <h4 class="mega-group-header"><span>Computers & Peripherals</span></h4>
+                                                    <ul class="group-link-default">
+                                                        <li>
+                                                            @*<a href="~/Product/Products?parentCategoryId=558">*@
+                                                            <a href="@Url.RouteUrl("ProductsByCategory", new { item = "computer-accessories", parentCategoryId = 558, city = cityName })">Computer Accessories</a>
+                                                        </li>
+                                                        <li>
+                                                            @*<a href="~/Product/Products?parentCategoryId=575">*@
+                                                            <a href="@Url.RouteUrl("ProductsByCategory", new { item = "headphones-and-speakers", parentCategoryId = 575, city = cityName })">Headphones & Speakers</a>
+                                                        </li>
+                                                        <li>
+                                                            @*<a href="~/Product/Products?parentCategoryId=567">*@
+                                                            <a href="@Url.RouteUrl("ProductsByCategory", new { item = "pen-drive", parentCategoryId = 567, city = cityName })">Pen Drive</a>
+                                                        </li>
+                                                        <li>
+                                                            <a href="@Url.RouteUrl("ProductsByCategory", new { item = "data-cards", parentCategoryId = 580, city = cityName })">Data Cards</a>
+                                                        </li>
+                                                    </ul>
+                                                </div>
+                                                <div class="mega-group col-sm-4">
+                                                    <h4 class="mega-group-header"><span>Mobile & Tablets</span></h4>
+                                                    <ul class="group-link-default">
+                                                        <li>
+                                                            @*<a href="~/Product/Products?parentCategoryId=534">*@
+                                                            <a href="@Url.RouteUrl("ProductsByCategory", new { item = "mobile-accessories", parentCategoryId = 534, city = cityName })">Mobile Accessories</a>
+                                                        </li>
+                                                        <li>
+                                                            @*<a href="~/Product/Products?parentCategoryId=531">*@
+                                                            <a href="@Url.RouteUrl("ProductsByCategory", new { item = "mobile-cases-and-covers", parentCategoryId = 531, city = cityName })">Mobile Cases & Covers</a>
+                                                        </li>
+                                                    </ul>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </li>
+                                    <li>
+                                        @*<a class="parent" href="~/Home/HomeAndKitchenAppliancesVaranasi">*@
+                                        <a class="parent" href='@Url.RouteUrl("HomeAndKitchenAppliances", new { city = cityName })'><img class="icon-menu" alt="Funky roots" src="~/Content/update(5-10)/images/23.png">Kitchenware &amp; Appliances<span class="icon_fith fa fa-angle-right"></span></a>
+                                        <div class="vertical-dropdown-menu menu-kitchen" style="width: 900px;">
+                                            <div class="vertical-groups col-sm-12">
+                                                <div class="mega-group col-sm-4">
+                                                    <h4 class="mega-group-header"><span>Kitchen Wares</span></h4>
+                                                    <ul class="group-link-default">
+                                                        <li>
+                                                            @*<a href="~/Product/Products?parentCategoryId=256">*@
+                                                            <a href="@Url.RouteUrl("ProductsByCategory", new { item = "tea-and-coffee-serveware", parentCategoryId = 256, city = cityName })">Tea & Coffee Serveware </a>
+                                                        </li>
+                                                        <li>
+                                                            @*<a href="~/Product/Products?parentCategoryId=253">*@
+                                                            <a href="@Url.RouteUrl("ProductsByCategory", new { item = "cookware-and-bakeware", parentCategoryId = 253, city = cityName })">Cookware & Bakeware</a>
+                                                        </li>
+                                                        <li>
+                                                            @*<a href="~/Product/Products?parentCategoryId=254">*@
+                                                            <a href="@Url.RouteUrl("ProductsByCategory", new { item = "dining-and-serving", parentCategoryId = 254, city = cityName })">Dining & Serving</a>
+                                                        </li>
+                                                        <li>
+                                                            @*<a href="~/Product/Products?parentCategoryId=250">*@
+                                                            <a href="@Url.RouteUrl("ProductsByCategory", new { item = "flasks-and-tiffins", parentCategoryId = 250, city = cityName })">Flasks & Tiffins</a>
+                                                        </li>
+                                                        <li>
+                                                            @*<a href="~/Product/Products?parentCategoryId=251">*@
+                                                            <a href="@Url.RouteUrl("ProductsByCategory", new { item = "kitchen-storage", parentCategoryId = 251, city = cityName })">Kitchen Storage</a>
+                                                        </li>
+                                                        <li>
+                                                            <a href="@Url.RouteUrl("ProductsByCategory", new { item = "gas-stoves-and-hobs", parentCategoryId = 505, city = cityName })">Gas Stoves & Hobs</a>
+                                                        </li>
+                                                    </ul>
+                                                </div>
+                                                <div class="mega-group col-sm-4">
+                                                    <h4 class="mega-group-header"><span>Small Appliances</span></h4>
+                                                    <ul class="group-link-default">
+                                                        <li>
+                                                            @*<a href="~/Product/Products?parentCategoryId=497">*@
+                                                            <a href="@Url.RouteUrl("ProductsByCategory", new { item = "geysere-and-heating", parentCategoryId = 497, city = cityName })">Geysere & Heating</a>
+                                                        </li>
+                                                        <li>
+                                                            @*<a href="~/Product/Products?parentCategoryId=506">*@
+                                                            <a href="@Url.RouteUrl("ProductsByCategory", new { item = "iron", parentCategoryId = 506, city = cityName })">Iron</a>
+                                                        </li>
+                                                        <li>
+                                                            @*<a href="~/Product/Products?parentCategoryId=511">*@
+                                                            <a href="@Url.RouteUrl("ProductsByCategory", new { item = "water-purifiers", parentCategoryId = 511, city = cityName })">Water Purifiers</a>
+                                                        </li>
+                                                        <li>
+                                                            @*<a href="~/Product/Products?parentCategoryId=492">*@
+                                                            <a href="@Url.RouteUrl("ProductsByCategory", new { item = "microwave-ovens-and-otgs", parentCategoryId = 492, city = cityName })">Microwave Ovens & Otgs</a>
+                                                        </li>
+                                                        <li>
+                                                            @*<a href="~/Product/Products?parentCategoryId=510">*@
+                                                            <a href="@Url.RouteUrl("ProductsByCategory", new { item = "vacuum-cleaners", parentCategoryId = 510, city = cityName })">Vacuum Cleaners</a>
+                                                        </li>
+                                                        <li>
+                                                            @*<a href="~/Product/Products?parentCategoryId=507">*@
+                                                            <a href="@Url.RouteUrl("ProductsByCategory", new { item = "mixer-grinders", parentCategoryId = 507, city = cityName })">Mixer Grinders</a>
+                                                        </li>
+                                                        <li>
+                                                            <a href="@Url.RouteUrl("ProductsByCategory", new { item = "personal-care-appliances", parentCategoryId = 495, city = cityName })">Personal Care Appliances</a>
+                                                        </li>
+
+                                                    </ul>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </li>
+
+
+
+                                    <li>
+                                        @*<a class="parent" href="~/Home/BuildingMaterialAndHardwareVaranasi">*@
+                                        <a class="parent" href='@Url.RouteUrl("BuildingMaterialAndHardware", new { city = cityName })'><img class="icon-menu" alt="Funky roots" src="~/Content/update(5-10)/images/4.png">Building Material & Hardware<span class="icon_f fa fa-angle-right">@*<img src="~/Content/update(5-10)/images/icon1.png" />*@</span></a>
+                                        <div class="vertical-dropdown-menu menu2" style="width: 900px;">
+                                            <div class="vertical-groups col-sm-12">
+                                                <div class="mega-group col-sm-4">
+                                                    <h4 class="mega-group-header"><span>Hardware & Sanitary Fittings</span></h4>
+                                                    <ul class="group-link-default">
+                                                        <li>
+                                                            @*<a href="~/Product/Products?parentCategoryId=614">*@
+                                                            <a href="@Url.RouteUrl("ProductsByCategory", new { item = "tool-and-hardware", parentCategoryId = 614, city = cityName })">Tool & Hardware</a>
+                                                        </li>
+                                                    </ul>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </li>
+                                    <li>
+                                        @*<a class="parent" href="~/Home/AutomotiveMarketVaranasi">*@
+                                        <a class="parent" href='@Url.RouteUrl("AutomotiveMarket", new { city = cityName })'><img class="icon-menu" alt="Funky roots" src="~/Content/update(5-10)/images/27.png">Automotive Market<span class="icon_f fa fa-angle-right">@*<img src="~/Content/update(5-10)/images/icon1.png" />*@</span></a>
+                                        <div class="vertical-dropdown-menu menu2" style="width: 900px;">
+                                            <div class="vertical-groups col-sm-12">
+                                                <div class="mega-group col-sm-4">
+                                                    <h4 class="mega-group-header"><span>2 Wheelers</span></h4>
+                                                    <ul class="group-link-default">
+                                                        <li>
+                                                            @*<a href="~/Product/Products?parentCategoryId=1391">*@
+                                                            <a href="@Url.RouteUrl("ProductsByCategory", new { item = "helmet", parentCategoryId = 1391, city = cityName })">Helmet</a>
+                                                        </li>
+                                                        <li>
+                                                            <a href="@Url.RouteUrl("ProductsByCategory", new { item = "two-wheeler-accessories", parentCategoryId = 1390, city = cityName })">Two Wheeler Accessories</a>
+                                                        </li>
+                                                    </ul>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </li>
+                                    <li>
+                                        <a class="parent" href='@Url.RouteUrl("ElectricalMarket", new { city = cityName })'><img class="icon-menu" alt="Funky roots" src="~/Content/update(5-10)/images/24.png">Electricals &amp; Lighting<span class="icon_f fa fa-angle-right">@*<img src="~/Content/update(5-10)/images/icon1.png" />*@</span></a>
+                                        <div class="vertical-dropdown-menu menu-Electronic" style="width: 900px;">
+                                            <div class="vertical-groups col-sm-12">
+                                                <div class="mega-group col-sm-4">
+                                                    <h4 class="mega-group-header"><span>Fans And Air Cooler</span></h4>
+                                                    <ul class="group-link-default">
+                                                        <li>
+                                                            <a href="@Url.RouteUrl("ProductsByCategory", new { item = "table-fan", parentCategoryId = 479, city = cityName })">Table Fan</a>
+                                                        </li>
+                                                        <li>
+                                                            <a href="@Url.RouteUrl("ProductsByCategory", new { item = "wall-fan", parentCategoryId = 480, city = cityName })">Wall Fan</a>
+                                                        </li>
+                                                    </ul>
+                                                </div>
+
+                                            </div>
+                                        </div>
+                                    </li>
+                                    <li>
+                                        @*<a class="parent" href="~/Home/BooksAndMediaArcadeVaranasi">*@
+                                        <a class="parent" href='@Url.RouteUrl("BooksAndMedia", new { city = cityName })'><img class="icon-menu" alt="Funky roots" src="~/Content/update(5-10)/images/8.png">Books &amp; Stationery<span class="icon_f fa fa-angle-right">@*<img src="~/Content/update(5-10)/images/icon1.png" />*@</span></a>
+                                        <div class="vertical-dropdown-menu menu2" style="width: 900px;">
+                                            <div class="vertical-groups col-sm-12">
+                                                <div class="mega-group col-sm-4">
+                                                    <h4 class="mega-group-header"><span>Stationery</span></h4>
+                                                    <ul class="group-link-default">
+                                                        <li>
+                                                            @*<a href="~/Product/Products?parentCategoryId=301">*@
+                                                            <a href="@Url.RouteUrl("ProductsByCategory", new { item = "pens-and-markers", parentCategoryId = 301, city = cityName })">Pens & Markers</a>
+                                                        </li>
+                                                        <li>
+                                                            @*<a href="~/Product/Products?parentCategoryId=302">*@
+                                                            <a href="@Url.RouteUrl("ProductsByCategory", new { item = "calculators", parentCategoryId = 302, city = cityName })">Calculators</a>
+                                                        </li>
+                                                    </ul>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </li>
+
+
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="main-menu" class="col-sm-9 main-menu">
+                        <nav class="navbar navbar-default">
+                            <div class="container-fluid">
+                                <div class="navbar-header">
+                                    <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+                                        <i class="fa fa-bars"></i>
+                                    </button>
+                                    <a class="navbar-brand" href="#">MENU</a>
+                                </div>
+                                @*<div id="navbar" class="navbar-collapse collapse">
+                                        <ul class="nav navbar-nav">
+                                            <li><a href="#">Fruits & Vegetables</a></li>
+                                            <li><a href="#">Groceries</a></li>
+                                        </ul>
+                                    </div>*@<!--/.nav-collapse -->
+                            </div>
+                        </nav>
+                    </div>
+                </div>
+                <!-- userinfo on top-->
+                <div id="form-search-opntop">
+                </div>
+                <!-- userinfo on top-->
+                <div id="user-info-opntop">
+                </div>
+                <!-- CART ICON ON MMENU -->
+                @*<div id="shopping-cart-box-ontop" style="display: none;">
+                        <i class="fa fa-shopping-cart"></i>
+                        <div class="shopping-cart-box-ontop-content"></div>
+                    </div>*@
+            </div>
+        </div>
+    </div>
+
+    @*<div class="topdivnew">
+            <div class="headerlinks">
+            </div>
+        </div>*@
+    <div data-role="dialog" id="dialog9" class="padding20" data-close-button="true" data-overlay="true" data-overlay-color="op-dark" style="display: none; ">
+        <div>
+            @Html.Partial("_ChangeCity")
+
+        </div>
+
+
+        @*@Html.Partial("_Login")*@
+    </div>
+    <div class="shotlistdiv">
+        <span style="color:white;font-size:16px;cursor:pointer" onclick="showDialog('dialog6'); LoadShortList(); OpenShortlist();"><span class="mif-star-full" style="margin-top: -5px; padding-right: 5px;"></span>Shortlist</span>
+        <span id="spanShortlistCount" class="textcircle"></span>
+    </div>
+    <div data-role="dialog" id="dialog6" class="padding20" data-close-button="true" data-type="info" style="display:none">
+        <div id="ShortListDiv">
+            @*<h1>Simple dialog</h1>
+                <p>
+                    Dialog :: Metro UI CSS - The front-end framework for developing projects on the web in Windows Metro Style
+                </p>*@
+            @*<iframe src="@Url.Action("Shortlist", "ShortList")" style="width: 260px; height: 450px;border:none;"></iframe>*@
+            @Html.Partial("_ShortListItemPartial")
+
+        </div>
+    </div>
+
+    @*<button id="showSearch" class="square-button fg-black bg-hover-dark no-border feedbackbutton" onclick="showSearch()"><span class="mif-edit newfeedback">Feedback</span></button>*@
+    <div class="charm right-side padding20 bg-grayDark" id="charmSearch">
+        <button class="square-button bg-transparent fg-white no-border place-right small-button" onclick="showSearch()"><span class="mif-cross"></span></button>
+        <h1 class="text-light">FeedBack</h1>
+        <hr class="thin" />
+        <br />
+        <iframe src="@Url.Action("Create","Feedback")" style="width: 260px; height: 450px;border:none;"></iframe>
+    </div>
+
+    <div class="container body-content">
+
+        @RenderBody()
+        <div style="width:100%">
+            <table style="width:100%">
+                <tr></tr>
+            </table>
+        </div>
+    </div>
+    <!-- Footer -->
+    <footer id="footer">
+        <div class="container">
+            <!-- introduce-box -->
+            <div id="introduce-box" class="row">
+                @*<div class="col-md-3">
+                        <div id="address-box">
+                            <a href="#"><img src="~/Content/update(5-10)/images/logo2.png" alt="logo"></a>
+
+                            <div id="address-list">
+                                <div class="tit-name">Address:</div>
+                                <div class="tit-contain">NSP Furturetech Pvt. Ltd. 9 9-A, NMC Complex Sadar, Nagpur</div>
+
+                                <div class="tit-name">Email:</div>
+                                <div class="tit-contain">Gandhibagh.com</div>
+                            </div>
+                        </div>
+                    </div>*@
+                <div class="col-md-9 col-sm-9">
+                    <div class="row">
+                        <div class="col-sm-3">
+                            <div class="introduce-title">CUSTOMER SERVICES</div>
+                            <ul id="introduce-company" class="introduce-list">
+                                @*<li><a href="~/home/about">About Us</a></li>*@
+                                <li><a href="@Url.RouteUrl("AboutUs", new { city = cityName })">About Us</a></li>
+                                @*<li><a href="~/Customer/create">Register</a></li>*@
+                                <li><a href="@Url.RouteUrl("cust-reg", new { city = cityName })" title="Register">Register</a></li>
+                                @*<li><a href="~/Login/login?returnUrl=http%3A%2F%2Flocalhost%3A1427%2FHome">Login</a></li>*@
+                                <li><a href="@Url.RouteUrl("Login")" title="login">Login</a></li>
+                                <li><a id="showSearch" style="cursor:pointer" onclick="showSearch()">Feedback</a></li>
+                            </ul>
+                        </div>
+                        <div class="col-sm-3">
+                            <div class="introduce-title">POLICIES</div>
+                            <ul id="introduce-Account" class="introduce-list">
+                                @*changes by harshada for url rewriting*@
+                                @*<li><a href="~/Policy/Shipping_Policy">Shipping Policy</a></li>*@
+                                <li><a href="@Url.RouteUrl("ShippingPolicy", new { city = cityName })">Shipping Policy</a></li>
+                                @*<li><a href="~/Policy/Return_Policy">Return Policy</a></li>*@
+                                <li><a href="@Url.RouteUrl("ReturnPolicy", new { city = cityName })">Return Policy</a></li>
+                                @*<li><a href="~/Policy/Cancellation_Policy">Cancellation Policy</a></li>*@
+                                <li><a href="@Url.RouteUrl("CancellationPolicy", new { city = cityName })">Cancellation Policy</a></li>
+                                @*<li><a href="~/Policy/Advertise_With_Us">Advertise With Us</a></li>*@
+                                <li><a href="@Url.RouteUrl("AdvertiseWithUs", new { city = cityName })">Advertise With Us</a></li>
+                            </ul>
+                        </div>
+                        <div class="col-sm-3">
+                            <div class="introduce-title">QUICK LINKS</div>
+                            <ul id="introduce-support" class="introduce-list">
+                                <li><a href="http://www.merchant.gandhibagh.com/">Sell With Us</a></li>
+                                <li><a href="http://www.Partner.gandhibagh.com/">Join As Partner</a></li>
+                                <li><a href="http://www.Delivery.gandhibagh.com/">Join As Delivery Partner</a></li>
+                                <li><a href="@Url.RouteUrl("AllShops", new { city = cityName })">All Shop</a></li>
+                            </ul>
+
+                        </div>
+                        <div class="col-sm-3">
+                            <div class="introduce-title">CUSTOMER GUIDE</div>
+                            <ul id="introduce-support" class="introduce-list">
+                                @*<li><a href="~/home/shopperguide">Shoppers Guide</a></li>*@
+                                <li><a href="@Url.RouteUrl("ShppersGuide", new { city = cityName })">Shoppers Guide</a></li>
+                                @*<li><a href="~/home/Paymentguide">Payment Options</a></li>*@
+                                <li><a href="@Url.RouteUrl("PaymentGuide", new { city = cityName })">Payment Guide</a></li>
+                                @*<li><a href="~/home/customerguide">Customer Registration</a></li>*@
+                                <li><a href="@Url.RouteUrl("CustomerGuide", new { city = cityName })">Customer Guide</a></li>
+                                @*<li><a href="~/home/Marchantguide">Merchant Registration</a></li>*@
+                                <li><a href="@Url.RouteUrl("MerchantGuide", new { city = cityName })">Merchant Guide</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3 col-sm-3">
+                    <div id="contact-box">
+                        <div class="introduce-title">CALL US</div>
+                        <div class="input-group" id="mail-box">
+                            <span class="mif-phone fg-green"></span> <span>
+                                Varanasi Help Line: 9519704040
+                            </span><br />
+                            <span class="mif-phone fg-green"></span> <span>  Customer Care: 9860890890</span><br />
+                            10 am to 7 pm , Monday-Saturday
+                        </div><!-- /input-group -->
+                        <div class="introduce-title">FOLLOW US ON</div>
+                        <div class="social-link">
+                            <a href="https://www.facebook.com/gandhibagh" target="_blank" title="facebook"><i class="fa fa-facebook"></i></a>
+                            <a href="https://twitter.com/Gandhibaghcom" target="_blank" title="twitter"><i class="fa fa-twitter"></i></a>
+                            <a href="https://plus.google.com/+Gandhibaghcom" target="_blank" title="google-plus"><i class="fa fa-google-plus"></i></a>
+                            <a href="https://www.youtube.com/channel/UCzfy7xDV9nEbAGH4II9MW6w/videos" target="_blank" title="youtube"><i class="fa fa-youtube"></i></a>
+                            <a href="https://www.pinterest.com/gandhibagh" target="_blank" title="pinterest"><i class="fa fa-pinterest-p"></i></a>
+
+                        </div>
+                        @*<div class="introduce-title">PAYMENT METHOD</div>
+                            <ul id="introduce-support" class="introduce-list">
+                                <li><a class="link footerlinknew"><img src="~/Content/cash_on_delivery.png" alt="COD" /></a></li>
+                                <li><a class="link footerlinknew"><img src="~/Content/net_banking.png" alt="Net Banking" /></a></li>
+                            </ul>*@
+                    </div>
+
+                </div>
+            </div>
+            <!-- /#introduce-box -->
+            <div class="row" style="margin-top:10px;">
+                <div class="col-md-6 col-sm-6">
+                    <style type="text/css">
+                        .twitter-timeline {
+                            height: 235px !important;
+                        }
+                    </style>
+                    <a class="twitter-timeline" href="https://twitter.com/GandhibaghCom" data-widget-id="627060792140042240">Tweets by-GandhibaghCom</a>
+                    <script>!function (d, s, id) { var js, fjs = d.getElementsByTagName(s)[0], p = /^http:/.test(d.location) ? 'http' : 'https'; if (!d.getElementById(id)) { js = d.createElement(s); js.id = id; js.src = p + "://platform.twitter.com/widgets.js"; fjs.parentNode.insertBefore(js, fjs); } }(document, "script", "twitter-wjs");</script>
+                </div>
+                <div class="col-md-3 col-sm-3">
+                    <div class="introduce-title">Facebook like</div>
+                    <ul id="introduce-support" class="introduce-list">
+                        <li>
+                            <script type="text/javascript">
+                                (function (d, s, id) {
+                                    var js, fjs = d.getElementsByTagName(s)[0];
+                                    if (d.getElementById(id)) return;
+                                    js = d.createElement(s); js.id = id;
+                                    js.src = "//connect.facebook.net/en_US/sdk.js#xfbml=1&version=v2.3";
+
+                                    fjs.parentNode.insertBefore(js, fjs);
+                                }(document, 'script', 'facebook-jssdk'));
+
+                                var url = window.location.href;
+                                document.write('<div class="fb-share-button"  data-href="' + url + '" data-layout="button_count" ></div>');
+                            </script>
+                        </li>
+
+                    </ul>
+
+                </div>
+                <div class="col-md-3 col-sm-3">
+                    <div class="introduce-title">PAYMENT METHOD</div>
+                    <ul id="introduce-support" class="introduce-list">
+                        <li><a class="link footerlinknew"><img src="~/Content/cash_on_delivery.png" alt="COD" /></a></li>
+                        <li><a class="link footerlinknew"><img src="~/Content/net_banking.png" alt="Net Banking" /></a></li>
+                    </ul>
+                </div>
+
+            </div>
+
+            <!-- #trademark-text-box -->
+            <div class="row">
+                <div class="col-md-10new">
+                    <p>Top Stores : Brand Directory | Store Directory</p>
+                </div>
+            </div>
+            <div id="trademark-text-box" class="row">
+
+                <div class="col-sm-12">
+                    <ul id="trademark-mobile-list" class="trademark-list">
+                        <li class="trademark-text-tit">WOMEN WEAR :</li>
+                        <li>@Html.RouteLink("Salwar Suits", "ProductsByCategory", new { item = "salwar-suits", parentCategoryId = 744, city = cityName }, new { @title = "Salwar Suits" })</li>
+                        <li>@Html.RouteLink("Kurtis", "ProductsByCategory", new { item = "kurtis", parentCategoryId = 735, city = cityName }, new { @title = "Kurtis" })</li>
+                    </ul>
+                </div>
+                <div class="col-sm-12">
+                    <ul id="trademark-laptop-list" class="trademark-list">
+                        <li class="trademark-text-tit">MEN CLOTHING :</li>
+                        <li>@Html.RouteLink("Jeans, Jackets & T-Shirts", "ProductsByCategory", new { item = "jeans-jackets-and-t-Shirts", parentCategoryId = 1017, city = cityName }, new { @title = "Jeans, Jackets & T-Shirts" })</li>
+
+                    </ul>
+                </div>
+                <div class="col-sm-12">
+                    <ul id="trademark-watches-list" class="trademark-list">
+                        <li class="trademark-text-tit">MEN FOOTWEAR :</li>
+                        <li>@Html.RouteLink("Sports Shoes", "ProductsByCategory", new { item = "sports-shoes", parentCategoryId = 1004, city = cityName }, new { @title = "Sports Shoes" })</li>
+                        <li>@Html.RouteLink("Casual Shoes", "ProductsByCategory", new { item = "casual-shoes", parentCategoryId = 997, city = cityName }, new { @title = "Casual Shoes" })</li>
+                    </ul>
+                </div>
+                <div class="col-sm-12">
+                    <ul id="trademark-shoes-list" class="trademark-list">
+                        <li class="trademark-text-tit">GIFTING IDEAS</li>
+                        <li>@Html.RouteLink("Gifts", "ProductsByCategory", new { item = "gifts", parentCategoryId = 777, city = cityName }, new { @title = "Gifts" })</li>
+                        <li>@Html.RouteLink("Flowers Bouquet", "ProductsByCategory", new { item = "flowers-bouquet", parentCategoryId = 773, city = cityName }, new { @title = "Flowers Bouquet" })</li>
+
+                    </ul>
+                </div>
+
+                <div class="col-sm-12">
+                    <ul id="trademark-shoes-list" class="trademark-list">
+                        <li class="trademark-text-tit">WINTER WEAR MEN :</li>
+                        <li>@Html.RouteLink("Mens Thermal wear", "ProductsByCategory", new { item = "mens-thermal-wear", parentCategoryId = 1406, city = cityName }, new { @title = "Mens Thermal wear" })</li>
+                        <li>@Html.RouteLink("Mens Sweater", "ProductsByCategory", new { item = "mens-sweater", parentCategoryId = 1400, city = cityName }, new { @title = "Mens Sweater" })</li>
+
+                    </ul>
+                </div>
+                <div class="col-sm-12">
+                    <ul id="trademark-shoes-list" class="trademark-list">
+                        <li class="trademark-text-tit">WINTER WEAR WOMEN :</li>
+                        <li>@Html.RouteLink("Women Thermal wear", "ProductsByCategory", new { item = "women-thermal-wear", parentCategoryId = 1418, city = cityName }, new { @title = "Women Thermal wear" })</li>
+
+                    </ul>
+                </div>
+                <div class="col-sm-12">
+                    <ul id="trademark-shoes-list" class="trademark-list">
+                        <li class="trademark-text-tit">2 WHEELERS :</li>
+                        <li>@Html.RouteLink("Helmet", "ProductsByCategory", new { item = "helmet", parentCategoryId = 1391, city = cityName }, new { @title = "Helmet" })</li>
+
+                    </ul>
+                </div>
+                <div class="col-sm-12">
+                    <ul id="trademark-shoes-list" class="trademark-list">
+                        <li class="trademark-text-tit">STATIONERY :</li>
+                        <li>@Html.RouteLink("Pens & Markers", "ProductsByCategory", new { item = "pens-and-markers", parentCategoryId = 1163, city = cityName }, new { @title = "Pens & Markers" })</li>
+                    </ul>
+                </div>
+
+            </div><!-- /#footer-menu-box -->
+        </div>
+    </footer>
+    <!-- Script-->
+
+
+
+    <a href="#" class="scroll_top" title="Scroll to Top" style="display: none;">Scroll</a>
+    @*<div id="footerDiv">
+        <div class="sites-category">
+            <div class="container" data-text="" style="border:none;position:inherit">
+                <div class="grid" style="position:inherit">
+                    <br />
+                    <table style="width:100%;">
+                        <tr>
+                            <td colspan="3" class="footerheading">
+                                <label>
+                                    INFORMATION
+                                </label>
+                                <hr style="border: 0; height: 1px; background-color: #D3CECE;" />
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="footerheading">
+                                <label>
+                                    CUSTOMER SERVICES
+                                </label>
+                            </td>
+                            <td class="footerheading">
+                                <label>
+                                    POLICIES
+                                </label>
+                            </td>
+                            <td class="footerheading">
+                                <label>
+                                    QUICK LINKS
+                                </label>
+                            </td>
+                        </tr>
+                        <tr class="footerrow">
+                            <td class="tablefooter"><a href="~/home/about" class="link footerlinknew">About Us</a></td>
+                            <td class="tablefooter"><a href="~/Policy/Shipping_Policy" class="link footerlinknew">Shipping Policy</a></td>
+                            <td class="tablefooter"><a href="http://www.merchant.gandhibagh.com/" target="_blank" class="link footerlinknew">Sell With Us</a></td>
+                        </tr>
+                        <tr class="footerrow">
+                            <td class="tablefooter"><a href="~/Customer/create" class="link footerlinknew">Register</a></td>
+                            <td class="tablefooter"><a href="/Policy/Return_Policy" class="link footerlinknew">Return Policy</a></td>
+                            <td class="tablefooter"><a href="http://www.Partner.gandhibagh.com/" target="_blank" class="link footerlinknew">Join As Partner</a></td>
+                        </tr>
+                        <tr class="footerrow">
+                            <td class="tablefooter"><a href="~/Login/login?returnUrl=http%3A%2F%2Flocalhost%3A1427%2FHome" class="link footerlinknew">Login</a></td>
+                            <td class="tablefooter"><a href="~/Policy/Cancellation_Policy" class="link footerlinknew">Cancellation Policy</a></td>
+                            <td class="tablefooter"><a href="http://www.Delivery.gandhibagh.com/" target="_blank" class="link footerlinknew">Join As Delivery Partner</a></td>
+                        </tr>
+                        <tr class="footerrow">
+                            <td class="tablefooter"><a href="#" class="link footerlinknew">Site Map</a></td>
+                            <td class="tablefooter"><a href="~/Policy/Advertise_With_Us" class="link footerlinknew">Advertise With Us</a></td>
+                            <td class="tablefooter"><a href="~/AllShops/Index" class="link footerlinknew">All Shops</a></td>
+                        </tr>
+                        <tr>
+                            <td colspan="3"><br /></td>
+                        </tr>
+                        <tr>
+                            <td class="footerheading">
+                                <label>
+                                    PAYMENT METHOD
+                                </label>
+                            </td>
+                            <td class="footerheading">
+                                <label>
+                                    FOLLOW US ON
+                                </label>
+                            </td>
+                            <td class="footerheading">
+                                <label>
+                                    CALL US
+                                </label>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="footerheading">
+                                <a class="link footerlinknew"><img src="~/Content/cash_on_delivery.png" alt="COD" /></a><br />
+                                <a class="link footerlinknew"><img src="~/Content/net_banking.png" alt="Net Banking" /></a>
+                            </td>
+                            <td>
+                                <div class="footerrow" data-role="buttonGroup" data-group-type="multi-state">
+                                    <a href="https://www.facebook.com/gandhibagh" target="_blank"><button class="toolbar-button active Facebook mini-button"><span class="mif-facebook " title="Facebook"></span></button></a>
+                                    <a href="https://twitter.com/Gandhibaghcom" target="_blank"><button class="toolbar-button active Twitter mini-button"><span class="mif-twitter" title="Twitter"></span></button></a>
+                                    <a href="https://plus.google.com/+Gandhibaghcom" target="_blank"> <button class=" toolbar-button active google mini-button"><span class="mif-google-plus" title="Google"></span></button></a>
+                                    <a href="https://www.youtube.com/channel/UCzfy7xDV9nEbAGH4II9MW6w/videos" target="_blank"><button class="toolbar-button active Youtube mini-button"><span class="mif-youtube" title="youtube"></span></button></a>
+                                    <a href="https://www.pinterest.com/gandhibagh" target="_blank"><button class="toolbar-button active Youtube mini-button"><span class="mif-pinterest " title="pinterest"></span></button></a>
+
+                                    <script type="text/javascript">
+                                        var width = $(window).width();
+                                        if (width < 480) {
+                                            var url = window.location.href;
+                                            document.write('<a href="whatsapp://send" data-text="' + url + '" data-href="" class="wa_btn wa_btn_s" style="display"><button class="toolbar-button active mini-button"><img class="whatsapp" src="/Content/Images/whatsapp.png" /></button></a>');
+                                        }
+                                    </script>
+                                    <a href="https://play.google.com/store/apps/details?id=onlineshopping.gandhibagh.shoppingapp&hl=en" target="_blank"><button class="toolbar-button active Download mini-button"><span class="mif-android " title="Download App"></span></button></a>
+                                </div>
+                            </td>
+                            <td class="footerheading">
+                                <span class="mif-phone" title="Helpline Number"> 0712-6602142/6630864 </span><br />
+                                <span> 8 am to 8 pm , Monday-Saturday</span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                        </tr>
+                    </table>
+
+                    <br />
+                    <table style="width: 33%; text-align: center;float:left;">
+                        <tr>
+                            <td class="footerheading">
+                                <label>
+                                    CUSTOMER GUIDE
+                                </label>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><a href="~/home/shopperguide" class="link footerlinknew">Shoppers Guide</a></td>
+                        </tr>
+                        <tr>
+                            <td><a href="~/home/Paymentguide" class="link footerlinknew">Payment Options</a></td>
+                        </tr>
+                        <tr>
+                            <td><a href="~/home/customerguide" class="link footerlinknew">Customer Registration</a></td>
+                        </tr>
+                        <tr>
+                            <td><a href="~/home/Marchantguide" class="link footerlinknew">Merchant Registration</a></td>
+                        </tr>
+                        <tr>
+                            <td class="footerheading">
+                                <label>
+                                    Facebook like
+                                </label>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <script type="text/javascript">
+                                    (function (d, s, id) {
+                                        var js, fjs = d.getElementsByTagName(s)[0];
+                                        if (d.getElementById(id)) return;
+                                        js = d.createElement(s); js.id = id;
+                                        js.src = "//connect.facebook.net/en_US/sdk.js#xfbml=1&version=v2.3";
+
+                                        fjs.parentNode.insertBefore(js, fjs);
+                                    }(document, 'script', 'facebook-jssdk'));
+
+                                    var url = window.location.href;
+                                    document.write('<div class="fb-share-button"  data-href="' + url + '" data-layout="button_count" ></div>');
+                                </script>
+                            </td>
+                        </tr>
+                    </table>
+                    <div style="float:left;width:67%" id="twittertwitte">
+                        <a class="twitter-timeline" href="https://twitter.com/GandhibaghCom" data-widget-id="627060792140042240">Tweets by-GandhibaghCom</a>
+                        <script>!function (d, s, id) { var js, fjs = d.getElementsByTagName(s)[0], p = /^http:/.test(d.location) ? 'http' : 'https'; if (!d.getElementById(id)) { js = d.createElement(s); js.id = id; js.src = p + "://platform.twitter.com/widgets.js"; fjs.parentNode.insertBefore(js, fjs); } }(document, "script", "twitter-wjs");</script>
+                    </div>
+                    <br />
+
+                    @*<table style="width:100%;">
+                            <tr>
+                                <td colspan="3" class="footerheading">
+                                    <label>
+                                        INFORMATION
+                                    </label>
+                                    <hr style="border: 0; height: 1px; background-color: #D3CECE;" />
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="footerheading">
+                                    <label>
+                                        CUSTOMER SEVICES
+                                    </label>
+                                </td>
+                                <td class="footerheading">
+                                    <label>
+                                        POLICIES
+                                    </label>
+                                </td>
+                                <td class="footerheading">
+                                    <label>
+                                        QUICK LINKS
+                                    </label>
+                                </td>
+                            </tr>
+                            <tr class="footerrow">
+                                <td class="tablefooter"><a href="~/home/about" class="link footerlinknew">About Us</a></td>
+                                <td class="tablefooter"><a href="~/Policy/Shipping_Policy" class="link footerlinknew">Shipping Policy</a></td>
+                                <td class="tablefooter"><a href="/merchant.gandhibagh.com" class="link footerlinknew">Sell With Us</a></td>
+                            </tr>
+                            <tr class="footerrow">
+                                <td class="tablefooter"><a href="#" class="link footerlinknew">Feedback</a></td>
+                                <td class="tablefooter"><a href="/Policy/Return_Policy" class="link footerlinknew">Return Policy</a></td>
+                                <td class="tablefooter"><a href="/partner.gandhibagh.com" class="link footerlinknew">Join As Co-Owner</a></td>
+                            </tr>
+                            <tr class="footerrow">
+                                <td class="tablefooter"><a href="#" class="link footerlinknew">Rating</a></td>
+                                <td class="tablefooter"><a href="~/Policy/Cancellation_Policy" class="link footerlinknew">Cancellation Policy</a></td>
+                                <td class="tablefooter"><a href="/delivery.gandhibagh.com" class="link footerlinknew">Join As Delivery Partner</a></td>
+                            </tr>
+                            <tr class="footerrow">
+                                <td class="tablefooter"><a href="#" class="link footerlinknew">Site Map</a></td>
+                                <td class="tablefooter"><a href="~/Policy/Advertise_With_Us" class="link footerlinknew">Advertise With Us</a></td>
+                                <td class="tablefooter"><a href="~/Allshops/index" class="link footerlinknew">All Shops</a></td>
+                            </tr>
+                            <tr>
+                                <td colspan="3"><br /></td>
+                            </tr>
+                            <tr>
+                                <td class="footerheading">
+                                    <label>
+                                        PAYMENT METHOD
+                                    </label>
+                                </td>
+                                <td class="footerheading">
+                                    <label>
+                                        FOLLOW US ON
+                                    </label>
+                                </td>
+                                <td class="footerheading">
+                                    <label>
+                                        CALL US
+                                    </label>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="footerheading">
+                                    <img src="~/Content/Images/payu.jpg" style=" height: 50px;" />
+                                </td>
+                                <td>
+                                    <div class="footerrow" data-role="buttonGroup" data-group-type="multi-state">
+                                        <a href="https://www.facebook.com/gandhibagh"><button class="toolbar-button active Facebook"><span class="mif-facebook mif-2x" title="Facebook"></span></button></a>
+                                        <a href="https://twitter.com/Gandhibaghcom"><button class="toolbar-button active Twitter"><span class="mif-twitter mif-2x" title="Twitter"></span></button></a>
+                                        <a href="https://plus.google.com/+Gandhibaghcom/posts"> <button class="toolbar-button active Google"><span class="mif-google-plus mif-2x" title="Google"></span></button></a>
+                                        <a href="https://www.youtube.com/channel/UCzfy7xDV9nEbAGH4II9MW6w/videos"><button class="toolbar-button active Youtube"><span class="mif-youtube mif-2x" title="youtube"></span></button></a>
+                                        <script type="text/javascript">
+                                            var width = $(window).width();
+                                            if (width < 480) {
+                                                var url = window.location.href;
+                                                document.write('<a href="whatsapp://send" data-text="' + url + '" data-href="" class="wa_btn wa_btn_s" style="display"><button class="toolbar-button active "><img class="whatsapp" src="/Content/Images/whatsapp.png" /></button></a>');
+                                            }
+                                        </script>
+                                        <button class="toolbar-button active Download"><span class="mif-android mif-2x" title="Download App"></span></button>
+
+                                    </div>
+                                </td>
+                                <td class="footerheading">
+                                    <span class="mif-phone" title="phone"> 0712-6602142 6630864 </span><br />
+                                    <span> 10 am to 10 pm , Monday-Saturday</span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td></td>
+                            </tr>
+                        </table>*@
+
+
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/bootstrap")
+    @RenderSection("scripts", required: false)
+    @RenderSection("MyScripts", required: false)
+    @RenderSection("itemScripts", required: false)
+    @RenderSection("BotDetectStyles", required: false)
+
+    <script type="text/javascript">
+        var _mfq = _mfq || [];
+        (function () {
+
+            var mf = document.createElement("script");
+            mf.type = "text/javascript"; mf.async = true;
+            mf.src = "//cdn.mouseflow.com/projects/7f427334-24a3-4418-9f8f-c61a9dd7b289.js";
+            document.getElementsByTagName("head")[0].appendChild(mf);
+        })();
+    </script>
+</body>
+
+</html>
+<link href="~/Content/css/docs.css" rel="stylesheet">
+<script src="~/Scripts/jquery-2.1.3.min.js"></script>
+<script src="~/Scripts/metro.js" defer="defer"></script>
+<script src="~/Scripts/docs.js"></script>
+<script src="~/Scripts/ga.js"></script>
+<script src="~/Scripts/run_prettify.js"></script>
+<script src="~/Scripts/metro.min.js"></script>
+
+<script type="text/javascript" src="~/Content/update(5-10)/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="~/Content/update(5-10)/js/select2.min.js"></script>
+@*<script type="text/javascript" src="~/Content/update(5-10)/js/jquery.plugin.js"></script>
+    <script type="text/javascript" src="~/Content/update(5-10)/js/jquery.countdown.js"></script>*@
+<!-- ./COUNTDOWN -->
+@*<script type="text/javascript" src="~/Content/update(5-10)/js/jquery.actual.min.js"></script>*@
+<script type="text/javascript" src="~/Content/update(5-10)/js/theme-script.js"></script>
+<script>
+    function showDialog(id) {
+        var dialog = $("#" + id).data('dialog');
+        if (!dialog.element.data('opened')) {
+            dialog.open();
+        } else {
+            dialog.close();
+        }
+    }
+    $(function () {
+        //alert($("#CityID").val());
+        if ($("#CityID").val() != 0) {
+            $("#SpanChangeCity").text($("#CityID").val().split("$")[1]);
+            $("#divCity").css("display", "none");
+        }
+        else {
+            $("#dialog9").css("display", "block");
+        }
+    });
+
+    $(function () {
+        if ($("#ShoppingCartCookieValue").val() != 0) {
+            var cnt = $("#ShoppingCartCookieValue").val().split(",").length;
+            $("#spanShoppingCartCount").text(cnt);
+        }
+        else {
+            $("#spanShoppingCartCount").text(0);
+        }
+    });
+
+
+    function OpenShortlist() {
+        $("#dialog6").css("display", "block");
+
+    }
+
+
+    function getCookie(name) {
+        var dc = document.cookie;
+        var prefix = name + "=";
+        var begin = dc.indexOf("; " + prefix);
+        if (begin == -1) {
+            begin = dc.indexOf(prefix);
+            if (begin != 0) return null;
+        } else {
+            begin += 2;
+        }
+        var end = document.cookie.indexOf(";", begin);
+        if (end == -1) {
+            end = dc.length;
+        }
+        return unescape(dc.substring(begin + prefix.length, end));
+    }
+    //function set shortlist item count on page load
+    $(function () {
+        var a = getCookie("ShortListCookie");
+        if (a != null) {
+            $("[id*=spanShortlistCount]").text(a.split(',').length);
+        }
+        else {
+            $("[id*=spanShortlistCount]").text(0);
+        }
+    });
+
+
+    function LoadShortList() {
+        // alert("reload");
+        //window.location = '/ShortList/Shortlist';
+        //$('#ShortListDiv').load('/ShortList/Shortlist');
+        $('#ShortListDiv').load('@Url.Action("ShortList", "Shortlist")');
+        @*$.ajax({
+            type: "POST",
+            url: '@Url.Action("ShortList", "Shortlist")',
+            //url: "/ShortList/Shortlist",
+            data: {},
+            contentType: "application/json; charset = utf-8",
+            dataType: "json",
+            success: function (response) {
+                alert("Short list div reload");
+            },
+            failure: function (response) {
+
+            },
+            error: function (response) {
+
+            }
+        });*@
+    }
+
+</script>
+<script type="text/javascript">
+    $(document).ready(function () {
+        var cname = window.location.href.replace('http://www.gandhibagh.com/', '');
+        //var cname = window.location.href.replace('http://localhost:7474/', '');
+        cname = cname.substring(0, cname.indexOf('/'));
+
+        var a = getCookie("CityCookie");
+        if (a == null || a == "") {
+            if (cname != "") {
+                switch (cname) {
+                    case 'nagpur':
+                        createCookie("CityCookie", "4968$Nagpur", 30);
+                        window.location.reload(true);
+                        break;
+                    case 'varanasi':
+                        createCookie("CityCookie", "10908$Varanasi", 30);
+                        window.location.reload(true);
+                        break;
+                    case 'kanpur':
+                        createCookie("CityCookie", "10909$Kanpur", 30);
+                        window.location.reload(true);
+                        break;
+                    case 'wardha':
+                        createCookie("CityCookie", "7536$Wardha", 30);
+                        window.location.reload(true);
+                        break;
+                    default:
+                        $(".window").css('display', 'block');
+                        $("#mask").show();
+                }
+            }
+            else {
+                $(".window").css('display', 'block');
+                $("#mask").show();
+            }
+        }
+        $(".headersubul").click(function () {
+            // alert("g");
+            $(".window").show();
+            $("#mask").show();
+        });
+        //$("#mask").click(function () {
+        //    $(this).hide();
+        //    $(".window").hide();
+        //});
+        $(".closeTag").click(function () {
+            $(".window").hide();
+            $("#mask").hide();
+        });
+    });
+</script>
+<script>
+    function showSearch() {
+        var charm = $("#charmSearch");
+        if (charm.data('hidden') == undefined) { charm.data('hidden', true); }
+
+        if (!charm.data('hidden')) {
+            charm.animate({
+                right: -300
+            });
+            $("#showSearch").animate({ right: 0 });
+            charm.data('hidden', true);
+        }
+        else {
+            charm.animate({
+                right: 0
+            });
+            $("#showSearch").animate({ right: 303 });
+            charm.data('hidden', false);
+        }
+    }
+</script>

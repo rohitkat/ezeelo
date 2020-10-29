@@ -1,0 +1,181 @@
+﻿@model IEnumerable<ModelLayer.Models.DynamicCategoryProduct>
+
+@{
+    ViewBag.Title = "Details";
+}
+<style>
+    .tri-state {
+        width: 80px;
+    }
+   .box-header h3 {
+        line-height: 0px;
+    }
+
+    .fixed_headers {
+        table-layout: fixed;
+        border-collapse: collapse;
+    }
+
+    td:nth-child(1){
+        min-width: 101px;
+        word-wrap:break-word;
+    }
+
+    td:nth-child(2) {
+        min-width: 217px;
+        word-wrap: break-word;
+    }
+
+    td:nth-child(3) {
+        width: 200px;
+        word-wrap: break-word;
+    }
+
+    td:nth-child(4) {
+        min-width: 200px;
+        word-wrap: break-word;
+    }
+
+    td:nth-child(5) {
+        min-width: 100px;
+        word-wrap: break-word;
+    }
+
+    td:nth-child(6) {
+        width: 100px;
+        word-wrap: break-word;
+    }
+    th:nth-child(1) {
+        min-width: 83px;
+        word-wrap: break-word;
+    }
+
+    th:nth-child(2) {
+        min-width: 201px;
+        word-wrap: break-word;
+    }
+
+    th:nth-child(3) {
+        width: 166px;
+        word-wrap: break-word;
+    }
+
+    th:nth-child(4) {
+        min-width: 184px;
+        word-wrap: break-word;
+    }
+
+    th:nth-child(5) {
+        min-width: 84px;
+        word-wrap: break-word;
+    }
+
+    th:nth-child(6) {
+        width: 95px;
+        word-wrap: break-word;
+    }
+ 
+
+    thead {
+        background-color: #ccc;
+        color: #fff;
+    }
+
+    tr {
+        display: block;
+        position: relative;
+    }
+
+
+    tbody {
+        display: block;
+        overflow: auto;
+        width: 100%;
+        max-height: 500px;
+    }
+
+    .old_ie_wrapper {
+        height: 200px;
+        width: 100%;
+        overflow-x: hidden;
+        overflow-y: auto;
+    }
+    .dataTables_length {
+        margin-left: 0px;
+        margin-top: 7px;
+    }
+
+    .pagination {
+        margin: 0 40px;
+    }
+</style>
+<div id="content" class="span10">
+   
+        <div class="row-fluid">
+            <div class="box span12 ">
+                <div class="box-header">
+                    <h2><i class="icon-edit"></i><span class="break"></span>Details</h2>
+                </div>
+                <div class="box-content">
+                    @if(TempData["Message"] != null)
+                    {
+                        <div style="font-weight:bold; color:red;">@TempData["Message"]</div>
+                    }
+                    <table class="table table-striped table-bordered bootstrap-datatable datatable dataTable fixed_headers">
+                        <thead>
+                            <tr>
+                                <th>
+                                    Category Name
+                                </th>
+                                <th>
+                                    Product Name
+                                </th>
+                                <th>
+                                    Start Date
+                                </th>
+                                <th>
+                                    End Date
+                                </th>
+                                <th>
+                                    Is Active
+                                </th>
+
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model)
+                            {
+                                <tr>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.Product.Category.Name)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.Product.Name)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.StartDate)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.EndDate)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.IsActive, new { @class = "check-box" })
+                                    </td>
+                                    <td>
+                                        @Html.ActionLink("Edit", "Edit", new { id = item.ID }, new { @class = "btn btn-small btn-primary" })
+                                        @Html.ActionLink("Delete", "Delete", new { id = item.ID }, new { @class = "btn btn-small btn-danger" })
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+
+                    <div class="form-actions no-color">
+                        @Html.ActionLink("Back to Franchise List", "Index", null, new { @class = "btn btn-default" })
+                    </div>
+
+</div>
+</div>
+</div>
+</div>

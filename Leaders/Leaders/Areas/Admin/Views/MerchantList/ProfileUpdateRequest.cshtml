@@ -1,0 +1,702 @@
+﻿@model ModelLayer.Models.Merchant
+@{
+    ViewBag.Title = "Merchant Details";
+    Layout = "~/Views/Shared/_LeadersLayout.cshtml";
+    ModelLayer.Models.EzeeloDBContext db = new ModelLayer.Models.EzeeloDBContext();
+    ModelLayer.Models.Merchant obj = db.Merchants.FirstOrDefault(p => p.Id == Model.Id);
+    bool IsRemarkChange = false;
+    if (Model.SpecialRemark != obj.SpecialRemark)
+    {
+        IsRemarkChange = true;
+    }
+}
+
+<script src="~/Scripts/MerchantMenuOpenup.js"></script>
+<style type="text/css">
+    select {
+        float: none !important;
+        border-radius: 4px !important;
+    }
+
+    .row {
+        margin: 0 !important;
+    }
+
+    .ms-options-wrap > button:focus, .ms-options-wrap > button {
+        border-radius: 4px !important;
+        box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075);
+        border: 1px solid #673AB7;
+        height: 34px;
+        color: #555 !important;
+        line-height: 1.42857143;
+        transition: border-color ease-in-out .15s, box-shadow ease-in-out .15s;
+    }
+
+    .field-validation-error {
+        color: red
+    }
+
+    #divLoading {
+        margin: 0px;
+        padding: 0px;
+        position: fixed;
+        right: 0px;
+        top: 0px;
+        width: 100%;
+        height: 100%;
+        background-color: rgb(102, 102, 102);
+        z-index: 30001;
+        opacity: 0.8;
+        display: none;
+    }
+
+    .dashboard {
+        background-color: brown;
+        border-color: brown;
+        color: white;
+    }
+
+        .dashboard:focus {
+            background-color: saddlebrown;
+        }
+
+    .details {
+        background-color: orangered;
+        border-color: orangered;
+        color: white;
+    }
+</style>
+
+<div class="container">
+    <div id="divLoading">
+        <p style="position: absolute; color: White; top: 35%; left: 45%;">
+            <img src="~/img/ajax-loading-gif-transparent-background-8.gif">
+        </p>
+    </div>
+    @*<div id="progress" class="modal" style="display:block;">
+            <div class="center">
+                <img src="~/img/ajax-loading-gif-transparent-background-8.gif" />
+            </div>
+        </div>*@
+    @using (Html.BeginForm())
+    {
+        @Html.AntiForgeryToken()
+        @Html.ValidationSummary(true)
+        <div class="card">
+            <div class="card-header">
+                <strong style="text-transform:uppercase !important"> @Model.FranchiseName</strong>
+                <div style="float:right">
+                    @if (Model.Status.ToLower() == "inactive")
+                    {
+                        <strong style="color:#ef0c0c">Registered on @Model.CreateDate.ToString("dd/MM/yyyy HH:mm")</strong>
+                    }
+                    else if (Model.Status.ToLower() == "accept")
+                    {
+                        <strong style="color:#ef0c0c">Registered on @Model.CreateDate.ToString("dd/MM/yyyy HH:mm")</strong><strong style="color:#0094ff"> &nbsp;Accepted on @Model.AcceptDate.Value.ToString("dd/MM/yyyy HH:mm")</strong>
+                    }
+                    else if (Model.Status.ToLower() == "approve")
+                    {
+                        <strong style="color:#ef0c0c">Registered on @Model.CreateDate.ToString("dd/MM/yyyy HH:mm")</strong><strong style="color:#09aa1e"> &nbsp;Approved on @Model.ApproveDate.Value.ToString("dd/MM/yyyy HH:mm")</strong>
+                    }
+                </div>
+            </div>
+            <div class="card-body card-block">
+                @Html.HiddenFor(model => model.Id)
+                <div class="row">
+
+                    <div class="col-md-12">
+                        <div class="box-lg">
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <span style="font-weight:bold;color:brown">
+                                        @Html.DisplayFor(modelItem => modelItem.Remark)
+                                    </span>
+                                    <div class="example">
+                                        <div class="grid">
+                                            @Html.ValidationSummary(true)
+                                            @if (TempData["Messaage"] != null)
+                                            {
+                                                <div id="divmsg" class="alert alert-danger alert-dismissible">
+                                                    <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                                                    <strong>Warning!</strong> @TempData["Messaage"]
+                                                </div>
+                                            }
+                                            @if (TempData["Alert"] != null)
+                                            {
+                                                <div id="divmsg" class="alert alert-success alert-dismissible">
+                                                    <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                                                    <strong>Success!</strong> @TempData["Alert"]
+                                                </div>
+                                            }
+                                            <div class="row" style="text-align: center;">
+                                                <span id="errorMessage" class="breadcrumbs dark" style="width:100%;text-align:center"></span>
+                                            </div>
+                                            <div class="row">
+
+                                                <div class="col-md-6">
+                                                    <div class="form-group">
+                                                        <label>
+                                                            Franchise/ Shop Name
+                                                        </label>
+                                                        @Html.TextBoxFor(model => model.FranchiseName, null, new { autocomplete = "off", maxlength = 200, placeholder = "Enter Franchise/ Shop Name", @class = "form-control", required = "required" })
+                                                        @Html.ValidationMessageFor(model => model.FranchiseName)
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-md-6">
+                                                    <div class="form-group">
+                                                        <label>
+                                                            GSTIN No.
+                                                        </label>
+                                                        <div class="row">
+                                                            <div class="col-md-9">
+                                                                @Html.TextBoxFor(model => model.GSTINNo, null, new { autocomplete = "off", maxlength = 15, placeholder = "Enter GSTIN No.", @class = "form-control", required = "required", @onkeypress = "return ValidateAlphaNumeric(event);" })
+                                                                @Html.ValidationMessageFor(model => model.GSTINNo)
+                                                            </div>
+                                                            <div class="col-md-3">
+                                                                @Html.CheckBox("chkGSTApplicable", new { @id = "chkGSTApplicable" })
+                                                                <lable>Not Applicable</lable>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div><div class="col-md-6">
+                                                    <div class="form-group">
+                                                        <label>
+                                                            PAN No.
+                                                        </label>
+                                                        @Html.TextBoxFor(model => model.PANNo, null, new { autocomplete = "off", maxlength = 15, placeholder = "Enter PAN No.", @class = "form-control", required = "required", @onkeypress = "return ValidateAlphaNumeric(event);" })
+                                                        @Html.ValidationMessageFor(model => model.PANNo)
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-md-12">
+                                                    <div class="form-group">
+                                                        <label>
+                                                            Address
+                                                        </label>
+                                                        @Html.TextBoxFor(model => model.Address, null, new { autocomplete = "off", maxlength = 150, placeholder = "Enter Address", @class = "form-control", required = "required" })
+                                                        @Html.ValidationMessageFor(model => model.Address)
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-md-4">
+                                                    <div class="form-group">
+                                                        <label>
+                                                            State
+                                                        </label>
+                                                        @Html.DropDownListFor(model => model.State, new SelectList(ViewBag.State, "ID", "Name"), "Select State", new { @class = "form-control", required = "required" })
+                                                        @Html.ValidationMessageFor(model => model.State)
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <div class="form-group">
+                                                        <label>
+                                                            City
+                                                        </label>
+                                                        @if (ViewBag.City != null)
+                                                        {
+                                                            @Html.DropDownListFor(model => model.City, new SelectList(ViewBag.City, "CityID", "CityName"), "Select City", new { @class = "form-control", required = "required" })
+                                                        }
+                                                        else
+                                                        { @Html.DropDownListFor(model => model.City, new SelectList(new List<ModelLayer.Models.City>(), "ID", "Name"), "Select City", new { @class = "form-control", required = "required" })}
+                                                        @Html.ValidationMessageFor(model => model.City)
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <div class="form-group">
+                                                        <label>
+                                                            Pincode
+                                                        </label>
+                                                        @Html.TextBoxFor(model => model.Pincode, new { @class = "form-control", required = "required", maxlength = 6, minlength = 6, placeholder = "Enter Pincode", @onkeypress = "return ValidateNumber(event);" })
+                                                        @*@if (ViewBag.Pincode != null)
+                                                            {
+                                                                @Html.DropDownListFor(model => model.Pincode, new SelectList(ViewBag.Pincode, "ID", "Name"), "Select Pincode", new { @class = "form-control", required = "required" })
+                                                            }
+                                                            else
+                                                            { @Html.DropDownListFor(model => model.Pincode, new SelectList(new List<ModelLayer.Models.Pincode>(), "ID", "Name"), "Select Pincode", new { @class = "form-control", required = "required" })}*@
+                                                        @Html.ValidationMessageFor(model => model.Pincode)
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="row">
+                                                <div class="col-md-6">
+                                                    <div class="form-group">
+                                                        <label>
+                                                            Shop Timings
+                                                        </label>
+                                                        @Html.DropDownListFor(model => model.ShopTiming, (IEnumerable<SelectListItem>)ViewBag.ShopTiming, "Select Shop Timings", new { @class = "form-control", required = "required" })
+                                                        @Html.ValidationMessageFor(model => model.ShopTiming)
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <div class="form-group">
+                                                        <label>
+                                                            Holiday
+                                                        </label>
+                                                        @Html.DropDownList("Holiday", new SelectList(ViewBag.Holiday, "Id", "Name"), new { @class = "form-control mdb-select", @multiple = "multiple" })
+
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-md-4">
+                                                    <div class="form-group">
+                                                        <label>
+                                                            Contact Person
+                                                        </label>
+                                                        @Html.TextBoxFor(model => model.ContactPerson, null, new { autocomplete = "off", maxlength = 150, placeholder = "Enter Contact Person Name", @class = "form-control", required = "required" })
+                                                        @Html.ValidationMessageFor(model => model.ContactPerson)
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <div class="form-group">
+                                                        <label>
+                                                            <span style="color:green"><i class="fa fa-info-circle"></i> By updating contact number, Merchant Dashboard UserId will also change.</span>
+                                                            Contact Number
+                                                        </label>
+                                                        @Html.TextBoxFor(model => model.ContactNumber, null, new { autocomplete = "off", maxlength = 10, placeholder = "Enter Contact No.", @class = "form-control", required = "required", @onkeypress = "return ValidateNumber(event);" })
+                                                        @Html.ValidationMessageFor(model => model.ContactNumber)
+                                                        <label class="field-validation-error" style="display:none" id="msgCon"></label>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <div class="form-group">
+                                                        <label>
+                                                            Email
+                                                        </label>
+                                                        @Html.TextBoxFor(model => model.Email, null, new { autocomplete = "off", maxlength = 150, placeholder = "Enter Email Address", @class = "form-control", required = "required", @type = "email" })
+                                                        @Html.ValidationMessageFor(model => model.Email)
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="row">
+                                                <div class="col-md-6">
+                                                    <div class="form-group">
+                                                        <label>
+                                                            Category
+                                                        </label>
+                                                        @Html.DropDownListFor(model => model.Category, new SelectList(ViewBag.Category, "Id", "Name"), "Select Category", new { @class = "form-control", required = "required" })
+                                                        @Html.ValidationMessageFor(model => model.Category)
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <div class="form-group">
+                                                        <label>
+                                                            Commission
+                                                        </label>
+                                                        @Html.DropDownListFor(model => model.Comission, new SelectList(ViewBag.Comission, "Id", "Commission"), "Select Commission", new { @class = "form-control", required = "required" })
+                                                        @Html.ValidationMessageFor(model => model.Comission)
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-md-6">
+                                                    <div class="form-group">
+                                                        <label>
+                                                            Google Map Link
+                                                        </label>
+                                                        @Html.TextBoxFor(model => model.GoogleMapLink, null, new { autocomplete = "off", placeholder = "Enter Google Map Link", @type = "url", @class = "form-control" })
+                                                        @Html.ValidationMessageFor(model => model.GoogleMapLink)
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <label>
+                                                    Shop Introduction
+                                                </label>
+                                                @Html.TextAreaFor(model => model.SpecialRemark, 5, 10, new { autocomplete = "off", maxlength = 15000, placeholder = "Enter Special Remarks", @class = "form-control" })
+                                                @Html.ValidationMessageFor(model => model.SpecialRemark)
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="form-group">
+                    <div class="col-md-offset-2 col-md-10">
+                        <input id="submit" name="Save" type="submit" value="Save Changes" class="btn btn-info btn-sm" />
+                        <input id="submit" name="Reject" type="submit" value="Reject Request" class="btn btn-sm btn-danger" />
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    }
+</div>
+
+@section Scripts {
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+            if ($("#divmsg").length != 0) {
+                $("html, body").delay(1000).animate({ scrollTop: $('#divmsg').offset().top }, 2000);
+            }
+        });
+        if ('@Model.FranchiseName' != '@obj.FranchiseName') {
+            $("#FranchiseName").css("background-color", "#fcf573");
+        }
+        if ('@Model.GSTINNo' != '@obj.GSTINNo') {
+            $("#GSTINNo").css("background-color", "#fcf573");
+        }
+        if ('@Model.PANNo' != '@obj.PANNo') {
+            $("#PANNo").css("background-color", "#fcf573");
+        }
+        if ('@Model.Address' != '@obj.Address') {
+            $("#Address").css("background-color", "#fcf573");
+        }
+        if ('@Model.State' != '@obj.State') {
+            $("#State").css("background-color", "#fcf573");
+        }
+        if ('@Model.City' != '@obj.City') {
+            $("#City").css("background-color", "#fcf573");
+        }
+        if ('@Model.Pincode' != '@obj.Pincode') {
+            $("#Pincode").css("background-color", "#fcf573");
+        }
+         if ('@Model.ShopTiming' != '@obj.ShopTiming') {
+             $("#ShopTiming").css("background-color", "#fcf573");
+        }
+        if ('@Model.ContactPerson' != '@obj.ContactPerson') {
+            $("#ContactPerson").css("background-color", "#fcf573");
+        }
+        if ('@Model.ContactNumber' != '@obj.ContactNumber') {
+            $("#ContactNumber").css("background-color", "#fcf573");
+        }
+        if ('@Model.Email' != '@obj.Email') {
+            $("#Email").css("background-color", "#fcf573");
+        }
+        if ('@Model.Category' != '@obj.Category') {
+            $("#Category").css("background-color", "#fcf573");
+        }
+        if ('@Model.Comission' != '@obj.Comission') {
+            $("#Comission").css("background-color", "#fcf573");
+        }
+         if ('@Model.GoogleMapLink' != '@obj.GoogleMapLink') {
+             $("#GoogleMapLink").css("background-color", "#fcf573");
+        }
+        if ('@IsRemarkChange' == 'True') {
+               $("#SpecialRemark").css("background-color", "#fcf573");
+        }
+        var holiday = "@ViewBag.Holidays";
+        if (holiday != '') {
+            var valArr = holiday.split(",")
+            var i = 0; var size = valArr.length;
+            $options = $('#Holiday option');
+            for (i; i < size; i++) {
+                $options.filter('[value="' + valArr[i] + '"]').prop('selected', true);
+            }
+
+        }
+
+        $(document).ready(function () {
+            document.getElementById("GSTINNo").onkeypress = function () { ValidateAlphaNumeric(e) };
+
+            $("select#State").val(@Model.State);
+            $("select#City").val(@Model.City);
+            $('#Pincode').val(@Model.Pincode);
+            $("#ShopTiming").val(@Model.ShopTiming);
+            $("#Comission").val(@Model.Comission);
+            $("#Category").val(@Model.Category);
+            //$("#ContactNumber").blur();
+
+            var chk = "@ViewBag.NotApplicableGST";
+            if (chk == "False")
+                $('[id*=chkGSTApplicable]').prop("checked", false);
+            else {
+                $('[id*=chkGSTApplicable]').prop("checked", true);
+                $('[id*=GSTINNo]').removeAttr("required");
+                $('[id*=GSTINNo]').prop("disabled", true);
+                $('[id*=GSTINNo]').removeClass('field-validation-error').next('span[data-valmsg-for]').removeClass('field-validation-error').html("");
+            }
+
+            $("#btnUpgrade").bind('click', function () {
+                $("#divLoading").show();
+                $.ajax({
+                    type: "POST",
+                    url: "@Url.Action("Upgrade", "MerchantList")",
+                    data: "{'MerchantID':" + $("#Id").val() + "}",
+                    contentType: "application/json; charset = utf-8",
+                    dataType: "json",
+                    cache: false,
+                    success: function (data) {
+                        $("#divLoading").hide();
+                        //alert(data);
+                        window.location.reload();
+                    },
+                    error: function (x, e) {
+                        $("#divLoading").hide();
+                    }
+                });
+            });
+
+            $("#btnsensSMS").bind('click', function () {
+                $("#divLoading").show();
+                $.ajax({
+                    type: "POST",
+                    url: "@Url.Action("SendSMS", "MerchantList")",
+                    data: "{'MerchantID':" + $("#Id").val() + ",'Text':'" + $("#txtSms").val() + "'}",
+                    contentType: "application/json; charset = utf-8",
+                    dataType: "json",
+                    cache: false,
+                    success: function (data) {
+                        $("#divLoading").hide();
+                        $("#txtSms").val("");
+                        alert("SMS sent successfully!!!");
+                    },
+                    error: function (x, e) {
+                        $("#divLoading").hide();
+                    }
+                });
+            });
+
+            $("#btnAccept").bind('click', function () {
+                $("#divLoading").show();
+                $.ajax({
+                    type: "POST",
+                    url: "@Url.Action("Accept", "MerchantList")",
+                    data: "{'MerchantID':" + $("#Id").val() + "}",
+                    contentType: "application/json; charset = utf-8",
+                    dataType: "json",
+                    cache: false,
+                    success: function (data) {
+                        $("#divLoading").hide();
+                        //alert(data);
+                        window.location.reload();
+                    },
+                    error: function (x, e) {
+                        $("#divLoading").hide();
+                    }
+                });
+            });
+
+            $("#btnApprove").bind('click', function () {
+                $("#divLoading").show();
+                $.ajax({
+                    type: "POST",
+                    url: "@Url.Action("Approve", "MerchantList")",
+                    data: "{'MerchantID':" + $("#Id").val() + "}",
+                    contentType: "application/json; charset = utf-8",
+                    dataType: "json",
+                    cache: false,
+                    success: function (data) {
+                        $("#divLoading").hide();
+                        //alert(data);
+                        window.location.reload();
+                    },
+                    error: function (x, e) {
+                        $("#divLoading").hide();
+                    }
+                });
+            });
+
+            $("#btnReject").bind('click', function () {
+                $("#divLoading").show();
+                $.ajax({
+                    type: "POST",
+                    url: "@Url.Action("Reject", "MerchantList")",
+                    data: "{'MerchantID':" + $("#Id").val() + "}",
+                    contentType: "application/json; charset = utf-8",
+                    dataType: "json",
+                    cache: false,
+                    success: function (data) {
+                        $("#divLoading").hide();
+                        //alert(data);
+                        window.location.reload();
+                    },
+                    error: function (x, e) {
+                        $("#divLoading").hide();
+                    }
+                });
+            });
+        });
+
+        $("#LeaderContactNo").bind('blur', function () {
+            CheckLeadersContactNo();
+        });
+            function CheckLeadersContactNo() {
+                $.ajax({
+                    type: "POST",
+                    url: "@Url.Action("ValidateLeaderContactNo", "MerchantList")",
+                    data: "{'contactNo':" + $("#LeaderContactNo").val() + "}",
+                    contentType: "application/json; charset = utf-8",
+                    dataType: "json",
+                    cache: false,
+                    success: function (data) {
+                        // alert(data);
+                        if (!data) {
+                            $('#submit').prop("disabled", true);
+                            $('#msgLeader').css("display", "block");
+                            $('#msgLeader').html('Invalid Leardership Contact No.');
+                        }
+                        else {
+                            $('#submit').prop("disabled", false);
+                            $('#msgLeader').html('');
+                            $('#msgLeader').css("display", "none");
+                            //CheckContactNo();
+                        }
+
+                    },
+                    error: function (x, e) {
+                        //alert('Failure');
+
+                    }
+                });
+            }
+        @*$("#ContactNumber").bind('blur', function () {
+            CheckContactNo();
+        });
+        function CheckContactNo() {
+            $.ajax({
+                type: "POST",
+                url: "@Url.Action("ValidateContactNo", "MerchantList")",
+                data: "{'contactNo':" + $("#ContactNumber").val() + " , 'Id':" + $("#Id").val() + " }",
+                contentType: "application/json; charset = utf-8",
+                dataType: "json",
+                cache: false,
+                success: function (data) {
+                    // alert(data);
+                    if (!data) {
+                        $('#submit').prop("disabled", true);
+                        $('#msgCon').css("display", "block");
+                        $('#msgCon').html('This Contact No. Is Already Registered.');
+                    }
+                    else {
+                        $('#submit').prop("disabled", false);
+                        $('#msgCon').html('');
+                        $('#msgCon').css("display", "none");
+                        CheckLeadersContactNo();
+                    }
+
+                },
+                error: function (x, e) {
+                    //alert('Failure');
+
+                }
+            });
+        }*@
+
+    $("select#State").bind('change', function () {
+       // $('#loader_img2').show();
+
+        var stateid = $("select#State option:selected").val();
+        if (stateid == 0) {
+            $('#City').empty();
+            $('#City').append('<option value=0>Select City</option>');
+            $('#Pincode').empty();
+            $('#Pincode').append('<option value=0>Select Pincode</option>');
+
+         //   $('#loader_img2').hide();
+            return;
+        }
+        $.ajax({
+            type: "POST",
+            url:"@Url.Action("GetCityList", "MerchantList")",
+            data: "{'stateID':"+stateid+"}",
+            contentType: "application/json; charset = utf-8",
+            dataType: "json",
+            cache: false,
+            success: function (msg) {
+                $('#Pincode').empty();
+                $('#Pincode').append('<option value=0>Select Pincode</option>');
+                $('#City').empty();
+                $('#City').append('<option value=0>Select City</option>');
+                $.each(msg, function (index, item) {
+                    $('#City').append('<option value=' + item.CityID + '>' + item.CityName + '</option>');
+                });
+                //$('#loader_img2').hide();
+            },
+            error: function (x, e) {
+                alert('Failure');
+
+            }
+        });
+
+    });
+
+        $("select#City").bind('change', function () {
+            // $('#loader_img2').show();
+
+            var cityid = $("select#City option:selected").val();
+            if (cityid == 0) {
+                $('#Pincode').empty();
+                $('#Pincode').append('<option value=0>Select Pincode</option>');
+                //   $('#loader_img2').hide();
+                return;
+            }
+            $.ajax({
+                type: "POST",
+                url: "@Url.Action("GetPincodeByCityId", "MerchantList")",
+                data: "{'cityID':" + cityid + "}",
+                contentType: "application/json; charset = utf-8",
+                dataType: "json",
+                cache: false,
+                success: function (msg) {
+                    $('#Pincode').empty();
+                    $('#Pincode').append('<option value=0>Select Pincode</option>');
+                    $.each(msg, function (index, item) {
+                        $('#Pincode').append('<option value=' + item.value + '>' + item.text + '</option>');
+                    });
+                    //$('#loader_img2').hide();
+                },
+                error: function (x, e) {
+                    alert('Failure');
+
+                }
+            });
+        });
+
+        $("#chkGSTApplicable").bind('change', function () {
+
+        if ($(this).prop("checked")) {
+            $('[id*=GSTINNo]').removeAttr("required");
+            $('[id*=GSTINNo]').prop("disabled", true);
+            $('[id*=GSTINNo]').val("");
+            $('[id*=GSTINNo]').removeClass('field-validation-error').next('span[data-valmsg-for]').removeClass('field-validation-error').html("");
+        }
+        else {
+            $('[id*=GSTINNo]').attr("required", "required");
+            $('[id*=GSTINNo]').prop("disabled", false);
+            $('[id*=GSTINNo]').val('@Model.GSTINNo');
+        }
+        });
+
+
+    function ValidateNumber(e) {
+
+        var evt = (e) ? e : window.event;
+        var charCode = (evt.keyCode) ? evt.keyCode : evt.which;
+        if ((charCode > 47 && charCode < 59) || charCode == 8 || charCode == 46  ) { // (charCode > 31 && (charCode < 48 || charCode > 57)) {
+            return true;
+        }
+        else if (charCode == 9) {
+            SendKeys("{tab}");
+            return true;
+        }
+        return false;
+    };
+
+    function ValidateAlphaNumeric(e) {
+        var evt = (e) ? e : window.event;
+        var charCode = (evt.keyCode) ? evt.keyCode : evt.which;
+        if ((charCode >= 65 && charCode <= 90) || (charCode > 45 && charCode < 58) || (charCode > 95 && charCode < 106) || charCode == 8 || charCode == 127 || charCode == 37 || charCode == 39 || charCode == 189 || charCode == 109) { // (charCode > 31 && (charCode < 48 || charCode > 57)) {
+            return true;
+        }
+        else if (charCode == 9) {
+            SendKeys("{tab}");
+            return true;
+        }
+        return false;
+        };
+
+
+    </script>
+}

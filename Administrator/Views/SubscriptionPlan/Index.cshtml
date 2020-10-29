@@ -1,0 +1,125 @@
+﻿@using PagedList;
+@using PagedList.Mvc;
+
+@model IPagedList<ModelLayer.Models.SubscriptionPlan>
+
+@{
+    ViewBag.Title = "Subscription Plan";
+}
+<style>
+    .dataTables_length {
+        margin-left: 0px;
+        margin-top: 7px;
+    }
+    .pagination {
+        margin: 0px 40px;
+    }
+</style>
+<div id="content" class="span10">
+    <ul class="breadcrumb">
+        <li>
+            <a href="#">Subscription Plan</a>
+        </li>
+    </ul>
+
+    <div class="row-fluid">
+
+        <div class="box span12">
+            <div class="box-header">
+                <h2><i class="icon-edit"></i><span class="break"></span>@Html.ActionLink("Create New", "Create")</h2>
+
+            </div>
+            <div class="box-content">
+                <table class="table table-striped table-bordered bootstrap-datatable datatable dataTable">
+                    <thead>
+                        <tr>
+                            <th>Sl.No</th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.First().Name)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.First().Fees)
+                            </th>
+                            <th>
+                                No. Of Days
+                            </th>
+                            <th>
+                                No. Of Coupens
+                            </th>
+                            <th>
+                                Service Tax
+                            </th>
+                            <th>
+                                Extra Tax
+                            </th>
+                            <th>
+                                Start Date
+                            </th>
+                            <th>
+                                Active
+                            </th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    @if (Model.Count() == 0)
+                    {
+                        <tr>
+                            <td colspan="6" class="text-center"><h3>No Record Found...</h3></td>
+                        </tr>
+                    }
+                    else
+                    {
+                        int i = 1;
+                        foreach (var item in Model)
+                        {
+                            <tr>
+                                <td>@{int SrNo = ((ViewBag.PageNumber - 1) * ViewBag.PageSize) + i; i = i + 1; } @SrNo</td>
+
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Name)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Fees)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.NoOfDays)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.NoOfCoupens)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.ServiceTax)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.ExtraTax)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.StartDate)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.IsActive, new { @class = "tri-state1" })
+                                </td>
+                                <td style="width:120px;">
+                                    <a href="@Url.Action("Edit", "SubscriptionPlan", new { id = item.ID })" class="btn btn-small btn-success btnSme">Edit</a>
+                                    @Html.ActionLink("Details", "Details", new { id = item.ID }, new { @class = "btn btn-small btn-primary btnSme" })
+                                </td>
+                            </tr>
+                        }
+                    }
+
+                </table>
+                <div class="pager">
+                    @Html.PagedListPager(Model, Page => Url.Action("Index", new
+                       {
+                           page = Page,
+                           SearchString = ViewBag.SearchString
+                       }),
+                                                                    new PagedListRenderOptions()
+                                                                    {
+                                                                        Display = PagedListDisplayMode.IfNeeded
+                                                                    })
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

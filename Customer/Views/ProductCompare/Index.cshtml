@@ -1,0 +1,463 @@
+﻿@model Gandhibagh.Controllers.CompareProductPage
+@{
+    string cityName = "";
+    int franchiseID = 0;////added
+    if (Request.Cookies["CityCookie"] != null && Request.Cookies["CityCookie"].Value != "")
+    {
+        cityName = Request.Cookies["CityCookie"].Value.Split('$')[1].ToLower();
+        franchiseID = Convert.ToInt32(Request.Cookies["CityCookie"].Value.Split('$')[2]);////added
+    }
+}
+
+
+@using (Html.BeginForm())
+{
+    <div class="compareMainDiv">
+        <h2 class="headingCompare">
+            Compare   @Html.Display("CategoryName", @Model.CategoryName)
+            @Html.HiddenFor(x => x.categoryID, new { @class = "CategoryIDForRead" })
+        </h2>
+        <span class="com-msg">You can add upto 3 <span class="compare-brand"> @Html.Display("CategoryName", @Model.CategoryName)</span> to compare<span class="close-msg">X</span></span>
+
+        @if (ViewBag.Message != null)
+        {
+            <div class="errorMsgDiv">
+                @Html.Label("Messaage", (string)ViewBag.Message)
+                <span class="close-error-msg">X</span>
+            </div>
+        }
+        <div class="clr"></div>
+        <div id="ProductHeadsTop">
+
+            <div id="ProductHeads">
+                <div id="ProductHeadsDetail" class="comp-3 sameDiv">
+
+                </div>
+
+
+                <div id="ProducDetail1" class="comp-3 sameDiv">
+                </div>
+
+                <div id="ProducDetail2" class="comp-3 sameDiv">
+                </div>
+
+                <div id="ProducDetail3" class="comp-3 sameDiv">
+                </div>
+                <div class="clr"></div>
+            </div>
+        </div>
+        <div id="GeneralSpecification"> <h3>Technical Specification</h3> </div>
+        <div>
+            @Html.Hidden("CookiesCount", Model.CookiesCount)
+
+            <div id="CompareCategoryHeads">
+            </div>
+
+            <div id="CompareCategoryDetail1">
+            </div>
+
+            <div id="CompareCategoryDetail2">
+            </div>
+
+            <div id="CompareCategoryDetail3">
+            </div>
+            <div class="clr"></div>
+
+
+        </div>
+    </div>
+}
+
+<style>
+    #CompareCategoryHeads {
+        /*width: 15%;*/
+        float: left;
+        margin: 5px;
+    }
+
+    #ProductHeads {
+        clear: both;
+    }
+
+    #ProductHeadsDetail {
+        width: 20%;
+        float: left;
+        margin: 5px;
+    }
+
+    #ProducDetail1 {
+        width: 20%;
+        float: left;
+        margin: 5px;
+    }
+
+    #ProducDetail2 {
+        width: 20%;
+        float: left;
+        margin: 5px;
+    }
+
+    #ProducDetail3 {
+        width: 20%;
+        float: left;
+        margin: 5px;
+    }
+
+    #CompareCategoryDetail1 #footer {
+        display: none;
+    }
+
+    #CompareCategoryDetail3 #footer {
+        display: none;
+    }
+
+    #CompareCategoryDetail2 #footer {
+        display: none;
+    }
+</style>
+@*<link href="~/Content/css/Site.css" rel="stylesheet" />*@
+<link href="~/Content/css/Site.css" rel="stylesheet" />
+<script>
+    /*Pradnyakar*/
+
+    $(document).ready(function () {
+        $("#pageloaddiv").css('display', 'block');
+        $("#pageloaddiv").fadeOut(1000);
+        var CookiesCount = $('#CookiesCount').val()
+        var _urlhead = '@Url.Action("CompareProductHeads", "ProductCompare")';
+        $.get(_urlhead, { CookiesCount: CookiesCount }).done(function (data) {
+            $('#CompareCategoryHeads').html(data);
+            $('#CompareCategoryHeads').fadeIn('fast');
+        });
+
+        $("#pageloaddiv").css('display', 'none');
+        $("#pageloaddiv").fadeOut(1000);
+
+    });
+
+    $(document).ready(function () {
+        var _urlspec = '@Url.Action("CompareProductSpecification", "ProductCompare")';
+        var _urlprodESpan = "'@Url.Action("Product_CompareEmptySpan", "ProductCompare")'";
+        var arr1 = [];
+        var arr2 = [];
+        var arr3 = [];
+        var MaxCounts = 0;
+        var c = 0;
+        var CookiesCount = $('#CookiesCount').val()
+        if (CookiesCount > 0) {
+            $("#pageloaddiv").css('display', 'block');
+            $("#pageloaddiv").fadeOut(1000);
+
+            /* Request the partial view with .get request. */
+            $.get(_urlspec, { CookiesCount: "1" }).done(function (data) {
+                /* data is the pure html returned from action method, load it to your page */
+                $('#CompareCategoryDetail1').html(data);
+                /* little fade in effect */
+                $('#CompareCategoryDetail1').fadeIn('fast');
+
+                $("#CompareCategoryDetail1 .sameData span").each(function (index, elem) {
+                    arr1.push($(this).attr('id'));
+                });
+
+                MaxCountMethode(arr1.length);
+            });
+
+            $("#pageloaddiv").css('display', 'none');
+            $("#pageloaddiv").fadeOut(1000);
+        }
+
+
+        var CookiesCount1 = $('#CookiesCount').val()
+        if (CookiesCount1 > 1) {
+            $("#pageloaddiv").css('display', 'block');
+            $("#pageloaddiv").fadeOut(1000);
+            /* Request the partial view with .get request. */
+            $.get(_urlspec, { CookiesCount: "2" }).done(function (data) {
+                /* data is the pure html returned from action method, load it to your page */
+                $('#CompareCategoryDetail2').html(data);
+                /* little fade in effect */
+                $('#CompareCategoryDetail2').fadeIn('fast');
+                $("#CompareCategoryDetail2 .sameData span").each(function (index, elem) {
+                    arr2.push($(this).attr('id'));
+                });
+
+                MaxCountMethode(arr2.length)
+
+            });
+
+            $("#pageloaddiv").css('display', 'none');
+            $("#pageloaddiv").fadeOut(1000);
+        }
+        else {
+
+
+            $("#pageloaddiv").css('display', 'block');
+            $("#pageloaddiv").fadeOut(1000);
+            /* Request the partial view with .get request. */
+            $.get(_urlprodESpan, { CookiesCount: "2" }).done(function (data) {
+                /* data is the pure html returned from action method, load it to your page */
+                $('#CompareCategoryDetail2').html(data);
+                /* little fade in effect */
+                $('#CompareCategoryDetail2').fadeIn('fast');
+
+                $("#CompareCategoryDetail2 .sameData span").each(function (index, elem) {
+                    arr2.push($(this).attr('id'));
+                });
+
+                MaxCountMethode(arr2.length)
+            });
+
+            $("#pageloaddiv").css('display', 'none');
+            $("#pageloaddiv").fadeOut(1000);
+        }
+
+        var CookiesCount2 = $('#CookiesCount').val()
+        if (CookiesCount2 > 2) {
+            $("#pageloaddiv").css('display', 'block');
+            $("#pageloaddiv").fadeOut(1000);
+            /* Request the partial view with .get request. */
+            $.get(_urlspec, { CookiesCount: "3" }).done(function (data) {
+                // alert(CookiesCount);
+                /* data is the pure html returned from action method, load it to your page */
+                $('#CompareCategoryDetail3').html(data);
+                /* little fade in effect */
+                $('#CompareCategoryDetail3').fadeIn('fast');
+
+
+                $("#CompareCategoryDetail3 .sameData span").each(function (index, elem) {
+                    arr3.push($(this).attr('id'));
+                });
+
+                MaxCountMethode(arr3.length)
+
+            });
+
+            $("#pageloaddiv").css('display', 'none');
+            $("#pageloaddiv").fadeOut(1000);
+        }
+        else {
+            $("#pageloaddiv").css('display', 'block');
+            $("#pageloaddiv").fadeOut(1000);
+            /* Request the partial view with .get request. */
+            $.get(_urlprodESpan, { CookiesCount: "3" }).done(function (data) {
+                /* data is the pure html returned from action method, load it to your page */
+                $('#CompareCategoryDetail3').html(data);
+                /* little fade in effect */
+                $('#CompareCategoryDetail3').fadeIn('fast');
+
+                $("#CompareCategoryDetail3 .sameData span").each(function (index, elem) {
+                    arr3.push($(this).attr('id'));
+                });
+
+                MaxCountMethode(arr3.length)
+            });
+
+            $("#pageloaddiv").css('display', 'none');
+            $("#pageloaddiv").fadeOut(1000);
+        }
+
+
+        function MaxCountMethode(CountVal) {
+            MaxCounts = CountVal;
+            c++;
+
+            if (c == 3) {
+                var maxHeight;
+                /*
+                    for setting same size of all 3 div span height
+                    Set span size only after load all three partial pages
+                */
+                for (i = 0; i < MaxCounts; i++) {
+
+                    var idVar = arr1[i];
+                    maxHeight = $("#CompareCategoryDetail1 .sameData span#" + idVar).height();
+
+                    if ($("#CompareCategoryDetail2 .sameData span#" + idVar).height() > maxHeight) {
+                        maxHeight = $("#CompareCategoryDetail2 .sameData span#" + idVar).height();
+                    }
+                    if ($("#CompareCategoryDetail3 .sameData span#" + idVar).height() > maxHeight) {
+                        maxHeight = $("#CompareCategoryDetail3 .sameData span#" + idVar).height();
+                    }
+                    if ($("#CompareCategoryHeads .sameData span#" + idVar).height() > maxHeight) {
+                        maxHeight = $("#CompareCategoryHeads .sameData span#" + idVar).height();
+                    }
+
+                    $("#CompareCategoryDetail1 .sameData span#" + idVar).height(maxHeight);
+                    $("#CompareCategoryDetail2 .sameData span#" + idVar).height(maxHeight);
+                    $("#CompareCategoryDetail3 .sameData span#" + idVar).height(maxHeight);
+                    $("#CompareCategoryHeads .sameData span#" + idVar).height(maxHeight);
+                }
+            }
+
+        }
+
+    });
+
+    $(document).ready(function () {
+
+
+
+    });
+
+    $(document).ready(function () {
+
+
+
+    });
+
+
+    $(document).ready(function () {
+        var _urlpreview = '@Url.Action("ProductPreviewDetail", "ProductCompare")';
+        var _urlEview = '@Url.Action("EmptyView", "ProductCompare")';
+        var CookiesCount = $('#CookiesCount').val()
+        if (CookiesCount > 0) {
+            $("#pageloaddiv").css('display', 'block');
+            $("#pageloaddiv").fadeOut(1000);
+
+            /* Request the partial view with .get request. */
+            $.get(_urlpreview, { CookiesCount: "1" }).done(function (data) {
+                /* data is the pure html returned from action method, load it to your page */
+                $('#ProducDetail1').html(data);
+                /* little fade in effect */
+                $('#ProducDetail1').fadeIn('fast');
+            });
+
+            $("#pageloaddiv").css('display', 'none');
+            $("#pageloaddiv").fadeOut(1000);
+        }
+        else {
+            var id = $("#categoryID").val();
+
+            $("#pageloaddiv").css('display', 'block');
+            $("#pageloaddiv").fadeOut(1000);
+            /* Request the partial view with .get request. */
+            $.get(_urlEview, { CategoryID: id }).done(function (data) {
+                /* data is the pure html returned from action method, load it to your page */
+                $('#ProducDetail1').html(data);
+                /* little fade in effect */
+                $('#ProducDetail1').fadeIn('fast');
+            });
+
+            $("#pageloaddiv").css('display', 'none');
+            $("#pageloaddiv").fadeOut(1000);
+        }
+
+    });
+    $(document).ready(function () {
+        var _urlpreview = '@Url.Action("ProductPreviewDetail", "ProductCompare")';
+        var _urlEview2 = '@Url.Action("EmptyView2", "ProductCompare")';
+        var CookiesCount = $('#CookiesCount').val()
+        if (CookiesCount > 1) {
+            $("#pageloaddiv").css('display', 'block');
+            $("#pageloaddiv").fadeOut(1000);
+
+            /* Request the partial view with .get request. */
+            $.get(_urlpreview, { CookiesCount: "2" }).done(function (data) {
+                //alert(CookiesCount);
+                /* data is the pure html returned from action method, load it to your page */
+                $('#ProducDetail2').html(data);
+                /* little fade in effect */
+                $('#ProducDetail2').fadeIn('fast');
+            });
+
+            $("#pageloaddiv").css('display', 'none');
+            $("#pageloaddiv").fadeOut(1000);
+        }
+        else {
+            var id = $("#categoryID").val();
+
+            $("#pageloaddiv").css('display', 'block');
+            $("#pageloaddiv").fadeOut(1000);
+            /* Request the partial view with .get request. */
+            $.get(_urlEview2, { CategoryID: id }).done(function (data) {
+                /* data is the pure html returned from action method, load it to your page */
+                $('#ProducDetail2').html(data);
+                /* little fade in effect */
+                $('#ProducDetail2').fadeIn('fast');
+            });
+
+            $("#pageloaddiv").css('display', 'none');
+            $("#pageloaddiv").fadeOut(1000);
+        }
+
+    });
+
+    $(document).ready(function () {
+        var _urlpreview = '@Url.Action("ProductPreviewDetail", "ProductCompare")';
+        var _urlEview3 = '@Url.Action("EmptyView3", "ProductCompare")';
+        var CookiesCount = $('#CookiesCount').val()
+        if (CookiesCount > 2) {
+            $("#pageloaddiv").css('display', 'block');
+            $("#pageloaddiv").fadeOut(1000);
+
+            /* Request the partial view with .get request. */
+            $.get(_urlpreview, { CookiesCount: "3" }).done(function (data) {
+                /* data is the pure html returned from action method, load it to your page */
+                $('#ProducDetail3').html(data);
+                /* little fade in effect */
+                $('#ProducDetail3').fadeIn('fast');
+            });
+
+            $("#pageloaddiv").css('display', 'none');
+            $("#pageloaddiv").fadeOut(1000);
+        }
+        else {
+            var id = $("#categoryID").val();
+
+            $("#pageloaddiv").css('display', 'block');
+            $("#pageloaddiv").fadeOut(1000);
+            /* Request the partial view with .get request. */
+            $.get(_urlEview3, { CategoryID: id }).done(function (data) {
+                /* data is the pure html returned from action method, load it to your page */
+                $('#ProducDetail3').html(data);
+                /* little fade in effect */
+                $('#ProducDetail3').fadeIn('fast');
+            });
+
+            $("#pageloaddiv").css('display', 'none');
+            $("#pageloaddiv").fadeOut(1000);
+        }
+
+    });
+
+    $(function () {
+        $(".close-msg").click(function () {
+            $(".com-msg").fadeOut(1000);
+        });
+        $(".close-error-msg").click(function () {
+            $(".errorMsgDiv").fadeOut(1000);
+            $(".com-msg").removeAttr('style');
+        });
+
+    });
+
+    $(window).scroll(function () {
+        if ($(this).scrollTop() > 150) {
+            $("#ProductHeadsTop").addClass('ProductHeadsTop');
+            $("#GeneralSpecification").css('padding-top', '285px');
+        } else {
+            $("#ProductHeadsTop").removeClass('ProductHeadsTop');
+            $("#GeneralSpecification").removeAttr('style');
+        }
+
+    })
+    var width = $(window).width();
+    if (width < 768) {
+        $(window).scroll(function () {
+            var scroll = $(window).scrollTop();
+            if (scroll > 150) {
+                $("#GeneralSpecification").css('padding-top', '35px');
+            } else {
+                $("#GeneralSpecification").removeAttr('style');
+            }
+        });
+    }
+    $(function () {
+        if ($(".errorMsgDiv").css('display') == 'block') {
+            $(".com-msg").css('width', '50%');
+        } else {
+            $(".com-msg").removeAttr('style');
+        }
+
+    });
+</script>

@@ -1,0 +1,74 @@
+﻿@model ModelLayer.Models.ViewModel.TrackOrderViewModelList
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<script src="~/Scripts/jquery-1.10.2.min.js"></script>
+<script type="text/javascript">
+    $(document).ready(function () {
+        $("#chkSelect").click(function () {
+            $(".chkSelect").prop('checked', $(this).prop('checked'));
+        });
+    });
+
+</script>
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+
+    <table class="table">
+       @for (var i = 0; i < Model.LtrackOrderViewModelList.Count(); i++)
+        {
+         <tr>
+            <th>
+                @Html.CheckBox("select", new { id = "chkSelect"  })
+            </th>
+
+        <th>
+                @Html.DisplayNameFor(model => model.LtrackOrderViewModelList[i].ShopOrderID)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.LtrackOrderViewModelList[i].CustomerOrderId)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.LtrackOrderViewModelList[i].ShopStockId)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.LtrackOrderViewModelList[i].Qty)
+            </th>
+            <th></th>
+        </tr>
+            break;
+       }
+        @for (var i = 0; i < Model.LtrackOrderViewModelList.Count(); i++)
+        {
+            <tr>
+                <td>
+                    @Html.CheckBoxFor(model => model.LtrackOrderViewModelList[i].CheckBoxStatus, new { @class = "chkSelect" })
+
+                </td>
+                <td>
+                    @Html.DisplayFor(model => model.LtrackOrderViewModelList[i].ShopOrderID)
+                    @Html.HiddenFor(model => model.LtrackOrderViewModelList[i].ShopOrderID)
+                </td>
+                <td>
+                    @Html.DisplayFor(model => model.LtrackOrderViewModelList[i].CustomerOrderId)
+                </td>
+                <td>
+                    @Html.DisplayFor(model => model.LtrackOrderViewModelList[i].ShopStockId)
+                </td>
+                <td>
+                    @Html.DisplayFor(model => model.LtrackOrderViewModelList[i].Qty)
+                </td>
+                <td></td>
+            </tr>
+        }
+
+    </table>
+    <input type="submit" value="Conform" name="action" />
+    <input type="submit" value="Cancel" name="action" />
+}
+
+
+

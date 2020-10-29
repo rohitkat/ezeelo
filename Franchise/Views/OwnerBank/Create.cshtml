@@ -1,0 +1,129 @@
+﻿@model ModelLayer.Models.OwnerBank
+
+@{
+    ViewBag.Title = "Create";
+    Layout = null;
+}
+
+<link href="~/Content/css/style_asset.css" rel="stylesheet" />
+<script src="~/Content/assets/js/jquery.easing.min.js"></script>
+<link href="http://www.jqueryscript.net/css/jquerysctipttop.css" rel="stylesheet" type="text/css">
+@*<link href="~/Content/assets/css/form-design.css" rel="stylesheet" />*@
+<link href="~/Content/css/Site.css" rel="stylesheet" />
+@*<h2>Create</h2>*@
+
+<div id="content" class="span10">
+    <div style="margin-top:20px;">
+        @if (ViewBag.Message != null)
+        {
+            <span class="succes-msg" style="margin: 0 12px;">@ViewBag.Message</span>
+        }
+    </div>
+    @using (Html.BeginForm())
+    {
+        @Html.AntiForgeryToken()
+
+        <div class="row-fluid">
+            <div class="box span12">
+                <div class="box-content">
+                    <form class="form-horizontal" id="msform1">
+                        <div class="form-horizontal" id="msform1">
+                            @Html.ValidationMessage("Message")
+                            @Html.ValidationSummary(true)
+
+
+                            <div class="control-group mrg-btm">
+                                <div class="NameDescription">
+                                    <div class="control-group  mrg-left">
+                                        @Html.LabelFor(model => model.AccountName, new { @class = " col-md-2" })
+                                        <div class="">
+                                            @Html.TextBoxFor(model => model.AccountName, new { required = "required" })
+                                            @Html.ValidationMessageFor(model => model.AccountName)
+                                        </div>
+                                    </div>
+                                    <div class="control-group mrg-left">
+                                        @Html.LabelFor(model => model.BankID, "Bank", new { @class = "control-label col-md-2" })
+                                        <div class="bank_exClas">
+                                            @Html.DropDownList("BankID", "Select Bank")
+                                            @Html.ValidationMessageFor(model => model.BankID)
+                                        </div>
+                                    </div>
+
+                                    <div class="control-group  mrg-left">
+                                        @Html.LabelFor(model => model.BranchName, new { @class = "control-label col-md-2" })
+                                        <div class="">
+                                            @Html.EditorFor(model => model.BranchName)
+                                            @Html.ValidationMessageFor(model => model.BranchName)
+
+                                        </div>
+
+                                    </div>
+                                    <div class="control-group  mrg-left">
+                                        @Html.LabelFor(model => model.IFSCCode, new { @class = "control-label col-md-2" })
+                                        <div class="">
+
+                                            @Html.TextBoxFor(model => model.IFSCCode, new { @maxlength = 11 })
+                                            @Html.ValidationMessageFor(model => model.IFSCCode)
+                                        </div>
+
+                                    </div>
+
+                                    <div class="clr"></div>
+                                </div>
+                            </div>
+
+                            <div class="control-group mrg-btm">
+                                <div class="NameDescription">
+
+
+
+                                    <div class="control-group mrg-left">
+                                        @Html.LabelFor(model => model.MICRCode, new { @class = "control-label col-md-2" })
+                                        <div class="">
+                                            @Html.TextBoxFor(model => model.MICRCode, new { @maxlength = 50 })
+                                            @Html.ValidationMessageFor(model => model.MICRCode)
+                                        </div>
+                                    </div>
+
+                                    <div class="control-group  mrg-left">
+                                        @Html.LabelFor(model => model.AccountNumber, new { @class = "control-label col-md-2" })
+                                        <div class="">
+                                            @Html.TextBoxFor(model => model.AccountNumber, new { @maxlength = 20 })
+                                            @Html.ValidationMessageFor(model => model.AccountNumber)
+                                        </div>
+                                    </div>
+
+                                    <div class="control-group  mrg-left">
+                                        @Html.LabelFor(model => model.BankAccountTypeID, "Bank Account Type", new { @class = "control-label col-md-2" })
+                                        <div class="bank_exClas">
+                                            @Html.DropDownList("BankAccountTypeID", "Select Bank Account Type")
+                                            @Html.ValidationMessageFor(model => model.BankAccountTypeID)
+                                        </div>
+                                    </div>
+                                    <div class="clr"></div>
+                                </div>
+                            </div>
+
+                            <div class="clr"></div>
+
+                            <div class="control-group mrg-btm">
+                                <div class="mrg-left">
+                                    <div class="">
+                                        <input type="submit" value="Save" class="btn btn-primary btn-woner" />
+
+                                        @*<input type="button" name="next" class="btn next action-button btn-success" value="Next" />*@
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+
+
+
+                    </form>
+                </div>
+            </div>
+        </div>
+    }
+</div>
+

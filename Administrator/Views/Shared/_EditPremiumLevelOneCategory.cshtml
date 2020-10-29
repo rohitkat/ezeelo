@@ -1,0 +1,166 @@
+﻿
+@model ModelLayer.Models.ViewModel.PremiumShopPriorityList
+
+@using (Html.BeginForm("UpdatePremiumShopPrimaryMarket", "PremiumShopPriority"))
+{
+    <div>
+        <div class="form-actions" style="clear:both;">
+            <input type="submit" name="submit" id="btnSubmit" class="btn btn-success" />
+        </div>
+        <div style="color:red; font-weight:bold;">
+            <marquee behavior="alternate" onmouseover="this.stop();" onmouseout="this.start();">Note:-  UP/DOWN Priority Will only Affected After Submit</marquee>
+        </div>
+       
+        @if (ViewBag.FranchiseID != null)
+        {
+            @Html.Hidden("FranchiseID", (Int64)ViewBag.FranchiseID)
+        }
+        <div style="width:100%; margin-top:10px;"></div>
+        <table class="table table-bordered ">
+            <thead>
+                <tr id="toptr">
+
+                    <th>
+                        Sequence
+                    </th>
+                    @*<th>
+                            Image
+                        </th>*@
+                    <th>
+                        Category Name
+                    </th>
+                    <th style="display:none;">
+                        Shop Category Name
+                    </th>
+                    <th>IsActive</th>
+
+                    <th colspan="2">Move</th>
+
+                    <th>Action </th>
+                </tr>
+            </thead>
+
+            @for (int i = 0; i < Model.premiumShopPriorityList.Count(); i++)
+            {
+
+                <tr>
+                    <td class="shopPriority">
+
+                        @*@Html.HiddenFor(x => x.franchiseMenuList[i].id)*@
+                        @Html.HiddenFor(x => x.premiumShopPriorityList[i].Priority)
+                        @Html.DisplayFor(x => x.premiumShopPriorityList[i].Priority)
+                        @Html.HiddenFor(x => x.premiumShopPriorityList[i].CategoryID)
+
+                    </td>
+
+                    <td class="shop">
+                        @Html.DisplayFor(x => x.premiumShopPriorityList[i].CategoryName)
+                    </td>
+                   
+                    <td>
+                        @Html.DisplayFor(x => x.premiumShopPriorityList[i].IsActive)
+                    </td>
+                    <td> <a href="#noname" class='up'>Up</a></td>
+                    <td> <a href="#noname" class='down'>Down</a></td>
+
+                    <td>
+                        @Html.ActionLink("Edit", "PremiumShopPrimaryMarket_Edit", new { id = Model.premiumShopPriorityList[i].ID }, new { @class = "btn btn-small btn-success" })
+                        @Html.ActionLink("Details", "PremiumShopPrimaryMarket_Details", new { id = Model.premiumShopPriorityList[i].ID }, new { @class = "btn btn-small btn-primary" })
+                        @Html.ActionLink("Delete", "PremiumShopPrimaryMarket_Delete", new { id = Model.premiumShopPriorityList[i].ID }, new { @class = "btn btn-small btn-danger" })
+                    </td>
+                </tr>
+            }
+
+        </table>
+    </div>
+}
+
+<div class="form-actions">
+
+    @Html.ActionLink("Back to List", "Index", string.Empty, new { @class = "btn btn-brown" })
+
+</div>
+
+<script>
+    $(document).ready(function () {
+
+        $(".up,.down").click(function () {
+
+            var $element = this;
+            var row = $($element).parents("tr:first");
+            var val = $($element).parents("tr:first").children("td:first").text();
+
+            if ($(this).is('.up')) {
+                $('.table').find('tr').removeAttr('style');
+
+                if (row.prev('tr').html() != undefined) {
+
+                    //var ImageName = row.children("td:nth-child(2)").html();
+                    var CategoryID = row.children("td:nth-child(1)").find("[id*=CategoryID]").val();
+                    var CategoryName = row.children("td:nth-child(2)").html();
+                    //var FranchiseCategoryName = row.children("td:nth-child(4)").html();
+                    var IsActive = row.children("td:nth-child(3)").find(".check-box").prop('checked');
+
+                   // var prevImageName = row.prev().children("td:nth-child(2)").html();
+                    var prevCategoryID = row.prev().children("td:nth-child(1)").find("[id*=CategoryID]").val();
+                    var prevCategoryName = row.prev().children("td:nth-child(2)").html();
+                    //var prevFranchiseCategoryName = row.prev().children("td:nth-child(4)").html();
+                    var prevIsActive = row.prev().children("td:nth-child(3)").find(".check-box").prop('checked');
+
+                   // row.children("td:nth-child(2)").html(prevImageName);
+                    row.children("td:nth-child(1)").find("[id*=CategoryID]").val(prevCategoryID);
+                    row.children("td:nth-child(2)").html(prevCategoryName);
+                   // row.children("td:nth-child(4)").html(prevFranchiseCategoryName);
+                    row.children("td:nth-child(3)").find(".check-box").prop('checked', prevIsActive);
+
+                    //row.prev().children("td:nth-child(2)").html(ImageName);
+                    row.prev().children("td:nth-child(1)").find("[id*=CategoryID]").val(CategoryID);
+                    row.prev().children("td:nth-child(2)").html(CategoryName);
+                    //row.prev().children("td:nth-child(4)").html(FranchiseCategoryName);
+                    row.prev().children("td:nth-child(3)").find(".check-box").prop('checked', IsActive);
+                    row.prev('tr').css('background-color', '#ace8a9');
+                }
+            }
+            else {
+
+                $('.table').find('tr').removeAttr('style');
+                if ($(this).parents().not("tr:last")) {
+                    if (row.next('tr').html() != undefined) {
+
+                       // var ImageName = row.children("td:nth-child(2)").html();
+                        var CategoryID = row.children("td:nth-child(1)").find("[id*=CategoryID]").val();
+                        var CategoryName = row.children("td:nth-child(2)").html();
+                       // var FranchiseCategoryName = row.children("td:nth-child(4)").html();
+                        var IsActive = row.children("td:nth-child(3)").find(".check-box").prop('checked');
+
+                       // var nextImageName = row.next().children("td:nth-child(2)").html();
+                        var nextCategoryID = row.next().children("td:nth-child(1)").find("[id*=CategoryID]").val();
+                        var nextCategoryName = row.next().children("td:nth-child(2)").html();
+                       // var nextFranchiseCategoryName = row.next().children("td:nth-child(4)").html();
+                        var nextIsActive = row.next().children("td:nth-child(3)").find(".check-box").prop('checked');
+
+                       // row.children("td:nth-child(2)").html(nextImageName);
+                        row.children("td:nth-child(1)").find("[id*=CategoryID]").val(nextCategoryID);
+                        row.children("td:nth-child(2)").html(nextCategoryName);
+                      //  row.children("td:nth-child(4)").html(nextFranchiseCategoryName);
+                        row.children("td:nth-child(3)").find(".check-box").prop('checked', nextIsActive);
+
+                       // row.next().children("td:nth-child(2)").html(ImageName);
+                        row.next().children("td:nth-child(1)").find("[id*=CategoryID]").val(CategoryID);
+                        row.next().children("td:nth-child(2)").html(CategoryName);
+                      //  row.next().children("td:nth-child(4)").html(FranchiseCategoryName);
+                        row.next().children("td:nth-child(3)").find(".check-box").prop('checked', IsActive);
+                        row.next('tr').css('background-color', '#ace8a9');
+
+                    }
+                }
+            }
+        });
+
+    });
+
+</script>
+<script src="~/Content/js/custom.js"></script>
+<script src="~/Content/js/jquery.dataTables.min.js"></script>
+
+

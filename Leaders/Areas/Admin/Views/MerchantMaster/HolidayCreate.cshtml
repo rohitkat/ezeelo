@@ -1,0 +1,56 @@
+﻿@model ModelLayer.Models.HolidayMaster
+@{
+    ViewBag.Title = "HolidayCreate";
+    Layout = "~/Views/Shared/_LeadersLayout.cshtml";
+}
+<script>
+    $(document).ready(function () {
+        $("#HolidayDate").datepicker({
+            minDate: 0
+        });
+    });
+</script>
+
+<script src="~/Scripts/MerchantMenuOpenup.js"></script>
+<style>
+    .form-control-label {
+        width: 120px !important;
+    }
+</style>
+<div class="container">
+    @using (Html.BeginForm())
+    {
+        @Html.AntiForgeryToken()
+        @Html.ValidationSummary(true)
+        <div class="card">
+            <div class="card-header">
+                <strong>Holiday Master</strong>
+            </div>
+            <div class="card-body card-block">
+                <div class="form-group">
+                    <label for="company" class=" form-control-label">Name</label>
+                    @Html.EditorFor(model => model.Name)
+                    @Html.ValidationMessageFor(model => model.Name, null, new { @class = "text-danger" })
+                </div>
+                <div class="form-group">
+                    <label for="company" class=" form-control-label">Date(optional)</label>
+                    @Html.EditorFor(model => model.HolidayDate)
+                    @Html.ValidationMessageFor(model => model.HolidayDate, null, new { @class = "text-danger" })
+                </div>
+                <div class="form-group">
+                    <label for="company" class=" form-control-label">IsActive</label>
+                    @Html.EditorFor(model => model.IsActive)
+                    @Html.ValidationMessageFor(model => model.IsActive)
+                </div>
+                <div class="form-group">
+                    <div class="col-md-offset-2 col-md-10">
+                        <input type="submit" value="Create" class="btn btn-primary btn-sm" />
+                        <a class="btn btn-info btn-sm" href="@Url.Action("HolidayIndex", "MerchantMaster", new { area = "Admin" })">Back To List</a>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    }
+</div>
+

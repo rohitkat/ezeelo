@@ -1,0 +1,175 @@
+﻿@model ModelLayer.Models.ViewModel.FranchiseDshboardCustomerRet
+
+@{
+    ViewBag.Title = "Index";
+}
+<style>
+    .tomargin {
+        margin-top: 5px;
+    }
+    .btn-success {
+        background-color: #3c8dbc !important;
+        border-color: #3c8dbc !important;
+    }
+</style>
+<h2 style="margin-top:0px;">Franchise</h2>
+<div>
+    @using (Html.BeginForm("GetReport", "FranchiseWiseData", FormMethod.Post, new { id = "FranchiseWiseDataForm", name = "FranchiseWiseDataForm", enctype = "multipart/form-data" }))
+    {
+        <div class="row">
+            <div class="col-md-3 tomargin">
+                @Html.DropDownList("FranchisesID", null, "--All Franchise--", new { @class = "form-control", onchange = "SelectedIndexChanged()" })
+            </div>
+            <div class="col-md-4 tomargin">
+                <div class="btn-group-horizontal">
+                    <input type="submit" id="btnToDay" value="DAY" name="Submit" class="btn btn-success" />
+                    <input type="submit" value="WEEK" id="btnWeek" name="Submit" class="btn btn-success">
+                    <input type="submit" value="MONTH" id="btnMonth" name="Submit" class="btn btn-success">
+                    <input type="button" id="btncustom" value="CUSTOM DATE" class="btn btn-success" />
+                </div>
+            </div>
+            <div class="col-md-5 hidden rightButton hidden tomargin" id="divDate">
+
+                <div class="input-group date col-md-4" style="float:left;">
+                    <div class="input-group-addon">
+                        <i class="fa fa-calendar"></i>
+                    </div>
+                    <input type="text" name="FromDate" class="form-control pull-right " id="FromDate" placeholder="FromDate" autocomplete="off">
+                </div>
+                <div class="input-group date col-md-4" style="float:left;">
+                    <div class="input-group-addon">
+                        <i class="fa fa-calendar"></i>
+                    </div>
+                    <input type="text" name="ToDate" class="form-control pull-right " id="ToDate" placeholder="ToDate" autocomplete="off"  >
+
+                </div>
+                <div class="input-group date col-md-4">
+                    <input type="submit" value="SEARCH" id="btnSearch" name="Submit" class="btn btn-success">
+                </div>
+
+            </div>
+        </div>
+        
+    }
+    <br />
+    <div>
+        @if (Model != null)
+        {
+            @Html.Partial("GetReport", Model)
+            //Html.RenderPartial("_GetReport",Model);
+        }
+    </div>
+</div>
+<script src="~/Scripts/jquery-2.2.3.min.js"></script>
+<script>
+    $(document).ready(function () {
+        var toggle = true;
+        $('#btncustom').click(function () {
+            if (toggle) {
+                $('#divDate').removeClass('hidden');
+            }
+            else {
+                $('#divDate').addClass('hidden');
+            }
+            toggle = !toggle;
+        });
+    });
+</script>
+<script type="text/javascript">
+    function SelectedIndexChanged() {
+        //JavaScript way to post form
+        document.FranchiseWiseDataForm.submit();
+        //Or
+        //jQuery way to post form
+        $('#FranchiseWiseDataForm').submit();
+    }
+</script>
+<script type="text/javascript">
+    $(function () {
+        $("input#btnSearch").on('click', function () {
+            $('#loader_img').show();
+            var pagecount = 0;
+            var page = 1;
+            var toDate = $('#txtToDate').val();
+            var fromDate = $('#txtFromDate').val();
+            var shopID = 0;
+            if ($("select#shopID option:selected").val() > 0) {
+                shopID = $("select#shopID option:selected").val();
+            }
+            var isValid = ValidateDate(fromDate, toDate);
+            if (isValid == false) {
+                $('#loader_img').hide();
+                return;
+            }
+            $.ajax({
+                url: '@Url.Action("_GetReport", "TrackReport")',
+                data: { 'fromDate': fromDate, 'toDate': toDate },
+                type: "Post",
+                cache: false,
+                success: function (data) {
+                    //alert(data);
+                    $('#loader_img').hide();
+                    $('#divReport').empty();
+                    $('#divReport').append(data);
+                },
+                error: function (data) {
+
+                }
+            });
+        });
+    });
+
+
+
+
+    function ValidateDate(fromDate, toDate) {
+        if (fromDate == '' && toDate == '') {
+            $('[id*=lblMsg]').text('Please Select From Date and To Date.');
+            return false;
+        }
+        else if (fromDate == '') {
+            $('[id*=lblMsg]').text('Please Select From Date.');
+            return false;
+        }
+        else if (toDate == '') {
+            $('[id*=lblMsg]').text('Please Select To Date.');
+            return false;
+        }
+
+        if (fromDate != '' && toDate != '') {
+            dateFirst = fromDate.split('/');
+            dateSecond = toDate.split('/');
+            var from = new Date(dateFirst[2], dateFirst[1], dateFirst[0]); //Year, Month, Date
+            var to = new Date(dateSecond[2], dateSecond[1], dateSecond[0]);
+            if (from > to) {
+                $('[id*=lblMsg]').text('To Date must be greater than From Date.');
+                return false;
+            }
+            else {
+                $('[id*=lblMsg]').text('');
+            }
+        }
+    }
+
+
+    function DateValidation() {
+        var FromDate = $('#StartDate').val();
+        var ToDate = $('#EndDate').val();
+
+        if (FromDate != '' && ToDate != '') {
+            FirstDate = FromDate.split('/');
+            SecondDate = ToDate.split('/');
+            var from = new Date(FirstDate[2], FirstDate[1], FirstDate[0]); //Year, Month, Date
+            var to = new Date(SecondDate[2], SecondDate[1], SecondDate[0]);
+            if (from > to) {
+                $('[id*=lblMsg]').text('To Date must be greater than From Date.');
+                return false;
+            }
+            else {
+                $('[id*=lblMsg]').text('');
+                return true;
+            }
+        }
+    }
+</script>
+

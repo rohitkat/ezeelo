@@ -1,0 +1,420 @@
+﻿@*<copyright file="GetReport.cshtml" company="Ezeelo Consumer Services Pvt. Ltd.">
+     Copyright (c) Ezeelo Consumer Services Pvt. Ltd. All rights reserved.
+    </copyright>
+    <author>Harshada Raghorte</author>*@
+@model IEnumerable<ModelLayer.Models.ViewModel.StockManagementReportViewModel>
+
+
+@{
+    ViewBag.Title = "GetReport";
+    Layout = null;
+}
+<style>
+    .totalcount {
+        margin-right: 26px !important;
+    }
+
+    #myTable_wrapper {
+        margin-top: 53px !important;
+    }
+
+    .fg-toolbar {
+        margin-top: -61px !important;
+    }
+</style>
+<script src="~/Content/js/bootstrap.js"></script>
+<script src="~/Content/js/jquery-1.9.1.min.js"></script>
+<script src="~/Content/js/jquery.dataTables.min.js"></script>
+<script src="~/Content/js/bootstrap.min.js"></script>
+<script type="text/javascript">
+    $(document).ready(function () {
+        $("#myTable").DataTable({
+            "bDestroy": true,
+            //"sPaginationType": "full_numbers",
+            "bJQueryUI": true,
+            "bInfo": false,
+            "scrollY": 700,
+            "scrollCollapse": true,
+            "bPaginate": false,
+            "iDisplayLength": 20,
+            "bAutoWidth": false,
+
+        });
+
+    });
+</script>
+<style>
+    #myTable_wrapper {
+        width: 100% !important;
+    }
+</style>
+<style>
+    .btn_Print {
+        margin-bottom: 7px;
+        margin-top: 7px;
+        margin-left: 5px;
+    }
+
+    .section {
+        position: relative;
+        border: 1px solid #000;
+        /*padding-top: 33px;*/
+        margin-left: 5px;
+        /*background: #A4A5A7;*/ background: rgb(179, 159, 128);
+        margin-top: 39px;
+    }
+
+    #myTable_wrapper {
+        min-height: 61px;
+        margin-top: 2px;
+        max-height: 516px;
+    }
+
+    .fg-toolbar {
+        margin-top: -145px !important;
+    }
+
+    #myTable_filter {
+        margin-left: 232px;
+      
+    }
+    #myTable_filter {
+        position: absolute;
+        margin-top: 13px !important;
+    }
+
+    .section.positioned {
+        position: absolute;
+        top: 100px;
+        left: 100px;
+        width: 800px;
+        box-shadow: 0 0 15px #333;
+    }
+
+    .container_tbl {
+        /*overflow-y: auto;*/
+        /*height: 200px;*/ height: 420px;
+    }
+
+    table {
+        border-spacing: 0;
+        width: 100%;
+    }
+
+    td + td {
+        border-left: 1px solid #eee;
+    }
+
+    td, th {
+        border-bottom: 1px solid #eee;
+        /*background: #ddd;*/
+        color: #000;
+        padding: 10px 25px;
+    }
+
+    #myTable thead tr th {
+        height: 0;
+        line-height: 0 !important;
+        padding-top: 0 !important;
+        padding-bottom: 0 !important;
+        color: transparent;
+        border: none;
+        white-space: nowrap;
+    }
+
+    th div {
+        position: absolute;
+        background: transparent;
+        color: #fff;
+        /*padding: 9px 10px;*/ padding: 11px 2px;
+        top: 0;
+        margin-left: -8px;
+        line-height: normal;
+        /*border-left: 1px solid #800;*/ border-left: 1px solid #DDD;
+    }
+
+    th:first-child div {
+        border: none;
+    }
+
+    .wrap {
+        margin-top: 105px;
+    }
+</style>
+
+<div>
+    <select name="ddlStatus" id="ddlStatus">
+        <option value="0">Select Status</option>
+        <option value="1">In Stock</option>
+        <option value="2">Out Of Stock</option>
+    </select>
+    @*<a href="@Url.Action("GetReport", "StockManagementReport", new
+       {
+           page = 0,
+           pagecount = 0,
+           fromDate = ViewBag.fromDate,
+           toDate = ViewBag.toDate,
+           shopID = ViewBag.shopID,
+           StockStatus = ViewBag.StockStatus,
+           print = 1
+       })" target="_blank"><input type="button" value="Print" id="btnPrint" class="btn btn-primary" /></a>*@
+</div>
+<div class="section">
+    <div class="table container_tbl">
+        @if (Model.Count() > 0)
+        {
+            <table class="table" id="myTable">
+                <thead>
+                    <tr class="header">
+                        <th style="width:145px;">
+                            Product Name
+                        </th>
+                        <th>
+                            Qty
+                        </th>
+                        <th style="width:77px;">
+                            Reorder Level
+                        </th>
+                        <th style="width:38px;">
+                            Color
+                        </th>
+                        <th style="width:22px;">
+                            Size
+                        </th>
+
+                        <th style="width:58px;">
+                            Dimension
+                        </th>
+
+                        <th style="width:47px;">Material</th>
+                        <th style="width:50px;">Sale Rate</th>
+                        <th style="width:30px;">Mrp</th>
+                        <th>Product Upload Date</th>
+                        <th>Stock Modified Date</th>
+                        <th style="width:52px;">Stock Status</th>
+
+                    </tr>
+                </thead>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        @if (item.Quantity == 0)
+                        {
+                            <td style="background-color: rgba(255, 0, 0, 0.63);">
+                                @Html.DisplayFor(modelItem => item.ProductName)
+                            </td>
+
+                            <td style="background-color: rgba(255, 0, 0, 0.63);">
+                                @Html.DisplayFor(modelItem => item.Quantity)
+                            </td>
+
+                            <td style="background-color: rgba(255, 0, 0, 0.63);">@Html.DisplayFor(modelItem => item.ReorderLevel)</td>
+
+
+                            <td style="background-color: rgba(255, 0, 0, 0.63);">
+                                @Html.DisplayFor(modelItem => item.ColorName)
+                            </td>
+                            <td style="background-color: rgba(255, 0, 0, 0.63);">
+                                @Html.DisplayFor(modelItem => item.SizeName)
+                            </td>
+                            <td style="background-color: rgba(255, 0, 0, 0.63);">
+                                @Html.DisplayFor(modelItem => item.DimensionName)
+                            </td>
+
+                            <td style="background-color: rgba(255, 0, 0, 0.63);">
+                                @Html.DisplayFor(modelItem => item.MaterialName
+
+                            )
+                            </td>
+
+
+
+                            <td style="background-color: rgba(255, 0, 0, 0.63);">
+                                @Html.DisplayFor(modelItem => item.SaleRate)
+                            </td>
+                            <td style="background-color: rgba(255, 0, 0, 0.63);">
+                                @Html.DisplayFor(modelItem => item.Mrp)
+                            </td>
+                            <td style="background-color: rgba(255, 0, 0, 0.63);">
+                                @{string lDate = "";}
+                                @if (item.ProductUploadDate != null)
+                                {
+                                    lDate = item.ProductUploadDate.ToString("dd/MM/yyyy");
+                                }
+                                @lDate
+                            </td>
+                            @*<td style="background-color: rgba(255, 0, 0, 0.63);">
+                                    @{string lmDate = "";}
+                                    @if (item.ProductModifiedDate != null)
+                                    {
+                                        lmDate = item.ProductModifiedDate.ToString();
+                                    }
+                                    @lmDate
+                                </td>*@
+                            <td>
+                                @{string lmDate = ""; DateTime modDate = new DateTime();}
+                                @if (item.ProductModifiedDate != null)
+                                {
+                                    modDate = Convert.ToDateTime(item.ProductModifiedDate);
+                                    lmDate = modDate.ToString("dd/MM/yyyy");
+                                }
+                                @lmDate
+                            </td>
+                            <td style="background-color: rgba(255, 0, 0, 0.63);">Out Of Stock</td>
+                        }
+                        else
+                        {
+                            <td>
+                                @Html.DisplayFor(modelItem => item.ProductName)
+                            </td>
+
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Quantity)
+                            </td>
+
+                            <td>@Html.DisplayFor(modelItem => item.ReorderLevel)</td>
+
+
+                            <td>
+                                @Html.DisplayFor(modelItem => item.ColorName)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.SizeName)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.DimensionName)
+                            </td>
+
+                            <td>
+                                @Html.DisplayFor(modelItem => item.MaterialName
+
+                            )
+                            </td>
+
+
+
+                            <td>
+                                @Html.DisplayFor(modelItem => item.SaleRate)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Mrp)
+                            </td>
+                            <td>
+                                @{string lDate = "";}
+                                @if (item.ProductUploadDate != null)
+                                {
+                                    lDate = item.ProductUploadDate.ToString("dd/MM/yyyy");
+                                }
+                                @lDate
+                            </td>
+                            <td>
+                                @{string lmDate = ""; DateTime modDate = new DateTime();}
+                                @if (item.ProductModifiedDate != null)
+                                {
+                                    modDate = Convert.ToDateTime(item.ProductModifiedDate);
+                                    lmDate = modDate.ToString("dd/MM/yyyy");
+                                }
+                                @lmDate
+                            </td>
+
+                            <td>In Stock</td>
+
+                        }
+                    </tr>
+                }
+
+            </table>
+        }
+    </div>
+    </div>
+<div id="Pager">
+    <div class="wrap">
+        <div id="slider1" class="slider">
+            <ul>
+                @for (int c = 1; c <= @ViewBag.TotalPages; c++)
+                {
+                    <li><a class="page-number" href="javascript:void();">@c</a></li>
+
+                }
+            </ul>
+        </div>
+        <div class="controls" style="margin-top:-27px; background:#F9F9F9">
+            <a href="#noname" class="prev-slide"><<</a>
+            <a href="#noname" class="next-slide" style="float: right; margin-right: 299px;">>></a>
+        </div>
+    </div>
+    <span class="totalcount"><b>Showing @ViewBag.PageSize of @ViewBag.TotalCount enteries</b></span>
+</div>
+
+<div class="loader">
+    <img id="loader_img" src="~/Content/img/loader.gif" style="display: none" />
+</div>
+<script>
+    $(document).ready(function () {
+        $("#Pager .page-number").click(function (e) {
+            $('#loader_img').show();
+            var StockStatus = $("select#ddlStatus option:selected").val();
+            //alert($(this).html());
+            var pagecount = 0;
+            var page = parseInt($(this).html());
+            if (page > 1) {
+                pagecount = 1;
+            }
+            var fromDate = "@ViewBag.fromDate";
+            var toDate = "@ViewBag.toDate";
+            var shopID = "@ViewBag.shopID";
+            var print = 0;
+           // var approvedStatus = "@ViewBag.approvedStatus";
+            //alert(shopID);
+            $.ajax({
+                url: '@Url.Action("GetReport", "StockManagementReport")',
+                data: { 'page': page, 'pagecount': pagecount, 'fromDate': fromDate, 'toDate': toDate, 'shopID': shopID, 'StockStatus': StockStatus, 'print': print },
+                type: "POST",
+                cache: false,
+                success: function (data) {
+                    //alert(data);
+                    $('#loader_img').hide();
+                    $('#divReport').empty();
+                    $('#divReport').append(data);
+                    $("select#ddlStatus").val(StockStatus);
+
+                },
+                error: function (data) {
+
+                }
+            });
+        });
+    });
+
+    $("select#ddlStatus").bind('change', function () {
+        $('#loader_img').show();
+        var pagecount = 0;
+        //var page = parseInt($(this).html());
+        //if (page > 1) {
+        //    pagecount = 1;
+        //}
+        var fromDate = "@ViewBag.fromDate";
+        var toDate = "@ViewBag.toDate";
+        var shopID = "@ViewBag.shopID";
+        var StockStatus = $("select#ddlStatus option:selected").val();
+        var page = 1;
+        var print = 0;
+        $.ajax({
+            url: '@Url.Action("GetReport", "StockManagementReport")',
+            data: { 'page': page, 'pagecount': pagecount, 'fromDate': fromDate, 'toDate': toDate, 'shopID': shopID, 'StockStatus': StockStatus, 'print': print },
+            type: "POST",
+            cache: false,
+            success: function (data) {
+                //alert(data);
+                $('#loader_img').hide();
+                $('#divReport').empty();
+                $('#divReport').append(data);
+                $("select#ddlStatus").val(StockStatus);
+
+            },
+            error: function (data) {
+
+            }
+        });
+    });
+</script>

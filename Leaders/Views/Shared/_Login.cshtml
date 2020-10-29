@@ -1,0 +1,102 @@
+﻿@model ModelLayer.Models.ViewModel.LoginViewModel
+<script src="~/Scripts/jquery-1.12.4.min.js"></script>
+<script src="~/Scripts/jquery.validate.min.js"></script>
+<script src="~/Scripts/jquery.validate.unobtrusive.js"></script>
+<script src="~/Scripts/jquery.unobtrusive-ajax.js"></script>
+<link href="~/Content/Site.css" rel="stylesheet" />
+<script src="https://terrylinooo.github.io/jquery.disableAutoFill/assets/js/jquery.disableAutoFill.min.js"></script>
+<script>
+    $(document).ready(function () {
+        $("#UserName").keyup(function () {
+            var email = $(this).val();
+            if (email != "" && email.length > 3) {
+                $.ajax({
+                    type: "POST",
+                    dataType: "text",
+                    url: '/LeadersLogin/CheckUserLoginId?Email=' + email,
+                    contentType: "application/json; charset=utf-8",
+                    success: function (data) {
+                        data = data.replace("\"", "");
+                        data = data.replace("\"", "");
+                        data = data.trim();
+                        if (data != "") {
+                            $("#pSu").text("Hello " + data);
+                            $("#pSu").show();
+                            $("#pEr").hide();
+                            $('#subLogin').removeAttr('disabled');
+                        }
+                        else {
+                            $("#pSu").hide();
+                            $("#pEr").show();
+                            $('#subLogin').attr('disabled', 'disabled');
+                        }
+                    },
+                    error: function (xhr) {
+                        $("#pSu").hide();
+                        $("#pEr").show();
+                        $('#subLogin').attr('disabled', 'disabled');
+                    }
+                });
+            }
+            else {
+                $("#pSu").hide();
+                $("#pEr").hide();
+            }
+        });
+$("#UserName").blur(function () {
+            var email = $(this).val();
+            if (email != "" && email.length > 3) {
+                $.ajax({
+                    type: "POST",
+                    dataType: "text",
+                    url: '/LeadersLogin/CheckUserLoginId?Email=' + email,
+                    contentType: "application/json; charset=utf-8",
+                    success: function (data) {
+                        data = data.replace("\"", "");
+                        data = data.replace("\"", "");
+                        data = data.trim();
+                        if (data != "") {
+                            $("#pSu").text("Hello " + data);
+                            $("#pSu").show();
+                            $("#pEr").hide();
+                            $('#subLogin').removeAttr('disabled');
+                        }
+                        else {
+                            $("#pSu").hide();
+                            $("#pEr").show();
+                            $('#subLogin').attr('disabled', 'disabled');
+                        }
+                    },
+                    error: function (xhr) {
+                        $("#pSu").hide();
+                        $("#pEr").show();
+                        $('#subLogin').attr('disabled', 'disabled');
+                    }
+                });
+            }
+            else {
+                $("#pSu").hide();
+                $("#pEr").hide();
+            }
+        });
+    });
+</script>
+@using (Html.BeginForm(new { id = "login-form" }))
+{
+    @Html.AntiForgeryToken()
+    <div>
+        @Html.ValidationMessageFor(model => model.ReferralId)
+        <div class="form-group form-material floating" data-plugin="formMaterial">
+            @Html.TextBoxFor(model => model.UserName, new { @Class = "form-control", @placeholder = "User Id", autocomplete = "nope" })
+            <p style="display:none" id="pEr">Sorry You're not a registered Ezeelo Customer, First register Yourself at <a href="http://www.ezeelo.com/" target="_blank">Ezeelo.com</a></p>
+            <p style="display:none" id="pSu"></p>
+            @Html.ValidationMessageFor(model => model.UserName)
+        </div>
+        <div class="form-group form-material floating" data-plugin="formMaterial">
+            @Html.PasswordFor(model => model.Password, new { @Class = "form-control", @placeholder = "Password" })
+            @Html.ValidationMessageFor(model => model.Password)
+        </div>
+        
+        <button id="subLogin" type="submit" class="btn btn-success btn-block waves-effect waves-classic">Sign In</button>
+    </div>
+}

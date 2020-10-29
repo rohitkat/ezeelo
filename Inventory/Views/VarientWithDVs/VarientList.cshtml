@@ -1,0 +1,461 @@
+﻿@model ModelLayer.Models.ViewModel.ProductRateListViewModel
+
+
+
+<style>
+    .pro_th thead tr th {
+        font-size: 12px;
+        border-bottom: 1px solid #EEE;
+        padding: 6px 0;
+        background-color: #26A69A;
+    }
+
+    .pro_th tbody td {
+        font-size: 12px;
+        text-align: center;
+        border: 1px solid #EEE;
+    }
+
+        .pro_th tbody td.btn-set {
+            white-space: nowrap;
+        }
+
+    .dataTables_length {
+        margin-left: 0px !important;
+        margin-top: 7px;
+    }
+
+    .pagination {
+        margin: 0 26px;
+    }
+
+    form {
+        margin: 0 0 -15px;
+    }
+</style>
+
+<script src="~/Content/js/jquery-2.1.3.min.js"></script>
+<link href="~/Content/css/jquery.dataTables.css" rel="stylesheet" />
+<script src="~/Content/js/jquery.dataTables.js" language="jascript"></script>
+
+<script type="text/javascript" class="init">
+    $(document).ready(function () {
+        $('#tblData1').DataTable({
+            "processing": true,
+            "serverSide": true,
+            "aaSorting": []
+        });
+        $('#tblData').DataTable({
+            "processing": true,
+            "serverSide": true,
+            "aaSorting": []
+        });
+        // alert("1");
+    });
+</script>
+<div class="row-fluid">
+
+
+    <label style="display:none" id="lblIsActive-">DV wise Varient List</label>
+
+    <div>
+        <table style="text-align:center;width:40%;margin-left:30%">
+            <tr>
+                <td>
+                    <h1 style="color:#083a5f">
+                        <b>
+                            <u>
+                                @Model.ProductName
+                            </u>
+                        </b>
+                    </h1>
+                    @Html.HiddenFor(model => model.ProductId)
+                </td>
+            </tr>
+            <tr>
+                <td> <h2>HSN Code : @Model.HSNCode </h2> </td>
+            </tr>
+            @*<tr>
+                    <td>
+                        <h2>Varient Count : @Model.VarientList.Count() </h2>
+                    </td>
+                </tr>*@
+
+        </table>
+    </div>
+    <br />
+    <div class="box span11" id="assignedDVs">
+        <h3>DV wise Varient List</h3>
+        <table id="tblData1" class="table border-table display">
+            <thead>
+                <tr>
+
+                    <th class="header CalRate1">Varient Name<span>*</span></th>
+                    <th class="header CalRate1">MRP<span>*</span></th>
+                    <th class="header CalRate1">Decided Sale Price<span>*</span></th>
+                    <th class="header CalRate1">Rate Valid Upto<span>*</span></th>
+                    <th class="header CalRate1">Active Status<span>*</span></th>
+                    <th class="header CalRate1">Warehouse<span>*</span></th>
+                    <th class="header CalRate1">Assigned Date<span>*</span></th>
+                    <th class="header CalRate1">Modified Date<span>*</span></th>
+
+
+                </tr>
+            </thead>
+
+            <tbody>
+                @for (var i = 0; i < Model.AssignedDVsList.Count(); i++)
+                {
+                    <tr>
+                        <td class="CalRate1">
+                            @Html.DisplayFor(model => model.AssignedDVsList[i].VarientName, new { style = "width:60px;border:double;border-color:green !important", id = "MRP2-" + i, @class = "Number" })
+
+                        </td>
+                        <td class="CalRate1">
+                            @Html.DisplayFor(model => model.AssignedDVsList[i].MRP, new { style = "width:60px;border:double;border-color:green !important", id = "MRP2-" + i, @class = "Number" })
+
+                        </td>
+
+                        <td class="CalRate1">
+                            @Html.DisplayFor(model => model.AssignedDVsList[i].DecidedSalePrice, new { style = "width:60px;border:double;border-color:green !important", id = "DecidedSalePrice-" + i, @class = "Number" })
+
+                        </td>
+                        <td class="CalRate1">
+                            @Html.DisplayFor(model => model.AssignedDVsList[i].RateExpiry, "{0:MM/dd/yyyy}", new { style = "width:70px;border:double;border-color:green !important", @readonly = "readonly", placeholder = "Rate Valid UpTo", @required = "required", id = "RateExpiry-" + i, @class = "DateTxt" })
+
+                        </td>
+                        <td class="CalRate1">
+                            @Html.DisplayFor(model => model.AssignedDVsList[i].AssignStatus, new { id = "IsActive-" + i, @class = "IsAct" })
+
+                        </td>
+
+                        <td class="CalRate1">
+                            @Html.DisplayFor(model => model.AssignedDVsList[i].WarehouseName, "{0:MM/dd/yyyy}", new { style = "width:70px;border:double;border-color:green !important", @readonly = "readonly", placeholder = "Rate Valid UpTo", @required = "required", id = "RateExpiry-" + i, @class = "DateTxt" })
+
+                        </td>
+                        <td class="CalRate1">
+                            @Html.DisplayFor(model => model.AssignedDVsList[i].CreateDate, "{0:MM/dd/yyyy}", new { style = "width:70px;border:double;border-color:green !important", @readonly = "readonly", placeholder = "Rate Valid UpTo", @required = "required", id = "RateExpiry-" + i, @class = "DateTxt" })
+
+                        </td>
+                        <td class="CalRate1">
+                            @Html.DisplayFor(model => model.AssignedDVsList[i].ModifiedDate, "{0:MM/dd/yyyy}", new { style = "width:70px;border:double;border-color:green !important", @readonly = "readonly", placeholder = "Rate Valid UpTo", @required = "required", id = "RateExpiry-" + i, @class = "DateTxt" })
+
+                        </td>
+
+                    </tr>
+
+                }
+            </tbody>
+        </table>
+    </div>
+    <br />
+
+    <h3>Assign To DVs</h3>
+    <br />
+    <div class="box span11" id="warehouseList">
+        <h2>DVs List</h2>
+        <div><input type="checkbox" id="selectAllWarehouse" /><b>SELECT ALL</b></div>
+
+        @foreach (var item in Model.WarehouseList)
+        {
+        <div class="checkbox">
+            <label>
+                <input type="checkbox"
+                       name="SelectedDV"
+                       id="SelectedDV"
+                       class="SelectAllDVs"
+                       value="@item.Value" /> @item.Text
+                </label>
+            </div>
+        }
+
+        <br />
+        <input type="button" value="Assign Value" id="btnSubmit" class="btn-primary" />
+
+    </div>
+
+    <div class="box span11" id="addRate">
+
+
+
+        @*@Html.DropDownListFor(model => model.ProductVarientID, Model.ProductVarientList, "--select--", new { id = "VarientID", @class = "ProductVarient" })*@
+        <h2>Varient List</h2>
+
+        <label style="display:none" id="lblIsActive-">Select Varient</label>
+
+        <table id="tblData" class="table border-table display tblwidth1">
+            <thead>
+                <tr>
+
+                    <th class="header CalRate1">Varient Name<span>*</span></th>
+                    <th class="header CalRate1">MRP<span>*</span></th>
+                    <th class="header CalRate1">Decided Sale Price<span>*</span></th>
+                    <th class="header CalRate1">Rate Valid Upto<span>*</span></th>
+                    @*<th class="header CalRate1">Active Status<span>*</span></th>*@
+                    @*<th class="header CalRate1">Warehouse<span>*</span></th>*@
+                    <th class="header CalRate1">Select Varient<span>*</span></th>
+
+                </tr>
+            </thead>
+
+            @{
+                DateTime currDate1 = DateTime.Now.Date;
+                DateTime NoDate1 = new DateTime(0001, 01, 01);
+            }
+            <tbody>
+                @for (var i = 0; i < Model.AllVarientList.Count(); i++)
+                {
+
+                    <tr>
+                        <td class="CalRate1">
+                            @Html.DisplayFor(model => model.AllVarientList[i].VarientName, new { style = "width:60px;border:double;border-color:green !important", id = "MRP1-" + i, @class = "Number" })
+                            <label style="display:none" id="lblMRP-@i">@Model.AllVarientList[i].VarientName</label>
+                        </td>
+                        <td class="CalRate1">
+                            @Html.DisplayFor(model => model.AllVarientList[i].MRP, new { style = "width:60px;border:double;border-color:green !important", id = "MRPValue" + i, @class = "Numbers" })
+                            <label style="display:none" id="lblMRPValue-@i">@Model.AllVarientList[i].MRP</label>
+                        </td>
+
+                        <td class="CalRate1">
+                            @Html.DisplayFor(model => model.AllVarientList[i].DecidedSalePrice, new { style = "width:60px;border:double;border-color:green !important", id = "DecidedSalePrice-" + i, @class = "Number" })
+                            <label style="display:none" id="lblDecidedSalePrice-@i">@Model.AllVarientList[i].DecidedSalePrice</label>
+                        </td>
+                        <td class="CalRate1">
+                            @Html.DisplayFor(model => model.AllVarientList[i].RateExpiry, "{0:MM/dd/yyyy}", new { style = "width:70px;border:double;border-color:green !important", @readonly = "readonly", placeholder = "Rate Valid UpTo", @required = "required", id = "RateExpiry-" + i, @class = "DateTxt" })
+                            <label style="display:none" id="lblRateExpiry-@i">@Model.AllVarientList[i].RateExpiry.ToString("MM/dd/yyyy")</label>
+                        </td>
+                        @*<td class="CalRate1">
+                                @Html.CheckBoxFor(model => model.AllVarientList[i].IsActive, new { id = "IsActive-" + i, @class = "IsAct" })
+                                <label style="display:none" id="lblIsActive-@i">@Model.AllVarientList[i].IsActive</label>
+                            </td>*@
+
+                        @*<td class="CalRate1">
+                                @Html.DisplayFor(model => model.AllVarientList[i].WarehouseName, "{0:MM/dd/yyyy}", new { style = "width:70px;border:double;border-color:green !important", @readonly = "readonly", placeholder = "Rate Valid UpTo", @required = "required", id = "RateExpiry-" + i, @class = "DateTxt" })
+                                <label style="display:none" id="lblRateExpiry-@i">@Model.AllVarientList[i].WarehouseName</label>
+                            </td>*@
+                        <td class="CalRate1">
+
+                            <label>
+                                @Html.CheckBox("SelectedVarient", false, new { value = @Model.AllVarientList[i].ProductVarientId, id = "checkbox-" + i, @class = "SelectedVarient" })
+                                @*<input type="checkbox"
+                                    name="SelectedVarient"
+                                    id="SelectedVarient"
+                                    value="@Model.AllVarientList[i].ProductVarientId" />*@
+                            </label>
+                        </td>
+                    </tr>
+
+
+                }
+            </tbody>
+        </table>
+
+        @*<div id="warehouseList">
+                <div><input type="checkbox" id="selectAllWarehouse" /><b>SELECT ALL</b></div>
+                @foreach (var item in Model.WarehouseList)
+                {
+                    <div class="checkbox">
+                        <label>
+                            <input type="checkbox"
+                                   name="SelectedDV"
+                                   id="SelectedDV"
+                                   class="SelectAllDVs"
+                                   value="@item.Value" /> @item.Text
+                            </label>
+                        </div>
+                }
+
+                <br />
+                <input type="button" value="Assign Value" id="btnSubmit" class="btn-primary" />
+
+            </div>*@
+
+
+        <br />
+
+
+
+    </div>
+</div>
+
+<script type="text/javascript">
+    //-------------- added by amit------------//
+    //$(document).ready(function () {
+    //    $('#').DataTable({
+    //        bSort: false,
+    //        "aoColumnDefs": [{ 'bSortable': false, 'aTargets': [3] }],
+    //        "scrollY": "200px",
+    //        "scrollCollapse": true,
+    //        "info": true,
+    //        "paging": true,
+    //        "scrollX": true,
+    //        dom: 'Blfrtip',
+    //        lengthMenu: [
+    //            [10, 25, 50, -1],
+    //            ['25 rows', '50 rows', 'Show all']
+    //        ],
+    //        buttons: [
+    //            'excelHtml5'
+    //        ]
+
+    //});
+
+
+    //});
+
+</script>
+<script type="text/javascript">
+    //-------------- added by amit------------//
+    //$(document).ready(function () {
+    //    $('#').DataTable({
+
+    //        "aoColumnDefs": [{ 'bSortable': false, 'aTargets': [3] }],
+    //        "bSort": true,
+    //        "scrollY": 100,
+    //        "scrollX": true,
+    //        dom: 'Blfrtip',
+    //        lengthMenu: [
+    //            [10, 25, 50, -1],
+    //            ['10 rows', '25 rows', '50 rows', 'Show all']
+    //        ],
+    //        buttons: [
+    //            'excelHtml5'
+    //        ]
+    //    }
+
+    //    );
+
+
+    //});
+
+</script>
+<script>
+
+
+    $("#selectAllWarehouse").click(function () {
+        debugger
+
+        if (!$(".SelectAllDVs").prop('readonly'))
+        {
+            var tblChkBox = $('.SelectAllDVs');
+            $(tblChkBox).prop('checked', $(this).prop('checked'));
+
+        }
+        else {
+            $(this).removeAttr("checked");
+        }
+    });
+    //------------------end--------------------//
+</script>
+<script>
+    $('#btnSubmit').on('click', function () {
+
+        debugger
+        var STRMS = [];
+        var VARIENT = [];
+        var MRP = [];
+        var check;
+        var arr;
+
+        const object = {};
+        const result = [];
+
+
+        var productID = $("#ProductId").val();
+        var RateCalculationId = $("#RateCalculation").val();
+
+        if ($('#SelectedDV:checked').length != 0 && $(".SelectedVarient:checked").length != 0) {
+
+
+
+            $("#SelectedDV:checked").each(function () {
+                STRMS.push($(this).val());
+
+            });
+
+            $('.SelectedVarient:checked').each(function () {
+                debugger
+                check = $(this).attr("id");
+                arr = check.split('-');
+
+                VARIENT.push($(this).attr("value"));
+
+                var mrp = $("#lblMRPValue-" + arr[1]).text();
+
+                // lblMRP - 1
+
+                //alert(arr[1]);
+                //alert(mrp);
+
+                MRP.push(mrp);
+
+
+                
+
+            })
+            VARIENT.forEach(function (item)
+            {
+                if (!object[item])
+                    object[item] = 0;
+                object[item] += 1;
+            })
+
+            for (var prop in object)
+            {
+                if (object[prop] >= 2)
+                {
+                    result.push(prop);
+
+
+                    alert(result);
+                }
+            }
+                   
+
+               
+            
+        
+                
+            
+            if (result == 0) {
+
+                $.ajax({
+                    type: "POST",
+                    url: '@Url.Action("AssignRateToDVs", "VarientWithDVs")',
+                    dataType: "html",
+                    contentType: "application/json; charset=utf-8",
+                    data: JSON.stringify({ STRMSelected: STRMS, VARIENTSelected: VARIENT, productId: productID, mrp: MRP }),
+                    success:
+                        function (data) {
+
+                            var res = "\"" + "Assigned" + "\"";
+                            var resNew = "\"" + "success" + "\"";
+                            if (data == res) {
+
+                                alert("Varient is already assigned to DV!!")
+
+                            }
+                            else if (data == resNew) {
+                                alert("Varient is assigned to DVs successfully!!")
+                                window.location.href = "/VarientWithDVs/VarientList?ProductId=" + $("#ProductId").val();
+
+
+                                // window.location.href = "/VarientWithDVs/VarientList?ProductId=" + $("#ProductId").val();
+                                // alert("Varient is assigned to DVs")
+                            }
+                        }
+
+                });
+            }
+            else {
+                alert("Please Select Different Varient!!");
+            }
+
+        }
+        else {
+            alert("ERROR! Please select at both checkbox");
+            valid = false;
+        }
+
+    });
+</script>

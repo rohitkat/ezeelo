@@ -1,0 +1,166 @@
+﻿<div id="divCoupon" class="inputDiv">
+    <input type="text" class="txtCoupon inputbox1" maxlength="15" /><input type="button" class="checkBtn" value="Check" />
+    <span class="spnCouponMessage"></span>
+    <input type="hidden" class="hiddenCouponCode" />
+    <input type="hidden" class="hiddenCouponAmount" />
+    <input type="hidden" class="hiddenCouponPercent" />
+</div>
+
+@*Js for checking coupon code  *@
+<script type="text/javascript">
+    $(function () {
+        $(".btnCheck").click(function () {
+
+            $(".spnCouponMessage").text("");
+            var productId = $("#PID").val();
+            var shopId = $("#SID").val();
+            var couponCode = $(".txtCoupon").val();
+            if (couponCode != "") {
+                $.ajax({
+                    type: "POST",
+                    url: "/PreviewItem/CheckCouponCode",
+                    data: "{'couponCode':'" + couponCode + "', 'organisationId':'" + shopId + "', 'itemId':'" + productId + "'}",
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    success: function (response) {
+                        OnSuccessCouponCode(response);
+                    },
+                    failure: function (response) {
+                        alert("Failure");
+                    },
+                    error: function (response) {
+                        alert("Error");
+                    }
+                });
+            }
+            else {
+                $(".spnCouponMessage").text("Please enter  coupon code!!");
+                $(".spnCouponMessage").css("color", "red");
+            }
+        });
+    });
+
+    function OnSuccessCouponCode(response) {
+        alert("success");
+        if (response == "true") {
+            alert("true");
+
+            $(".spnCouponMessage").css("color", "red");
+            $(".spnCouponMessage").text("Coupon is already applied on one of the items in shopping cart");
+        }
+
+        if (response.length == 0) {
+            alert("false");
+
+            $(".spnCouponMessage").css("color", "red");
+            $(".spnCouponMessage").text("VOUCHER IS NOT VALID");
+           
+        }
+
+        $.each(response, function (j, dataVal) {
+
+            var result = dataVal.Result;
+            var voucherAmount = dataVal.VoucherAmount;
+            var voucherPercent = dataVal.VoucherPercent;
+            var minimumPurchaseAmount = dataVal.MinimumPurchaseAmount;
+            var minimumPurchaseQuantity = dataVal.minimumPurchaseQuantity;
+            var isFreeDelivery = dataVal.IsFreeDelivery;
+
+            if (result != 1) {
+                ShowCouponMessage(result);
+            }
+            else {
+                $(".hiddenCouponCode").val($(".txtCoupon").val());
+                $(".hiddenCouponAmount").val(voucherAmount);
+                $(".hiddenCouponPercent").val(voucherPercent);
+
+                $(".spnCouponMessage").css("color", "green");
+                $("#divCouponApplied").css("display", "block");
+                $("#divSaleRate").removeAttr("class");
+                $("#divCouponApplied").attr("class", "priceDiv priceSell");
+                if (voucherAmount > 0) {
+                    $(".spnCouponMessage").text("You get Rs. " + voucherAmount + "  discount");
+                    $(".spnTotalPay").text("Rs " + ($("#hiddenSaleRate").val() - voucherAmount));
+                }
+                else if (voucherPercent > 0) {
+                    var saleRate = $("#hiddenSaleRate").val();
+                    var couponPercent = (saleRate * voucherPercent) / 100;
+                    $(".spnCouponMessage").text("You get " + voucherPercent + "%  discount");
+                    $(".spnTotalPay").text("Rs " + ($("#hiddenSaleRate").val() - (($("#hiddenSaleRate").val()) * voucherAmount) / 100));
+                }
+            }
+        });
+    }
+    function ShowCouponMessage(result) {
+        $(".spnCouponMessage").css("color", "red");
+        if (result == 0) {
+            $(".spnCouponMessage").text("VOUCHER IS NOT VALID");
+        }
+        else if (result == 1) {
+            $(".spnCouponMessage").text("VOUCHER IS VALID");
+        }
+        else if (result == 2) {
+            $(".spnCouponMessage").text("FOR SPECIFIC CUSTOMER ONLY");
+        }
+        else if (result == 3) {
+            $(".spnCouponMessage").text("NOT FOR GIVEN CUSTOMER");
+        }
+        else if (result == 4) {
+            $(".spnCouponMessage").text("VOUCHER EXPIRED");
+        }
+        else if (result == 5) {
+            $(".spnCouponMessage").text("NOT VALID FOR PROVIDED SHOP");
+        }
+        else if (result == 6) {
+            $(".spnCouponMessage").text("VOUCHER IS NOT VALID FOR	GIVEN PRODUCT");
+        }
+        else if (result == 7) {
+            $(".spnCouponMessage").text("VOUCHER IS NOT VALID FOR GIVEN CATEGORY");
+        }
+        else if (result == 8) {
+            $(".spnCouponMessage").text("VOUCHER IS USED BY SAME CUSTOMER");
+        }
+    }
+
+</script>
+@*End*@
+
+<script type="text/javascript">
+    $(function () {
+        $("#anchorBuy").click(function () {
+            AddProductToShppingCartFromPreview($(".hiddenShopStockId").val(), $(".hiddenProductId").val(), $(".hiddenCouponCode").val(), $(".hiddenCouponAmount").val(), $(".hiddenCouponPercent").val());
+        });
+        function checkPinCode() {
+            var pincodeCookie = getCookie("DeliverablePincode");
+            if (pincodeCookie == null) {
+                $(".inputbox").css("border-color", "red");
+                $(".spnMessage").css("display", "block");
+                $(".spnMessage").text("Please check pincode!!");
+                $(".spnMessage").css("color", "red");
+                return false;
+            }
+            else {
+                $(".inputbox").removeAttr("border-color");
+
+                var url = "";
+                alert($(".hiddenCouponCode").val());
+                if ($(".hiddenCouponCode").val() == "") {
+                    url = '/PreviewItem/ExpressBuy?ShopStockID=' + $(".hiddenShopStockId").val() + "&itemID=" + $(".hiddenProductId").val();
+                }
+                else {
+                    if ($(".hiddenCouponAmount").val() == "") {
+                        $(".hiddenCouponAmount").val("0");
+                    }
+                    if ($(".hiddenCouponAmount").val() == "") {
+                        $(".hiddenCouponAmount").val("0")
+                    }
+                    url = '/PreviewItem/ExpressBuy?ShopStockID=' + $(".hiddenShopStockId").val() + "&itemID=" + $(".hiddenProductId").val() + "&couponCode=" + $(".hiddenCouponCode").val() + "&couponAmount=" + $(".hiddenCouponAmount").val() + "&couponPercent=" + $(".hiddenCouponPercent").val() + "productQuantity=" + $("[id*=productQuantity]").value;
+                }
+                window.location.href = url;
+
+                return true;
+            }
+        }
+    });
+</script>
+

@@ -1,0 +1,312 @@
+﻿@using PagedList;
+@using PagedList.Mvc;
+
+@model IPagedList<ModelLayer.Models.ViewModel.Report.Account.ReportTransactionInputViewModel>
+
+@{
+    ViewBag.Title = "TransactionDetail";
+}
+
+<style>
+    .tbl th {
+        border: solid 1px #808080 !important;
+    }
+
+    .tbl td {
+        border: solid 1px #808080 !important;
+    }
+</style>
+<div class="row-fluid" style="margin-top:20px;margin-left:15px;">
+    <div class="box span12">
+        <div class="box-header">
+            <h2><i class="icon-edit"></i><span class="break"></span>Transaction Detail</h2>
+        </div>
+        <div class="box-content">
+            @using (Html.BeginForm())
+            {
+                @Html.AntiForgeryToken()
+
+                <table class="table">
+                    <tr>
+                        <td>@Html.TextBox("FromDate", null, new { id = "FromDate", @class = "datepicker glyphicons-iconcalendar", @placeholder = "Start Date", @style = "margin-top:-2px;", required = "requird" })</td>
+                       
+                        <td>@Html.TextBox("ToDate", null, new { id = "ToDate", @class = "datepicker glyphicons-iconcalendar", @placeholder = "End Date", @style = "margin-top:-2px;", required = "requird" })</td>
+                       
+                        <td class="text-right" style="width:100px;">@Html.DropDownList("Franchise", "Select Partner")</td>
+                        <td class="text-right" style="width:100px;"><input type="submit" name="btnSearchShop" value="Search Shop" class="btn btn-small btn-primary" style="margin-top:4px;" /></td>
+                        @{
+                try
+                {
+                    if (TempData["FranchiseID"] != null)
+                    {
+                        <td><a href="@Url.Action("ExportData", "ReportTransaction", new { pFranchiseID = TempData["FranchiseID"], FromDate = TempData["FromDate"].ToString(), ToDate = TempData["ToDate"].ToString() })" class="btn btn-warning btn-small " style="margin-top:4px;">Export</a></td>
+                    }
+                }
+                catch (Exception ex)
+                { }
+                        }
+
+                    </tr>
+                </table>
+            }
+
+
+            <div class="row" style="width:100%; height:550px; overflow:scroll; margin:5px;">
+                <table class="table table-bordered table-condensed table-hover table-responsive table-striped tbl">
+                    <tr>
+                        <th>Sr.No</th>
+                        <th>Customer</th>
+                        <th>Shop</th>
+                        <th>
+                            Order Code
+                        </th>
+                        <th>
+                            Shop Order Code
+                        </th>
+                        <th>
+                            Payment Mode
+                        </th>
+                        <th>
+                            <span>    PlacedDate     </span>
+                        </th>
+
+                        <th>
+                            <span>                                Product                                </span>
+                        </th>
+                        <th>Weight</th>
+                        <th>
+                            Qty Asked By Customer
+                        </th>
+                        <th>
+                            Qty Shop Out
+                        </th>
+                        <th>
+                            MRP /Unit
+                        </th>
+                        <th>
+                            SaleRate /Unit
+                        </th>
+                        <th>
+                            Offer In % By Shop/ Unit
+                        </th>
+                        <th>
+                            Offer In Rs By Shop/ Unit
+                        </th>
+                        <th>
+                            Is Inclusive Of TAX
+                        </th>
+                        <th>
+                            Service TAX
+                        </th>
+                        <th>
+                            Landing Price By Shop/ Unit
+                        </th>
+                        <th>
+                            Charge In % By GB/ Unit
+                        </th>
+                        <th>
+                            Total MRP
+                        </th>
+                        <th>
+                            Total Sale Rate
+                        </th>
+                        <th>
+                            Shop Total Offer
+                        </th>
+                        <th>
+                            New Sale Rate After Offer
+                        </th>
+                        <th>
+                            Total Shop Final Price
+                        </th>
+                        <th>
+                            Shop Receivable
+                        </th>
+                        <th>
+                            Is Shop Handle Other TAX
+                        </th>
+                        <th>
+                            Other TAX Payable Receivable From Merchant
+                        </th>
+                        <th>
+                            Sum Of Amount Shop Receivable After Other TAX
+                        </th>
+                        <th>
+                            GB Receivable Amount
+                        </th>
+                        <th class="bg-aqua">
+                            GB Transaction Fee
+                        </th>
+                        <th>
+                            GB Service TAX On Transaction Fee
+                        </th>
+                        <th>
+                            Final Shop Receivable After All Done
+                        </th>
+                    </tr>
+                    @{ int i = 1;
+    //string lGBOD = "";
+    //string lCustomer = "";
+    //string lShopOrderCode = "";
+                    }
+                    @foreach (var item in Model.OrderBy(x => x.CODCreateDate))
+                    {
+                        <tr>
+                            <td>@{int SrNo = ((ViewBag.PageNumber - 1) * ViewBag.PageSize) + i; i = i + 1; } @SrNo</td>
+                            <td>
+                                @*@{
+                                    if (lGBOD != item.OrderCode)
+                                    {
+                                        lCustomer = item.CustomerName;
+                                        <span>@Html.DisplayFor(modelItem => item.CustomerName)</span>
+                                    }
+                                            }*@
+                                @Html.DisplayFor(modelItem => item.CustomerName)
+                            </td>
+                            <td>@Html.DisplayFor(modelItem => item.ShopName)</td>
+                            <td>
+                                @*@{
+                                    if (lGBOD != item.OrderCode)
+                                    {
+                                        lGBOD = item.OrderCode;
+                                        <span>@Html.DisplayFor(modelItem => item.OrderCode)</span>
+                                    }
+                                            }*@
+                                @Html.DisplayFor(modelItem => item.OrderCode)
+                            </td>
+                            <td>
+                                @*@{
+                                    if (lShopOrderCode != item.ShopOrderCode)
+                                    {
+                                        lShopOrderCode = item.ShopOrderCode;
+                                        <span>@Html.DisplayFor(modelItem => item.ShopOrderCode)</span>
+                                    }
+                                            }*@
+                                @Html.DisplayFor(modelItem => item.ShopOrderCode)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.PaymentMode)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.CODCreateDate)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Product)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Size)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Qty)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.QtyShop)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.MRPPerUnit)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.SaleRatePerUnit)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.OfferInPercentByShopPerUnit)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.OfferInRsByShopPerUnit)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.IsInclusiveOfTAX)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.ServiceTAX)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.LandingPriceByShopPerUnit)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.ChargeINPercentByGBPerUnit)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.TotalMRP)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.TotalSaleRate)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.ShopTotalOffer)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.NewSaleRateAfterOffer)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.TotalShopFinalPrice)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.ShopReceivable)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.IsShopHandleOtherTAX1)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.OtherTAXPayableReceivableFromMerchant)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.SumOfAmountShopReceivableAfterOtherTAX)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.GBReceivableAmount)
+                            </td>
+                            <td class="bg-aqua">
+                                @Html.DisplayFor(modelItem => item.GBTransactionFee)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.GBServiceTAXOnTransactionFee)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.FinalShopReceivableAfterAllDone)
+                            </td>
+                        </tr>
+                    }
+
+                </table>
+                <div class="pager">
+                    @Html.PagedListPager(Model, Page => Url.Action("TransactionByOrderGroup", new
+                   {
+                       page = Page,
+                       SearchString = ViewBag.SearchString,
+                       FromDate = ViewBag.FromDate,
+                       ToDate = ViewBag.ToDate,
+                       //OrderStatus = Request.QueryString["OrderStatus"]
+                       //pShopID = Request.QueryString["pShopID"]
+                   }),
+                                                                new PagedListRenderOptions()
+                                                                {
+                                                                    Display = PagedListDisplayMode.IfNeeded
+                                                                })
+                </div>
+            </div>
+
+
+            @{
+                TempData["FromDate"] = ViewBag.FromDate;
+                TempData["ToDate"] = ViewBag.ToDate;
+                TempData["Franchise"] = ViewBag.Franchise;
+            }
+        </div>
+    </div>
+</div>
+
+
+
+@*@section MyScripts{
+        <script>
+            //----------------------------------------------------------------------For datepicker---//
+            //<![CDATA[
+            $(window).load(function () {
+                //$('#DOB').datepicker('setDate', new Date());
+                $('#FromDate').datepicker('update');
+                $('#ToDate').datepicker('update');
+            });//]]>
+
+        </script>
+    }*@

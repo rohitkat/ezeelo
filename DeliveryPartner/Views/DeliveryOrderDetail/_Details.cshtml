@@ -1,0 +1,237 @@
+﻿@model DeliveryPartner.Models.ViewModel.DeliveryDetailViewModel
+@using DeliveryPartner.Models.ViewModel;
+@{
+    Layout = null;
+    List<TaxOnOrderViewModel> lTaxOnOrderViewModels = (List<TaxOnOrderViewModel>)ViewBag.TaxOnOrderViewModels;
+    int lDeliveryPartnerID = (int)ViewBag.DeliveryPartnerID;
+}
+
+<!------------------------------------------------------------------------------------------------------------->
+
+<style>
+    .not-active {
+        background-color: rgba(255, 0, 0, 0.24);
+    }
+</style>
+
+<div id="dvContainer" style="background-color: white; padding: 10px 60px 10px 60px; ">
+    <table style="width:100%; background-color:white; font-family:Calibri;">
+        <tr>
+            <td rowspan="4"><img src="@System.Configuration.ConfigurationManager.AppSettings["EZEELO_DELIVERY_URL"]/Content/Images/logo.png" style="height:60px;" /></td>
+            <td style="text-align:right;"><h3>MERCHANT COPY</h3></td>
+        </tr>
+        <tr>
+            <td style="text-align:right;">GB Order No : @Model.GandhibaghOrderCode</td>
+        </tr>
+        <tr>
+            <td style="text-align:right;">Order No : @Model.ShopOrderCode</td>
+        </tr>
+        <tr>
+            <td style="text-align:right;">Order Date : @Model.TrackOrderViewModels.FirstOrDefault().CreateDate.ToString("dd-MMM-yyyy")</td>
+        </tr>
+    </table>
+    <hr />
+
+    <table style="width: 100%; background-color: white; font-family: Calibri;">
+        <tr>
+            <td><strong>Customer Name : @Model.DeliverToName</strong></td>
+        </tr>
+
+        <tr style="text-align:left;">
+            <td>Pick Up Address</td>
+        </tr>
+        <tr style="text-align:left;">
+            <td>Shop : @Model.ShopName</td>
+        </tr>
+        <tr style="text-align:left;">
+            <td>Name : @Model.PickUpName</td>
+        </tr>
+        <tr style="text-align:left;">
+            <td>Address : @Model.PickUpAddress</td>
+        </tr>
+        <tr style="text-align:left;">
+            <td>Contact : @Model.PickUpContact</td>
+        </tr>
+        <tr style="text-align:left;">
+            <td>Alternate Contact : @Model.PickUpAlternateContact</td>
+        </tr>
+    </table>
+    <hr />
+
+    <table style="width: 100%; background-color: white; font-family: Calibri;">
+        <tr>
+            <td><strong>Sn.</strong></td>
+            <td><strong>Particulars</strong></td>
+            @if ((lDeliveryPartnerID == 57 || lDeliveryPartnerID == 2)) //- Start for Landing Price //lDeliveryPartnerID == 1 ||
+            {
+            <td><strong>Landing Price</strong></td>
+            }
+            else
+            {
+            <td><strong>Unit Price</strong></td>
+            }
+
+            <td><strong>Qty</strong></td>
+            <td><strong>Variant(s)</strong></td>
+            <td><strong>Amount</strong></td>
+        </tr>
+        @{
+            int i = 0;
+            int lCountQty = 0;
+            decimal lTotalAmount = 0;
+            decimal lTotalPrice = 0;
+        }
+        @foreach (var item in Model.TrackOrderViewModels.Where(x => x.OrderStatus != 9).ToList())
+        {
+            lTotalAmount = 0;
+        <tr>
+            <td>@{ i++; } @i</td>
+            <td>
+                @item.Name
+
+                @if (lTaxOnOrderViewModels.FirstOrDefault(x => x.CustomerOrderDetailID == item.ID) != null)
+                    {
+                        <!-- Start Tax Include on 31-march-2016 , By Avi Verma. -->
+                    <br />
+                    <span style="background-color:#ffd800; font-size:smaller">
+                        @foreach (var tax in lTaxOnOrderViewModels.Where(x => x.CustomerOrderDetailID == item.ID).OrderBy(x => x.TaxID))
+                            {
+                            @tax.TaxPrefix<b>(@tax.TaxAmount) </b>
+                            }
+                    </span>
+                    }
+                <!-- End Tax Include on 31-march-2016 , By Avi Verma. -->
+            </td>
+            @if ((lDeliveryPartnerID == 57 || lDeliveryPartnerID == 2)) //- Start for Landing Price  lDeliveryPartnerID == 1 ||
+                {
+                    lTotalAmount = item.MerchantCopyLandingPrice;
+                <td><span class="indian_currency"></span>@item.MerchantCopyLandingPrice.ToString("00.00")</td>
+                }
+                else
+                {
+                    lTotalAmount = item.SaleRate;
+                <td><span class="indian_currency"></span>@item.SaleRate</td>
+
+                }
+            <td>
+                @item.CODQty
+                @{
+                lTotalAmount = lTotalAmount * item.CODQty;
+                lCountQty++;
+                }
+            </td>
+            <td>@DeliveryPartner.Common.Common.GetVarients(item.ShopStockID)</td>
+            <td><span class="indian_currency"></span>@lTotalAmount.ToString("00.00") @{ lTotalPrice += lTotalAmount; }</td>
+        </tr>
+        }
+    </table>
+    @{
+        decimal lTotalAmountTobePaid = 0;
+        lTotalAmountTobePaid = lTotalPrice + Model.GandhibaghCharge;
+    }
+    <hr />
+    <table style="width: 100%; background-color: white; font-family: Calibri;">
+        <tr>
+            <td>
+                <table>
+                    <tr>
+                        @if (Model.PaymentMode.Equals("COD"))
+                        {
+                            <td><h3>Payment Mode : COD</h3></td>
+                        }
+                        else
+                        {
+                            <td><h3>Payment Mode : Online</h3></td>
+                        }
+                    </tr>
+                    <tr>
+                        <td>
+                            <table>
+                                <tr><td colspan="2">I have received the above items for Delivery.</td></tr>
+                                <tr><td colspan="2">Receivers Signature (Name) :</td></tr>
+                                <tr><td>_________________________</td><td>_________________________</td></tr>
+                                <tr><td>Mobile</td><td>Date</td></tr>
+                            </table>
+                        </td>
+                    </tr>
+                </table>
+            </td>
+            <td style="text-align:right;">
+                <table table style="width:100%;">
+                    <tr>
+                        <td>Total Items</td>
+                        <td>&nbsp;</td>
+                        <td style="text-align:right;">&nbsp;&nbsp;&nbsp; @lCountQty</td>
+                    </tr>
+
+                    <tr>
+                        <td>Total Price</td>
+                        <td>&nbsp;</td>
+                        <td style="text-align:right;"><span class="indian_currency"></span>@lTotalPrice.ToString("00.00")</td>
+                    </tr>
+                    @{
+                        //-- Start Tax Include on 31-march-2016 , By Avi Verma.
+                        List<TaxOnOrderViewModel> lGrpsTaxOnViewModes = (from tovm in lTaxOnOrderViewModels
+                                                                         group tovm by tovm.TaxID into g
+                                                                         select new TaxOnOrderViewModel
+                                                                         {
+                                                                             TaxID = g.Key,
+                                                                             TaxAmount = g.Where(x => x.TaxID == g.Key).Sum(x => x.TaxAmount),
+                                                                             TaxPrefix = g.FirstOrDefault(x => x.TaxID == g.Key).TaxPrefix,
+                                                                             TaxName = g.FirstOrDefault(x => x.TaxID == g.Key).TaxName,
+                                                                         }).ToList();
+
+                        decimal lTotalTAX = lGrpsTaxOnViewModes.Sum(x => x.TaxAmount);
+                        lTotalAmountTobePaid += lTotalTAX;
+
+
+                        foreach (TaxOnOrderViewModel toovm in lGrpsTaxOnViewModes.OrderBy(x => x.TaxID))
+                        {
+                            <tr>
+                                <td style="text-align:right;">@toovm.TaxPrefix</td>
+                                <td>&nbsp;</td>
+                                <td style="text-align:right;"><span class="indian_currency"></span> @toovm.TaxAmount</td>
+                            </tr>
+                        }
+    //-- End Tax Include on 31-march-2016 , By Avi Verma.
+                    }
+
+                    <tr>
+                        <td>Delivery Charge</td>
+                        <td>&nbsp;</td>
+                        <td style="text-align:right;"><span class="indian_currency"></span>@Model.GandhibaghCharge</td>
+                    </tr>
+                    <tr>
+                        <td><b>Total Amount to be Paid</b></td>
+                        <td>&nbsp;</td>
+                        <td style="text-align:right;">
+                            <b>
+                                <span class="indian_currency"></span>@lTotalAmountTobePaid.ToString("00.00")
+                            </b>
+                        </td>
+                    </tr>
+                </table>
+            </td>
+
+        </tr>
+    </table>
+</div>
+
+
+<div style="float:right;">
+    <input type="button" value="Print" id="btnPrint" class="btn btn-primary" />
+</div>
+
+<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
+<script type="text/javascript">
+    $("#btnPrint").live("click", function () {
+        var divContents = $("#dvContainer").html();
+        var printWindow = window.open('', '', 'height=400,width=800');
+        printWindow.document.write('<html><head><title>POD</title>');
+        printWindow.document.write('</head><body >');
+        printWindow.document.write(divContents);
+        printWindow.document.write('</body></html>');
+        printWindow.document.close();
+        printWindow.print();
+    });
+</script>

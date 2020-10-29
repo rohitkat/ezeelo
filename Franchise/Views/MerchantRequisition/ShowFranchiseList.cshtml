@@ -1,0 +1,47 @@
+﻿@*//-----------------------------------------------------------------------
+        // <copyright file="ShowFranchiseList.cshtml" company="Ezeelo Consumer Services Pvt. Ltd.">
+        //     Copyright (c) Ezeelo Consumer Services Pvt. Ltd. All rights reserved.
+        //
+    </copyright>
+        // <author>Snehal Shende</author>
+        //-----------------------------------------------------------------------*@
+
+@model IEnumerable<ModelLayer.Models.ViewModel.FranchisePendingApprovalViewModel>
+
+@{
+    ViewBag.Title = "ShowFranchiseList";
+}
+
+
+<div class="span10" id="content">
+    <div class="row-fluid">
+        <div class="box span12">
+            <div class="box-header">
+                <h2><i class="halflings-icon user"></i><span class="break"></span>List Of Franchise</h2>
+            </div>
+            <div class="box-content">
+                <table class="table table table-striped table-bordered bootstrap-datatable datatable dataTable">
+                    <thead>
+                        <tr>
+                            <th>
+                                Franchise Name
+                            </th>
+                        </tr>
+                    </thead>
+                        @foreach (var item in Model)
+                        {
+                            <tr>
+                                @*<td>
+                        @Html.DisplayFor(modelItem => item.Name)
+                    </td>*@
+                                <td>
+                                    @Html.ActionLink(item.Name, "Index", "MerchantRequisition", new { franchiseID = item.OwnerId }, null)
+                                </td>
+                            </tr>
+                        }
+
+</table>
+            </div>
+        </div>
+    </div>
+</div>

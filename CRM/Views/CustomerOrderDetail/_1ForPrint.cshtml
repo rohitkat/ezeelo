@@ -1,0 +1,273 @@
+﻿@{
+    Layout = null;
+}
+@using ModelLayer.Models;
+@using CRM.Models.ViewModel;
+@model IEnumerable<ModelLayer.Models.CustomerOrderDetail>
+
+@{
+    string lPincode = "";
+    string lAreaName = "";
+    int countItem = 1;
+    decimal lTotalAmt = 0;
+    decimal lTotalMRP = 0;
+    decimal lTotalSave = 0;
+    try
+    {
+        lPincode = Model.FirstOrDefault().CustomerOrder.Pincode.Name;
+        lAreaName = Model.FirstOrDefault().CustomerOrder.Area.Name;
+    }
+    catch (Exception ex)
+    { }
+
+    List<DeliveryOrderDetail> lDeliveryOrderDetails = (List<DeliveryOrderDetail>)ViewBag.DeliveryOrderDetails;
+    List<TaxOnOrderViewModel> lTaxOnOrderViewModels = (List<TaxOnOrderViewModel>)ViewBag.TaxOnOrderViewModels;
+
+}
+
+@{
+    PersonalDetail lPersonalDetail = Model.FirstOrDefault().PersonalDetail;
+    string lName = "";
+    if (lPersonalDetail.FirstName != null)
+    {
+        lName += lPersonalDetail.FirstName;
+    }
+    if (lPersonalDetail.MiddleName != null)
+    {
+        lName += " " + lPersonalDetail.MiddleName;
+    }
+    if (lPersonalDetail.LastName != null)
+    {
+        lName += " " + lPersonalDetail.LastName;
+    }
+}
+@{string lRegMobile = "";}
+@{
+    if (Model.FirstOrDefault().CustomerOrder.UserLogin.Mobile != null)
+    {
+        if (!Model.FirstOrDefault().CustomerOrder.UserLogin.Mobile.Equals(Model.FirstOrDefault().CustomerOrder.PrimaryMobile) && !Model.FirstOrDefault().CustomerOrder.UserLogin.Mobile.Equals(Model.FirstOrDefault().CustomerOrder.SecondoryMobile))
+        {
+            lRegMobile = Model.FirstOrDefault().CustomerOrder.UserLogin.Mobile;
+        }
+    }
+}
+@{
+    string lPrimaryNo = Model.FirstOrDefault().CustomerOrder.PrimaryMobile;
+    string lSecondaryNo = Model.FirstOrDefault().CustomerOrder.SecondoryMobile;
+
+    string lContact = "";
+    if (lPrimaryNo != null && lPrimaryNo.Length > 0)
+    {
+        lContact += lPrimaryNo;
+    }
+
+    if (lSecondaryNo != null && lSecondaryNo.Length > 0)
+    {
+        lContact += ", " + lSecondaryNo;
+    }
+    if (lRegMobile != null & lRegMobile.Length > 0)
+    {
+        lContact += ", " + lRegMobile;
+    }
+}
+<style>
+    .items td {
+        text-align: left;
+        border-bottom: 1px solid #ccc;
+    }
+</style>
+
+<div>
+    <div>
+        <input type="button" value="Print" id="btnPrint" style="background:#4289ed; color:white;" />
+    </div>
+    <div id="dvContainer" style="background-color: white; margin:0px;">
+        <table style="width: 35%; font-family: monospace !important">
+            <tr>
+                <td><img src="~/Content/Images/logo.png" style="height:60px;" /></td>
+                <td style="text-align:center;"><h3>POD</h3></td>
+            </tr>
+            <tr>
+                <td colspan="2">Order No : @Model.FirstOrDefault().CustomerOrder.OrderCode</td>
+            </tr>
+            <tr>
+                <td colspan="2">Order Date : @Model.FirstOrDefault().CreateDate.ToShortDateString()</td>
+            </tr>
+            <tr>
+                <td colspan="2"><hr /></td>
+            </tr>
+        </table>
+
+
+        <table style="width: 35%; font-family: monospace !important">
+            <tr>
+                <td>To,</td>
+            <tr>
+            <tr>
+                <td>@lName</td>
+            </tr>
+            <tr>
+                <td>Address : @Model.FirstOrDefault().CustomerOrder.ShippingAddress</td>
+            </tr>
+            <tr>
+                <td>Pincode : @lPincode</td>
+            </tr>
+            <tr>
+                <td>Area : @lAreaName</td>
+            </tr>
+            <tr>
+                <td>Contact : @lContact</td>
+            </tr>
+            <tr><td><hr /></td></tr>
+        </table>
+
+
+
+        <table class="items" style="width: 35%; font-family: monospace !important">
+            <tr>
+                <td style=" text-align: left; border-bottom: 1px solid #ccc;">Sr.</td>
+                <td style=" text-align: left; border-bottom: 1px solid #ccc;">Items</td>
+                <td style="text-align: center; border-bottom: 1px solid #ccc;">Qty</td>
+                <td style="text-align: right; border-bottom: 1px solid #ccc;">Amount</td>
+            </tr>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td style="text-align: left; border-bottom: 1px solid #ccc;">@countItem @{countItem++;}</td>
+                    <td style="text-align: left; border-bottom: 1px solid #ccc;">
+                        @item.ShopStock.ShopProduct.Product.Name [@item.ShopStock.ProductVarient.Size.Name]
+                        @if (lTaxOnOrderViewModels.FirstOrDefault(x => x.CustomerOrderDetailID == item.ID) != null)
+                        {
+                            <br />
+                            <span style="background-color:#ffd800; font-size:smaller">
+                                @foreach (var tax in lTaxOnOrderViewModels.Where(x => x.CustomerOrderDetailID == item.ID).OrderBy(x => x.TaxID))
+                                {
+                                    @tax.TaxPrefix<b>(<img src="~/Content/Images/_indian_rupee.png" style="height:10px;" /> @tax.TaxAmount) </b>
+                                }
+                            </span>
+                        }
+                    </td>
+                    <td style="text-align: center; border-bottom: 1px solid #ccc;">
+                        @item.Qty
+                        @{ lTotalMRP = lTotalMRP + (item.Qty * item.MRP); }
+                        @{ lTotalAmt = lTotalAmt + (item.Qty * item.SaleRate); }
+                    </td>
+                    @*<td>
+                            @item.MRP @{ lTotalMRP = lTotalMRP + (item.Qty * item.MRP); }
+                        </td>
+                        <td>
+                            @item.SaleRate @{ lTotalAmt = lTotalAmt + (item.Qty * item.SaleRate); }
+                        </td>*@
+
+                    @{
+                         decimal lSave = (item.MRP * item.Qty) - (item.SaleRate * item.Qty);
+                         lTotalSave += lSave;
+                    }
+                    <td style="text-align: right; border-bottom: 1px solid #ccc;">@item.TotalAmount</td>
+                </tr>
+            }
+        </table>
+
+        <table class="summary" style="width: 35%; font-family: monospace !important">
+            <tr>
+                <td style="text-align: right;">Total Items</td>
+                <td style="text-align: right;">@{ countItem--; }@countItem</td>
+            </tr>
+            <tr>
+                <td style="text-align: right;">Total Amount</td>
+                <td style="text-align: right;"><img src="~/Content/Images/_indian_rupee.png" style="height:10px;" /> @lTotalAmt</td>
+            </tr>
+            @{
+                List<TaxOnOrderViewModel> lGrpsTaxOnViewModes = (from tovm in lTaxOnOrderViewModels
+                                                                 group tovm by tovm.TaxID into g
+                                                                 select new TaxOnOrderViewModel
+                                                                 {
+                                                                     TaxID = g.Key,
+                                                                     TaxAmount = g.Where(x => x.TaxID == g.Key).Sum(x => x.TaxAmount),
+                                                                     TaxPrefix = g.FirstOrDefault(x => x.TaxID == g.Key).TaxPrefix,
+                                                                     TaxName = g.FirstOrDefault(x => x.TaxID == g.Key).TaxName,
+                                                                 }).ToList();
+
+                foreach (TaxOnOrderViewModel toovm in lGrpsTaxOnViewModes.OrderBy(x => x.TaxID))
+                {
+                    <tr>
+                        <td style="text-align: right;">@toovm.TaxPrefix</td>
+                        <td style="text-align: right;"><img src="~/Content/Images/_indian_rupee.png" style="height:10px;" /> @toovm.TaxAmount</td>
+                    </tr>
+                }
+            }
+            @{
+                if (@Model.FirstOrDefault().CustomerOrder.CoupenAmount > 0)
+                {
+                    <tr>
+                        <td style="text-align: right;">Coupon Amount</td>
+                        <td style="text-align: right;"><img src="~/Content/Images/_indian_rupee.png" style="height:10px;" /> @Model.FirstOrDefault().CustomerOrder.CoupenAmount</td>
+                    </tr>
+                }
+            }
+
+            <tr>
+                <td style="text-align: right;">Delivery Charges</td>
+                <td style="text-align: right;"><img src="~/Content/Images/_indian_rupee.png" style="height:10px;" /> @ViewBag.DeliveryCharge</td>
+            </tr>
+            <tr>
+                <td style="text-align: right;">Bill Amount</td>
+                <td style="text-align: right;"><img src="~/Content/Images/_indian_rupee.png" style="height:10px;" /> @Model.FirstOrDefault().CustomerOrder.PayableAmount</td>
+            </tr>
+            <tr>
+                <td style="color: #ff0000; font-weight: bold; text-align: right;">Total Saving</td>
+                <td style="color: #ff0000; font-weight: bold; text-align: right;"><img src="~/Content/Images/_indian_rupee.png" style="height:10px;" />@lTotalSave</td>
+            </tr>
+
+        </table>
+        <table style="width: 35%; font-family: monospace !important">
+            <tr><td colspan="2"><hr /></td></tr>
+            <tr>
+                <td>Order fulfilled by</td>
+                <td style="text-align:right;">Payment Mode</td>
+            </tr>
+            <tr>
+                <td><h3>eZeelo</h3></td>
+                @{
+                    string lPayableMode = Model.FirstOrDefault().CustomerOrder.PaymentMode;
+                    if (lPayableMode.Equals("ONLINE"))
+                    {
+                        lPayableMode = "PAID ONLINE";
+                    }
+                }
+                <td style="text-align:right;">
+                    <h3>@lPayableMode <img src="~/Content/Images/_indian_rupee.png" style="height:15px;" /> @Model.FirstOrDefault().CustomerOrder.PayableAmount </h3>
+                </td>
+
+            </tr>
+        </table>
+
+        <table style="width: 35%; font-family: monospace !important">
+            <tr><td colspan="2" style="text-align:left;">I have received the above items for Delivery.</td></tr>
+            <tr><td>Receiver Sign</td></tr>
+            <tr><td>_________________________</td></tr>
+            <tr><td>Date</td></tr>
+        </table>
+
+        <table style="width: 35%; font-family: monospace !important">
+            <tr><td><hr /></td></tr>
+            <tr>
+                <td style="color:#808080; text-align:center;">This is not a TAX Invoice.</td>
+            </tr>
+        </table>
+    </div>
+</div>
+
+<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
+<script type="text/javascript">
+    $("#btnPrint").live("click", function () {
+        var divContents = $("#dvContainer").html();
+        var printWindow = window.open('', '', 'height=400,width=800');
+        printWindow.document.write('<html><head><title>POD</title>');
+        printWindow.document.write('</head><body >');
+        printWindow.document.write(divContents);
+        printWindow.document.write('</body></html>');
+        printWindow.document.close();
+        printWindow.print();
+    });
+</script>

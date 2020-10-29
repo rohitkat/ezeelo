@@ -1,0 +1,60 @@
+﻿@model ModelLayer.Models.CommissionMaster
+@{
+    ViewBag.Title = "CommissionUpdate";
+    Layout = "~/Views/Shared/_LeadersLayout.cshtml";
+}
+
+<script src="~/Scripts/MerchantMenuOpenup.js"></script>
+<script>
+    $(document).ready(function () {
+        $("#frmMerMst").submit(function (e) {
+            if ('@ViewBag.IsInUse' == 'True') {
+                alert('Commission value is in use you can not update');
+                e.preventDefault();
+                return false;
+            }
+        });
+    });
+</script>
+<style>
+    .form-control-label {
+        width: 100px !important;
+    }
+</style>
+<div class="container">
+    @using (Html.BeginForm("CommissionUpdate", "MerchantMaster", FormMethod.Post, new { id = "frmMerMst" }))
+    {
+        @Html.AntiForgeryToken()
+        @Html.ValidationSummary(true)
+        <div class="card">
+            <div class="card-header">
+                <strong>Commission Master</strong>
+            </div>
+            <div class="card-body card-block">
+                @if (ViewBag.IsInUse == true)
+                {
+                    <label style="color:red;font-weight:bold">Commission value in use</label>
+                    <br />
+                }
+                <div class="form-group">
+                    <label for="company" class=" form-control-label">Commission</label>
+                    @Html.TextBoxFor(model => model.Commission, new { style = "width:50px" })%
+                    @Html.ValidationMessageFor(model => model.Commission, null, new { @class = "text-danger" })
+                </div>
+                <div class="form-group">
+                    <label for="company" class=" form-control-label">IsActive</label>
+                    @Html.EditorFor(model => model.IsActive)
+                    @Html.ValidationMessageFor(model => model.IsActive)
+                </div>
+                <div class="form-group">
+                    <div class="col-md-offset-2 col-md-10">
+                        <input type="submit" value="Update" class="btn btn-primary btn-sm" />
+                        <a class="btn btn-info btn-sm" href="@Url.Action("CommissionIndex", "MerchantMaster", new { area = "Admin" })">Back To List</a>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    }
+</div>
+

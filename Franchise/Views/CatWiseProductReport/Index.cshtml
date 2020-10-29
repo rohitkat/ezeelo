@@ -1,0 +1,287 @@
+﻿@using PagedList;
+@using PagedList.Mvc;
+@model IPagedList<ModelLayer.Models.ViewModel.CategoryproductDetail>
+
+<link href="~/Content/css/Site.css" rel="stylesheet" />
+<script src="~/Content/js/jquery-1.9.1.min.js"></script>
+<script src="~/Content/js/jquery.dataTables.min.js"></script>
+<script src="~/Content/js/bootstrap.min.js"></script>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $("#myTable").DataTable({
+            "bDestroy": true,
+            //"sPaginationType": "full_numbers",
+            "bJQueryUI": true,
+            "bInfo": false,
+            "scrollY": 700,
+            "scrollCollapse": true,
+            "bPaginate": false,
+            "iDisplayLength": 20,
+            "bAutoWidth": false,
+
+        });
+
+    });
+</script>
+
+
+
+@{
+    ViewBag.Title = "Index";
+}
+
+
+<style>
+    .btn_Print {
+        margin-bottom: 7px;
+        margin-top: 7px;
+        margin-left: 5px;
+    }
+
+    .section {
+        position: relative;
+        border: 1px solid #000;
+        padding-top: 33px;
+        margin-left: 5px;
+        /*background: #A4A5A7;*/ background: rgb(179, 159, 128);
+        margin-top: 92px;
+    }
+
+    #myTable_wrapper {
+        min-height: 100px;
+        margin-top: 2px;
+        max-height: 250px;
+        overflow-y: auto;
+    }
+    .pager {
+        margin: 0px 0;
+        text-align: center;
+        list-style: none;
+    }
+    .table {
+        width: 100%;
+        margin-bottom: 0px;
+    }
+    .scrollable #myTable {
+        overflow: hidden; 
+        display: block;
+    }
+    .fg-toolbar {
+        margin-top: -89px;
+    }
+
+    #myTable_filter {
+        position: absolute;
+        margin-top: 13px !important;
+    }
+
+    .section.positioned {
+        position: absolute;
+        top: 100px;
+        left: 100px;
+        width: 800px;
+        box-shadow: 0 0 15px #333;
+    }
+
+    .container_tbl {
+        overflow-y: auto;
+        min-height: 50px;
+        max-height: 200px;
+        margin-bottom: 0px;
+        /*height: 200px;*/ /*height: 420px;*/
+    }
+
+    table {
+        border-spacing: 0;
+        width: 100%;
+    }
+
+    td + td {
+        border-left: 1px solid #eee;
+    }
+
+    td, th {
+        border-bottom: 1px solid #eee;
+        /*background: #ddd;*/
+        color: #000;
+        padding: 10px 25px;
+    }
+
+    #myTable thead tr th {
+        height: 0;
+        line-height: 0 !important;
+        padding-top: 0 !important;
+        padding-bottom: 0 !important;
+        color: transparent;
+        border: none;
+        white-space: nowrap;
+    }
+
+    th div {
+        position: absolute;
+        background: transparent;
+        color: #fff;
+        padding: 9px 10px;
+        top: 0;
+        margin-left: -8px;
+        line-height: normal;
+        /*border-left: 1px solid #800;*/ border-left: 1px solid #DDD;
+    }
+
+    th:first-child div {
+        border: none;
+    }
+
+    .wrap {
+        margin-top: 105px;
+    }
+
+    .ui-widget-header {
+        border: none;
+    }
+
+    td:nth-of-type(1) {
+        width: 90px;
+    }
+
+    td:nth-of-type(2) {
+        width: 400px;
+    }
+
+    td:nth-of-type(3) {
+        width: 300px;
+    }
+
+    td:nth-of-type(4) {
+        width: 260px;
+    }
+    /*td:nth-child(2) {
+        width: 300px;
+    }*/
+  .dataTables_filter {
+        margin-left: 2px !important;
+    }
+</style>
+<div class="row-fluid" style="margin-top:20px;width:96%">
+    <div class="box span12">
+        <div class="box-header">
+            <h2><i class="icon-home"></i><span class="break"></span>Category Product Detail</h2>
+        </div>
+        <div class="box-content viewCont">
+            <div class="span12" style="margin-top:10px;">
+                <div class="span2">Select Category</div>
+                <div class="span3">@Html.DropDownList("CategoryList")</div>
+                @using (Html.BeginForm("GetThirdLevelCategory", "CatWiseProductReport", FormMethod.Post, null))
+                {
+                    <div class="span3 cat_res">@Html.DropDownList("LevelTwoCategoryList")@Html.Hidden("Page", 1)</div>
+                    <div><input type="submit" value="Search" id="btnSearch" class="btn btn-small btn-warning1 search_res"></div>
+                }
+            </div>
+            <div class="section section2_res">
+                <div class="table">
+                    <table class="table" id="myTable">
+                        @if (Model.Count() == 0)
+                        {
+                            <tr>
+                                <td colspan="6" class="text-center"><h3>No Record Found...</h3></td>
+                            </tr>
+                        }
+                        else
+                        {
+                            int i = 1;
+                            <thead>
+                                <tr class="hed-tble header">
+                                    <th>Sr.No.</th>
+                                    <th>
+
+                                        Category Name
+                                    </th>
+                                    <th>
+
+                                        Approved Product Count
+                                    </th>
+                                    <th>
+
+                                        NonApproved Product Count
+                                    </th>
+
+
+                                </tr>
+                            </thead>
+                            foreach (var item in Model)
+                            {
+
+                                <tr>
+                                    <td>@{int SrNo = ((ViewBag.PageNumber - 1) * ViewBag.PageSize) + i; i = i + 1; } @SrNo</td>
+
+                                    <td>@Html.ActionLink(item.Name, "GetProductInCategory", "CatWiseProductReport", new { CategoryID = item.ID }, null)</td>
+
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.ApprovedCount)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.NonApprovedCount)
+                                    </td>
+
+
+                                </tr>
+                            }
+                        }
+
+                    </table>
+
+
+                    <div class="pager">
+                        @Html.PagedListPager(Model, Page => Url.Action("GetThirdLevelCategory", "CatWiseProductReport", new
+                       {
+                           LevelTwoCategoryList = ViewBag.CatID,
+                           page = Page,
+
+                       }),
+                                                                    new PagedListRenderOptions()
+                                                                    {
+                                                                        Display = PagedListDisplayMode.IfNeeded
+                                                                    })
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+        
+
+        <div>
+           
+        </div>
+
+        <script src="~/Content/js/jquery-1.9.1.min.js"></script>
+        <script type="text/javascript">
+            $(document).ready(function () {
+
+                $("#CategoryList").change(function () {
+                    /* Get the selected value of dropdownlist */
+                    var selectedID = $(this).val();
+                    var FranchiseID = $("#FranchiseList option:selected").val();
+                    var level = 1;
+
+                    $.ajax({
+                        type: "POST",
+                        url: "/CatWiseProductReport/SelectCategory/?ParentCategory=" + selectedID + "&level=2",
+                        dataType: "json",
+                        async: true,
+                        cache: false,
+                        success: function (msg) {
+                            $('#LevelTwoCategoryList').empty();
+                            $('#LevelTwoCategoryList').append('<option value=0>Second Level</option>');
+                            $.each(msg, function (index, item) {
+                                $('#LevelTwoCategoryList').append('<option value=' + item.ID + '>' + item.Name + '</option>');
+                            });
+                        },
+                        error: function (x, e) {
+                            alert("Sorry No Such Type of Category Is available. ");
+                        }
+                    });
+                });
+            });
+        </script>

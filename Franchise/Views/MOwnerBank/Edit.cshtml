@@ -1,0 +1,220 @@
+﻿@model ModelLayer.Models.OwnerBank
+
+@{
+    ViewBag.Title = "Edit";
+    Layout = null;
+}
+
+
+<style>
+    .NameDescription control-group {
+        float: left;
+    }
+
+    .succes-msg {
+        color: #125400;
+        font-size: 20px;
+    }
+    input[type="submit"].btn.btn-small {
+    }
+
+    .btn-warning {
+        color: #fff !important;
+        text-shadow: 0 -1px 0 rgba(0,0,0,0.25) !important;
+        background-color: #faa732 !important;
+        background-image: -moz-linear-gradient(top,#fbb450,#f89406) !important;
+        background-image: -webkit-gradient(linear,0 0,0 100%,from(#fbb450),to(#f89406)) !important;
+        background-image: -webkit-linear-gradient(top,#fbb450,#f89406) !important;
+        background-image: -o-linear-gradient(top,#fbb450,#f89406) !important;
+        background-image: linear-gradient(to bottom,#fbb450,#f89406) !important;
+        background-repeat: repeat-x;
+        border-color: #f89406 #f89406 #ad6704;
+        border-color: rgba(0,0,0,0.1) rgba(0,0,0,0.1) rgba(0,0,0,0.25) !important;
+        filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#fffbb450',endColorstr='#fff89406',GradientType=0);
+        filter: progid:DXImageTransform.Microsoft.gradient(enabled=false);
+    }
+
+    .btn-small {
+        padding: 2px 10px !important;
+        font-size: 11.9px !important;
+        -webkit-border-radius: 3p !importantx;
+        -moz-border-radius: 3px !important;
+        border-radius: 3px;
+    }
+
+    .btn {
+        display: inline-block !important;
+        padding: 2px 12px !important;
+        margin-bottom: 0;
+        font-size: 11.9px;
+        line-height: 20px !important;
+        color: #fff !important;
+        text-align: center !important;
+        text-shadow: 0 1px 1px rgba(255,255,255,0.75);
+        vertical-align: middle;
+        cursor: pointer;
+        background-color: #f5f5f5 !important;
+        background-image: -moz-linear-gradient(top,#fff,#e6e6e6);
+        background-image: -webkit-gradient(linear,0 0,0 100%,from(#fff),to(#e6e6e6));
+        background-image: -webkit-linear-gradient(top,#fff,#e6e6e6);
+        background-image: -o-linear-gradient(top,#fff,#e6e6e6);
+        background-image: linear-gradient(to bottom,#fff,#e6e6e6);
+        background-repeat: repeat-x;
+        border: 1px solid #ccc;
+        border-color: #e6e6e6 #e6e6e6 #bfbfbf;
+        border-color: rgba(0,0,0,0.1) rgba(0,0,0,0.1) rgba(0,0,0,0.25);
+        border-bottom-color: #b3b3b3;
+        -webkit-border-radius: 4px;
+        -moz-border-radius: 4px;
+        border-radius: 4px !important;
+        filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ffffffff',endColorstr='#ffe6e6e6',GradientType=0);
+        filter: progid:DXImageTransform.Microsoft.gradient(enabled=false);
+        -webkit-box-shadow: inset 0 1px 0 rgba(255,255,255,0.2),0 1px 2px rgba(0,0,0,0.05);
+        -moz-box-shadow: inset 0 1px 0 rgba(255,255,255,0.2),0 1px 2px rgba(0,0,0,0.05);
+        box-shadow: inset 0 1px 0 rgba(255,255,255,0.2),0 1px 2px rgba(0,0,0,0.05) !important;
+    }
+
+    .btn-warning:hover,
+    .btn-warning:focus,
+    .btn-warning:active,
+    .btn-warning.active,
+    .open .dropdown-toggle.btn-warning {
+        color: #fff !important;
+        background-color: #ed9c28 !important;
+        border-color: #d58512 !important;
+    }
+</style>
+<link href="~/Content/css/style_asset.css" rel="stylesheet" />
+<script src="~/Content/js/jquery-1.9.1.min.js"></script>
+<link href="http://www.jqueryscript.net/css/jquerysctipttop.css" rel="stylesheet" type="text/css">
+@*<link href="~/Content/assets/css/form-design.css" rel="stylesheet" />*@
+<div id="content" class="span10">
+    <div style="margin-top:20px;">
+        @if (ViewBag.Message != null)
+        {
+            <span class="succes-msg" style="margin: 0 12px;">@ViewBag.Message</span>
+        }
+    </div>
+    @using (Html.BeginForm())
+    {
+        @Html.AntiForgeryToken()
+        <div class="row-fluid">
+            <div class="box span12">
+                <div class="box-content">
+
+                    <div class="form-horizontal" id="msform1">
+
+                        @Html.ValidationSummary(true)
+                        @Html.HiddenFor(model => model.ID)
+                        <div class="control-group mrg-btm clearfix">
+                            <div class="NameDescription">
+                                <div class="control-group  mrg-left">
+                                    @Html.LabelFor(model => model.AccountName, new { @class = " col-md-2" })
+                                    <div class="">
+                                        @Html.TextBoxFor(model => model.AccountName, new { required = "required" })
+                                        @Html.ValidationMessageFor(model => model.AccountName)
+                                    </div>
+                                </div>
+                                <div class="control-group mrg-left">
+                                    @Html.LabelFor(model => model.BankID, "BankID", new { @class = "col-md-2" })
+                                    <div class="">
+                                        @Html.DropDownList("BankID", String.Empty)
+                                        @Html.ValidationMessageFor(model => model.BankID)
+                                    </div>
+                                </div>
+
+                                <div class="control-group mrg-left">
+                                    @Html.LabelFor(model => model.BranchName, new { @class = "col-md-2" })
+                                    <div class="">
+                                        @Html.TextBoxFor(model => model.BranchName, new { required = "required" })
+                                        @Html.ValidationMessageFor(model => model.BranchName)
+                                    </div>
+                                </div>
+
+                                <div class="control-group mrg-left">
+                                    @Html.LabelFor(model => model.IFSCCode, new { @class = "col-md-2" })
+                                    <div class="">
+                                        @Html.TextBoxFor(model => model.IFSCCode, new { required = "required", @maxlength = 11 })
+                                        @Html.ValidationMessageFor(model => model.IFSCCode)
+                                    </div>
+                                </div>
+                                <div class="control-group mrg-left">
+                                    @Html.LabelFor(model => model.MICRCode, new { @class = "col-md-2", @maxlength = 50 })
+                                    <div class="">
+                                        @Html.EditorFor(model => model.MICRCode)
+                                        @Html.ValidationMessageFor(model => model.MICRCode)
+                                    </div>
+                                </div>
+                                <div class="clr"></div>
+                            </div>
+                        </div>
+                        <div class="clr"></div>
+                        <div class="control-group mrg-btm clearfix">
+                            <div class="NameDescription">
+                                <div class="control-group mrg-left">
+                                    @Html.LabelFor(model => model.AccountNumber, new { @class = "col-md-2" })
+                                    <div class="">
+                                        @Html.TextBoxFor(model => model.AccountNumber, new { required = "required", @maxlength = 20 })
+                                        @Html.ValidationMessageFor(model => model.AccountNumber)
+                                    </div>
+                                </div>
+
+                                <div class="control-group mrg-left">
+                                    @Html.LabelFor(model => model.BankAccountTypeID, "BankAccountTypeID", new { @class = "col-md-2" })
+                                    <div class="">
+                                        @Html.DropDownList("BankAccountTypeID", String.Empty)
+                                        @Html.ValidationMessageFor(model => model.BankAccountTypeID)
+                                    </div>
+                                </div>
+
+
+                                <div class="clr"></div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            @*@Html.LabelFor(model => model.BusinessTypeID, "BusinessTypeID", new { @class = "col-md-2" })*@
+                            <div class="col-md-10">
+                                @*@Html.DropDownList("BusinessTypeID", String.Empty)*@
+                                @Html.HiddenFor(model => model.BusinessTypeID)
+                                @Html.ValidationMessageFor(model => model.BusinessTypeID)
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            @*@Html.LabelFor(model => model.OwnerID, new { @class = "col-md-2" })*@
+                            <div class="col-md-10">
+                                @* @Html.EditorFor(model => model.OwnerID)*@
+                                @Html.HiddenFor(model => model.OwnerID)
+                                @Html.ValidationMessageFor(model => model.OwnerID)
+                            </div>
+                        </div>
+
+
+                        <div class="form-group">
+                            @*@Html.LabelFor(model => model.CreateDate, new { @class = "col-md-2" })*@
+                            <div class="col-md-10">
+                                @*@Html.EditorFor(model => model.CreateDate)*@
+                                @Html.HiddenFor(model => model.CreateDate)
+                                @Html.ValidationMessageFor(model => model.CreateDate)
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            @*@Html.LabelFor(model => model.CreateBy, "CreateBy", new { @class = "col-md-2" })*@
+                            <div class="col-md-10">
+                                @*@Html.DropDownList("CreateBy", String.Empty)*@
+                                @Html.HiddenFor(model => model.CreateBy)
+                                @Html.ValidationMessageFor(model => model.CreateBy)
+                            </div>
+                        </div>
+                        <div class="col-md-offset-2 col-md-10">
+                            @*<input type="submit" value="Save" class="btn btn-default btn-woner" />*@
+                            <input type="submit" value="Save" class="btn btn-small btn-warning" style="margin-top: 25px;margin-left: 30px;" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+</div>
+

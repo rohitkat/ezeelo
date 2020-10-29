@@ -1,0 +1,130 @@
+﻿@model IEnumerable<ModelLayer.Models.Category>
+
+@{
+    ViewBag.Title = "Index";
+}
+<br />
+<style>
+    .dataTables_length {
+        margin-left: 0px;
+    }
+
+    .pagination {
+        margin: 0 40px;
+    }
+</style>
+<div class="row-fluid" style="margin-left:15px;">
+    <div class="box span12">
+        <div class="box-header">
+            <h2><i class="icon-edit"></i><span class="break"></span>@Html.ActionLink("Create Level Two Category", "Create")</h2>
+
+        </div>
+        <div class="box-content">
+            <table class="table table-striped table-bordered bootstrap-datatable datatable">
+                <thead>
+                    <tr>
+                        <th>Parent Category</th>
+                        <th>Name</th>
+                        <th>Level</th>
+                        <th>Description</th>
+                        <th>SearchKeyword</th>
+                        <th>IsActive</th>
+                        <th>IsExpire</th>
+                        <th>ExpiryDate</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td>@Html.DisplayFor(modelItem => item.Category2.Name)</td>
+                            <td class="center">@Html.DisplayFor(modelItem => item.Name)</td>
+                            <td class="center">@Html.DisplayFor(modelItem => item.Level)</td>
+                            <td class="center">@Html.DisplayFor(modelItem => item.Description)</td>
+                            <td class="center">@Html.DisplayFor(modelItem => item.SearchKeyword)</td>
+                            <td class="center">@Html.DisplayFor(modelItem => item.IsActive, new { @class = "chkBox" })</td>
+
+                            <td class="center">@Html.DisplayFor(modelItem => item.IsExpire, new { @class = "chkBox" })</td>
+                            <td class="center">@Html.DisplayFor(modelItem => item.ExpiryDate)</td>
+
+                            <td class="center" style="width: 160px;">
+                                @Html.ActionLink("Edit", "Edit", new { id = item.ID }, new { @class = "btn btn-small btn-success" })
+                                @Html.ActionLink("Details", "Details", new { id = item.ID }, new { @class = "btn btn-small btn-primary" })
+                                @*@Html.ActionLink("Delete", "Delete", new { id = item.ID })*@
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+            @*<div class="pager">
+                    @Html.PagedListPager(Model, page => Url.Action("Index", new { page }))
+                </div>*@
+            @*@Html.PagedListPager(Model, page => Url.Action("Index", new { page }))*@
+        </div>
+    </div><!--/span-->
+
+</div>
+
+
+
+
+
+
+@*<p>
+        @Html.ActionLink("Create New", "Create")
+    </p>
+    <table class="table">
+        <tr>
+            <th>
+                Parent Category
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Name)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Level)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Description)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.SearchKeyword)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.IsActive)
+            </th>
+
+            <th></th>
+        </tr>
+
+    @foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Category2.Name)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Name)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Level)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Description)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.SearchKeyword)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.IsActive)
+            </td>
+
+            <td>
+                @Html.ActionLink("Edit", "Edit", new { id=item.ID }) |
+                @Html.ActionLink("Details", "Details", new { id=item.ID }) |
+                @Html.ActionLink("Delete", "Delete", new { id=item.ID })
+            </td>
+        </tr>
+    }
+
+    </table>*@

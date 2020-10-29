@@ -1,0 +1,178 @@
+﻿@model ModelLayer.Models.PersonalDetail
+
+@{
+    Layout = "~/Views/Shared/_LayoutPartial.cshtml";
+}
+<style>
+    select{
+        width:80px;
+    }
+    textarea{
+        width:50%;
+        height:50px;
+    }
+    #DOB1 {
+        width: 70px;
+    }
+</style>
+<div class="widget-content">
+    <p>
+        @Html.ActionLink("Back", "Details", new { ID = @Model.ID }, new { @class = "btn btn-small btn-success" })
+    </p>
+    @using (Html.BeginForm())
+    {
+        @Html.AntiForgeryToken()
+
+        <div class="form-horizontal">
+            @Html.ValidationSummary(true)
+            @Html.HiddenFor(model => model.ID)
+
+            <div class="control-group">
+                <span class="control-label">Name</span>
+                <div class="controls">
+                    @Html.DropDownList("SalutationID")
+                    @Html.ValidationMessageFor(model => model.SalutationID)
+                    @Html.EditorFor(model => model.FirstName)
+                    @Html.ValidationMessageFor(model => model.FirstName)
+                    @Html.EditorFor(model => model.MiddleName)
+                    @Html.ValidationMessageFor(model => model.MiddleName)
+                    @Html.EditorFor(model => model.LastName)
+                    @Html.ValidationMessageFor(model => model.LastName)
+                </div>
+            </div>
+
+            <div class="control-group">
+                <span class="control-label">DOB</span>
+                <div class="controls">
+                    @Html.TextBox("DOB1", null, new { @readonly = "readonly", id = "DOB1" })
+                    @*@Html.ValidationMessageFor(model => model.DOB)*@
+                </div>
+            </div>
+
+            <div class="control-group">
+                <span class="control-label">Gender</span>
+                <div class="controls">
+                    @Html.DropDownList("Gender")
+                    @Html.ValidationMessageFor(model => model.Gender)
+                </div>
+            </div>
+
+            <div class="control-group">
+                <span class="control-label">Address</span>
+                <div class="controls">
+                    @Html.TextAreaFor(model => model.Address)
+                    @Html.ValidationMessageFor(model => model.Address)
+                </div>
+            </div>
+
+            <div class="control-group">
+                <span class="control-label">Pincode</span>
+                <div class="controls">
+                    @Html.TextBox("Pincode", null, new { @id = "Pincode", @class = "form-control-Widout-block", @placeholder = "Enter Pincode", @onkeypress = "return isValidPincode(event)" })
+                    <img id="Pincode_loading" src="~/Content/Images/ajax_loader.gif" style="width: 30px; height: 30px; display: none" />
+                    <div id="divPincodeError" style="width:400px; display: none; padding:5px" class="alert-danger focused">  </div>
+                </div>
+            </div>
+            <div id="divAddress">
+                @*to load Address Details*@
+            </div>
+
+            <div class="control-group">
+                <span class="control-label">Alternate Mobile</span>
+                <div class="controls">
+                    @Html.EditorFor(model => model.AlternateMobile)
+                    @Html.ValidationMessageFor(model => model.AlternateMobile)
+                </div>
+            </div>
+
+            <div class="control-group">
+                <span class="control-label">Alternate Email</span>
+                <div class="controls">
+                    @Html.EditorFor(model => model.AlternateEmail)
+                    @Html.ValidationMessageFor(model => model.AlternateEmail)
+                </div>
+            </div>
+
+            <div class="control-group">
+                <div style="float:right">
+                    <input type="submit" value="Save" class="btn btn-danger" />
+                </div>
+            </div>
+        </div>
+    }
+</div>
+@section Myscripts{
+    <script type="text/javascript">
+
+        //----------------------------------------------------------------------For datepicker---//
+        //<![CDATA[
+        $(window).load(function () {
+            //$('#DOB').datepicker('setDate', new Date());
+            $('#DOB1').datepicker('update');
+        });//]]>
+
+
+        //----------------------------------------------------------------------To GetAddress From Pincode---//
+
+        var lPincode = $('#Pincode').val()
+
+        $('#Pincode').bind('input propertychange', function () {
+            var lPincode = $('#Pincode').val()
+            $('#divPincodeError').hide();
+
+            if (lPincode.length == 6) {
+                $('#Pincode_loading').show();
+                $.ajax({
+                    url: '@Url.Action("GetAddress", "PersonalDetail")?Pincode=' + lPincode,
+                    type: "GET",
+                    success: function (result) {
+                        $('#divAddress').html(result);
+                        $('#Pincode_loading').hide();
+                        $('#divPincodeError').hide();
+                    },
+                    error: function (data) {
+                        //alert('Pincode : ' + lPincode + ' Dose Not Exist, please Contact to ADMIN');
+                        $('#divAddress').empty();
+                        $('#Pincode_loading').hide();
+                        $('#divPincodeError').show();
+                        $('#divPincodeError').html('Pincode [' + lPincode + '] dose not exist, please Contact to ADMIN');
+                        $('#Pincode').val('');
+                    }
+                });
+            }
+        });
+
+
+        function isValidMobile(evt) {
+            var charCode = (evt.which) ? evt.which : event.keyCode
+            var l = $('#RegMobile').val().length + 1;
+
+            if (charCode > 31 && (charCode < 48 || charCode > 57))
+                return false;
+
+            if (l > 10 && charCode != 8) {
+                return false;
+            }
+
+            return true;
+        }
+
+        function isValidPincode(evt) {
+            var charCode = (evt.which) ? evt.which : event.keyCode
+            var l = $('#Pincode').val().length + 1;
+
+            if (charCode > 31 && (charCode < 48 || charCode > 57))
+                return false;
+
+            if (l > 6 && charCode != 8) {
+                return false;
+            }
+
+            return true;
+        }
+
+
+    </script>
+}
+
+

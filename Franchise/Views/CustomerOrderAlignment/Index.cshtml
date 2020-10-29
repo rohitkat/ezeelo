@@ -1,0 +1,466 @@
+﻿@using PagedList;
+@using PagedList.Mvc;
+
+@{
+    ViewBag.Title = "List [ Order ]";
+    Layout = "~/Views/Shared/_Layout_franchise2.cshtml";
+}
+<style>
+    .form_datetime input {
+        width: 78%;
+    }
+
+    .form_datetime label {
+        font-weight: bold !important;
+    }
+
+    .add-on {
+        margin-top: -3px;
+    }
+
+    input, textarea, select, .uneditable-input {
+        width: 100px;
+        margin-top: 5px;
+    }
+
+    table td {
+        text-align: center;
+        width: 140px;
+    }
+
+    table tr {
+        vertical-align: text-top;
+    }
+
+        table tr th {
+            padding-left: 7px;
+        }
+
+    .dropdown-menu {
+        /*left: 980px !important;
+        top: 375.5px !important;*/
+    }
+
+    .datepicker-dropdown.datepicker-orient-top:after {
+        top: -8px !important;
+    }
+
+    .datepicker-dropdown.datepicker-orient-top:before {
+        top: -8px !important;
+    }
+
+    .datepicker-dropdown:before {
+        border: none !important;
+    }
+
+    .main-inner .container {
+        width: 95% !important;
+    }
+</style>
+
+<link href="~/Content/css/bootstrap-datetimepicker.min.css" rel="stylesheet" />
+<link href="~/Content/css/bootstrap-datetimepicker.css" rel="stylesheet" />
+
+
+@model IPagedList<Franchise.Models.ViewModel.NewCustomerOrderViewModel>
+@{ Franchise.Models.ViewModel.NewOrderStatusViewModel orderStatusViewModel = ViewBag.OrderStatusCount; }
+
+@*<div class="row">
+        <div class="col-lg-11 col-md-8 col-sm-8 col-xs-8" style="margin-left:-20px;">
+            @(((ViewBag.PageNumber - 1) * ViewBag.PageSize) + 1) - @(((ViewBag.PageNumber - 1) * ViewBag.PageSize) + ViewBag.PageSize) of @orderStatusViewModel.TotalOrder
+            <button><</button>
+            <button>></button>
+            <a href="#NewCustomerOrder" class="btn btn-xs btn-primary">View All</a>
+        </div>
+    </div>*@
+
+<div class="widget">
+    <div class="widget-header">
+        <i class="icon-list-alt"></i>
+        <h3> Customer Order</h3>
+    </div>
+    <div class="widget-content">
+        <table class="table table-bordered table-condensed table-hover table-responsive table-striped">
+            <tr>
+                <td>
+                    <a href="@Url.Action("Index", "CustomerOrderAlignment", new { ULID = ViewBag.ULID, OrderStatus = "1" })">
+                        <i class="fa fa-envelope-o"></i>
+                        <span class="label label-success"> @orderStatusViewModel.PLACED </span>
+                        <br /><small class="status-label">Placed</small>
+                    </a>
+                </td>
+
+                <td>
+                    <a href="@Url.Action("Index","CustomerOrderAlignment", new{ULID=ViewBag.ULID,OrderStatus="2"})">
+                        <i class="fa fa-bell-o"></i>
+                        <span class="label label-warning"> @orderStatusViewModel.CONFIRM </span>
+                        <br /><small class="status-label">Confirm</small>
+                    </a>
+                </td>
+
+                <td>
+                    <a href="@Url.Action("Index", "CustomerOrderAlignment", new { ULID = ViewBag.ULID, OrderStatus = "3" })">
+                        <i class="fa fa-flag-o"></i>
+                        <span class="label label-danger"> @orderStatusViewModel.PACKED </span>
+                        <br /><small class="status-label">Packed</small>
+                    </a>
+                </td>
+
+                <td>
+                    <a href="@Url.Action("Index", "CustomerOrderAlignment", new { ULID = ViewBag.ULID, OrderStatus = "4" })">
+                        <i class="fa fa-envelope-o"></i>
+                        <span class="label label-success"> @orderStatusViewModel.DISPATCH_FROM_SHOP </span>
+                        <br /><small class="status-label">Shop Out</small>
+                    </a>
+                </td>
+
+                <td>
+                    <a href="@Url.Action("Index", "CustomerOrderAlignment", new { ULID = ViewBag.ULID, OrderStatus = "5" })">
+                        <i class="fa fa-bell-o"></i>
+                        <span class="label label-warning"> @orderStatusViewModel.IN_GODOWN </span>
+                        <br /><small class="status-label">In Godown</small>
+                    </a>
+                </td>
+
+                <td>
+                    <a href="@Url.Action("Index", "CustomerOrderAlignment", new { ULID = ViewBag.ULID, OrderStatus = "6" })">
+                        <i class="fa fa-flag-o"></i>
+                        <span class="label label-danger"> @orderStatusViewModel.DISPATCH_FROM_GODOWN </span>
+                        <br /><small class="status-label">Dispatch</small>
+                    </a>
+                </td>
+
+                <td>
+                    <a href="@Url.Action("Index", "CustomerOrderAlignment", new { ULID = ViewBag.ULID, OrderStatus = "7" })">
+                        <i class="fa fa-envelope-o"></i>
+                        <span class="label label-success"> @orderStatusViewModel.DELIVERED </span>
+                        <br /><small class="status-label">Delivered</small>
+                    </a>
+                </td>
+
+                <td>
+                    <a href="@Url.Action("Index", "CustomerOrderAlignment", new { ULID = ViewBag.ULID, OrderStatus = "8" })">
+                        <i class="fa fa-bell-o"></i>
+                        <span class="label label-warning"> @orderStatusViewModel.RETURNED </span>
+                        <br /><small class="status-label">Returned</small>
+                    </a>
+                </td>
+
+                <td>
+                    <a href="@Url.Action("Index", "CustomerOrderAlignment", new { ULID = ViewBag.ULID, OrderStatus = "9" })">
+                        <i class="fa fa-flag-o"></i>
+                        <span class="label label-danger"> @orderStatusViewModel.CANCELLED </span>
+                        <br /><small class="status-label">Cancelled</small>
+                    </a>
+                </td>
+                <td>
+                    <a href="@Url.Action("Index", "CustomerOrderAlignment", new { ULID = ViewBag.ULID, OrderStatus = "10" })">
+                        <i class="fa fa-flag-o"></i>
+                        <span class="label label-danger"> @orderStatusViewModel.ABANDONED </span>
+                        <br /><small class="status-label">Abandoned</small>
+                    </a>
+                </td>
+            </tr>
+        </table>
+
+        @using (Html.BeginForm("Index", "CustomerOrderAlignment", FormMethod.Post))
+        {
+            @Html.AntiForgeryToken()
+            <table class="table-responsive for_tbleFst">
+                <thead>
+                    <tr>
+                        <td colspan="2" class="input-append date form_datetime" data-date-format="dd/mm/yyyy, HH:ii P">
+                            @*<div class="controls input-append  form_datetime" data-date-format="dd/mm/yyyy - HH:ii p" data-link-field="">
+                                    @Html.TextBox("FromDate", null, new { @readonly = "readonly", @class = "search", placeholder = "From" })
+                                </div>*@
+                            <label>From Date</label>
+                            @Html.TextBox("FromDate", null, new { @readonly = "readonly", @class = "search", placeholder = "From" })
+                            <span class="add-on"><i class="icon-th"></i></span>
+                        </td>
+                        <td colspan="2" class="input-append date form_datetime" data-date-format="dd/mm/yyyy, HH:ii P">
+                            <label>To Date</label>
+                            @Html.TextBox("ToDate", null, new { @readonly = "readonly", @class = "search", placeholder = "To" })
+                            <span class="add-on"><i class="icon-th"></i></span>
+                        </td>
+                        <td colspan="4" style="text-align:right;">
+                            <label> &nbsp;</label>
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <th>Order Code</th>
+                        <th>Customer</th>
+                        <th>Total Amount</th>
+                        <th>Mobile</th>
+                        <th>Order Status</th>
+                        @*<th>Delivery Type</th>*@
+                        @*<th>From Date</th>
+                            <th>To Date</th>*@
+                        <th>Delivery Time</th>
+                        <th>Payment Mode</th>
+                    </tr>
+                </thead>
+                <tr>
+                    <td>
+                        @Html.TextBox("OrderCode", ViewBag.OrderCode as string, new { @class = "search", placeholder = "OrderCode" }) &nbsp;
+                    </td>
+                    <td>
+                        @Html.TextBox("Customer", ViewBag.Customer as string, new { @class = "search", placeholder = "Customer" }) &nbsp;
+                    </td>
+                    <td style="width: 140px;">
+                        @Html.TextBox("TotalAmountMin", (decimal)ViewBag.TotalAmountMin, new { @class = "search", placeholder = "Min", value = 0, required = "required" }) &nbsp;
+                        @Html.TextBox("TotalAmountMax", (decimal)ViewBag.TotalAmountMax, new { @class = "search", placeholder = "Max", value = 10000000, required = "required", style = "margin-top: -7px;margin-bottom: 4px;" }) &nbsp;
+                    </td>
+                    <td>
+                        @Html.TextBox("Mobile", ViewBag.Mobile as string, new { @class = "search", placeholder = "Mobile" })
+                    </td>
+
+                    <td>
+                        @Html.DropDownList("OrderStatus", (SelectList)ViewBag.OrderStatus, "All Status", new { @class = "form-control" })&nbsp;
+                        <button type="submit" value="Search" class="btn btn-small btn-warning" name="submit">Search</button>
+                        <button type="button" class="btn btn-small btn-info" id="btnClear">Clear</button>
+                    </td>
+                    @*<td>
+                        @Html.DropDownList("DeliveryType", (SelectList)ViewBag.DeliveryType, "All Delivery Type", new { @class = "form-control select-small" })
+                    </td>*@
+
+                    @*<td class="input-append date form_datetime" data-date="-09-16T05:25:07Z" data-date-format="dd/mm/yyyy, HH:ii p" data-link-field="dtp_input1">
+                                    @*<div class="controls input-append  form_datetime" data-date-format="dd/mm/yyyy - HH:ii p" data-link-field="">
+                            @Html.TextBox("FromDate", null, new { @readonly = "readonly", @class = "search", placeholder = "From" })
+                        </div>
+
+                                        <input size="16" type="text" value="" readonly style="">
+
+                                        <span class="add-on"><i class="icon-th"></i></span>
+
+                                </td>
+                                <td>
+                                    @Html.TextBox("ToDate", null, new { @readonly = "readonly", @class = "search", placeholder = "To" })
+                                </td>*@
+                    <td>
+                        @Html.TextBox("DeliveryTime", ViewBag.DeliveryTime as string, new { @class = "search", placeholder = "Delivery Time" })
+                    </td>
+                    <td>
+                        @Html.DropDownList("lPaymentMode", (SelectList)ViewBag.PaymentMode, "Payment Mode", new { @class = "form-control select-small" })
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="8" style="text-align:right"></td>
+
+                </tr>
+
+                <tr>
+                    <td colspan="5" style="    text-align: right;">
+                        <input type="radio" id="rbEXCEL" name="exportType" value="1" title="EXCEL" /> EXCEL &nbsp;
+                        <input type="radio" id="rbCSV" name="exportType" value="2" title="CSV" /> CSV &nbsp;
+                        <input type="radio" id="rbPDF" name="exportType" value="3" title="PDF" /> PDF &nbsp;
+                    </td>
+                    <td colspan="5" style="    text-align: left;">
+                        <button type="submit" value="Export" name="submit" id="btnExport" class="btn btn-small btn-success" onclick="return ValidateType();">Export</button>
+                        <button type="button" value="Print" class="btn btn-small btn-success" onclick="javascript:PrintDivContent('divToPrint');">Print</button>
+                    </td>
+                </tr>
+
+            </table>
+        }
+        <div style="overflow-x:scroll; height:500px; overflow-y:scroll; background:#ffffff;" id="divToPrint">
+            <table class="table table-bordered table-condensed table-hover table-responsive table-striped" id="myTable">
+                <thead>
+                    <!--<th ng-repeat="(key, val) in Headers">{{val}}</th>-->
+                    <tr>
+                        <th>Sr.No</th>
+                        <th>Order</th>
+                        <th>Customer</th>
+                        <th>IsLeader</th> @*Yashaswi 30-7-2018*@
+                        <th>Wallet Amount Used</th>  @*Priti on 24-12-2018*@
+                        <th>Total Amount</th>
+                        <th>Retail Points</th> @*Yashaswi 30-7-2018*@
+                        <th>Cashback Points</th>
+                        <th>Mobile</th>
+                        <th>City</th>
+                        <th>Status</th>
+                        <th>Order Date</th>
+                        <th>Delivery Date</th>
+                        <th>Delivery Time</th>
+                        <th>Delivery Type</th>
+                        <th>Device</th>
+                        <th>Payment Mode</th>
+                        <th>BBP</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @{ int i = 1; }
+                    @foreach (var ord in Model)
+                    {
+                    <tr>
+                        <td class="@ord.DeliveryType"> @{int SrNo = ((ViewBag.PageNumber - 1) * ViewBag.PageSize) + i; i = i + 1; } @SrNo </td>
+                        <td><a href="@Url.Action("Index","CustomerOrderDetailAlignment", new{COID=ord.COID})">@ord.OrderCode</a></td>
+                        <td>@ord.Customer</td>
+                        <td>@ord.IsLeader</td>@*Yashaswi 30-7-2018*@
+                        <td>@ord.MLMAmountUsed</td>   @*Priti on 24-12-2018*@
+                        <td><img src="~/Content/Images/indian_rupee.png" style="height:10px;" />&nbsp;@ord.PayableAmount</td>
+                        <td>@ord.RetailPoints</td>@*Yashaswi 30-7-2018*@
+                        <td>@ord.CashbackPoints</td>
+                        <td>@ord.RegMobile</td>
+                        <td>@ord.City</td>
+                        <td>@ord.OrderStatus</td>
+                        <td>@ord.CreateDate.ToString("dd/MM/yyyy, hh:mm tt")</td>
+                        <td>
+                            @{string lDeliveryDateStr = "";}
+                            @if (ord.DeliveryDate != null && !ord.DeliveryDate.ToString().Contains("01/01/0001"))
+                            {
+                                DateTime lDeliveryTime = Convert.ToDateTime(ord.DeliveryDate);
+                                lDeliveryDateStr = lDeliveryTime.ToString("dd/MM/yyyy");
+                            }
+                            <span>@lDeliveryDateStr</span>
+                        </td>
+                        <td>@ord.DeliveryTime</td>
+                        <td>@ord.DeliveryType</td>
+                        <td>
+                            @{ord.DeviceType = (ord.DeviceType == "x") ? "Web" : ord.DeviceType;}
+                            @ord.DeviceType
+                        </td>
+                        <td>@ord.PaymentMode</td>
+                        <td>@ord.IsBusinessBoosterPlanOrder</td>
+                    </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+        <div class="pager">
+            <div class="pagination-container">
+                <ul class="pagination">
+                    @{
+                        int TotalPages = Convert.ToInt16(ViewBag.PageCount);
+                        int CurrentPageNo = Convert.ToInt16(ViewBag.PageNumber);
+                        for (int k = 1; k <= TotalPages; k++)
+                        {
+                            <li class="@((CurrentPageNo == k)?"active":"")" ><a href = "/CustomerOrderAlignment?page=@k&FromDate=@ViewBag.FromDate&ToDate=@ViewBag.ToDate&OrderCode=@ViewBag.OrderCode&OrderStatus=@ViewBag.SelectedOrderStatus&ULID=@ViewBag.ULID&lPaymentMode=@ViewBag.SelectedPaymentMode&Customer=@ViewBag.Customer&TotalAmountMin=@ViewBag.TotalAmountMin&TotalAmountMax=@ViewBag.TotalAmountMax&Mobile=@ViewBag.Mobile&City=@ViewBag.City&DeliveryTime=@ViewBag.DeliveryTime" > @k </a ></li >
+                        }
+                    }
+                </ul>
+            </div>
+        </div>
+        @*<div class="pager">
+                @Html.PagedListPager(Model, Page => Url.Action("Index", new
+                       {
+                           page = Page,
+                           FromDate = ViewBag.FromDate,
+                           ToDate = ViewBag.ToDate,
+                           OrderCode = ViewBag.OrderCode,
+                           OrderStatus = ViewBag.SelectedOrderStatus,
+                           ULID = ViewBag.ULID,
+                           DeliveryType = ViewBag.SelectedDeliveryType,
+                           lPaymentMode = ViewBag.SelectedPaymentMode,
+                           Customer = ViewBag.Customer,
+                           TotalAmountMin = ViewBag.TotalAmountMin,
+                           TotalAmountMax = ViewBag.TotalAmountMax,
+                           Mobile = ViewBag.Mobile,
+                           City = ViewBag.City,
+                           DeliveryTime = ViewBag.DeliveryTime
+                       }),
+                                                                    new PagedListRenderOptions()
+                                                                    {
+                                                                        Display = PagedListDisplayMode.IfNeeded
+                                                                    })
+            </div>*@
+    </div>
+
+</div>
+
+
+<script src="~/Content/js/jquery-1.9.1.min.js"></script>
+<script type="text/javascript">
+    $(document).ready(function () {
+        $("#myTable").DataTable({
+            "bDestroy": true,
+            //"sPaginationType": "full_numbers",
+            "bJQueryUI": true,
+            "bInfo": false,
+            "scrollY": 700,
+            "scrollCollapse": true,
+            "bPaginate": false,
+            "iDisplayLength": 20,
+            "bAutoWidth": false,
+            "bFilter": false
+        });
+
+    });
+</script>
+@*<link href="~/Content/css/bootstrap-datetimepicker.min.css" rel="stylesheet" />*@
+@*<script src="~/Content/js/bootstrap-datetimepicker.min.js"></script>*@
+@section MyScripts{
+    <script type="text/javascript">
+        //----------------------------------------------------------------------For datepicker---/
+        $(window).load(function () {
+            //$('#DOB').datepicker('setDate', new Date());
+            //$('#FromDate').datepicker('update');
+            //$('#ToDate').datepicker('update');
+            //$('#FromDate').datetimepicker();
+            //$('#ToDate').datetimepicker();
+        });
+
+        $("#btnClear").click(function () {
+            $('form input').val("");
+            $('form select').val("");
+            $("#TotalAmountMin").val(0);
+            $("#TotalAmountMax").val(10000000);
+
+            var fullDate = new Date();
+            var twoDigitMonth = (fullDate.getMonth() + 1) + ""; if (twoDigitMonth.length == 1) twoDigitMonth = "0" + twoDigitMonth;
+            var FromMonth = twoDigitMonth;
+            var FromYear = fullDate.getFullYear();
+            var twoDigitDate = fullDate.getDate() + ""; if (twoDigitDate.length == 1) twoDigitDate = "0" + twoDigitDate;
+            var hour = fullDate.getHours();
+            var minute = fullDate.getMinutes();
+            var ampm = hour > 12 ? "PM" : "AM";
+            if (fullDate.getDate() == 1) {
+                FromMonth = "12";
+                FromYear = (fullDate.getFullYear() - 1);
+            } else {
+                FromMonth = (fullDate.getMonth()) + ""; if (FromMonth.length == 1) FromMonth = "0" + FromMonth;
+                FromYear = fullDate.getFullYear();
+            }
+            hour = hour % 12;
+            hour = hour ? hour : 12; // zero = 12
+
+            minute = minute > 9 ? minute : "0" + minute;
+            hour = hour > 9 ? hour : "0" + hour;
+
+            $("#FromDate").val(twoDigitDate + "/" + (FromMonth) + "/" + (FromYear) + ", " + hour + ":" + minute + " " + ampm);
+            $("#ToDate").val(twoDigitDate + "/" + twoDigitMonth + "/" + fullDate.getFullYear() + ", " + hour + ":" + minute + " " + ampm);
+        });
+
+        function ValidateType() {
+            var type = $('input[name=exportType]:radio:checked').val();
+            if (type == null || type == "") {
+                alert('Select format to Export !!');
+                return false;
+            }
+            return true;
+        }
+
+        function PrintDivContent(divId) {
+            var printContent = document.getElementById(divId);
+            var WinPrint = window.open('', '', 'left=0,top=0,toolbar=0,sta­tus=0');
+            WinPrint.document.write(printContent.innerHTML);
+            WinPrint.document.close();
+            WinPrint.focus();
+            WinPrint.print();
+        }
+    </script>
+}
+<script src="~/Content/js/bootstrap-datetimepicker.js"></script>
+<script src="~/Content/js/bootstrap-datetimepicker.min.js"></script>
+<script type="text/javascript">
+    $('.form_datetime').datetimepicker({
+        //language:  'fr',
+        weekStart: 1,
+        todayBtn: 1,
+        autoclose: 1,
+        todayHighlight: 1,
+        startView: 2,
+        forceParse: 0,
+        showMeridian: 1
+    });
+</script>

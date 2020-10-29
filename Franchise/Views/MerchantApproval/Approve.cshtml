@@ -1,0 +1,178 @@
+﻿@*//-----------------------------------------------------------------------
+        // <copyright file="Approve.cshtml" company="Ezeelo Consumer Services Pvt. Ltd.">
+        //     Copyright (c) Ezeelo Consumer Services Pvt. Ltd. All rights reserved.
+        //
+    </copyright>
+        // <author>Snehal Shende</author>
+        //-----------------------------------------------------------------------*@
+
+@model ModelLayer.Models.ViewModel.ApprovalViewModel
+@{
+    ViewBag.Title = "Approve";
+}
+<style>
+    select {
+        width: 220px;
+        background-color: #ffffff;
+        border: 1px solid #cccccc;
+        text-transform: lowercase;
+    }
+    div.checker {
+        margin-top: -11px !important;
+    }
+</style>
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+
+    <div id="content" class="span10" style="min-height: 403px;">
+        <div class="row-fluid">
+            <div class="box span12">
+                <div class="box-header">
+                    <h2><i class="halflings-icon user"></i><span class="break"></span>Approve Merchant</h2>
+                </div>
+                <div class="box-content">
+                    <form class="form-horizontal">
+                        <hr />
+                        @Html.ValidationMessage("CustomError")
+                        @Html.ValidationSummary(true)
+                        @Html.HiddenFor(model => model.FromPersonalDetailId)
+                        @Html.HiddenFor(model => model.FromBusinessTypeID)
+                        @Html.HiddenFor(model => model.ToPersonalDetailID)
+                        @Html.HiddenFor(model => model.ToPersonalDetailID)
+                        @*<input type="hidden" value="@Model.UserLoginID" id="hdnUID" />
+                    <input type="hidden" value="@Model.FromPersonalDetailId" id="hdnFromPDID" />
+                    <input type="hidden" value="@Model.FromBusinessTypeID" id="hdnFromBTID" />
+                <input type="hidden" value="@Model.ToPersonalDetailID" id="hdnToPDID" />
+                <input type="hidden" value="@Model.ToBusinessTypeID" id="hdnToBTID" />
+                //fromPID: $("#hdnFromPDID").val(),
+                //fromBTID: $("#hdnFromBTID").val(),
+                //toPID: $("#hdnToPDID").val(),
+                //toBTID: $("#hdnToBTID").val()*@
+
+                        <div class="control-group">
+                            @Html.LabelFor(model => model.FromName, "Owner Name", new { @class = "control-label span2" })
+                            <div class="controls">
+                                @Html.TextBoxFor(model => model.FromName, new { @readonly = "readonly" })
+                            </div>
+                        </div>
+                        <div class="control-group">
+                            @Html.LabelFor(model => model.Fees, "Required Fees", new { @class = "control-label span2" })
+                            <div class="controls">
+                                @Html.TextBoxFor(model => model.Fees, new { @readonly = "readonly" })
+                            </div>
+                        </div>
+                        <div class="control-group">
+                            @Html.LabelFor(model => model.ChargeStageID, "Charge Stage", new { @class = "control-label span2" })
+                            <div class="controls">
+                                @Html.DropDownList("ChargeStageID", "Select Charge Stage")
+                                @Html.ValidationMessageFor(model => model.ChargeStageID)
+                            </div>
+                        </div>
+                        <div class="control-group">
+                            @Html.LabelFor(model => model.ChargeID, "Charge", new { @class = "control-label span2" })
+                            <div class="controls">
+                                <select id="ddlChargeID" name="ddlChargeID" style="width: 220px" />
+                                @Html.Hidden("ChargeID")
+                                @Html.ValidationMessageFor(model => model.ChargeID)
+                            </div>
+                        </div>
+                        <div class="control-group" style="display:none;">
+                            @Html.Label("Abc", new { @class = "control-label span2" })
+                            <div class="controls">
+                                @Html.TextBox("abc","", new { style = "display:none;" })
+                            </div>
+                        </div>
+                        <div class="control-group">
+                            @Html.LabelFor(model => model.TransactionAmount, "Received Fees", new { @class = "control-label span2" })
+                            <div class="controls">
+                                @Html.TextBoxFor(model => model.TransactionAmount, new { @readonly = "readonly" })
+                            </div>
+                        </div>
+                        <div class="control-group">
+                            @Html.LabelFor(model => model.IsApproved, "Is Approved", new { @class = "control-label span2" })
+                            <div class="controls">
+                                @Html.EditorFor(model => model.IsApproved)
+                                @Html.ValidationMessageFor(model => model.IsApproved)
+                            </div>
+                        </div>
+
+                        <div class="form-actions">
+                            <div class="col-md-offset-2 col-md-10">
+                                <input type="submit" value="Approve" id="Approve" class="btn btn-primary btn-small" />
+                                @Html.ActionLink("Back to List", "Index", "MerchantApproval", string.Empty, new { @class = "btn btn-small" })
+                                <span id="msgtext"></span>
+                            </div>
+                        </div>
+                    </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+}
+
+<script src="~/Scripts/jquery-1.10.2.js"></script>
+
+<script type="text/javascript">
+    $(function () {
+        $("select#ChargeStageID").bind('change', function () {
+            var chargeStageId = $("select#ChargeStageID option:selected").val();
+            //if (chargeStageId != 0) {
+            //    {
+            $.ajax({
+                type: "POST",
+                url: '@Url.Action("GetChargeByChargeStageId", "MerchantApproval")',
+                data: { 'chargeStageID': chargeStageId },
+                //dataType: "json",
+                cache: false,
+                success: function (msg) {
+                    $('#ddlChargeID').empty();
+                    $('#ddlChargeID').append('<option value=0>Select Charge</option>');
+                    $.each(msg, function (index, item) {
+                        $('#ddlChargeID').append('<option value=' + item.ID + '>' + item.Name + '</option>');
+                    });
+                },
+                error: function (x, e) {
+                    alert('Failure');
+                    //alert("The call to the server side failed. " + x.responseText);
+                }
+            });
+            //}
+        });
+
+        $("select#ddlChargeID").bind('change', function () {
+            var chargeId = $("select#ddlChargeID option:selected").val();
+            if (chargeId != 0) {
+                $('#ChargeID').val(chargeId);
+                var myData = {
+                    ChargeID: chargeId,
+                    FromPersonalDetailId: "@Model.FromPersonalDetailId",
+                    FromBusinessTypeID: "@Model.FromBusinessTypeID",
+                    ToPersonalDetailID: "@Model.ToPersonalDetailID",
+                    ToBusinessTypeID: "@Model.ToBusinessTypeID"
+                };
+//                alert(JSON.stringify(myData));
+
+                $.ajax({
+                    type: "GET",
+                    url: '@Url.Action("GetReceivedAmount", "MerchantApproval")',
+                    data: myData,  //JSON.stringify(myData)
+                    dataType: "json",
+                    cache: false,
+                    success: function (response) {
+                        $('#TransactionAmount').val(response);
+                        if ($('#TransactionAmount').val() == 0) {
+                            // $('#Approve').css('display', 'none');
+                            //$('#Approve').attr('disabled', 'disabled');
+                            $('#msgtext').html("No Amount Received!!");
+                        }
+                    },
+                    error: function (x, e) {
+                        alert('Failure');
+                        //alert("The call to the server side failed. " + x.responseText);
+                    }
+                });
+            }
+        });
+    });
+</script>

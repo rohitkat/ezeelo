@@ -1,0 +1,323 @@
+﻿@model ModelLayer.Models.ViewModel.GSTReportViewModel
+
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_LeadersLayout.cshtml";
+}
+
+@if (TempData["BBPResult"] != null)
+{
+    <script>
+    alert("@TempData["BBPResult"]");
+    </script>
+}   `
+<script src="~/Scripts/MerchantMenuOpenup.js"></script>
+<script>
+    $(document).ready(function () {
+        $("#Month").val(@Model.Month);
+        $("#Year").val(@Model.Year);
+        $("#spMonth").text($("#Month option:selected").text());
+
+        $("#frm").submit(function (e) {
+            //alert($("#MerchantID").val())
+            if ($("#MerchantID").val() >=0) {
+                $("#progress").show();
+            }
+            else {
+                alert("Plaese Select Merchant");
+                e.preventDefault();
+            }
+        });
+
+        $("#StateId").change(function () {
+            $("#SpMsg").show();
+            var stateid = $("select#StateId option:selected").val();
+            if (stateid <= 0) {
+                stateid = 0;
+            }
+            $.ajax({
+                type: "POST",
+                url: "@Url.Action("GetCityList", "MerchantReport")",
+                data: "{'stateID':" + stateid + "}",
+                contentType: "application/json; charset = utf-8",
+                dataType: "json",
+                cache: false,
+                success: function (msg) {
+                    $('#CityId').empty();
+                    $('#CityId').append('<option value=0>All City</option>');
+                    $.each(msg, function (index, item) {
+                        $('#CityId').append('<option value=' + item.CityID + '>' + item.CityName + '</option>');
+                    });
+                    $("#SpMsg").hide();
+                },
+                error: function (x, e) {
+                    alert('Failure');
+
+                }
+            });
+            $.ajax({
+                type: "POST",
+                url: "@Url.Action("GetMerchantListbyState", "MerchantReport")",
+                data: "{'StateID':" + stateid + "}",
+                contentType: "application/json; charset = utf-8",
+                dataType: "json",
+                cache: false,
+                success: function (msg) {
+                    $('#MerchantID').empty();
+                    $('#MerchantID').append('<option>Select Merchant/Shop</option>');
+                    $('#MerchantID').append('<option value=0>All</option>');
+                    $.each(msg, function (index, item) {
+                        $('#MerchantID').append('<option value=' + item.CityID + '>' + item.CityName + '</option>');
+                    });
+                },
+                error: function (x, e) {
+                    alert('Failure');
+
+                }
+            });
+
+        })
+
+        $("#CityId").change(function () {
+            var CityId = $("select#CityId option:selected").val();
+            $("#SpMsg").show();
+            $.ajax({
+                type: "POST",
+                url: "@Url.Action("GetMerchantListbyCity", "MerchantReport")",
+                data: "{'CityID':" + CityId + "}",
+                contentType: "application/json; charset = utf-8",
+                dataType: "json",
+                cache: false,
+                success: function (msg) {
+                    $('#MerchantID').empty();
+                    $('#MerchantID').append('<option>Select Merchant/Shop</option>');
+                    $('#MerchantID').append('<option value=0>All</option>');
+                    $.each(msg, function (index, item) {
+                        $('#MerchantID').append('<option value=' + item.CityID + '>' + item.CityName + '</option>');
+                    });
+                    $("#SpMsg").hide();
+                },
+                error: function (x, e) {
+                    alert('Failure');
+
+                }
+            });
+        })
+        $("#btnExport").click(function () {
+            var tab_text = '<table border="1px" style="font-size:20px" ">';
+            var textRange;
+            var j = 0;
+            var tab = document.getElementById('tblRpt');
+            var lines = tab.rows.length;
+
+            if (lines > 0) {
+                tab_text = tab_text + '<tr bgcolor="#DFDFDF">' + tab.rows[0].innerHTML + '</tr>';
+            }
+            for (j = 1; j < lines; j++) {
+                tab_text = tab_text + "<tr>" + tab.rows[j].innerHTML + "</tr>";
+            }
+            var fileName = 'Test file.xls';
+            var blob = new Blob([tab_text], {
+                type: "application/xls;charset=utf-8;"
+            });
+            if (window.navigator.msSaveBlob) {
+                navigator.msSaveBlob(blob, fileName);
+            } else {
+                var csvUrl = URL.createObjectURL(blob);
+
+                let a = $("<a />", {
+                    href: csvUrl,
+                    download: "MerchantTransactionGSTReport.xls"
+                })
+                    .appendTo("body")
+                    .get(0)
+                    .click();
+            }
+        });
+    });
+</script>
+<style>
+    th {
+        text-align: center !important;
+    }
+</style>
+<div class="container">
+    <div id="progress" class="modal">
+        <div class="center">
+            <img src="~/img/ajax-loading-gif-transparent-background-8.gif" />
+        </div>
+    </div>
+
+    <div class="card" id="maindiv">
+        <div class="card-header"><strong>Merchant GST Report </strong> &nbsp;<span style="display:none;color:red" id="SpMsg">Please wait Loading List</span></div>
+        <div class="card-body card-block">
+            @using (Html.BeginForm("GSTReport", "MerchantReport", FormMethod.Post, new { id = "frm" }))
+            {
+                @Html.AntiForgeryToken()
+                <table>
+                    <tr>
+                        <td>
+                            @Html.DropDownListFor(m => m.StateId, Model.StateList, "All State", new { @class = "form-control" })
+                        </td>
+                        <td>
+                            @Html.DropDownListFor(m => m.CityId, Model.CityList, "All City", new { @class = "form-control" })
+                        </td>
+                        <td>
+                            @Html.DropDownListFor(m => m.MerchantID, Model.MerchantList, "Select Merchant/Shop", new { @class = "form-control" })
+                        </td>
+                        <td>
+                            <select name="Month" id="Month" class="form-control" style="text-transform:uppercase;">
+                                <option value="1">JANUARY</option>
+                                <option value="2">FEBRUARY</option>
+                                <option value="3">MARCH</option>
+                                <option value="4">APRIL</option>
+                                <option value="5">MAY</option>
+                                <option value="6">JUN</option>
+                                <option value="7">JULY</option>
+                                <option value="8">AUGEST</option>
+                                <option value="9">SEPTEMBER</option>
+                                <option value="10">OCTOBER</option>
+                                <option value="11">NOVEMBER</option>
+                                <option value="12">DECEMBER</option>
+                            </select>
+                        </td>
+                        <td>
+                            <select name="Year" id="Year" class="form-control" style="text-transform:uppercase;">
+                                @for (int i = 2019; i <= 2030; i++)
+                                {
+                                    if (i <= DateTime.Now.Year)
+                                    {
+                                        <option value="@i">@i</option>
+                                    }
+                                }
+                            </select>
+                        </td>
+                        <td>
+                            <input id="btnGo" type="submit" value="Go" class="btn btn-info" />
+                        </td>
+                        <td>
+                            <input id="btnExport" type="button" value="Export To Excel" class="btn btn-warning" />
+                        </td>
+                    </tr>
+                </table>
+                <br />
+            }
+            @if (Model.TransactionList != null)
+            {
+                <div style="max-width:1000px;overflow:auto">
+                    <table id="tblRpt" class="table table-bordered table-striped table-condensed display" width="100%">
+                        <tbody>
+                            @if (Model.MerchantID != 0)
+                            {
+                                <tr>
+                                    <th colspan="8" style="font-size:20px;color:blue">@Model.Merchant.FranchiseName</th>
+                                </tr>
+                                <tr>
+                                    <th colspan="8" style="font-size:18px;color:red">@Model.Merchant.ServiceMasterDetail.Name</th>
+                                </tr>
+                            }
+                            else
+                            {
+                                <tr>
+                                    <th colspan="12" style="font-size:18px;color:red">Merchant Transactions GST Report</th>
+                                </tr>
+                            }
+                            <tr style="font-size:18px;color:green">
+                                <th>
+                                    <span style="float:left">Month : <span id="spMonth"></span></span>
+                                </th>
+
+                                @if (Model.MerchantID != 0)
+                                {
+                                    <th colspan="6">
+                                        @if (Model.Merchant.GSTINNo != null)
+                                        {
+                                            <span style="text-align:center;width:100%">GSTIN : @Model.Merchant.GSTINNo</span>
+                                        }
+                                    </th>
+                                }
+                                else
+                                {
+                                    <th colspan="10">
+                                    </th>
+
+                                }
+                                <th>
+                                    <span style="float:right">Year : @Model.Year</span>
+                                </th>
+                            </tr>
+                            <tr>
+                                @if (Model.MerchantID == 0)
+                                {
+                                    <th>Merchant Name</th>
+                                    <th>State</th>
+                                    <th>City</th>
+                                    <th>GSTIN</th>
+                                }
+                                <th>Transaction Code</th>
+                                <th>Date</th>
+                                <th>Bill Amount</th>
+                                <th>Commission</th>
+                                <th>GST%</th>
+                                <th>IsApplied</th>
+                                <th>GST</th>
+                                <th>TaxableValue</th>
+                            </tr>
+                            @{
+                                decimal BillAmount = Model.TransactionList.Sum(p => p.BillAmount);
+                                decimal Commission = Model.TransactionList.Sum(p => p.Commission);
+                                decimal GST = Model.TransactionList.Sum(p => p.GST);
+                                decimal TaxableValue = Model.TransactionList.Sum(p => p.TaxableValue);
+                            }
+                            @if (Model.TransactionList.Count != 0)
+                            {
+                                foreach (var item in @Model.TransactionList)
+                                {
+
+                                    <tr>
+
+                                        @if (Model.MerchantID == 0)
+                                        {
+                                            <td>@item.FranchiseName</td>
+                                            <td>@item.State</td>
+                                            <td>@item.City</td>
+                                            <td>@item.GSTIN </td>
+                                        }
+                                        <td>@item.TransactionCode</td>
+                                        <td>@item.Date.ToString("dd-MM-yyyy")</td>
+                                        <td>@item.BillAmount</td>
+                                        <td>@item.Commission</td>
+                                        <td>@item.GSTPer</td>
+                                        <td>
+                                            @if (item.IsApplied)
+                                            {
+                                                <span>Yes</span>
+                                            }
+                                            else
+                                            {
+                                                <span>
+                                                    No
+                                                </span>
+                                            }
+                                        </td>
+                                        <td>@item.GST</td>
+                                        <td>@item.TaxableValue</td>
+                                    </tr>
+
+                                }
+                            }
+                            <tr style="font-weight:bold">
+                                <td colspan=@(Model.MerchantID==0?"6":"2")>Total</td>
+                                <td>@BillAmount</td>
+                                <td>@Commission</td>
+                                <td colspan="2"></td>
+                                <td>@GST</td>
+                                <td>@TaxableValue</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            }
+        </div>
+    </div>
+</div>

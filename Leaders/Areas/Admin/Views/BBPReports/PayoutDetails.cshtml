@@ -1,0 +1,81 @@
+﻿@model List<ModelLayer.Models.ViewModel.BBPPayoutDetailsViewModel>
+<table id="tblData" class="table table-bordered table-striped table-condensed display" width="100%">
+    <thead>
+        <tr>
+            <th>Sr.No.</th>
+            <th>UserLoginId</th>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Phone No</th>
+            <th>ERP</th>
+            <th>Pending ERP</th>
+            <th>Total ERP</th>
+            <th>Status</th>
+        </tr>
+    </thead>
+    <tbody>
+        @{ var i = 0; }
+        @if (Model.Count != 0)
+        {
+            foreach (var item in @Model)
+            {
+                <tr>
+                    <td>
+                        @{
+                            i = i + 1;
+                        }
+                        @i
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.UserloginId)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Name)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Email)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Mobile)
+                    </td>
+
+                    <td>
+                        @Html.DisplayFor(modelItem => item.ERP)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.PendingERP)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.TotalERP)
+                    </td>
+                    @if (item.Status == true)
+                    {
+                        <td>
+                            Active
+                        </td>
+                    }
+                    else
+                    {
+                        <td>
+                            InActive
+                        </td>
+                    }
+
+                </tr>
+            }
+        }
+        else
+        {
+            <tr>
+                <td colspan="9" style="min-width:960px;max-width:960px">
+                    <label style=" color: #138afc; ">No Record Found.... </label>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('#tblData').DataTable();
+    });
+</script>

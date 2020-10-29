@@ -1,0 +1,83 @@
+﻿@model ModelLayer.Models.ViewModel.ProductTaxIndexView
+
+@{
+    ViewBag.Title = "Index";
+}
+
+@using (Html.BeginForm("Create", "ProductTax"))
+{ 
+    
+      <div class="span10" id="content">
+        <ul class="breadcrumb">
+            <li>
+                <a href="index.html">LIST OF Taxable Product</a>
+            </li>
+   
+        </ul>
+        <div class="row-fluid">
+            <div class="box">
+                <div class="box-header">
+                    <h2><i class="icon-edit"></i><span class="break"></span>Product Tax Index</h2>
+                </div>
+                <table class="table table-striped table-bordered">
+                    <tr>
+                        <th>
+                            Product Name
+                        </th>
+                        <th>
+                            Color
+                        </th>
+                        <th>
+                            Size
+                        </th>
+                        <th>
+                            Material
+                        </th>
+
+                        <th>
+                            Select
+                        </th>
+                        
+                    </tr>
+                    @for (int i = 0; i < Model.ProductVarientByCategoryAndShop.Count(); i++)
+                    {
+                        <tr>
+                            <td>
+                                @Html.HiddenFor(x => x.ProductVarientByCategoryAndShop[i].ShopStockID)
+                                @Html.DisplayFor(x => x.ProductVarientByCategoryAndShop[i].ProductName)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(x => x.ProductVarientByCategoryAndShop[i].ColorName)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(x => x.ProductVarientByCategoryAndShop[i].SizeName)
+
+                            </td>
+
+                            <td>
+                                @Html.DisplayFor(x => x.ProductVarientByCategoryAndShop[i].MaterialName)
+
+                            </td>
+                            <td>
+                                @Html.DisplayFor(x => x.ProductVarientByCategoryAndShop[i].isSelected)
+                                
+                            </td>
+                            <td class="center">
+                                @Html.ActionLink("Edit", "Edit", new { id = Model.ProductVarientByCategoryAndShop[i].ProductTaxID  }, new { @class = "btn btn-small btn-success" }) |
+                                @Html.ActionLink("Details", "Details", new { id = Model.ProductVarientByCategoryAndShop[i].ProductTaxID }, new { @class = "btn btn-small btn-primary" })
+                                @*@Html.ActionLink("Delete", "Delete", new { id = item.ID })*@
+                            </td>
+                        </tr>
+                    }
+                    <tr>
+                        <td>@Html.Hidden("TaxMasterID", Model.TaxMasterID)</td>
+                    </tr>
+                </table>
+                </div>
+            </div>
+        </div>
+    
+    <span id="message"></span>
+      
+
+}

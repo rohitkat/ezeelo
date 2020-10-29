@@ -1,0 +1,132 @@
+﻿@model Franchise.Models.ViewModel.CustomerViewModel
+@{
+    //Layout = "~/Views/Shared/_Layout_franchise2.cshtml";
+    Layout = "~/Views/Shared/_LayoutPartial.cshtml";
+}
+
+<style>
+    .text-primary td {
+        line-height: 65px;
+    }
+        .text-primary td:nth-of-type(1) {
+            color: #33a3dd;
+            font-weight: bold;
+            font-size: 18px;
+        }
+    .dl-horizontal tr {border-bottom:1px solid#eee9e9;
+    }
+    .img_clos {
+        width: 25px;
+        cursor: pointer;
+        float: right;
+        margin-top: 8px;
+        margin-right: 5px;
+    }
+    </style>
+
+<div class="row">
+    <div class="span4 span4_Resp">
+        <div class="widget">
+            <div class="widget-header">
+                <i class="icon-list-alt"></i>
+                <h3> Customer Details [ @Model.FirstName.ToString() ]</h3>
+                <img src="~/Content/Images/close1.png" onclick="Back();" class="img_clos" />
+                @*<button class="btn btn-small btn-success" onclick="Back();">Close</button>*@
+            </div>
+            <!-- /widget-header -->
+            <div class="widget-content">
+                <div class="widget big-stats-container">
+                    <div class="widget-content matchdivheight" style="margin-top:-50px;">                        
+                        <table class="dl-horizontal">
+                            <tr class="text-primary text-bold">
+                                <td colspan="2">Basic Info</td>
+                            </tr>
+                            <tr>
+                                <td>Customer</td>
+                                <td>@Model.Salutation @Model.FirstName @Model.MiddleName @Model.LastName</td>
+                            </tr>
+                            <tr>
+                                <td>Reg. Mobile</td>
+                                <td>@Model.RegMobile</td>
+                            </tr>
+                            <tr>
+                                <td>Reg. Email</td>
+                                <td>@Model.RegEmail</td>
+                            </tr>
+                            <tr>
+                                <td>DOB</td>
+                                <td>@if (Model.DOB != null) { @Html.Raw(((DateTime)Model.DOB).ToString("dd/MM/yyyy")) }</td>
+                            </tr>
+                            <tr>
+                                <td>Gender</td>
+                                <td>@Model.Gender</td>
+                            </tr>
+                            <tr class="text-primary text-bold">
+                                <td colspan="2">Account Info</td>
+                            </tr>
+                            <tr class="text-danger text-bold">
+                                <td style="color: #b14442; font-weight:bold">Total Orders</td>
+                                <td style="color: #b14442; font-weight: bold">@Model.TotalOrder</td>
+                            </tr>
+                            <tr class="text-danger text-bold">
+                                <td style="color: #b14442; font-weight: bold">Total Amount</td>
+                                <td style="color: #b14442; font-weight: bold">@Model.TotalAmount</td>
+                            </tr>
+                            <tr class="text-danger text-bold">
+                                <td style="color: #b14442; font-weight: bold">Last Purchased</td>
+                                <td style="color: #b14442; font-weight: bold">@Model.LastPurchasedDate</td>
+                            </tr>
+
+                            <tr class="text-primary text-bold">
+                                <td colspan="2">Extra Info</td>
+                            </tr>
+                            <tr>
+                                <td>Address</td>
+                                <td>@Model.Address, Pincode : @Model.Pincode</td>
+                            </tr>
+                            <tr>
+                                <td>Joining Date</td>
+                                <td>@Model.CreateDate</td>
+                            </tr>
+                            <tr>
+                                <td>Locked</td>
+                                <td>@Model.IsLocked</td>
+                            </tr>
+                            <tr>
+                                <td>Active</td>
+                                <td>@Model.IsActive</td>
+                            </tr>
+                            <tr>
+                                <td>Alternate Mobile</td>
+                                <td>@Model.AlternateMobile</td>
+                            </tr>
+                            <tr>
+                                <td>Alternate Email</td>
+                                <td>@Model.AlternateEmail</td>
+                            </tr>
+                            <tr>
+                                <td>Total FeedBack</td>
+                                <td>@Model.FedCount</td>
+                            </tr>
+                            <tr>
+                                <td>Last FeedBack Date</td>
+                                <td>@Model.LastFeedbackDate</td>
+                            </tr>
+                           </table> 
+                    </div>
+                </div>
+                <button class="btn btn-small btn-success" onclick="Back();" style="float:right;">Back</button>
+                <!-- /widget-content -->
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    function Back() {
+        $('#divtable').removeClass('span8');
+        $('#divtable').addClass('span12');
+        window.parent.$("[id$=Details]").hide();
+        $('#loader_img').hide();
+        $("#divtable").css('width', '100%');
+    }
+</script>

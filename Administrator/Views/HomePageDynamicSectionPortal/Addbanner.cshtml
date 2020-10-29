@@ -1,0 +1,684 @@
+﻿
+@model ModelLayer.Models.HomePageDynamicSectionBanner
+
+@{
+    ViewBag.Title = "Addbanner";
+}
+@*<script src="http://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>*@
+
+<style>
+
+    select {
+        width: 219px;
+    }
+
+    .uploader input {
+        right: 95px !important;
+    }
+
+    div.uploader span.action {
+        display: inline;
+        padding: 8px 19px;
+        background: #08c;
+        overflow: hidden;
+        cursor: pointer;
+        color: #fff;
+        text-shadow: none;
+        font-size: 14px;
+        line-height: 28px;
+    }
+
+    .CategoryDiv {
+        width: 233px;
+        float: left;
+        padding: 10px;
+    }
+
+        .CategoryDiv span {
+            display: block;
+            font-size: 15px;
+            font-weight: 600;
+        }
+
+        .CategoryDiv label {
+            display: block;
+            font-size: 15px;
+            font-weight: 600;
+            text-align: left !important;
+        }
+
+        .CategoryDiv select {
+            display: block;
+        }
+
+    div.uploader span.filename {
+        border-right: none;
+    }
+
+    #dvPreview {
+        /*float: left;*/
+        width: 120px;
+    }
+
+    .uploader {
+        margin-top: 35px;
+    }
+
+    #dvPreview img {
+        border: 3px solid#CEC4C4;
+        margin-bottom: 10px;
+        height: 124px;
+    }
+
+    div.uploader {
+        left: -12px;
+        top: 121px;
+    }
+
+    .top_cat {
+        margin-top: 2px; /*margin-bottom:45px;*/
+        border: 1px solid #ccc;
+        width: 173px;
+        height: 135px;
+    }
+
+    #dvPreview {
+        margin-top: -60px;
+        width: 164px;
+        padding: 0px 1px;
+    }
+</style>
+<div id="content" class="span10">
+    <ul class="breadcrumb">
+        <li>
+            <div>HomePageDynamicSectionPortal</div>
+        </li>
+    </ul>
+    @using (Html.BeginForm("Addbanner", "HomePageDynamicSectionPortal", FormMethod.Post, new { enctype = "multipart/form-data" }))
+    {
+        @Html.AntiForgeryToken()
+        @Html.Hidden("HomepageDynamicSectionID")
+        <div class="row-fluid">
+            <div class="box span12">
+                <div class="box-header">
+                    <h2><i class="icon-edit"></i><span class="break"></span>Offer Section</h2>
+                </div>
+                @if (TempData["Messaage"] != null)
+                {
+                    <div style="font-weight:bold; color:red;">@TempData["Messaage"]</div>
+                }
+                @if (ViewBag.Message != null)
+                {
+                    <div style="font-weight: bold; color: red; float: left; margin: 5px 5px;">@ViewBag.Message</div>
+                }
+                <div class="box-content">
+
+                    <div class="span8">
+                        <div class="span2">
+                            <div class="form-horizontal">
+                                <br />
+                                @Html.ValidationSummary(true)
+
+                                <div class="control-group">
+
+                                    <label class="control-label col-md-2">Select Start Date</label>
+                                    <div class="col-md-10 controls">
+                                        <input type="text" id="SDate" name="SDate" value="@ViewBag.SDate" class="datepicker" />
+                                        <span id="SDateErro" style="font-weight:bold;color:red;"></span>
+                                    </div>
+
+                                </div>
+
+                                <div class="control-group">
+                                    <label class="control-label col-md-2">Select End Date</label>
+                                    <div class="col-md-10 controls">
+                                        <input type="text" id="EDate" name="EDate" value="@ViewBag.EDate" class="datepicker" />
+                                        <span id="EDateErro" style="font-weight:bold;color:red;"></span>
+
+                                    </div>
+                                </div>
+                                <div class="col-md-5"> <span id="DateErro" style="font-weight:bold;color:red;"></span></div>
+                                <div class="clr"></div>
+                                <div class="control-group">
+                                    <label class="control-label col-md-2"> Franchise :</label>
+                                    <div class="col-md-10 controls">
+                                        @ViewBag.FranchiseName
+
+                                    </div>
+                                </div>
+
+                                <div class="control-group">
+                                    <label class="control-label col-md-2"> Section Name :</label>
+                                    <div class="col-md-10 controls">
+                                        @ViewBag.SectionDisplayName
+
+                                    </div>
+                                </div>
+
+                                <div class="control-group">
+                                    <label class="control-label col-md-2"> Section Style :</label>
+                                    <div class="col-md-10 controls">
+                                        @ViewBag.SectionStyle
+
+
+                                    </div>
+                                </div>
+
+
+
+
+                                @*<div class="control-group">
+            <label class="control-label col-md-2">select offer Category</label>
+            <div class="col-md-10 controls">
+                @Html.DropDownList("OfferCategory", "select offer Category")
+
+                <span id="OfferCategoryErro" style="font-weight:bold;color:red;"></span>
+            </div>
+        </div>*@
+
+
+                                <div class="control-group">
+                                    @Html.LabelFor(model => model.SequenceOrder, new { @class = "control-label col-md-2" })
+                                    <div class="col-md-10 controls">
+                                        <input type="number" id="SequenceOrder" name="SequenceOrder" min="0" />
+                                        @*@Html.EditorFor(model => model.SequenceOrder)*@
+                                        @*@Html.ValidationMessageFor(model => model.SequenceOrder)*@
+                                        <span id="SequenceOrderErro" style="font-weight:bold;color:red;"></span>
+                                    </div>
+                                </div>
+
+                                <div class="control-group">
+                                    @Html.LabelFor(model => model.LinkURL, new { @class = "control-label col-md-2" })
+                                    <div class="col-md-10 controls">
+                                        @Html.EditorFor(model => model.LinkURL)
+                                        @Html.ValidationMessageFor(model => model.LinkURL)
+                                        <span id="LinkURLErro" style="font-weight:bold;color:red;"></span>
+                                    </div>
+                                </div>
+
+                                <div class="control-group">
+                                    @Html.LabelFor(model => model.ToolTip, new { @class = "control-label col-md-2" })
+                                    <div class="col-md-10 controls">
+                                        @Html.EditorFor(model => model.ToolTip)
+                                        @Html.ValidationMessageFor(model => model.ToolTip)
+                                        <span id="ToolTipErro" style="font-weight:bold;color:red;"></span>
+                                    </div>
+                                </div>
+
+                                @*<div class="control-group">
+            <label class="control-label col-md-2">Upload Image</label>
+            @Html.LabelFor(model => , new { @class = "control-label col-md-2" })
+            <div class="col-md-10 controls">
+                <input type="file"  name="File" id="File" class="pull-right" />
+
+                <span id="IsActiveErro" style="font-weight:bold;color:red;"></span>
+            </div>
+        </div>*@
+
+                                <div class="control-group">
+                                    @Html.LabelFor(model => model.IsActive, new { @class = "control-label col-md-2" })
+                                    <div class="col-md-10 controls">
+                                        @*<input type="checkbox" id="IsActive" name="IsActive">*@
+                                        @Html.CheckBoxFor(model => model.IsActive_)
+                                        @Html.ValidationMessageFor(model => model.IsActive_)
+                                        <span id="IsActiveErro" style="font-weight:bold;color:red;"></span>
+                                    </div>
+                                </div>
+
+                                <div class="control-group" id="isban" style="display:block">
+                                    @*@Html.LabelFor(model => model.IsBanner, new { @class = "control-label col-md-2" })*@
+                                    <label class="control-label col-md-2">Banner</label>
+                                    <div class="col-md-10 controls">
+                                        @Html.CheckBoxFor(model => model.IsBanner_)
+                                        @Html.ValidationMessageFor(model => model.IsBanner_)
+                                        <span id="IsBannerErro" style="font-weight:bold;color:red;"></span>
+                                    </div>
+                                </div>
+
+                                <div class="control-group" id="iscat" style="display:block">
+                                    @*@Html.LabelFor(model => model.IsCategory, new { @class = "control-label col-md-2" })*@
+                                    <label class="control-label col-md-2">Sub Banner</label>
+                                    <div class="col-md-10 controls">
+                                        @Html.CheckBoxFor(model => model.IsCategory)
+                                        @Html.ValidationMessageFor(model => model.IsCategory)
+
+                                    </div>
+                                </div>
+                                <div class="control-group">
+                                    <div class="control-label col-md-2" style="margin-left: 75px;">
+                                        <span id="checkErro" style="font-weight:bold;color:red;"></span>
+                                    </div>
+                                </div>
+                               
+                            </div>
+                        </div>
+                        @*<div class="span7 image_span7" id="imgDiv" style="display: block;">
+                                <input type="file" name="File" id="File" class="pull-right" />
+                                <br /><span id="imgSize" style="color: #777;"></span>
+                                <div id="dvPreview">
+                                </div>
+                                <div class="clr"></div>
+                                <span id="ImageErro" style="font-weight:bold;color:red;"></span>
+                            </div>*@
+                    </div>
+                    <div class="span4" id="imid" style="display:none">
+
+                        <span id="ImageErro" style="font-weight:bold;color:red;"></span>
+                        <span id="imgSize" style="color: #777;"></span>
+                        <div class="top_cat pull-left">
+
+                            <div class=" categorydiv">
+                                @*<img src="@Model.ImageName" width="100px" height="100px" onerror="this.src = '../../Content/Images/No_thumbnail.png'" style="border: 2px solid#CEC4C4; margin-left: 10px; padding: 5px; margin-top: 20px;" />*@
+                                <input type="file" name="File" id="File" class="pull-right" />
+
+                                <div id="dvPreview">
+
+                                </div><div class="clr"></div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="form-actions no-color">
+            <div class=" col-md-offset-2 col-md-10" style="text-align:center;">
+                <input type="submit" value="Create" class="btn btn-primary" />
+
+                @Html.ActionLink("Back to List", "Index", null, new { @class = "btn btn-default" })
+            </div>
+        </div>
+    }
+</div>
+<div class="span4 spanLeft" style="margin-top:12px;">
+    <div id="divAddNew"></div>
+</div>
+
+
+@*<script src="~/Scripts/jquery-2.1.4.min.js"></script>*@
+<script src="~/Scripts/jquery-1.10.2.min.js"></script>
+<script>
+
+    //$.noConflict();
+    var height = 0;
+    var width = 0;
+    var Size = 0;
+   $("#IsBanner_").change(function () {
+        if (this.checked) {
+
+            $("#imid").css('display', 'block');
+            $("#iscat").css('display', 'none');
+
+
+            var sectionsty = "@ViewBag.SectionStyle";
+            var sectionsty = "@Html.Raw(@ViewBag.SectionStyle)";
+            var ID = $("#HomepageDynamicSectionID").val();
+            if (sectionsty != null || sectionsty != "") {
+                /*Processing Image*/
+                $("#pageloaddiv").css('display', 'block');
+                $("#pageloaddiv").fadeOut(1000);
+
+                $.ajax({
+                    type: "POST",
+                    url: "/HomePageDynamicSectionPortal/GetBlocksize?sectionsty=" + sectionsty,
+                    dataType: "json",
+                    async: true,
+                    cache: false,
+                    success: function (data) {
+
+                        height = data.Portal_Banner_Height;
+                        width = data.Portal_Banner_Width;
+                        //size = data.Portal_Banner_Size;
+                        size = 400;
+                        $("#imgSize").html("Please Select Image with Size " + width + "x" + height + " px size of image" + size + "kb");
+                        $("#dvPreview").css("height", 300);
+                        $("#dvPreview").css("width", 173);
+                        $("#imgDiv").css('display', 'block');
+                        $("#pageloaddiv").css('display', 'none');
+                        $("#pageloaddiv").fadeOut(1000);
+                    },
+                    error: function (x, e) {
+                        // alert("Sorry No Such Type of Block Type Is available. ");
+                        $("#imgDiv").css('display', 'none');
+                        $("#pageloaddiv").css('display', 'none');
+                        $("#pageloaddiv").fadeOut(1000);
+                    }
+                });
+            }
+        }
+        else
+        {
+            $("#imid").css('display', 'none');
+          
+         var sectionsty =  "@Html.Raw(@ViewBag.SectionStyle)";
+            var ID = $("#HomepageDynamicSectionID").val();
+            if (sectionsty != null || sectionsty != "") {
+                /*Processing Image*/
+                $("#pageloaddiv").css('display', 'block');
+                $("#pageloaddiv").fadeOut(1000);
+
+                $.ajax({
+                    type: "POST",
+                    url: "/HomePageDynamicSectionPortal/GetBlocksizecategory?sectionsty=" + sectionsty,
+                    dataType: "json",
+                    async: true,
+                    cache: false,
+                    success: function (data) {
+
+                        height = data.Portal_Category_Height;
+                        width = data.Portal_Category_Width;
+                        if (data.Portal_Category_Height != null && data.Portal_Category_Width != null) {
+                            $("#iscat").css('display', 'block');
+                        }
+                        else {
+                            $("#iscat").css('display', 'none');
+                        }
+                    },
+                    error: function (x, e) {
+                        // alert("Sorry No Such Type of Block Type Is available. ");
+                        $("#imgDiv").css('display', 'none');
+                        $("#pageloaddiv").css('display', 'none');
+                        $("#pageloaddiv").fadeOut(1000);
+                    }
+                });
+            }
+        }
+    });
+
+
+
+    $("#IsCategory").change(function () {
+        if (this.checked) {
+
+            $("#imid").css('display', 'block');
+            $("#isban").css('display', 'none');
+
+
+            var sectionsty = "@Html.Raw(@ViewBag.SectionStyle)";
+            var ID = $("#HomepageDynamicSectionID").val();
+            if (sectionsty != null || sectionsty != "") {
+                /*Processing Image*/
+                $("#pageloaddiv").css('display', 'block');
+                $("#pageloaddiv").fadeOut(1000);
+
+                $.ajax({
+                    type: "POST",
+                    url: "/HomePageDynamicSectionPortal/GetBlocksizecategory?sectionsty=" + sectionsty,
+                    dataType: "json",
+                    async: true,
+                    cache: false,
+                    success: function (data) {
+
+                        height = data.Portal_Category_Height;
+                        width = data.Portal_Category_Width;
+                        //size = data.Portal_Category_Size;
+                        size = 400;
+                        $("#imgSize").html("Please Select Image with Size " + width + "x" + height + " px size of image" + size + "kb");
+                        $("#dvPreview").css("height", 300);
+                        $("#dvPreview").css("width", 173);
+                        $("#imgDiv").css('display', 'block');
+                        $("#pageloaddiv").css('display', 'none');
+                        $("#pageloaddiv").fadeOut(1000);
+                    },
+                    error: function (x, e) {
+                        // alert("Sorry No Such Type of Block Type Is available. ");
+                        $("#imgDiv").css('display', 'none');
+                        $("#pageloaddiv").css('display', 'none');
+                        $("#pageloaddiv").fadeOut(1000);
+                    }
+                });
+            }
+        }
+        else
+        {
+            $("#imid").css('display', 'none');
+            $("#isban").css('display', 'block');
+        }
+    });
+
+
+
+
+
+    $(document).ready(function () {
+
+
+         var sectionsty =  "@Html.Raw(@ViewBag.SectionStyle)";
+
+            if (sectionsty != null || sectionsty != "") {
+                /*Processing Image*/
+                $("#pageloaddiv").css('display', 'block');
+                $("#pageloaddiv").fadeOut(1000);
+
+                $.ajax({
+                    type: "POST",
+                    url: "/HomePageDynamicSectionPortal/GetBlocksizecategory?sectionsty=" + sectionsty,
+                    dataType: "json",
+                    async: true,
+                    cache: false,
+                    success: function (data) {
+                        if (data.Portal_Category_Height != null && data.Portal_Category_Width != null) {
+                            $("#iscat").css('display', 'block');
+                        }
+                        else {
+                            $("#iscat").css('display', 'none');
+                        }
+                    },
+                    error: function (x, e) {
+                        // alert("Sorry No Such Type of Block Type Is available. ");
+                        $("#imgDiv").css('display', 'none');
+                        $("#pageloaddiv").css('display', 'none');
+                        $("#pageloaddiv").fadeOut(1000);
+                    }
+                });
+            }
+
+
+
+
+
+
+        $(".btn-primary").click(function () { //remain validation for image
+            debugger
+            var ErrorCount = 0;
+            var AjaxError = 0;
+            var checkError = 0;
+            var startDate = $("#SDate").val();
+            var endDate = $("#EDate").val();
+            var PriorityLevel = $("#SequenceOrder").val();
+            var url = $("#LinkURL").val();
+            var tooltip = $("#ToolTip").val();
+            var isActive = $("#IsActive option:selected").text();
+
+            if (isActive == 'Not Set') {
+                $('#IsActiveErro').html('Please Select the IsActive');
+                ErrorCount = ErrorCount + 1;
+            }
+            else {
+                $('#IsActiveErro').html('');
+            }
+
+
+            if (startDate == '') {
+                $('#SDateErro').html('Please Select Start Date');
+                ErrorCount = ErrorCount + 1;
+            }
+            else {
+                $('#SDateErro').html('');
+            }
+            if (endDate == '') {
+                $("#EDateErro").html('Please Select End Date');
+                ErrorCount = ErrorCount + 1;
+            }
+            else {
+                $("#EDateErro").html('');
+            }
+            if (PriorityLevel == '') {
+                $('#SequenceOrderErro').html('Please Select Sequence Order ');
+                ErrorCount = ErrorCount + 1;
+            }
+            else {
+
+                $('#SequenceOrderErro').html('');
+            }
+
+            if (PriorityLevel != '') {
+                debugger
+                var Hpid = $("#HomepageDynamicSectionID").val();
+                $.ajax({
+                    type: "POST",
+                    url: "/HomePageDynamicSectionMobile/getsequencedeatail?id=" + Hpid + "&sequenceOrder=" + PriorityLevel,
+                    dataType: "json",
+                    async: false,
+                    cache: false,
+                    success: function (data) {
+                        if (data != "") {
+                            AjaxError = 1;
+                            $('#SequenceOrderErro').html(data);
+                            return false;
+                        }
+                        else {
+                            $('#SequenceOrderErro').html('');
+                        }
+                    }
+
+                });
+            }
+           
+            if (url == '') {
+                $('#LinkURLErro').html('Please Enter Link Url or Set to #');
+                ErrorCount = ErrorCount + 1;
+            }
+            else {
+                $('#LinkURLErro').html('');
+            }
+            if (tooltip == '') {
+                $('#ToolTipErro').html('Please Enter Tooltip');
+                ErrorCount = ErrorCount + 1;
+            }
+            else {
+                $('#ToolTipErro').html('');
+            }
+
+
+            if (startDate != '' && endDate != '') {
+
+                var sdate = startDate.split("/");   //date present in dd/MM/yyyy format
+                var edate = endDate.split("/");    //date present in dd/MM/yyyy format
+
+                if (new Date(sdate[2], sdate[1], sdate[0]) > new Date(edate[2], edate[1], edate[0])) {     //date in yyyy mm dd format
+                    $("#DateErro").html('Please Select Start Date Less than End Date');
+                    ErrorCount = ErrorCount + 1;
+                }
+                else {
+                    $("#DateErro").html('');
+                }
+            }
+           
+               
+
+            var filename = $('input[type=file]').val();
+            //var filename = document.getElementById("File").val();
+            if (filename == '') {
+                //Show error message or alert('please choose file');
+                $("#ImageErro").html('Please choose Image');
+                ErrorCount = ErrorCount + 1;
+            }
+
+            debugger
+
+            if ($("#IsCategory").prop("checked") == true) {
+
+              
+                checkError = 0;
+            }
+            else
+            {
+               
+                checkError = checkError + 1;
+
+            }
+
+
+            if ($("#IsBanner_").prop("checked") == true) {
+
+                
+                checkError = 0;
+              
+            }
+            else {
+                checkError = checkError + 1;
+
+            }
+
+            if (checkError == 2) {
+                $("#checkErro").html('Please choose Banner or Sub Category');
+                return false;
+            }
+            else
+            {
+                $("#checkErro").html('');
+            }
+
+            if (AjaxError > 0) {
+                return false;
+            }
+
+            if (ErrorCount > 0) {
+
+                return false;
+            }
+        });
+
+    });
+
+
+
+
+
+
+
+</script>
+<script language="javascript" type="text/javascript">
+    window.onload = function () {
+
+        var Files = document.getElementById("File");
+        Files.onchange = function () {
+            if (typeof (FileReader) != "undefined") {
+                var dvPreview = document.getElementById("dvPreview");
+                dvPreview.innerHTML = "";
+                var regex = /^([a-zA-Z0-9\s_\\.\-:])+(.jpg|.jpeg|.gif|.png|.bmp|.JPG|.JPEG|.GIF|.PNG|.BMP)$/;
+                for (var i = 0; i < Files.files.length; i++) {
+                    var file = Files.files[i];
+
+                    //if (file.size / 1024 <= size && file.width == width && file.height == height) {
+                    if (file.size / 1024 <= size) {
+                        if (regex.test(file.name.toLowerCase())) {
+                            var reader = new FileReader();
+                            reader.onload = function (e) {
+                                var img = document.createElement("IMG");
+                                img.height = height;
+                                img.width = width;
+                                img.src = e.target.result;
+                                dvPreview.appendChild(img);
+                                //$('#img_upload'.hide());
+                            }
+                            reader.readAsDataURL(file);
+                        } else {
+                            alert(file.name + " is not a valid image file.");
+                            dvPreview.innerHTML = "";
+                            return false;
+                        }
+                    }
+                    else {
+                        alert(file.name + " is too large image to upload Max size of image is" + size + "Kb.");
+                        dvPreview.innerHTML = "";
+                        return false;
+                    }
+                }
+            } else {
+                alert("This browser does not support HTML5 FileReader.");
+            }
+        }
+    };
+</script>

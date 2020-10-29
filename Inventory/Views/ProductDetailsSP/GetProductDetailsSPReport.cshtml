@@ -1,0 +1,484 @@
+﻿@model ModelLayer.Models.ViewModel.ProductDetailsSPViewModelList
+@{
+    ViewBag.Title = "ProductDetailsSP  Report";
+}
+
+
+<style>
+    .ClaimAmtList table {
+        border-collapse: separate;
+        width: 800px;
+        max-width: 800px;
+        overflow-x: scroll;
+        display: block;
+    }
+
+    .ClaimAmtList thead, .ClaimAmtList tfoot {
+        background-color: #EFEFEF;
+    }
+
+    .ClaimAmtList thead, .ClaimAmtList tbody, .ClaimAmtList tfoot {
+        display: block;
+    }
+
+    .ClaimAmtList tbody {
+        overflow-y: scroll;
+        overflow-x: auto;
+        max-height: 350px;
+    }
+
+    .ClaimAmtList td, .ClaimAmtList th {
+        padding: 5px;
+        min-width: 80px;
+        height: 25px;
+        border: inset 1px lightblue;
+        /*overflow: hidden;*/
+        text-overflow: ellipsis;
+        max-width: 80px;
+        /*word-break: break-all;*/
+        text-align: center;
+    }
+</style>
+
+
+
+<link href="~/Content/css/bootstrap-datetimepicker.min.css" rel="stylesheet" />
+<link href="~/Content/css/bootstrap-datetimepicker.css" rel="stylesheet" />
+<link href="~/Content/assets/css/font-awesome.min.css" rel="stylesheet" />
+<link href="~/Content/assets/css/form-design.css" rel="stylesheet" />
+
+
+<script src="~/Content/js/jquery-2.1.3.min.js"></script>
+<link href="~/Content/css/jquery.dataTables.css" rel="stylesheet" />
+<script src="~/Content/js/jquery.dataTables.js" language="jascript"></script>
+<script type="text/javascript" class="init">
+    $(document).ready(function () {
+        $('#tblData').DataTable({
+            dom: 'T<"clear">lfrtip',
+            "processing": true,
+            "serverSide": true,
+            "aaSorting": []
+        });
+    });
+</script>
+
+<script type="text/javascript">
+
+    @*$.ajax({
+        url: '@Url.Action("WarehouseBlocks", "addBlockLocation")',
+        traditional: true,
+        data: WarehouseBlockLocation,
+        dataType: "html",
+        type: 'POST',
+        success: function (data) {
+            alert("success");
+        },
+        error: function () {
+            alert("fail");
+        }
+    });*@
+
+    //$(document).ready(function () {
+
+    //    $("#tblData tbody").on("change", "input", function () {
+
+
+    //        var selecteditems = [];
+    //        $('#checkboxes input:checked[name="c_n[]"]')
+    //        .map(function () { return $(this).val(); }).get()
+    //        if ($("#checkbox_" + $rowID).prop("checked") == true)
+    //        {
+
+
+    //        }
+    //        $("#Search").click(function (event) {
+    //            event.preventDefault();
+    //            var searchIDs = $("#find-table input:checkbox:checked").map(function () {
+    //                return $(this).val();
+    //            }).get(); // <----
+    //            console.log(searchIDs);
+    //        });
+
+    //        $(':checkbox').map(function () {
+    //            return this.id;
+    //        }).get().join();
+
+    //    });
+    //});
+
+</script>
+
+
+
+@*for checkbox*@
+@*<script>
+        $("#checkbox").change(function () {
+            if (this.checked) {
+
+
+            }
+        });
+    </script>*@
+
+<section class="right_side_main_part">
+    <div class="row-fluid">
+        @using (Html.BeginForm("GetProductDetailsSPReport", "ProductDetailsSP", new { enctype = "multipart/form-data" }, FormMethod.Post, new { id = "Form_" }))
+        {
+            @Html.ValidationSummary(true)
+
+            <div class="box span12">
+                <div class="box-header creatProduct clearfix">
+                    <h2>
+                        <i class="icon-list-alt"></i>
+                        <span class="break"></span>
+                        ProductDetailsSP Report
+                    </h2>
+                </div>
+                <div class="box-content nameDscrp">
+                    <div class="form-horizontal">
+                        <div class="NameDescription">
+                            <div class="control-group mrg-left">
+                                <div class="col-sm-3">
+                                    Filter by Warehouse
+                                </div>
+                                @Html.DropDownListFor(model => model.WarehouseID, Model.WarehouseList)
+                                @*<div class="col-sm-6">
+                                             @if (ViewBag.PossibleSuppliers != null)
+                                             {
+                                                 @Html.DropDownListFor(model => model.SupplierID, ((IEnumerable<ModelLayer.Models.Supplier>)ViewBag.PossibleSuppliers).Select(option => new SelectListItem
+                                    {
+                                        Text = (option == null ? "None" : option.Name),
+                                        Value = option.ID.ToString(),
+                                        Selected = (Model != null) && (option.ID == Model.SupplierID)
+                                    }), "--All Suppliers--")
+                                             }
+                                         </div>*@
+                            </div>
+
+                            <div class="control-group mrg-left">
+                                <div class="col-sm-3">
+                                    From Date
+                                </div>
+                                <div class="col-sm-6">
+                                    @*@Html.TextBox("FromDate", null, new { @readonly = "readonly", @class = "search", placeholder = "From" })*@
+                                    @Html.TextBoxFor(model => model.FromDate, "{0:dd/MM/yyyy}")
+                                    @Html.HiddenFor(model => model.FromDate)
+                                </div>
+                            </div>
+                            <div class="control-group mrg-left">
+                                <div class="col-sm-3">
+                                    To Date
+                                </div>
+                                <div class="col-sm-6">
+                                    @*@Html.TextBox("ToDate", null, new { @readonly = "readonly", @class = "search", placeholder = "To" })*@
+                                    @Html.TextBoxFor(model => model.ToDate, "{0:MM/dd/yyyy}")
+                                    @Html.HiddenFor(model => model.ToDate)
+                                </div>
+                            </div>
+
+
+
+                            <div class="clr"></div>
+
+
+
+                            @*<button value="StockFilter" type="submit" class="btnRemove btn btn-warning">StockFilter</button>*@
+                            <button value="Search" type="submit" class="btnRemove btn btn-warning">Search</button>
+                            @*<button id="btnPrint" class="btnPrint btn btn-success">Print</button>*@
+                            @*<a id="Print" class="print btn btn-default" href="@Url.Action("GetInventoryItemReport", "InventoryReports")" target="_blank">Print</a>*@
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        }
+        <iframe id="txtArea1" style="display:none"></iframe>
+        @*onclick="fnExcelReport();"*@
+        <input class="btn btn-primary" type="button" value="Print" id="btnPrint" />
+        @* <button id="btnExport" class="btnPrint btn btn-success btn-small">EXPORT TO EXCEL</button>*@
+        <display:setproperty name="export.Excel.filename" value="InventoryReport.xls" />
+        <div class="box">
+            <div class="box-content">
+                <div class="NameDescription">
+                    <div style="overflow-x:scroll; height:500px; background:#ffffff;" id="divToPrint">
+                        <div id="dvContainer">
+                            <table id="headerTable" class="ClaimAmtList" border="1" cellpadding="2" cellspacing="0">
+                                <thead>
+                                    @*<tr><td style="text-align:center" colspan="12"><h2>INVENTORY REPORT </h2></td></tr>*@
+                                    <tr>
+                                        <th style="min-width: 50px; max-width: 50px; word-break: break-all">Sr. No.</th>
+                                        <th style="min-width: 150px; max-width: 150px; word-break: break-all"> Product Image</th>
+                                        <th style="min-width:95px; max-width: 95px; text-align: left">
+                                            SKU ID
+                                        </th>
+                                        <th style="min-width: 150px; max-width: 150px; text-align: left">
+                                            Product Name
+                                        </th>
+
+                                        <th style="min-width :80px;max-width:80px;text-align:left">Unit</th>
+                                        @*<th style="min-width: 120px; max-width: 120px;">
+                                                Supplier
+                                            </th>*@
+                                        @*<th style="min-width: 150px; max-width: 150px; word-break: break-all">Manufacturer</th>*@
+
+                                        @*<th style="min-width: 100px; max-width: 100px; word-break: break-all">Brand Name</th>
+
+
+                                            <th style="min-width: 150px; max-width: 150px; text-align: left">BatchCode</th>
+
+                                            <th style="min-width: 100px; max-width: 100px; text-align: left">InvoiceCode</th>
+                                            <th style="min-width: 100px; max-width: 100px; text-align: left">InitialQuantity</th>
+                                            <th style="min-width: 100px; max-width: 100px; text-align: left">AvailableInStock</th>*@
+
+
+
+
+                                        @*<th style="text-align:right">SupplierName</th>*@
+
+
+                                        @*<th style="text-align:right"> Amount </th>
+                                            <th style="text-align:right"> Purchase Date</th>
+                                            <th style="text-align:right">BuyRatePerUnit</th>*@
+                                        <th style="text-align:right">MRP</th>
+                                        <th style="text-align:right">Sale Rate</th>
+
+                                        <th style="text-align:right">Retail Point</th>
+                                        @*<th style="text-align:right">ExpiryDate</th>*@
+                                        @*<th style="text-align:right">SaleQty</th>*@
+                                        @*<th style="text-align:right">SaleValue</th>*@
+                                        @*<th style="text-align:right">InventoryValue</th>*@
+                                        <th style="text-align:right">Discount%</th>
+
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @{
+                                        var i = 1;
+                                    }
+                                    @*@foreach (var item in Model)*@
+
+                                    @foreach (var item in Model.lProductDetailsSPViewModel)
+                                    {
+                                        <tr>
+
+                                            <td style="text-align: center; min-width: 50px; max-width: 50px; word-break: break-all">
+                                                @i
+                                                @{
+                                                    i = i + 1;
+                                                }
+                                            </td>
+                                            <td style="min-width: 150px; max-width: 150px; word-break: break-all"><img id=" imgproductimage" src="@item.item_image_Path" onerror="this.src = '/Content/Images/no_image.png'" style="width: 70px; height:70px;" alt=" eZeelo " /></td>
+                                            @*<td style="min-width: 100px; max-width: 100px; word-break: break-all;">*@
+
+
+                                            <td style="min-width:95px; max-width: 95px; text-align: left">
+                                                @item.SKUID
+                                            </td>
+                                            <td style="min-width: 150px; max-width: 150px; text-align: left">@item.SKUName</td>
+
+                                            <td style="min-width: 80px; max-width: 80px; text-align: left">@item.SKUUnit</td>
+                                            @*<td style="min-width: 100px; max-width: 100px; word-break: break-all">@item.Manifecturer</td>
+
+                                                <td style="min-width: 150px; max-width: 150px; text-align: left">
+                                                    @item.BatchCode
+                                                </td>
+                                                <td style="min-width: 100px; max-width: 100px; text-align: left">
+                                                    @item.InvoiceCode
+                                                </td>
+
+                                                <td style="min-width: 100px; max-width: 100px; text-align: left">@item.InitialQuantity</td>
+
+                                                <td style="min-width: 100px; max-width: 100px; text-align: left">@item.AvailableInStock</td>*@
+
+
+                                            @*<td style="min-width:75px; max-width: 75px; text-align: left">@item.ReorderLevel</td>*@
+
+                                            @*<td style="text-align:right"> @item.SupplierName</td>
+
+                                                <td style="text-align:right">@item.Amount</td>
+                                                <td style="text-align:right">@item.CreateDate</td>*@
+                                            @*<td style="text-align:right">@item.BuyRatePerUnit</td>*@
+                                            <td style="text-align:right">@item.MRP</td>
+                                            <td style="text-align:right">@item.SaleRate</td>
+
+                                            <td style="text-align:right">@item.RetailPoint</td>
+                                            @*<td style="text-align:right">@item.ExpiryDate</td>*@
+                                            @*<td style="text-align:right">@item.SaleQty</td>*@
+                                            @*<td style="text-align:right">@item.SaleValue</td>*@
+                                            @*<td style="text-align:right">@item.InventoryValue</td>*@
+                                            <td style="text-align:right">@item.DiscountPer%</td>
+
+                                        </tr>
+
+
+                                    }
+
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+    <script type="text/javascript">
+
+        $(document).ready(function () {
+            $('#ToDate').datepicker({ dateFormat: 'mm/dd/yy', maxDate: 'now' });
+            $('#FromDate').datepicker({ dateFormat: 'mm/dd/yy' });
+
+            $('Search').click();
+            //$("#Export").on('click', function () {
+            //    var WarehouseID = $("select#WarehouseID option:selected").val();
+
+            //    var print = 0;
+            //    var option = 0;
+            //    //var WarehouseID = 0
+
+            //    if ($("select#WarehouseID option:selected").val() > 0) {
+            //        WarehouseID = $("select#WarehouseID option:selected").val();
+            //    }
+
+            //    if ($("select#ExportOption option:selected").val() > 0) {
+            //        option = $("select#ExportOption option:selected").val();
+            //    }
+            //    var toDate = $('#ToDate').val();
+            //    var fromDate = $('#FromDate').val();
+
+            //    window.location.href = "/OutOfStockReport/Export?&FromDate=" + fromDate + "&ToDate=" + toDate + "&option=" + option + "&WarehouseID=" + WarehouseID;
+
+            //});
+        });
+    </script>
+
+
+
+    @*<script type="text/javascript">
+            function fnExcelReport() {
+                var tab_text = "<table border='2px'><tr bgcolor='#87AFC6'>";
+                var textRange; var j = 0;
+                tab = document.getElementById('headerTable'); // id of table
+
+
+                for (j = 0 ; j < tab.rows.length ; j++) {
+                    tab_text = tab_text + tab.rows[j].innerHTML + "</tr>";
+                    //tab_text=tab_text+"</tr>";
+                }
+
+                tab_text = tab_text + "</table>";
+                tab_text = tab_text.replace(/<A[^>]*>|<\/A>/g, "");//remove if u want links in your table
+                tab_text = tab_text.replace(/<img[^>]*>/gi, ""); // remove if u want images in your table
+                tab_text = tab_text.replace(/<input[^>]*>|<\/input>/gi, ""); // reomves input params
+
+                var ua = window.navigator.userAgent;
+                var msie = ua.indexOf("MSIE ");
+
+                if (msie > 0 || !!navigator.userAgent.match(/Trident.*rv\:11\./))      // If Internet Explorer
+                {
+                    txtArea1.document.open("txt/html", "replace");
+                    txtArea1.document.write(tab_text);
+                    //txtArea1.document.AddHeader("PURCHASE ORDER HISTORY")
+                    txtArea1.document.close();
+                    txtArea1.focus();
+                    sa = txtArea1.document.execCommand("SaveAs", true, "Say Thanks to Sumit.xls");
+                }
+                else                 //other browser not tested on IE 11
+                    sa = window.open('data:application/vnd.ms-excel,' + 'filename=InventoryReports.xls,' + encodeURIComponent(tab_text));
+
+                return (sa);
+
+            }
+
+        </script>*@
+
+
+
+
+
+
+
+
+
+
+    <script type="text/javascript">
+        $("#btnExport").click(function () {
+            window.location.href = "/ProductDetailsSP/Export";
+        })
+
+
+        function fnExcelReport() {
+            var tab_text = "<table border='2px'><tr bgcolor='#87AFC6'>";
+            var textRange; var j = 0;
+            tab = document.getElementById('headerTable'); // id of table
+
+
+            for (j = 0; j < tab.rows.length; j++) {
+                tab_text = tab_text + tab.rows[j].innerHTML + "</tr>";
+                //tab_text=tab_text+"</tr>";
+            }
+
+            tab_text = tab_text + "</table>";
+            tab_text = tab_text.replace(/<A[^>]*>|<\/A>/g, "");//remove if u want links in your table
+            tab_text = tab_text.replace(/<img[^>]*>/gi, ""); // remove if u want images in your table
+            tab_text = tab_text.replace(/<input[^>]*>|<\/input>/gi, ""); // reomves input params
+
+            var ua = window.navigator.userAgent;
+            var msie = ua.indexOf("MSIE ");
+
+            if (msie > 0 || !!navigator.userAgent.match(/Trident.*rv\:11\./))      // If Internet Explorer
+            {
+                txtArea1.document.open("txt/html", "replace");
+                txtArea1.document.write(tab_text);
+                //txtArea1.document.AddHeader("PURCHASE ORDER HISTORY")
+                txtArea1.document.close();
+                txtArea1.focus();
+                sa = txtArea1.document.execCommand("SaveAs", true, "Say Thanks to priti.xls");
+            }
+            else {//other browser not tested on IE 11
+                // sa = window.open('data:application/vnd.ms-excel,' + encodeURIComponent(tab_text));
+                // sa.document.title = "your new title";
+
+                //new added by amit
+                let a = $("<a />", {
+                    href: 'application/octet-stream,' + encodeURIComponent(tab_text),
+                    download: "InventoryReport.pdf"
+                })
+                    //application/octet-stream
+                    .appendTo("body")
+                    .get(0)
+                    .click();
+                e.preventDefault();
+            }
+
+            return (sa);
+        }
+    </script>
+
+
+    @*<script type="text/javascript">
+            $(function () {
+                $("#Search").click(function () {
+                    var WarehouseID = $("select#WarehouseID option:selected").val();
+                    //window.location = "/WastageReport/WastageReportNotePrint?WarehouseID=" + WarehouseID;
+                    window.location = "/OutOfStockReport/GetOutOfStockReport?WarehouseID=" + WarehouseID;
+                });
+            });
+
+        </script>*@
+
+    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
+    <script type="text/javascript">
+        $("#btnPrint").live("click", function () {
+            var divContents = $("#dvContainer").html();
+            var printWindow = window.open('', '', 'height=400,width=800');
+            printWindow.document.write('<html><head><title>Ezeelo Best Valued Product List</title>');
+            printWindow.document.write('<link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" />');
+            printWindow.document.write('<html><head><strong>Ezeelo Best Valued Product List</strong></head></html>');
+            printWindow.document.write(divContents);
+            printWindow.document.write('</body></html>');
+            printWindow.document.close();
+            printWindow.print();
+        });
+    </script>

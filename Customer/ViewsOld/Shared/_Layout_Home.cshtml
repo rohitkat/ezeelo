@@ -1,0 +1,1994 @@
+﻿@using System.Globalization;
+@{
+    string cityName = "nagpur";
+    int franchiseID = 2;//added
+    if (Request.Cookies["CityCookie"] != null && Request.Cookies["CityCookie"].Value != "")
+    {
+        cityName = Request.Cookies["CityCookie"].Value.Split('$')[1].ToLower();
+        franchiseID = Convert.ToInt32((Request.Cookies["CityCookie"].Value.Split('$')[2].ToLower()));//added
+    }
+
+    List<ModelLayer.Models.ViewModel.BlockViewModel> blocks = new List<ModelLayer.Models.ViewModel.BlockViewModel>();
+}
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    @*Commented and Changes by Zubair on 27-07-2017 for SEO*@
+    @*<meta name="description" content="eZeelo � India�s leading online Shopping store with wide range of grocery, Daily Needs, vegetables, fruits, Meat, personal care, home care products.">*@
+
+    <meta name="keywords" content="online shopping, online store, beauty products online, buy fresh fruits, vegetables, groceries, home appliances, sweets, supermarket, india, lucknow, kanpur">
+    <meta name="language" content="English">
+    <script>
+        (function (i, s, o, g, r, a, m) {
+            i['GoogleAnalyticsObject'] = r; i[r] = i[r] || function () {
+                (i[r].q = i[r].q || []).push(arguments)
+            }, i[r].l = 1 * new Date(); a = s.createElement(o),
+            m = s.getElementsByTagName(o)[0]; a.async = 1; a.src = g; m.parentNode.insertBefore(a, m)
+        })(window, document, 'script', 'https://www.google-analytics.com/analytics.js', 'ga');
+
+        ga('create', 'UA-102017214-1', 'auto');
+        ga('send', 'pageview');
+    </script>
+
+
+    <!-- Google Tag Manager -->
+    <script>
+(function (w, d, s, l, i) {
+w[l] = w[l] || []; w[l].push({
+'gtm.start':
+new Date().getTime(), event: 'gtm.js'
+}); var f = d.getElementsByTagName(s)[0],
+j = d.createElement(s), dl = l != 'dataLayer' ? '&l=' + l : ''; j.async = true; j.src =
+'https://www.googletagmanager.com/gtm.js?id=' + i + dl; f.parentNode.insertBefore(j, f);
+})(window, document, 'script', 'dataLayer', 'GTM-TR78CNF');</script>
+    <!-- End Google Tag Manager -->
+
+    <link href="~/Content/css/font-awesome.css" rel="stylesheet" />
+    <link rel="stylesheet" href="~/Content/css/bootstrap.css">
+    <link rel="stylesheet" href="~/Content/css/styles.css">
+    <link rel="stylesheet" href="~/Content/css/mystyles.css">
+    <link rel="stylesheet" href="~/Content/css/switcher.css">
+    <link rel='shortcut icon' type='image/x-icon' href='~/Content/Images/logo.png' />
+    <script src="~/Scripts/jquery-1.10.2.js"></script>
+    <style>
+        .carousel-inner > .item > img,
+        .carousel-inner > .item > a > img {
+            width: 100%;
+            margin: auto;
+        }
+
+        #myAlert {
+            display: none;
+            position: fixed;
+            top: 100px;
+            z-index: 100;
+            width: 100%;
+            background: rgba(168, 207, 69, 0.83);
+            color: black;
+            border: 1px solid rgba(168, 207, 69, 0.83);
+            text-align: center;
+        }
+
+        .back-to-top {
+            cursor: pointer;
+            position: fixed !important;
+            bottom: 20px;
+            right: 20px;
+            display: none;
+            z-index: 100000;
+        }
+
+        select {
+            border-radius: 0px 0px 0px 0px !important;
+            background: transparent;
+            padding: 0px 15px 0px 5px !important;
+            font-size: 14px;
+            border: 1px solid #E9B800;
+            height: 30px;
+            /*-webkit-appearance: none;*/
+            /*-moz-appearance: none;*/
+            appearance: none;
+            float: left;
+            /*background: url(/Content/Images/drop.gif) 96% / 10px no-repeat !important;*/
+        }
+
+        .City {
+            width: 280px !important;
+            min-height: 30px !important;
+            top: 245px !important;
+            overflow: auto !important;
+            max-height: 200px !important;
+            left: 39.4% !important;
+            margin-left: 19% !important;
+        }
+    </style>
+    <script type="application/ld+json">
+        /*{ "context" : "http://schema.org",
+        "type" : "Organization",
+        " name " : " eZeelo pvt ltd ",
+        "url" : " http://ezeelo.com/nagpur/2 ", @*////added /2*@
+        "sameAs" : [ " https://www.facebook.com/ezeelocom ",
+        " https://twitter.com/eZeeloCom ",
+        " https://plus.google.com/u/0/116348735803658149077/ ",
+        " https://www.youtube.com/channel/UCVWnnSwkDcgnHQXl5XffMyA/",
+        " https://www.instagram.com/eZeeloCom/",
+        " https://www.linkedin.com/company/ezeelo ",
+        " https://in.pinterest.com/eZeelocom/ "]
+        }*/
+    </script>
+    <script>
+        $(document).ready(function () {
+            $(window).scroll(function () {
+                if ($(this).scrollTop() > 50) {
+                    $('#back-to-top').fadeIn();
+                } else {
+                    $('#back-to-top').fadeOut();
+                }
+            });
+            // scroll body to 0px on click
+            $('#back-to-top').click(function () {
+                $('#back-to-top').tooltip('hide');
+                $('body,html').animate({
+                    scrollTop: 0
+                }, 800);
+                return false;
+            });
+            $('#back-to-top').tooltip('show');
+            // Onclick menubutton code
+            $('.navbar-toggle').click(function () {
+                $('body,html').animate({
+                    scrollTop: 0
+                }, 800);
+            });
+        });
+    </script>
+    @if (Request.Cookies["CityCookie"] == null || Request.Cookies["CityCookie"].Value == string.Empty)
+    {
+        //Yashaswi 10-7-2018 chnage � to '
+        <title>India's Online Shopping Store of Groceries, Fruits & Vegetables</title>
+        @*Added by Zubair on 27-07-2017 for SEO*@
+        <meta name="description" content="eZeelo � India�s leading online Shopping store with wide range of grocery, Daily Needs, vegetables, fruits, Meat, personal care, home care products.">
+    }
+    else
+    {
+
+        // this code for dinamic city change.
+        string city = Request.Cookies["CityCookie"].Value.Split('$')[1].ToLower();
+        int franchise = Convert.ToInt32(Request.Cookies["CityCookie"].Value.Split('$')[2]);////added
+
+        //string str = "Largest Online Shopping Store for Kanpur, Lucknow, Nagpur, Varanasi";
+        //Added by pri
+        //Yashaswi 10-7-2018 chnage � to '
+        string str = "India's Online Shopping Store of Groceries, Fruits And Vegetables";
+
+        if (city == "nagpur" && franchise == 2)
+        { 
+            //Yashaswi 10-7-2018 chnage � to '
+            str = "Nagpur's Online Shopping Store Of Groceries, Fruits And Vegetables"; }
+        else if (city == "kanpur" && franchise == 3)
+        {
+            @*Commented and Changes by Zubair on 27-07-2017 for SEO*@
+            //str = "Kanpur�s Online Shopping Store Of Groceries, Fruits And Vegetables";
+            //Yashaswi 10-7-2018 chnage � to '
+            str = "Kanpur's Online Grocery, Vegetables, Fruits, Meat, Chicken, Sweet Store";
+            <meta name="description" content="eZeelo � Leading online Daily Needs Store with wide range of grocery, vegetables, fruits, Meat, personal care & home care products in Kanpur City.">
+        }
+        else if (city == "varanasi" && franchise == 4)
+        //Yashaswi 10-7-2018 chnage � to '
+        { str = "Varanasi's Online Shopping Store Of Groceries, Fruits And Vegetables"; }
+        //Added by pri
+        else if (city == "lucknow" && franchise == 26)//modified by harshada on 03/02/2017  change condition (city == "Lucknow" && franchise == 26)
+        {
+            @*Commented and Changes by Zubair on 27-07-2017 for SEO*@
+            //str = "Lucknow�s Online Shopping Store Of Groceries, Fruits And Vegetables";
+            //Yashaswi 10-7-2018 chnage � to '
+            str = "Lucknow's Online Grocery, Vegetables, Fruits, Meat, Chicken, Sweet Store";
+            <meta name="description" content="eZeelo � Leading online Daily Needs Store with wide range of grocery, vegetables, fruits, Meat, personal care & home care products in Lucknow City.">
+
+        }
+        else if (city == "wardha" && franchise == 8)
+        //Yashaswi 10-7-2018 chnage � to '
+        { str = "Wardha's Online Shopping Store Of Groceries, Fruits And Vegetables"; }
+
+        <title>@str</title>
+    }
+
+    <script>
+        $(function () {
+            var a = getCookie("ShortListCookie");
+            if (a != null) {
+                $("[id*=spanShortlistCount]").text(a.split(',').length);
+            }
+            else {
+                $("[id*=spanShortlistCount]").text(0);
+            }
+        });
+    </script>
+    @* Commented by Tejaswee (2-7-2016) *@
+    <script type="application/ld+json">
+        {
+        "@@context": "http://schema.org",
+        "@@type": "WebSite",
+        "url": "http://ezeelo.com/@cityName/@franchiseID",@*//// added @franchiseID*@
+        "potentialAction": {
+        "@@type": "SearchAction",
+        "target": "http://ezeelo.com/@cityName/@franchiseID/products?item={search_term}", @*//// added @franchiseID*@
+        "query-input": "required name=search_term"
+        }
+        }
+    </script>
+
+    @*Only use this cond in this page only as per SEO Requirment----Comment By Mohit*@
+    <link href="https://plus.google.com/+ezeelo" rel="publisher" />
+    @*End Of Comment*@
+
+
+
+    <!--App Download PopUp Mobile Device-->
+    <script type="text/javascript">
+        $(document).ready(function () {
+            if ($(window).width() < 600) {
+                var a = getCookie("CityCookie");
+                if (a == null || a == "") {
+                    $("#dialog").css('display', 'block');
+                    $("#mask").css('display', 'block');
+                    if ($("#dialog").css('display') == 'none') {
+                        $("#mask").css('display', 'none');
+                    } else {
+                        $("#mask").css('display', 'block');
+                    }
+                }
+            }
+            else {
+                $(".appCover").css('display', 'none');
+                var a = getCookie("CityCookie");
+                if (a == null || a == "") {
+                    $("#dialog").css('display', 'block');
+                    $("#mask").css('display', 'block');
+                    if ($("#dialog").css('display') == 'none') {
+                        $("#mask").css('display', 'none');
+                    } else {
+                        $("#mask").css('display', 'block');
+                    }
+                }
+            }
+            $(".skip").click(function () {
+                $(".appCover").css('display', 'none');
+                $(".appDownload").css('display', 'none');
+            });
+            $(".LogOut").click(function () {
+                $(".LogOut ul").toggle();
+            });
+            $(".openCity").click(function () {
+                $(".openCity ul").toggle();
+            });
+        });
+    </script>
+    <script>
+        $(document).ready(function () {
+            $(".windowclose").click(function () {
+                $(".window").hide();
+                $("#mask").hide();
+            });
+            $("#SpanChangeCity").click(function () {
+                $(".window").show();
+                $("#mask").show();
+            });
+            $(".closeTag").click(function () {
+                $(".window").hide();
+                $("#mask").hide();
+            });
+        });
+    </script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('#cart > .heading a').click(function () {
+                $('#cart').addClass('active');
+                $('#cart').mouseleave(function () {
+                    $(this).removeClass('active');
+                });
+            });
+        });
+    </script>
+    <!--ON SCROLL LOAD PARTIOAL VIEW IN INDEX PAGE ONLY Create by Gopal-->
+    @*<script type="text/javascript">
+            $(document).ready(function () {
+                //$('body').click(function (event) {
+                //    if ($(event.target).is('#customerdiv')) {
+                //        alert();
+                //    }
+                //    //else if ($(event.target).is('#l2')) {
+                //    //    log.html(event.target.id + ' was clicked.');
+                //    //} else if ($(event.target).is('#l3')) {
+                //    //    log.html(event.target.id + ' was clicked.');
+                //    //} else if ($(event.target).is('#l4')) {
+                //    //    log.html(event.target.id + ' was clicked.');
+                //    //} else {
+                //    //    log.html('');
+                //    //}
+                //});
+
+
+                $(window).load(function () {
+                    AddModal();
+                });
+                AddModal = function () {
+                    var partialHtml;
+                    var url = 'nagpur/Home/HomeGenerate';
+
+                    $.get(url, function (data) {
+                        $("#load-content").html(data);
+                    });
+                };
+
+
+                $("#customerdiv").click(function () {
+                    $("#newdropdown").toggle();
+                    //alert($("#newdropdown").attr("style"));
+                    //alert($("#newdropdown").css('display'));
+
+                });
+
+            });
+        </script>*@
+
+    <script>
+        $(document).click(function (e) {
+            if ($(e.target).parents(".dropdown-toggle").length === 0) {
+                $(".split-content").hide();
+            }
+        });
+    </script>
+    <!--New header part smoothly scroll jquery create by Gopal Shende-->
+    <!--End Jquery-->
+    @*<script type="text/javascript">
+            var web = "ezeelo";
+            var sourceName = "website";  // More like utm_source
+            var titlePop = 'Stay updated on the most stunning offers and updates of our website ';
+            var descPop = 'Just click on the Yes button and you are done!';
+        </script>*@
+    @*<script src="~/Scripts/popup.js"></script>*@
+    <script>
+        function findOffset(element) {
+            var top = 0, left = 0;
+
+            do {
+                top += element.offsetTop || 0;
+                left += element.offsetLeft || 0;
+                element = element.offsetParent;
+            } while (element);
+
+            return {
+                top: top,
+                left: left
+            };
+        }
+
+        window.onload = function () {
+            var stickyHeader = document.getElementById('sticky');
+            var headerOffset = findOffset(stickyHeader);
+
+            window.onscroll = function () {
+                // body.scrollTop is deprecated and no longer available on Firefox
+                var bodyScrollTop = document.documentElement.scrollTop || document.body.scrollTop;
+
+                if (bodyScrollTop > headerOffset.top) {
+                    stickyHeader.classList.add('fixed');
+                    //  $('#logodiv').css('display', 'none');
+                    // $('#cat').css('display', 'none');
+                } else {
+                    stickyHeader.classList.remove('fixed');
+                    // $('#logodiv').css('display', 'block');
+                    // $('#cat').css('display', 'block');
+                }
+            };
+        };
+
+    </script>
+    <style>
+        body {
+            margin: 0;
+        }
+
+        .sticky {
+            width: 100%;
+        }
+
+        .fixed {
+            position: fixed;
+            top: 0;
+            box-shadow: 0px 2px 1px #E9B800;
+        }
+
+        iframe {
+            display: none !important;
+        }
+    </style>
+    <script type="text/javascript">
+        var web = "ezeelo";
+        var sourceName = "website";  // More like utm_source
+        var titlePop = 'Stay updated on the most stunning offers and updates of our website ';
+        var descPop = 'Just click on the Yes button and you are done!';
+    </script>
+    @*<script src="~/Scripts/popup.js"></script>*@
+
+    <!-- Facebook Pixel Code -->
+    <script>
+        !function (f, b, e, v, n, t, s) {
+            if (f.fbq) return; n = f.fbq = function () {
+                n.callMethod ?
+                n.callMethod.apply(n, arguments) : n.queue.push(arguments)
+            }; if (!f._fbq) f._fbq = n;
+            n.push = n; n.loaded = !0; n.version = '2.0'; n.queue = []; t = b.createElement; t.async = !0;
+            t.src = v; s = b.getElementsByTagName[0]; s.parentNode.insertBefore(t, s)
+        }(window,
+        document, 'script', 'https://connect.facebook.net/en_US/fbevents.js');
+        fbq('init', '1854334538152853'); // Insert your pixel ID here.
+        fbq('track', 'PageView');
+
+    </script>
+    <noscript>
+        <img height="1" width="1" style="display:none"
+             src="https://www.facebook.com/tr?id=1854334538152853&ev=PageView&noscript=1" />
+    </noscript>
+    <!-- DO NOT MODIFY -->
+    <!-- End Facebook Pixel Code -->
+
+</head>
+
+<body class="home option2" id="container">
+
+    <div class="alert alert-success" id="myAlert">
+        <h3>Item added in cart successfully</h3>
+    </div>
+
+
+    <!-- Google Tag Manager (noscript) -->
+    <noscript>
+        <iframe src="https://www.googletagmanager.com/ns.html?id=GTM-TR78CNF"
+                height="0" width="0" style="display:none;visibility:hidden"></iframe>
+    </noscript>
+    <!-- End Google Tag Manager (noscript) -->
+    <!-- Google Code for ezeelo Conversion Page -->
+    <script type="text/javascript">
+        /* <![CDATA[ */
+        var google_conversion_id = 854083791;
+        var google_conversion_language = "en";
+        var google_conversion_format = "3";
+        var google_conversion_color = "ffffff";
+        var google_conversion_label = "cq87CNX3wnIQz5GhlwM";
+        var google_remarketing_only = false;
+        /* ]]> */
+    </script>
+    <script type="text/javascript" src="//www.googleadservices.com/pagead/conversion.js">
+    </script>
+    <noscript>
+        <div style="display:inline;">
+            <img height="1" width="1" style="border-style:none;" alt="" src="//www.googleadservices.com/pagead/conversion/854083791/?label=cq87CNX3wnIQz5GhlwM&;guid=ON&amp;script=0" />
+        </div>
+    </noscript>
+
+
+
+    <nav id="sticky" class="navbar navbar-default navbar-main-white navbar-pad-top navbar-first sticky">
+        <div class="container">
+            <div class="navbar-header" id="logodiv">
+                @if (TempData["DynamicBlocks"] != null)
+                {
+                    blocks = (List<ModelLayer.Models.ViewModel.BlockViewModel>)TempData["DynamicBlocks"];
+
+                    ModelLayer.Models.ViewModel.BlockViewModel block = blocks.Where(x => x.Name.ToLower().Trim() == "logo").FirstOrDefault();
+
+                    if (block != null && block.blockItemsList != null)
+                    {
+                        int max = block.blockItemsList.Count;
+                        if (block.MaxLimit < block.blockItemsList.Count)
+                        {
+                            max = block.MaxLimit;
+                        }
+                        for (int i = 0; i < max; i++)
+                        {
+                            <a href="@block.blockItemsList[i].LinkUrl">
+                                <img alt="@block.blockItemsList[i].Tooltip" src="@block.blockItemsList[i].ImageName" id="gblogo" title="@block.blockItemsList[i].Tooltip" onerror="this.src = '/Content/Images/no_image.png'" style="float: left; height: 55px; padding-right: 7px;padding-top:5px;
+							">
+                            </a>
+                        }
+                    }
+                }
+            </div>
+            @Html.Partial("_SearchPartial")
+            <ul class="nav navbar-nav navbar-right navbar-mob-item-left">
+                <li id="mlmLink" title="Go To Ezeelo Leader's Site." class="dropdown">
+                    <a title="Go To Ezeelo Leader's Site." href='http://leaders.ezeelo.com/login/' target="_blank" style="height:90px !important">
+                        <img alt="Be A Leader" src="~/Content/Images/tags/mlm.png" title="Go To Ezeelo Leader's Site." style="float: left; width:50px" />
+                    </a>
+                </li>
+                <li id="ChangeCity1">
+                    @*<a class="dropdown-toggle" id="myBtn"><span>Select city</span><i class="fa fa-map-marker"></i> @CultureInfo.CurrentCulture.TextInfo.ToTitleCase(cityName.ToLower())</a>*@
+                    @*Yashaswi 1/6/2018*@
+                    <a class="dropdown-toggle" id="myBtn" style="text-align: center; max-width: 110px; padding-left: 2px !important; padding-right: 3px !important; height: auto !important;"><span>Delivering At</span><i class="fa fa-map-marker"></i> @CultureInfo.CurrentCulture.TextInfo.ToTitleCase(cityName.ToLower()) <br /><span id="spPinArea" style="font-size: 14px !important; padding-bottom: 20px !important;"></span></a>
+                    <div id="myModal" class="modal" style="background: rgba(130, 129, 129, 0.77); ">
+                        <div class="modal-dialog modal-sm">
+                            <!-- Modal content -->
+                            <div class="modal-content" style="padding:10px;text-align:center">
+                                <span class="close">�</span>
+                                <div class="row" style="padding: 10px;">
+                                    <div class="col-lg-12">
+                                        <div id="logodiv" style="width:100%;text-align:center;">
+                                            <img src="~/Content/Images/logo_1.png" style="height: 85px;" class="gblogopopup" />
+                                        </div>
+                                    </div>
+                                    @*<div class="col-md-4">
+                                            <h2 style="color: #E9B800;">45,000 +</h2>
+                                            <b style="color:#777">PRODUCTS TO CHOOSE FROM</b>
+                                        </div>*@
+                                    <div class="col-xs-12">
+                                        <h4 style="color: #663399; margin-bottom: 5px; ">SELECT DELIVERY LOCATION</h4>@*Yashaswi 1/6/2018*@
+                                        <select class="select select1 form-control" id="ddlSelectCity" name="SelectCity" style="width: 100%; margin-bottom: 5px;border: 3px solid #E9B800; "></select>
+                                        <input id="txtSelectPincode" class="textpincode form-control ui-autocomplete-input" name="search" placeholder="Enter Pincode/Area" type="text" value="" autocomplete="off" role="textbox" aria-autocomplete="list" aria-haspopup="true" style="display: none; padding: 6px 5px;border-radius:0px;border: 3px solid #E9B800;">
+                                        <select class="select select1" id="ddlSelectArea" name="SelectArea" style="width: 100%; margin-top: 5px; display: none"></select>
+                                        <label id="lblarea" style="color:red"></label>
+                                        @*<a href="#" id="startshoppingID" class="btn btn-warning startshpping" style="width: 100%;">Start Shopping</a>*@
+                                    </div>
+                                    <div class="col-xs-12" style="text-align: left; font-weight: 900;color:#777;">
+                                        <h5 style=" margin-bottom: 2px;"><i class="fa fa fa-gift fa-2x" aria-hidden="true" style="width: 25px; color: #663399; text-align: center;"></i> AMAZING DEALS, OFFERS AND COUPONS</h5>
+                                        <h5 style=" margin-bottom: 2px;"><i class="fa fa-truck  fa-2x" aria-hidden="true" style="width: 25px; color: #663399; text-align: center;"></i> FREE DELIVERY</h5>
+                                        <h5 style=" margin-bottom: 2px;"><i class="fa fa-fire fa-2x" aria-hidden="true" style="width: 25px; color: #663399; text-align: center;"></i> QUALITY YOU CAN TRUST</h5>
+                                        <h5 style=" margin-bottom: 2px;"><i class="fa fa-inr fa-2x" aria-hidden="true" style="width: 25px; color: #663399; text-align: center;"></i> EASY PAYMENT METHODS</h5>
+                                        <h5 style=" margin-bottom: 2px;"><i class="fa fa-mobile-phone fa-2x" aria-hidden="true" style="width: 25px; color: #663399; text-align: center;"></i> PAY BY CASH OR ONLINE</h5>
+                                        <h5 style=" margin-bottom: 2px;"><i class="fa fa-smile-o fa-2x" aria-hidden="true" style="width: 25px; color: #663399; text-align: center;"></i> 100% SECURE PAYMENTS</h5>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    @*Start Yashaswi 1/6/2018*@
+                    <div id="divPinArea" class="modal" style="background: rgba(130, 129, 129, 0.77); ">
+                        <div class="modal-dialog modal-sm" style="width:350px !important;">
+                            <div class="modal-content" style="padding:10px;text-align:center">
+                                <div class="row" style="padding: 10px;">
+                                    <div class="col-lg-12" style="text-align:left">
+                                        <p>
+                                            <span style="font-size: 18px; color: #09a9f8"> <i class="fa fa-info-circle"></i> Alert </span>
+                                            <hr style="margin-top:-8px;margin-bottom:5px" />
+                                            You are viewing products which can only be delivered to
+                                            <span id="sp-PinArea" style="font-size:16px"> </span>
+                                        </p>
+                                        <div style="text-align:center">
+                                            <input type="button" class="btn btn-success" style="font-size:10px !important; " value="Change Location" onclick="LocPopupChange()" />  &nbsp;&nbsp;&nbsp;
+                                            <input type="button" class="btn btn-warning" style="font-size:10px !important" value="Continue" onclick="LocPopupContinue();" />
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="divPinAreaChange" class="modal" style="background: rgba(130, 129, 129, 0.77); ">
+                        <div class="modal-dialog modal-sm" style="width:450px !important;">
+                            <div class="modal-content" style="padding:10px;text-align:center">
+                                <div class="row" style="padding: 10px;">
+                                    <div class="col-lg-12" style="text-align:left">
+                                        <p>
+                                            <span style="font-size:18px; color:orange"> <i class="fa  fa-exclamation-circle"></i> Warning </span>
+                                            <hr style="margin-top:-8px;margin-bottom:5px" />
+                                            <b style="color:#b01e1e"> Product Prices, Coupons and offers are “Area” specific and may change on changing your Selected Delivery Area.</b> <br />
+                                            <br />
+                                            CONFIRM if you wish to change your area to <span id="spnewArea"></span>  ,<br /> CANCEL if you wish to continue to shop from <span id="spoldArea"></span>.
+
+                                            <hr style="margin-top:10px;margin-bottom:5px" />
+
+                                            <b> Note: By clicking on confirm, all products will remove from your cart and products of new location needs to be added again.</b>
+                                        </p>
+                                        <div style="text-align:center">
+                                            <input type="button" class="btn btn-success" style="font-size:10px !important; " value="Cancel" onclick="CancelChangeAreaConfirmWindow()" />  &nbsp;&nbsp;&nbsp;
+                                            <input type="button" class="btn btn-warning" style="font-size:10px !important" value="Confirm" onclick="ContinueChangeAreaConfirmWindow()" />
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="divCheckLoc" class="modal" style="background: rgba(130, 129, 129, 0.77); ">
+                        <div class="modal-dialog modal-sm" style="width:450px !important;">
+                            <div class="modal-content" style="padding:10px;text-align:center">
+                                <div class="row" style="padding: 10px;">
+                                    <div class="col-lg-12" style="text-align:left">
+                                        <p>
+                                            <span style="font-size:18px; color:red"> <i class="fa  fa-exclamation-circle"></i> Sorry! This items can't be delivered at your location!!! </span>
+                                            <span>Note : Please change your Location. </span>
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    @*End Yashaswi 1/6/2018*@
+                    <script>
+                        ////start Yashaswi
+                        var UrlAfterConfirm;
+                        ///New Yashaswi
+                        var LocStorddlSelectCityI;
+                        var LocStorPinArea;
+                        var LocStorAreaId;
+                        var LocStorSelectedPincode;
+                        //End
+                        var modalPinAreaChange = document.getElementById('divPinAreaChange');
+                        var modalPinArea = document.getElementById('divPinArea');
+                        var modaldivCheckLoc = document.getElementById('divCheckLoc');
+                        //End
+                        // Get the modal
+                        var modal = document.getElementById('myModal');
+
+                        // Get the button that opens the modal
+                        var btn = document.getElementById("myBtn");
+
+                        // Get the <span> element that closes the modal
+                        var span = document.getElementsByClassName("close")[0];
+
+                        // When the user clicks the button, open the modal
+                        btn.onclick = function () {
+                            modal.style.display = "block";
+                            //********* Multiple Franchise in same city By Ashish***********//
+                            if ($("#ddlSelectCity").val() !== null) {
+                                $("#lblarea").text('');
+                            }
+                            $("#ddlSelectCity").val(0);
+                            $("#txtSelectPincode").hide();
+                            $("#ddlSelectArea").hide();
+                            $("#txtSelectPincode").val('');
+                            $("#ddlSelectArea").val('');
+                            //*********************************
+                            //Yashaswi 1/6/2018 Show Selected City And PinCode and Area
+                            if (localStorage.getItem("CityID") != null) {
+                                $("#ddlSelectCity").val(localStorage.getItem("CityID"));
+                                $("#ddlSelectCity").change();
+                            }
+                            //
+                        }
+
+                        // When the user clicks on <span> (x), close the modal
+                        span.onclick = function () {
+                            modal.style.display = "none";
+                        }
+
+                        // When the user clicks anywhere outside of the modal, close it
+                        window.onclick = function (event) {
+                            //if (event.target == modal) {
+                            //    modal.style.display = "none";
+                            //}
+                            //Yashaswi
+                            if (event.target == modalPinAreaChange) {
+                                modalPinAreaChange.style.display = "none";
+                            }
+                            if (event.target == modalPinArea) {
+                                modalPinArea.style.display = "none";
+                            }
+                            if (event.target == modaldivCheckLoc) {
+                                modaldivCheckLoc.style.display = "none";
+                            }
+                            //End
+                        }
+                        ////added by ashish
+                        var startshopBtn = document.getElementById('startshoppingID');
+                        startshopBtn.onclick = (function () {
+                            modal.style.display = "none";
+                        });
+                        //Yashaswi
+                        function CancelChangeAreaConfirmWindow() {
+                            modalPinAreaChange.style.display = "none";
+
+                        }
+                        function ContinueChangeAreaConfirmWindow() {
+                            localStorage.removeItem("IsLocConfirmed");
+                            localStorage.setItem("CityID", LocStorddlSelectCityI);
+                            localStorage.setItem("PinArea", LocStorPinArea);
+                            localStorage.setItem("AreaId", LocStorAreaId);
+                            localStorage.setItem("SelectedPincode", LocStorSelectedPincode);
+                            window.location.href = UrlAfterConfirm;
+                        }
+                        //End
+                    </script>
+                    <div>
+                        <ul class="inline-list" id="Locations" style="margin-left:15px;"></ul>
+                    </div>
+                </li>
+                <li class="dropdown" id="customerdiv">
+                    @Html.Hidden("hdnSessionID", Session["UID"])
+                    @if (Session["UID"] != null)
+                    {
+                        <a href="#" class="dropdown-toggle">
+                            @*Yashaswi Change User Name Length 10-7-2018*@
+                            <span>Hi, @(Session["FirstName"].ToString().Trim().Split(' ')[0].Substring(0, Math.Min(Session["FirstName"].ToString().Trim().Split(' ')[0].Length, 10)))</span><i class="fa fa-user"></i> Account
+                        </a>
+                    }
+                    else if (Request.Cookies["UserName"] != null && Request.Cookies["UserName"].Value != string.Empty)
+                    {
+                         @*Yashaswi Change User Name Length 10-7-2018*@
+                        <a href="#" class="dropdown-toggle"><span>Hi, @(Request.Cookies["UserName"].Value.Split('$')[0].ToString().Trim().Split(' ')[0].Substring(0, Math.Min(Request.Cookies["UserName"].Value.Split('$')[0].ToString().Trim().Split(' ')[0].Length, 10)))</span><i class="fa fa-user"></i> Account</a>
+                    }
+                    else
+                    {
+                        <a href="#" class="dropdown-toggle"><span>Hi, Sign in</span><i class="fa fa-user"></i> Account</a>
+                    }
+                    <ul class="dropdown-menu dropdown-menu-shipping-login" id="newdropdown">
+                        @if (Session["UID"] == null)
+                        {
+                            <li style="width:100%"><a href="/@cityName/@franchiseID/login"><i class="fa fa-sign-in"></i> SignIn</a></li>@*//// added /@franchiseID*@
+                        }
+                        else
+                        {
+                            <li style="width:100%"><a href="@Url.RouteUrl("my-profile", new { id = @Session["UID"], city = cityName, franchiseId = franchiseID })"><i class="fa fa-user"></i> My Profile</a></li>
+                            <li style="width:100%"><a href="@Url.RouteUrl("Logout", new { city = cityName, franchiseId = franchiseID })"><i class="fa fa-sign-out"></i> Logout</a></li>
+                            <li style="width:100%"><a href="@Url.RouteUrl("ReferDetails", new { city = cityName, franchiseId = franchiseID })"><i class="fa fa-google-wallet"></i> Wallet Points <span class="fa fa-inr" id="gbWalletAmt" style="font-weight:900"> </span> </a></li>
+                            @*<li style="width:100%"> @Html.RouteLink(" My Profile", "my-profile", new { id = @Session["UID"], city = cityName, franchiseId = franchiseID })</li>
+                                <li style="width:100%">@Html.RouteLink(" Logout", "Logout", new { city = cityName, franchiseId = franchiseID })</li>*@
+                            List<string> IDs = new List<string>();
+                            if (!string.IsNullOrEmpty(System.Configuration.ConfigurationManager.AppSettings["SITEMAP_ID"]))
+                            {
+                                IDs = System.Configuration.ConfigurationManager.AppSettings["SITEMAP_ID"].Trim().ToString().Split(',').ToList();
+                            }
+                            if (IDs.Contains(Session["UID"].ToString()))
+                            {
+                                <li style="width:100%"><a href="@Url.RouteUrl("SiteMapMaker", new { city = cityName, franchiseId = franchiseID })"><i class="fa fa-map"></i> Site Map</a></li>
+                                @*<li style="width:100%">@Html.RouteLink("SiteMap Generator", "SiteMapMaker", new { city = cityName, franchiseId = franchiseID })</li>*@
+                            }
+                        }
+                        @if (Session["UID"] == null)
+                        {
+                            @*<li style="width:100%"><a href="@Url.RouteUrl("cust-reg", new { city = cityName })" title="Register" style="color: #60A917; font-size: 14px;">Register</a></li>*@
+                        }
+                        <li style="width:100%"><a href="@Url.RouteUrl("CustomerOrder/myorders", new { trackorder = "true", city = cityName, franchiseId = franchiseID })"><i class="fa fa-map-o"></i> Track Order</a></li>
+                        <li style="width:100%"><a href="@Url.RouteUrl("AllShops", new { city = cityName, franchiseId = franchiseID })" class="all-shop-mobile"><i class="fa fa-university"></i> Top Stores</a></li>
+                        <li style="width:100%"><a href="https://play.google.com/store/apps/details?id=onlineshopping.ezeelo.shoppingapp&hl=en"><i class="fa fa-download"></i> Download App</a></li>
+                    </ul>
+
+                </li>
+                @*<li>
+                        <a href="@Url.RouteUrl("ReferDetails", new { city = cityName, franchiseId = franchiseID })" title="GB Wallet">
+                            <span class="fa fa-inr" id="gbWalletAmt" style="font-weight:900"></span>
+                            <i class="fa fa-google-wallet"></i> GB Points
+                        </a>
+                    </li>*@
+                <li class="dropdown">
+                    <a href="@Url.RouteUrl("cart", new { city = cityName, franchiseId = franchiseID })" title="Cart" id="shoppingcart">
+                        @if (Request.Cookies["ShoppingCartCookie"] != null)
+                        {
+                            @Html.Hidden("ShoppingCartCookieValue", Request.Cookies["ShoppingCartCookie"].Value)
+
+                        }
+                        else
+                        {
+                            @Html.Hidden("ShoppingCartCookieValue", 0)
+                        }
+                        <span>Your Cart</span><i class="fa fa-shopping-basket"> <span id="spanShoppingCartCount" style=" color: #5cb85c; font-weight: 700;"> 0 </span> Items</i>
+                    </a>
+                    @*<ul class="dropdown-menu dropdown-menu-shipping-cart">
+                            <li>
+                                <a class="dropdown-menu-shipping-cart-img" href="#">
+                                    <img src="content/images/1.jpg" alt="Image Alternative text" title="Image Title">
+                                </a>
+                                <div class="dropdown-menu-shipping-cart-inner">
+                                    <p class="dropdown-menu-shipping-cart-price"><i class="fa fa-inr" aria-hidden="true"></i> 63</p>
+                                    <p class="dropdown-menu-shipping-cart-item">
+                                        <a href="#">Gucci Patent Leather Open Toe Platform</a>
+                                    </p>
+                                </div>
+                            </li>
+                            <li>
+                                <a class="dropdown-menu-shipping-cart-img" href="#">
+                                    <img src="content/images/2.jpg" alt="Image Alternative text" title="Image Title">
+                                </a>
+                                <div class="dropdown-menu-shipping-cart-inner">
+                                    <p class="dropdown-menu-shipping-cart-price"><i class="fa fa-inr" aria-hidden="true"></i> 82</p>
+                                    <p class="dropdown-menu-shipping-cart-item">
+                                        <a href="#">Nikon D5200 24.1 MP Digital SLR Camera</a>
+                                    </p>
+                                </div>
+                            </li>
+                            <li>
+                                <a class="dropdown-menu-shipping-cart-img" href="#">
+                                    <img src="content/images/3.jpg" alt="Image Alternative text" title="Image Title">
+                                </a>
+                                <div class="dropdown-menu-shipping-cart-inner">
+                                    <p class="dropdown-menu-shipping-cart-price"><i class="fa fa-inr" aria-hidden="true"></i> 70</p>
+                                    <p class="dropdown-menu-shipping-cart-item">
+                                        <a href="#">Apple 11.6" MacBook Air Notebook </a>
+                                    </p>
+                                </div>
+                            </li>
+                            <li>
+                                <a class="dropdown-menu-shipping-cart-img" href="#">
+                                    <img src="content/images/4.jpg" alt="Image Alternative text" title="Image Title">
+                                </a>
+                                <div class="dropdown-menu-shipping-cart-inner">
+                                    <p class="dropdown-menu-shipping-cart-price"><i class="fa fa-inr" aria-hidden="true"></i> 96</p>
+                                    <p class="dropdown-menu-shipping-cart-item">
+                                        <a href="#">Fossil Women's Original Boyfriend</a>
+                                    </p>
+                                </div>
+                            </li>
+                            <li>
+                                <p class="dropdown-menu-shipping-cart-total">Total: <i class="fa fa-inr" aria-hidden="true"></i> 150</p>
+                                <button class="dropdown-menu-shipping-cart-checkout btn btn-primary">Checkout</button>
+                            </li>
+                        </ul>*@
+                </li>
+                <div class="navbar-header">
+                    <button class="navbar-toggle" type="button" data-toggle="collapse" data-target="#main-nav-collapse" area_expanded="false" aria-expanded="true">
+                        <span class="sr-only">Main Menu</span><span class="icon-bar"></span><span class="icon-bar"></span><span class="icon-bar"></span>
+                    </button>
+                </div>
+            </ul>
+        </div>
+    </nav>
+    <nav class="navbar-default navbar-main-white yamm" id="cat" style="box-shadow: 0px 2px 1px #E9B800;">
+        <div class="container">
+            <div class="navbar-collapse navbar-collapse-no-pad collapse" id="main-nav-collapse" aria-expanded="true">
+                <ul class="nav navbar-nav" style="width: 100%;">
+                    <li class="dropdown" style="background: #E9B800;">
+                        <a href="#" style=" padding-top: 6px; padding-bottom: 6px; color: black; font-weight: 700;">@*<span>Shop by</span>*@<i class="fa fa fa-bars"></i> CATEGORIES <i class="drop-caret" data-toggle="dropdown" aria-expanded="false"></i></a>
+                        <div class="dropdown-menu dropdown-menu-category">
+                            <div id="MenuListing">
+
+                            </div>
+                        </div>
+                    </li>
+                    <li class="dropdown" id="offerdiv" style="padding-top: 0px; float: left; min-width: 70%; max-width: 78%;">
+                        @{
+                            ModelLayer.Models.ViewModel.BlockViewModel offerBlock = blocks.Where(x => x.Name.ToLower().Trim() == "navigation bar").FirstOrDefault();
+
+                            if (offerBlock != null && offerBlock.blockItemsList != null)
+                            {
+                                int max = offerBlock.blockItemsList.Count;
+                                if (offerBlock.MaxLimit < offerBlock.blockItemsList.Count)
+                                {
+                                    max = offerBlock.MaxLimit;
+                                }
+                                for (int i = 0; i < max; i++)
+                                {
+                                    <div class="col-xs-4 col-sm-3 col-md-3 col-lg-3 ">
+                                        <a class="navbar-item-top" href="@offerBlock.blockItemsList[i].LinkUrl"><img alt="@offerBlock.blockItemsList[i].Tooltip" src="@offerBlock.blockItemsList[i].ImageName" id="gblogo" title="@offerBlock.blockItemsList[i].Tooltip" onerror="this.src = '/Content/Images/no_image.png'" style="width: 100%; height: 32px;float:left"></a>
+                                    </div>
+                                }
+                            }
+                        }
+
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- end header -->
+    @*<div class="shotlistdiv">
+            <span style="color:white;font-size:16px;cursor:pointer" onclick="showDialog('dialog6'); LoadShortList(); OpenShortlist();"><span class="fa fa-star" style="margin-top: -5px; padding-right: 5px;"></span>Shortlist</span>
+            <span id="spanShortlistCount" class="textcircle"></span>
+        </div>
+        <div data-role="dialog" id="dialog6" class="padding20" data-close-button="true" data-type="info" style="display:none">
+            <span style="background: url(../Content/Images/tags/crossbutton.png); position: absolute; z-index:1000000000000000000; width: 25px; height: 25px; top: 4px; right: 1%; cursor: pointer; background-color: white; " onclick="closeShortlist()"></span>
+            <div id="ShortListDiv" style="color:black;margin-bottom:50px;height:217px;overflow-y:auto;">
+                @Html.Partial("_ShortListItemPartial")
+            </div>
+        </div>*@
+    <div class="body-content" id="body-content">
+        @RenderBody()
+    </div><div id="mobile-content"></div>
+    <!-- Footer -->
+    @*<div id="mobileFooter">
+
+        </div>*@
+    <a id="back-to-top" href="#" class="btn btn-primary back-to-top" role="button"><span class="fa fa-arrow-circle-up fa-2x"></span></a>
+    <div class="container-fluid" style="background: #717171; color: white; padding-top: 5px; padding-bottom: 5px;">
+        <div class="container" style="padding-left:0px;padding-right:0px;">
+            <div class="col-md-3 col-sm-6">
+                <i class="fa fa-truck fa-3x pull-left" aria-hidden="true"></i> <h4 style=" margin-top: 10px;">NO DELIVERY CHARGES</h4>
+            </div>
+            <div class="col-md-3 col-sm-6">
+                <i class="fa fa-clock-o fa-3x pull-left " aria-hidden="true"></i> <h4 style=" margin-top: 10px;">SAME DAY DELIVERY</h4>
+            </div>
+            <div class="col-md-3 col-sm-6">
+                <i class="fa fa-credit-card fa-3x pull-left" aria-hidden="true"></i> <h4 style=" margin-top: 10px;">ONLINE PAYMENT AVAILABLE </h4>
+            </div>
+            <div class="col-md-3 col-sm-6">
+                <i class="fa fa-inr fa-3x pull-left" aria-hidden="true"></i> <h4 style=" margin-top: 10px;">CASH ON DELIVERY</h4>
+            </div>
+        </div>
+
+    </div>
+
+    <footer id="footer" class="main-footer">
+        <div class="col-md-12 col-sm-12" style="padding-left:0px;padding-right:0px;">
+            @Html.Partial("_footer")
+        </div>
+        <div id="trademark-text-box" class="container" style=" padding: 5px;">
+
+        </div>
+        <div style="background: #E9B800;">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-5">
+                        @*Yashaswi 10-7-2018 change  Copyright sign*@
+                        <p class="copyright-text">Copyright © <a href="http://www.ezeelo.com" style="color:#000">eZeelo</a> 2017. All rights reserved</p>
+                    </div>
+                    <div class="col-md-7">
+                        <a href="http://www.freecouponindia.in/ezeelo-coupons/" target="_blank" title="Free coupon india">
+                            <img src="~/Content/Images/tags/Freecoupon.png" style="width: 85px; height: 40px;" />
+                        </a>
+                        <a href="http://www.couponcenter.in/coupons/ezeelo" target="_blank" title="Coupon center">
+                            <img src="~/Content/Images/tags/Ccenter.png" style="width: 85px; " />
+                        </a>
+                        <a href="http://www.couponzguru.com/ezeelo-coupons/" target="_blank" title="Couponz guru">
+                            <img src="~/Content/Images/tags/Couponguru.png" style="width: 85px; " />
+                        </a>
+                        <a href="http://www.couponrani.com/ezeelo-coupons" target="_blank" title="Couponrani">
+                            <img src="~/Content/Images/tags/CRani.png" style="width: 85px; " />
+                        </a>
+                        <img src="/Content/Images/4-1.png" style="width: 40%;">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <a href="#" class="scroll_top" title="Scroll to Top" style="display: none;">Scroll</a>
+    @*@Scripts.Render("~/bundles/jquery")
+        @Scripts.Render("~/bundles/bootstrap")*@
+    @RenderSection("scripts", required: false)
+    @RenderSection("MyScripts", required: false)
+    @RenderSection("itemScripts", required: false)
+    @RenderSection("BotDetectStyles", required: false)
+    <script src="~/Content/js/jquery.js"></script>
+    <script src="~/Content/js/bootstrap.js"></script>
+    @*<script src="~/Content/js/switcher.js"></script>*@
+    <script src="~/Scripts/jquery-ui-1.8.7.min.js"></script>
+    <script src="~/Scripts/Cookie.js"></script>
+    <script type="text/javascript">
+
+        //Yashaswi 1/6/2018 Show Selected City And PinCode and Area
+        $(document).ready(function () {
+
+            if (localStorage.getItem("PinArea") != null) {
+                $("#spPinArea").text(localStorage.getItem("PinArea"));
+                $("#sp-PinArea").text(localStorage.getItem("PinArea") + " ," + '@CultureInfo.CurrentCulture.TextInfo.ToTitleCase(cityName.ToLower())');
+            }
+
+        });
+
+        //
+        //-------------Code By Mohit To save GB Track for ----------------//
+        $(function () {
+            $.ajax({
+                url: '@Url.Action("InsertGBTrack", "GBTrack")?URL=' + window.location.href,
+                type: "GET",
+                success: function (result) {
+                },
+                error: function (data) {
+                }
+            });
+
+            // CallAutoComplete1();///call
+        });
+        //-------------End of Code By Mohit To save GB Track for ----------------//
+
+        $(function () {
+            var custSessionId = $("#hdnSessionID").val();
+            if (custSessionId != null && custSessionId != "") {
+                $.ajax({
+                    type: "POST",
+                    url: '@Url.Action("GetGBWalletAmt", "Home")',
+                    data: "{'userID':" + custSessionId + "}",
+                    contentType: "application/json; charset = utf-8",
+                    dataType: "json",
+                    success: function (response) {
+                        $("#gbWalletAmt").text(parseFloat(response).toFixed(2));
+                        // alert(response);
+                    },
+                    failure: function (response) {
+                    },
+                    error: function (response) {
+                    }
+                });
+            }
+            else {
+                $("#gbWalletAmt").text("0.00");
+            }
+
+
+            //// CallAutoComplete();
+
+            //********* Multiple Franchise in same city By Ashish***********//
+            var source = [];
+            var jsonGloble = [];
+            $("#ddlSelectCity").change(function () {
+                // $("#loader").show();
+                $("#lblarea").text('');
+                $("#lblarea").text('Please wait..');
+
+                if ($("#ddlSelectCity").val() == 0) {
+                    $("#txtSelectPincode").val('');
+                    $("#txtSelectPincode").hide();
+                    $("#ddlSelectArea").val('');
+                    $("#ddlSelectArea").hide();
+                    $("#lblarea").text('');
+                }
+                $("#ddlSelectArea").val('');
+                $("#txtSelectPincode").val('');
+                $("#ddlSelectArea").hide();
+                //$("#txtSelectPincode").show();
+
+                //******************** Call 1st API ****************//
+
+                var ID = $("#ddlSelectCity").val();
+                var Name = $("#ddlSelectCity option:selected").text();
+                //alert(ID);
+                var fLocation = "GetFranchiseAllottedLocation?cityid=" + ID;
+                var urlAPILocation = "http://api.ezeelo.com/api/" + fLocation;
+                ////var urlAPILocation = "http://localhost:1600/api/" + fLocation;
+                //alert(urlAPILocation)
+
+                $.getJSON(urlAPILocation, { format: "json" })
+               .done(function (json) {
+                   //  loading...
+                   // alert("Success");
+                   if (json.HTTPStatusCode == "200") {
+                       jsonGloble = json.Data;
+                       //debugger;
+                       $("#txtSelectPincode").show();
+                       // $("#loader").hide();
+                       $("#lblarea").text('');
+                   }
+                   else if (json.HTTPStatusCode == "204") {
+                       //alert("No Record found.");
+                   }
+                   else if (json.HTTPStatusCode == "400") {
+                       //alert("Failed.");
+                   }
+
+               })
+                   .fail(function (jqXHR, textStatus, error) {
+                       var err = textStatus + ", " + error;
+                       // alert('Unable to Connect to Server.\n Try again Later.\n Request Failed: ' + err);
+
+                   });
+
+                //******************** End Call 1st API ****************//
+
+
+            });
+            $("#ddlSelectArea").change(function () {
+                // $("#loader").show();
+                $("#lblarea").text('Please wait..');
+                //////////////////////////////////////
+                //******************** Call 3rd API ****************//
+                var ID2 = $("#ddlSelectCity").val();
+                var Name2 = $("#ddlSelectCity option:selected").text();
+                var FranchiseID2 = $("#ddlSelectArea").val();
+                var HelpLineContact2 = "GetHelpLineNumber?franchiseid=" + FranchiseID2;
+                var urlAPIHelpLineNo2 = "http://api.ezeelo.com/api/" + HelpLineContact2;
+                ////var urlAPIHelpLineNo2 = "http://localhost:1600/api/" + HelpLineContact2;
+
+                //alert(urlAPIHelpLineNo2)
+                $.getJSON(urlAPIHelpLineNo2, { format: "json" })
+                   .done(function (jsonfcontact) {
+
+                       if (jsonfcontact.HTTPStatusCode == "200") {
+                           var countfc = jsonfcontact.Data.length;
+                           if (parseInt(countfc) > 0) {
+                               var HelpLineNumber2 = jsonfcontact.Data[0].HelpLineNumber;
+                               // alert("HelpNo: 200" + HelpLineNumber2 + "===" + FranchiseID2 + "===" + Name2);
+
+                               var changeUrl2 = '@(Html.Raw(Url.RouteUrl("ChangeCity", new { city = cityName, CityID = "_CityID_", CityName = "_CityName_", FranchiseID = "_FranchiseID_", HelpLineNumber = "_HelpLineNumber_" })))';
+                               var url2 = changeUrl2.replace("_CityID_", ID2).replace("_CityName_", Name2).replace("_FranchiseID_", FranchiseID2).replace("_HelpLineNumber_", HelpLineNumber2);
+                               alert(url2)
+                               if (url2 != undefined) {
+                                   window.location.href = url2;
+                               }
+                           }
+                           // $("#loader").hide();
+                           $("#lblarea").text('');
+                       }
+                       else if (json.HTTPStatusCode == "204") {
+                           //// alert("No Record found.");
+
+                           var HelpLineNumber = "Contact not found.";
+                           //alert("HelpNo: 204" + HelpLineNumber2 + "===" + FranchiseID2 + "===" + Name2);
+
+                           var changeUrl2 = '@(Html.Raw(Url.RouteUrl("ChangeCity", new { city = cityName, CityID = "_CityID_", CityName = "_CityName_", FranchiseID = "_FranchiseID_", HelpLineNumber = "_HelpLineNumber_" })))';
+                           var url2 = changeUrl2.replace("_CityID_", ID2).replace("_CityName_", Name2).replace("_FranchiseID_", FranchiseID2).replace("_HelpLineNumber_", HelpLineNumber2);
+                           if (url2 != undefined) {
+                               window.location.href = url2;
+                           }
+                       }
+                       else if (json.HTTPStatusCode == "400") {
+                           //// alert("Failed.");
+                           // alert("aaa else 400:" + jsonfcontact.UserMessage);
+                       }
+                   })
+               .fail(function (jqXHR, textStatus, error) {
+                   //  var err = textStatus + ", " + error;
+               });
+
+                //******************** End Call 3rd API ****************//
+
+            });
+
+            var input = "";
+            $("#txtSelectPincode").keyup(function (evt) {
+                var ID = $("#ddlSelectCity").val();
+                var Name = $("#ddlSelectCity option:selected").text();
+
+                input = document.getElementById('txtSelectPincode').value;
+                //alert(input.length);
+                if (input != '') {
+                    // var source = [];
+                    ////var input = $("#txtSelectPincode").val();
+                    // alert($("#txtSelectPincode").val());
+                    var integer_str = parseInt(input);
+                    if (input.length == 1) {
+                        $("#lblarea").text('Please enter two character');
+                    }
+                    else if (input.length > 1 && input.length <= 6) {
+                        $("#lblarea").text('');
+                    }
+                    if (isNaN(integer_str)) {
+                        //alert(integer_str);
+                        //debugger;
+                        source = [];
+                        source = $.map(jsonGloble, function (item) {
+                            return {
+                                //Yashaswi 3/7/2018
+                                label: item.Pincode + " - " + item.Area,
+                                value: item.AreaID
+                            };
+                        });
+                        if (input.length == 0) {
+                            $("#lblarea").text('');
+                        }
+                    }
+                    else if (!isNaN(integer_str)) {
+                        //alert(integer_str);
+                        source = [];
+                        source = $.map(jsonGloble, function (item) {
+                            return {
+                                label: item.Pincode + " - " + item.Area,
+                                // If single pincode is distributed to multiple franchise. (Ref. By Rakesh sir)
+                                // then franchiseID will be selected based on selected area
+                                //Commented by Zubair on 31-05-2018
+                                //value: item.PincodeID
+                                value: item.AreaID   //assigned AreaId by Zubair on 31-05-2018
+                                //End by Zubair
+                            };
+                        });
+                        //if (input.length > 6 ) {
+                        //     $("#lblarea").text('Invalid pincode...');
+                        // }
+                        // else {
+                        //     $("#lblarea").text('');
+                        // }
+                        if (input.length == 0) {
+                            $("#lblarea").text('');
+                        }
+                    }
+
+                }
+                else {
+                    $("#lblarea").text('');
+                }
+
+                ///////////////////////////////////////////////////////////////
+                // alert("HIN");
+                /*******var ID = $("#ddlSelectCity").val();
+                 var Name = $("#ddlSelectCity option:selected").text();
+                 var fLocation = "GetFranchiseAllottedLocation?cityid=" + ID;
+                 var urlAPILocation = "http://api.ezeelo.com/api/" + fLocation;******/
+
+                //******************** Call 1st API ****************//
+                //Call the REST program/method returns: JSONP
+                /******  $.getJSON(urlAPILocation, { format: "json" })
+                  .done(function (json) {
+                      //  loading...
+                      if (json.HTTPStatusCode == "200") {
+                          // $("#txtSelectPincode").show();
+                          //////////////
+                          // alert("kp: "+$("#txtSelectPincode").val());
+                          if ($("#txtSelectPincode").val() != '') {
+                              var input = $("#txtSelectPincode").val();
+                              var integer_str = parseInt(input);
+                              if (isNaN(integer_str)) {
+                                  // alert('string');
+
+                                  source = [];
+                                  source = $.map(json.Data, function (item) {
+                                      return {
+                                          label: item.Area,
+                                          value: item.AreaID
+                                      };
+                                  });
+                                  if (input.length == 0) {
+                                      $("#lblarea").text('');
+                                  }
+
+                              }
+                              else if (!isNaN(integer_str)) {
+                                  // alert('integer');
+                                  source = [];
+                                  source = $.map(json.Data, function (item) {
+                                      return {
+                                          label: item.Pincode + " - " + item.Area,
+                                          value: item.PincodeID
+                                      };
+                                  });
+                                   //if (input.length > 6 ) {
+                                   //     $("#lblarea").text('Invalid pincode...');
+                                   // }
+                                   // else {
+                                   //     $("#lblarea").text('');
+                                   // }
+                                  if (input.length == 0) {
+                                      $("#lblarea").text('');
+                                  }
+                              }
+                          }******/
+
+                //////////////////////////////
+                var __response = $.ui.autocomplete.prototype._response;
+                $.ui.autocomplete.prototype._response = function (content) {
+                    __response.apply(this, [content]);
+                    this.element.trigger("autocompletesearchcomplete", [content]);
+                };
+                ///////////////////////////////
+                // alert(source);//working
+                // alert(source.length);//
+                // alert(input);
+                $("#txtSelectPincode").autocomplete({
+                    //  document.getElementById('txtSelectPincode').autocomplete({
+                    // delay: 500,
+
+                    source: source,
+                    /*search: function (event, ui) {
+                        debugger;
+                        alert(ui.watch);
+                    },*/
+
+                    focus: function (event, ui) {
+                        $('#txtSelectPincode').val(ui.item.label);
+                        // document.getElementById('txtSelectPincode').value=ui.item.label;
+
+                        return false;
+                    },
+                    // appendTo: ee,
+                    // Once a value in the drop down list is selected, do the following:
+                    select: function (event, ui) {
+                        $("#lblarea").text('');////
+                        //$("#loader").show();
+                        $("#lblarea").text('Please wait..');
+                        $('#txtSelectPincode').val(ui.item.label);
+
+                        //document.getElementById('txtSelectPincode').value = ui.item.label;
+                        // and place the person.id into the hidden textfield called 'link_origin_id'.
+                        //// $('#hdd_origin_id').val(ui.item.value);
+
+                        //******************** Call 2nd API ****************//
+
+                        //Yashaswi 1/6/2018 Show Selected City And PinCode and Area
+                        var OldAreaId = localStorage.getItem("AreaId");
+                        var NewAreaId = ui.item.value;
+                        var PinArea = ui.item.label;
+                        var selectedPincode = PinArea.split('-')[0];
+                        var CartCount = $("#spanShoppingCartCount").text();
+                        $("#spnewArea").text(PinArea);
+                        $("#spoldArea").text(localStorage.getItem("PinArea"));
+                        PinArea = PinArea.replace(" - ", ", ");
+                        
+                        //
+                        var AreaID = ui.item.value;
+                        var Area_Pin_ID = "GetFranchiseID?cityid=" + ID + "&" + "pincide_areaid=" + AreaID;
+                        var urlAPIFranciseID = "http://api.ezeelo.com/api/" + Area_Pin_ID;
+                        //var urlAPIFranciseID = "http://localhost:1600/api/" + Area_Pin_ID;
+
+                        //alert(urlAPIFranciseID)
+                        $.getJSON(urlAPIFranciseID, { format: "json" })
+                            .done(function (jsonfid) {
+                                //  loading...
+                                if (jsonfid.HTTPStatusCode == "200") {
+
+                                    var count = jsonfid.Data.length;
+                                    if (parseInt(count) > 1) {
+                                        //-- If Count is greather then 1 means city having multiple Franhies --//
+                                        var ddlArea = $("[id*=ddlSelectArea]");
+                                        ddlArea.empty().append('<option selected="selected" value="0">Select Area</option>');
+                                        $.each(jsonfid.Data, function (index, item) {
+                                            var City = this['CityName'] + " - " + this['FranchiseOfficePincode'];
+                                            ddlArea.append($("<option></option>").val(this['FranchiseIDs']).html(City));
+                                        });
+                                        $("#ddlSelectArea").show();
+                                        //$("#loader").hide();
+                                        $("#lblarea").text('');
+                                    }
+                                    else {
+                                        var FranchiseID = jsonfid.Data[0].FranchiseIDs;
+                                        //alert("ID:" + FranchiseID);
+
+                                        //******************** Call 3rd API ****************//
+                                        var HelpLineContact = "GetHelpLineNumber?franchiseid=" + FranchiseID;
+                                        var urlAPIHelpLineNo = "http://api.ezeelo.com/api/" + HelpLineContact;
+                                        //var urlAPIHelpLineNo = "http://localhost:1600/api/" + HelpLineContact;
+                                        $.getJSON(urlAPIHelpLineNo, { format: "json" })
+                                           .done(function (jsonfcontact) {
+                                               if (jsonfcontact.HTTPStatusCode == "200") {
+                                                   var countfc = jsonfcontact.Data.length;
+                                                   //alert("hhh:" + parseInt(countfc));
+                                                   if (parseInt(countfc) > 0) {
+                                                       var HelpLineNumber = jsonfcontact.Data[0].HelpLineNumber;
+                                                       // alert("HelpNo...200" + HelpLineNumber + "===" + FranchiseID + "===" + Name+ "===" +ID);
+                                                       //Yashaswi change in changeUrl and url
+                                                       var changeUrl = '@(Html.Raw(Url.RouteUrl("ChangeCity", new { city = cityName, CityID = "_CityID_", CityName = "_CityName_", FranchiseID = "_FranchiseID_", HelpLineNumber = "_HelpLineNumber_", OldAreaId = "OldAreaId" })))';
+                                                       var url = changeUrl.replace("_CityID_", ID).replace("_CityName_", Name).replace("_FranchiseID_", FranchiseID).replace("_HelpLineNumber_", HelpLineNumber).replace("OldAreaId", OldAreaId);
+                                                       if (url != undefined) {
+                                                           //    window.location.href = url;
+                                                           //Yashaswi 1/6/2018 Show Selected City And PinCode and Area
+                                                           if (OldAreaId != NewAreaId) {
+                                                               if (CartCount == "0") {
+                                                                   localStorage.removeItem("IsLocConfirmed");
+                                                                   localStorage.setItem("CityID", $("#ddlSelectCity").val());
+                                                                   localStorage.setItem("PinArea", PinArea);
+                                                                   localStorage.setItem("AreaId", ui.item.value);
+                                                                   localStorage.setItem("SelectedPincode", selectedPincode);
+                                                                   window.location.href = url;
+                                                               }
+                                                               else {
+                                                                   ///Yashaswi
+                                                                   $.ajax({
+                                                                       type: "POST",
+                                                                       //url: "CheckSelectedPincode",
+                                                                       url: "@Url.Action("CheckSelectedAreaCode", "PaymentProcess")",
+                                                                       data: "{ NewAreaId: " + NewAreaId + ",OldAreaId:" + OldAreaId + "}",
+                                                                       contentType: "application/json; charset=utf-8",
+                                                                       dataType: "json",
+                                                                       async: true,
+                                                                       cache: false,
+                                                                       success: function (msg) {
+                                                                           $("#lblareaI").text('');
+                                                                           modal.style.display = "none";
+                                                                           if (msg == false) {
+                                                                               LocStorddlSelectCityI = $("#ddlSelectCity").val();
+                                                                               LocStorPinArea = PinArea;
+                                                                               LocStorAreaId = ui.item.value;
+                                                                               LocStorSelectedPincode = selectedPincode;
+                                                                               UrlAfterConfirm = url;
+                                                                               modalPinAreaChange.style.display = "block";
+                                                                           }
+                                                                           else {
+                                                                               localStorage.setItem("CityID", $("#ddlSelectCity").val());
+                                                                               localStorage.setItem("PinArea", PinArea);
+                                                                               localStorage.setItem("AreaId", ui.item.value);
+                                                                               localStorage.setItem("SelectedPincode", selectedPincode);
+                                                                               window.location.href = url;
+                                                                           }
+
+
+                                                                       },
+                                                                       error: function (x, e) {
+                                                                           // alert("unable to Retrive Mobile No ");
+                                                                       }
+                                                                   });
+
+                                                               }
+                                                           } else {
+                                                               $("#lblarea").text('');
+                                                               modal.style.display = "none";
+                                                           }
+                                                           //End
+                                                       }
+                                                   }
+                                               }
+                                               else if (jsonfcontact.HTTPStatusCode == "204") {
+                                                   //// alert("No Record found.");
+                                                   var HelpLineNumber = "Contact not found.";
+                                                   // alert("HelpNo...204" + HelpLineNumber + "===" + FranchiseID + "===" + Name);
+                                                   //Yashaswi change in changeUrl and url
+                                                   var changeUrl = '@(Html.Raw(Url.RouteUrl("ChangeCity", new { city = cityName, CityID = "_CityID_", CityName = "_CityName_", FranchiseID = "_FranchiseID_", HelpLineNumber = "_HelpLineNumber_", OldAreaId = "OldAreaId" })))';
+                                                   var url = changeUrl.replace("_CityID_", ID).replace("_CityName_", Name).replace("_FranchiseID_", FranchiseID).replace("_HelpLineNumber_", HelpLineNumber).replace("OldAreaId", OldAreaId);
+                                                   if (url != undefined) {
+                                                       // window.location.href = url;
+                                                       //Yashaswi 1/6/2018 Show Selected City And PinCode and Area
+                                                       //alert(url);
+                                                       if (OldAreaId != NewAreaId) {
+                                                           if (CartCount == "0") {
+                                                               localStorage.removeItem("IsLocConfirmed");
+                                                               localStorage.setItem("CityID", $("#ddlSelectCity").val());
+                                                               localStorage.setItem("PinArea", PinArea);
+                                                               localStorage.setItem("AreaId", ui.item.value);
+                                                               localStorage.setItem("SelectedPincode", selectedPincode);
+                                                               window.location.href = url;
+                                                           }
+                                                           else {
+                                                               ///Yashaswi
+                                                               $.ajax({
+                                                                   type: "POST",
+                                                                   //url: "CheckSelectedPincode",
+                                                                   url: "@Url.Action("CheckSelectedAreaCode", "PaymentProcess")",
+                                                                   data: "{ NewAreaId: " + NewAreaId + ",OldAreaId:" + OldAreaId + "}",
+                                                                   contentType: "application/json; charset=utf-8",
+                                                                   dataType: "json",
+                                                                   async: true,
+                                                                   cache: false,
+                                                                   success: function (msg) {
+                                                                       $("#lblareaI").text('');
+                                                                       modal.style.display = "none";
+                                                                       if (msg == false) {
+                                                                           LocStorddlSelectCityI = $("#ddlSelectCity").val();
+                                                                           LocStorPinArea = PinArea;
+                                                                           LocStorAreaId = ui.item.value;
+                                                                           LocStorSelectedPincode = selectedPincode;
+                                                                           UrlAfterConfirm = url;
+                                                                           modalPinAreaChange.style.display = "block";
+                                                                       }
+                                                                       else {
+                                                                           localStorage.setItem("CityID", $("#ddlSelectCity").val());
+                                                                           localStorage.setItem("PinArea", PinArea);
+                                                                           localStorage.setItem("AreaId", ui.item.value);
+                                                                           localStorage.setItem("SelectedPincode", selectedPincode);
+                                                                           window.location.href = url;
+                                                                       }
+
+
+                                                                   },
+                                                                   error: function (x, e) {
+                                                                       // alert("unable to Retrive Mobile No ");
+                                                                   }
+                                                               });
+
+                                                           }
+                                                       } else {
+                                                           $("#lblarea").text('');
+                                                           modal.style.display = "none";
+                                                       }
+                                                       //End
+                                                   }
+
+                                               }
+                                               else if (jsonfcontact.HTTPStatusCode == "400") {
+                                                   //// alert("Failed.");
+                                                   // alert("hhh else 400:" + jsonfcontact.UserMessage);
+
+                                               }
+                                           })
+                                                .fail(function (jqXHR, textStatus, error) {
+                                                    var err = textStatus + ", " + error;
+                                                });
+
+                                        //******************** End Call 3rd API ****************//
+                                        if (url != undefined) {
+                                            window.location.href = url;//urlglobal;
+                                        }
+                                    }
+
+                                }
+                                else if (json.HTTPStatusCode == "204") {
+                                    //// alert("No Record found.");
+                                }
+                                else if (json.HTTPStatusCode == "400") {
+                                    //// alert("Failed.");
+                                }
+                            })
+                              .fail(function (jqXHR, textStatus, error) {
+                                  var err = textStatus + ", " + error;
+                                  //// alert('Unable to Connect to Server.\n Try again Later.\n Request Failed: ' + err);
+
+                              });
+
+                        //******************** End Call 2nd API ****************//
+                        return false;
+                    }
+                }).bind("autocompletesearchcomplete", function (event, contents) { // $("#txtSelectPincode")
+                    // alert(contents.length);
+                    if (input != '') {
+
+
+                        //// var input = $("#txtSelectPincode").val();
+                        // alert(input);
+                        var integer_str = parseInt(input);
+                        if (!isNaN(integer_str)) {
+                            if (contents.length == 0) {
+                                $("#lblarea").text('Pincode not found...');
+                                if (input.length > 6) {
+                                    $("#lblarea").text("");
+                                    $("#lblarea").text('Invalid pincode...');
+                                }
+                            }
+                                //if (input.length > 6) {
+                                //    $("#lblarea").text('Invalid pincode...');
+                                //}
+                            else {
+                                $("#lblarea").text("");
+                            }
+                        }
+                        else if (isNaN(integer_str)) {
+                            if (contents.length == 0) {
+                                $("#lblarea").text('Area not found...');
+                                //$("#lblarea").text(contents.length);
+                                //   return false;
+                            }
+                            else if (input.length == 0) {
+                                $("#lblarea").text("");
+                            }
+                        }
+
+                        /* if (contents.length !== 0) {
+                             $("#lblarea").text('');
+                         }*/
+                    }
+                    /*if (contents.length !== 0) {
+                        $("#lblarea").html('');
+                    }*/
+                    /* else
+                     {
+                         $("#lblarea").text('');
+                     }*/
+                    // alert(contents.length)
+                }).autocomplete("widget").addClass("City");
+
+
+
+                /*****  }
+                  else if (json.HTTPStatusCode == "204") {
+                      //// alert("No Record found.");
+                  }
+                  else if (json.HTTPStatusCode == "400") {
+                      //// alert("Failed.");
+                  }
+
+              })
+                  .fail(function (jqXHR, textStatus, error) {
+                      var err = textStatus + ", " + error;
+                      //// alert('Unable to Connect to Server.\n Try again Later.\n Request Failed: ' + err);
+
+                  });*****/
+
+                //******************** End Call 1st API ****************//
+
+                //***************************************test**********************
+                /* var __response = $.ui.autocomplete.prototype._response;
+                 $.ui.autocomplete.prototype._response = function (content) {
+                     __response.apply(this, [content]);
+                     this.element.trigger("autocompletesearchcomplete", [content]);
+                 };
+                $("#txtSelectPincode").autocomplete({
+                     source: source,
+                     /*search: function (event, ui) {
+                         alert(ui);
+                     }
+                }).bind("autocompletesearchcomplete", function (event, contents) {
+                   // alert(contents.length);
+                     if (contents.length < 1) {
+                         // $("#results").html("No Entries Found");
+                         $("#lblarea").text('Area not found...');
+                     }
+                     else {
+                         //  $("#results").html("");
+                         // alert(input);
+                         $("#lblarea").html("");
+                     }
+
+                 });*/
+
+                //*************************************end test********************************************
+
+            });
+
+            //********* End Multiple Franchise in same city ***********//
+
+
+
+        });
+
+    </script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            var str = getCookie("CityCookie");
+            ///New Yashaswi 20/6/2018
+            if (localStorage.getItem("CityID") == null || localStorage.getItem("CityID") == undefined || localStorage.getItem("CityID") == "undefined") {
+                str = null;
+            }
+            //End
+            var cucity = "";
+            var cityId = 0;
+            var cufranchiseId = 0;//added
+            if (str != null && str != "" && str != undefined) {
+                callCity();////added
+                var str1 = [];
+                str1 = str.split('$');
+                cityId = str1[0];
+                cucity = str1[1].toLowerCase();
+                cufranchiseId = str1[2];//added
+                // alert(cityId + "==" + cucity + "==" + cufranchiseId);
+                $("#ChangeCity1").removeClass("active-container");
+                //$(".modal").css("display", "block!important");
+
+                $(".open").css("display", "none");
+
+                $("#smallHeader").css("background-color", "#FFF");
+                $("#smallHeader").css("box-shadow", "inset 0px -5px 5px #cacaca");
+                $("#container").css("background-color", "#FFF");
+                $("#shoppingcart").css("display", "block");
+
+                $("#body-content").css("pointer-events", "visible");
+                $("#footer").css("pointer-events", "visible");
+                $("#logodiv").css("pointer-events", "visible");
+                $("#searchdiv").css("pointer-events", "visible");
+                $(".shotlistdiv").css("pointer-events", "visible");
+                $("#category_menu").css("pointer-events", "visible");
+                $("#gb_wallet").css("pointer-events", "visible");
+            }
+            else {
+                //$("#ChangeCity1").addClass("active-container");
+                $("#mask").css("background-color", "none!important");
+                //$(".modal").css("display", "block");
+                $("#myModal").css("display", "block"); //Yashaswi Change class name to id
+                callCity();////added
+                ///New Yashaswi 20/6/2018
+                localStorage.removeItem("CityID");
+                localStorage.removeItem("PinArea");
+                localStorage.removeItem("AreaId");
+                localStorage.removeItem("SelectedPincode");
+                //End
+                $(".open").css("display", "block");
+                $("#shoppingcart").css("display", "block");
+                $("#body-content").addClass("body-contentblur");
+                $("#footer").addClass("body-contentblur");
+                $("#logodiv").addClass("logodivblur");
+                $("#searchdiv").addClass("logodivblur");
+                $(".shotlistdiv").addClass("logodivblur");
+                $("#category_menu").addClass("logodivblur");
+                $("#gb_wallet").addClass("logodivblur");
+                $("#cart").addClass("logodivblur");
+                $("#spanShoppingCartCount").addClass("logodivblur");
+
+                $("#smallHeader").css("background-color", "rgba(0, 0, 0, 0)");
+                $("#smallHeader").css("box-shadow", "none");
+                $("#container").css("background-color", "rgba(0, 0, 0, 0.80)");
+                $("#body-content").css("pointer-events", "none");
+                $("#footer").css("pointer-events", "none");
+                $("#logodiv").css("pointer-events", "none");
+                $("#searchdiv").css("pointer-events", "none");
+                $(".shotlistdiv").css("pointer-events", "none");
+                $("#category_menu").css("pointer-events", "none");
+                $("#gb_wallet").css("pointer-events", "none");
+                cityId = 4968;
+                cucity = "nagpur";
+                cufranchiseId = 2;//added
+                //createCookie("CityCookie", "4968$Nagpur", 30);//hide
+                //createCookie("CityCookie", "4968$Nagpur$2$9860890890", 30);//added
+                createCookie("CityCookie", "11187$Lucknow$26$8090090890", 30);
+            }
+            //-- added--/
+            var cname = window.location.href.replace('http://ezeelo.com/', '');
+            //var cname = window.location.href.replace('http://beta.customer.ezeelo.in/', '');
+            //var cname = window.location.href.replace('http://localhost:5555/', '');
+            var cfranchise = cname;
+            cname = cname.substring(0, cname.indexOf('/'));
+            var removecname = cname + '/';
+            cfranchise = cfranchise.replace(removecname, '');
+            //alert("Home: "+cname + "==" + cfranchise);
+            //-- End Add --//
+            function callCity() {
+                //$("#loader").show();
+                $("#lblarea").text('Please wait..');
+                $.ajax({
+                    type: "POST",
+                    // url: "/nagpur/Home/GetCities",//hide
+                    url: "/" + cname + "/" + cfranchise + "/Home/GetCities",//added
+                    dataType: "json",
+                    async: true,
+                    cache: false,
+                    success: function (msg) {
+
+                        $('#Locations').empty();
+                        ////var changeUrl = '@(Html.Raw(Url.RouteUrl("ChangeCity", new { city = cityName, CityID = "_CityID_", CityName = "_CityName_" })))'; //Hide old code
+                        //********* Multiple Franchise in same city By Ashish***********//
+                        var ddlCities = $("[id*=ddlSelectCity]");
+                        ddlCities.empty().append('<option selected="selected" value="0">Select City</option>');
+                        //********* End Multiple Franchise in same city ***********//
+                        $.each(msg, function (index, item) {
+
+                            if (cityId == 4968) {
+                                if (item.Name.toLowerCase() == "nagpur") {
+                                    cityId = item.ID;
+                                    cucity = "nagpur";
+                                    cufranchiseId = 2;//added
+                                    $('#ChangeLocation').html("Nagpur");
+                                }
+                            }
+                            //********* Multiple Franchise in same city By Ashish ***********//
+                            ddlCities.append($("<option></option>").val(this['ID']).html(this['Name']));
+                            //********* End Multiple Franchise in same city ***********//
+                            //// var url = changeUrl.replace("_CityID_", item.ID).replace("_CityName_", item.Name);//Hide old code
+                            ////  $('#Locations').append('<li style="width:44%;float:left;margin-right:10px;margin-bottom: 10px;"><a class="button popupsuccess" href="' + url + '" value=' + item.ID + '>' + item.Name + '</a></li>');//Hide old code
+
+                        });
+                        // $("#loader").hide();
+                        $("#lblarea").text('');
+                    },
+                    error: function (x, e) {
+                        //alert("Sorry No Such Type of City Is available. ");
+                    }
+                });
+            }
+
+            /****************** cart cookie****/
+
+            if ($("#ShoppingCartCookieValue").val() != 0) {
+                var cnt = $("#ShoppingCartCookieValue").val().split(",").length;
+                //alert(cnt);
+                // Set value for shopping cart count
+                $("#spanShoppingCartCount").text(cnt);
+
+            }
+            else {
+                $("#spanShoppingCartCount").text(0);
+            }
+
+            /**************************/
+
+
+            /* Request the partial view with .get request. */
+            //$.get('/' + cucity + '/Home/GetMenuListing', function (data) {//hide
+            $.get('/' + cucity + '/' + cufranchiseId + '/Home/GetMenuListing', function (data) {//added
+                /* data is the pure html returned from action method, load it to your page */
+                $('#MenuListing').html(data);
+
+                /* little fade in effect */
+                //$('#MenuListing').fadeIn('fast');
+
+                // $.get('/' + cucity + '/Home/GetFooterMenuListing?Width=' + $(window).width(), function (data) {
+                $.get('/' + cucity + '/' + cufranchiseId + '/Home/GetFooterMenuListing?Width=' + $(window).width(), function (data) {//added
+                    /* data is the pure html returned from action method, load it to your page */
+                    if ($(window).width() > 800) {
+                        $('#trademark-text-box').html(data);
+                    }
+                    else {
+                        $('#mobileFooter').html(data);
+                    }
+                });
+
+
+            });
+            //alert($(window).width());
+            //if ($(window).width() < 974) {
+            //    $('#MenuListing').css('display', 'none');
+            //    $('.box-vertical-megamenus h4').css("pointer-events", "visible");
+
+            //} else {
+            //    $('#MenuListing').css('display', 'block');
+            //    $('.box-vertical-megamenus h4').css("pointer-events", "none");
+
+            //}
+        });
+        $("#ChangeCity1").click(function () {
+            $("#body-content").removeClass("body-contentblur");
+            $("#footer").removeClass("body-contentblur");
+            $("#logodiv").removeClass("logodivblur");
+            $("#searchdiv").removeClass("logodivblur");
+            $("#ChangeCity1").removeClass("active-container");
+            $(".shotlistdiv").removeClass("logodivblur");
+            $("#category_menu").removeClass("logodivblur");
+            $("#gb_wallet").removeClass("logodivblur");
+            $("#cart").removeClass("logodivblur");
+            $("#spanShoppingCartCount").removeClass("logodivblur");
+
+            $("#smallHeader").css("background-color", "#FFF");
+            $("#smallHeader").css("box-shadow", "inset 0px -5px 5px #cacaca");
+            $("#container").css("background-color", "#FFF");
+            $("#shoppingcart").css("display", "block");
+            $("#body-content").css("pointer-events", "visible");
+            $("#footer").css("pointer-events", "visible");
+            $("#logodiv").css("pointer-events", "visible");
+            $("#searchdiv").css("pointer-events", "visible");
+            $(".shotlistdiv").css("pointer-events", "visible");
+            $("#category_menu").css("pointer-events", "visible");
+            $("#gb_wallet").css("pointer-events", "visible");
+        });
+
+        flagToggle = false;
+
+        function removeLightBox() {
+            $("#body-content").removeClass("body-contentblur");
+            $("#footer").removeClass("body-contentblur");
+            $("#logodiv").removeClass("logodivblur");
+            $("#searchdiv").removeClass("logodivblur");
+            $(".shotlistdiv").removeClass("logodivblur");
+            $("#category_menu").removeClass("logodivblur");
+            $('#ChangeCity1').removeClass("active-container");
+            $("#gb_wallet").removeClass("logodivblur");
+            $("#cart").removeClass("logodivblur");
+            $("#spanShoppingCartCount").removeClass("logodivblur");
+
+            $("#smallHeader").css("background-color", "#FFF");
+            $("#smallHeader").css("box-shadow", "inset 0px -5px 5px #cacaca");
+            $("#container").css("background-color", "#FFF");
+            $("#shoppingcart").css("display", "block");
+            $("#body-content").css("pointer-events", "visible");
+            $("#footer").css("pointer-events", "visible");
+            $("#logodiv").css("pointer-events", "visible");
+            $("#searchdiv").css("pointer-events", "visible");
+            $(".shotlistdiv").css("pointer-events", "visible");
+            $("#category_menu").css("pointer-events", "visible");
+            $("#gb_wallet").css("pointer-events", "visible");
+        }
+
+        function addLightBox() {
+            $("#body-content").addClass("body-contentblur");
+            $("#footer").addClass("body-contentblur");
+            $("#logodiv").addClass("logodivblur");
+            $("#searchdiv").addClass("logodivblur");
+            $(".shotlistdiv").addClass("logodivblur");
+            $("#category_menu").addClass("logodivblur");
+            $("#gb_wallet").addClass("logodivblur");
+            $("#cart").addClass("logodivblur");
+            $("#spanShoppingCartCount").addClass("logodivblur");
+
+            $("#smallHeader").css("background-color", "rgba(0, 0, 0, 0)");
+            $("#smallHeader").css("box-shadow", "none");
+            $("#container").css("background-color", "rgba(0, 0, 0, 0.80)");
+            $("#shoppingcart").css("display", "block");
+            $("#body-content").css("pointer-events", "none");
+            $("#footer").css("pointer-events", "none");
+            $("#logodiv").css("pointer-events", "none");
+            $("#searchdiv").css("pointer-events", "none");
+            $(".shotlistdiv").css("pointer-events", "none");
+            $("#category_menu").css("pointer-events", "none");
+            $("#gb_wallet").css("pointer-events", "none");
+        }
+
+        //- Toggle Lightbox for change city
+        $(document).click(function () {
+            removeLightBox();
+            flagToggle = false;
+        });
+
+        //added
+        $(document).change(function () {
+            removeLightBox();
+            flagToggle = false;
+        });
+
+        $(document).keyup(function (e) {
+            if (e.keyCode == 27) { // escape key maps to keycode `27`
+                // <DO YOUR WORK HERE>
+                removeLightBox();
+                flagToggle = false;
+            }
+        });
+        $("#customerdiv").click(function () {
+            //alert('12');
+            $("#newdropdown").toggle();
+            //alert($("#newdropdown").attr("style"));
+            //alert($("#newdropdown").css('display'));
+
+        });
+        $("#ChangeLocation").click(function () {
+            // alert("ChangeLocation");
+            flagToggle = !flagToggle;
+            //alert(flagToggle);
+            if (flagToggle) {
+                addLightBox();
+            }
+            else {
+                removeLightBox();
+            }
+        });
+
+
+    </script>
+    @*javascript for scroll page start*@
+    <script>
+        //$(window).scroll(function () {
+        //    if ($(window).scrolltop() > 100) {
+        //        $("#menulisting").css('display', 'none');
+        //    }
+        //    else {
+        //        $("#menulisting").css('display', 'block');
+        //    }
+        //});
+    </script>
+    @*javascript for scroll page End*@
+    <script>
+        // alert($("#spanShoppingCartCount").text());
+        //alert($("#spanShoppingCartCount").val());
+        /*$('#myAlert').css('display', 'block');
+        setTimeout(function () {
+            $("#myAlert").hide('blind', {}, 500)
+        }, 2000);*/
+
+        function showDialog(id) {
+            var ww = $(window).width();
+            var cw = (ww / 2);
+            var dialog = $("#" + id).width();
+            var dw = (dialog / 2);
+            var lp = (cw - dw);
+            $("#" + id).css('left', lp);
+            if ($("#" + id).css('display') == 'none') {
+                $("#" + id).css('display', 'block');
+            } else {
+                $("#" + id).css('display', 'none');
+            }
+            $(".closeDilog").click(function () {
+                $("#" + id).css('display', 'none');
+            });
+        }
+
+        $(function () {
+            //alert($("#CityID").val());
+            if ($("#CityID").val() != 0) {
+                $("#SpanChangeCity").text($("#CityID").val().split("$")[1]);
+                $("#divCity").css("display", "none");
+            }
+            else {
+                $("#dialog9").css("display", "block");
+            }
+        });
+
+
+        function OpenShortlist() {
+            $("#dialog6").css("display", "block");
+
+        }
+        function closeShortlist() {
+            $("#dialog6").css("display", "none");
+
+        }
+        function getCookie(name) {
+            var dc = document.cookie;
+            var prefix = name + "=";
+            var begin = dc.indexOf("; " + prefix);
+            if (begin == -1) {
+                begin = dc.indexOf(prefix);
+                if (begin != 0) return null;
+            } else {
+                begin += 2;
+            }
+            var end = document.cookie.indexOf(";", begin);
+            if (end == -1) {
+                end = dc.length;
+            }
+            return unescape(dc.substring(begin + prefix.length, end));
+        }
+
+        function setCookie(c_name, value, expiredays) {
+            document.cookie = c_name + "=" + value;
+        }
+
+        function LoadShortList() {
+            $('#ShortListDiv').load('@Url.Action("ShortList", "Shortlist")');
+            $.ajax({
+                type: "POST",
+                url: '@Url.Action("ShortList", "Shortlist")',
+                data: {},
+                contentType: "application/json; charset = utf-8",
+                dataType: "json",
+                success: function (response) {
+                    alert("Short list div reload");
+                },
+                failure: function (response) {
+
+                },
+                error: function (response) {
+
+                }
+            });
+        }
+
+    </script>
+
+
+
+    <!--Flying Image add to cart Jquery Added by Gopal-->
+
+
+</body>
+</html>

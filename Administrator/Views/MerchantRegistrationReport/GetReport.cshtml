@@ -1,0 +1,286 @@
+﻿@model IEnumerable<ModelLayer.Models.ViewModel.MerchantRegistrationReportViewModel>
+@*<copyright file="GetReport.cshtml" company="Ezeelo Consumer Services Pvt. Ltd.">
+     Copyright (c) Ezeelo Consumer Services Pvt. Ltd. All rights reserved.
+    </copyright>
+    <author>Harshada Raghorte</author>*@
+@{
+    ViewBag.Title = "GetReport";
+    Layout = null;
+}
+<link href="~/Content/css/Site.css" rel="stylesheet" />
+<script src="~/Content/js/bootstrap.js"></script>
+<script src="~/Content/js/jquery-1.9.1.min.js"></script>
+<script src="~/Content/js/jquery.dataTables.min.js"></script>
+<script src="~/Content/js/bootstrap.min.js"></script>
+<script type="text/javascript">
+    $(document).ready(function () {
+        $("#myTable").DataTable({
+            "bDestroy": true,
+            //"sPaginationType": "full_numbers",
+            "bJQueryUI": true,
+            "bInfo": false,
+            "scrollY": 700,
+            "scrollCollapse": true,
+            "bPaginate": false,
+            "iDisplayLength": 20,
+            "bAutoWidth": false,
+
+        });
+
+    });
+
+</script>
+
+
+<style>
+    .btn_Print {
+        margin-bottom: 7px;
+        margin-top: 7px;
+        margin-left: 5px;
+    }
+
+    .section {
+        position: relative;
+        border: 1px solid #000;
+        padding-top: 37px;
+        margin-left: 5px; background: #A4A5A7;
+    }
+
+        .section.positioned {
+            position: absolute;
+            top: 100px;
+            left: 100px;
+            width: 800px;
+            box-shadow: 0 0 15px #333;
+        }
+
+    .container_tbl {
+        overflow-y:scroll;
+        /*height: 200px;*/ height: 420px;
+    }
+
+    table {
+        border-spacing: 0;
+        width: 100%;
+    }
+
+    td + td {
+        border-left: 1px solid #eee;
+    }
+
+    td, th {
+        border-bottom: 1px solid #eee;
+        /*background: #ddd;*/
+        color: #000;
+        padding: 10px 25px;
+    }
+
+    #myTable thead tr th {
+        height: 0;
+        line-height: 0 !important;
+        padding-top: 0 !important;
+        padding-bottom: 0 !important;
+        color: transparent;
+        border: none;
+        white-space: nowrap;
+    }
+
+    th div {
+        position: absolute;
+        background: transparent;
+        color: #fff;
+        padding: 9px 10px;
+        top: 0;
+        margin-left: -8px;
+        line-height: normal;
+        /*border-left: 1px solid #800;*/ border-left: 1px solid #DDD;
+    }
+
+    th:first-child div {
+        border: none;
+    }
+</style>
+
+
+
+<div class="section">
+    <div class="table scrollable container_tbl">
+        <table class="table scroll" id="myTable">
+            <thead>
+                <tr class="header">
+
+                    <th>
+                        Vendor Registration No
+                        <div>Vendor Registration No</div>
+                    </th>
+                    <th>
+                        Vendor Name
+                        <div>Vendor Name</div>
+                    </th>
+                    <th>
+                        Organisation Name
+                        <div>Organisation Name</div>
+                    </th>
+                    <th>
+                        Mobile No.
+                        <div>Mobile No.</div>
+                    </th>
+                    <th>
+                        Address
+                        <div>Address</div>
+                    </th>
+                    <th>
+                        Email
+                        <div>Email</div>
+                    </th>
+                    <th>
+                        Registration Date
+                        <div>Registration Date</div>
+                    </th>
+
+
+                    <th></th>
+                </tr>
+            </thead>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.VendorRegistrationNo)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.VendorName)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.OrganisationName)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.MobileNo)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Address)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Email)
+                    </td>
+
+                    <td>
+                        @{string lDate = "";}
+                        @if (item.RegistrationDate != null)
+                        {
+                            lDate = item.RegistrationDate.ToString("dd/MM/yyyy");
+                        }
+                        @lDate
+                    </td>
+                </tr>
+            }
+
+        </table>
+
+    </div>
+</div>
+<div id="Pager">
+    <div class="wrap">
+        <div id="slider1" class="slider">
+            <ul>
+                @for (int c = 1; c <= @ViewBag.TotalPages; c++)
+                {
+                    <li><a class="page-number" href="javascript:void();">@c</a></li>
+
+                }
+
+            </ul>
+
+        </div>
+
+        <div class="controls" style="margin-top:-27px; background:#F9F9F9">
+            <a href="#noname" class="prev-slide"><<</a>
+            <a href="#noname" class="next-slide" style="float: right; margin-right: 299px;">>></a>
+        </div>
+    </div>
+    <span class="totalcount"><b>Showing @ViewBag.PageSize of @ViewBag.TotalCount enteries</b></span>
+</div>
+
+
+
+
+
+<div class="loader">
+    <img id="loader_img" src="~/Content/img/loader.gif" style="display: none" />
+</div>
+<script src="~/Content/js/jquery.1.8.3.min.js"></script>
+<script>
+    $(document).ready(function () {
+        $("#Pager .page-number").click(function (e) {
+            //alert($(this).html());
+            $('#loader_img').show();
+            //alert($(this).html());
+            var pagecount = 0;
+            var page = parseInt($(this).html());
+            if (page > 1) {
+                pagecount = 1;
+            }
+            var fromDate = "@ViewBag.fromDate";
+            var toDate = "@ViewBag.toDate";
+            var franchiseID = "@ViewBag.franchiseID";
+            var approvedStatus = "@ViewBag.approvedStatus"
+            var CategoryID = "@ViewBag.CategoryID"
+            //alert('CategoryID');
+            $.ajax({
+                url: '@Url.Action("GetReport", "MerchantRegistrationReport")',
+                data: { 'page': page, 'pagecount': pagecount, 'fromDate': fromDate, 'toDate': toDate, 'franchiseID': franchiseID, 'approvedStatus': approvedStatus, 'CategoryID': CategoryID },
+                type: "POST",
+                cache: false,
+                success: function (data) {
+                    //alert(data);
+                    $('#loader_img').hide();
+                    $('#divReport').empty();
+                    $('#divReport').append(data);
+
+                },
+                error: function (data) {
+
+                }
+            });
+        });
+    });
+
+</script>
+<script src="~/Content/js/lemmon-slider.js"></script>
+<script type="text/javascript">
+    $(document).ready(function () {
+        //alert('OK');
+        // slider 1
+        $('#slider1').lemmonSlider({
+            infinite: false
+        });
+
+    });
+
+</script>
+
+
+
+
+
+@*<script type="text/javascript">
+        // Change the selector if needed
+        var $table = $('table.scroll'),
+            $bodyCells = $table.find('table.scroll tbody tr:first').children(),
+            colWidth;
+
+        // Adjust the width of thead cells when window resizes
+        $(window).resize(function () {
+            // Get the tbody columns width array
+            colWidth = $bodyCells.map(function () {
+                return $(this).width();
+            }).get();
+
+            // Set the width of thead columns
+            $table.find('table.scroll thead tr').children().each(function (i, v) {
+                $(v).width(colWidth[i]);
+            });
+            //alert(colWidth = $bodyCells.map(function ());
+        }).resize(); // Trigger resize handler
+
+    </script>*@

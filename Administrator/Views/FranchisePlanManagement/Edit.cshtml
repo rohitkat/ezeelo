@@ -1,0 +1,133 @@
+﻿@model ModelLayer.Models.PlanBindCategory
+
+@{
+    ViewBag.Title = "Edit";
+}
+
+<h2>Edit</h2>
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+
+
+    <div class="span10" id="content">
+
+        <ul class="breadcrumb">
+            <li>
+                <i class="icon-home"></i>
+                @*<a href="index.cshtml">Home</a>*@
+                @Html.ActionLink("Home", "Index")
+                <i class="icon-angle-right"></i>
+            </li>
+            <li><a href="#">Tables</a></li>
+        </ul>
+
+        <div class="row-fluid">
+            <div class="box span6">
+                <div class="box-header">
+                    <h2><i class="halflings-icon user"></i><span class="break"></span>PlanBindCategory</h2>
+                    @Html.ValidationSummary(true)
+                    @Html.HiddenFor(model => model.ID)
+                </div>
+                <div class="box-content">
+                    @if (ViewBag.Messaage != null)
+                    {
+                        @Html.Label("Messaage", (string)ViewBag.Messaage, new { @class = "deleteMsg" })
+                    }
+                    else
+                    {
+                        @Html.Label("Messaage", "", new { @class = "deleteMsg" })
+                    }
+                    <div class="form-horizontal">
+                        @Html.ValidationSummary(true)
+                        @Html.HiddenFor(model => model.ID)
+
+                        <div class="control-group">
+                            @Html.LabelFor(model => model.PlanBindID, "PlanBindID", new { @class = "control-label col-md-2" })
+                            <div class="col-md-10 controls">
+                                @Html.Hidden("PlanID")
+                                @Html.Hidden("PlanBindID")
+                                @Html.DropDownList("MasterPlan", String.Empty)
+                            </div>
+                        </div>
+
+                        <div class="control-group">
+                            @Html.LabelFor(model => model.CategoryID, "CategoryID", new { @class = "control-label col-md-2" })
+                            <div class="col-md-10 controls">
+                                @Html.DropDownList("CategoryID", String.Empty)
+                            </div>
+                        </div>
+
+                        <div class="control-group">
+                            @Html.LabelFor(model => model.IsActive, new { @class = "control-label col-md-2" })
+                            <div class="col-md-10 controls">
+                                @Html.EditorFor(model => model.IsActive)
+                                @Html.ValidationMessageFor(model => model.IsActive)
+                            </div>
+                        </div>
+
+
+                        <div class="form-actions">
+                            <div class="col-md-offset-2 col-md-10">
+                                <input type="submit" value="Save" class="btn btn-success" />
+                                @Html.ActionLink("Back to List", "Index", string.Empty, new { @class = "btn " })
+                            </div>
+                            @if (ViewBag.lblError != null)
+                            {
+                                @Html.Label("lblError", (string)ViewBag.lblError)
+                            }
+                        </div>
+                    </div>
+                  
+                </div>
+            </div>
+        </div>
+    </div>
+
+    @*<div class="form-horizontal">
+            <h4>PlanBindCategory</h4>
+            <hr />
+            @Html.ValidationSummary(true)
+            @Html.HiddenFor(model => model.ID)
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.PlanBindID, "PlanBindID", new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    @Html.Hidden("PlanID")
+                    @Html.Hidden("PlanBindID")
+                    @Html.DropDownList("MasterPlan", String.Empty)
+                </div>
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.CategoryID, "CategoryID", new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    @Html.DropDownList("CategoryID", String.Empty)
+
+                </div>
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.IsActive, new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    @Html.EditorFor(model => model.IsActive)
+                    @Html.ValidationMessageFor(model => model.IsActive)
+                </div>
+            </div>
+            @if (ViewBag.Messaage != null)
+            {
+            <span style="color:red;font-weight:bold;">@ViewBag.Messaage</span>
+            }
+
+            <div class="form-group">
+                <div class="col-md-offset-2 col-md-10">
+                    <input type="submit" value="Save" class="btn btn-default" />
+                </div>
+            </div>
+        </div>*@
+}
+
+<div>
+    @Html.ActionLink("Back to List", "Index")
+</div>

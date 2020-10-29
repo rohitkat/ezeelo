@@ -1,0 +1,97 @@
+﻿@model IEnumerable<Franchise.Models.ViewModel.CustomerOrderSystemLogViewModel>
+
+@{
+    ViewBag.Title = "ViewSystemLog";
+    Layout = "~/Views/Shared/_Layout_franchise2.cshtml";
+}
+
+<div class="widget">
+    <div class="widget-header">
+        <i class="icon-list-alt"></i>
+        <h3>View Order Log</h3>
+    </div>
+    <div class="widget-content">
+        <div class="row-fluid" style="width: 100%;">
+            <div class="box span12">
+                <div class="box-content viewCont">
+                    <div style=" min-height: 300px; overflow-y: scroll; max-height: 500px; height: auto; width: 100%;">
+                        <table class="table table-bordered table-condensed table-hover table-responsive table-striped">
+                            <tr>
+                                <th>
+                                    Order Summary
+                                </th>
+                                <th>
+                                    Order Detail Summary
+                                </th>
+                            </tr>
+
+                            @foreach (var item in Model)
+                            {
+                                <tr>
+                                    <td>
+                                        @Html.HiddenFor(modelItem => item.COID)
+                                        <ul>
+                                            <li><b>Change By</b> : @Html.DisplayFor(modelItem => item.PersonName)</li>
+                                            <li><b>Order Amount</b> : @Html.DisplayFor(modelItem => item.OrderAmount)</li>
+                                            <li><b>Changed Date</b> : @Html.Raw(item.CreateDate.ToString("dd/MM/yyyy, hh:mm tt"))</li>
+                                            <li><b>Coupon Amount</b> : @Html.DisplayFor(modelItem => item.CoupenAmount)</li>
+                                            @*<li><b>Delivery Charge</b> : @Html.DisplayFor(modelItem => item.DeliveryCharge)</li>*@
+                                            <li><b>Payable Amount</b> : @Html.DisplayFor(modelItem => item.PayableAmount)</li>
+                                            <li><b>Shipping Address</b> : @Html.DisplayFor(modelItem => item.ShippingAddr)</li>
+                                            <li><b>Pincode</b> : @Html.DisplayFor(modelItem => item.Pincode)</li>
+                                            <li><b>Area</b> : @Html.DisplayFor(modelItem => item.Area)</li>                                            
+                                            <li><b>City</b> : @Html.DisplayFor(modelItem => item.City)</li>   
+                                            <li><b>Primary Mobile</b> : @Html.DisplayFor(modelItem => item.PrimaryMobile)</li>
+                                            <li><b>Secondary Mobile</b> : @Html.DisplayFor(modelItem => item.SecondaryMobile)</li>
+                                            @*@{
+                                                item.CoupenAmount = (item.CoupenAmount == null || item.CoupenAmount < 0) ? 0 : item.CoupenAmount;
+                                                decimal PayableAmt = item.OrderAmount + item.DeliveryCharge - (decimal)item.CoupenAmount;
+                                                            }
+                                                            <li><b>Payable Amount</b> : @Html.Raw(PayableAmt.ToString())</li>*@
+                                        </ul>
+
+                                    </td>
+                                    <td style="width:75%">
+                                        <div style="min-height: 200px; overflow-y: auto; max-height: 100px; height: auto; width: 100%; ">
+                                            <table style="width:100%">
+                                                <tr>
+                                                    <th>ShopOrder Code</th>
+                                                    <th>Product</th>
+                                                    <th>MRP</th>
+                                                    <th>SaleRate</th>
+                                                    <th>Qty</th>
+                                                    <th>Total Amount</th>
+                                                    <th>OrderStatus</th>
+                                                    @*<th>Change By</th>
+                                                        <th>Changed Date</th>*@
+                                                </tr>
+                                                @foreach (var itemDetail in item.CustomerOrderDetailSystemLogList)
+                                                {
+                                                    <tr style="border-bottom: 1px solid #dddddd; ">
+                                                        <td>@Html.DisplayFor(modelItemDetail => itemDetail.ReferenceShopOrderCode)</td>
+                                                        <td>@Html.DisplayFor(modelItemDetail => itemDetail.ProductName)</td>
+                                                        <td>@Html.DisplayFor(modelItemDetail => itemDetail.MRP)</td>
+                                                        <td>@Html.DisplayFor(modelItemDetail => itemDetail.SaleRate)</td>
+                                                        <td>@Html.DisplayFor(modelItemDetail => itemDetail.Qty)</td>
+                                                        <td>@Html.DisplayFor(modelItemDetail => itemDetail.TotalAmount)</td>
+                                                        <td>@Html.Raw(Franchise.Common.Common.GetDeliveryStatus(itemDetail.OrderStatus))</td>
+                                                        @*<td>@Html.DisplayFor(modelItemDetail => itemDetail.ChangeByPersonName)</td>
+                                                            <td>@Html.Raw(itemDetail.CreateDate.ToString("dd/MM/yyyy, hh:mm tt"))</td>*@
+                                                    </tr>
+                                                }
+
+                                            </table>
+                                        </div>
+
+                                    </td>
+                                </tr>
+                            }
+
+                        </table>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,265 @@
+﻿@model ModelLayer.Models.Area
+
+@{
+    ViewBag.Title = "Edit";
+}
+<br />
+<div class="row-fluid" style="margin-left: 15px;">
+    <div class="box span12">
+        <div class="box-header">
+            <h2><i class="icon-edit"></i><span class="break"></span>Edit Area</h2>
+        </div>
+        <div class="box-content">
+            <div class="form-horizontal">
+                @if (ViewBag.Messaage != null)
+                {
+                    @Html.Label("Messaage", (string)ViewBag.Messaage, new { @class = "deleteMsg" })
+                }
+                else
+                {
+                    @Html.Label("Messaage", "", new { @class = "deleteMsg" })
+                }
+                @using (Html.BeginForm())
+                {
+                    @Html.AntiForgeryToken()
+                    @Html.ValidationSummary(true)
+                    @Html.HiddenFor(model => model.ID)
+                    <fieldset>
+                        <div class="control-group">
+                            <label class="control-label" for="focusedInput">Name</label>
+                            <div class="controls">
+                                @*<input class="input-xlarge focused" id="focusedInput" type="text" value="This is focused…">*@
+                                @Html.EditorFor(model => model.Name)
+                                @Html.ValidationMessageFor(model => model.Name)
+                            </div>
+                        </div>
+                        <div class="control-group">
+                            <label class="control-label" for="focusedInput">State</label>
+                            <div class="controls">
+                                @Html.DropDownList("State", "---State---")
+                            </div>
+                        </div>
+                        <div class="control-group">
+                            <label class="control-label" for="focusedInput">District</label>
+                            <div class="controls">
+                                @Html.DropDownList("District", "---District----")
+                            </div>
+                        </div>
+                        <div class="control-group">
+                            <label class="control-label" for="focusedInput">City</label>
+                            <div class="controls">
+                                @Html.DropDownList("City", "---City----")
+                            </div>
+                        </div>
+                        <div class="control-group">
+                            <label class="control-label" for="focusedInput">PinCode</label>
+                            <div class="controls">
+                                @Html.DropDownList("PincodeID", "Pincode")
+                                @Html.ValidationMessageFor(model => model.PincodeID)
+                            </div>
+                        </div>
+                        <div class="control-group">
+                            <label class="control-label" for="optionsCheckbox2">Is Active</label>
+                            <div class="controls">
+                                <label class="checkbox">
+                                    @Html.EditorFor(model => model.IsActive)
+                                    @Html.ValidationMessageFor(model => model.IsActive)
+                                </label>
+                            </div>
+                        </div>
+
+                        <div class="form-actions">
+                            <input type="submit" value="Save" class="btn btn-success" />
+                            @Html.ActionLink("Back to List", "Index", null, new { @class = "btn" })
+                        </div>
+                    </fieldset>
+
+                }
+            </div>
+        </div>
+    </div><!--/span-->
+
+</div>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}
+
+
+
+
+@*@using (Html.BeginForm())
+    {
+        @Html.AntiForgeryToken()
+
+        <div class="form-horizontal">
+            <h4>Area</h4>
+            <hr />
+            @Html.ValidationSummary(true)
+            @Html.HiddenFor(model => model.ID)
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.Name, new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    @Html.EditorFor(model => model.Name)
+                    @Html.ValidationMessageFor(model => model.Name)
+                </div>
+            </div>*@
+
+@*<div class="form-group">
+        @Html.LabelFor(model => model.PincodeID, "PincodeID", new { @class = "control-label col-md-2" })
+        <div class="col-md-10">
+            @Html.DropDownList("PincodeID", String.Empty)
+            @Html.ValidationMessageFor(model => model.PincodeID)
+        </div>
+    </div>*@
+
+@*<div class="form-group">
+                State
+                <div class="col-md-10">
+                    @Html.DropDownList("State", "---State---")
+                </div>
+            </div>
+
+            <div class="form-group">
+                District
+                <div class="col-md-10">
+                    @Html.DropDownList("District", "---District----")
+
+                </div>
+            </div>
+
+            <div class="form-group">
+                City
+                <div class="col-md-10">
+                    @Html.DropDownList("City", "---City----")
+
+                </div>
+            </div>
+
+
+            <div class="form-group">
+                Pincode
+                <div class="col-md-10">
+                    @Html.DropDownList("PincodeID", "Pincode")
+                    @Html.ValidationMessageFor(model => model.PincodeID)
+                </div>
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.IsActive, new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    @Html.EditorFor(model => model.IsActive)
+                    @Html.ValidationMessageFor(model => model.IsActive)
+                </div>
+            </div>
+
+
+
+            <div class="form-group">
+                <div class="col-md-offset-2 col-md-10">
+                    <input type="submit" value="Save" class="btn btn-default" />
+                </div>
+            </div>
+        </div>
+    }
+
+    <div>
+        @Html.ActionLink("Back to List", "Index")
+    </div>*@
+
+
+
+<script src="~/Scripts/jquery-1.10.2.min.js"></script>
+<script>
+    $(function () {
+        $('#State').change(function (e) {
+            var selectedVal = $("#State option:selected").val();
+            if (selectedVal > 0) {
+                //alert(selectedVal);
+                $.ajax({
+                    type: "POST",
+                    url: "/Area/getDistrict",
+                    data: "{ StateID: '" + selectedVal + "'}",
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    async: true,
+                    cache: false,
+                    success: function (msg) {
+                        $('#PincodeID').empty();
+                        $('#City').empty();
+                        $('#District').empty();
+                        $('#District').append('<option value=0>Select District</option>');
+                        $.each(msg, function (index, item) {
+                            $('#District').append('<option value=' + item.value + '>' + item.text + '</option>');
+                        });
+                    },
+                    error: function (x, e) {
+                        alert("The call to the server side failed. " + x.responseText);
+                    }
+                });
+            }
+        });
+
+
+
+        $('#District').change(function (e) {
+            var selectedVal = $("#District option:selected").val();
+            if (selectedVal > 0) {
+                //alert(selectedVal);
+                $.ajax({
+                    type: "POST",
+                    url: "/Area/getCity",
+                    data: "{ DistrictID: '" + selectedVal + "'}",
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    async: true,
+                    cache: false,
+                    success: function (msg) {
+                        $('#PincodeID').empty();
+                        $('#City').empty();
+                        $('#City').append('<option value=0>Select City</option>');
+                        $.each(msg, function (index, item) {
+                            $('#City').append('<option value=' + item.value + '>' + item.text + '</option>');
+                        });
+                    },
+                    error: function (x, e) {
+                        alert("The call to the server side failed. " + x.responseText);
+                    }
+                });
+            }
+        });
+
+
+
+        $('#City').change(function (e) {
+            var selectedVal = $("#City option:selected").val();
+            if (selectedVal > 0) {
+                //alert(selectedVal);
+                $.ajax({
+                    type: "POST",
+                    url: "/Area/getPincode",
+                    data: "{ CityID: '" + selectedVal + "'}",
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    async: true,
+                    cache: false,
+                    success: function (msg) {
+
+                        $('#PincodeID').empty();
+                        $('#PincodeID').append('<option value=0>Select Pincode</option>');
+                        $.each(msg, function (index, item) {
+                            $('#PincodeID').append('<option value=' + item.value + '>' + item.text + '</option>');
+                        });
+                    },
+                    error: function (x, e) {
+                        alert("The call to the server side failed. " + x.responseText);
+                    }
+                });
+            }
+        });
+
+    });
+
+
+</script>

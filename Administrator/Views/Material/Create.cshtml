@@ -1,0 +1,65 @@
+﻿@model ModelLayer.Models.Material
+
+@{
+    ViewBag.Title = "Create";
+}
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+    <div class="span10" id="content">
+        <div class="row-fluid">
+            <div class="box span12">
+                <div class="box-header">
+                    <h2><i class="icon-edit"></i><span class="break"></span>@Html.ActionLink("Create New", "Create")</h2>
+
+                </div>
+                <div class="box-content">
+                    <div class="form-horizontal">
+                        @if (ViewBag.Messaage != null)
+                        {
+                            @Html.Label("Messaage", (string)ViewBag.Messaage, new { @class = "deleteMsg" })
+                        }
+                        else
+                        {
+                            @Html.Label("Messaage", "", new { @class = "deleteMsg" })
+                        }
+                        <hr />
+
+
+                        <div class="control-group">
+                            @Html.LabelFor(model => model.Name, new { @class = "control-label span2" })
+                            <div class="controls">
+                                @Html.EditorFor(model => model.Name)
+                                @Html.ValidationMessageFor(model => model.Name)
+                            </div>
+                        </div>
+
+                        <div class="control-group">
+                            @Html.LabelFor(model => model.IsActive, new { @class = "control-label span2" })
+                            <div class="controls">
+                                @Html.EditorFor(model => model.IsActive)
+                                @Html.ValidationMessageFor(model => model.IsActive)
+                            </div>
+                        </div>
+                        <div class="form-group">
+
+                            @if (ViewBag.lblError != null)
+                            {
+                                @Html.Label("lblError", (string)ViewBag.lblError)
+                            }
+                        </div>
+                    </div>
+                    <div class="form-actions" style="padding-left:180px;">
+                        <input type="submit" value="Create" class="btn btn-success" />
+                        @Html.ActionLink("Back to List", "Index", null, new { @class = "btn" })
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+}
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}

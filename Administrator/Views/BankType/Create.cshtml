@@ -1,0 +1,105 @@
+﻿@model ModelLayer.Models.BankAccountType
+
+@{
+    ViewBag.Title = "Create";
+}
+<br />
+<div class="row-fluid" style="margin-left:15px;">
+    <div class="box span12">
+        <div class="box-header">
+            <h2><i class="icon-edit"></i><span class="break"></span>Create BankType</h2>
+        </div>
+        <div class="box-content">
+            @if (ViewBag.Messaage != null)
+            {
+                @Html.Label("Messaage", (string)ViewBag.Messaage, new { @class = "deleteMsg" })
+            }
+            else
+            {
+                @Html.Label("Messaage", "", new { @class = "deleteMsg" })
+            }
+            <div class="form-horizontal">
+                @using (Html.BeginForm())
+                {
+                    @Html.AntiForgeryToken()
+                    @Html.ValidationSummary(true)
+                    <fieldset>
+                        <div class="control-group">
+                            <label class="control-label" for="focusedInput">Name</label>
+                            <div class="controls">
+                                @*<input class="input-xlarge focused" id="focusedInput" type="text" value="This is focused…">*@
+                                @Html.EditorFor(model => model.Name)
+                                @Html.ValidationMessageFor(model => model.Name)
+                            </div>
+                        </div>
+
+                        <div class="control-group">
+                            <label class="control-label" for="optionsCheckbox2">Is Active</label>
+                            <div class="controls">
+                                <label class="checkbox">
+                                    @Html.EditorFor(model => model.IsActive)
+                                    @Html.ValidationMessageFor(model => model.IsActive)
+                                </label>
+                            </div>
+                        </div>
+
+                        <div class="form-actions">
+                            <input type="submit" value="Create" class="btn btn-success" />
+                            @Html.ActionLink("Back to List", "Index", null, new { @class = "btn" })
+                            @if (ViewBag.Message != null)
+                            {
+                                @Html.Label("lblError", (string)ViewBag.Message)
+                            }
+                        </div>
+                    </fieldset>
+                }
+            </div>
+
+        </div>
+    </div><!--/span-->
+
+</div>
+
+
+@*@using (Html.BeginForm()) 
+{
+    @Html.AntiForgeryToken()
+    
+    <div class="form-horizontal">
+        <h4>BankAccountType</h4>
+        <hr />
+        @Html.ValidationSummary(true)
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Name, new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.Name)
+                @Html.ValidationMessageFor(model => model.Name)
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.IsActive, new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.IsActive)
+                @Html.ValidationMessageFor(model => model.IsActive)
+            </div>
+        </div>
+
+       
+
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="submit" value="Create" class="btn btn-default" />
+            </div>
+        </div>
+    </div>
+}
+
+<div>
+    @Html.ActionLink("Back to List", "Index")
+</div>*@
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}

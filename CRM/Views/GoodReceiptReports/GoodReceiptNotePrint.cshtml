@@ -1,0 +1,103 @@
+﻿@model ModelLayer.Models.ViewModel.PurchaseOrderViewModelList
+@{
+    Layout = null;
+}
+
+<link href="~/Content/css/bootstrap.min.css" rel="stylesheet" />
+
+<div>
+    <div style="position:fixed; text-align:right; padding-left:20px">
+        <input class="btn btn-info" type="button" value="Print" id="btnPrint" />
+    </div>
+    <div class="NameDescription">
+        <div id="divToPrint">
+            <table id="headerTable" class="ClaimAmtList" border="1" cellpadding="2" cellspacing="0">
+                <thead>
+                    <tr><td style="text-align:center" colspan="12"><h2>GOOD RECEIPT REPORT (@Convert.ToDateTime(@Model.FromDate).ToString("dd MMM yyyy") To @Convert.ToDateTime(@Model.ToDate).ToString("dd MMM yyyy"))</h2></td></tr>
+                    <tr>
+                        <th style="min-width: 50px; max-width: 50px; word-break: break-all">Sr.No.</th>
+                        <th style="min-width: 100px; max-width: 100px; word-break: break-all">
+                            PO Code
+                        </th>
+                        <th>
+                            Create Date
+                        </th>
+                        <th style="min-width: 120px; max-width: 120px; word-break: break-all">
+                            Supplier
+                        </th>
+                        <th style="min-width: 150px; max-width: 150px; word-break: break-all">Item</th>
+                        <th>Qty Ordered</th>
+                        <th>Received Date</th>
+                        <th>Invoice Code</th>
+                        <th>MRP</th>
+                        <th>Unit Price</th>
+                        <th>Qty Received</th>
+                        <th>
+                            Amount
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @{
+                        var i = 1;
+                    }
+                    @foreach (var item in Model.lPurchaseOrderViewModel)
+                    {
+                        <tr>
+                            <td style="text-align: center; min-width: 50px; max-width: 50px; word-break: break-all">
+                                @i
+                                @{
+                        i = i + 1;
+                                }
+                            </td>
+                            <td style="min-width: 100px; max-width: 100px; word-break: break-all;">
+                                @*@(item.PurchaseOrderCode == null ? "" : item.PurchaseOrderCode)*@
+                                <a id="Print" style="color: #3C73DC; font-weight: bold; " href="@Url.Action("PrintOrder1", "PurchaseOrders", new { id = @item.PurchaseOrderID })" target="_blank">@(item == null ? "" : item.PurchaseOrderCode)</a>
+                            </td>
+                            <td>
+                                @item.OrderDate.ToString("dd MMM yyyy")
+                            </td>
+
+                            <td style="min-width: 120px; max-width: 120px; text-align: left; word-break: break-all">
+                                @(item.SupplierName == null ? "None" : item.SupplierName)
+                            </td>
+
+                            <td style="min-width: 150px; max-width: 150px; text-align: left">@item.ItemName</td>
+                            <td style="text-align:center">@item.OrderedQuantity</td>
+
+                            <td>
+                                @item.ReceivedDate.ToString("dd MMM yyyy")
+                            </td>
+                            <td style="color: #DB4437; font-weight: bold; word-break: break-all">
+                                <a id="Print" style="color: #DB4437; font-weight: bold" href="@Url.Action("PrintGR", "Invoices", new { InvoiceID = @item.InvoiceID })" target="_blank">@item.InvoiceCode</a>
+                            </td>
+                            <td style="text-align:right">@item.MRP</td>
+                            <td style="text-align:right">@item.UnitPrice</td>
+                            <td style="text-align:center">@item.ReceivedQuantity</td>
+                            <td style="text-align:right"> @item.Amount</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+</div>
+
+<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
+<script type="text/javascript">
+    $("#btnPrint").live("click", function () {
+        var divContents = $("#divToPrint").html();
+        var printWindow = window.open('', '', 'height=400,width=800');
+        printWindow.document.write('<html><head><title>GOOD RECEIPT REPORT</title>');
+        printWindow.document.write('<link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" />');
+        printWindow.document.write('</head><body>');
+        printWindow.document.write(divContents);
+        printWindow.document.write('</body></html>');
+        printWindow.document.close();
+        printWindow.print();
+    });
+
+</script>
+
+

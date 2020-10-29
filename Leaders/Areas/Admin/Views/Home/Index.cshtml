@@ -1,0 +1,126 @@
+﻿@{
+                /**/
+
+                ViewBag.Title = "Index";
+                Layout = "~/Views/Shared/_LeadersLayout.cshtml";
+}
+<script>
+    if ('@TempData["Result"]' != '') {
+        alert('@TempData["Result"]');
+    }
+</script>
+<div class="col-sm-6 col-lg-3">
+    <div class="card text-white bg-flat-color-1">
+        <div class="card-body pb-0">
+            <div class="dropdown float-right">
+                <button class="btn bg-transparent dropdown-toggle theme-toggle text-light" type="button" id="dropdownMenuButton" data-toggle="dropdown">
+                    <i class="fa fa-cog"></i>
+                </button>
+                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                    <div class="dropdown-menu-content">
+                        <a class="dropdown-item" href="#">Action</a>
+                        <a class="dropdown-item" href="#">Another action</a>
+                        <a class="dropdown-item" href="#">Something else here</a>
+                    </div>
+                </div>
+            </div>
+            <h4 class="mb-0">
+                <span class="count">@Session["Count"]</span>
+            </h4>
+            <a href="@Url.Action("Index", "MLMUser")"<p class="text-light">Total Number of <b>Leaders</b></p></a>
+            <div class="chart-wrapper px-0" style="height:20px;" height="50">
+                <canvas id="widgetChart1"></canvas>
+            </div>
+        </div>
+    </div>
+</div>
+<!--/.col-->
+@if (Session["RoleName"].ToString() != "leaders")
+{
+    <div class="col-sm-6 col-lg-3">
+        <div class="card text-white bg-flat-color-4">
+            <div class="card-body pb-1">
+                <div class="dropdown float-right">
+                    <button class="btn bg-transparent dropdown-toggle theme-toggle text-light" type="button" id="dropdownMenuButton" data-toggle="dropdown">
+                        <i class="fa fa-cog"></i>
+                    </button>
+                    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+
+                    </div>
+                </div>
+                <h4 class="mb-0">
+                    <span class="count">@Session["EzeeloOrderCount"]</span>
+                </h4>
+                <a href="@Url.Action("GetList", "EzeeloUsers")"><p class="text-light">Total no. of <b>Ezeelo Customer Order</b></p></a>
+                <div class="chart-wrapper px-3" style="height:20px;" height="70">
+                    <canvas id="widgetChart4"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+<!--/.col-->
+<div class="col-sm-6 col-lg-3">
+    <div class="card text-white bg-flat-color-3">
+        <div class="card-body pb-1">
+            <div class="dropdown float-right">
+                <button class="btn bg-transparent dropdown-toggle theme-toggle text-light" type="button" id="dropdownMenuButton" data-toggle="dropdown">
+                    <i class="fa fa-cog"></i>
+                </button>
+                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                    <div class="dropdown-menu-content">
+                        <a class="dropdown-item" href="#">Action</a>
+                        <a class="dropdown-item" href="#">Another action</a>
+                        <a class="dropdown-item" href="#">Something else here</a>
+                    </div>
+                </div>
+            </div>
+            <h4 class="mb-0">
+                <span class="count">@Session["LeaderOrderCount"]</span>
+            </h4>
+            <a href="@Url.Action("Select", "LeadersCustomerOrder", new { area="Admin"})"<p class="text-light">Total no. of <b>Leaders Order</b></p></a>
+        </div>
+        <div class="chart-wrapper px-0" style="height:20px;" height="70">
+            <canvas id="widgetChart3"></canvas>
+        </div>
+    </div>
+</div>
+<!--/.col-->
+@if (Session["RoleName"].ToString() != "leaders")
+{
+    <div class="col-sm-6 col-lg-3">
+        <div class="card text-white bg-flat-color-4">
+            <div class="card-body pb-0">
+                <div class="dropdown float-right">
+                    <button class="btn bg-transparent dropdown-toggle theme-toggle text-light" type="button" id="dropdownMenuButton" data-toggle="dropdown">
+                        <i class="fa fa-cog"></i>
+                    </button>
+                    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+
+                    </div>
+                </div>
+                <h4 class="mb-0">
+                    <span class="count">@Session["EzeeloUsersCount"]</span>
+                </h4>
+                <a href="@Url.Action("GetList", "EzeeloUsers")"><p class="text-light">Total No. Ezeelo Users</p></a>
+                <div class="chart-wrapper px-3" style="height:20px;" height="70">
+                    <canvas id="widgetChart4"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+@if (Session["Username"] != null)
+{
+
+    <div class="col-sm-12">
+        <div class="alert  alert-success alert-dismissible fade show" role="alert">
+
+            <span class="badge badge-pill badge-success">Success</span> Welcome @Session["Username"]!!.
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+    </div>
+}
+

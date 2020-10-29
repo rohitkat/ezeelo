@@ -1,0 +1,136 @@
+﻿@model ModelLayer.Models.CoupenList
+
+@{
+    ViewBag.Title = "Create";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<div id="content" class="span10">
+    <ul class="breadcrumb">
+        <li>
+            <a href="#">Create</a>
+        </li>
+    </ul>
+    <div class="row-fluid ">
+        <div class="box span12">
+            <div class="box-header">
+                <h2><i class="icon-edit"></i><span class="break"></span>Create Coupen List</h2>
+            </div>
+            <div class="box-content">
+                <div class="form-horizontal">
+                    @using (Html.BeginForm())
+                    {
+                        @Html.AntiForgeryToken()
+                          <span id="errorMsg" style="color:red"></span> @*////added*@
+                        @Html.ValidationSummary(true)
+                        <span style="color:red;"> @ViewBag.Message</span>
+
+                        <div class="control-group">
+                            @Html.LabelFor(model => model.SchemeTypeID, "SchemeTypeID", new { @class = "control-label" })
+                            <div class="controls">
+                                @Html.DropDownList("SchemeTypeID", null, String.Empty, new { })
+                                @Html.ValidationMessageFor(model => model.SchemeTypeID)
+                            </div>
+                        </div>
+
+                        <div class="control-group">
+                            @Html.LabelFor(model => model.CoupenCode, new { @class = "control-label " })
+                            <div class="controls">
+                                @Html.TextBoxFor(model => model.CoupenCode, new { required = "required" })
+                                @Html.ValidationMessageFor(model => model.CoupenCode)
+                            </div>
+                        </div>
+
+                        <div class="control-group">
+                            @Html.LabelFor(model => model.CoupenQty, new { @class = "control-label " })
+                            <div class="controls">
+                                @Html.TextBoxFor(model => model.CoupenQty, new { required = "required" })
+                                @Html.ValidationMessageFor(model => model.CoupenQty)
+                            </div>
+                        </div>
+
+                        <div class="control-group">
+                            @Html.LabelFor(model => model.UsedQty, new { @class = "control-label " })
+                            <div class="controls">
+                                @Html.TextBoxFor(model => model.UsedQty, new { required = "required" })
+                                @Html.ValidationMessageFor(model => model.UsedQty)
+                            </div>
+                        </div>
+
+                        <div class="control-group">
+                            @Html.LabelFor(model => model.CityID, "CityID", new { @class = "control-label " })
+                            <div class="controls">
+                                @Html.DropDownList("CityID", null, String.Empty, new { required = "required" })
+                                @Html.ValidationMessageFor(model => model.CityID)
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.FranchiseID, "Franchise", new { @class = "control-label col-md-2" }) @*////added*@
+                            <div class="col-md-10">
+                                @Html.DropDownList("FranchiseID", "Select Franchise")
+                                @*@Html.ValidationMessageFor(model => model.FranchiseID)*@
+                                @Html.ValidationMessageFor(model => model.Franchise.ContactPerson)
+                            </div>
+                        </div>
+                        <div class="control-group">
+                            @Html.LabelFor(model => model.IsActive, new { @class = "control-label " })
+                            <div class="controls">
+                                @Html.EditorFor(model => model.IsActive)
+                                @Html.ValidationMessageFor(model => model.IsActive)
+                            </div>
+                        </div>
+                        <div class="form-actions" style="padding-left: 25px;">
+                            <input type="submit" value="Create" class="btn btn-primary" id="btnCreate" />
+                            @Html.ActionLink("Back to List", "Index", null, new { @class = "btn btn-default" })
+                        </div>
+
+                    }
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+</div>
+<script src="~/Scripts/jquery-1.10.2.min.js"></script> @*////added*@
+<script type="text/javascript">
+
+    $(document).ready(function () { ////added
+
+
+        $("#btnCreate").click(function () {
+            if ($("#FranchiseID").val() == 0) { ////added
+                $("#errorMsg").html("Please select Franchise.");
+                return false;
+            }
+        });
+
+        $("#CityID").change(function () {
+            var selectedVal = $("#CityID option:selected").val();
+            if (selectedVal > 0) {
+
+                $.ajax({
+                    type: "POST",
+                    url: "/CoupenList/getFranchise",
+                    data: "{ CityID: '" + selectedVal + "'}",
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    async: true,
+                    cache: false,
+                    success: function (msg) {
+
+                        $('#FranchiseID').empty();
+                        $('#FranchiseID').append('<option value=0>Select FranchiseID</option>');
+                        $.each(msg, function (index, item) {
+                            $('#FranchiseID').append('<option value=' + item.value + '>' + item.text + '</option>');
+                        });
+                    },
+                    error: function (x, e) {
+                        //alert("The call to the server side failed. " + x.responseText);
+                    }
+                });
+
+            }
+        });
+    });
+
+</script>

@@ -1,0 +1,53 @@
+﻿
+@{
+    ViewBag.Title = "PrintQrCode";
+}
+<script src="~/plugins/Custom.js"></script>
+<script>
+    $(document).ready(function () {
+        $("#Print").click(function () {
+            var divToPrint = document.getElementById('printQrCode');
+            var newWin = window.open('', 'Print-Window');
+            newWin.document.open();
+            newWin.document.write('<html><body onload="window.print()">' + divToPrint.innerHTML + '</body></html>');
+            newWin.document.close();
+            setTimeout(function () { newWin.close(); }, 10);
+        });
+    });
+</script>
+<section class="content">
+    <div class="row">
+        <!-- left column -->
+        <div class="col-md-5">
+            <!-- general form elements -->
+            <div class="box " id="printQrCode">
+                <center>
+                    <div style="border-color:#3c8dbc;border:3px solid #3c8dbc;border-radius:3px; padding-top:50px;width:300px;height:500px; ">
+                        <center>
+                            <span style="font-size:50px;color:#367fa9">Ezeelo</span><br />
+                            <div style="line-height:0px">
+                                <span style="font-size:20px;">Market Partner</span><br />
+                            </div>
+                            <br />
+                            <span style="font-size:20px;font-weight:500;text-transform:uppercase">@ViewBag.shopName</span>
+                            <br />
+                            <br />
+                            @if (ViewBag.QRCodeImage != null)
+                            {
+                                <img src="@ViewBag.QRCodeImage" alt="" style="height:250px;width:250px;" />
+                                <br /><span> To Pay, Scan Qr Code in Ezeelo App </span> <br />
+                            }
+                            <br />
+                            <br />
+                        </center>
+                    </div><!-- /.box -->
+                </center>
+            </div>
+            <div>
+                <div class="form-group has-feedback">
+                    <button id="Print" type="button" class="form-control btn btn-primary btn-block btn-flat">Print</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

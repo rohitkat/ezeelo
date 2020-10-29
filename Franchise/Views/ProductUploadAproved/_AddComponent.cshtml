@@ -1,0 +1,726 @@
+﻿@model IEnumerable<ModelLayer.Models.ViewModel.ProductComponentViewModel>
+
+@{
+    ViewBag.Title = "eZeelo:AddComponent";
+    Layout = null;
+}
+
+
+
+<script src="~/Scripts/jquery-1.10.2.min.js"></script>
+<style>
+    .webGrid {
+        margin: 4px;
+        border-collapse: collapse;
+        width: 500px;
+        background-color: #FCFCFC;
+    }
+
+    .header {
+        background-color: #C1D4E6;
+        font-weight: bold;
+        color: #FFF;
+    }
+
+    .webGrid th, .webGrid td {
+        border: 1px solid #C0C0C0;
+        padding: 5px;
+    }
+
+    .alt {
+        background-color: #E4E9F5;
+        color: #000;
+    }
+
+    .gridHead a:hover {
+        text-decoration: underline;
+    }
+
+    .description {
+        width: auto;
+    }
+
+    .select {
+        background-color: #389DF5;
+    }
+
+    #dvList {
+        float: left;
+        width: 20%;
+    }
+
+    .SaveComponent {
+        background: url(../Content/img/save-img.png) no-repeat 10% !important;
+        border: none !important;
+        width: 21px !important;
+        height: 35px !important;
+    }
+
+    .Remove {
+        background: url(../Content/img/remove-img.png) no-repeat 10% !important;
+        border: none !important;
+        width: 21px !important;
+        height: 35px !important;
+    }
+
+    #tblComponentDetails thead tobdy tr td {
+    }
+
+    .comp-tble table thead {
+        width: 858px;
+    }
+
+    .frstTD {
+        width: 4px;
+    }
+
+    .blankTH {
+        width: 6px !important;
+    }
+
+    .compName {
+        width: 130px !important;
+    }
+
+    .perUnit {
+        width: 52px !important;
+    }
+
+    .priceUnit {
+        width: 49px !important;
+    }
+
+    .comWet {
+        width: 70px !important;
+    }
+
+    .compUnt {
+        width: 30px !important;
+    }
+
+    .depComp {
+        width: 78px !important;
+    }
+
+    .actionhed {
+        width: 175px !important;
+    }
+
+    .Ttl {
+        width: 63px !important;
+    }
+
+    .scndTD {
+        width: 132px;
+    }
+
+    .thrdTD {
+        width: 51px;
+    }
+
+    .frthTD {
+        width: 49px;
+    }
+
+    .fithTD {
+        width: 70px;
+    }
+
+    .sixthTD {
+        width: 60px;
+    }
+
+    .sevenTD {
+        width: 78px;
+    }
+
+    .eightTD {
+        width: 63px;
+    }
+
+    .dvTable {
+        width: 74%;
+    }
+</style>
+
+<div>
+    <div id="dvList">
+        <select class="CmpList" id='listItemComponent' size="3" style="height:250px;"></select>
+    </div>
+    <div id="dvBtn" style="float: left; vertical-align:middle; margin-top:155px; width:2%;">
+        <table>
+            <tr>
+                <td align="left">
+                    <input type="button" id="btnMoveRight" value=">>" onclick="MoveComponentRight()" class="btnrt" style="" />
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <span class="Message" style="color:Green"></span>
+                </td>
+            </tr>
+        </table>
+    </div>
+    <div class="comp-tble">
+        <div id="dvTable" class="dvTable">
+            <table id="tblComponentDetails" class=" table table-striped table-bordered bootstrap-datatable">
+                <thead>
+                    <tr>
+                        <th class="blankTH"></th>
+                        <th class="compName">Component Name</th>
+                        <th class="perUnit">Per Unit Price(Rs)</th>
+                        <th class="priceUnit">Per Unit Price(%)</th>
+                        <th class="comWet">Component Weight</th>
+                        <th class="compUnt">Component Unit</th>
+                        <th class="depComp">Dep Comp Name</th>
+                        <th class="Ttl">Total</th>
+                        <th class="actionhed">Action</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody style="min-height:200px;">
+                    <tr>
+                        <td style="display:none;"></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="ttl">
+        <label>Total:<span class="ComponentTotal"></span></label>
+        <label id="lblErrorMsg" style="color:red; margin-top:32px;"></label>
+    </div>
+
+</div>
+
+
+<script>
+
+    $(document).ready(function () {
+        BindComponent();
+        setTimeout("ShowTime()", 10000);
+        BindSavedComponent();
+
+    });
+
+    //Method to bind Components to List
+    function BindComponent() {
+        $('[id*=listItemComponent]').find("option").remove();
+        $.ajax({
+            url: '@Url.Action("BindComponent", "ProductUploadAproved")',
+            data: {},
+            type: "Post",
+            cache: false,
+            success: function (data) {
+
+                $.each(data, function (index, item) {
+                    $("[id*=listItemComponent]").append("<option value='" + item.ComponentID + "'>" + item.ComponentName + "</option>");
+                });
+
+            },
+            error: function (data) {
+
+            }
+        });
+
+    }
+    //function to bind saved component for particular varient
+    function BindSavedComponent() {
+        alert('This will load components for selected product.It may take some time...');
+        var ShopStockID = "@ViewBag.ShopStockID";
+        var ProductVarientID = "@ViewBag.ProductVarientID";
+        //alert(ProductVarientID);
+        $.ajax({
+            url: '@Url.Action("BindSavedComponent", "ProductUploadAproved")',
+            data: { 'ShopStockID': ShopStockID, 'ProductVarientID': ProductVarientID },
+            type: "Post",
+            cache: false,
+            success: function (data) {
+                $.each(data, function (index, item) {
+                    var Total = 0;
+                    if (item.DependentOnComponentID > 0) {
+                        var PerUnitPriceTotal = $("[id*=" + item.DependentOnComponentID + "]").closest('tr').find('.CmpTotalPrice').html();
+                        var PerUnitPercent = item.PerUnitRateInPer;
+                        var PerUnitPrice = item.PerUnitRateInRs;
+                        if (PerUnitPercent > 0) {
+                            Total = parseFloat(PerUnitPriceTotal * PerUnitPercent / 100).toFixed(2);
+                        }
+                        else if (PerUnitPrice > 0) {
+                            var Weight = $("[id*=" + item.DependentOnComponentID + "]").closest('tr').find('.cmpWeight').val();
+                            Total = parseFloat(PerUnitPrice * Weight).toFixed(2);
+                        }
+                        //alert(Total);
+                    }
+                    else {
+                        var PerUnitRateInRs = item.PerUnitRateInRs;
+                        var ComponentWeight = item.ComponentWeight;
+                        Total = parseFloat(PerUnitRateInRs * ComponentWeight).toFixed(2); //calculate Total of each row----Perunitprice*weight
+                    }
+                    $('#listItemComponent option[value="' + item.ComponentID + '"]').remove();
+                    $("#tblComponentDetails").append("<tr>" +
+                          "<td class='frstTD'><input type='hidden' id='hdnComponentID' value='" + item.ComponentID + "'/></td>" +
+                            "<td class='scndTD'><span class='CmpComponentName'>" + item.ComponentName + "</td>" +
+                             "<td class='thrdTD'><span class='CmpUnitPrice'>" + item.PerUnitRateInRs + "</td>" +
+                             "<td class='frthTD'><span class ='CmpUnitPercent'>" + item.PerUnitRateInPer + "</td>" +
+                             "<td class='fithTD'><input type ='text' value='" + item.ComponentWeight + "' id='txtWeight$" + item.ComponentID + "' autocomplete='off' class ='cmpWeight' style='width:30px' onkeypress='return validateWeight(event);' onkeyup='CalculateTotal(this.id)'/></td>" +
+                             "<td class='sixthTD'><input type='hidden' value='" + item.ComponentUnitID + "' id='hdnCmpUnit'/><span class ='cmpUnit'> " + item.ComponentUnitName + " </td>" +
+                             "<td class='sevenTD'><input id='hdnDepComponentID' type='hidden' value='" + item.DependentOnComponentID + "'/><span class='CmpDepCmpComponentName'>" + item.DependentComponentName + "</td>" +
+                             "<td class='eightTD'><span class='CmpTotalPrice' value='" + item.Total + "' id='spTotal$" + item.ComponentID + "'>" + Total + "</td>" +
+                             "<td class='ninethTD'><input type='button' id='btnSave$" + item.ComponentID + "' class='SaveComponent btn-success' onclick='SaveComponent(this.id)' value='' style=''></input><span class='savemsg' style='color:Green'></span></td>" +
+                             "<td class='tenID'><input type='button' id='btnDelete$" + item.ComponentID + "' class='Remove btn-danger' onclick='DeleteComponent(this.id)' value='' style=''></input></td>" +
+                             "<td class='lastTD'><input type='hidden' id='IsSaved' value='1'/></td>" +
+                            "</tr>"
+                        );
+
+                    if (item.DependentOnComponentID > 0 || item.ComponentName == 'VAT') {
+                        $("[id*=" + item.ComponentID + "]").closest('tr').find('.cmpWeight').attr('disabled', true);
+                        $("[id*=" + item.ComponentID + "]").closest('tr').find('.cmpWeight').val(0);
+                    }
+                    if (item.DependentComponentName == null) {
+                        //alert('gg');
+                        $("[id*=" + item.ComponentID + "]").closest('tr').find('.CmpDepCmpComponentName').html('N/A');
+                    }
+                    if (item.ComponentUnitID == null) {
+                        $("[id*=" + item.ComponentID + "]").closest('tr').find('.cmpUnit').html('N/A');
+                    }
+
+                });
+                CalculateComponentTotal();
+            },
+            error: function (data) {
+
+            }
+        });
+
+    }
+    //function to move component from (left) list to (right) table
+    function MoveComponentRight() {
+        var IsComponentPresent = false;
+        var IsWeightPresent = true;
+        var selected = $('#listItemComponent :selected');
+        var selectedComponentValue = $('#listItemComponent :selected').val();
+        if (selected.length == 0) {
+            alert("Please select Component to move.");
+            return;
+        }
+        $.ajax({
+            url: '@Url.Action("BindComponentDetails", "ProductUploadAproved")',
+            data: { 'componentID': selectedComponentValue },
+            type: "Post",
+            cache: false,
+            success: function (data) {
+                //alert(data);
+                $.each(data, function (index, item) {
+                    var ComponentID = item.DependentOnComponentID;
+                    var ComponentName = item.DependentComponentName;
+                    var DependentCmpName = item.ComponentName;
+                    var Price = item.PerUnitRateInPer;
+
+                    var Weight;
+                    var PerUnitPrice;
+                    var IsSaved = $("[id*=" + ComponentID + "]").closest('tr').find('#IsSaved').val()
+                    if (IsSaved == 0) {
+                        alert("Please Save '" + ComponentName + "' first.");
+                        return;
+                    }
+                    if (DependentCmpName == 'VAT') {
+                        var vatTotal = CalculateVAT(Price);
+                        if (vatTotal == 0) {
+                            return;
+                        }
+                        else {
+                            AddRowToTable(index, item, vatTotal);
+                            CalculateComponentTotal();
+                            return;
+                        }
+
+                    }
+
+                    if (ComponentID > 0) { //when selected component have dependent Component
+                        $("#tblComponentDetails tr:gt(1)").each(function () {
+                            var tableComponentID = $(this).closest('tr').find('#hdnComponentID').val();
+                            if (ComponentID == tableComponentID) {  //When dependent component id is alredy present in right side table
+                                IsComponentPresent = true;
+                                Weight = $(this).closest('tr').find('.cmpWeight').val();
+                                PerUnitPrice = $(this).closest('tr').find('.CmpTotalPrice').html(); //unit price of dependent component
+                                if (Weight == '') {
+                                    IsWeightPresent = false;
+                                }
+                            }
+                        });
+                    }
+                    else {//when selected component dont have dependent Component
+
+                        IsComponentPresent = true;
+                        PerUnitPrice = $("[id='spTotal$" + ComponentID + "']").html();
+                    }
+                    if (IsComponentPresent == true && IsWeightPresent == true) {
+
+                        var total = 0;
+                        if (item.DependentOnComponentID > 0) {
+                            var PerUnitPercent = item.PerUnitRateInPer;
+                            var UnitPrice = item.PerUnitRateInRs;
+                            if (PerUnitPercent > 0) {
+                                total = parseFloat(PerUnitPrice * PerUnitPercent / 100).toFixed(2);
+                            }
+                            else if (PerUnitPrice > 0) {
+                                //alert(PerUnitPrice);
+                                total = parseFloat(Weight * UnitPrice).toFixed(2);
+                            }
+
+
+                        }
+
+                        AddRowToTable(index, item, total);
+
+                    }
+                    else if (IsComponentPresent == false) {
+                        alert("Please move '" + ComponentName + "' first because '" + DependentCmpName + "' is '" + Price + "' % of '" + ComponentName + "'");
+                        return;
+
+                    }
+                    else if (IsWeightPresent == false) {
+                        alert("Please enter weight of '" + ComponentName + "' first before moving this component");
+                        return;
+                    }
+
+
+                });
+                CalculateComponentTotal();
+
+            },
+            error: function (data) {
+
+            }
+        });
+    }
+
+
+    function AddRowToTable(index, item, Total) {
+
+        $("#tblComponentDetails").append("<tr>" +
+                                  "<td class='frstTD'><input type='hidden' id='hdnComponentID' value='" + item.ComponentID + "'/></td>" +
+                                    "<td class='scndTD'><span class='CmpComponentName'>" + item.ComponentName + "</td>" +
+                                     "<td class='thrdTD'><span class='CmpUnitPrice'>" + item.PerUnitRateInRs + "</td>" +
+                                     "<td class='frthTD'><span class ='CmpUnitPercent'>" + item.PerUnitRateInPer + "</td>" +
+                                    "<td class='fithTD'><input type ='text' id='txtWeight$" + item.ComponentID + "' autocomplete='off' class ='cmpWeight' style='width:30px' onkeypress='return validateWeight(event); ' onkeyup='CalculateTotal(this.id)'/></td>" +
+                                    "<td class='sixthTD'><input type='hidden' value='" + item.ComponentUnitID + "' id='hdnCmpUnit'/><span class ='cmpUnit'> " + item.ComponentUnitName + " </td>" +
+                                     "<td class='sevenTD'><input id='hdnDepComponentID' type='hidden' value='" + item.DependentOnComponentID + "'/><span class='CmpDepCmpComponentName'>" + item.DependentComponentName + "</td>" +
+                                    "<td class='eightTD'><span class='CmpTotalPrice' value='" + Total + "' id='spTotal$" + item.ComponentID + "'>" + Total + "</td>" +
+                                     "<td class='ninethTD'><input type='button' id='btnSave$" + item.ComponentID + "' class='SaveComponent btn-success' onclick='SaveComponent(this.id)' value='' style=''></input><span class='savemsg' style='color:Green'></span></td>" +
+                                     "<td  class='tenID'><input type='button' id='btnDelete$" + item.ComponentID + "' class='Remove btn-danger' value='' onclick='DeleteComponent(this.id)' style=''></input></td>" +
+                                      "<td><input type='hidden' id='IsSaved' value='0'/></td>" +
+                                    "</tr>"
+                                );
+        $('#listItemComponent :selected').remove();
+        //disable text box
+
+        if (item.DependentOnComponentID > 0 || item.ComponentName == 'VAT') {
+            $("[id$=" + item.ComponentID + "]").closest('tr').find('.cmpWeight').attr('disabled', true);
+            $("[id$=" + item.ComponentID + "]").closest('tr').find('.cmpWeight').val(0);
+        }
+        if (item.DependentComponentName == null) {
+            $("[id$=" + item.ComponentID + "]").closest('tr').find('.CmpDepCmpComponentName').html('N/A');
+        }
+        //alert(item.ComponentUnitID);
+        if (item.ComponentUnitID == null) {
+            $("[id$=" + item.ComponentID + "]").closest('tr').find('.cmpUnit').html('N/A');
+        }
+        //----End----//
+    }
+
+
+    function CalculateVAT(Price) {
+        var total = 0;
+        var IsTotalPresent = true;
+        var rowCount = $('#tblComponentDetails tr:gt(1)').length;
+        //alert(rowCount);
+        if (rowCount == 0) { //If there is no row in Table
+            alert('Please Move the components first on which you want to apply VAT.');
+            return total;
+        }
+        else { //1
+            $("#tblComponentDetails tr:gt(1)").each(function () {
+                var ComponentTotal = $(this).closest('tr').find('.CmpTotalPrice').html();
+                if (ComponentTotal == 0) {
+                    IsTotalPresent = false;
+                }
+                else {
+                    IsTotalPresent = true;
+                }
+            });
+            if (IsTotalPresent == false) {
+                alert('Please enter weights of all previous components in table and save it');
+                return total;
+            }
+            else { //2
+                if (Price > 0) {
+                    var totalComponentPrice = $('.ComponentTotal').html();
+                    total = parseFloat(totalComponentPrice * Price / 100).toFixed(2);
+                }
+            } //2
+        } //1
+        return total;
+    }
+    //Check if vat is present in Gried.
+    function IsVATPresent() {
+        var flag = false;
+        $("#tblComponentDetails tr:gt(1)").each(function () {
+            var Name = $(this).closest('tr').find('.CmpComponentName').html();
+            if (Name == 'VAT') {
+                flag = true;
+            }
+        });
+        return flag;
+    }
+
+    function RecalculateVAT() {
+
+        var totalcomponentprice = 0;
+        var percent = '';
+        var componentId = '';
+        $("#tblComponentDetails tr:gt(1)").each(function () {
+            var ComponentName = $(this).closest('tr').find('.CmpComponentName').html();
+            var totalPrice = $(this).closest('tr').find('.CmpTotalPrice').html();
+            var depComponentID = $(this).closest('tr').find('#hdnDepComponentID').val();
+            if (depComponentID > 0) { //change making charges if change in component price on which component is present
+                var tprice = $("[id='btnSave$" + depComponentID + "']").closest('tr').find('.CmpTotalPrice').html();
+                var Weight = $("[id='btnSave$" + depComponentID + "']").closest('tr').find('.cmpWeight').val();
+                var perUnitPer = $(this).closest('tr').find('.CmpUnitPercent').html();
+                var perUnitRs = $(this).closest('tr').find('.CmpUnitPrice').html();
+                if (perUnitPer > 0) {
+                    var totprice = (parseFloat(tprice) * parseFloat(perUnitPer) / 100).toFixed(2);
+                }
+                else if (perUnitRs > 0) {
+                    var totprice = parseFloat(Weight * perUnitRs).toFixed(2);
+                }
+                $(this).closest('tr').find('.CmpTotalPrice').html(totprice);
+
+            }
+
+            if (totalPrice != '') {
+                if (ComponentName != 'VAT') {
+                    totalcomponentprice = parseFloat(totalcomponentprice) + parseFloat(totalPrice);
+
+                }
+                else {
+                    percent = $(this).closest('tr').find('.CmpUnitPercent').html();
+                    componentId = $(this).closest('tr').find('#hdnComponentID').val();
+                }
+            }
+        });
+        var vatOnTotal = totalcomponentprice * percent / 100;
+
+        if (vatOnTotal > 0) {
+            $("[id='btnSave$" + componentId + "']").closest('tr').find('.CmpTotalPrice').html(parseFloat(vatOnTotal).toFixed(2));
+        }
+        $('.ComponentTotal').html(parseFloat(totalcomponentprice + vatOnTotal).toFixed(2));
+    }
+    //function to validate weight
+    function validateWeight(evt) {
+        var charCode = (evt.which) ? evt.which : event.keyCode
+        if (charCode > 35 && charCode < 40 || charCode > 45 && charCode < 58 || charCode == 127 || charCode == 8 || charCode == 190 || charCode == 110) {
+
+            return true;
+        }
+        else {
+            return false;
+
+        }
+    }
+    // spTotal$12
+    //function to calculate Total of component
+    function CalculateTotal(id) {
+        var ID = id.split('$');
+        var txtID = id;
+        var weight = $("[id='" + id + "']").val();
+        var total;
+        if (weight == '' || weight == '.') {
+            $("[id='" + id + "']").closest('tr').find("[id='spTotal$" + ID[1] + "']").html(0);
+        }
+        else {
+            total = parseFloat(weight) * parseFloat($("[id='" + id + "']").closest('tr').find('.CmpUnitPrice').html());
+            $("[id*='" + id + "']").closest('tr').find("[id='spTotal$" + ID[1] + "']").html(total.toFixed(2));
+        }
+        CalculateComponentTotal();
+
+    }
+
+    function CalculateComponentTotal() {
+        var Isvatpresent = IsVATPresent();
+        if (Isvatpresent == true) {
+            RecalculateVAT();
+        }
+        var ComponentTotal = 0;
+        var total = 0;
+        $("#tblComponentDetails tr:gt(1)").each(function () {
+            var depComponentID = $(this).closest('tr').find('#hdnDepComponentID').val();
+            if (depComponentID > 0) { //change making charges if change in component price on which component is present
+                var tprice = $("[id='btnSave$" + depComponentID + "']").closest('tr').find('.CmpTotalPrice').html();
+                var Weight = $("[id='btnSave$" + depComponentID + "']").closest('tr').find('.cmpWeight').val();
+                var perUnitPer = $(this).closest('tr').find('.CmpUnitPercent').html();
+                var perUnitRs = $(this).closest('tr').find('.CmpUnitPrice').html();
+                if (perUnitPer > 0) {
+                    var totprice = (parseFloat(tprice) * parseFloat(perUnitPer) / 100).toFixed(2);
+                }
+                else if (perUnitRs > 0) {
+                    var totprice = parseFloat(Weight * perUnitRs).toFixed(2);
+                }
+                $(this).closest('tr').find('.CmpTotalPrice').html(totprice);
+
+            }
+            total = $(this).closest('tr').find('.CmpTotalPrice').html();
+            ComponentTotal = parseFloat(parseFloat(ComponentTotal) + parseFloat(total)).toFixed(2);
+            //alert(parseFloat(ComponentTotal).toFixed(2));
+        });
+        $('.ComponentTotal').html(ComponentTotal);
+
+    }
+
+
+
+    //Function to save Component
+    function SaveComponent(id) {
+        $('#lblErrorMsg').text('');
+        $("[id*='" + id + "']").closest('tr').find('#IsSaved').val('1');
+        var weight = $("[id*='" + id + "']").closest('tr').find('.cmpWeight').val();
+        if (!($("[id*='" + id + "']").closest('tr').find('.cmpWeight').is(':disabled'))) {
+
+            if (weight == '') { //if weight is not entered
+                $('#lblErrorMsg').text('Please enter weight');
+                return;
+            }
+        }
+        CalculateComponentTotal();
+
+        var ShopStockID = "@ViewBag.ShopStockID";
+        var componentID = $("[id*='" + id + "']").closest('tr').find('#hdnComponentID').val();
+        var componentWeight = $("[id*='" + id + "']").closest('tr').find('.cmpWeight').val();
+        var componentUnitID = $("[id*='" + id + "']").closest('tr').find('#hdnCmpUnit').val();
+        var total = $('.ComponentTotal').html();
+        var myData = {
+            ShopStockID: ShopStockID,
+            ComponentID: componentID,
+            ComponentWeight: componentWeight,
+            ComponentUnitID: componentUnitID,
+            Total: total
+        };
+        //alert(JSON.stringify(myData));
+        $.ajax({
+            url: '@Url.Action("SaveComponent", "ProductUploadAproved")',
+            data: myData,
+            type: "Post",
+            cache: false,
+            success: function (data) {
+                //alert(data);
+                var msg = $("[id='" + id + "']").closest('tr').find('.savemsg');
+                $(msg).text(data);
+                $(msg).show();
+                setTimeout(function () { $(msg).hide(); }, 5000);
+                SetMrpInVarientGrid(total);
+                //$("[id*='" + componentID + "']").closest('tr').find('.savemsg').html(data);
+                //savemsg
+            },
+            error: function (data) {
+
+            }
+        });
+    }
+
+    function DeleteComponent(id) {
+        var ComponentID;
+        var ComponentName;
+        var Percent;
+        var flag = false;
+        if (!confirm('Are you sure you want to remove selected Component?')) { //if click on cancel
+            return;
+        }
+        else { //if click on yes
+            ComponentID = $("[id='" + id + "']").closest('tr').find('#hdnComponentID').val();  //Delete Id on which we r clicking
+            ComponentName = $("[id='" + id + "']").closest('tr').find('.CmpComponentName').html();
+            var rowCount = $('#tblComponentDetails tr:gt(1)').length;
+            if (rowCount == 2) {
+                {
+                    $("#tblComponentDetails tr:gt(1)").each(function () {
+                        var CompName = $(this).closest('tr').find('.CmpComponentName').html();
+                        if (CompName == 'VAT') {
+                            if (ComponentName != 'VAT') {
+                                alert("You can not delete this componenet because 'VAT' is depends on it ");
+                                flag = true;
+                            }
+                        }
+                    });
+                    if (flag == true) {
+                        return;
+                    }
+                }
+
+            }
+            if ($("[id='" + id + "']").closest('tr').find('#IsSaved').val() == 0) { //Delete If component is not entered in database
+                $("[id='" + id + "']").closest('tr').remove();
+                $('[id=listItemComponent]').append("<option value='" + ComponentID + "'>" + ComponentName + "</option>");
+                CalculateComponentTotal();
+
+                return;
+            }
+            else {//If component is entered in database and then we are tying to delete
+                var IsPresent = false;
+                var DepCompID = $("[id='" + id + "']").closest('tr').find('#hdnDepComponentID').val();
+                $("#tblComponentDetails tr:gt(1)").each(function () { //id we are deleting component id whose dependent ID is present
+                    var DepCompID = $(this).closest('tr').find('#hdnDepComponentID').val();
+                    if (ComponentID == DepCompID) {
+                        CompName = $(this).closest('tr').find('.CmpComponentName').html();
+                        IsPresent = true;
+                    }
+                });
+                if (IsPresent == true) {
+                    alert("You can not delete componenet '" + ComponentName + "' because '" + CompName + "' is dependent on '" + ComponentName + "'");
+                    return;
+                }
+
+                var ComponentID = $("[id='" + id + "']").closest('tr').find('#hdnComponentID').val();
+                var ShopStockID = "@ViewBag.ShopStockID";
+                var ComponentName = $("[id='" + id + "']").closest('tr').find('.CmpComponentName').html();
+                $("[id='" + id + "']").closest('tr').remove();
+                CalculateComponentTotal();
+                var total = $('.ComponentTotal').html();
+
+                $('[id*=listItemComponent]').append("<option value='" + ComponentID + "'>" + ComponentName + "</option>");
+                $.ajax({
+                    url: '@Url.Action("DeleteComponent", "ProductUploadAproved")',
+                    data: { 'ComponentID': ComponentID, 'ShopStockID': ShopStockID, 'Total': total },
+                    type: "Post",
+                    cache: false,
+                    success: function (data) {
+                        var msg = $('.Message').html(data);
+                        $(msg).text(data);
+                        $(msg).show();
+                        setTimeout(function () { $(msg).hide(); }, 5000);
+                        SetMrpInVarientGrid(total);
+
+                    },
+                    error: function (data) {
+
+                    }
+                });
+            }
+        }
+    }
+
+    //function to set MRP in Varien Grid
+    function SetMrpInVarientGrid(total) {
+
+        $(".webgrid-table tr").each(function () {
+            var ProductVarientID = "@ViewBag.ProductVarientID";
+            var tableProductVarientId = $(this).closest('tr').find('#hdnProductVarientID').val();
+            if (tableProductVarientId > 0) {
+                if (ProductVarientID == tableProductVarientId) {
+                    $(this).closest('tr').find('.Mrp').html(total);
+                }
+            }
+        });
+
+    }
+
+</script>

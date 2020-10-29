@@ -1,0 +1,60 @@
+﻿@model ModelLayer.Models.BulkLog
+
+@{
+    ViewBag.Title = "Edit";
+}
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+    <div id="content" class="span10">
+        <ul class="breadcrumb">
+            <li>
+
+                <a href="#">Bulk Log</a>
+
+            </li>
+        </ul>
+        <div class="row-fluid">
+            <div class="box span12">
+                <div class="box-header">
+                    <h2><i class="halflings-icon user"></i><span class="break"></span>Bulk Log/Edit</h2>
+                </div>
+                <div class="box-content">
+                    <div class="form-horizontal">
+                        @Html.ValidationSummary(true)
+                        @Html.HiddenFor(model => model.ID)
+                        <div class="control-group">
+                            @Html.LabelFor(model => model.ShopID, "ShopID", new { @class = "control-label" })
+                            <div class="controls">
+                                @Html.DropDownList("ShopID", String.Empty)
+                                @Html.ValidationMessageFor(model => model.ShopID)
+                            </div>
+                        </div>
+
+                        <div class="control-group">
+                            @Html.LabelFor(model => model.ExcelSheetName, new { @class = "control-label" })
+                            <div class="controls">
+                                @Html.EditorFor(model => model.ExcelSheetName)
+                                @Html.ValidationMessageFor(model => model.ExcelSheetName)
+                            </div>
+                        </div>
+
+                        <div class="control-group">
+                            @Html.LabelFor(model => model.BulkType, new { @class = "control-label" })
+                            <div class="controls">
+                                @Html.EditorFor(model => model.BulkType)
+                                @Html.ValidationMessageFor(model => model.BulkType)
+                            </div>
+                        </div>
+
+                        <div class="form-actions">
+                            <input type="submit" value="Save" class="btn btn-success" />
+                            @Html.ActionLink("Back to List", "Index", string.Empty, new { @class = "btn" })
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}

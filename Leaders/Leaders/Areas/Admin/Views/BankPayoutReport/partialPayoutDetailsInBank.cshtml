@@ -1,0 +1,463 @@
+﻿@model IEnumerable<ModelLayer.Models.ViewModel.BankPayoutRequestViewModel>
+
+
+
+<style type="text/css">
+    #loading {
+        display: none;
+        position: fixed;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(255,255,255,0.8);
+        z-index: 1000;
+    }
+
+    #loadingcontent {
+        display: table;
+        position: fixed;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+    }
+
+    #loadingspinner {
+        display: table-cell;
+        vertical-align: middle;
+        width: 100%;
+        text-align: center;
+        font-size: larger;
+        padding-top: 80px;
+    }
+</style>
+
+
+
+<style>
+    .pro_th thead tr th {
+        font-size: 12px;
+        border-bottom: 1px solid #EEE;
+        padding: 6px 0;
+        background-color: #26A69A;
+    }
+
+    .pro_th tbody td {
+        font-size: 12px;
+        text-align: center;
+        border: 1px solid #EEE;
+    }
+
+        .pro_th tbody td.btn-set {
+            white-space: nowrap;
+        }
+
+    .dataTables_length {
+        margin-left: 0px !important;
+        margin-top: 7px;
+    }
+
+    .pagination {
+        margin: 0 26px;
+    }
+
+    form {
+        margin: 0 0 -15px;
+    }
+</style>
+
+<div id="wrap">
+    <div class="container">
+        <div id="content" class="span10" style="min-height: 403px;">
+            <table id="custTableNew" class="table table-striped table-bordered dt-responsive nowrap" width="70%" cellspacing="0">
+                <thead>
+                    <tr>
+                        <th style="color:red;">
+                            Beneficiary A/c no
+                        </th>
+                        <th style="color:red;">
+                            Beneficiary Name
+                        </th>
+                        <th style="color:red;">
+                            Instrument Amount
+                        </th>
+                        <th style="color:red;">
+                            IFSC Code
+                        </th>
+                        <th>
+                            Beneficiary email id
+                        </th>
+
+                        <th>
+                            Transaction Date
+                        </th>
+                        <th>
+                            Transaction Type
+                        </th>
+                        <th>
+                            Information To Benificiary
+                        </th>
+                        <th>
+                            Debit Account Narration
+                        </th>
+                        <th>
+                            Payment Details 1
+                        </th>
+                        <th>
+                            Payment Details 2
+                        </th>
+                        <th>
+                            Payment Details 3
+                        </th>
+                        <th>
+                            Payment Details 4
+                        </th>
+                        <th>
+                            Payment Details 5
+                        </th>
+                        <th>
+                            Payment Details 6
+                        </th>
+                        <th>
+                            Payment Details 7
+                        </th>
+                        <th>
+                            Bene Bank Name
+                        </th>
+                        @*<th>
+                            Payment Status
+                        </th>
+                        <th>
+                            Payment Remark
+                        </th>*@
+
+                        @*<th style="color:red;">
+                                Requested Date
+                            </th>*@
+
+                    </tr>
+                </thead>
+                <thead>
+                    <tr>
+                        <th style="color:red;">
+                            A
+                        </th>
+                        <th style="color:red;">
+                            C
+                        </th>
+                        <th style="color:red;">
+                            N
+                        </th>
+                        <th style="color:red;">
+                            N
+                        </th>
+                        <th>
+                            A
+                        </th>
+
+                        <th>
+                            D
+                        </th>
+                        <th>
+                            A
+                        </th>
+                        <th>
+                            C
+                        </th>
+                        <th>
+                            C
+                        </th>
+                        <th>
+                            C
+                        </th>
+                        <th>
+                            C
+                        </th>
+                        <th>
+                            C
+                        </th>
+                        <th>
+                            C
+                        </th>
+                        <th>
+                            C
+                        </th>
+                        <th>
+                            C
+                        </th>
+                        <th>
+                            C
+                        </th>
+                        <th>
+                            A
+                        </th>
+                        @*<th>
+
+                        </th>
+                        <th>
+
+                        </th>*@
+
+                    </tr>
+                    <tr>
+                        <th style="color:red;">
+                            25
+                        </th>
+                        <th style="color:red;">
+                            40
+                        </th>
+                        <th style="color:red;">
+                            20(17.2)
+                        </th>
+                        <th style="color:red;">
+                            15
+                        </th>
+                        <th>
+                            100
+                        </th>
+                        <th>
+                            10
+                        </th>
+                        <th>
+                            1
+                        </th>
+                        <th>
+                            15
+                        </th>
+                        <th>
+                            20
+                        </th>
+                        <th>
+                            20
+                        </th>
+                        <th>
+                            30
+                        </th>
+                        <th>
+                            30
+                        </th>
+                        <th>
+                            30
+                        </th>
+                        <th>
+                            30
+                        </th>
+                        <th>
+                            30
+                        </th>
+                        <th>
+                            30
+                        </th>
+                        <th>
+                            40
+                        </th>
+                        @*<th>
+
+                        </th>
+                        <th>
+
+                        </th>*@
+                    </tr>
+                    <tr>
+                        <th style="color:red;">
+
+                        </th>
+                        <th style="color:red;">
+                            Mandatory
+                        </th>
+                        <th style="color:red;">
+                            Mandatory
+                        </th>
+                        <th style="color:red;">
+                            Mandatory
+                        </th>
+                        <th>
+                            Optional
+                        </th>
+                        <th>
+                            Optional
+                        </th>
+                        <th>
+                            Optional
+                        </th>
+                        <th>
+                            Optional
+                        </th>
+                        <th>
+                            Optional
+                        </th>
+                        <th>
+                            Optional
+                        </th>
+                        <th>
+                            Optional
+                        </th>
+                        <th>
+                            Optional
+                        </th>
+                        <th>
+                            Optional
+                        </th>
+                        <th>
+                            Optional
+                        </th>
+                        <th>
+                            Optional
+                        </th>
+                        <th>
+                            Optional
+                        </th>
+                        <th>
+                            Optional
+                        </th>
+                        @*<th>
+
+                        </th>
+                        <th>
+
+                        </th>*@
+                    </tr>
+                    
+                    <tr style="background-color:yellow;">
+                        <th>
+                            9999999999999
+                        </th>
+                        <th>
+                            Beneficiary Name
+                        </th>
+                        <th>1500.00</th>
+                        <th>
+                            HDFC0000240
+                        </th>
+                        <th>
+                            Email 
+                        </th>
+                        <th>
+                            28/01/2006
+                        </th>
+                        <th>
+                            N for NEFT/R for RTGS
+                        </th>
+                        <th>
+                            Debit account
+                        </th>
+                        <th>
+                            Beneficiary Name
+                        </th>
+                        <th>
+                            Inv no 123
+                        </th>
+                        <th>
+                            Amt 111.00
+                        </th>
+                        <th>
+
+                        </th>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                        <th>
+                            State Bank OF India
+                        </th>
+                        @*<th>
+
+                        </th>
+                        <th>
+
+                        </th>*@
+                    </tr>
+                </thead>
+
+
+                <tbody>
+
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td style="text-align: center">
+                                @Html.DisplayFor(modelItem => item.BenificiaryAccountNumber)
+                            </td>
+                            <td style="text-align: center">
+                                @Html.DisplayFor(modelItem => item.BenificiaryAccountName)
+                            </td>
+                            <td style="text-align: center">
+                                @Html.DisplayFor(modelItem => item.InstrumentAmount)
+                            </td>
+
+                            <td style="text-align: center">
+                                @Html.DisplayFor(modelItem => item.IFSC)
+                            </td>
+                            <td style="text-align: center">
+                                @Html.DisplayFor(modelItem => item.BenificiaryEmail)
+                            </td>
+
+                            <td style="text-align: center">
+                                @*<input type="datetime" id="min" name="min" readonly="readonly" placeholder="Date">*@
+                                @Html.DisplayFor(modelItem => (item.TransactionDate), new { id="transactionDate"})
+                            </td>
+                            <td style="text-align: center">
+                                @Html.DisplayFor(modelItem => item.InfoToBenificiary)
+                            </td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            @*<td>
+                                @Html.DisplayFor(modelItem => item.PaymentStatus)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.PaymentRemark)
+                            </td>*@
+
+
+                        </tr>
+                    }
+                </tbody>
+            </table>
+            <input type="button" onclick="tableToExcelNew('custTableNew', 'www.leaders.com')" value="&nbsp; Export To Excel &nbsp;" class="btn-success btn btn-warning btn-small" style="margin-top:15px;">
+        </div>
+
+    </div>
+</div>
+
+<script src="http://code.jquery.com/jquery-latest.min.js" type="text/javascript"></script>
+<script type="text/javascript">
+    var tableToExcelNew = (function () {
+
+        var uri = 'data:application/vnd.ms-excel;base64,'
+            , template = '<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:x="urn:schemas-microsoft-com:office:excel" xmlns="http://www.w3.org/TR/REC-html40"><head><!--[if gte mso 9]><xml><x:ExcelWorkbook><x:ExcelWorksheets><x:ExcelWorksheet><x:Name>{worksheet}</x:Name><x:WorksheetOptions><x:DisplayGridlines/></x:WorksheetOptions></x:ExcelWorksheet></x:ExcelWorksheets></x:ExcelWorkbook></xml><![endif]--></head><body><table>{table}</table></body></html>'
+            , base64 = function (s) { return window.btoa(unescape(encodeURIComponent(s))) }
+            , format = function (s, c) { return s.replace(/{(\w+)}/g, function (m, p) { return c[p]; }) }
+        return function (table, name) {
+            if (!table.nodeType) table = document.getElementById(table)
+            var ctx = { worksheet: name || 'Worksheet', table: table.innerHTML }
+            window.location.href = uri + base64(format(template, ctx))
+        }
+    })()
+
+    var target = document.getElementById('loading');
+    var spinner = new Spinner(opts).spin(target);
+</script>
+<script src="~/Scripts/jquery-ui-1.12.1.min.js"></script>
+<link href="~/Content/css/datepicker.css" rel="stylesheet" />
+<link href="~/Content/css/jquery-ui-1.8.21.custom.css" rel="stylesheet" />
+
+<script>
+    $(document).ready(function () {
+
+        $("#min").datepicker();
+        
+
+    });
+</script>
+
+
+

@@ -1,0 +1,130 @@
+﻿@{
+    ViewBag.Title = "SetSequence";
+}
+
+<style>
+    .CategoryDiv {
+        width: 233px;
+        float: left;
+        padding: 10px;
+    }
+
+        .CategoryDiv span {
+            display: block;
+            font-size: 15px;
+            font-weight: 600;
+        }
+
+        .CategoryDiv select {
+            display: block;
+        }
+
+    .textDiv {
+        margin-left: 10px;
+        width: 100%;
+        float: left;
+    }
+
+    #Content {
+    }
+</style>
+
+<div id="content" class="span10">
+    <ul class="breadcrumb">
+        <li>
+            <a href="#">Set Sequence</a>
+        </li>
+    </ul>
+
+    <div class="row-fluid">
+        <div class="box span12">
+            <div class="box-content">
+                <div style="width:100%;">
+                    <div class="CategoryDiv">
+                        <span>Select Franchise</span>
+                        @Html.DropDownList("FranchiseList", "Select Franchise")
+                    </div>
+                    <div class="CategoryDiv">
+                        <span>Select Category</span>
+                        @Html.DropDownList("BlockTypeList", "Select Block Type")
+                    </div>
+                </div>
+                @if (TempData["Message"] != null)
+                {
+                    <br />
+                    <span style="font-weight:bold; color:red;"> @TempData["Message"]  </span>
+                }
+                <div id="divSpecification" style="display:block;">
+
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<script src="~/Scripts/jquery-1.10.2.min.js"></script>
+<script>
+
+    $(document).ready(function () {
+
+        var BlocktypeID = $("#BlockTypeList option:selected").val();
+        var FranchiseID = $("#FranchiseList option:selected").val();
+
+        if(BlocktypeID!=''&& FranchiseID!='')
+        {
+            $('#divSpecification').html(null);
+
+            /*Processing Image*/
+            $("#pageloaddiv").css('display', 'block');
+            $("#pageloaddiv").fadeOut(1000);
+
+
+            /* Request the partial view with .get request. */
+            $.get('/HomePageBlocksItem/GetBlocksItemsList?FranchiseID=' + FranchiseID + '&BlockTypeID=' + BlocktypeID, function (data) {
+                /* data is the pure html returned from action method, load it to your page */
+                $('#divSpecification').html(data);
+
+                /* little fade in effect */
+                $('#divSpecification').fadeIn('fast');
+            });
+
+            $("#pageloaddiv").css('display', 'none');
+            $("#pageloaddiv").fadeOut(1000);
+        }
+    });
+
+    $("#BlockTypeList").change(function () {
+        /* Get the selected value of dropdownlist */
+        var selectedID = $(this).val();
+        var FranchiseID = $("#FranchiseList option:selected").val();
+        /*Check Condition*/
+        $('#divSpecification').html(null);
+
+        /*Processing Image*/
+        $("#pageloaddiv").css('display', 'block');
+        $("#pageloaddiv").fadeOut(1000);
+
+
+        /* Request the partial view with .get request. */
+        $.get('/HomePageBlocksItem/GetBlocksItemsList?FranchiseID=' + FranchiseID + '&BlockTypeID=' + selectedID, function (data) {
+            /* data is the pure html returned from action method, load it to your page */
+            $('#divSpecification').html(data);
+
+            /* little fade in effect */
+            $('#divSpecification').fadeIn('fast');
+        });
+
+        $("#pageloaddiv").css('display', 'none');
+        $("#pageloaddiv").fadeOut(1000);
+
+    });
+
+</script>
+
+
+
+
+
+

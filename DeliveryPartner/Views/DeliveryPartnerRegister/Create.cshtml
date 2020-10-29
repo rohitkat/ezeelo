@@ -1,0 +1,276 @@
+﻿@model DeliveryPartner.Models.ViewModel.DeliveryPartnerRegisterViewModel
+@{
+    Layout = "~/Views/Shared/_LayoutLogin.cshtml";
+}
+
+@{
+    ViewBag.Title = "Registration";
+}
+<style>
+    textarea {
+        width: 50%;
+        height: 50px;
+    }
+
+    .navbar .btn, .navbar .btn-group {
+        margin-top: 5px;
+        display: none;
+    }
+</style>
+<!-- /widget-header -->
+<div class="widget-content">
+    <div class="widget big-stats-container">
+        <div class="widget-content matchdivheight">
+            @using (Html.BeginForm())
+            {
+                @Html.AntiForgeryToken()
+
+                <div id="content"  style="min-height: 369px;">
+                    <div class="row-fluid sortable ui-sortable">
+                        <div class="box span12">
+                            <div data-original-title="" class="box-header" style="text-align:right">
+                                Already Registered. <a href="@Url.Action("Login", "Login")" class="btn btn-small btn-success">Sing In</a>
+                            </div>
+                            <div class="box-content">
+                                <form class="form-horizontal">
+                                    <hr /><h2><i class="halflings-icon user"></i><span class="break"></span>Register Now</h2>
+                                    @Html.ValidationSummary(true)
+                                    <div class="control-group">
+                                        <span class="control-label">Name <span style="color:red"> *</span></span>
+                                        <div class="control-group">
+                                            <div class="controls">
+                                                @Html.DropDownList("Salutation", null, new { @class = "select" })
+                                            </div>
+                                            @Html.ValidationMessageFor(model => model.SalutationID)
+                                        </div>
+                                        <div class="control-group">
+                                            <div class="controls">
+                                                @Html.TextBoxFor(model => model.FirstName, new { @placeholder = "First Name" })
+                                            </div>
+                                            @Html.ValidationMessageFor(model => model.FirstName)
+                                        </div>
+                                        <div class="control-group">
+                                            <div class="controls">
+                                                @Html.TextBoxFor(model => model.MiddleName, new { @placeholder = "Middle Name" })
+                                            </div>
+                                            @Html.ValidationMessageFor(model => model.MiddleName)
+                                        </div>
+                                        <div class="control-group">
+                                            <div class="controls">
+                                                @Html.TextBoxFor(model => model.LastName, new { @placeholder = "Last Name" })
+                                            </div>
+                                            @Html.ValidationMessageFor(model => model.LastName)
+                                        </div>
+                                    </div>
+                                    <div class="control-group">
+                                        <span class="control-label">Bussiness Name</span>
+                                        <div class="controls">
+                                            @Html.TextBoxFor(model => model.BussinessName, new { @placeholder = "Business Name" })
+                                        </div>
+                                        @Html.ValidationMessageFor(model => model.BussinessName)
+                                    </div>
+                                    <div class="control-group">
+                                        <span class="control-label">Service Level</span>
+                                        <div class="controls">
+                                            @Html.DropDownList("ServiceLevel")
+                                        </div>
+                                        @Html.ValidationMessageFor(model => model.ServiceLevel)
+                                    </div>
+                                    <div class="control-group">
+                                        <span class="control-label">Email</span>
+                                        <div class="controls">
+                                            @Html.TextBoxFor(model => model.Email, new { @placeholder = "Contact/Business Email", @class = "form-control", @onchange = "return ValidateEmail(this);", required = "required" })
+                                            <div id="divEmailError" style="width:400px; display: none; padding:5px" class="alert-danger focused">  </div>
+                                        </div>
+                                        @Html.ValidationMessageFor(model => model.Email)
+                                    </div>
+                                    <div class="control-group">
+                                        <span class="control-label">Mobile</span>
+                                        <div class="controls">
+                                            @*@Html.TextBoxFor(model => model.Mobile, new { @placeholder = "Contact Mobile" })
+                                                @Html.ValidationMessageFor(model => model.Mobile)*@
+                                            @Html.TextBox("Mobile", null, new { @id = "Mobile", @class = "form-control-Widout-block", @placeholder = "Enter Mobile", @onchange = "return ValidateMobile(this);", @onkeypress = "return isValidMobile(event)", maxlength = "10" })
+                                            <div id="divMobileError" style="width:400px; display: none; padding:5px" class="alert-danger focused">  </div>
+                                        </div>
+                                    </div>
+                                    <div class="control-group">
+                                        <span class="control-label">Pin Code</span>
+                                        <div class="controls">
+                                            @*@Html.TextBoxFor(model => model.PinCode, new { @placeholder = "Pincode" })
+                                                @Html.ValidationMessageFor(model => model.PinCode)*@
+                                            @Html.TextBox("Pincode", null, new { @id = "Pincode", @class = "form-control-Widout-block", @placeholder = "Enter Pincode", @onkeypress = "return isValidPincode(event)" })
+                                            <img id="Pincode_loading" src="~/Content/Images/ajax_loader.gif" style="width: 30px; height: 30px; display: none" />
+                                            <div id="divPincodeError" style="width:400px; display: none; padding:5px" class="alert-danger focused">  </div>
+                                        </div>
+                                        <div id="divAddress">
+                                            @*to load Address Details*@
+                                        </div>
+                                    </div>
+                                    <div class="control-group">
+                                        <span class="control-label">Password</span>
+                                        <div class="controls">
+                                            @Html.EditorFor(model => model.Password)
+                                        </div>
+                                        @Html.ValidationMessageFor(model => model.Password)
+                                    </div>
+                                    <div class="control-group">
+                                        <span class="control-label">Confirm Password</span>
+                                        <div class="controls">
+                                            @Html.EditorFor(model => model.ConfirmPassword)
+                                        </div>
+                                        @Html.ValidationMessageFor(model => model.ConfirmPassword)
+                                    </div>
+                                    <div class="control-group">
+                                        <span class="control-label">Security Question</span>
+                                        <div class="controls">
+                                            @Html.DropDownList("SecurityQuestion")
+                                        </div>
+                                        @Html.ValidationMessageFor(model => model.SecurityQuestionID)
+                                    </div>
+                                    <div class="control-group">
+                                        <span class="control-label">Security Answer</span>
+                                        <div class="controls">
+                                            @Html.TextBoxFor(model => model.SecurityAnswer, new { @placeholder = "Security Answer" })
+                                        </div>
+                                        @Html.ValidationMessageFor(model => model.SecurityAnswer)
+                                    </div>
+                                    <div class="box-header">
+                                        <input type="submit" value="Register" class="btn btn-primary" />
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+    <!-- /widget-content -->
+</div>
+@section Myscripts{
+    <script type="text/javascript">
+        var lPincode = $('#Pincode').val()
+
+        $('#Pincode').bind('input propertychange', function () {
+            var lPincode = $('#Pincode').val()
+            $('#divPincodeError').hide();
+
+            if (lPincode.length == 6) {
+                $('#Pincode_loading').show();
+                $.ajax({
+                    url: '@Url.Action("GetAddress", "DeliveryPartnerRegister")?Pincode=' + lPincode,
+                    type: "GET",
+                    success: function (result) {
+                        $('#divAddress').html(result);
+                        $('#Pincode_loading').hide();
+                        $('#divPincodeError').hide();
+                    },
+                    error: function (data) {
+                        //alert('Pincode : ' + lPincode + ' Dose Not Exist, please Contact to ADMIN');
+                        $('#divAddress').empty();
+                        $('#Pincode_loading').hide();
+                        $('#divPincodeError').show();
+                        $('#divPincodeError').html('Pincode [' + lPincode + '] dose not exist, please Contact to ADMIN');
+                        $('#Pincode').val('');
+                    }
+                });
+            }
+        });
+
+    </script>
+
+    <script type="text/javascript">
+        var lMobile = $('#Mobile').val()
+        $('#Mobile').bind('input propertychange', function () {
+            var lMobile = $('#Mobile').val();
+            $('#divMobileError').hide();
+            if (lMobile.length == 10) {
+                //$('#Pincode_loading').show();
+                $.ajax({
+                    url: '@Url.Action("IsMobileAvailable", "DeliveryPartnerRegister")?Mobile=' + lMobile,
+                    type: "GET",
+                    success: function (result) {
+                        //alert(result);
+                        //$('#Pincode_loading').hide();
+                        $('#divlMobileError').hide();
+                        if (result == "1") {
+                            $('#Mobile').val('');
+                            $('#divMobileError').show();
+                            $('#divMobileError').html('Mobile [' + lMobile + '] already exist');
+                        }
+
+                    },
+                    error: function (data) {
+                        //alert(data);
+                        //alert('Pincode : ' + lPincode + ' Dose Not Exist, please Contact to ADMIN');
+                        //$('#divAddress').empty();
+                        //$('#Pincode_loading').hide();
+                        $('#divlMobileError').hide();
+                        //alert('');
+                        //$('#Pincode').val('');
+                    }
+                });
+            }
+        });
+
+    </script>
+    <script type="text/javascript">
+        $('#Email').bind('input propertychange', function () {
+            var lEmail = $('#Email').val();
+            $('#divEmailError').hide();
+            $.ajax({
+                url: '@Url.Action("IsEmailAvailable", "DeliveryPartnerRegister")?Email=' + lEmail,
+                type: "GET",
+                success: function (result) {
+                    $('#divEmailError').hide();
+                    if (result == "1") {
+                        $('#divEmailError').show();
+                        $('#divEmailError').html('Email [' + lEmail + '] already exist');
+                        $('#Email').val('');
+                    }
+                },
+                error: function (data) {
+                    $('#divEmailError').hide();
+                }
+            });
+        });
+    </script>
+
+
+    <script type="text/javascript">
+
+        function ValidateEmail(obj) {
+            var email = $(obj).val();
+            var filter = /^([\w-\.]+@@([\w-]+\.)+[\w-]{2,4})?$/;
+            $('#divEmailError').hide();
+            if (filter.test(email)) {
+                return true;
+            }
+            else {
+                $('#divEmailError').show();
+                $('#divEmailError').html('Invalid Email [' + email + ']');
+                $('#userLogin_Email').val('');
+                $('#userLogin_Email').focus();
+                return false;
+            }
+        }
+
+        function ValidateMobile(obj) {
+            var mobile = $(obj).val();
+            var filter = /^[7-9]{1}[0-9]{9}$/;
+            $('#divMobileError').hide();
+            if (filter.test(mobile)) {
+                return true;
+            }
+            else {
+                $('#divMobileError').show();
+                $('#divMobileError').html('Invalid Mobile [' + mobile + ']');
+                $('#Mobile').val('');
+                $('#Mobile').focus();
+                return false;
+            }
+        }
+
+    </script>
+}
+

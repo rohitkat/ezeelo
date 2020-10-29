@@ -1,0 +1,165 @@
+﻿@model ModelLayer.Models.ViewModel.DisplayReviewsViewModel
+<style>
+    .newborder {
+        border: 1px solid #ccc;
+        padding: 10px;
+        background-color: rgba(234, 233, 233, 0.21);
+        border-radius: 0px 30px 0px 30px;
+        height: auto;
+        min-height: 115px;
+        max-height: 220px;
+        overflow: hidden;
+        margin-top: 4px;
+    }
+
+    .ratinghead {
+        background: #aa8fb7;
+        padding: 7px;
+        font-weight: 600;
+        border-radius: 20px;
+        font-size: 20px;
+    }
+
+    .userimg {
+        padding-top: 25px;
+        width: 90%;
+        float: left;
+    }
+
+    .rating {
+        width: 100%;
+        padding-left: 40px;
+    }
+
+    .hesddivright {
+        float: left;
+        width: 10%;
+    }
+
+    .leftpadding {
+        padding-left: 40px;
+        margin-top: 0px;
+    }
+
+    .buttonrating {
+        float: right;
+        border: 1px solid rgb(252, 176, 109) !important;
+        background-color: rgb(252, 176, 109) !important;
+        margin: 3px;
+        color: white !important;
+    }
+
+    .helpyes {
+        font-size: 10px;
+        padding-left: 10px;
+        padding-right: 10px;
+        color: #948686;
+        background-color: #FFFFFF !important;
+        border: 1px solid #E6E6E6;
+        border-radius: 4px;
+    }
+
+        .helpyes:hover {
+            font-size: 10px;
+            padding-left: 10px;
+            padding-right: 10px;
+            color: #A6CE40;
+            background-color: #FFFFFF !important;
+            border: 1px solid #D7E9AA;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+</style>
+@{
+    string cityName = "";
+    int franchiseID = 0;////added
+    if (Request.Cookies["CityCookie"] != null && Request.Cookies["CityCookie"].Value != "")
+    {
+        cityName = Request.Cookies["CityCookie"].Value.Split('$')[1].ToLower();
+        franchiseID = Convert.ToInt32(Request.Cookies["CityCookie"].Value.Split('$')[2]);////added
+    }
+}
+<div class="row">
+    <div class="col-md-12 product-review">
+        <h3 class="product-tab-rating-title">Shop Reviews:</h3>
+        @{
+            int ratingPoint = 0;
+            if (@Model.AvgPoints == null)
+            {
+                ratingPoint = 3;
+            }
+            else
+            {
+                ratingPoint = Convert.ToInt32(Math.Ceiling(Convert.ToDouble(@Model.AvgPoints.AvgRatingPonts)));
+            }
+
+            for (int j = 1; j <= ratingPoint; j++)
+            {
+                <span class="star on fa fa-star"></span>
+            }
+            for (int j = 1; j <= 5 - ratingPoint; j++)
+            {
+                <span class="star fa fa-star"></span>
+            }
+            if (@Model.AvgPoints == null)
+            {
+                <button class="btn btn-primary">@Html.RouteLink("Write A Review", "shop_rating", new { ID = @Model.AvgPoints.OwnerID, prodId = @Model.prodId, city = cityName, franchiseId = franchiseID }, new { style = "color:white" })</button>
+            }
+            else
+            {
+                if (Model.CustomerReviewList != null)
+                {
+                    @*<span> (based on @Model.AvgPoints.Count ratings)</span>*@
+                    <span> (based on @Model.CustomerReviewList.Count ratings)</span>
+                }
+                <button class="btn btn-primary">@Html.RouteLink("Write A Review", "shop_rating", new { ID = @Model.AvgPoints.OwnerID, prodId = @Model.prodId, city = cityName, franchiseId = franchiseID }, new { style = "color:white" })</button>
+            }
+
+        }
+    </div>
+</div>
+
+
+<article class="product-review">
+    @{
+        if (Model.CustomerReviewList != null)
+        {
+            for (int i = 0; i < Model.CustomerReviewList.Count; i++)
+            {
+
+                <div class="product-review-content product-review" style="border-right:0px;width:100%;">
+                    <h5 class="product-review-title">@Model.CustomerReviewList[i].Comment</h5>
+
+                    <p class="product-review-meta">@Model.CustomerReviewList[i].CustomerName @Model.CustomerReviewList[i].ReviewDate.ToLocalTime().ToString("MMM dd, yyyy")</p>
+
+                    @*<small class="v-align-top">@Model.CustomerReviewList[i].ReviewCount Review(s)</small>*@
+                    <div class="rating">
+                        @for (int j = 1; j <= Math.Ceiling(Convert.ToDouble(Model.CustomerReviewList[i].AvgPointsPerCustomer)); j++)
+                        {
+                            <span class="star on fa fa-star"></span>
+                        }
+                        @for (int j = 1; j <= 5 - Math.Ceiling(Convert.ToDouble(Model.CustomerReviewList[i].AvgPointsPerCustomer)); j++)
+                        {
+                            <span class="star fa fa-star"></span>
+                        }
+                    </div>
+                    @*@if (Model.CustomerReviewList[i].Comment.Length > 15)
+                        {
+                            <h4 style="width: 100%; float: left;">@Model.CustomerReviewList[i].Comment</h4>
+                        }
+                        else
+                        {
+
+
+                        }*@
+
+                    <div class="text">
+                        <div class="hesddivright">
+                            <div class="date LTgray"> </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        }
+    }
+</article>

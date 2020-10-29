@@ -1,0 +1,51 @@
+﻿@model ModelLayer.Models.MerchantSelfCBPoints
+@{
+    ViewBag.Title = "Edit";
+    Layout = "~/Views/Shared/_LeadersLayout.cshtml";
+}
+
+<script src="~/Scripts/MerchantMenuOpenup.js"></script>
+<style>
+    .form-control-label {
+        width: 100px !important;
+    }
+</style>
+<div class="container">
+    @using (Html.BeginForm())
+    {
+        @Html.AntiForgeryToken()
+        @Html.ValidationSummary(true)
+        <div class="card">
+            <div class="card-header">
+                <strong>Self CBPoints Master</strong>
+            </div>
+            <div class="card-body card-block">
+                <div class="form-group">
+                    <label for="company" class=" form-control-label">City</label>
+                    @Html.TextBoxFor(model => model.City, new { disabled = "disabled" })
+                    @Html.ValidationMessageFor(model => model.City, null, new { @class = "text-danger" })
+                </div>
+                <div class="form-group">
+                    <label for="company" class=" form-control-label">CBPoints</label>
+                    @Html.TextBoxFor(model => model.CBPoints, new { style = "width:100px" })
+                    @Html.ValidationMessageFor(model => model.CBPoints, null, new { @class = "text-danger" })
+                </div>
+                <div class="form-group">
+                    <label for="company" class=" form-control-label">IsActive</label>
+                    @Html.EditorFor(model => model.IsActive)
+                    @Html.ValidationMessageFor(model => model.IsActive)
+                </div>
+                <div class="form-group">
+                    <div class="col-md-offset-2 col-md-10">
+                        <input type="submit" value="Create" class="btn btn-primary btn-sm" />
+                        <a class="btn btn-info btn-sm" href="@Url.Action("MerchantSelfCBPointsList", "MerchantMaster", new { area = "Admin" })">Back To List</a>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    }
+</div>
+
+
+

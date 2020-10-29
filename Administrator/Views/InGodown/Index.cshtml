@@ -1,0 +1,452 @@
+﻿@model ModelLayer.Models.ViewModel.TrackOrderViewModelList
+
+@{
+    ViewBag.Title = "Index";
+}
+@*@{
+        Layout = "";
+    }*@
+<style>
+    .row-fluid [class*="span"] {
+        display: block;
+        float: left;
+        min-height: 30px;
+        margin-left: 0.1% !important;
+        box-sizing: border-box;
+    }
+</style>
+<script src="~/Scripts/jquery-1.10.2.min.js"></script>
+<script type="text/javascript">
+    $(document).ready(function () {
+        $("#chkSelect").click(function () {
+            $(".chkSelect").prop('checked', $(this).prop('checked'));
+        });
+    });
+
+</script>
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+    <div class="span10" id="content">
+        <ul class="breadcrumb">
+            <li>
+                <a href="#">Track Order/In Godown</a>
+            </li>
+
+        </ul>
+        <div class="box-header">
+            <h2><i class="icon-align-justify"></i><span class="break"></span>In Godown</h2>
+
+        </div>
+        <div class="row-fluid">
+            <div class="box span12">
+                <table class="table table-bordered">
+
+                    <tr>
+                        <th>
+                            @Html.CheckBox("select", new { id = "chkSelect" })
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.LtrackOrderViewModelList[0].OrderCode)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.LtrackOrderViewModelList[0].ShopOrderCode)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.LtrackOrderViewModelList[0].FirstName)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.LtrackOrderViewModelList[0].CreateDate)
+                        </th>
+                    </tr>
+                    @if (Model.LtrackOrderViewModelList.Count() == 0)
+                    {
+                        <tr>
+                            <td colspan="6" class="text-center"><h3>No Record Found...</h3></td>
+                        </tr>
+                    }
+                    @if (Model.LtrackOrderViewModelList != null && Model.LtrackOrderViewModelList.Distinct().Count() > 0)
+                    {
+                        List<string> OrderCodeList = Model.LtrackOrderViewModelList.Select(x => x.OrderCode).Distinct().ToList();
+
+
+                        bool IsDelivery = Convert.ToBoolean(Model.LtrackOrderViewModelList.Select(x => x.IsDeliveryOutSource).First());
+
+                        if (IsDelivery == false)
+                        {
+                            //outer printing material
+                            for (int i = 0; i < OrderCodeList.Count(); i++)
+                            {
+
+                                var allFileds = (Model.LtrackOrderViewModelList
+                                    .Select(x => new
+                                    {
+                                        x.OrderCode,
+                                        x.ShopOrderCode,
+                                        x.CustomerOrderID,
+                                        x.FirstName,
+                                        x.CreateDate,
+                                        x.PName,
+                                        x.PackSize,
+                                        x.Name,
+                                        x.CODQty,
+                                        x.RetailerRate,
+                                        x.TotalAmount,
+                                        x.OrderAmount,
+                                        x.GandhibaghCharge,
+                                        x.PayableAmount,
+                                        x.IsDeliveryOutSource,
+                                        x.Email,
+                                        x.Mobile,
+                                        x.ShippingAddress,
+                                        x.AreaName,
+                                        x.CityName,
+                                        x.PincodeName
+                                    })
+                                    .Where(x => x.OrderCode == OrderCodeList[i].ToString()).ToList());
+
+                                <tr>
+                                    <td>
+                                        @Html.CheckBoxFor(model => model.LtrackOrderViewModelList[0].CheckBoxStatus, new { @class = "chkSelect" })
+                                        @Html.HiddenFor(model => model.LtrackOrderViewModelList[0].ShopOrderCode)
+                                        @Html.HiddenFor(model => model.LtrackOrderViewModelList[0].CustomerOrderID)
+                                    </td>
+                                    <td>
+                                        <a href="#" class="btn-minimize"><i class="halflings-icon chevron-down"></i>@allFileds[0].OrderCode</a>
+                                    </td>
+
+                                    <td>
+                                        @allFileds[0].ShopOrderCode
+                                    </td>
+                                    <td>
+                                        @allFileds[0].FirstName
+                                    </td>
+                                    <td>
+                                        @allFileds[0].CreateDate
+                                    </td>
+                                </tr>
+                                <tr class="hide-row box-content" id="abc">
+                                    <td colspan="5">
+                                        <table class="table">
+                                            <tr>
+                                                <td colspan="5">
+                                                    <div class="row-fluid sortable ui-sortable">
+                                                        <div class="box span12">
+                                                            <table class="table table-bordered table-striped">
+
+                                                                <tr>
+                                                                    <td colspan="6">
+
+                                                                        @for (int j = 0; j < allFileds.Count(); j++)
+                                                                        {
+
+                                                                            <div class="box span6">
+                                                                                <table class="table table-bordered ProDisplayBlock">
+                                                                                    <tr>
+                                                                                        <td rowspan="6">
+                                                                                            @{string s = @Model.LtrackOrderViewModelList[j].ImageLocation;
+                                                                                            <img src="@s" alt="@allFileds[j].PName" />
+                                                                                            }
+                                                                                        </td>
+                                                                                        <th>
+                                                                                            @Html.DisplayNameFor(model => model.LtrackOrderViewModelList[j].PName)
+                                                                                        </th>
+                                                                                        <td>
+                                                                                            @allFileds[j].PName
+                                                                                        </td>
+                                                                                    </tr>
+                                                                                    <tr>
+                                                                                        <th>
+                                                                                            @Html.DisplayNameFor(model => model.LtrackOrderViewModelList[j].PackSize)
+                                                                                        </th>
+
+                                                                                        <td>
+                                                                                            @allFileds[j].PackSize @allFileds[j].Name
+                                                                                        </td>
+                                                                                    </tr>
+
+                                                                                    <tr>
+                                                                                        <th>
+                                                                                            @Html.DisplayNameFor(model => model.LtrackOrderViewModelList[j].CODQty)
+                                                                                        </th>
+                                                                                        <td>
+                                                                                            @allFileds[j].CODQty
+                                                                                        </td>
+                                                                                    </tr>
+                                                                                    <tr>
+                                                                                        <th>
+                                                                                            @Html.DisplayNameFor(model => model.LtrackOrderViewModelList[j].RetailerRate)
+                                                                                        </th>
+                                                                                        <td>
+                                                                                            @allFileds[j].RetailerRate
+                                                                                        </td>
+                                                                                    </tr>
+                                                                                    <tr>
+                                                                                        <th>
+                                                                                            @Html.DisplayNameFor(model => model.LtrackOrderViewModelList[j].TotalAmount)
+                                                                                        </th>
+                                                                                        <td>
+                                                                                            @allFileds[j].TotalAmount
+                                                                                        </td>
+                                                                                    </tr>
+
+
+                                                                                </table>
+                                                                            </div>
+
+                                                                        }
+
+                                                                    </td>
+                                                                </tr>
+                                                            </table>
+                                                        </div>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>
+                                                    <div class="span4">
+                                                        <div class="box-header box-bg-color">
+                                                            <h2><i class="halflings-icon user"></i><span class="break"></span>Customer Information</h2>
+                                                        </div>
+                                                        <table class="table table-bordered">
+                                                            <tr>
+                                                                <th>@Html.DisplayNameFor(model => model.LtrackOrderViewModelList[0].FirstName)</th>
+                                                                <td>@allFileds[0].FirstName</td>
+                                                            </tr>
+                                                            <tr>
+                                                                <th>@Html.DisplayNameFor(model => model.LtrackOrderViewModelList[0].Email)</th>
+                                                                <td>@allFileds[0].Email </td>
+                                                            </tr>
+                                                            <tr>
+                                                                <th>@Html.DisplayNameFor(model => model.LtrackOrderViewModelList[0].Mobile)</th>
+                                                                <td>@allFileds[0].Mobile</td>
+                                                            </tr>
+
+                                                        </table>
+
+                                                    </div>
+                                                    <div class="span4">
+                                                        <div class="box-header box-bg-color">
+                                                            <h2><i class="icon-truck"></i><span class="break"></span>Shipping Address</h2>
+                                                        </div>
+                                                        <table class="table table-bordered">
+
+                                                            <tr>
+                                                                <th>@Html.DisplayNameFor(model => model.LtrackOrderViewModelList[0].AreaName)</th>
+                                                                <td>@allFileds[0].AreaName</td>
+                                                            </tr>
+                                                            <tr>
+                                                                <th>@Html.DisplayNameFor(model => model.LtrackOrderViewModelList[0].CityName)</th>
+                                                                <td>@allFileds[0].CityName </td>
+                                                            </tr>
+                                                            <tr>
+                                                                <th>@Html.DisplayNameFor(model => model.LtrackOrderViewModelList[0].PincodeName)</th>
+                                                                <td>@allFileds[0].PincodeName</td>
+                                                            </tr>
+                                                        </table>
+                                                    </div>
+                                                    <div class="span4">
+                                                        <div class="box-header box-bg-color">
+                                                            <h2><i class="icon-money"></i><span class="break"></span>Payment Information</h2>
+                                                        </div>
+                                                        <table class="table table-bordered">
+                                                            <tr>
+                                                                <th colspan="4">@Html.DisplayNameFor(model => model.LtrackOrderViewModelList[0].OrderAmount)</th>
+                                                                <td>@allFileds[0].OrderAmount</td>
+                                                            </tr>
+                                                            <tr>
+                                                                <th colspan="4">@Html.DisplayNameFor(model => model.LtrackOrderViewModelList[0].GandhibaghCharge)</th>
+                                                                <td>@allFileds[0].GandhibaghCharge</td>
+                                                            </tr>
+                                                            <tr>
+                                                                <th colspan="4">@Html.DisplayNameFor(model => model.LtrackOrderViewModelList[0].PayableAmount)</th>
+                                                                <td>@allFileds[0].PayableAmount</td>
+                                                            </tr>
+
+
+                                                        </table>
+
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    </td>
+                                </tr>
+                            }
+                        }
+                        if (IsDelivery == true)
+                        {
+                            //outer printing material
+                            for (int i = 0; i < OrderCodeList.Count(); i++)
+                            {
+
+                                var allFileds = (Model.LtrackOrderViewModelList
+                                    .Select(x => new
+                                    {
+                                        x.OrderCode,
+                                        x.ShopOrderCode,
+                                        x.CustomerOrderID,
+                                        x.FirstName,
+                                        x.CreateDate,
+                                        x.PName,
+                                        x.PackSize,
+                                        x.Name,
+                                        x.CODQty,
+                                        x.RetailerRate,
+                                        x.TotalAmount,
+                                        x.OrderAmount,
+                                        x.GandhibaghCharge,
+                                        x.PayableAmount,
+                                        x.IsDeliveryOutSource,
+                                        x.Email,
+                                        x.Mobile,
+                                        x.ShippingAddress,
+                                        x.AreaName,
+                                        x.CityName,
+                                        x.PincodeName
+                                    })
+                                    .Where(x => x.OrderCode == OrderCodeList[i].ToString()).ToList());
+
+                                <tr>
+                                    <td>
+                                        @Html.CheckBoxFor(model => model.LtrackOrderViewModelList[0].CheckBoxStatus, new { @class = "chkSelect" })
+                                        @Html.HiddenFor(model => model.LtrackOrderViewModelList[0].ShopOrderCode)
+                                        @Html.HiddenFor(model => model.LtrackOrderViewModelList[0].CustomerOrderID)
+                                    </td>
+                                    <td>
+                                        <a href="#" class="btn-minimize"><i class="halflings-icon chevron-down"></i> @allFileds[0].OrderCode</a>
+                                    </td>
+
+                                    <td>
+                                        @allFileds[0].ShopOrderCode
+                                    </td>
+                                    <td>
+                                        @allFileds[0].FirstName
+                                    </td>
+                                    <td>
+                                        @allFileds[0].CreateDate
+                                    </td>
+                                </tr>
+
+                                <tr class="hide-row box-content" id="abc">
+                                    <td colspan="5">
+                                        <table class="table">
+                                            <tr>
+                                                <td colspan="5">
+                                                    <div class="row-fluid sortable ui-sortable">
+                                                        <div class="box span12">
+                                                            <table class="table table-bordered table-striped ProDisplayBlock">
+
+                                                                <tr>
+                                                                    <td colspan="6">
+
+                                                                        @for (int j = 0; j < allFileds.Count(); j++)
+                                                                        {
+
+                                                                            <div class="box span6">
+                                                                                <table class="table table-bordered">
+                                                                                    <tr>
+                                                                                        <td rowspan="6">
+                                                                                            @{string s = @Model.LtrackOrderViewModelList[j].ImageLocation;
+                                                                                            <img src="@s" alt="@allFileds[j].PName" />
+                                                                                            }
+                                                                                        </td>
+                                                                                        <th>
+                                                                                            @Html.DisplayNameFor(model => model.LtrackOrderViewModelList[j].PName)
+                                                                                        </th>
+                                                                                        <td>
+                                                                                            @allFileds[j].PName
+                                                                                        </td>
+                                                                                    </tr>
+                                                                                    <tr>
+                                                                                        <th>
+                                                                                            @Html.DisplayNameFor(model => model.LtrackOrderViewModelList[j].PackSize)
+                                                                                        </th>
+
+                                                                                        <td>
+                                                                                            @allFileds[j].PackSize @allFileds[j].Name
+                                                                                        </td>
+                                                                                    </tr>
+
+                                                                                    <tr>
+                                                                                        <th>
+                                                                                            @Html.DisplayNameFor(model => model.LtrackOrderViewModelList[j].CODQty)
+                                                                                        </th>
+                                                                                        <td>
+                                                                                            @allFileds[j].CODQty
+                                                                                        </td>
+                                                                                    </tr>
+                                                                                    <tr>
+                                                                                        <th>
+                                                                                            @Html.DisplayNameFor(model => model.LtrackOrderViewModelList[j].RetailerRate)
+                                                                                        </th>
+                                                                                        <td>
+                                                                                            @allFileds[j].RetailerRate
+                                                                                        </td>
+                                                                                    </tr>
+                                                                                    <tr>
+                                                                                        <th>
+                                                                                            @Html.DisplayNameFor(model => model.LtrackOrderViewModelList[j].TotalAmount)
+                                                                                        </th>
+                                                                                        <td>
+                                                                                            @allFileds[j].TotalAmount
+                                                                                        </td>
+                                                                                    </tr>
+
+
+                                                                                </table>
+                                                                            </div>
+
+                                                                        }
+                                                                    </td>
+                                                                </tr>
+                                                            </table>
+                                                        </div>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>
+                                                    <div class="span4 pull-right">
+                                                        <div class="box-header box-bg-color">
+                                                            <h2><i class="icon-money"></i><span class="break"></span>Payment Information</h2>
+                                                        </div>
+                                                        <table class="table table-bordered">
+                                                            <tr>
+                                                                <th colspan="4">@Html.DisplayNameFor(model => model.LtrackOrderViewModelList[0].OrderAmount)</th>
+                                                                <td>@allFileds[0].OrderAmount</td>
+                                                            </tr>
+                                                            <tr>
+                                                                <th colspan="4">@Html.DisplayNameFor(model => model.LtrackOrderViewModelList[0].GandhibaghCharge)</th>
+                                                                <td>@allFileds[0].GandhibaghCharge</td>
+                                                            </tr>
+                                                            <tr>
+                                                                <th colspan="4">@Html.DisplayNameFor(model => model.LtrackOrderViewModelList[0].PayableAmount)</th>
+                                                                <td>@allFileds[0].PayableAmount</td>
+                                                            </tr>
+
+
+                                                        </table>
+
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    </td>
+                                </tr>
+
+
+                            }
+
+                        }
+
+                    }
+
+
+                </table>
+            </div>
+
+        </div>
+    </div>
+}

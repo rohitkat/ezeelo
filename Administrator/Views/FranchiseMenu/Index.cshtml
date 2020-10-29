@@ -1,0 +1,230 @@
+﻿@{
+    ViewBag.Title = "Index";
+}
+<style>
+    .CategoryDiv {
+        width: 233px;
+        float: left;
+        padding: 10px;
+    }
+
+        .CategoryDiv span {
+            display: block;
+            font-size: 15px;
+            font-weight: 600;
+        }
+
+        .CategoryDiv select {
+            display: block;
+        }
+
+    .textDiv {
+        margin-left: 10px;
+        width: 100%;
+        float: left;
+    }
+
+    #Content {
+    }
+</style>
+
+<div id="content" class="span10">
+    <ul class="breadcrumb">
+        <li>
+            <a href="#">Index</a>
+        </li>
+    </ul>
+
+    <div class="row-fluid">
+        <div class="box span12">
+            <div class="box-header">
+                <h2><i class="icon-edit"></i><span class="break"></span>@Html.ActionLink("Create New", "Create")</h2>
+            </div>
+            <div class="box-content">
+                <div style="width:100%;">
+                    <div class="CategoryDiv">
+                        <span>Select Franchise</span>
+                        @Html.DropDownList("FranchiseList", "Select Franchise")
+                    </div>
+                    <div class="CategoryDiv">
+                        <span>Select Category</span>
+                        @Html.DropDownList("CategoryList", "Select Category")
+                    </div>
+                    <div class="CategoryDiv">
+                        <span>Select Level Two Category</span>
+                        @Html.DropDownList("LevelTwoCategoryList", "Select Category")
+                    </div>
+                    @*<div class="CategoryDiv">
+                        <span>Select Level Three Category</span>
+                        @Html.DropDownList("LevelThreeCategoryList", "Select Category")
+                    </div>*@
+                </div>
+                @if (TempData["Message"] != null)
+                {
+                    <br />
+                    <span style="font-weight:bold; color:red;"> @TempData["Message"]  </span>
+                }
+
+                <div id="divSpecification" style="display:block;">
+
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<script src="~/Scripts/jquery-1.10.2.min.js"></script>
+<script>
+
+    $(document).ready(function () {
+
+        $('#FranchiseList').change(function (e) {
+            var id = $("#FranchiseList  option:selected").val();
+
+            $.ajax({
+                type: "POST",
+                //URL: "/ShopPriority/SelectLevelOneCategoryByFranchise?id=" + id,
+                url: "/FranchiseMenu/SelectLevelOneCategoryByFranchise",
+                data: "{ id: " + id + "}",
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                async: true,
+                cache: false,
+                success: function (msg) {
+
+                    $('#CategoryList').empty();
+                    $('#CategoryList').append('<option value=0>Select Category</option>');
+
+                    $.each(msg, function (index, item) {
+
+                        $('#CategoryList').append('<option value=' + item.ID + '>' + item.Name + '</option>');
+                    });
+                },
+                error: function (x, e) {
+                    alert("unable to Retrive Data No ");
+                }
+
+            });
+            
+            /* Request the partial view with .get request. */            
+            $.get('/FranchiseMenu/GetFranchiseCategoryList?FranchiseID=' + id, function (data) {
+                /* data is the pure html returned from action method, load it to your page */
+                
+                $('#divSpecification').html(data);
+
+                /* little fade in effect */
+                $('#divSpecification').fadeIn('fast');
+            });
+
+            $("#pageloaddiv").css('display', 'none');
+            $("#pageloaddiv").fadeOut(1000);
+
+        });
+
+        $("#CategoryList").change(function () {
+            /* Get the selected value of dropdownlist */
+            var selectedID = $(this).val();
+            var FranchiseID = $("#FranchiseList option:selected").val();
+            var level = 1;
+            /*Check Condition*/
+            $('#divSpecification').html(null);
+
+            /*Processing Image*/
+            $("#pageloaddiv").css('display', 'block');
+            $("#pageloaddiv").fadeOut(1000);
+
+
+            $.ajax({
+                type: "POST",
+                url: "/FranchiseMenu/SelectCategory/?ParentCategory=" + selectedID + "&level=2",
+                dataType: "json",
+                async: true,
+                cache: false,
+                success: function (msg) {
+                    $('#LevelTwoCategoryList').empty();
+                    $('#LevelTwoCategoryList').append('<option value=0>Select Category</option>');
+                    $.each(msg, function (index, item) {
+                        $('#LevelTwoCategoryList').append('<option value=' + item.ID + '>' + item.Name + '</option>');
+                    });
+                },
+                error: function (x, e) {
+                    alert("Sorry No Such Type of Category Is available. ");
+                }
+            });
+
+
+
+            /* Request the partial view with .get request. */
+            $.get('/FranchiseMenu/GetFranchiseCategoryList?FranchiseID=' + FranchiseID + '&CategoryID=' + selectedID, function (data) {
+                /* data is the pure html returned from action method, load it to your page */
+                $('#divSpecification').html(data);
+
+                /* little fade in effect */
+                $('#divSpecification').fadeIn('fast');
+            });
+
+            $("#pageloaddiv").css('display', 'none');
+            $("#pageloaddiv").fadeOut(1000);
+
+        });
+
+        $("#LevelTwoCategoryList").change(function () {
+            /* Get the selected value of dropdownlist */
+            var selectedID = $(this).val();
+            var FranchiseID = $("#FranchiseList option:selected").val();
+            var level = 2;
+            /*Check Condition*/
+            $('#divSpecification').html(null);
+
+            /*Processing Image*/
+            $("#pageloaddiv").css('display', 'block');
+            $("#pageloaddiv").fadeOut(1000);
+
+
+            /* Request the partial view with .get request. */
+                $.get('/FranchiseMenu/GetFranchiseCategoryList?FranchiseID=' + FranchiseID + '&CategoryID=' + selectedID, function (data) {
+                /* data is the pure html returned from action method, load it to your page */
+                $('#divSpecification').html(data);
+
+                /* little fade in effect */
+                $('#divSpecification').fadeIn('fast');
+            });
+
+            $("#pageloaddiv").css('display', 'none');
+            $("#pageloaddiv").fadeOut(1000);
+
+        });
+
+        //$("#LevelThreeCategoryList").change(function () {
+        //    /* Get the selected value of dropdownlist */
+        //    var selectedID = $(this).val();
+        //    var FranchiseID = $("#FranchiseList option:selected").val();
+        //    var level = 3;
+        //    /*Check Condition*/
+        //    $('#divSpecification').html(null);
+
+        //    /*Processing Image*/
+        //    $("#pageloaddiv").css('display', 'block');
+        //    $("#pageloaddiv").fadeOut(1000);
+
+        //    /* Request the partial view with .get request. */
+        //    //$.get('/ShopPriority/ShopPriorityList/?FranchiseList=' + FranchiseID + '&CategoryList=' + selectedID, function (data) {
+        //    $.get('/FranchiseMenu/ShopPriorityList/?FranchiseList=' + FranchiseID + '&CategoryList=' + selectedID + '&level=' + level, function (data) {
+        //        /* data is the pure html returned from action method, load it to your page */
+        //        $('#divSpecification').html(data);
+
+        //        /* little fade in effect */
+        //        $('#divSpecification').fadeIn('fast');
+        //    });
+
+        //    $("#pageloaddiv").css('display', 'none');
+        //    $("#pageloaddiv").fadeOut(1000);
+
+        //});
+
+    });
+
+</script>
+

@@ -1,0 +1,337 @@
+﻿@model ModelLayer.Models.ViewModel.InvoiceViewModel
+
+@{
+    ViewBag.Title = "Add Return Item In Stock";
+}
+
+<link href="~/Content/assets/css/font-awesome.min.css" rel="stylesheet" />
+<script src="~/Content/js/jquery-1.11.0.min.js"></script>
+<script>
+    $(document).ready(function () {
+        CalculateTotalAmt()
+        $("*[id^='ReasonId-']").live('change', function (e) {
+            var name = e.target.id;
+            var nameSplit = name.split('-');
+            var ReasonId = "ReasonId-" + nameSplit[1];
+            var SubReasonId = "SubReasonId-" + nameSplit[1];
+            $.ajax({
+                type: 'POST',
+                url: '/WarehouseWastageStock/GetSubReason',
+                data: { reason: $('#' + ReasonId).val() },
+                dataType: 'json',
+                success: function (data) {
+                    $('#' + SubReasonId + ' option').remove();
+                    $.each(data, function (index, val) {
+                        var optionTag = $('<option></option>');
+                        $(optionTag).val(val.Value).text(val.Text);
+                        $('#' + SubReasonId).append(optionTag);
+                    });
+                }
+            });
+        });
+
+        $("*[id^='ReturnQuantity-']").keyup(function (e) {
+            var name = e.target.id;
+            var nameSplit = name.split('-');
+            var ReturnQtyVar = "ReturnQuantity-" + nameSplit[1];
+            var AvlQtyVar = "BatchAvlQty-" + nameSplit[1];
+            var ReturnRateVar = "ReturnRatePerUnit-" + nameSplit[1];
+            var AmtVar = "Amount-" + nameSplit[1];
+            var Old_ReturnQtyVar = "OldReturnQty-" + nameSplit[1];
+
+            var ReturnQty = $("#" + ReturnQtyVar).val();
+            var RcdQty = $("#" + AvlQtyVar).text();
+            var ReturnRate = $("#" + ReturnRateVar).val();
+            var Old_ReturnQty = $("#" + Old_ReturnQtyVar).text();
+            var AdditionalQty = 0;
+            var Amt;
+
+            if (Number(ReturnQty) > Number(Old_ReturnQty))
+            {
+                AdditionalQty = Number(ReturnQty) - Number(Old_ReturnQty);
+                if(AdditionalQty > Number(RcdQty))
+                {
+                    var TotalQty = Number($("#" + AvlQtyVar).text()) + Number(Old_ReturnQty);
+                    $("#" + ReturnQtyVar).val(TotalQty);
+                    ReturnQty = $("#" + ReturnQtyVar).val();
+                }
+            }
+
+            Amt = Number(ReturnQty) * Number(ReturnRate);
+            $("#" + AmtVar).text(Amt.toFixed(2));
+            CalculateTotalAmt();
+        });
+
+
+        $("*[id^='ReturnRatePerUnit-']").keyup(function (e) {
+
+            var name = e.target.id;
+            var nameSplit = name.split('-');
+            var ReturnQtyVar = "ReturnQuantity-" + nameSplit[1];
+            var ReturnRateVar = "ReturnRatePerUnit-" + nameSplit[1];
+            var BuyRateVar = "BuyRatePerUnit-" + nameSplit[1];
+            var AmtVar = "Amount-" + nameSplit[1];
+
+            var ReturnQty = $("#" + ReturnQtyVar).val();
+            var ReturnRate = $("#" + ReturnRateVar).val();
+            var BuyRate = $("#" + BuyRateVar).text();
+            if (Number(ReturnRate) > Number(BuyRate)) {
+                $("#" + ReturnRateVar).val(Number(BuyRate).toFixed(2));
+                ReturnRate = $("#" + ReturnRateVar).val();
+            }
+            var Amt;
+            Amt = Number(ReturnQty) * Number(ReturnRate);
+            $("#" + AmtVar).text(Amt.toFixed(2));
+            CalculateTotalAmt();
+        });
+
+        function CalculateTotalAmt() {
+            var AddCharge = $("#AdditionalCharge").val();
+            var TransCharge = $("#TranportationCharge").val();
+            var TotalAmt;
+            var table = document.getElementById('tbl');
+            var rowLength = table.rows.length;
+            var itemTotal = 0;
+            for (var i = 0; i < rowLength - 1; i++) {
+                var AmtVar = "Amount-" + i;
+                itemTotal = Number(itemTotal) + Number($("#" + AmtVar).text());
+            }
+            TotalAmt = Number(AddCharge) + Number(TransCharge) + Number(itemTotal);
+            $("#TotalReturnAmout").val(TotalAmt.toFixed(2))
+        }
+
+        $("#AdditionalCharge").keyup(function (e) {
+            CalculateTotalAmt()
+        });
+        $("#TranportationCharge").keyup(function (e) {
+            CalculateTotalAmt()
+        });
+
+
+    });
+
+
+</script>
+@using (Html.BeginForm("Edit", "WarehouseReturnStock", null, FormMethod.Post, new { id = "Form_" }))     
+{
+    @Html.HiddenFor(model => @Model.ReturnId)
+    @Html.ValidationSummary(true)
+    <div id="content" class="span10">
+        <div class="row-fluid">
+            <div class="box span12">
+                <center><p style="font-size:large"><b><u>Add Return Item In Stock</u></b></p></center>
+                <div class="box-header creatProduct clearfix" data-original-title="">
+                    <h2>
+                        <i class="icon-exclamation-sign"></i>
+                        <span class="break"></span>
+                        INVOICE DETAIL
+                    </h2>
+                </div>
+                <div class="box-content">
+                    <div class="form-horizontal">
+                        <div class="display-label">Warehouse Name: <b>@Model.WarehouseName</b></div>
+                        <div class="display-label">Supplier Name: <b>@Model.SupplierName</b></div>
+                        <div class="display-label">Invoice Date: <b>@Model.InvoiceDate.ToString("dd/MM/yyyy")</b></div>
+                        <div class="display-label">Total Discount Amount:<b><i class="fa fa-inr"></i> @Model.TotalDiscountAmount</b></div>
+                        <div class="display-label">Shipping Charge: <b><i class="fa fa-inr"></i> @Model.ShippingCharge</b></div>
+                        <div class="display-label">Custom Duty Charge: <b><i class="fa fa-inr"></i> @Model.CustomDutyCharge</b></div>
+                        <div class="display-label">Operating Cost: <b><i class="fa fa-inr"></i> @Model.OperatingCost</b></div>
+                        <div class="display-label">Additional Cost: <b><i class="fa fa-inr"></i> @Model.AdditionalCost</b></div>
+                        <div class="display-label">Invoice Amount: <b><i class="fa fa-inr"></i> @Model.OrderAmount</b></div>
+                        <div class="display-label">Total Amount: <b><i class="fa fa-inr"></i> @Model.TotalAmount</b></div>
+                        <div class="display-label">Remark: <b>@Model.Remark</b></div>
+
+                    </div>
+                </div>
+            </div>
+
+            <div class="box">
+                <div class="box-header creatProduct clearfix" data-original-title="">
+                    <h2>
+                        <i class="icon-exclamation-sign"></i>
+                        <span class="break"></span>
+                        ADDED ITEM(S)
+                    </h2>
+                </div>
+                <div class="box-content nameDscrp">
+                    <div class="NameDescription">
+                        <div class="box-content box-content1" style="padding-left:0px;width:99%;overflow-x:scroll;z-index:1;">
+                            @Html.ValidationMessageFor(model => model.AdditionalCharge)
+                            <div class="box-content">
+                                <center>  </center>
+                                <table id="tbl" class="table table-striped table-bordered bootstrap-datatable datatable dataTable" width="100%">
+                                    <tr>
+                                        <th>Product</th>
+                                        <th>HSN Code</th>
+                                        <th>Received Qty</th>
+                                        <th>Available Qty</th>
+                                        <th>Buy Rate Per Unit</th>
+                                        <th>Return Qty</th>
+                                        <th>Return Rate Per Unit</th>
+                                        <th>Amount</th>
+                                        <th>Reason</th>
+                                        <th>SubReason</th>
+                                        <th>Remark</th>
+                                    </tr>
+                                    @for (int i = 0; i < @Model.lWarehouseReturnStockDetailsViewModel.Count; i++)
+                                    {
+                                        <tr>
+                                            <td class="table-shopping-cart-img" style="text-align: left;">
+                                                @Html.HiddenFor(model => @Model.lWarehouseReturnStockDetailsViewModel[i].WarehouseStockID)
+                                                @Html.HiddenFor(model => @Model.lWarehouseReturnStockDetailsViewModel[i].ID)
+                                                @Model.lWarehouseReturnStockDetailsViewModel[i].ItemName
+                                                <br />
+                                                <img id=" imgproductimage" src="@Model.lWarehouseReturnStockDetailsViewModel[i].StockThumbPath" onerror="this.src = '/Content/Images/no_image.png'" style="width: 70px; height:70px;" alt=" eZeelo " />
+                                            </td>
+                                            <td>@Model.lWarehouseReturnStockDetailsViewModel[i].HSNCode</td>
+                                            <td>@Html.LabelFor(model => @Model.lWarehouseReturnStockDetailsViewModel[i].ReceivedQuantity, @Model.lWarehouseReturnStockDetailsViewModel[i].ReceivedQuantity.ToString(), new { Style = "width:30px", @id = "ReceivedQuantity-" + i.ToString() })</td>
+                                            <td>
+                                                @Html.LabelFor(model => @Model.lWarehouseReturnStockDetailsViewModel[i].BatchAvlQty, @Model.lWarehouseReturnStockDetailsViewModel[i].BatchAvlQty.ToString(), new { Style = "width:30px", @id = "BatchAvlQty-" + i.ToString() })
+                                               @Html.HiddenFor(model => @Model.lWarehouseReturnStockDetailsViewModel[i].BatchAvlQty)
+                                        </td>
+                                        <td>
+                                            @Html.LabelFor(model => @Model.lWarehouseReturnStockDetailsViewModel[i].BuyRatePerUnit, @Model.lWarehouseReturnStockDetailsViewModel[i].BuyRatePerUnit.ToString(), new { Style = "width:40px", @id = "BuyRatePerUnit-" + i.ToString() })
+                                            @Html.HiddenFor(model => @Model.lWarehouseReturnStockDetailsViewModel[i].BuyRatePerUnit)
+                                        </td>
+                                        <td>
+                                            @{
+                                       
+                                            @Html.TextBoxFor(model => @Model.lWarehouseReturnStockDetailsViewModel[i].ReturnQuantity, new
+                                    {
+                                        style = "width:40px;",
+                                        @id = "ReturnQuantity-" + i.ToString(),
+                                        onkeyup = "if (/\\D/g.test(this.value)) this.value = this.value.replace(/\\D/g,'')" 
+                                    })
+                                        
+                                        <br />
+                                        <span style="color:red"> Old Qty:   <label id="OldReturnQty-@i.ToString()">@Model.lWarehouseReturnStockDetailsViewModel[i].OldReturnQuantity</label></span>
+}
+                                            @Html.HiddenFor(model => @Model.lWarehouseReturnStockDetailsViewModel[i].ReturnQuantity)
+
+                                        </td>
+
+                                        <td>
+                                            @{
+                                        if (Model.lWarehouseReturnStockDetailsViewModel[i].BatchAvlQty == 0)
+                                        {
+                                            @Html.TextBoxFor(model => @Model.lWarehouseReturnStockDetailsViewModel[i].ReturnRatePerUnit, new { style = "width:60px;", @id = "ReturnRatePerUnit-" + i.ToString(), disabled = "disabled" })
+                                        }
+                                        else
+                                        {
+                                            @Html.TextBoxFor(model => @Model.lWarehouseReturnStockDetailsViewModel[i].ReturnRatePerUnit, new { style = "width:60px;", @id = "ReturnRatePerUnit-" + i.ToString() })
+                                        }
+                                            }
+
+                                            @Html.HiddenFor(model => @Model.lWarehouseReturnStockDetailsViewModel[i].ReturnRatePerUnit)
+                                        </td>
+                                        <td>@Html.LabelFor(model => @Model.lWarehouseReturnStockDetailsViewModel[i].Amount, @Model.lWarehouseReturnStockDetailsViewModel[i].Amount.ToString(), new { Style = "width:40px", @id = "Amount-" + i.ToString() })</td>
+                                        <td>
+                                            @Html.DropDownListFor(model => @Model.lWarehouseReturnStockDetailsViewModel[i].ReasonId, @Model.lWarehouseReturnStockDetailsViewModel[i].ReasonList, "Select Reason", new { style = "width:60px;", @id = "ReasonId-" + i.ToString() })
+                                           
+                                        </td>
+                                        <td>
+                                            @Html.DropDownListFor(model => @Model.lWarehouseReturnStockDetailsViewModel[i].SubReasonId, @Model.lWarehouseReturnStockDetailsViewModel[i].SubReasonList, "Select Reason", new { style = "width:60px;", @id = "SubReasonId-" + i.ToString() })
+                                        </td>
+                                        <td>
+                                            @Html.TextBoxFor(model => @Model.lWarehouseReturnStockDetailsViewModel[i].Remark)
+                                            @*<textarea id="Remark" name="Remark" style="width:88%;">@Model.lWarehouseReturnStockDetailsViewModel[i].Remark</textarea>*@
+                                        </td>
+                                    </tr>
+                                    }
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="box">
+                <div class="box-header creatProduct clearfix" data-original-title="">
+                    <h2>
+                        <i class="icon-exclamation-sign"></i>
+                        <span class="break"></span>
+                        Other Details
+                    </h2>
+                </div>
+                <div class="box-content nameDscrp">
+                    <div class="NameDescription">
+                        <div class="box-content box-content1" style="padding-left:0px;width:99%;overflow-x:scroll;z-index:1;">
+
+                            <div class="box-content">
+                                <table style="width:90%">
+                                    <tr>
+                                        <td style="width:30%">
+                                            <div class="form-group">
+                                                <div class="col-sm-3">
+                                                    Additional Charge
+                                                </div>
+                                                <div class="col-sm-6">
+                                                    <i class="fa fa-inr"></i>&nbsp;@Html.TextBoxFor(model => model.AdditionalCharge)
+
+                                                    @Html.HiddenFor(model => model.AdditionalCharge)
+                                                    @*Additional Charges*@
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td style="width:30%">
+                                            <div class="form-group">
+                                                <div class="col-sm-3">
+                                                    Tranportation Charge
+                                                </div>
+                                                <div class="col-sm-6">
+                                                    <i class="fa fa-inr"></i>&nbsp;@Html.TextBoxFor(model => model.TranportationCharge)
+                                                    @Html.ValidationMessageFor(model => model.TranportationCharge)
+                                                    @Html.HiddenFor(model => model.TranportationCharge)
+                                                    @*TransportationCharge*@
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td style="width:30%">
+                                            <div class="form-group">
+                                                <div class="col-sm-3">
+                                                    Total Amount
+                                                </div>
+                                                <div class="col-sm-6">
+                                                    <span>
+                                                        <i class="fa fa-inr"></i>&nbsp;
+                                                        @Html.TextBoxFor(model => model.TotalReturnAmout, new { style = "width:80px;color:red", disabled = "disabled" })
+                                                        @Html.HiddenFor(model => model.TotalReturnAmout)
+                                                    </span>    @*<b style="color:red;" id="TotalAmount"> </b>*@
+
+                                                </div>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="3">
+                                            <div class="col-sm-3">
+                                                Remark
+                                            </div>
+                                            <div class="col-sm-6">
+                                                <textarea id="Remark" name="Remark" style="width:100%">@Model.Remark</textarea>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <br />
+            <p>
+                @if (Model.IsApproved == true)
+                {
+                    <span style="color:#2b7e08" >Approved</span>
+                }
+                else
+                {
+                    <input type="submit" value="Save" class="btn btn-success mrg-left mrg-top" />
+                }
+                
+                @Html.ActionLink("Back to List", "Index", null, new { @class = "btn btn-default mrg-left mrg-top" })
+                @Html.ValidationMessageFor(model => model.AdditionalCharge)
+            </p>
+
+        </div>
+    </div>
+}

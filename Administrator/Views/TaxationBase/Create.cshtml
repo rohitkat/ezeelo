@@ -1,0 +1,97 @@
+﻿@model ModelLayer.Models.TaxationBase
+
+@{
+    ViewBag.Title = "Create";
+}
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+
+    <div class="span10" id="content">
+        <ul class="breadcrumb">
+            <li>
+                <i class="icon-edit"></i>
+                @*<a href="index.cshtml">Home</a>*@
+                Create
+            </li>
+        </ul>
+        <div class="row-fluid">
+            <div class="box span12">
+                <div class="box-header">
+                    <h2><i class="halflings-icon user"></i><span class="break"></span>TaxationBase</h2>
+
+                </div>
+                <div class="box-content">
+                    <div class="form-horizontal">
+                        @Html.ValidationSummary(true)
+                        @if (ViewBag.Message != null)
+                        { 
+                        <div>
+                            <span style="color:red;font-weight:bold;">@ViewBag.Message</span>
+                        </div>
+                        }
+
+                        <div class="control-group">
+                            <label class="control-label col-md-2"> Select IndirectTax</label>
+                            <div class="col-md-10 controls">
+                                @Html.DropDownList("TaxationID", String.Empty)
+                                @Html.ValidationMessageFor(model => model.TaxationID)
+                            </div>
+                        </div>
+
+                        @*<div class="control-group">
+                            @Html.LabelFor(model => model.FranchiseTaxDetailID, "FranchiseTaxDetailID", new { @class = "control-label col-md-2" })
+                            <div class="col-md-10 controls">
+                                @Html.DropDownList("FranchiseTaxDetailID", String.Empty)
+                                @Html.ValidationMessageFor(model => model.FranchiseTaxDetailID)
+                            </div>
+                        </div>*@
+                        <div class="control-group">
+                            @*@Html.LabelFor(model => model.FranchiseTaxDetailID, "FranchiseTaxDetailID", new { @class = "control-label col-md-2" })*@
+                            <label class="control-label col-md-2"> Select Franchise</label>
+                            <div class="col-md-10 controls">
+                                @Html.DropDownList("Franchise", (SelectList)ViewBag.Franchise)
+                                @*@Html.ValidationMessageFor(model => model.FranchiseTaxDetailID)*@
+                            </div>
+                        </div>
+                        <div class="control-group">
+                           
+                            <label class="control-label col-md-2"> Select Direct Tax(Depend ON)</label>
+                            <div class="col-md-10 controls">
+                                @Html.DropDownList("TaxationDependOn", (SelectList)ViewBag.TaxationDependOn)
+                                @Html.ValidationMessageFor(model => model.TaxationID)
+                            </div>
+                        </div>
+
+                        <div class="control-group">
+                            @Html.LabelFor(model => model.Description, new { @class = "control-label col-md-2" })
+                            <div class="col-md-10 controls">
+                                @Html.EditorFor(model => model.Description)
+                                @Html.ValidationMessageFor(model => model.Description)
+                            </div>
+                        </div>
+
+                        <div class="control-group">
+                            @Html.LabelFor(model => model.IsActive, new { @class = "control-label col-md-2" })
+                            <div class="col-md-10 controls">
+                                @Html.EditorFor(model => model.IsActive)
+                                @Html.ValidationMessageFor(model => model.IsActive)
+                            </div>
+                        </div>
+
+
+
+                        <div class="form-actions">
+                            <div class="col-md-offset-2 col-md-10">
+                                <input type="submit" value="Create" class="btn btn-success" />
+                                @Html.ActionLink("Back to List", "Index", string.Empty, new { @class = "btn" })
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+

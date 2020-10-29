@@ -1,0 +1,234 @@
+﻿@model ModelLayer.Models.ReceiveOrderOnCall
+
+@{
+    ViewBag.Title = "Edit Receive Order On Call [ " + @Model.Name + " ]";
+}
+<style>
+    textarea {
+        width: 80%;
+        height: 40px;
+    }
+</style>
+<div class="row">
+    <div class="span12">
+        <div class="widget">
+            <div class="widget-header">
+                <i class="icon-list-alt"></i>
+                <h3> Edit Receive Order On Call [ @Model.Name ]</h3>
+            </div>
+            <!-- /widget-header -->
+            <div class="widget-content">
+                <div class="widget big-stats-container">
+                    <div class="widget-content">
+
+                        @using (Html.BeginForm())
+                        {
+                            @Html.AntiForgeryToken()
+
+                            <div class="form-horizontal">
+                                @Html.ValidationSummary(true)
+                                @Html.HiddenFor(model => model.ID)
+
+                                <div class="control-group">
+                                    <span class="control-label">Received By</span>
+                                    <div class="controls">
+                                        @Html.DropDownList("OrderReceivedPersonalDetailID")
+                                        @Html.ValidationMessageFor(model => model.OrderReceivedPersonalDetailID)
+                                    </div>
+                                </div>
+
+                                <div class="control-group">
+                                    <span class="control-label">Customer Name</span>
+                                    <div class="controls">
+                                        @Html.EditorFor(model => model.Name)
+                                        @Html.ValidationMessageFor(model => model.Name)
+                                    </div>
+                                </div>
+
+                                <div class="control-group">
+                                    <span class="control-label">Mobile</span>
+                                    <div class="controls">
+                                        @Html.EditorFor(model => model.PrimaryMobile)
+                                        @Html.ValidationMessageFor(model => model.PrimaryMobile)
+                                    </div>
+                                </div>
+
+                                <div class="control-group">
+                                    <span class="control-label">Secondary Mobile</span>
+                                    <div class="controls">
+                                        @Html.EditorFor(model => model.SecondaryMobile)
+                                        @Html.ValidationMessageFor(model => model.SecondaryMobile)
+                                    </div>
+                                </div>
+
+                                <div class="control-group">
+                                    <span class="control-label">Email</span>
+                                    <div class="controls">
+                                        @Html.EditorFor(model => model.Email)
+                                        @Html.ValidationMessageFor(model => model.Email)
+                                    </div>
+                                </div>
+
+                                <div class="control-group">
+                                    <span class="control-label">Shipping Address</span>
+                                    <div class="controls">
+                                        @Html.TextAreaFor(model => model.ShippingAddress)
+                                        @Html.ValidationMessageFor(model => model.ShippingAddress)
+                                    </div>
+                                </div>
+
+                                <div class="control-group">
+                                    <span class="control-label">Description</span>
+                                    <div class="controls">
+                                        @if (ViewBag.OrderCode != null)
+                                        {
+                                            @Html.TextAreaFor(model => model.Description, new { disabled = "disabled" })
+                                            @Html.ValidationMessageFor(model => model.Description)
+                                        }
+                                        else
+                                        {
+                                            @Html.TextAreaFor(model => model.Description)
+                                            @Html.ValidationMessageFor(model => model.Description)
+                                        }
+                                    </div>
+                                </div>
+
+                                <div class="control-group">
+                                    <span class="control-label">Order No</span>
+                                    <div class="controls">
+                                        @if (ViewBag.OrderCode != null)
+                                        {
+                                            @Html.TextBox("OrderCode", null, new { Disabled = "Disabled" })
+                                        }
+                                        else
+                                        {
+                                            @Html.TextBox("OrderCode", null, new { @id = "OrderCode", @class = "form-control-Widout-block", @placeholder = "Enter Order Code", @onkeypress = "return isValidOrderCode(event)" })
+                                            <img id="OrderNo_loading" src="~/Content/Images/ajax_loader.gif" style="width: 30px; height: 30px; display: none" />
+                                            <div id="divOrderNoError" style="width:400px; display: none; padding:5px" class="alert-danger focused">  </div>
+                                        }
+
+                                    </div>
+                                </div>
+
+                                <div class="control-group">
+                                    <span class="control-label">Reference Order No</span>
+                                    <div class="controls">
+                                        @if (ViewBag.ReferenceOrderCode != null)
+                                        {
+                                            @Html.TextBox("ReferenceOrderCode", null, new { Disabled = "Disabled" })
+                                        }
+                                        else
+                                        {
+                                            @Html.TextBox("ReferenceOrderCode", null, new { @id = "ReferenceOrderCode", @class = "form-control-Widout-block", @placeholder = "Enter Reference Order Code", @onkeypress = "return isValidRefOrderCode(event)" })
+                                            <img id="RefOrderNo_loading" src="~/Content/Images/ajax_loader.gif" style="width: 30px; height: 30px; display: none" />
+                                            <div id="divRefOrderNoError" style="width:400px; display: none; padding:5px" class="alert-danger focused">  </div>
+                                        }
+
+                                    </div>
+                                </div>
+
+                                <div class="control-group">
+                                    <div style="float:right">
+                                        <input type="submit" value="Save" class="btn btn-danger" />
+                                    </div>
+                                </div>
+                            </div>
+                        }
+
+                        <div>
+                            @Html.ActionLink("Back to List", "Index")
+                        </div>
+                    </div>
+                </div>
+                <!-- /widget-content -->
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Myscripts{
+    <script type="text/javascript">
+
+        //----------------------------------------------------------------------To GetAddress From Pincode---//
+
+        var lOrderCode = $('#OrderCode').val()
+
+        $('#OrderCode').bind('input propertychange', function () {
+            var lOrderCode = $('#OrderCode').val()
+            $('#divOrderNoError').hide();
+
+            if (lOrderCode.length == 15) {
+                $('#OrderNo_loading').show();
+                $.ajax({
+                    url: '@Url.Action("IsValidOrder", "ReceiveOrderOnCall")?OrderCode=' + lOrderCode,
+                    type: "GET",
+                    success: function (result) {
+                        //alert('success');
+                        if (result == "true") {
+                            $('#OrderNo_loading').hide();
+                            $('#divOrderNoError').hide();
+                        }
+                        else {
+                            $('#OrderNo_loading').hide();
+                            $('#divOrderNoError').show();
+                            $('#divOrderNoError').html('Order Code [' + lOrderCode + '] dose not exist');
+                            $('#OrderCode').val('');
+                        }
+                    },
+                    error: function (result) {
+                        //alert('error');
+                        //alert('Pincode : ' + lPincode + ' Dose Not Exist, please Contact to ADMIN');
+                        $('#OrderNo_loading').hide();
+                        $('#divOrderNoError').show();
+                        $('#divOrderNoError').html('Order Code [' + lOrderCode + '] dose not exist');
+                        $('#OrderCode').val('');
+                    }
+                });
+            }
+        });
+    </script>
+
+
+<script type="text/javascript">
+
+        //----------------------------------------------------------------------To GetAddress From Pincode---//
+
+    var lOrderCode = $('#ReferenceOrderCode').val()
+
+    $('#ReferenceOrderCode').bind('input propertychange', function () {
+        var lRefOrderCode = $('#ReferenceOrderCode').val()
+        $('#divRefOrderNoError').hide();
+
+            if (lRefOrderCode.length == 15) {
+                $('#RefOrderNo_loading').show();
+                $.ajax({
+                    url: '@Url.Action("IsValidOrder", "ReceiveOrderOnCall")?OrderCode=' + lRefOrderCode,
+                    type: "GET",
+                    success: function (result) {
+                        //alert('success');
+                        if (result == "true") {
+                            $('#RefOrderNo_loading').hide();
+                            $('#divRefOrderNoError').hide();
+                        }
+                        else {
+                            $('#RefOrderNo_loading').hide();
+                            $('#divRefOrderNoError').show();
+                            $('#divRefOrderNoError').html('Order Code [' + lRefOrderCode + '] dose not exist');
+                            $('#ReferenceOrderCode').val('');
+                        }
+                    },
+                    error: function (result) {
+                        //alert('error');
+                        //alert('Pincode : ' + lPincode + ' Dose Not Exist, please Contact to ADMIN');
+                        $('#RefOrderNo_loading').hide();
+                        $('#divRefOrderNoError').show();
+                        $('#divRefOrderNoError').html('Order Code [' + lRefOrderCode + '] dose not exist');
+                        $('#ReferenceOrderCode').val('');
+                    }
+                });
+            }
+        });
+</script>
+}
+
+

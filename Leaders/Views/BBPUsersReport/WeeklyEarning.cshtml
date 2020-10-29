@@ -1,0 +1,102 @@
+﻿@model IEnumerable<ModelLayer.Models.ViewModel.BBPWeeklyEarning>
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_LeaderUsersLayout.cshtml";
+}
+<script src="~/Content/js/jquery.dataTables.min.js"></script>
+<link href="~/Content/css/jquery.dataTables.min.css" rel="stylesheet" />
+<style>
+    .maintabularPageView {
+        font-size: medium !important
+    }
+
+    .table .thead-dark th {
+        color: #fff;
+        background-color: #620000 !important;
+        border-color: #FF8888;
+        font-size: medium !important
+    }
+
+    .table tr {
+        color: black;
+    }
+
+    .panel-title {
+        color: #620000 !important;
+        text-decoration: double !important;
+        font-weight: bold;
+    }
+</style>
+<script>
+    $(document).ready(function () {
+        $('#tablePreview').DataTable({
+            "scrollY": "200px",
+            "scrollCollapse": true,
+        });
+        $('.dataTables_length').addClass('bs-select');
+    });
+</script>
+<section class="maintabularPageView">
+    <div class="maintabularPageView-child">
+        <div class="container">
+            <div class="maintabularPageView-heading">
+                <h3 class="panel-title">Business Booster Weekly Earning</h3>
+            </div>
+            @{
+                decimal ERPTotal = 0;
+                decimal EzeeMoneyTotal = 0;
+                decimal Balance = 0;
+                <table id="tablePreview" class="table table-striped table-hover table-responsive">
+                    <thead class="thead-dark">
+                        <tr>
+                            <th>#</th>
+                            <th>Duration</th>
+                            <th>Active</th>
+                            <th style="text-align:right">ERP</th>
+                            <th style="text-align:right">EzeeMoney</th>
+                            <th style="text-align:right">Inactive Points</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model)
+                        {
+                        <tr>
+                            <td scope="row">@item.SrNo</td>
+                            <td>@item.Duration</td>
+                            <td>
+                                @if (item.Status)
+                                {<span>&nbsp; Yes</span>}
+                                else
+                                { <span> &nbsp;&nbsp;&nbsp;No</span>}
+                            </td>
+                            <td style="text-align:right"><span>@item.ERP&nbsp;&nbsp;</span>  @{ ERPTotal = ERPTotal + item.ERP;} </td>
+                            <td style="text-align:right"><span>@item.EzeeMoney&nbsp;&nbsp;</span>  @{ EzeeMoneyTotal = EzeeMoneyTotal + item.EzeeMoney;} </td>
+                            <td style="text-align:right"><span>@item.InactivePoint&nbsp;&nbsp;</span>  @{ Balance = Balance + item.InactivePoint;} </td>                            
+                        </tr>
+                        }
+                    </tbody>
+                    <tfoot class="thead-dark">
+                        <tr>
+                            <th colspan="2">
+
+                            </th>
+                            <th>
+                                <span> Total</span>
+                            </th>
+                            <th style="text-align:right">
+                                @ERPTotal
+                            </th>
+                            <th style="text-align:right">
+                                @EzeeMoneyTotal
+                            </th>
+                            <th style="text-align:right">
+                                @Balance
+                            </th>
+                        </tr>
+                    </tfoot>
+                </table>
+            }
+        </div>
+    </div>
+</section>
+

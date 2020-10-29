@@ -1,0 +1,374 @@
+﻿@model ModelLayer.Models.FrequentlyBuyTogetherProduct
+
+@{
+    ViewBag.Title = "Create";
+}
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+
+    <div class="span10" id="content">
+        <div class="row-fluid">
+            <div class="box">
+                <div class="box-header">
+                    <h2><i class="icon-edit"></i><span class="break"></span>Frequently Buy Together Product </h2>
+
+                </div>
+                <form class="form-horizontal">
+
+                    @*<hr />*@
+                    @Html.ValidationSummary(true)
+                    <div id="pageloaddiv"></div>
+
+                    @if (ViewBag.Message != null)
+                    {
+                        <span style="color:red; font-weight:bold;"></span> @ViewBag.Message
+                    }
+                    <div class="span12" style="margin-top:15px; margin-left:12px;">
+                        <div class="control-group span3">
+                            @*@Html.LabelFor(model => model.CategoryID, "CategoryID", new { @class = "control-label col-md-2" })*@
+                            <label>Level One Category</label>
+                            <div class="controls">
+                                @Html.DropDownList("CatLevelOne", "Select Category")
+                                @* @Html.ValidationMessageFor(model => model.CategoryID)*@
+                            </div>
+                        </div>
+                        <div class="control-group span3">
+                            <label>Level Two Category</label>
+                            @*@Html.LabelFor(model => model.CategoryID, "CategoryID", new { @class = "control-label col-md-2" })*@
+                            <div class="controls">
+                                @Html.DropDownList("CatLevelTwo", "Select Category")
+                                @*  @Html.ValidationMessageFor(model => model.CategoryID)*@
+                            </div>
+                        </div>
+                        <div class="control-group span3">
+                            <label>Level Three Category</label>
+                            @*@Html.LabelFor(model => model.CategoryID, "CategoryID", new { @class = "control-label col-md-2" })*@
+                            <div class="controls">
+                                @Html.DropDownList("CatLevelThree", "All Categories")
+                                @* @Html.ValidationMessageFor(model => model.CategoryID)*@
+                            </div>
+                        </div>
+                        <div class="control-group span3">
+                            <label>Product Name</label>
+                            <div class="controls">
+                                @Html.DropDownList("ProductID", "Products")
+                                @*  @Html.ValidationMessageFor(model => model.ProductID)*@
+                            </div>
+                        </div>
+                    </div>
+                    <div class="span12" style=" margin-left: 12px;">
+                        <div class="control-group span3">
+                            @*@Html.LabelFor(model => model.CategoryID, "CategoryID", new { @class = "control-label col-md-2" })*@
+                            <label>Level One Category</label>
+                            <div class="controls">
+                                @Html.DropDownList("CategoryLevelOne", "Select Category")
+                                @* @Html.ValidationMessageFor(model => model.CategoryID)*@
+                            </div>
+                        </div>
+                        <div class="control-group span3">
+                            <label>Level Two Category</label>
+                            @*@Html.LabelFor(model => model.CategoryID, "CategoryID", new { @class = "control-label col-md-2" })*@
+                            <div class="controls">
+                                @Html.DropDownList("CategoryLevelTwo", "Select Category")
+                                @* @Html.ValidationMessageFor(model => model.CategoryID)*@
+                            </div>
+                        </div>
+                        <div class="control-group span3">
+                            <label>Level Three Category</label>
+                            @*@Html.LabelFor(model => model.CategoryID, "CategoryID", new { @class = "control-label col-md-2" })*@
+                            <div class="controls">
+                                @Html.DropDownList("CategoryLevelThree", "All Categories")
+                                @*  @Html.ValidationMessageFor(model => model.CategoryID)*@
+                                @*  @Html.Hidden("ProIDD")*@
+                            </div>
+                        </div>
+                        @*<div class="control-group span3">
+                                <label>Product Name</label>
+                                <div class="controls">
+                                    @Html.DropDownList("ProductID", "Products")
+                                    @Html.ValidationMessageFor(model => model.ProductID)
+                                </div>
+                            </div>*@
+                    </div>
+
+
+                    <div class="clr"></div>
+
+                    <div id="divSpecification" style="display:block;"></div>
+                    <div class="form-actions">
+                        <div class="col-md-offset-2 col-md-10">
+                            @*<input type="submit" value="Create" class="btn btn-default" />*@
+                            @Html.ActionLink("Back to List", "Index", string.Empty, new { @class = "btn btn-brown" })
+                        </div>
+                    </div>
+                </form>
+                <div class="clr"></div>
+            </div>
+        </div>
+    </div>
+}
+
+@*<div>
+    @Html.ActionLink("Back to List", "Index")
+</div>*@
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+
+}
+
+
+
+<style type="text/css">
+    #pageloaddiv {
+        position: fixed;
+        left: 0px;
+        top: 0px;
+        width: 100%;
+        height: 100%;
+        z-index: 1000;
+        background: url('../Content/Images/ajax_loader.gif') no-repeat center center;
+        background-size: 100px;
+        display: none;
+    }
+</style>
+<script src="~/Content/js/jquery-2.1.3.min.js"></script>
+<script>
+    $(document).ready(function () {
+
+
+        $("#CategoryLevelThree").change(function () {
+            /* Get the selected value of dropdownlist */
+            var selectedID = $(this).val();
+
+
+            /*Check Condition*/
+            var TwoLevelID = $("#CategoryLevelTwo option:selected").val();
+            var ThreeLevelID = $("#CategoryLevelThree option:selected").val();
+            var WithProductID = $("#ProductID option:selected").val();
+            /*Processing Image*/
+            $("#pageloaddiv").css('display', 'block');
+            $("#pageloaddiv").fadeOut(1000);
+
+
+            /* Request the partial view with .get request. */
+            $.get('/FrequentlyBuyTogetherProduct/ProductList/?TwoLevelID=' + TwoLevelID + '&ThreeLevelID=' + ThreeLevelID + '&id=' + selectedID + '&WithProductID=' + WithProductID, function (data) {
+                /* data is the pure html returned from action method, load it to your page */
+                $('#divSpecification').html(data);
+                /* little fade in effect */
+                $('#divSpecification').fadeIn('fast');
+            });
+
+        });
+    });
+
+    $(document).ready(function () {
+
+        $("#CategoryLevelThree").change(function () {
+            var data = null;
+
+            $('#divSpecification').html(data);
+            $('#divSpecification').fadeIn('fast');
+
+        });
+
+
+        $("#CategoryLevelOne").change(function () {
+
+            var selectedVal = $("#CategoryLevelOne option:selected").val();
+            var data = null;
+
+            $('#divSpecification').html(data);
+            /* little fade in effect */
+            $('#divSpecification').fadeIn('fast');
+
+            /*Processing Image*/
+            $("#pageloaddiv").css('display', 'block');
+            $("#pageloaddiv").fadeOut(1000);
+
+            $.ajax({
+                type: "POST",
+                url: "SecondLevelCategory",
+                data: "{ cateID: '" + selectedVal + "'}",
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                async: true,
+                cache: false,
+                success: function (msg) {
+                    $('#CategoryLevelTwo').empty();
+                    $('#CategoryLevelTwo').append('<option value=0>Select Category</option>');
+                    $.each(msg, function (index, item) {
+                        $('#CategoryLevelTwo').append('<option value=' + item.ID + '>' + item.name + '</option>');
+                    });
+                    $("#pageloaddiv").css('display', 'none');
+                    $("#pageloaddiv").fadeOut(1000);
+                },
+                error: function (x, e) {
+                    alert("Unable to Load Category");
+                    $("#pageloaddiv").css('display', 'none');
+                    $("#pageloaddiv").fadeOut(1000);
+                }
+
+            });
+        });
+
+        $("#CategoryLevelTwo").change(function () {
+            var selectedVal = $("#CategoryLevelTwo option:selected").val();
+            var data = null;
+            $('#divSpecification').html(data);
+            /* little fade in effect */
+            $('#divSpecification').fadeIn('fast');
+
+
+            /*Processing Image*/
+            $("#pageloaddiv").css('display', 'block');
+            $("#pageloaddiv").fadeOut(1000);
+
+            $.ajax({
+                type: "POST",
+                url: "ThirdLevelCategory",
+                data: "{ cateID: '" + selectedVal + "'}",
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                async: true,
+                cache: false,
+                success: function (msg) {
+                    $('#CategoryLevelThree').empty();
+                    $('#CategoryLevelThree').append('<option value=0>All Categories</option>');
+                    $.each(msg, function (index, item) {
+                        $('#CategoryLevelThree').append('<option value=' + item.ID + '>' + item.name + '</option>');
+                    });
+                    $("#pageloaddiv").css('display', 'none');
+                    $("#pageloaddiv").fadeOut(1000);
+                },
+                error: function (x, e) {
+                    alert("Unable to Load Category");
+                    $("#pageloaddiv").css('display', 'none');
+                    $("#pageloaddiv").fadeOut(1000);
+                }
+
+            });
+        });
+
+        $("#CatLevelOne").change(function () {
+
+            var selectedVal = $("#CatLevelOne option:selected").val();
+            var data = null;
+
+            $('#divSpecification').html(data);
+            /* little fade in effect */
+            $('#divSpecification').fadeIn('fast');
+
+            /*Processing Image*/
+            $("#pageloaddiv").css('display', 'block');
+            $("#pageloaddiv").fadeOut(1000);
+
+            $.ajax({
+                type: "POST",
+                url: "SecondLevelCategory",
+                data: "{ cateID: '" + selectedVal + "'}",
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                async: true,
+                cache: false,
+                success: function (msg) {
+                    $('#CatLevelTwo').empty();
+                    $('#CatLevelTwo').append('<option value=0>Select Category</option>');
+                    $.each(msg, function (index, item) {
+                        $('#CatLevelTwo').append('<option value=' + item.ID + '>' + item.name + '</option>');
+                    });
+                    $("#pageloaddiv").css('display', 'none');
+                    $("#pageloaddiv").fadeOut(1000);
+                },
+                error: function (x, e) {
+                    alert("Unable to Load Category");
+                    $("#pageloaddiv").css('display', 'none');
+                    $("#pageloaddiv").fadeOut(1000);
+                }
+
+            });
+        });
+
+        $("#CatLevelTwo").change(function () {
+            var selectedVal = $("#CatLevelTwo option:selected").val();
+            var data = null;
+            $('#divSpecification').html(data);
+            /* little fade in effect */
+            $('#divSpecification').fadeIn('fast');
+
+
+            /*Processing Image*/
+            $("#pageloaddiv").css('display', 'block');
+            $("#pageloaddiv").fadeOut(1000);
+
+            $.ajax({
+                type: "POST",
+                url: "ThirdLevelCategory",
+                data: "{ cateID: '" + selectedVal + "'}",
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                async: true,
+                cache: false,
+                success: function (msg) {
+                    $('#CatLevelThree').empty();
+                    $('#CatLevelThree').append('<option value=0>All Categories</option>');
+                    $.each(msg, function (index, item) {
+                        $('#CatLevelThree').append('<option value=' + item.ID + '>' + item.name + '</option>');
+                    });
+                    $("#pageloaddiv").css('display', 'none');
+                    $("#pageloaddiv").fadeOut(1000);
+                },
+                error: function (x, e) {
+                    alert("Unable to Load Category");
+                    $("#pageloaddiv").css('display', 'none');
+                    $("#pageloaddiv").fadeOut(1000);
+                }
+
+            });
+        });
+
+        $("#CatLevelThree").change(function () {
+            var selectedVal = $("#CatLevelThree option:selected").val();
+            var data = null;
+            $('#divSpecification').html(data);
+            /* little fade in effect */
+            $('#divSpecification').fadeIn('fast');
+
+
+            /*Processing Image*/
+            $("#pageloaddiv").css('display', 'block');
+            $("#pageloaddiv").fadeOut(1000);
+
+            $.ajax({
+                type: "POST",
+                url: "GetProduct",
+                data: "{ cateID: '" + selectedVal + "'}",
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                async: true,
+                cache: false,
+                success: function (msg) {
+                    $('#ProductID').empty();
+                    $('#ProductID').append('<option value=0>All Categories</option>');
+                    $.each(msg, function (index, item) {
+                        $('#ProductID').append('<option value=' + item.ID + '>' + item.name + '</option>');
+                    });
+                    $("#pageloaddiv").css('display', 'none');
+                    $("#pageloaddiv").fadeOut(1000);
+                },
+                error: function (x, e) {
+                    alert("Unable to Load Product");
+                    $("#pageloaddiv").css('display', 'none');
+                    $("#pageloaddiv").fadeOut(1000);
+                }
+
+            });
+        });
+    });
+
+
+
+
+</script>

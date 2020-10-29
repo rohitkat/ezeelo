@@ -1,0 +1,32 @@
+﻿@model ModelLayer.Models.MerchantBanner
+@{
+    Layout = "~/Views/Shared/_LeadersLayout.cshtml";
+}
+
+<script src="~/Scripts/MerchantMenuOpenup.js"></script>
+@using (Html.BeginForm())
+{
+    @Html.HiddenFor(m => m.ID)
+    @Html.HiddenFor(m => m.MerchantID)
+    <div class="container">
+        <div class="card-header">
+            <strong style="text-transform:uppercase !important">@ViewBag.Merchantname - Approved Banner</strong>
+        </div>
+        <div class="card-body card-block">
+            <div class="grid">
+                <label>Banner Image</label>
+                <div class="row">
+                    <div class="col-md-12">
+                        <img src="@Model.BannerPath" />
+                    </div>
+                    <div class="col-md-12">
+                        <label>Is Display</label> &nbsp;&nbsp;
+                        @Html.CheckBoxFor(model => model.IsActive, new { style = "width:25px;height:25px;margin-top:10px" })
+                    </div>
+                </div>
+
+                <input type="submit" value="Save" class="btn btn-sm btn-success" />
+            </div>
+        </div>
+    </div>
+}

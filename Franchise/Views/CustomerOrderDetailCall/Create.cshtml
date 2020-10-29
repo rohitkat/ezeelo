@@ -1,0 +1,144 @@
+﻿@model ModelLayer.Models.CustomerOrderDetailCall
+
+
+@{
+    Layout = "~/Views/Shared/_LayoutPartial.cshtml";
+}
+<style>
+    #divtable {
+        width:920px;
+        margin-left: 35px;
+        border: 1px solid#ccc;
+    }
+
+        #divtable h3 {
+            padding: 11px;
+            background-color: #ac864f;
+            background-image: linear-gradient(hsla(0,0%,100%,.05), hsla(0,0%,0%,.05)), linear-gradient(-72deg, hsla(0,0%,100%,.05) 50%, transparent 50%);
+            box-shadow: inset 0 0 .25em hsla(0,0%,0%,.1), inset 0 0 1.5em hsla(0,0%,0%,.25);
+            border-bottom: 1px solid #d6d6d6;
+            color: #FAFAFA;
+        }
+
+    .widget {
+        padding: 0px;
+        margin-bottom: 28px;
+        margin-top: -10px;
+    }
+
+    .widget-content {
+        padding: 10px;
+    }
+
+    .margin_left_right_decress {
+        margin-left: -20px;
+        margin-right: -20px;
+    }
+
+    .margin_left_zero {
+        margin-left: 0px;
+    }
+
+    textarea {
+        width: 80%;
+        height: 40px;
+    }
+</style>
+@Html.Hidden("ShopID")
+@Html.Hidden("DeliveryPartnerID")
+@Html.Hidden("ShopOrderCode")
+@Html.Hidden("OrderStatus")
+@*-- Add by Ashish Nagrale --*@
+@Html.Hidden("PaymentMode", @Request.QueryString["PaymentMode"])
+@Html.Hidden("OrderCode", @Request.QueryString["OrderCode"])
+<script src="~/Content/js/jquery-1.9.1.min.js"></script>
+<script src="~/Content/js/CRMViewEvent.min.js"></script>
+@*-- End --*@
+<div class="row margin_left_zero">
+    <div id="divtable">
+        <div class="widget">
+            <div class="widget-header">
+             
+                <h3> <i class="icon-list-new"></i>Create Call Logs [ @Request.QueryString["ShopOrderCode"] ]</h3>
+            </div>
+            <!-- /widget-header -->
+            <div class="widget-content">
+                <div class="widget big-stats-container">
+                    <div class="widget-content matchdivheight">
+
+                        @using (Html.BeginForm())
+                        {
+                            @Html.AntiForgeryToken()
+
+                            <div class="form-horizontal">
+                                @Html.ValidationSummary(true)
+
+                                <div class="control-group">
+                                    <span class="control-label">Call To</span>
+                                    <div class="controls">
+                                        @Html.DropDownList("BusinessTypeID")
+                                        @Html.ValidationMessageFor(model => model.BusinessTypeID)
+                                    </div>
+                                </div>
+
+                                <div class="control-group">
+                                    <span class="control-label">Change Status</span>
+                                    <div class="controls">
+                                        @Html.DropDownList("OrderStatus")
+                                        @Html.ValidationMessageFor(model => model.OrderStatus)
+                                    </div>
+                                </div>
+
+
+                                <div class="control-group">
+                                    @Html.LabelFor(model => model.Description, new { @class = "control-label" })
+                                    <div class="controls">
+                                        @Html.TextAreaFor(model => model.Description)
+                                        @Html.ValidationMessageFor(model => model.Description)
+                                    </div>
+                                </div>
+                                @*-- Add by Ashish Nagrale -hide for live- --*@
+                                @*<div id="pnlDelevered" style="display:block">
+                                    <div class="">
+                                        @Html.LabelFor(model => model.OTP, new { @class = "control-label " })
+                                        <div class="controls">
+                                            @Html.EditorFor(model => model.OTP)
+                                            @Html.ValidationMessageFor(model => model.OTP)
+                                            @Html.Label((string)ViewBag.lblOTP, new { @id = "lblOTP" })
+                                            @Html.Label("lblOtpValidation", new { @id = "lblOtpValidation", @style = "color:red;display:block" })
+                                        </div>
+                                    </div>
+                                </div>*@
+                                @*-- End --*@
+                                <div class="control-group">
+                                    <span class="control-label">Send SMS to Customer</span>
+                                    <div class="controls">
+                                        <input type="checkbox" name="sendSMSToCustomer" />
+                                    </div>
+                                </div>
+
+                                <div class="control-group">
+                                    <div style="float:right">
+                              
+                                        <button id="btnSave" class="btn btn-danger btn-small">create</button>
+                                    </div>
+                                </div>
+                            </div>
+                        }
+
+                        <div>
+                            <button class="btn btn-small btn-success" onclick="Back()">Back</button>
+                        </div>
+                    </div>
+                    <!-- /widget-content -->
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function Back() {
+        window.parent.$("[id$=divLog]").hide();
+    }
+</script>

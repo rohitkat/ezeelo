@@ -1,0 +1,170 @@
+﻿@model IEnumerable<ModelLayer.Models.ViewModel.ShopDetailReportViewModel>
+
+@{
+    ViewBag.Title = "ForPrint";
+}
+<h2 id="btnPrint" class="btn btn-primary">Print</h2>
+<style>
+    .matchdivheight {
+        overflow: scroll;
+        height: 450px;
+    }
+
+    .widget {
+        margin-left: 37px;
+    }
+
+    .widget-content {
+        margin-top: -16px;
+        margin-left: -8px;
+    }
+    #btnPrint {
+        /*margin-bottom: 30px;*/
+        margin-left: 32px;
+    }
+    .total_C h4 {
+       float:right; margin-right:10px;
+    }
+</style>
+@{
+    <div class="widget-content" id="dvContainer">
+        <div class="total_C"><h4><span>Total Count:&nbsp;@ViewBag.TotalCount</span></h4></div>
+        <div class="widget big-stats-container">
+            <div class="widget-content matchdivheight">
+               
+                <table class="table table-bordered table-hover table-responsive table-striped">
+                    @if (Model.Count() == 0)
+                    {
+                        <tr>
+                            <td colspan="6" class="text-center"><h3>No Record Found...</h3></td>
+                        </tr>
+                    }
+                    else
+                    {
+                        int i = 1;
+                        <tr class="hed-tble">
+                            @*<th>Sr No</th>*@
+                            <th>
+                                ShopName
+                            </th>
+                            <th>
+                                Merchant Name
+                            </th>
+                            <th>
+                                UserLogin ID
+                            </th>
+                            <th>
+                                Login Email-ID
+                            </th>
+                            <th>
+                                Login Mobile No
+                            </th>
+                            <th>
+                                Password
+                            </th>
+                            <th>
+                                IsLive
+                            </th>
+                            <th>
+                                Address
+                            </th>
+                            <th>
+                                Alternate Mobile
+                            </th>
+                            <th>
+                                Landline No
+                            </th>
+
+                        </tr>
+                        foreach (var item in Model)
+                        {
+
+                            <tr>
+                                @*<td>@{int SrNo = ((ViewBag.PageNumber - 1) * ViewBag.PageSize) + i; i = i + 1; } @SrNo</td>*@
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.ShopName)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.MerchantName)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.UserLoginID)
+                                </td>
+
+                                @{string Email = "";}
+                                <td>
+                                    @if (item.Email != null)
+                                    {
+                                        Email = item.Email;
+                                    }
+
+                                    @Email
+                                </td>
+
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Mobile)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Password)
+                                </td>
+                                @if (item.IsLive == true)
+                                {
+                                    <td>
+                                        Live
+                                    </td>
+                                }
+                                else
+                                {
+                                    <td>
+                                        Not Live
+                                    </td>
+                                }
+                                @*@if (item.IsActive == true)
+                                    {
+                                        <td>
+                                            Active
+                                        </td>
+                                    }
+                                    else
+                                    {
+                                        <td>
+                                            InActive
+                                        </td>
+                                    }*@
+
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Address)
+
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.AlternateMobile)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.LandLine)
+                                </td>
+
+                            </tr>
+                        }
+                    }
+
+                </table>
+            </div>
+        </div>
+       
+    </div>
+    @*<div><h4><span>Total Count:&nbsp;@ViewBag.TotalCount</span></h4></div>*@
+}
+
+<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
+<script type="text/javascript">
+    $("#btnPrint").live("click", function () {
+        var divContents = $("#dvContainer").html();
+        var printWindow = window.open('', '', 'height=400,width=800');
+        printWindow.document.write('<html><head><title>Shop Details</title>');
+        printWindow.document.write('</head><body >');
+        printWindow.document.write(divContents);
+        printWindow.document.write('</body></html>');
+        printWindow.document.close();
+        printWindow.print();
+    });
+</script>

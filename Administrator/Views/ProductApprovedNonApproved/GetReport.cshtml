@@ -1,0 +1,454 @@
+﻿@model IEnumerable<ModelLayer.Models.ViewModel.ProductApprovedViewModel>
+
+@*<copyright file="GetReport.cshtml" company="Ezeelo Consumer Services Pvt. Ltd.">
+     Copyright (c) Ezeelo Consumer Services Pvt. Ltd. All rights reserved.
+    </copyright>
+    <author>Harshada Raghorte</author>*@
+@{
+    ViewBag.Title = "eZeelo:GetReport";
+    Layout = null;
+}
+<style>
+    .box-hide-content {
+        overflow: hidden !important;
+    }
+    .ui-widget-header {
+        border: none !important;
+    }
+</style>
+<style>
+    .btn_Print {
+        margin-bottom: 7px;
+        margin-top: 7px;
+        margin-left: 5px;
+    }
+
+    .section {
+        position: relative;
+        border: 1px solid #000;
+        padding-top: 76px;
+        margin-left: 5px;
+        background: #A4A5A7;
+        margin-top: 0px;
+        width: 1010px;
+        overflow-x: scroll;
+    }
+
+    #myTable_wrapper {
+        min-height: 61px;
+        margin-top: 2px;
+        max-height: 516px;
+    }
+
+    .fg-toolbar {
+        margin-top: -89px;
+    }
+
+    #myTable_filter {
+        position: absolute;
+        margin-top: 13px !important;
+    }
+
+    .section.positioned {
+        position: absolute;
+        top: 100px;
+        left: 100px;
+        width: 800px;
+        box-shadow: 0 0 15px #333;
+    }
+
+    .container_tbl {
+        /*overflow-y: auto;*/
+        /*height: 200px;*/ height: 420px;
+    }
+
+    table {
+        border-spacing: 0;
+        width: 100%;
+    }
+
+    td + td {
+        border-left: 1px solid #eee;
+    }
+
+    td, th {
+        border-bottom: 1px solid #eee;
+        /*background: #ddd;*/
+        color: #000;
+        padding: 10px 25px;
+    }
+
+    #myTable thead tr th {
+        height: 0;
+        line-height: 0 !important;
+        padding-top: 0 !important;
+        padding-bottom: 0 !important;
+        color: transparent;
+        border: none;
+        white-space: nowrap;
+    }
+
+    th div {
+        position: absolute;
+        background: transparent;
+        color: #fff;
+        padding: 30px 10px;
+        top: 20px;
+        margin-left: -8px;
+        line-height: 13px;  
+    }
+
+    th:first-child div {
+        border: none;
+    }
+
+    .wrap {
+        margin-top: 105px;
+    }
+    .fg-toolbar {
+        margin-top: -89px;
+    }
+    #myTable_filter {
+        position: absolute;
+        margin-top: 13px !important;
+    }
+
+    #myTable_wrapper {
+        min-height: 61px;
+        margin-top: 2px;
+        max-height: 516px;
+    }
+</style>
+<script src="~/Content/js/bootstrap.js"></script>
+<script src="~/Content/js/jquery-1.9.1.min.js"></script>
+<script src="~/Content/js/jquery.dataTables.min.js"></script>
+<script src="~/Content/js/bootstrap.min.js"></script>
+<script type="text/javascript">
+    $(document).ready(function () {
+        $("#myTable").DataTable({
+            "bDestroy": true,
+            //"sPaginationType": "full_numbers",
+            "bJQueryUI": true,
+            "bInfo": false,
+            "scrollY": 700,
+            "scrollCollapse": true,
+            "bPaginate": false,
+            "iDisplayLength": 20,
+            "bAutoWidth": false,
+
+        });
+
+    });
+</script>
+@*<div>
+    <a href="@Url.Action("GetReport", "ProductApprovedNonApproved", new
+       {
+           page = 0,
+           pagecount = 0,
+           fromDate = ViewBag.fromDate,
+           toDate = ViewBag.toDate,
+           MerchantID = ViewBag.merchantID,
+           approvedStatus = ViewBag.approvedStatus,
+           franchiseID = ViewBag.franchiseID,
+           cityID = ViewBag.cityID,
+           print = 1
+       })" target="_blank"><input type="button" value="Print" id="btnPrint" class="btn btn-primary" /></a>
+    @*<input type="button" value="Print" id="btnPrint" class="btn btn-primary" onclick="return Print()" />
+</div>*@
+
+<div class="section">
+    @if (Model.Count() > 0)
+{
+    <div class="table  scrollable" style="width:1535px;">
+        <table class="table  scroll container_tbl" id="myTable">
+            <thead>
+                <tr class="header">
+                    <th style="width:65px;">
+                        @Html.DisplayNameFor(model => model.ProductID)
+                    </th>
+                    <th style="width:120px;">
+                        @Html.DisplayNameFor(model => model.ProductName)
+                    </th>
+                    <th style="width:50px;">
+                        Cat ID
+                    </th>
+                    <th style="width:120px;">
+                        Cat Name
+                    </th>
+                    @*<th>
+                        @Html.DisplayNameFor(model => model.ProductName)
+                    </th>*@
+                    @*<th>
+                        @Html.DisplayNameFor(model => model.productDescription)
+                    </th>*@
+                    <th style="width:110px;">
+                        @Html.DisplayNameFor(model => model.MerchantName)
+                    </th>
+                    <th style="width:82px;">
+                        @Html.DisplayNameFor(model => model.ShopName)
+                    </th>
+                    @*<th>
+                        @Html.DisplayNameFor(model => model.AddedBy)
+                    </th>*@
+                    @if (ViewBag.uploadprod == 2)
+                    {
+                        <th style="width:83px;">Approved Date</th>
+                    }
+                    else if (ViewBag.uploadprod == 3)
+                    {
+                        <th>Product Upload Date</th>
+                    }
+                    else
+                    {
+                        <th>Product Upload Date</th>
+                        <th>Product Approved Date</th>
+                    }
+                    @if (ViewBag.uploadprod == 2 || ViewBag.uploadprod == 3)
+                    {
+                        <th style="width:82px;">Modified Date</th>
+                    }
+                    @if (ViewBag.uploadprod == 1)
+                    {
+                        <th>
+                            Status
+                        </th>
+                    }
+                    <th>Active/Deactive Status</th>
+                </tr>
+            </thead>
+            @foreach (var item in Model)
+            {
+                <tr>
+
+
+                    <td>
+                        @Html.DisplayFor(modelItem => item.ProductID)
+                    </td>
+
+                    <td>
+                        @Html.DisplayFor(modelItem => item.ProductName)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.CatID)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.CatName)
+                    </td>
+                    @*<td>
+                        @Html.DisplayFor(modelItem => item.productDescription)
+                    </td>*@
+                    <td>
+                        @Html.DisplayFor(modelItem => item.MerchantName)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.ShopName)
+                    </td>
+                    @*<td>
+                        @Html.DisplayFor(modelItem => item.AddedBy)
+                    </td>*@
+                    @if (ViewBag.uploadprod == 2)
+                    {
+                        <td>
+                            @{string lADate = ""; DateTime dtA = new DateTime();}
+                            @if (item.ProductApprovedDate != null)
+                            {
+                                dtA = Convert.ToDateTime(item.ProductApprovedDate);
+                                lADate = dtA.ToString("dd/MM/yyyy");
+                            }
+                            @lADate
+                        </td>
+                    }
+                    else if (ViewBag.uploadprod == 3)
+                    {
+                        <td>
+                            @{string lUDate = ""; DateTime dtU = new DateTime();}
+                            @if (item.ProductUploadDate != null)
+                            {
+                                dtU = Convert.ToDateTime(item.ProductUploadDate);
+                                lUDate = dtU.ToString("dd/MM/yyyy");
+                            }
+                            @lUDate
+                        </td>
+                    }
+                    else
+                    {
+                        <td>
+                            @{string lUDate = ""; DateTime dtU = new DateTime();}
+                            @if (item.ProductUploadDate != null)
+                            {
+                                dtU = Convert.ToDateTime(item.ProductUploadDate);
+                                lUDate = dtU.ToString("dd/MM/yyyy");
+                            }
+                            @lUDate
+                        </td>
+                        <td>
+                            @{string lADate = ""; DateTime dtA = new DateTime();}
+                            @if (item.ProductApprovedDate != null)
+                            {
+                                dtA = Convert.ToDateTime(item.ProductApprovedDate);
+                                lADate = dtA.ToString("dd/MM/yyyy");
+                            }
+                            @lADate
+                        </td>
+                    }
+                    @if (ViewBag.uploadprod == 2 || ViewBag.uploadprod == 3)
+                    {
+                        <td>
+                            @{string lMDate = ""; DateTime dtM = new DateTime();}
+                            @if (item.ProductModifiedDate != null)
+                            {
+                                dtM = Convert.ToDateTime(item.ProductModifiedDate);
+                                lMDate = dtM.ToString("dd/MM/yyyy");
+                            }
+                            @lMDate
+                        </td>
+                    }
+
+                    @if (ViewBag.uploadprod == 1)
+                    {
+                        <td>@Html.DisplayFor(modelItem => item.ApprovalRemark)</td>
+                    }
+                    @if (item.IsActive == true)
+                    {
+                        <td>
+                            Active
+                        </td>
+                    }
+                    else
+                    {
+                        <td>
+                            DeActive
+                        </td>
+                    }
+
+                </tr>
+
+            }
+
+        </table>
+
+    </div>
+}
+</div>
+<div id="Pager">
+    <div class="wrap">
+        <div id="slider1" class="slider">
+            <ul>
+                @for (int c = 1; c <= @ViewBag.TotalPages; c++)
+                {
+                    <li><a class="page-number" href="javascript:void();">@c</a></li>
+
+                }
+
+            </ul>
+
+        </div>
+
+        <div class="controls" style="margin-top:-27px; background:#F9F9F9">
+            <a href="#noname" class="prev-slide"><<</a>
+            <a href="#noname" class="next-slide" style="float: right; margin-right: 299px;">>></a>
+        </div>
+    </div>
+    <span class="totalcount"><b>Showing @ViewBag.PageSize of @ViewBag.TotalCount enteries</b></span>
+</div>
+<div class="loader" style="margin:0 auto;">
+    <img id="loader_img" src="~/Content/img/loader.gif" style="display: none; margin:0 auto;" />
+</div>
+
+<script>
+    $(document).ready(function () {
+        $("#Pager .page-number").click(function (e) {
+            //alert($(this).html());
+            $('#loader_img').show();
+            //alert($(this).html());
+            var pagecount = 0;
+            var page = parseInt($(this).html());
+            if (page > 1) {
+                pagecount = 1;
+            }
+            var fromDate = "@ViewBag.fromDate";
+            var toDate = "@ViewBag.toDate";
+            var MerchantID = "@ViewBag.merchantID";
+            var approvedStatus = "@ViewBag.approvedStatus";
+            var franchiseID = "@ViewBag.franchiseID";
+            var cityID = "@ViewBag.cityID";
+            var print = 0;
+            $.ajax({
+                url: '@Url.Action("GetReport", "ProductApprovedNonApproved")',
+                data: { 'page': page, 'pagecount': pagecount, 'fromDate': fromDate, 'toDate': toDate, 'merchantID': MerchantID, 'franchiseID': franchiseID, 'cityID': cityID, 'approvedStatus': approvedStatus, 'print': print },
+                type: "POST",
+                cache: false,
+                success: function (data) {
+                    //alert(data);
+                    $('#loader_img').hide();
+                    $('#divReport').empty();
+                    $('#divReport').append(data);
+
+                },
+                error: function (data) {
+
+                }
+            });
+        });
+    });
+
+</script>
+
+<script src="~/Content/js/lemmon-slider.js"></script>
+<script type="text/javascript">
+    $(document).ready(function () {
+        //alert('OK');
+        // slider 1
+        $('#slider1').lemmonSlider({
+            infinite: false
+        });
+
+    });
+
+</script>
+
+<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
+<script type="text/javascript">
+    function Print() {
+        //alert('in');
+        $('#loader_img').show();
+        //alert($(this).html());
+        var pagecount = 0;
+        var page = 0;
+
+        var fromDate = "@ViewBag.fromDate";
+        var toDate = "@ViewBag.toDate";
+        var MerchantID = "@ViewBag.merchantID";
+        var approvedStatus = "@ViewBag.approvedStatus";
+        var franchiseID = "@ViewBag.franchiseID";
+        var cityID = "@ViewBag.cityID";
+        var print = 1;
+        $.ajax({
+            url: '@Url.Action("GetReport", "ProductApprovedNonApproved")',
+            data: { 'page': page, 'pagecount': pagecount, 'fromDate': fromDate, 'toDate': toDate, 'merchantID': MerchantID, 'franchiseID': franchiseID, 'cityID': cityID, 'approvedStatus': approvedStatus, 'print': print },
+            type: "POST",
+            cache: false,
+            success: function (data) {
+                //alert(data);
+                $('#loader_img').hide();
+                $('#dvContainer').empty();
+                $('#dvContainer').append(data);
+
+            },
+            error: function (data) {
+
+            }
+        });
+    }
+
+
+
+    //var divContents = $("#dvContainer").html();
+    //var printWindow = window.open('', '', 'height=400,width=800');
+    //printWindow.document.write('<html><head><title>POD</title>');
+    //printWindow.document.write('</head><body >');
+    //printWindow.document.write(divContents);
+    //printWindow.document.write('</body></html>');
+    //printWindow.document.close();
+    //printWindow.print();
+</script>

@@ -1,0 +1,91 @@
+﻿@model ModelLayer.Models.OwnerBank
+
+@{
+    Layout = "~/Views/Shared/_LayoutPartial.cshtml";
+}
+<style>
+    select {
+        width: 80px;
+    }
+
+    textarea {
+        width: 50%;
+        height: 50px;
+    }
+</style>
+<div class="widget-content">
+    <p>
+        @Html.ActionLink("Back", "Details", new { ID = @Model.ID }, new { @class = "btn btn-small btn-success" })
+    </p>
+    @using (Html.BeginForm())
+    {
+        @Html.AntiForgeryToken()
+
+        <div class="form-horizontal">
+            @Html.ValidationSummary(true)
+            @Html.HiddenFor(model => model.ID)
+
+            <div class="control-group">
+                @Html.LabelFor(model => model.BankID, "BankID", new { @class = "control-label col-md-2" })
+                <div class="controls">
+                    @Html.DropDownList("BankID", String.Empty)
+                    @Html.ValidationMessageFor(model => model.BankID)
+                </div>
+            </div>
+
+            <div class="control-group">
+                @Html.LabelFor(model => model.BranchName, new { @class = "control-label col-md-2" })
+                <div class="controls">
+                    @Html.EditorFor(model => model.BranchName)
+                    @Html.ValidationMessageFor(model => model.BranchName)
+                </div>
+            </div>
+
+            <div class="control-group">
+                @Html.LabelFor(model => model.IFSCCode, new { @class = "control-label col-md-2" })
+                <div class="controls">
+                    @Html.EditorFor(model => model.IFSCCode)
+                    @Html.ValidationMessageFor(model => model.IFSCCode)
+                </div>
+            </div>
+
+            <div class="control-group">
+                @Html.LabelFor(model => model.MICRCode, new { @class = "control-label col-md-2" })
+                <div class="controls">
+                    @Html.EditorFor(model => model.MICRCode)
+                    @Html.ValidationMessageFor(model => model.MICRCode)
+                </div>
+            </div>
+
+            <div class="control-group">
+                @Html.LabelFor(model => model.AccountNumber, new { @class = "control-label col-md-2" })
+                <div class="controls">
+                    @Html.EditorFor(model => model.AccountNumber)
+                    @Html.ValidationMessageFor(model => model.AccountNumber)
+                </div>
+            </div>
+
+            <div class="control-group">
+                @Html.LabelFor(model => model.BankAccountTypeID, "BankAccountTypeID", new { @class = "control-label col-md-2" })
+                <div class="controls">
+                    @Html.DropDownList("BankAccountTypeID", String.Empty)
+                    @Html.ValidationMessageFor(model => model.BankAccountTypeID)
+                </div>
+            </div>
+
+            <div class="control-group">
+                @Html.LabelFor(model => model.IsActive, new { @class = "control-label col-md-2" })
+                <div class="controls">
+                    @Html.EditorFor(model => model.IsActive)
+                    @Html.ValidationMessageFor(model => model.IsActive)
+                </div>
+            </div>
+
+            <div class="control-group">
+                <div style="float:right">
+                    <input type="submit" value="Save" class="btn btn-danger" />
+                </div>
+            </div>
+        </div>
+    }
+</div>

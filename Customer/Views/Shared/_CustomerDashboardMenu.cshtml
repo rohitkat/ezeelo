@@ -1,0 +1,158 @@
+﻿
+<style>
+    .product-sm-left .product-caption-title {
+        font-size: 11px;
+        height: 35px;
+        font-weight: 700;
+    }
+
+    .product-sm-left .product-img-wrap {
+        padding: 10px 0px;
+    }
+
+    #Gender {
+        margin-left: 30px;
+    }
+</style>
+
+<section class="Profile-innner-content">
+    <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2 Profile-innner-content-main">
+        <div class="row" data-gutter="15">
+            @{
+                var sessionID = Session["UID"];
+                string cityName = "";
+                int franchiseID = 0;////added
+                if (Request.Cookies["CityCookie"] != null && Request.Cookies["CityCookie"].Value != "")
+                {
+                    cityName = Request.Cookies["CityCookie"].Value.Split('$')[1].ToLower();
+                    franchiseID = Convert.ToInt32(Request.Cookies["CityCookie"].Value.Split('$')[2]);////added
+                }
+            }
+
+            @if (Request.QueryString["pUserLoginID"] != null)
+            {
+                sessionID = Request.QueryString["pUserLoginID"];
+            }
+
+            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                <a href="@Url.RouteUrl("my-profile", new { id = sessionID, city = cityName, franchiseId = franchiseID })">
+                    <div class="product product-sm-left animated fadeRight">
+                        <div class="product-img-wrap" style="width: 100%; cursor: pointer;">
+                            <figure><img src="/Content/Images/menu_icons/profile.png"></figure>
+                            <h5 class="product-caption-title">My Profile</h5>
+                            @*<img class="" src="img/test_product/woman_running_shoes/2.jpg" alt="Image Alternative text" title="Image Title">*@
+                        </div>
+                    </div>
+                </a>
+            </div>
+            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 ">
+                <a href="@Url.RouteUrl("CustomerOrder/myorders", new { city = cityName, franchiseId = franchiseID })">
+                    <div class="product product-sm-left animated fadeRight">
+                        <div class="product-img-wrap" style="width: 100%; cursor: pointer;">
+                            <figure><img src="/Content/Images/menu_icons/order1.png"></figure>
+                            <h5 class="product-caption-title">My Orders</h5>
+                            @*<img class="" src="img/test_product/woman_running_shoes/2.jpg" alt="Image Alternative text" title="Image Title">*@
+                        </div>
+                    </div>
+                </a>
+            </div>
+            <!--Comment by paras 1-7-2019-->
+            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                @if (Session["LeaderSignUpLink"] == null)
+                {
+                    <a title="Go To Ezeelo Leader's Site." href='@System.Configuration.ConfigurationManager.AppSettings["EZEELO_LEADER_URL"]' target="_blank" style="padding: 0;">
+                        <div class="product product-sm-left animated fadeRight">
+                            <div class="product-img-wrap" style="width: 100%; cursor: pointer;">
+                                <figure><img src="~/Content/Images/tags/mlm.png"></figure>
+                                <h5 class="product-caption-title">My Ezee-Money</h5>
+
+                            </div>
+                        </div>
+                    </a>
+                }
+                else
+                {
+                    <a title="Go To Ezeelo Leader's Site." href=@Session["LeaderSignUpLink"] target="_blank" style="padding:0;">
+                        <div class="product product-sm-left animated fadeRight">
+                            <div class="product-img-wrap" style="width: 100%; cursor: pointer;">
+                                <figure><img src="~/Content/Images/tags/mlm.png"></figure>
+                                <h5 class="product-caption-title">My Ezee-Money</h5>
+                            </div>
+                        </div>
+                    </a>
+
+                }
+            </div>
+            <!--Comment by paras 1-7-2019-->
+            <!--Comment by paras 1-8-2019-->
+            <!-- <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                 <a href="@Url.RouteUrl("ReferDetails", new { city = cityName, franchiseId = franchiseID })">
+                     <div class="product product-sm-left animated fadeRight">
+                         <div class="product-img-wrap" style="width: 100%;cursor: pointer;">
+                             <figure><img src="/Content/Images/My-profile/Refer-summary.png"></figure>
+                             <h5 class="product-caption-title">Refer summary</h5>
+                             @*<img class="" src="img/test_product/woman_running_shoes/2.jpg" alt="Image Alternative text" title="Image Title">*@
+                         </div>
+                     </div>
+                 </a>
+             </div>
+
+
+            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                <a href="@Url.RouteUrl("TellAFriend", new { city = cityName, franchiseId = franchiseID })">
+                    <div class="product product-sm-left animated fadeRight">
+                        <div class="product-img-wrap" style="width: 100%; cursor: pointer;">
+                            <figure><img src="/Content/Images/My-profile/tellyourfrnds.png"></figure>
+                            <h5 class="product-caption-title">Tell A Friend</h5>
+                            @*<img class="" src="img/test_product/woman_running_shoes/2.jpg" alt="Image Alternative text" title="Image Title">*@
+                        </div>
+                    </div>
+                </a>
+            </div>-->
+            <!--Comment by paras 1-8-2019-->
+
+            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                <a href="@Url.RouteUrl("MyWishList", new { city = cityName, franchiseId = franchiseID })">
+                    <div class="product product-sm-left animated fadeRight">
+                        <div class="product-img-wrap" style="width: 100%;cursor: pointer;">
+                            <figure><img src="/Content/Images/My-profile/whislist-now.png"></figure>
+                            <h5 class="product-caption-title">Wishlist</h5>
+                            @*<img class="" src="img/test_product/woman_running_shoes/2.jpg" alt="Image Alternative text" title="Image Title">*@
+                        </div>
+                    </div>
+                </a>
+            </div>
+            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                <a href="@Url.RouteUrl("ChangePwd", new { city = cityName, pUserLoginID=Session["UID"], franchiseId = franchiseID })">
+                    <div class="product product-sm-left animated fadeRight">
+                        <div class="product-img-wrap" style="width: 100%; cursor: pointer;">
+                            <figure><img src="/Content/Images/My-profile/password.png"></figure>
+                            <h5 class="product-caption-title">Change Password</h5>
+                            @*<img class="" src="img/test_product/woman_running_shoes/2.jpg" alt="Image Alternative text" title="Image Title">*@
+                        </div>
+                    </div>
+                </a>
+            </div>
+            @*<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                    <a href="@Url.RouteUrl("SubPlanPurchasedBy", new { city = cityName, franchiseId = franchiseID })">
+                        <div class="product product-sm-left ">
+                            <div class="product-img-wrap" style="width: 100%; cursor: pointer; ">
+                                <i class="fa fa-file-text fa-4x" aria-hidden="true"></i>
+                                <h5 class="product-caption-title">My Subscription</h5>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+                <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                    <a href="@Url.RouteUrl("SubPlanHistory", new { city = cityName, franchiseId = franchiseID })">
+                        <div class="product product-sm-left ">
+                            <div class="product-img-wrap" style="width: 100%;cursor: pointer;">
+                                <i class="fa fa-clipboard fa-4x" aria-hidden="true"></i>
+                                <h5 class="product-caption-title">Subscription History</h5>
+                            </div>
+                        </div>
+                    </a>
+                </div>*@
+        </div>
+    </div>
+</section>

@@ -1,0 +1,143 @@
+﻿@using PagedList;
+@using PagedList.Mvc;
+@using System.Collections;
+
+@model IPagedList<DeliveryPartner.Models.ViewModel.StateViewModel>
+
+@{
+    Layout = "~/Views/Shared/_LayoutPartial.cshtml";
+}
+@{
+    int lServiceLevel = (int)ViewBag.lServiceLevel;
+}
+@*<style>
+        .tr_seleted{
+            background:#00ff90 !important;
+        }
+    </style>*@
+@*<div class="row">*@
+<div id="divtable">
+    <div class="widget">
+        <div class="widget-header">
+            <i class="icon-list-alt"></i>
+            <h3> List [ State ]</h3>
+        </div>
+        @{Dictionary<int, int> lAllStateInThisPage = new Dictionary<int, int>();}
+        <!-- /widget-header -->
+        <div class="widget-content matchdivheight">
+            @*<p>@Html.ActionLink("Create", "CreateState", "MyRegion", new { @class = "btn btn-small btn-danger" })</p>*@
+            @using (Html.BeginForm("CreateState", "MyRegion", FormMethod.Post, new { @class = "form-horizontal", role = "form", enctype = "multipart/form-data" }))
+            {
+                @Html.AntiForgeryToken()
+                <table class="table table-bordered table-hover table-responsive">
+                    <tr>
+                        <th style="width:20px;">Sr.No</th>
+                        <th>
+                            State
+                        </th>
+                        @*<th style="width:20px;">District</th>*@
+                        <td class="text-center" style="width:5px;">
+                            @if (lServiceLevel == (int)DeliveryPartner.Common.Constant.DELIVERY_PARTNER_SERVICE_LEVEL.STATE)
+                            {
+                                <input type="checkbox" class="chkBox" onclick="toggle(this)" />
+                            }
+                            else
+                            {
+                                <input type="checkbox" class="chkBox" onclick="toggle(this)" disabled="disabled" />
+                            }
+
+                        </td>
+                    </tr>
+
+                    @if (Model.Count() == 0)
+                    {
+                        <tr>
+                            <td colspan="6" class="text-center"><h3>No Record Found...</h3></td>
+                        </tr>
+                    }
+                    else
+                    {
+                        int i = 1;
+                        foreach (var item in Model)
+                        {
+                            <tr>
+                                <td>@{int SrNo = ((ViewBag.PageNumber - 1) * ViewBag.PageSize) + i; i = i + 1; } @SrNo</td>
+
+                                <td>
+                                    @{ lAllStateInThisPage.Add((int)item.ID, (int)item.ID); }
+                                    @if (lServiceLevel == (int)DeliveryPartner.Common.Constant.DELIVERY_PARTNER_SERVICE_LEVEL.STATE)
+                                    {
+                                        @Html.DisplayFor(modelItem => item.Name)
+                                    }
+                                    else
+                                    {
+                                        <a href="@Url.Action("District", "MyRegion", new { StateID = item.ID})" target="district" onclick="doAction()">@item.Name</a>
+                                    }
+
+                                </td>
+                                @*<td>
+                                        <button class="btn btn-small btn-success" onclick="Details(@item.ID)">View</button>
+                                    </td>*@
+                                <td class="text-center">
+                                    @if (lServiceLevel == (int)DeliveryPartner.Common.Constant.DELIVERY_PARTNER_SERVICE_LEVEL.STATE)
+                                    {
+                                        <input type="checkbox" class="chkBox" name="chkBox" checked="@item.IsSelected" value=@item.ID>
+                                    }
+                                    else
+                                    {
+                                        <input type="checkbox" class="chkBox" name="chkBox" checked="@item.IsSelected" value=@item.ID disabled="disabled">
+                                    }
+                                </td>
+                            </tr>
+                        }
+                        @*@Html.Hidden("lAllStateInThisPage")*@
+                    }
+                </table>
+                @*@Html.Hidden("lAllStateInThisPage")*@
+                @*Yashaswi 12-10-2018 to disable
+                     <div class="pager">
+        @Html.PagedListPager(Model, Page => Url.Action("State", new { page = Page, SearchString = ViewBag.SearchString }),
+                                                    new PagedListRenderOptions()
+                                                    {
+                                                        Display = PagedListDisplayMode.IfNeeded
+                                                    })
+    </div>*@
+                if (lServiceLevel == (int)DeliveryPartner.Common.Constant.DELIVERY_PARTNER_SERVICE_LEVEL.STATE)
+                {
+                    <div class="control-group">
+                        <div style="float:right">
+                            <input type="submit" value="Update" class="btn btn-danger btn-small" />
+                        </div>
+                    </div>
+                    TempData["lAllStateInThisPage"] = lAllStateInThisPage;
+                }
+            }
+        </div>
+        <!-- /widget-content -->
+    </div>
+</div>
+@*</div>*@
+
+@section myScripts{
+    <script>
+        function doAction() {
+            window.parent.$("[id$=city]").attr("src", '@Url.Action("City", "MyRegion")');
+        }
+
+
+        function toggle(source) {
+            checkboxes = document.getElementsByClassName('chkBox');
+            for (var i = 0, n = checkboxes.length; i < n; i++) {
+                checkboxes[i].checked = source.checked;
+            }
+        }
+        $(".chkBox").change(function () {
+            if (this.checked) {
+                $(".chkBox").parent("td").parent("tr").addClass("tr_seleted");
+            }
+            else {
+                $(".chkBox").parent("td").parent("tr").removeClass("tr_seleted");
+            }
+        })
+    </script>
+}

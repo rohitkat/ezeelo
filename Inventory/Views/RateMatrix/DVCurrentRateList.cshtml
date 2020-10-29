@@ -1,0 +1,369 @@
+﻿@model List<ModelLayer.Models.ViewModel.ProductRateMarginListViewModel>
+
+<style>
+    .header {
+        background-color: #536075 !important; /*4B77BE*/
+        color: white;
+    }
+
+    #ProductList a {
+        cursor: pointer;
+        font-size: x-large;
+        text-decoration: none !important;
+    }
+
+    .FVCol {
+        background-color: #f4eefc !important;
+    }
+
+    .DVCol {
+        background-color: #d8ecfb !important;
+    }
+
+    .EZCol {
+        background-color: #e9f7e8 !important;
+    }
+
+    html {
+        font-family: verdana;
+        font-size: 10pt;
+        line-height: 25px;
+    }
+
+    .fvlist table {
+        border-collapse: separate;
+        width: 300px;
+        max-width: 300px;
+        overflow-x: scroll;
+        display: block;
+    }
+
+    .fvlist thead {
+        background-color: #EFEFEF;
+    }
+
+    .fvlist thead, .fvlist tbody {
+        display: block;
+    }
+
+    .fvlist tbody {
+        overflow-y: scroll;
+        overflow-x: auto;
+        max-height: 180px;
+    }
+
+    .fvlist td, .fvlist th {
+        min-width: 70px;
+        height: 25px;
+        border: inset 1px lightblue;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        max-width: 70px;
+        /*word-break: break-all;*/
+        text-align: center;
+    }
+</style>
+
+<script>
+    $(document).ready(function () {
+        $('.fvlist').on('scroll', function () {
+            $(".fvlist > *").width($(".fvlist").width() + $(".fvlist").scrollLeft());
+        });
+
+
+        $('.abtn').click(function (event) {
+            var name = $(this).attr("id");
+            var nameSplit = name.split('-');
+            var PVList = "PVList-" + nameSplit[1];
+            var ClosePVList = "ClosePVList-" + nameSplit[1];
+            var OpenPVList = "OpenPVList-" + nameSplit[1];
+
+            var DVList = "DVList-" + nameSplit[1];
+            var CloseDVList = "CloseDVList-" + nameSplit[1];
+            var OpenDVList = "OpenDVList-" + nameSplit[1];
+
+            var FVList = "FVList-" + nameSplit[1];
+            var CloseFVList = "CloseFVList-" + nameSplit[1];
+            var OpenFVList = "OpenFVList-" + nameSplit[1];
+
+            if (name.indexOf('OpenPVList') > -1) {
+                $('#' + PVList).removeClass('animated zoomIn');
+
+                $('#' + PVList).show();
+                $('#' + PVList).addClass('animated zoomIn');
+                $('#' + ClosePVList).show();
+                $('#' + OpenPVList).hide();
+
+
+                //$('.dvbtn').hide();
+                //$('.fvbtn').hide();
+            }
+            else if (name.indexOf('ClosePVList') > -1) {
+                $('#' + PVList).hide();
+                $('#' + ClosePVList).hide();
+                $('#' + OpenPVList).show();
+
+
+                //$('.dvbtn').hide();
+                //$('.fvbtn').hide();
+            }
+
+            else if (name.indexOf('OpenDVList') > -1) {
+                $('#' + DVList).removeClass('animated zoomIn');
+
+                $('#' + DVList).show();
+                $('#' + DVList).addClass('animated zoomIn');
+                $('#' + CloseDVList).show();
+                $('#' + OpenDVList).hide();
+
+
+                //$('.fvbtn').hide();
+            }
+            else if (name.indexOf('CloseDVList') > -1) {
+
+                $('#' + DVList).hide();
+                $('#' + CloseDVList).hide();
+                $('#' + OpenDVList).show();
+
+
+                //$('.fvbtn').hide();
+            }
+            else if (name.indexOf('OpenFVList') > -1) {
+                var fvsalePrice = $("#fvSalePrice-" + nameSplit[1]).text();
+                if (fvsalePrice.trim() == "0") {
+                    $("#sp-" + nameSplit[1]).show();
+                    $("#sp-" + nameSplit[1]).addClass('animated flash');
+                }
+                else {
+                    $('#' + FVList).removeClass('animated zoomIn');
+                    $('#' + FVList).show();
+                    $('#' + FVList).addClass('animated zoomIn');
+                    $('#' + CloseFVList).show();
+                    $('#' + OpenFVList).hide();
+                }
+            }
+            else if (name.indexOf('CloseFVList') > -1) {
+                $('#' + FVList).hide();
+                $('#' + CloseFVList).hide();
+                $('#' + OpenFVList).show();
+            }
+            else {
+
+            }
+        });
+    });
+</script>
+
+<div class="row-fluid">
+    <div class="box span11" style="width:85%;background-color:white">
+        <div class="box-header">
+            <h2>
+                <i class="icon-list-alt"></i>
+                <span class="break"></span>
+                DV Rate List
+            </h2>
+        </div>
+
+        <div class="box-content">
+            @if (Model != null && Model.Count != 0)
+            {
+                <table id="ProductList" class="table border-table display" style="width:100%">
+
+                    @for (var i = 0; i < Model.Count(); i++)
+                    {
+                        <tr>
+                            <td>
+                                <a id="OpenPVList-@i" class="abtn" title="Click me to expand Product Varient List."><i class="icon-plus-sign"></i></a>
+                                <a id="ClosePVList-@i" style="display:none" class="abtn" title="Click me to minimize Product Varient List."><i class="icon-minus-sign"></i></a>
+
+                            </td>
+                            <td>
+                                <p style="color:#1a154b;font-size:large;float:left"> Product Name: <span style="font-weight:bold"> @Model[i].ProductName</span> &nbsp; &nbsp; HSNCode: @Model[i].HSNCode &nbsp; &nbsp;   </p>
+                            </td>
+                            <td colspan="2"></td>
+                        </tr>
+
+                        <tr>
+                            <td colspan="3">
+                                <table class="table border-table display" id="PVList-@i" style="display:none;width:100%">
+                                    @if (Model[i].PVarientList.Count() > 0)
+                                    {
+                                        for (var j = 0; j < Model[i].PVarientList.Count(); j++)
+                                        {
+                                            <tr>
+                                                <td>
+                                                    <a id="OpenDVList-@j@i" class="abtn" title="Click me to expand DV List."><i class="icon-plus-sign"></i></a>
+                                                    <a id="CloseDVList-@j@i" style="display:none" class="abtn dvbtn" title="Click me to minimize DV List."><i class="icon-minus-sign"></i></a>
+                                                    <span>
+                                                        @{
+                                                            var l = j;
+                                                            l = j + 1;
+                                                        }
+                                                        @l.
+                                                        <span style="color:#6b6a6a;font-size:large">
+                                                            Varient: <span style="font-weight:bold">@Model[i].PVarientList[j].ProductVarientName</span> &nbsp; &nbsp;
+                                                        </span>
+                                                    </span>
+                                                </td>
+                                                @*Yashaswi 26/4/2018*@
+                                                <td></td>
+
+                                            </tr>
+
+                                            <tr>
+                                                <td colspan="2">
+
+                                                    <table class="table border-table display" id="DVList-@j@i" style="display:none;">
+
+                                                        @for (var a = 0; a < Model[i].PVarientList[j].DVList.Count(); a++)
+                                                        {
+                                                            <tr>
+                                                                <td>
+                                                                    <a id="OpenFVList-@a@j@i" class="abtn fvbtn" title="Click me to expand FV List."><i class="icon-plus-sign"></i></a>
+                                                                    <a id="CloseFVList-@a@j@i" style="display:none" class="abtn " title="Click me to minimize FV List."><i class="icon-minus-sign"></i></a>
+
+                                                                    @{
+                                                                        var b = a;
+                                                                        b = b + 1;
+                                                                    }
+                                                                    <span style=" font-weight: bold; color: #1d1e23"> @b. &nbsp;&nbsp;@Model[i].PVarientList[j].DVList[a].Name </span>
+
+                                                                    @if (Model[i].PVarientList[j].DVList[a].FVList.Any(p => p.FVSalePrice != 0))
+                                                                    {
+                                                                        <div>
+                                                                            MRP:<span style="font-weight:bold">@Model[i].PVarientList[j].DVList[a].MRP Rs.</span> &nbsp; &nbsp;
+                                                                            GST: <span style="font-weight:bold">@Model[i].PVarientList[j].DVList[a].GST %</span> &nbsp; &nbsp;                                                                            
+                                                                            Rate Expiry: <span style="font-weight:bold">@Model[i].PVarientList[j].DVList[a].RateExpiry.ToString("dd/MM/yyyy") </span>
+                                                                        </div>                                                                       
+                                                                    }
+                                                                    else
+                                                                    {
+                                                                        <span style="font-weight:bold;color:red" id="sp-@a@j@i">Rate is not define</span>
+                                                                    }
+                                                                </td>
+
+
+                                                            </tr>
+                                                            <tr>
+                                                                <td>
+                                                                    <div style=" overflow-y: scroll !important; max-width: 80vw">
+
+                                                                        <table id="FVList-@a@j@i" class="fvlist " style="display:none">
+                                                                            <thead>
+                                                                                <tr>
+                                                                                    <th colspan="2" style="min-width:35px;max-width:35px "></th>
+                                                                                    @*<th style="min-width: 140px; max-width: 140px; word-break: break-all;"></th>*@
+                                                                                    <th colspan="5" style=" color: #1a154b;text-decoration:underline " class="FVCol">
+                                                                                        FV
+                                                                                    </th>
+                                                                                    <th colspan="5" style="color: #1a154b; text-decoration: underline; " class="DVCol">
+                                                                                        DV
+                                                                                    </th>
+                                                                                </tr>
+                                                                                <tr>
+                                                                                    <th style="min-width:35px;max-width:35px ">
+                                                                                        Sr.No
+                                                                                    </th>
+                                                                                    <th style="min-width: 140px; max-width: 140px; word-break: break-all;">
+                                                                                        FV Name
+                                                                                    </th>
+                                                                                    <th class="FVCol" style="min-width: 40px; max-width: 40px; word-break:break-all;">Margin(%)</th>
+                                                                                    <th class="FVCol"> Sale Price</th>
+                                                                                    <th class="FVCol"> Purchase Price</th>
+                                                                                    <th class="FVCol"> Margin Value with GST (Rs.)</th>
+                                                                                    <th class="FVCol"> GST</th>
+                                                                                    <th class="DVCol"> Margin(%)</th>
+                                                                                    <th class="DVCol"> Sale Price</th>
+                                                                                    <th class="DVCol"> Purchase Price</th>
+                                                                                    <th class="DVCol"> Margin Value with GST (Rs.)</th>
+                                                                                    <th class="DVCol"> GST</th>
+                                                                                </tr>
+                                                                            </thead>
+                                                                            <tbody>
+                                                                                @for (var c = 0; c < Model[i].PVarientList[j].DVList[a].FVList.Count(); c++)
+                                                                                {
+
+                                                                                    <tr>
+                                                                                        <td style="min-width:35px;max-width:35px " title="@Model[i].PVarientList[j].DVList[a].FVList[c].Name">
+                                                                                            @{
+                                                                                                var d = c;
+                                                                                                d = d + 1;
+                                                                                            }
+                                                                                            @d
+                                                                                        </td>
+                                                                                        <td style="min-width: 140px; max-width: 140px; word-break: break-all;" title="@Model[i].PVarientList[j].DVList[a].FVList[c].Name">
+
+                                                                                            <span style="font-weight: bold; color: #1d1e23">@Model[i].PVarientList[j].DVList[a].FVList[c].Name </span>
+                                                                                        </td>
+
+                                                                                        <td class="FVCol" style="min-width: 40px; max-width: 40px; word-break:break-all;" title="@Model[i].PVarientList[j].DVList[a].FVList[c].Name">
+                                                                                            <label title="@Model[i].PVarientList[j].DVList[a].FVList[c].Name">@Model[i].PVarientList[j].DVList[a].FVList[c].FVMargin </label>
+                                                                                        </td>
+
+                                                                                        <td class="FVCol" title="@Model[i].PVarientList[j].DVList[a].FVList[c].Name">
+                                                                                            <label id="fvSalePrice-@a@j@i" title="@Model[i].PVarientList[j].DVList[a].FVList[c].Name">@Model[i].PVarientList[j].DVList[a].FVList[c].FVSalePrice </label>
+                                                                                        </td>
+                                                                                        <td class="FVCol" title="@Model[i].PVarientList[j].DVList[a].FVList[c].Name">
+                                                                                            <label title="@Model[i].PVarientList[j].DVList[a].FVList[c].Name">@Model[i].PVarientList[j].DVList[a].FVList[c].FVPurchasePrice </label>
+                                                                                        </td>
+                                                                                        <td class="FVCol" title="@Model[i].PVarientList[j].DVList[a].FVList[c].Name">
+                                                                                            <label title="@Model[i].PVarientList[j].DVList[a].FVList[c].Name">@Model[i].PVarientList[j].DVList[a].FVList[c].FVMarginVAlueWithGST </label>
+                                                                                        </td>
+                                                                                        <td class="FVCol" title="@Model[i].PVarientList[j].DVList[a].FVList[c].Name">
+                                                                                            <label title="@Model[i].PVarientList[j].DVList[a].FVList[c].Name">@Model[i].PVarientList[j].DVList[a].FVList[c].FVGST </label>
+                                                                                        </td>
+
+                                                                                        <td class="DVCol" title="@Model[i].PVarientList[j].DVList[a].FVList[c].Name">
+                                                                                            <label title="@Model[i].PVarientList[j].DVList[a].FVList[c].Name">@Model[i].PVarientList[j].DVList[a].FVList[c].DVMargin </label>
+                                                                                        </td>
+
+                                                                                        <td class="DVCol" title="@Model[i].PVarientList[j].DVList[a].FVList[c].Name">
+                                                                                            <label title="@Model[i].PVarientList[j].DVList[a].FVList[c].Name">@Model[i].PVarientList[j].DVList[a].FVList[c].DVSalePrice </label>
+                                                                                        </td>
+                                                                                        <td class="DVCol" title="@Model[i].PVarientList[j].DVList[a].FVList[c].Name">
+                                                                                            <label title="@Model[i].PVarientList[j].DVList[a].FVList[c].Name">@Model[i].PVarientList[j].DVList[a].FVList[c].DVPurchasePrice </label>
+                                                                                        </td>
+                                                                                        <td class="DVCol" title="@Model[i].PVarientList[j].DVList[a].FVList[c].Name">
+                                                                                            <label title="@Model[i].PVarientList[j].DVList[a].FVList[c].Name">@Model[i].PVarientList[j].DVList[a].FVList[c].DVMarginVAlueWithGST </label>
+                                                                                        </td>
+                                                                                        <td class="DVCol" title="@Model[i].PVarientList[j].DVList[a].FVList[c].Name">
+                                                                                            <label title="@Model[i].PVarientList[j].DVList[a].FVList[c].Name">@Model[i].PVarientList[j].DVList[a].FVList[c].DVGST </label>
+                                                                                        </td>
+                                                                                    </tr>
+                                                                                }
+                                                                            </tbody>
+                                                                        </table>
+                                                                    </div>
+                                                                </td>
+                                                            </tr>
+                                                        }
+                                                    </table>
+
+
+                                                </td>
+                                            </tr>
+                                        }
+                                    }
+                                    else
+                                    {
+                                        <tr>
+                                            <td>
+                                                <p style="font-size:large;font-weight:bold"> Rate not found Or Rate may be expired for @Model[i].ProductName Item ...</p>
+                                            </td>
+                                        </tr>
+                                    }
+
+                                </table>
+
+                            </td>
+                        </tr>
+                    }
+
+                </table>
+                <p>
+                    @Html.ActionLink("Back to Product List", "ProductList", "RateMatrix", null, new { @class = "btn btn-default mrg-left mrg-top" })
+                </p>
+            }
+        </div>
+    </div>
+</div>

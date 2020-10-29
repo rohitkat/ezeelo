@@ -1,0 +1,192 @@
+﻿@{
+    ViewBag.Title = "Generate Sitemap";
+}
+<style>
+    .newselect {
+        border: none;
+        border-radius: 0px 0px 0px 0px !important;
+        background: transparent;
+        width: 165px;
+        padding: 5px 35px 5px 5px;
+        font-size: 13px;
+        border: 1px solid #eaeaea;
+        height: 34px;
+        /*-webkit-appearance: none;*/
+        /*-moz-appearance: none;*/
+        appearance: none;
+        /*background: url(/Content/Images/drop.gif) 97% / 5% no-repeat #fff !important;*/
+    }
+</style>
+<div class="gap"></div>
+<div class="row box">
+    <h2>Generate Sitemap</h2>
+    @using (Html.BeginForm())
+    {
+        @Html.AntiForgeryToken()
+        if (!string.IsNullOrEmpty(Convert.ToString(ViewBag.Message)))
+        {
+            <span style="color:red; font-weight:bold;" class="message"> @ViewBag.Message </span>
+        }
+        <div class="col-md-12" data-gutter="60" style="padding: 0px;">
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label>Gandhibagh Cities </label>
+                    @Html.DropDownList("City", null, "Select City", new { @class = "form-control", onclick = "$('.message').html('');" })
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label>&nbsp;</label>
+                    <select class="select select1 form-control" id="ddlSelectAreaSeo" name="SelectArea" style="width: 100%; display: none"></select>
+                </div>
+            </div>
+            
+        </div>
+    <div class="col-md-12" data-gutter="60" style="padding: 0px;">
+        <div class="col-md-6">
+            <div class="form-group">
+                <label>&nbsp;</label>
+                <table>
+                    <tr> 
+                        <td>
+                            <input type="radio" id="rbCategory" name="sitemapType" value="1" title="Category" onclick="$('.message').html('');" /> Category&nbsp;
+                        </td>
+                        <td>
+                            <input type="radio" id="rbProduct" name="sitemapType" value="2" title="Product" style="margin-left: 20px;" onclick="$('.message').html('');" /> Product&nbsp;
+                        </td>
+                        @*commented by harshada as per requirement of SEO team on 20/1/2017*@
+                        @*<td>
+                            <input type="radio" id="rbProduct" name="sitemapType" value="3" title="Product" style="margin-left: 20px;" onclick="$('.message').html('');" /> Shop&nbsp;
+                        </td>
+                        <td>
+                            <input type="radio" id="rbImage" name="sitemapType" value="4" title="Image" style="margin-left: 20px;" onclick="$('.message').html('');" /> Image&nbsp;
+                        </td>*@ @*commented by harshada as per requirement of SEO team on 20/1/2017*@
+                    </tr>
+                </table>
+            </div>
+        </div>
+    </div>
+
+
+
+
+        <br />
+        <button type="submit" value="Generate" class="btn btn-small btn-warning" name="submit" onclick="return ValidateType();">Generate Xml Sitemap</button>
+    }
+</div>
+<div class="gap"></div>
+
+
+
+
+
+
+
+
+<script type="text/javascript">
+    function ValidateType() {
+        $('.message').html('');
+        var city = $('select[name=City]').val();
+        var Area = $("#ddlSelectAreaSeo").val();
+            if (city != null && city != "" && Area != 0) {
+                var type = $('input[name=sitemapType]:radio:checked').val();
+                if (type == null || type == "") {
+                    alert('Select Type to generate sitemap !!');
+                    return false;
+                }
+                else {
+                    ShowLoader();
+                    return true;
+                }
+            }
+            else {
+                if ($('input[name=sitemapType]:radio:checked').val() == "4") {
+                    ShowLoader();
+                    return true;
+                }
+                else if (city == '') {
+                    alert('Select City to generate sitemap !!!');
+                    return false;
+                }
+                else if (city != '' && Area == 0) {
+                    alert('Select Area to generate sitemap !!');
+                    return false;
+                }
+
+            }
+     }
+
+    function ShowLoader()
+    {
+        $('#mask').show();
+    }
+
+    $(document).ready(function () {
+        $('#mask').hide();
+
+        if ($("#City").val() != 0) {
+            CallAPI()
+        }
+
+        $("#City").change(function () {
+            $("#ddlSelectAreaSeo").val('');          
+            if ($("#City").val() == 0) {              
+                $("#ddlSelectAreaSeo").hide();
+            }
+            else {
+                CallAPI()
+            }
+        });
+        function CallAPI() {
+            var AreaIDSeo = 0;
+            var IDSeo = $("#City").val();
+            var Area_Pin_IDSeo = "GetFranchiseID?cityid=" + IDSeo + "&" + "pincide_areaid=" + AreaIDSeo;
+            var urlAPIFranciseIDSeo = "http://api.identical/api/" + Area_Pin_IDSeo;
+           // alert(urlAPIFranciseIDSeo)
+            $.getJSON(urlAPIFranciseIDSeo, { format: "json" })
+
+            .done(function (jsonfidSeo) {
+                //  loading...
+                if (jsonfidSeo.HTTPStatusCode == "200") {
+
+                    var count = jsonfidSeo.Data.length;
+                    //alert(count);
+                    if (parseInt(count) > 0) {
+
+                        var ddlAreaSeo = $("[id*=ddlSelectAreaSeo]");
+                        ddlAreaSeo.empty().append('<option selected="selected" value="0">Select Area</option>');
+                       
+                        $.each(jsonfidSeo.Data, function (index, item) {
+                            var City = this['CityName'] + " - " + this['FranchiseOfficePincode'];
+                            ddlAreaSeo.append($("<option></option>").val(this['FranchiseIDs']).html(City));
+                        });
+                        $("#ddlSelectAreaSeo").show();
+                    }
+                    else {
+                        $("#ddlSelectAreaSeo").hide();
+                    }
+                }
+                else if (json.HTTPStatusCode == "204") {
+                    // alert("No Record found.");
+                }
+                else if (json.HTTPStatusCode == "400") {
+                    //  alert("Failed.");
+                }
+
+            })
+                   .fail(function (jqXHR, textStatus, error) {
+                       var err = textStatus + ", " + error;
+                       //  alert('Unable to Connect to Server.\n Try again Later.\n Request Failed: ' + err);
+
+                   });
+
+        }
+        $("#ddlSelectAreaSeo").change(function () {
+           // alert($("#ddlSelectAreaSeo").val());
+        });
+        $("#City").change(function () {
+           // alert($("#City").val());
+        });
+
+    });
+</script>

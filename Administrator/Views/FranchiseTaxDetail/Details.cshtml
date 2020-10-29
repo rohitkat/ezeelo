@@ -1,0 +1,174 @@
+﻿@model ModelLayer.Models.FranchiseTaxDetail
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<style>
+    fieldset.scheduler-border {
+        border: 1px groove #ddd !important;
+        padding: 0 1.4em 1.4em 1.4em !important;
+        /*margin: 0 0 1.5em 0 !important;*/
+        -webkit-box-shadow: 0px 0px 0px 0px #000;
+        box-shadow: 0px 0px 0px 0px #000;
+        width: 260px;
+        height: 298px;
+    }
+
+    legend.scheduler-border {
+        font-size: 1.2em !important;
+        font-weight: bold !important;
+        text-align: left !important;
+        color: #0E489E;
+    }
+
+    .form-horizontal .controls {
+        margin-left: 0;
+    }
+
+    .control-group label {
+        font-weight: bold;
+    }
+</style>
+
+
+<div>
+    <div class="span10" id="content">
+        <ul class="breadcrumb">
+            <li>
+                <i class="icon-home"></i>
+                <a href="#">Details</a>
+            </li>
+        </ul>
+        <div class="row-fluid">
+            <div class="box span12">
+                <div class="box-header">
+                    <h2><i class="halflings-icon user"></i><span class="break"></span>FranchiseTaxDetail</h2>
+                </div>
+                <div class="box-content">
+                    <div class="form-horizontal">
+                        <div class="span12">
+                            <div class="control-group span2">
+                                @*@Html.LabelFor(model => model.FranchiseID, "FranchiseID", new { @class = "control-label col-md-2" })*@
+                                <label> Franchise</label>
+                                <div class="controls col-md-10">
+                                    Tax @Html.DisplayFor(model => model.Franchise.ContactPerson)
+                                </div>
+                            </div>
+
+                            <div class="control-group span2">
+                                @*@Html.LabelFor(model => model.TaxationID, "TaxationID", new { @class = "control-label col-md-2" })*@
+                                <label> Tax</label>
+                                <div class="controls col-md-10">
+                                    @Html.DisplayFor(model => model.TaxationMaster.Name)
+                                </div>
+                            </div>
+
+
+                            <div class="control-group span2">
+                                @Html.LabelFor(model => model.InPercentage, new { @class = "" })
+                                <div class="controls">
+                                    @Html.DisplayFor(model => model.InPercentage)
+                                </div>
+                            </div>
+
+                            @*<div class="control-group span3">
+                                    @Html.LabelFor(model => model.InRupees, new { @class = "control-label col-md-2" })
+                                    <div class="controls col-md-10">
+                                        @Html.DisplayFor(model => model.InRupees)
+                                    </div>
+                                </div>*@
+
+                            <div class="control-group span3" style="margin-left:-87px;">
+                                @Html.LabelFor(model => model.IsActive, new { @class = "control-label col-md-2" })
+                                <div class="controls">
+                                    @Html.DisplayFor(model => model.IsActive)
+                                </div>
+                            </div>
+
+                        </div>
+
+
+                        <div class="span12" style="margin-left:0px;">
+                            <fieldset class="scheduler-border span3">
+                                <legend class="scheduler-border">Other</legend>
+
+                                <div class="control-group">
+                                    @Html.LabelFor(model => model.IsDirect, new { @class = "control-label col-md-2" })
+                                    <div class="controls col-md-10">
+                                        @Html.DisplayFor(model => model.IsDirect)
+                                    </div>
+                                </div>
+                                <div class="control-group">
+                                    @Html.LabelFor(model => model.IsCustomerSide, new { @class = "control-label col-md-2" })
+                                    <div class="controls col-md-10">
+                                        @Html.DisplayFor(model => model.IsCustomerSide)
+                                    </div>
+                                </div>
+                            </fieldset>
+
+                            <fieldset class="scheduler-border span4">
+                                <legend class="scheduler-border">Tax Limit</legend>
+                                <div class="control-group">
+                                    @*Limits in Percentage*@
+                                    @Html.LabelFor(model => model.IsPercentage, new { @class = "control-label col-md-2" })
+                                    <div class="col-md-10 controls">
+                                        :- @Html.DisplayFor(model => model.IsPercentage)
+                                        @Html.ValidationMessageFor(model => model.IsPercentage)
+                                    </div>
+                                </div>
+                                <div class="control-group">
+                                    @Html.LabelFor(model => model.LowerLimit, new { @class = "control-label col-md-2" })
+                                    <div class="col-md-10 controls">
+                                        :-  @Html.DisplayFor(model => model.LowerLimit)
+                                        @Html.ValidationMessageFor(model => model.LowerLimit)
+                                    </div>
+                                </div>
+
+                                <div class="control-group">
+                                    @Html.LabelFor(model => model.UpperLimit, new { @class = "control-label col-md-2" })
+                                    <div class="col-md-10 controls">
+                                        :- @Html.DisplayFor(model => model.UpperLimit)
+                                        @Html.ValidationMessageFor(model => model.UpperLimit)
+                                    </div>
+                                </div>
+                            </fieldset>
+
+                            <fieldset class="scheduler-border span4">
+                                <legend class="scheduler-border">Indirect Tax Setting</legend>
+                                <div class="control-group">
+                                    @Html.LabelFor(model => model.IsOnTaxSum, new { @class = "control-label col-md-2" })
+                                    <div class="controls col-md-10">
+                                        @Html.DisplayFor(model => model.IsOnTaxSum)
+                                    </div>
+                                </div>
+                                <div class="control-group">
+                                    @Html.LabelFor(model => model.IsMinusTaxs, new { @class = "control-label col-md-2" })
+                                    <div class="controls col-md-10">
+                                        @Html.DisplayFor(model => model.IsMinusTaxs)
+                                    </div>
+                                </div>
+                                <div class="control-group">
+                                    @Html.LabelFor(model => model.IsIncludeSaleRate, new { @class = "control-label col-md-2" })
+                                    <div class="controls col-md-10">
+                                        @Html.DisplayFor(model => model.IsIncludeSaleRate)
+                                    </div>
+                                </div>
+                            </fieldset>
+                        </div>
+
+
+                        <div class="span12" style="margin-left:0px;">
+                            <div class="form-actions">
+                                <div class="col-md-offset-2 col-md-10">
+                                    @Html.ActionLink("Back to List", "Index", string.Empty, new { @class = "btn" })
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+

@@ -1,0 +1,112 @@
+﻿@*@model List<ModelLayer.Models.ViewModel.EzeeMoneyPayout_ReportViewModel>*@
+@model ModelLayer.Models.ViewModel.EzeeMoneyPayoutReportViewModel
+
+
+<script src="~/Scripts/jquery-1.12.4.js"></script>
+
+<link href="//cdn.datatables.net/1.10.19/css/jquery.dataTables.min.css" rel="stylesheet" />
+<script src="//cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
+
+<div id="wrap">
+    <div class="container">
+        <div id="content" class="span10" style="min-height: 403px;">
+            <table id="tblData" class="table table-bordered table-striped table-condensed display" width="100%">
+                <thead>
+                    <tr>
+                        <th>Sr.No.</th>
+                        <th>Name</th>
+                        <th>Email</th>
+                        <th>Phone No</th>
+                        <th>Total Order Amt</th>
+                        <th>Total Retail Points</th>
+                        <th>ERP</th>
+                        <th>Status</th>
+                        <th>EzeeMoney</th>
+                        <th>QRP</th>
+
+                    </tr>
+                </thead>
+                <tbody>
+                    @{ var i = 0; }
+                    @if (Model.listEzeeMoneyPayoutDetails.Count != 0)
+                    {
+                        foreach (var item in @Model.listEzeeMoneyPayoutDetails)
+                        {
+                    <tr>
+                        <td>
+                            @i
+                            @{
+                                i = i + 1;
+                            }
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Name)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.EmailId)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.PhoneNo)
+                        </td>
+
+                        <td>
+                            @Html.DisplayFor(modelItem => item.TotalOrdAmt)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.TotalRetailPoints)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.ERP)
+                        </td>
+
+                        @if (item.Status == true)
+                        {
+                            <td>
+                                Active
+                            </td>
+                        }
+                        @if (item.Status == false)
+                        {
+                            <td>
+                                InActive
+                            </td>
+                        }
+                        @*else
+        {
+            <td>
+
+                @$("#EzeeMoneyPayoutDetailDiv").load("/Admin/EzeeMoneyPayoutReport/GetAllData");
+            </td>
+        }*@
+                        <td>
+                            @Html.DisplayFor(modelItem => item.EzeeMoney)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.QRP)
+                        </td>
+
+                    </tr>
+                        }
+                    }
+                    else
+                    {
+                        <tr>
+                            <td colspan="12" style="min-width:960px;max-width:960px">
+                                <label style=" color: #138afc; ">No Record Found.... </label>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('#tblData').DataTable();
+        //alert("")
+    $("#pageloaddiv").css('display', 'none');
+
+    });
+</script>

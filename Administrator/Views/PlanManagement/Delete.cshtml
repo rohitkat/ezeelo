@@ -1,0 +1,130 @@
+﻿@model ModelLayer.Models.ViewModel.PlanBindManagement
+
+@{
+    ViewBag.Title = "Delete Categories";
+}
+
+<div id="content" class="span10">
+    <ul class="breadcrumb">
+        <li>
+            <a href="#">Merchant Plan Management</a>
+        </li>
+    </ul>
+    <div class="row-fluid ">
+        <div class="box span12">
+            <div class="box-header">
+                <h2><i class="icon-edit"></i><span class="break"></span>Detail</h2>
+
+            </div>
+            <div class="box-content">
+                <div class="span12">
+                    <div class="span6">
+                        <span class="control-label">Select Master Plan</span>
+                        @Html.DropDownList("MasterPlan", "Select Plan")
+                    </div>
+                    <div class="span6">
+                        @*@Html.RadioButton("Included", 1) Included
+                            @Html.RadioButton("Included", 2) Excluded*@
+                        <span class="control-label">
+                            
+                            @if (Model.type == 1)
+                            {
+                                @Html.RadioButtonFor(x => x.type, 1, new { @checked = true })
+                            }
+                            else
+                            {
+                                @Html.RadioButtonFor(x => x.type, 1)
+                            }
+                            Included
+                        </span>
+                        <span class="control-label">
+                            @if (Model.type == 2)
+                            {
+                                @Html.RadioButtonFor(x => x.type, 2, new { @checked = true })
+                            }
+                            else
+                            {
+                                @Html.RadioButtonFor(x => x.type, 2)
+                            }
+                            Excluded
+                        </span>
+                        
+
+                    </div>
+                </div>
+                <table class="table table-striped table-bordered">
+                    <thead>
+                        <tr>
+                            
+                            <th>Category ID</th>
+                            <th>Category Name</th>
+                            <th>Action</th>
+
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @for (int i = 0; i < Model.planCommission.Count(); i++)
+                        {
+                            <tr id=@i>
+                                <td class="center">@Html.DisplayFor(x => x.planCommission[i].CategoryID)  </td>
+                                <td class="center">@Html.DisplayFor(x => x.planCommission[i].CategoryName)<br />
+                                    <span id='span_@i' style="color:red; font-size:x-small;"></span>
+                                </td>
+                                <td> 
+                                <a name="noname" href="#" id=@i class="btnRemove">Remove</a>
+
+                                </td>
+                                
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="form-actions">
+
+                @Html.ActionLink("Back to List", "Index", null, new { @class = "btn" })
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="~/Scripts/jquery-1.10.2.min.js"></script>
+<script>
+    $(document).ready(function () {
+        $(".btnRemove").click(function () {
+            var rowid = $(this).attr("id");
+            //alert(rowid.toString());
+            var catID = $('table tr' + '#' + rowid).find('td:first').text();
+            //alert(catID);
+            var planid = $("#MasterPlan option:selected").val();
+            //alert(planid);
+            if ($('#span_' + rowid).html().length < 1) {
+                $.ajax({
+                    type: "POST",
+                    url: "/PlanManagement/DeletePlanCategory",
+                    dataType: "json",
+                    data: "{PlanID: '" + planid + "',categoryID:'" + catID + "'}",
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    async: true,
+                    cache: false,
+                    success: function (msg) {
+                        if (msg == 1) {
+                            $('#span_' + rowid).html("Category Deleted Successfully");
+                        }
+                        else if (msg == 0) {
+                            $('#span_' + rowid).html("Category can not be deleted becuase it is used in other table");
+                        }
+                        else {
+                            $('#span_' + rowid).html("Problem in deletion");
+                        }
+                    },
+                    error: function (x, e) {
+                        alert("Sorry No Unable to Bind Data. ");
+                    }
+                });
+            }
+        });
+    });
+</script>

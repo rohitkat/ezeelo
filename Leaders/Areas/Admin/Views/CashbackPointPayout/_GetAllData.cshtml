@@ -1,0 +1,129 @@
+﻿@model ModelLayer.Models.ViewModel.CashbackPointsPayoutViewModel
+
+
+<div id="wrap">
+    <div class="container">
+        <div id="content" class="span10" style="min-height: 403px;">
+            <div id="divRpt">
+                <ul class="nav nav-tabs" id="myTab">
+                    <li class="nav-item">
+                        <a href="#main-P" class="nav-link active show" data-toggle="tab">Orderwise Cashback Points Report</a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#Pdetails" class="nav-link" data-toggle="tab">Userwise Cashback Points Report</a>
+                    </li>
+                </ul>
+                <div class="tab-content">
+                    <div class="tab-pane fade active show" id="main-P" style="max-width:1000px;overflow:auto">
+                        @if (@Model.orderwise != null)
+                        {
+                            <br />
+                            <table id="tblData" class="table table-bordered table-striped table-condensed display" width="100%">
+                                <thead>
+                                    <tr>
+                                        <th>SrNo</th>
+                                        <th>Order Code</th>
+                                        <th>UserloginId</th>
+                                        <th>Name</th>
+                                        <th>Paybale Amount</th>
+                                        <th>Retail Points</th>
+                                        <th>Cashback Points</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @{ var j = 0; }
+                                    @foreach (var item in @Model.orderwise)
+                                    {
+                                        <tr>
+                                            <td>
+                                                @{
+                                                    j = j + 1;
+                                                }
+                                                @j
+                                            </td>
+                                            <td>
+                                                @Html.DisplayFor(modelItem => item.OrderCode)
+                                            </td>
+                                            <td>
+                                                @Html.DisplayFor(modelItem => item.UserLoginId)
+                                            </td>
+                                            <td>
+                                                @Html.DisplayFor(modelItem => item.Name)
+                                            </td>
+                                            <td>
+                                                @Html.DisplayFor(modelItem => item.PayableAmout)
+                                            </td>
+                                            <td>
+                                                @Html.DisplayFor(modelItem => item.RetailPointsTotal)
+                                            </td>
+                                            <td>
+                                                @Html.DisplayFor(modelItem => item.CashbackPointsTotal)
+                                            </td>
+                                        </tr>
+                                    }
+
+                                </tbody>
+                            </table>
+                        }
+                    </div>
+                    <div class="tab-pane fade" id="Pdetails" style="max-width:1000px;overflow:auto">
+                        @if (@Model.userwise != null)
+                        {
+                            <br />
+                            <table id="tblData1" class="table table-bordered table-striped table-condensed display" width="100%">
+                                <thead>
+                                    <tr>
+                                        <th>Sr.No.</th>
+                                        <th>UserLoginId</th>
+                                        <th>Name</th>
+                                        <th>Cashback Points</th>
+                                        <th>Cashback Amount</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @{ var i = 0; }
+                                    @if (Model.userwise.Count != 0)
+                                    {
+                                        foreach (var item in @Model.userwise)
+                                        {
+                                            <tr>
+                                                <td>
+                                                    @{
+                                                        i = i + 1;
+                                                    }
+                                                    @i
+                                                </td>
+                                                <td>
+                                                    @Html.DisplayFor(modelItem => item.UserLoginId)
+                                                </td>
+                                                <td>
+                                                    @Html.DisplayFor(modelItem => item.Name)
+                                                </td>
+                                                <td>
+                                                    @Html.DisplayFor(modelItem => item.CashbackPoints)
+                                                </td>
+                                                <td>
+                                                    @Html.DisplayFor(modelItem => item.CashbackAmount)
+                                                </td>
+                                            </tr>
+                                        }
+                                    }
+
+                                </tbody>
+                            </table>
+                        }
+                    </div>
+                    
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $("#progress").hide();
+        $('#tblData').DataTable();
+        $('#tblData1').DataTable();
+    });
+</script>

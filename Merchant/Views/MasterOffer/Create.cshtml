@@ -1,0 +1,159 @@
+﻿@model ModelLayer.Models.Offer
+
+@{
+    ViewBag.Title = "Create";
+    //Layout = null;
+}
+
+<div id="content" class="span10">
+
+    @using (Html.BeginForm())
+    {
+        @Html.AntiForgeryToken()
+
+        <div class="row-fluid">
+            <div class="box-header">
+                <h2><i class="icon-edit"></i><span class="break"></span>Master Offer create</h2>
+
+            </div>
+            <div class="box-content">
+                <form class="form-horizontal">
+                
+                    @Html.ValidationSummary(true)
+
+                    <div class="control-group">
+                        @Html.LabelFor(model => model.ShortName, "Offer Name", new { @class = "control-label span2" })
+                        <div class="controls">
+                            @Html.EditorFor(model => model.ShortName)
+                            @Html.ValidationMessageFor(model => model.ShortName)
+                        </div>
+                    </div>
+
+                    <div class="control-group">
+                        @Html.LabelFor(model => model.Description, "Description", new { @class = "control-label span2" })
+                        <div class="controls">
+                            @Html.EditorFor(model => model.Description)
+                            @Html.ValidationMessageFor(model => model.Description)
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        @Html.LabelFor(model => model.IsFree, new { @class = "control-label span2" })
+                        <div class="controls">
+                            @*@Html.CheckBox("Is Free", new{@value=Model.IsFree, onclick=""})*@
+                            <input type="checkbox" name="chkIsFree" id="chkIsFree" onclick="return SetOffer(this.id)" />
+                        </div>
+                    </div>
+                    <br />
+                    <div class="control-group">
+                        @Html.LabelFor(model => model.MinPurchaseQty, "Min Purchase Qty", new { @class = "control-label span2" })
+                        <div class="controls">
+                            @Html.TextBoxFor(model => model.MinPurchaseQty)
+                            @Html.ValidationMessageFor(model => model.MinPurchaseQty)
+                        </div>
+                    </div>
+
+                    <div class="control-group">
+                        @Html.LabelFor(model => model.FreeOty, "Free Qty", new { @class = "control-label span2", @readonly = "readonly" })
+                        <div class="controls">
+                            @Html.TextBoxFor(model => model.FreeOty, new { @readonly = "readonly" })
+                        </div>
+                    </div>
+
+                    <div class="control-group">
+                        @Html.LabelFor(model => model.DiscountInRs, "Discount In Rs", new { @class = "control-label span2" })
+                        <div class="controls">
+                            @Html.TextBoxFor(model => model.DiscountInRs)
+                            @*@Html.ValidationMessageFor(model => model.DiscountInRs)*@
+                        </div>
+                    </div>
+
+                    <div class="control-group">
+                        @Html.LabelFor(model => model.DiscountInPercent, "Discount In Percent", new { @class = "control-label span2" })
+                        <div class="controls">
+                            @Html.TextBoxFor(model => model.DiscountInPercent)
+
+                        </div>
+                    </div>
+
+                    <div class="control-group">
+                        @Html.LabelFor(model => model.IsActive, new { @class = "control-label span2" })
+                        <div class="controls">
+                            @Html.EditorFor(model => model.IsActive)
+                            @Html.ValidationMessageFor(model => model.IsActive)
+                        </div>
+                    </div>
+
+
+
+                    <div class="form-actions">
+                        <div class="col-md-offset-2 col-md-10">
+                            <input type="submit" value="Create" class="btn btn-Ifrm-submit1 dollr" onclick="return Validate()" />
+                            @Html.ActionLink("Back to List", "Index", string.Empty, new { @class = "btn btn-brown" })
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+    }
+</div>
+@*<div>
+        @Html.ActionLink("Back to List", "Index")
+    </div>*@
+
+
+
+<script>
+    function SetOffer(id) {
+
+        if ($('#' + id).prop('checked')) {
+            $('#FreeOty:input').removeAttr('readonly');
+            $('#DiscountInRs:input').attr('readonly', 'readonly');
+            $('#DiscountInPercent:input').attr('readonly', 'readonly');
+        }
+        else {
+            $('#DiscountInRs:input').removeAttr('readonly');
+            $('#DiscountInPercent:input').removeAttr('readonly');
+            $('#FreeOty:input').attr('readonly', 'readonly');
+        }
+    }
+
+
+    function Validate() {
+
+        if ($('#chkIsFree').prop('checked')) {
+
+            if ($('#FreeOty:input').val() == "") {
+                alert('The free quantity field is required');
+                return false;
+            }
+
+        }
+
+        else {
+
+            if (($('#DiscountInRs:input').val() == 0 || $('#DiscountInRs:input').val() == "") && ($('#DiscountInPercent:input').val() == 0 || $('#DiscountInPercent:input').val() == "")) {
+                alert('Please fill value 0 or greater than 0 in Rs Or Percent field....');
+                return false;
+            }
+            else if ($('#DiscountInRs:input').val() > 0 && $('#DiscountInPercent:input').val() == "") {
+                alert('Please fill value 0 in Percent field');
+                return false;
+            }
+            else if ($('#DiscountInRs:input').val() =="" && $('#DiscountInPercent:input').val() >0) {
+                alert('Please fill value 0 in Rs field');
+                return false;
+            }
+            else if ($('#DiscountInRs:input').val() == "" || $('#DiscountInPercent:input').val() == "") {
+                alert('Please fill value 0 or greater than 0 in Rs and Percent field');
+                return false;
+            }
+            else if ($('#DiscountInRs:input').val() > 0 && $('#DiscountInPercent:input').val() > 0) {
+                alert('You can not fill value greater than 0 in both Rs and Percent Field.');
+                return false;
+
+            }
+        }
+    }
+
+</script>

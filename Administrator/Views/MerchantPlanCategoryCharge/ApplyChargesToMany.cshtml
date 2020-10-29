@@ -1,0 +1,71 @@
+﻿
+@using (Html.BeginForm("ApplyChargesToMany", "MerchantPlanCategoryCharge", FormMethod.Post))
+{
+    @Html.AntiForgeryToken()
+    <div id="content" class="span10">
+
+        <div class="row-fluid">
+            <div class="box span12">
+                <div class="box-content">
+                    <form class="form-horizontal">
+                        @Html.ValidationMessage("CustomError")
+                        @Html.ValidationSummary(true)
+
+                        @Html.Hidden("ownerId")
+                        @*<div class="control-group">
+                                @Html.Label("Charge Name", new { @class = "control-label col-md-2" })
+                                <div class="col-md-10">
+                                    @Html.DropDownList("ChargeID", "--Select--")
+                                    @Html.ValidationMessage("ChargeID")
+                                </div>
+                            </div>*@
+
+                        <div class="control-group">
+                            <label>Select Second Level Category</label>
+                            <div class="col-md-10">
+                                @*@Html.DropDownList("Category_2", (SelectList)ViewBag.Category_2, "All Category", new { })*@
+                                @Html.DropDownList("Category_2", (SelectList)ViewBag.Category_2, "All Category", null)
+                                
+                            </div>
+                        </div>
+                        <div class="control-group">
+                            @*@Html.LabelFor(model => model.ChargeInPercent, new { @class = "control-label col-md-2" })*@
+                            <label>Charge In Percent (%)</label>
+                            <div class="col-md-10">
+                                @Html.TextBox("ChargeInPercent", null, new { @Value = "0" })
+                                @*@Html.ValidationMessageFor(model => model.ChargeInPercent)*@
+                            </div>
+                        </div>
+
+                        <div class="control-group">
+                            @*@Html.LabelFor(model => model.ChargeInRupee, new { @class = "control-label col-md-2" })*@
+                            <label>Charge In Rupees (Rs.)</label>
+                            <div class="col-md-10">
+                                @Html.TextBox("ChargeInRupee", null, new { @Value = "0" })
+                                @*@Html.ValidationMessageFor(model => model.ChargeInRupee)*@
+                            </div>
+                        </div>
+
+                        <div class="control-group">
+                            <label>IsActive</label>
+                            <div class="col-md-10">
+                                @*<input type="checkbox" class="chkBox" name="IsActive" checked="false">*@
+                                @Html.CheckBox("IsActive", false,null)
+                            </div>
+                        </div>
+                        @if (ViewBag.Message != null)
+                        {
+                            <span style="color:red; font-weight:bold;"> @ViewBag.Message </span>
+                        }
+
+                    </form>
+                    <div class="form-actions">
+                        <input type="submit" name="submit" value="Save" class="btn btn-success" />
+                        @Html.ActionLink("Back to List", "Index", "MerchantPlanCategoryCharge", new { ownerId = ViewBag.ownerId }, new { @class = "btn" })
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+

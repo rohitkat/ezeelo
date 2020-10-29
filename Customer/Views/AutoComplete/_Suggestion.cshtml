@@ -1,0 +1,49 @@
+﻿@{
+    Layout = null;
+}
+
+@using System.Text.RegularExpressions;
+@using System.Globalization;
+@{
+    string cityName = "";
+    string cityID = "";
+    int franchiseID = 0;////added
+    if (Request.Cookies["CityCookie"] != null && Request.Cookies["CityCookie"].Value != "")
+    {
+        cityName = Request.Cookies["CityCookie"].Value.Split('$')[1].ToLower();
+        cityID = Request.Cookies["CityCookie"].Value.Split('$')[0].Trim();
+        franchiseID = Convert.ToInt32(Request.Cookies["CityCookie"].Value.Split('$')[2]);////added
+    }
+}
+
+
+@model IEnumerable<ModelLayer.Models.ViewModel.AutoSuggestViewModel>
+
+<ul class="searchItemList">
+    @{
+        string item = ViewBag.term;
+    }
+    <p class="text-bold">@item</p>
+    @foreach (var lst in Model)
+    {
+
+        <li class="icon_t fa fa-angle-right">
+
+            @{ string lTitle = item + " in ";// +lst.Name;
+            }
+            @{
+        string itemName = Regex.Replace(lst.Name.Substring(0, Math.Min(lst.Name.Length, 30)), @"[\/\\#,+()$~%.':*?<>{} ]", "-").Replace("&", "and").ToLower();
+            }
+            @if (!lst.IsManagedItem)
+            {
+                <a href="@Url.RouteUrl("ProductsByCategory", new { item = item + " ", parentCategoryId = lst.ID, city = cityName, franchiseId = franchiseID })">@CultureInfo.CurrentCulture.TextInfo.ToTitleCase(lTitle.ToLower()) <span>@CultureInfo.CurrentCulture.TextInfo.ToTitleCase(lst.Name.ToLower())</span></a> @*////added  franchiseId=franchiseID*@ 
+            }
+            else
+            {
+                <a href="@Url.RouteUrl("Managed", new { CatName = item + " ", ParentCatID = lst.ID, Level = lst.CategoryLevel, cityId = cityID, city = cityName, franchiseId = franchiseID })">@CultureInfo.CurrentCulture.TextInfo.ToTitleCase(lTitle.ToLower())</a> @*////added  franchiseId=franchiseID*@ 
+            }
+
+        </li>
+
+    }
+</ul>

@@ -1,0 +1,237 @@
+﻿@model ModelLayer.Models.MLMCoinRate
+
+@{
+    ViewBag.Title = "Update";
+    Layout = "~/Views/Shared/_LeadersLayout.cshtml";
+}
+
+<script src="~/Scripts/jquery-1.12.4.min.js"></script>
+<script src="~/Scripts/jquery-ui-1.12.1.min.js"></script>
+<link href="~/Content/css/datepicker.css" rel="stylesheet" />
+<link href="~/Content/css/jquery-ui-1.8.21.custom.css" rel="stylesheet" />
+
+
+<link href="https://cdn.datatables.net/1.10.19/css/jquery.dataTables.min.css" rel="stylesheet" />
+
+<script src="https://code.jquery.com/jquery-3.3.1.js"></script>
+<script src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
+
+@if (TempData["Alert"] == "Add")
+{
+    <div class="col-sm-12">
+        <div class="alert  alert-success alert-dismissible fade show" role="alert">
+
+            <span class="badge badge-pill badge-success">Success</span> You successfully Added  Rate!!.
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+    </div>
+}
+else if (TempData["Alert"] == "Update")
+{
+    <div class="col-sm-12">
+        <div class="alert  alert-primary alert-dismissible fade show" role="alert">
+
+            <span class="badge badge-pill badge-success">Success</span> You successfully Updated Rate!!.
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+    </div>
+}
+else if (TempData["Alert"] == "Delete")
+{
+    <div class="col-sm-12">
+        <div class="alert  alert-danger alert-dismissible fade show" role="alert">
+
+            <span class="badge badge-pill badge-success">Success</span> You successfully Updated Rate!!.
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+    </div>
+}
+
+<div class="container">
+    @using (Html.BeginForm())
+    {
+        @Html.AntiForgeryToken()
+
+        <div class="card">
+            @*<div class="form-horizontal">*@
+            <div class="card-header"><strong>Add</strong><small> Form</small></div>
+            <div class="card-body card-block">
+                <h4>Add Coin Rate</h4>
+                <hr />
+                @Html.ValidationSummary(true)
+
+                <div class="form-group">
+                    <label for="company" class=" form-control-label">Start Date</label>
+                    @*<input type="date" name="startDate" id="txtStartDate" />*@
+                    @Html.EditorFor(model => model.StartDate, new { htmlAttributes = new { @readonly = "readonly" } })
+                    @Html.ValidationMessageFor(model => model.StartDate)
+
+
+                </div>
+
+                <div class="form-group">
+                    <label for="company" class=" form-control-label">End Date</label>
+
+                    @*<input type="date" name="endDate" id="txtEndDate" />*@
+                    @Html.EditorFor(model => model.EndDate)
+                    @Html.ValidationMessageFor(model => model.EndDate)
+
+                </div>
+
+                <div class="form-group">
+                    <label for="company" class=" form-control-label">Coin Rate</label>
+
+                    @Html.EditorFor(model => model.Rate)
+                    @Html.ValidationMessageFor(model => model.Rate)
+
+                </div>
+
+
+                <div class="form-group">
+                    <div class="col-md-offset-2 col-md-10">
+                        <input type="submit" value="Update" class="btn btn-primary" />
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+    }
+    <div class="col-lg-12">
+        <div class="card">
+            <div class="card-header">
+                <strong class="card-title">Basic Table</strong>
+            </div>
+            <div class="card-body">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th scope="col">Start Date</th>
+                            <th scope="col">End Date</th>
+                            <th scope="col">Coin Rate</th>
+                            <th scope="col">Created Date</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in (IEnumerable<ModelLayer.Models.MLMCoinRate>)@ViewBag.UserList)
+                        {
+
+                            <tr>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.StartDate)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.EndDate)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Rate)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.CreateDate)
+                                </td>
+                                <td>
+                                    @Html.ActionLink("Edit", "Create", new { id = item.ID }) |
+
+
+                                    @Html.ActionLink("Delete", "Delete", new { id = item.ID })
+                                </td>
+                            </tr>
+
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+
+        <div class="card">
+            <div class="card-header">
+                <strong class="card-title">Log Table For InDirect Income</strong>
+            </div>
+            <div class="card-body">
+                <table class="LogTable" id="LogTable">
+                    <thead>
+                        <tr>
+
+                            <th scope="col">Start Date</th>
+                            <th scope="col">End Date</th>
+                            <th scope="col">Rate</th>
+                           
+                            <th scope="col">Last Create Date</th>
+                           
+
+                        </tr>
+                    </thead>
+
+                </table>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<script>
+    $(document).ready(function () {
+
+
+        $("#LogTable").DataTable({
+
+            "ajax": {
+                "url": "/CoinRateMaster/LogIndex",
+                "type": "POST",
+                "datatype": "json"
+            },
+
+            "columns": [
+                { "data": "StartDate", "name": "StartDate", "autoWidth": true },
+                { "data": "EndDate", "name": "EndDate", "autoWidth": true },
+                { "data": "Rate", "name": "Rate", "autoWidth": true },
+
+                {
+                    "data": "Last_Create_Date", "name": "Last_Create_Date", "autoWidth": true,
+                    "render": function (value) {
+                        if (value === null) return "";
+
+                        var pattern = /Date\(([^)]+)\)/;
+                        var results = pattern.exec(value);
+                        var dt = new Date(parseFloat(results[1]));
+
+                        return (dt.getMonth() + 1) + "/" + dt.getDate() + "/" + dt.getFullYear();
+                    }
+                },
+
+            ]
+
+        });
+    });
+
+</script>
+
+
+
+
+
+
+@section Scripts {
+
+    @*@System.Web.Optimization.Scripts.Render("~/bundles/jqueryui")
+        @System.Web.Optimization.Styles.Render("~/Content/cssjqryUi")*@
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('input[type=datetime]').datepicker({
+                dateFormat: "dd/mm/yy",
+                changeMonth: true,
+                changeYear: true,
+                yearRange: "-60:+0"
+            });
+
+        });
+    </script>
+}

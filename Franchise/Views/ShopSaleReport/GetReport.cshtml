@@ -1,0 +1,211 @@
+﻿
+@*<copyright file="GetReport.cshtml" company="Ezeelo Consumer Services Pvt. Ltd.">
+     Copyright (c) Ezeelo Consumer Services Pvt. Ltd. All rights reserved.
+    </copyright>
+    <author>Harshada Raghorte</author>*@
+
+@model IEnumerable<ModelLayer.Models.ViewModel.ShopSaleViewModel>
+
+@{
+    ViewBag.Title = "GetReport";
+    Layout = null;
+}
+<style>
+    .totalcount {
+        margin-right: 142px !important;
+    }
+    #myTable_wrapper {
+        margin-top: 53px !important;
+        height:168px;
+    }
+    .ui-widget-header {
+        border:none!important;
+    }
+    .fg-toolbar {
+        margin-top: -61px !important;
+    }
+</style>
+<script src="~/Content/js/jquery-1.9.1.min.js"></script>
+<script src="~/Content/js/jquery.dataTables.min.js"></script>
+<script src="~/Content/js/bootstrap.min.js"></script>
+<script type="text/javascript">
+    $(document).ready(function () {
+        $("#myTable").DataTable({
+            "bDestroy": true,
+            //"sPaginationType": "full_numbers",
+            "bJQueryUI": true,
+            "bInfo": false,
+            "scrollY": 700,
+            "scrollCollapse": true,
+            "bPaginate": false,
+            "iDisplayLength": 20,
+            "bAutoWidth": false,
+
+        });
+
+    });
+</script>
+<div class="table">
+    <table class="table" id="myTable">
+        <thead>
+            <tr>
+                <th>
+                  Customer Order Code
+                </th>
+                <th>
+                  Total Order
+                </th>
+                <th>
+                 Shop Name
+                </th>
+                <th>
+                Address
+                </th>
+                <th>
+                 Ordered Date
+                </th>
+                <th>
+                 Is Delivery Out Source
+                </th>
+                <th>
+                 Contact Person
+                </th>
+                <th>
+                 Nearest Landmark
+                </th>
+                <th>
+                Opening Time
+                </th>
+                <th>
+                 Closing Time
+                </th>
+                <th>
+                 Weekly Off
+                </th>
+                <th>
+                Is Free Home Delivery
+                </th>
+                <th>
+                 Minimum Amount For Fre eDelivery)
+                </th>
+                <th>
+                Is Live
+                </th>
+                <th></th>
+            </tr>
+        </thead>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.CustomerOrderCode)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.TotalOrder)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ShopName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Address)
+                </td>
+                <td>
+                    @{string lDate = "";}
+                    @if (item.OrderedDate != null)
+                    {
+                        lDate = item.OrderedDate.ToString("dd/MM/yyyy");
+                    }
+                    @lDate
+                </td>
+
+                <td>
+                    @Html.DisplayFor(modelItem => item.IsDeliveryOutSource)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ContactPerson)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.NearestLandmark)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.OpeningTime)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ClosingTime)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.WeeklyOff)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.IsFreeHomeDelivery)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.MinimumAmountForFreeDelivery)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.IsLive)
+                </td>
+                <td>
+
+            </tr>
+        }
+
+    </table>
+</div>
+<div id="Pager">
+    <div class="wrap">
+        <div id="slider1" class="slider">
+            <ul>
+                @for (int c = 1; c <= @ViewBag.TotalPages; c++)
+                {
+                    <li><a class="page-number" href="javascript:void();">@c</a></li>
+
+                }
+            </ul>
+        </div>
+        <div class="controls" style="margin-top:-27px; background:#F9F9F9">
+            <a href="#noname" class="prev-slide"><<</a>
+            <a href="#noname" class="next-slide" style="float: right; margin-right: 299px;">>></a>
+        </div>
+    </div>
+    <span class="totalcount"><b>Showing @ViewBag.PageSize of @ViewBag.TotalCount enteries</b></span>
+</div>
+
+<div class="loader">
+    <img id="loader_img" src="~/Content/img/loader.gif" style="display: none" />
+</div>
+<script>
+    $(document).ready(function () {
+        $("#Pager .page-number").click(function (e) {
+            //alert($(this).html());
+            $('#loader_img').show();
+            //alert($(this).html());
+            var pagecount = 0;
+            var page = parseInt($(this).html());
+            if (page > 1) {
+                pagecount = 1;
+            }
+            var fromDate = "@ViewBag.fromDate";
+            var toDate = "@ViewBag.toDate";
+            var shopID = "@ViewBag.shopID";
+            var approvedStatus = "@ViewBag.approvedStatus";
+
+            $.ajax({
+                url: '@Url.Action("GetReport", "ProductApprovedNonApprovedReport")',
+                data: { 'page': page, 'pagecount': pagecount, 'fromDate': fromDate, 'toDate': toDate, 'shopID': shopID, 'approvedStatus': approvedStatus },
+                type: "POST",
+                cache: false,
+                success: function (data) {
+                    //alert(data);
+                    $('#loader_img').hide();
+                    $('#divReport').empty();
+                    $('#divReport').append(data);
+
+                },
+                error: function (data) {
+
+                }
+            });
+        });
+    });
+</script>

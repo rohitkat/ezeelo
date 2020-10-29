@@ -1,0 +1,289 @@
+﻿@model ModelLayer.Models.MerchantTransaction
+@{
+    /**/
+
+    ViewBag.Title = "New Transaction";
+}
+<script src="~/plugins/Custom.js"></script>
+<script>
+    $(document).ready(function () {
+        $("#lnk-Transaction").addClass("active");
+        $("#Name").attr("disabled", "disabled");
+        $("#Comission").attr("disabled", "disabled");
+        if ($("#BillAmount").val() == 0) {
+            $("#BillAmount").val("");
+        }
+        $("#MobileNo").on("keypress", function (e) {
+            var evt = (e) ? e : window.event;
+            var charCode = (evt.keyCode) ? evt.keyCode : evt.which;
+            if ((charCode > 47 && charCode < 59) || charCode == 8 || charCode == 46) { // (charCode > 31 && (charCode < 48 || charCode > 57)) {
+                return true;
+            }
+            else if (charCode == 9) {
+                SendKeys("{tab}");
+                return true;
+            }
+            return false;
+        });
+        $("#BillAmount").on("keypress", function (e) {
+            var evt = (e) ? e : window.event;
+            var charCode = (evt.keyCode) ? evt.keyCode : evt.which;
+            if ((charCode > 47 && charCode < 59) || charCode == 8 || charCode == 46 || charCode == 190) { // (charCode > 31 && (charCode < 48 || charCode > 57)) {
+                return true;
+            }
+            else if (charCode == 9) {
+                SendKeys("{tab}");
+                return true;
+            }
+            return false;
+        });
+        $("#MobileNo").on("keyup", function () {
+            if ($(this).val().length > 9) {
+                $("span[for='MobileNo']").html("<i class='fa fa-spinner'></i>");
+
+                $.ajax({
+                    type: "POST",
+                    url: "@Url.Action("ValidateContactNo", "MerchantTransaction")",
+                    data: "{'contactNo':" + $("#MobileNo").val() + "}",
+                    contentType: "application/json; charset = utf-8",
+                    dataType: "json",
+                    cache: false,
+                    success: function (data) {
+                        var className = "";
+                        var removeClass = "";
+                        if (data.data == 1) {
+                            className = "success-call";
+                            removeClass = "error-call";
+                            $("span[for='MobileNo']").html("<i class='fa fa-check'></i>");
+                            $("#MobileNo").removeClass("warning-call");
+                            $("#msg").removeClass("warning-call");
+                            $("span[for='MobileNo']").removeClass("warning-call");
+                            $("#submit").removeAttr("disabled");
+                            loadTransaction();
+                        }
+                        else if (data.data == 0) {
+                            className = "error-call";
+                            removeClass = "success-call";
+                            $("span[for='MobileNo']").html("<i class='fa fa-ban'></i>");
+                            $("#MobileNo").removeClass("warning-call");
+                            $("#msg").removeClass("warning-call");
+                            $("span[for='MobileNo']").removeClass("warning-call");
+                            $("#submit").attr("disabled", "disabled");
+                        }
+                        else {
+                            $("span[for='MobileNo']").html("<i class='fa fa-warning'></i>");
+                            removeClass = "success-call";
+                            className = "warning-call";
+                            $("#submit").attr("disabled", "disabled");
+                        }
+                        $("#msg").addClass(className);
+                        $("span[for='MobileNo']").addClass(className);
+                        $("#MobileNo").addClass(className);
+                        $("#MobileNo").removeClass(removeClass);
+                        $("#msg").removeClass(removeClass);
+                        $("span[for='MobileNo']").removeClass(removeClass);
+
+                        $("#Name").val(data.Name);
+                        $("#msg").show();
+                        $("#msg").html(data.result)
+                        $("#BillAmount").focus();
+                    },
+                    error: function (x, e) {
+                    }
+                });
+            }
+        });
+        $("#BillAmount").on("keyup", function () {
+            $.ajax({
+                type: "POST",
+                url: "@Url.Action("CalculateCommission", "MerchantTransaction")",
+                data: "{'BillAmount':" + $("#BillAmount").val() + "}",
+                contentType: "application/json; charset = utf-8",
+                dataType: "json",
+                cache: false,
+                success: function (data) {
+                    var RemAmt = Number('@ViewBag.RemainingAmt');
+                    var comission = Number(data);
+                    if (RemAmt < comission) {
+                        //$("#submit").attr("disabled", "disabled");
+                        $("#msg").show();
+                        $("#msg").html("Comission on Bill Amount is " + comission + " Rs which is less than Remaining deposit amount. On Transaction submit " + RemAmt + " Rs will distribute.");
+                        $("#msg").removeClass("success-call");
+                        $("#msg").removeClass("warning-call");
+                        $("#msg").addClass("error-call");
+                    } else {
+                        //$("#submit").removeAttr("disabled");
+                        $("#msg").hide();
+                    }
+                    $("#Comission").val(data);
+                },
+                error: function (x, e) {
+                }
+            });
+        });
+        function loadTransaction() {
+            $.ajax({
+                type: "POST",
+                url: "@Url.Action("GetUserTransaction", "MerchantTransaction")",
+                data: "{'MobileNo':" + $("#MobileNo").val() + "}",
+                contentType: "application/json; charset = utf-8",
+                dataType: "json",
+                cache: false,
+                success: function (data) {
+                    $("#lstTran").html("");
+                    if (data != "") {
+                        $(data).each(function (index, element) {
+                            $("#lstTran").append("<tr><td>" + element.code + "</td><td>" + element.Date + "</td><td>" + element.Amount + "</td></tr>")
+                        });
+                    } else {
+                        $("#lstTran").append("<tr><td colspan='3'>No last transaction found...</td></tr>")
+                    }
+                },
+                error: function (x, e) {
+                }
+            });
+        }
+    });
+</script>
+@if (ViewBag.Type == "0")
+{
+    <div id="popupDanngerMsg" class="modal" style="display:block">
+        <div class="modal-dialog modal-sm">
+            <div class="row">
+                <div class="alert alert-danger alert-dismissable">
+                    <h4>	<i class="icon fa fa-ban"></i> Alert!</h4>
+                    <label>@ViewBag.Msg</label>
+                    <a style="width:100% !important;background-color:white;color:red" class="btn btn-sm" href="@Url.Action("Index", "Home")">OK</a>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+else if (ViewBag.Type == "1")
+{
+    <div id="popupWarningMsg" class="modal" style="display:block">
+        <div class="modal-dialog modal-sm">
+            <div class="row">
+                <div class="alert alert-warning alert-dismissable">
+                    <h4>	<i class="icon fa fa-warning"></i> Alert!</h4>
+                    <label>@ViewBag.Msg</label>
+                    <a style="width:100% !important;background-color:white;color:red" class="btn btn-sm" onclick="$('#popupWarningMsg').hide()">OK</a>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+<section class="content">
+    <div class="row">
+        <!-- left column -->
+        <div class="col-md-9">
+            <!-- general form elements -->
+            <div class="box box-primary">
+                <div class="box-header">
+                    <h3 class="box-title">Add New Transaction</h3>
+                    <h3 id="msg" class="box-title animated flash" style="float:right;display:none;">Inavalid Contact No</h3>
+                </div><!-- /.box-header -->
+                <!-- form start -->
+                @using (Html.BeginForm("AddNew", "MerchantTransaction", FormMethod.Post, new { id = "frm" }))
+                {
+                    <div class="box-body">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="MobileNo">Remaining Cashback Deposit Amount</label>&nbsp;
+                                    <span class="text-success text-bold" style="font-size:large">@ViewBag.RemainingAmt Rs</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label for="MobileNo">User Mobile No</label>&nbsp;
+                                    @Html.ValidationMessageFor(model => model.MobileNo, null, new { @class = "text-danger" })
+                                    <div class="input-group">
+                                        <span for="MobileNo" class="input-group-addon"><i class="fa fa-fw fa-phone"></i></span>
+                                        @Html.TextBoxFor(model => model.MobileNo, null, new { autocomplete = "off", maxlength = 10, minlength = 10, placeholder = "Enter Customer Mobile Number", @class = "form-control", required = "required" })
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-8">
+                                <div class="form-group">
+                                    <label for="MobileNo">User Name</label>
+                                    <div class="input-group">
+                                        <span class="input-group-addon"><i class="fa fa-fw fa-user"></i></span>
+                                        @Html.TextBoxFor(model => model.Name, null, new { autocomplete = "off", @class = "form-control", required = "required" })
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="Service">Service Provided to Customer</label> &nbsp;
+                            @Html.ValidationMessageFor(model => model.Service, null, new { @class = "text-danger" })
+                            <div class="input-group">
+                                <span class="input-group-addon"><i class="fa fa-fw fa-pencil"></i></span>
+                                @Html.TextBoxFor(model => model.Service, null, new { autocomplete = "off", placeholder = "Enter Service Provided to Customer", @class = "form-control", required = "required" })
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="BillAmount">Bill Amount</label>&nbsp;
+                                    @Html.ValidationMessageFor(model => model.BillAmount, null, new { @class = "text-danger" })
+                                    <div class="input-group">
+                                        <span class="input-group-addon"><i class="fa fa-fw fa-inr"></i></span>
+                                        @Html.TextBoxFor(model => model.BillAmount, null, new { autocomplete = "off", placeholder = "Enter Service Provided to Customer", @class = "form-control", required = "required",MaxLength = 7 })
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="Comission">Ezeelo Comission</label>
+                                    <div class="input-group">
+                                        <span class="input-group-addon"><i class="fa fa-fw fa-inr"></i></span>
+                                        @Html.TextBoxFor(model => model.Comission, null, new { autocomplete = "off", placeholder = "Ezeelo Commission", @class = "form-control", required = "required" })
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="Remark">Remark</label>
+                            <div class="input-group">
+                                <span class="input-group-addon"><i class="fa fa-fw fa-pencil"></i></span>
+                                @Html.TextAreaFor(model => model.Remark, new { rows = "3", autocomplete = "off", placeholder = "Enter Remark", @class = "form-control" })
+                            </div>
+                        </div>
+                    </div><!-- /.box-body -->
+                    <div class="box-footer">
+                        <button id="submit" type="submit" class="btn btn-primary" disabled>Submit</button>
+                    </div>
+                }
+            </div><!-- /.box -->
+        </div>
+        <div class="col-md-3">
+            <!-- general form elements -->
+            <div class="box box-primary" style="min-height:445px !important">
+                <div class="box-header">
+                    <h3 class="box-title">Last Transaction</h3>
+                </div><!-- /.box-header -->
+                <!-- /.box-header -->
+                <div class="box-body no-padding">
+                    <table class="table">
+                        <tr>
+                            <th>TransactionCode</th>
+                            <th>Date</th>
+                            <th>Amount</th>
+                        </tr>
+                        <tbody id="lstTran">
+                            <tr>
+                                <td colspan="3">
+                                    Add customer mobile number to view the last transactions.
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div><!-- /.box-body -->
+
+            </div><!-- /.box -->
+        </div>
+    </div>
+</section>

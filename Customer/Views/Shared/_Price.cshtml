@@ -1,0 +1,60 @@
+﻿@model ModelLayer.Models.ViewModel.ProductViewModel
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $(".contentPrice").show(200);
+        $(".titlePrice").click(function () {
+            $(".contentPrice").toggle();
+        });
+    });
+</script>
+
+@if (Model != null)
+{
+
+    if (Model.priceList != null)
+    {
+        if (Model.priceList.Count() > 0)
+        {
+
+            <table id="tblPrice">
+                @Html.HiddenFor(it => it.priceList[0].Slab)
+                @for (var i = 0; i < Model.priceList.Distinct().Count(); i++)
+                {
+
+                    if (Model.priceList[i].IsProductAvailable == true)
+                    {
+                        <tr>
+                            <td>
+                                @Html.CheckBoxFor(it => it.priceList[i].IsSelected, new { onchange = "this.form.submit();", Style = "vertical-align:3px}", @class = "priceCheckBox", @checked = "" })
+                            </td>
+                            <td>
+                                @Html.HiddenFor(it => it.priceList[i].Min)
+                                @Html.HiddenFor(it => it.priceList[i].Max)
+                                @Html.HiddenFor(it => it.priceList[i].Slab)
+                                @Html.HiddenFor(it => it.priceList[i].IsProductAvailable)
+                                @Html.DisplayFor(it => it.priceList[i].Slab)
+                            </td>
+                        </tr>
+                    }
+                    else
+                    {
+                        <tr>
+                            <td>
+                                @Html.CheckBoxFor(it => it.priceList[i].IsSelected, new { Style = "vertical-align:3px;", @class = "priceCheckBox", disabled = "disabled" })
+                            </td>
+                            <td>
+                                @Html.HiddenFor(it => it.priceList[i].Min)
+                                @Html.HiddenFor(it => it.priceList[i].Max)
+                                @Html.HiddenFor(it => it.priceList[i].Slab)
+                                @Html.HiddenFor(it => it.priceList[i].IsProductAvailable)
+                                @Html.DisplayFor(it => it.priceList[i].Slab)
+                            </td>
+                        </tr>
+                    }
+                }
+            </table>
+
+        }
+    }
+}

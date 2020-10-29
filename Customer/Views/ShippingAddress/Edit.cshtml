@@ -1,0 +1,156 @@
+﻿@model ModelLayer.Models.CustomerShippingAddress
+@{//Yashaswi 01/12/2018 Default City Change 
+    ViewBag.Title = "eZeelo: Largest Online Shopping store For All Types Of Products";
+    Layout = "~/Views/Shared/_LayoutPartial.cshtml";
+
+}
+<style type="text/css">
+    .back {
+        color: white !important;
+    }
+
+    .newselect {
+        border: none;
+        border-radius: 0px 0px 0px 0px !important;
+        background: transparent;
+        width: 150px;
+        padding: 5px 35px 5px 5px;
+        font-size: .875rem;
+        border: 1px solid #eaeaea;
+        height: 34px;
+        /*-webkit-appearance: none;*/
+        /*-moz-appearance: none;*/
+        appearance: none;
+        /*background: url(/Content/Images/drop.gif) 98% / 3% no-repeat #fff !important;*/
+    }
+
+    .field-validation-error {
+        color: red;
+        font-size: 12px;
+    }
+
+    .grid .row {
+        width: 100%;
+        display: block;
+        margin: 0 0 0;
+    }
+
+    .button {
+        margin-top: 20px;
+    }
+
+    #divPincodeError {
+        font-weight: bold;
+        color: red;
+        font-size: 12px;
+    }
+
+    .field-validation-error {
+        margin-top: -52px;
+        display: block;
+        font-weight: bold;
+    }
+</style>
+
+@Html.Hidden("SelectedState")
+@Html.Hidden("SelectedDistrict")
+@Html.Hidden("SelectedCity")
+@Html.Hidden("SelectedPincode")
+@Html.Hidden("SelectedArea")
+<span style="color: red; font-size: 12px;">@ViewBag.Msg</span>
+<div data-text="">
+    @using (Html.BeginForm())
+    {
+        @Html.AntiForgeryToken()
+        @Html.ValidationSummary(true)
+        @Html.HiddenFor(model => model.ID)
+        <div class="col-md-12">
+            <div class="box-lg">
+                <div class="row" data-gutter="60">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            @Html.TextBoxFor(model => model.ShippingAddress, new { placeholder = "Address", @class = "form-control" })
+                            @Html.ValidationMessageFor(model => model.ShippingAddress)
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            @Html.TextBoxFor(model => model.PrimaryMobile, new { placeholder = "Primary Mobile", @class = "form-control" })
+                            @Html.ValidationMessageFor(model => model.PrimaryMobile)
+                        </div>
+                    </div>
+                    <div id="divAddress">
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            @Html.TextBox("Pincode", null, new { @id = "Pincode", @class = "form-control", @placeholder = "Enter Pincode", @onkeypress = "return isValidPincode(event)" })
+                            <img id="Pincode_loading" src="~/Content/Images/ajax_loader.gif" style="width: 30px; height: 30px; display: none" />
+                            <div id="divPincodeError" style="width:430px; display: none; padding:5px" class="alert-danger focused">  </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            <button type="submit" value="Save" class="btn btn-success">Save</button> @Html.ActionLink("Back to List", "Index", null, new { @class = "btn btn-primary" })
+
+
+        </div>
+
+    }
+</div>
+
+@section Scripts{
+    @Scripts.Render("~/bundles/jqueryval")
+}
+<link href="~/Content/css/bootstrap.css" rel="stylesheet" />
+<script src="~/Scripts/jquery-1.10.2.min.js"></script>
+
+<script type="text/javascript">
+    var lPincode = $('#Pincode').val()
+
+    var lPincode = $('#Pincode').val()
+    $('#divPincodeError').hide();
+    if (lPincode.length == 6) {
+        $('#Pincode_loading').show();
+        $.ajax({
+            url: '@Url.Action("GetAddress", "ShippingAddress")?Pincode=' + lPincode,
+            type: "GET",
+            success: function (result) {
+                $('#divAddress').html(result);
+                $('#Pincode_loading').hide();
+                $('#divPincodeError').hide();
+            },
+            error: function (data) {
+                $('#divAddress').empty();
+                $('#Pincode_loading').hide();
+                $('#divPincodeError').show();
+                $('#divPincodeError').html('Products can not be delivered on entered pincode');
+                $('#Pincode').val('');
+            }
+        });
+    }
+
+    $('#Pincode').bind('input propertychange', function () {
+        var lPincode = $('#Pincode').val()
+        $('#divPincodeError').hide();
+        if (lPincode.length == 6) {
+            $('#Pincode_loading').show();
+            $.ajax({
+                url: '@Url.Action("GetAddress", "ShippingAddress")?Pincode=' + lPincode,
+                type: "GET",
+                success: function (result) {
+                    $('#divAddress').html(result);
+                    $('#Pincode_loading').hide();
+                    $('#divPincodeError').hide();
+                },
+                error: function (data) {
+                    $('#divAddress').empty();
+                    $('#Pincode_loading').hide();
+                    $('#divPincodeError').show();
+                    $('#divPincodeError').html('Pincode [' + lPincode + '] dose not exist, please Contact to ADMIN');
+                    $('#Pincode').val('');
+                }
+            });
+        }
+    });
+</script>

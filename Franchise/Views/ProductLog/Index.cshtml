@@ -1,0 +1,178 @@
+﻿@*@model ModelLayer.Models.ViewModel.ProductLogViewModelList*@
+@model IEnumerable<ModelLayer.Models.ViewModel.ProductLogViewModel>
+
+@*@using PagedList;
+    @using PagedList.Mvc;
+    @model IPagedList<ModelLayer.Models.ViewModel.ProductLogViewModel>*@
+<style>
+    .pagination {
+        margin: 0px 40px;
+    }
+
+    form {
+        margin: 0 0 40px;
+    }
+
+    .newdivshow {
+        display: block !important;
+    }
+</style>
+<link href="~/Content/DataTable/css/searching.css" rel="stylesheet" />
+<link href="~/Content/DataTable/css/sortable.css" rel="stylesheet" />
+<script src="~/Content/js/jquery-1.11.1.min.js"></script>
+<script src="~/Content/DataTable/lib/jQuery-Table-Plugin.js"></script>
+<div id="content" class="span10" style="min-height: 400px;">
+    <div class="row-fluid">
+        <div class="box span12">
+            <div class="box-header">
+                <h2><i class="halflings-icon user"></i><span class="break"></span>Index</h2>
+            </div>
+            <div class="box-content">
+                @using (Html.BeginForm("Select_product", "ProductLog", FormMethod.Post))
+                {
+                    <div class="span12 lineSpaceRes" style="width:100%">
+                        <div class="span4 control-group forDate1">
+
+                            @* <input type="text" id="txtFromDate" class="input-large datepicker" placeholder="From Date" />*@
+                            @Html.TextBox("txtFromDate", null, new { @class = "input-large datepicker" })
+                            <label for="txtFromDate" class="dtPic"><i class="glyphicons-icon calendar"></i></label>
+                        </div>
+                        <div class="span4 control-group forDate2">
+                            @*<input type="text" id="txtToDate" class="input-large datepicker" placeholder="To Date" />*@
+                            @Html.TextBox("txtToDate", null, new { @class = "input-large datepicker" })
+                            <label for="txtToDate" class="dtPic"><i class="glyphicons-icon calendar"></i></label>
+                            <label id="lblMsg" style="color: red; margin-top: -20px; margin-left: 30px;"></label>
+                        </div>
+                        <div class="span4 selectCity">
+                            <table class="table">
+                                <tr>
+                                    <td style="padding-top: 0px;">@Html.DropDownList("shopID", "--Select Shop--")</td>
+                                    <td style="padding-top: 0px;">
+                                        <input class="btn btn-small btn-warning1" id="btnSearch" type="submit" value="Search" style="float:right" />
+                                    </td>
+                                </tr>
+                            </table>
+
+                            @*<select id="ddlDistrict" name="ddlDistrict" style="width: 200px"/>*@
+
+
+                        </div>
+                    </div>
+                }
+                <div class="div_class">
+                    <table class="table table-striped table-bordered bootstrap-datatable datatable dataTable">
+                        <tr>
+                            <th>Product Name</th>
+                            <th>Category Name</th>
+                            <th>WholeSaleRate</th>
+                            <th>MRP</th>
+                            <th>SaleRate</th>
+                            <th>CreateDate</th>
+                            <th>ModifyDate</th>
+                            <th>Actions</th>
+                        </tr>
+                        @if (Model != null)
+                        {
+                            foreach (var item in Model)
+                            {
+                                <tr>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.Product_Name)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.Category_Name)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.WholeSaleRate)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.MRP)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.SaleRate)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.CreateDate)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.ModifyDate)
+                                    </td>
+                                    <td>
+                                        <button id="@item.ID" onclick="GetDetails(this)" type="button" class="btn btn-primary btn-small" data-toggle="modal" data-target="#myModal">Details</button>
+                                        @*<a id="@item.ID" href="#" onclick="GetDetails(this)" class="btn btn-primary btn-small">Details</a>*@
+                                    </td>
+                                </tr>
+                            }
+                        }
+                        else
+                        {
+                            <tr><td colspan="8">No Record Found!</td></tr>
+                        }
+                    </table>
+                </div>
+
+            </div>
+
+        </div>
+        <!-- Modal -->
+
+    </div>
+
+</div>
+<div class="modal fade newdivshow" id="myModal" role="dialog">
+    <div class="modal-dialog">
+
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Product Details</h4>
+            </div>
+            <div class="modal-body">
+                <div id="ProductListing"></div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<script src="~/Scripts/jquery-1.10.2.js"></script>
+<script type="text/javascript">
+
+    function GetDetails(id) {
+        @*var url = '@Url.Action("Select_product_log", "ProductLog")';
+        alert("dfhsdj");
+        var mydata = {
+            "ShopStockId": id.id,
+            "txtFromDate": $("#txtFromDate").val(),
+            "txtToDate": $("#txtToDate").val()
+
+        };*@
+        //$.get(url, mydata, function (data) {
+        //    /* data is the pure html returned from action method, load it to your page */
+        //    $('#ProductListing').html(data);
+
+        //    /* little fade in effect */
+        //    $('#ProductListing').fadeIn('fast');
+
+        //});
+
+        //alert('');
+        //alert(id.id);
+        //alert($("[id*=txtFromDate]").text());
+        //alert($("#txtToDate").val());
+        $.ajax({
+
+            url: '@Url.Action("Select_product_log")',
+            type: 'GET',
+            data: { ShopStockId: id.id, txtFromDate: $("#txtFromDate").val(), txtToDate: $("#txtToDate").val() },
+            success: function (partialView) {
+                $('#ProductListing').html(partialView);
+                $('#ProductListing').show();
+            }
+        });
+    }
+</script>

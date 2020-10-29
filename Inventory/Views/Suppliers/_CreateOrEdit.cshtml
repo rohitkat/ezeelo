@@ -1,0 +1,409 @@
+@model ModelLayer.Models.Supplier
+
+@* This partial view defines form fields that will appear when creating and editing entities *@
+
+@{
+                /**/
+
+                ViewBag.Title = "Create";
+}
+
+<style>
+    #msform1 fieldset:not(:first-of-type) {
+        display: none;
+    }
+
+    .field-validation-error {
+        color: #000000 !important;
+    }
+
+    .succes-msg {
+        color: #31A012;
+        font-size: 20px;
+    }
+
+    .beatpicker-clearButton button {
+        display: none;
+    }
+
+    .input-parent button {
+        display: none;
+    }
+
+    .textarea-adjust {
+        width: 85%;
+    }
+    /*Beatpicker Css*/
+    .beatpicker-clearButton button {
+        display: none;
+    }
+
+    .input-parent button {
+        display: none;
+    }
+
+    .header-navbar-button {
+        position: absolute !important;
+    }
+
+    .beatpicker .main-nav .current-indicator {
+        text-align: center !important;
+    }
+
+    .beatpicker .main-nav .prev1 {
+        left: 0 !important;
+        width: 14%;
+        padding: 0px 10px;
+        color: #fff;
+        font-size: 16px;
+    }
+
+    .beatpicker .main-nav .next1 {
+        right: 0 !important;
+        width: 9%;
+        color: #fff;
+        font-size: 16px;
+    }
+
+    .beatpicker .main-nav .prev1:hover {
+        left: 0 !important;
+        width: 14%;
+        padding: 0px 10px;
+        color: #fff;
+        font-size: 20px;
+        cursor: pointer !important;
+    }
+
+    .beatpicker .main-nav .next1:hover {
+        right: 0 !important;
+        width: 9%;
+        color: #fff;
+        font-size: 20px;
+        cursor: pointer !important;
+    }
+    /*Beatpicker Css End*/
+</style>
+<link href="~/Content/css/BeatPicker.min.css" rel="stylesheet" />
+<script src="~/Content/js/jquery-1.11.0.min.js"></script>
+<script src="~/Content/js/BeatPicker.js"></script>
+<link href="~/Content/assets/css/style.css" rel="stylesheet" />
+<script src="~/Content/js/jquery-1.9.1.min.js"></script>
+@*<script src="~/Content/js/jquery.easing.min.js"></script>*@
+<link href="http://www.jqueryscript.net/css/jquerysctipttop.css" rel="stylesheet" type="text/css">
+<link href="~/Content/assets/css/form-design.css" rel="stylesheet" />
+
+<div class="row-fluid">
+    <div class="box span12">
+        <div class="box-header creatProduct clearfix" data-original-title="">
+            <h2>
+                <i class="icon-exclamation-sign"></i>
+                <span class="break"></span>
+                SUPPLIER REGISTRATION
+            </h2>
+        </div>
+        <div class="box-content nameDscrp">
+            <div class="form-horizontal">
+                <div class="control-group mrg-btm">
+                    <div class="NameDescription">
+                        <div class="control-group mrg-left">
+                            @Html.LabelFor(model => model.Name, "Name", new { @class = "col-md-2" })
+
+                            <div class="">
+                                @Html.EditorFor(model => model.Name, new { @required = "required" })
+                                @Html.ValidationMessageFor(model => model.Name)
+
+                                @Html.HiddenFor(model => model.SupplierCode)
+                            </div>
+                        </div>
+                        <div class="control-group mrg-left">
+                            @Html.LabelFor(model => model.GSTNumber, "GST Number", new { @class = "col-md-2" })
+
+                            <div class="">
+                                @Html.EditorFor(model => model.GSTNumber)
+                                @Html.ValidationMessageFor(model => model.GSTNumber)
+                            </div>
+                        </div>
+
+                        <div class="control-group mrg-left">
+                            @Html.LabelFor(model => model.ContactPerson, "Contact Person", new { @class = "col-md-2" })
+                            <div class="">
+                                @Html.EditorFor(model => model.ContactPerson)
+                                @Html.ValidationMessageFor(model => model.ContactPerson)
+                            </div>
+                            <div class="clr"></div>
+                        </div>
+
+                        <div class="control-group mrg-left">
+                            @Html.LabelFor(model => model.Mobile, new { @class = "col-md-2" })
+
+                            <div class="">
+                                @Html.EditorFor(model => model.Mobile, new { @required = "required", @maxlength = "10", @minLength = "10" })
+                                @Html.ValidationMessageFor(model => model.Mobile)
+                            </div>
+                        </div>
+
+                        <div class="control-group mrg-left">
+                            @Html.LabelFor(model => model.Landline, new { @class = "col-md-2" })
+
+                            <div class="">
+                                @Html.EditorFor(model => model.Landline)
+                                @Html.ValidationMessageFor(model => model.Landline)
+                            </div>
+                        </div>
+                        @*Priti*@
+                        <div class="control-group mrg-left">
+                            @Html.LabelFor(model => model.FSSILicenseNo, "FSSI License No.", new { @class = "col-md-2" })
+
+                            <div class="">
+                                @Html.EditorFor(model => model.FSSILicenseNo)
+                                @Html.ValidationMessageFor(model => model.FSSILicenseNo)
+                            </div>
+                        </div>
+                        <div class="control-group mrg-left">
+                            @Html.LabelFor(model => model.InsecticidesLicenseNo, "Insecticides License No.", new { @class = "col-md-2" })
+
+                            <div class="">
+                                @Html.EditorFor(model => model.InsecticidesLicenseNo)
+                                @Html.ValidationMessageFor(model => model.InsecticidesLicenseNo)
+                            </div>
+                        </div>
+                        @*Added by Priti on 13-2-2019*@
+                        <div class="control-group mrg-left">
+                            @Html.LabelFor(model => model.CityName, "CityName", new { @class = "col-md-2" })
+
+                            <div class="">
+                                @Html.EditorFor(model => model.CityName)
+                                @Html.ValidationMessageFor(model => model.CityName)
+                            </div>
+                        </div>
+
+                    
+                        <div class="control-group mrg-left">
+                            @Html.LabelFor(model => model.StateName, "StateName", new { @class = "col-md-2" })
+
+                            <div class="">
+                                @Html.EditorFor(model => model.StateName)
+                                @Html.ValidationMessageFor(model => model.StateName)
+                            </div>
+                        </div>
+                        @*end by Priti on 13-2-2019*@
+
+                        @*Priti*@
+                        <div class="col-sm-6 control-group mrg-left" style="padding:0 0 5px 0;">
+                            @Html.DropDownList("ExportOption", new List<SelectListItem>
+         {
+                 new SelectListItem{ Text="Due in 1 Days  ", Value = "1" },
+                 new SelectListItem{ Text="Due in 2 Days ", Value = "2" },
+                 new SelectListItem{ Text="Due in 7 Days ", Value = "3" },
+                   new SelectListItem{ Text="Due in 10 Days ", Value = "4" },
+                    new SelectListItem{ Text="Due in 15 Days ", Value = "5" },
+                     new SelectListItem{ Text="Due in 21 Days ", Value = "6" },
+                      new SelectListItem{ Text="Due in 30 Days ", Value = "7" },
+                          new SelectListItem{ Text="Due in 45 Days ", Value = "8" },
+                              new SelectListItem{ Text="Due in 60 Days ", Value = "9" },
+                                  new SelectListItem{ Text="Due in  90 Days ", Value = "10" },
+                                      new SelectListItem{ Text="Due above 90 Days ", Value = "11" },
+
+
+        })
+                        </div>
+
+
+
+
+
+
+                        @*@*//Added by Priti on 13-2-2019*@
+
+                        @*<div class="col-sm-6" style="padding:0 0 5px 0;">
+            @Html.DropDownListFor(x => x.CityID, new SelectList(ViewBag.PossibleCities, "ID", "Name"))
+        </div>*@
+
+
+                        <div class="clr"></div>
+                    </div>
+                </div>
+
+                <div class="control-group mrg-btm">
+                    <div class="NameDescription">
+
+                        <div class="control-group mrg-left">
+                            @Html.LabelFor(model => model.Email, new { @class = "col-md-2" })
+
+                            <div class="">
+                                @Html.EditorFor(model => model.Email, new { @required = "required", type = "email" })
+                                @Html.ValidationMessageFor(model => model.Email)
+                            </div>
+                        </div>
+
+                        <div class="control-group mrg-left">
+                            @Html.LabelFor(model => model.FAX, new { @class = "col-md-2" })
+
+                            <div class="">
+                                @Html.EditorFor(model => model.FAX)
+                                @Html.ValidationMessageFor(model => model.FAX)
+                            </div>
+                        </div>
+
+
+
+                        <div class="control-group mrg-left">
+                            @Html.LabelFor(model => model.PAN, new { @class = "col-md-2" })
+
+                            <div class="">
+                                @Html.EditorFor(model => model.PAN)
+                                @Html.ValidationMessageFor(model => model.PAN)
+                            </div>
+                        </div>
+
+                        <div class="control-group mrg-left">
+                            @Html.LabelFor(model => model.Website, new { @class = "col-md-2" })
+
+                            <div class="">
+                                @Html.EditorFor(model => model.Website)
+                                @Html.ValidationMessageFor(model => model.Website)
+                            </div>
+                        </div>
+
+
+                        <div class="control-group mrg-left">
+                            @Html.LabelFor(model => model.CC, new { @class = "col-md-2" })
+
+                            <div class="">
+                                @Html.EditorFor(model => model.CC)
+                                @Html.ValidationMessageFor(model => model.CC)
+                            </div>
+                        </div>
+                        <div class="clr"></div>
+                    </div>
+                </div>
+
+
+                <div class="control-group mrg-btm">
+                    <div class="NameDescription">
+
+                        <div class="control-group mrg-left">
+                            @Html.LabelFor(model => model.PincodeID, "Pincode", new { @class = "col-md-2" })
+
+                            <div class="editor-field">
+                                @Html.TextBoxFor(model => model.PincodeID, new { @id = "PincodeID", @class = "form-control-Widout-block ", @placeholder = "Enter Pincode", @onkeypress = "return isValidPincode(event)", required = "required", maxlength = 6, minLength = 6 })
+                                <img id="Pincode_loading" src="~/Content/img/ajax_loader.gif" style="height: 20px; float: right; display: none" />
+                                <div id="divPincodeError" class="alert-danger focused divPincodeError-Class1" style="display:none;"> </div>
+                            </div>
+                        </div>
+
+                        <div class="control-group mrg-left">
+                            @Html.LabelFor(model => model.Address, new { @class = "col-md-2" })
+
+                            <div class="">
+                                @Html.TextAreaFor(model => model.Address, new { @class = "discrip_box textarea-adjust" })
+                                @Html.ValidationMessageFor(model => model.Address)
+                            </div>
+                        </div>
+
+                        <div class="control-group mrg-left">
+                            @Html.LabelFor(model => model.WarehouseID, "Select Warehouse to act as a Supplier", new { @class = "col-md-4" })
+
+                            <div class="">
+                                @Html.DropDownListFor(model => model.WarehouseID, ((IEnumerable<ModelLayer.Models.Warehouse>)ViewBag.PossibleWarehouses).Select(option => new SelectListItem
+                                {
+                                 Text = (option == null ? "None" : option.Name),
+                                 Value = option.ID.ToString(),
+                                 Selected = (Model != null) && (option.ID == Model.WarehouseID)
+                                }), "--Select Warehouse--")
+
+                                @Html.ValidationMessageFor(model => model.WarehouseID)
+
+                                @if (TempData["Message"] != null)
+                                {
+                                    <span style="color:red"> @TempData["Message"] </span>
+
+                                }
+
+                            </div>
+                        </div>
+
+                        <div class="control-group mrg-left">
+
+                            <div class="">
+
+                            </div>
+                        </div>
+
+                        <div class="control-group mrg-left">
+                            @Html.LabelFor(model => model.IsActive, new { @class = "col-md-2" })
+
+                            <div class="">
+                                @Html.CheckBoxFor(model => model.IsActive, new { @checked = true })
+                                @Html.ValidationMessageFor(model => model.IsActive)
+
+
+                                @Html.HiddenFor(model => model.CreateBy)
+                                @Html.HiddenFor(model => model.CreateDate)
+
+                            </div>
+                        </div>
+
+                        <div class="clr"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script type="text/javascript">
+    var lPincode = $('#PincodeID').val()
+    //alert("2");
+    $('#PincodeID').bind('input propertychange', function () {
+        var lPincode = $('#PincodeID').val()
+        $('#divPincodeError').hide();
+
+        if (lPincode.length == 6) {
+            $('#Pincode_loading').show();
+            $.ajax({
+                url: '@Url.Action("GetAddress", "Suppliers")?Pincode=' + lPincode,
+                type: "GET",
+                success: function (result) {
+                    if (result > 0)
+                    {
+                        $('#Pincode_loading').hide();
+                        $('#divPincodeError').hide();
+                    }
+                    else
+                    {
+                        $('#Pincode_loading').hide();
+                        $('#divPincodeError').show();
+                        $('#divPincodeError').html('[' + lPincode + '] dose not exist,Contact to ADMIN');
+                        $('#PincodeID').val('');
+                    }
+                },
+                error: function (result) {
+                    //alert(result)
+                    //alert('Pincode : ' + lPincode + ' Dose Not Exist, please Contact to ADMIN');
+                    $('#Pincode_loading').hide();
+                    $('#divPincodeError').show();
+                    $('#divPincodeError').html('[' + lPincode + '] dose not exist,Contact to ADMIN');
+                    $('#PincodeID').val('');
+                }
+            });
+        }
+    });
+</script>
+
+<script type="text/javascript">
+    function isValidPincode(evt) {
+        var charCode = (evt.which) ? evt.which : event.keyCode
+        var l = $('#PincodeID').val().length + 1;
+
+        if (charCode > 31 && (charCode < 48 || charCode > 57))
+            return false;
+
+        if (l > 6 && charCode != 8) {
+            return false;
+        }
+
+        return true;
+    }
+</script>

@@ -1,0 +1,81 @@
+﻿@model ModelLayer.Models.ViewModel.LoginViewModel
+@{
+    Layout = "~/Views/Shared/_LayoutLogin.cshtml";
+}
+@{
+    ViewBag.Title = "Login";
+}
+<style>
+    body {
+        background-image: url(../Content/Images/customer_care_services.png);
+        background-repeat: no-repeat;
+        height: 262px;
+        background-color: white;
+    }
+    .login {
+        margin-top: 50px;
+        background-color: #0B528E;
+        padding: 10px;
+        color: #ffffff;
+        width: 222px;
+        height: 196px;
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+        .login label {
+            color: #ffffff;
+        }
+
+        .login a {
+            color: #ffffff;
+        }
+</style>
+<div class="row span3 login">
+    @using (Html.BeginForm())
+    {
+    @Html.AntiForgeryToken()
+
+        if (TempData["Message"] != null)
+        {
+    <div class="breadcrumbs dark">
+        @TempData["Message"]
+    </div>
+        }
+    @Html.ValidationSummary(true)
+
+    <div class="form-group">
+        <label class="control-label">UserName</label>
+        <div class="controls">
+            @Html.TextBoxFor(model => model.UserName, new { @class = "margin-left-supress" })
+            @Html.ValidationMessageFor(model => model.UserName)
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label class="control-label">Password</label>
+        <div class="controls">
+            @Html.PasswordFor(model => model.Password, new { @class = "margin-left-supress" })
+            @Html.ValidationMessageFor(model => model.Password)
+        </div>
+    </div>
+    @*<p>
+        <a href="#">Forgot password</a>
+    </p>*@
+    <div style="text-align:right;">
+        @*<a href="@Url.Action("Create", "DeliveryPartnerRegister")" class="btn btn-small btn-success">Sign Up</a>*@
+        <button type="submit" value="Login" class="btn btn-danger btn-small">Login</button>
+    </div>
+   
+    }
+
+</div>
+
+@if (TempData["ServerMsg"] != null)
+{
+    <div class="span6">
+        <marquee behavior="alternate"><h1 style="color:red">@TempData["ServerMsg"]</h1></marquee>
+    </div>
+    
+    
+}

@@ -1,0 +1,561 @@
+﻿@model IEnumerable<ModelLayer.Models.ViewModel.BlockViewModel>
+@using System.Text.RegularExpressions;
+@using System.Globalization;
+@{
+    Layout = "~/Views/Shared/_Layout_Home.cshtml";
+}
+<style>
+    .product-caption {
+        padding: 10px 2px;
+        position: relative;
+    }
+
+    .product-labels {
+        position: absolute;
+        top: 3px !important;
+        left: 0px !important;
+        z-index: 1;
+        list-style: none;
+        margin: 0;
+        padding: 0;
+        font-size: 11px;
+        text-transform: uppercase;
+        color: #fff;
+    }
+
+    .product-img-wrap:hover {
+        -webkit-transform: scale(1.1);
+        transform: scale(1.1);
+    }
+
+    /* Start Yashaswi Label For Retail Point */
+    .product-labelsRP {
+        position: absolute;
+        top: 3px !important;
+        right: 0px !important;
+        z-index: 1;
+        list-style: none;
+        margin: 0;
+        padding: 0;
+        font-size: 11px;
+        text-transform: uppercase;
+        color: #fff;
+    }
+
+        .product-labelsRP > li {
+            background: #048f15;
+            color: #fff;
+            -webkit-box-shadow: 0 1px 2px rgba(0,0,0,0.4);
+            box-shadow: 0 1px 2px rgba(0,0,0,0.4);
+            padding: 3px 0px;
+            line-height: 1em;
+            margin-bottom: 5px;
+            display: table;
+            font-size: 14px;
+            min-width: 70px;
+            max-width: 250px;
+            font-weight: 900;
+        }
+
+    /* End Yashaswi Label For Retail Point */
+</style>
+@{
+    string cityName = "", city = "";
+    string franchiseID = "";//added
+    string s = Request.Cookies["UrlCookie"].Value;//for test
+
+    if (Request.Cookies["CityCookie"] != null && Request.Cookies["CityCookie"].Value != "")
+    {
+        cityName = Request.Cookies["CityCookie"].Value.Split('$')[1].ToLower();
+        city = Request.Cookies["CityCookie"].Value.Split('$')[0];
+        franchiseID = Request.Cookies["CityCookie"].Value.Split('$')[2];//added franchiseId by Ashish for multiple frnachise in same city
+        // franchiseId = "2";
+    }
+
+    @*//-- Add by Ashish (Dynamic Message) --//*@
+    string FSWMessage = "";
+    if (franchiseID != "")
+    {
+        DayOfWeek day = DateTime.Now.DayOfWeek;
+
+        for (var i = 0; i < ViewBag.FestivalMessage.Count; i++)
+        {
+            string dbFestivalToDate = ViewBag.FestivalToDate[i];
+            string cuFestivalDate = Convert.ToString(string.Format("{0:dd/MM/yyyy}", DateTime.Now.Date));
+
+            DateTime cuFD1 = DateTime.ParseExact(cuFestivalDate.ToString(), @"d/M/yyyy", System.Globalization.CultureInfo.InvariantCulture);
+            if (ViewBag.FestivalFrmDate[i] != null && ViewBag.FestivalToDate[i] != null && ViewBag.FestivalFrmDate[i] != "" && ViewBag.FestivalToDate[i] != "")
+            {
+                DateTime dbFD2 = DateTime.ParseExact(ViewBag.FestivalFrmDate[i], @"d/M/yyyy", System.Globalization.CultureInfo.InvariantCulture);
+                DateTime dbFD3 = DateTime.ParseExact(ViewBag.FestivalToDate[i], @"d/M/yyyy", System.Globalization.CultureInfo.InvariantCulture);
+                if (cuFD1 >= dbFD2 && cuFD1 <= dbFD3)
+                {
+                    FSWMessage = ViewBag.FestivalMessage[i];
+                }
+            }
+        }
+        for (var j = 0; j < ViewBag.SeasonalMessage.Count; j++)
+        {
+            if (ViewBag.SeasonalFrmMonth[j] != null && ViewBag.SeasonalToMonth[j] != null && ViewBag.SeasonalFrmMonth[j] != "" && ViewBag.SeasonalToMonth[j] != "")
+            {
+                int dbS1 = DateTime.Parse("1." + ViewBag.SeasonalFrmMonth[j] + " 2008").Month; /// using trick
+                int dbS2 = DateTime.Parse("1." + ViewBag.SeasonalToMonth[j] + " 2008").Month; /// using trick
+                if (DateTime.Now.Month >= dbS1 && DateTime.Now.Month <= dbS2)
+                {
+                    FSWMessage = FSWMessage + "." + ViewBag.SeasonalMessage[j];
+                }
+            }
+        }
+        for (var k = 0; k < ViewBag.WeeklyDay.Count; k++)//Enumerable.Count(ViewBag.WeeklyDay)
+        {
+            string strWeeklyMsg = ViewBag.WeeklyDay[k];
+            if (strWeeklyMsg != ",,,,,," && strWeeklyMsg != null)
+            {
+                string[] str1 = strWeeklyMsg.Split(',');
+                foreach (string d in str1)
+                {
+                    if (d == day.ToString())
+                    {
+                        FSWMessage = FSWMessage + "." + ViewBag.WeeklyMessage[k];
+                    }
+                }
+
+            }
+        }
+    }
+    @*//-- End Add by Ashish (Dynamic Message) --//*@
+}
+@*<link href="~/Content/css/Site.css" rel="stylesheet" />*@
+<script src="~/Scripts/Products.js"></script>
+<link href="~/Content/css/Site.css" rel="stylesheet" />
+@*<link href="~/Content/css/bootstrap.css" rel="stylesheet" />*@
+<div class="container-fluid" style="padding:0px;">
+
+    <marquee style="color: red; font-weight: 700; display: none;">@FSWMessage</marquee>
+    <div class="col-md-9"></div>
+    <div id="carousel" class="carousel slide carousel-fade" data-ride="carousel" style="width: 100%;">
+        @{ModelLayer.Models.ViewModel.BlockViewModel block = Model.Where(x => x.Name.ToLower().Trim() == "banner").FirstOrDefault();}
+        @if (block != null && block.blockItemsList != null)
+        {
+            int max = block.blockItemsList.Count;
+            if (block.MaxLimit < block.blockItemsList.Count)
+            {
+                max = block.MaxLimit;
+            }
+
+        <ol class="carousel-indicators">
+            @for (int i = 0; i < max; i++)
+                {
+                <li data-target="#carousel" data-slide-to="@i" class="active"></li>
+                }
+        </ol>
+        <div class="carousel-inner carousel-zoom" id="carouselMain">
+            @for (int i = 0; i < max; i++)
+                {
+                <div class="item" id="carouselSub">
+                    @*@{ModelLayer.Models.ViewModel.BlockViewModel block = Model.Where(x => x.Name.ToLower().Trim() == "banner").FirstOrDefault();}*@
+
+
+                    <a href="@block.blockItemsList[i].LinkUrl"><img class="img-responsive " alt="@CultureInfo.CurrentCulture.TextInfo.ToTitleCase(block.blockItemsList[i].Tooltip.ToLower())" src="@block.blockItemsList[i].ImageName" title="@CultureInfo.CurrentCulture.TextInfo.ToTitleCase(block.blockItemsList[i].Tooltip.ToLower())" onerror="this.src = '/Content/Images/no_image.png'"></a>
+
+
+
+                </div>
+                }
+
+            @if (max == 0)
+                {
+                <a href="http://www.ezeelo.com/@cityName/@franchiseID"><img class="img-responsive" alt="eZeelo/@cityName/@franchiseID" src="/Content/Images/no_image.png" title="eZeelo/@cityName/@franchiseID"></a> ////added /franchiseId by Ashish for multiple MCO in same city
+                }
+                @*<div class="active item">
+                        <img class="img-responsive" src="https://images.unsplash.com/photo-1419064642531-e575728395f2?crop=entropy&fit=crop&fm=jpg&h=400&ixjsv=2.1.0&ixlib=rb-0.3.5&q=80&w=1200">
+                    </div>
+                    <div class="item">
+                        <img class="img-responsive" src="https://images.unsplash.com/photo-1445280471656-618bf9abcfe0?crop=entropy&fit=crop&fm=jpg&h=400&ixjsv=2.1.0&ixlib=rb-0.3.5&q=80&w=1200">
+                    </div>
+                    <div class="item">
+                        <img class="img-responsive" src="https://images.unsplash.com/photo-1445462657202-a0893228a1e1?crop=entropy&fit=crop&fm=jpg&h=400&ixjsv=2.1.0&ixlib=rb-0.3.5&q=80&w=1200">
+                    </div>*@
+            </div>
+        }
+        else
+        {
+        <a href="http://www.ezeelo.com/@cityName/@franchiseID"><img class="img-responsive" alt="eZeelo/@cityName/@franchiseID" src="/Content/Images/no_image.png" title="eZeelo/@cityName/@franchiseID"></a> ////added /@franchiseId
+        }
+        @*<div id="carousel" class="carousel slide carousel-fade" data-ride="carousel">
+            <ol class="carousel-indicators">
+                <li data-target="#carousel" data-slide-to="0" class="active"></li>
+                <li data-target="#carousel" data-slide-to="1"></li>
+                <li data-target="#carousel" data-slide-to="2"></li>
+            </ol>*@
+        <!-- Carousel items -->
+        <!-- Carousel nav -->
+        <a class="carousel-control left" href="#carousel" data-slide="prev">‹</a>
+        <a class="carousel-control right" href="#carousel" data-slide="next">›</a>
+    </div>
+</div>
+
+
+
+
+
+
+<div class="container">
+
+    <div id="home-slider" style="margin-bottom:20px;">
+        <div class="row">
+            @Html.Hidden("hdnSessionValue", @Session["UID"])
+            <div class="">
+                <div class="col-sm-12 clearfix">
+                    <div class="col-sm-12" style=" padding-left: 0px; padding-right: 2px; padding-top: 5px;">
+                        <div class="w3-content w3-section " style="width: 100%;">
+                            @*@{ModelLayer.Models.ViewModel.BlockViewModel block = Model.Where(x => x.Name.ToLower().Trim() == "banner").FirstOrDefault();}
+                                @if (block != null && block.blockItemsList != null)
+                                {
+                                    int max = block.blockItemsList.Count;
+                                    if (block.MaxLimit < block.blockItemsList.Count)
+                                    {
+                                        max = block.MaxLimit;
+                                    }
+                                    for (int i = 0; i < max; i++)
+                                    {
+                                    <a href="@block.blockItemsList[i].LinkUrl"><img class="mySlides " alt="@CultureInfo.CurrentCulture.TextInfo.ToTitleCase(block.blockItemsList[i].Tooltip.ToLower())" src="@block.blockItemsList[i].ImageName" title="@CultureInfo.CurrentCulture.TextInfo.ToTitleCase(block.blockItemsList[i].Tooltip.ToLower())" onerror="this.src = '/Content/Images/no_image.png'" style="width:100%"></a>
+                                    }
+
+                                    if (max == 0)
+                                    {
+                                        <a href="http://www.ezeelo.com/@cityName/@franchiseID"><img class="mySlides" alt="eZeelo/@cityName/@franchiseID" src="/Content/Images/no_image.png" title="eZeelo/@cityName/@franchiseID" style="width: 100%;"></a> ////added /@franchiseId by Ashish for multiple MCO in same city
+                                    }
+                                }
+                                else
+                                {
+                                    <a href="http://www.ezeelo.com/@cityName/@franchiseID"><img class="mySlides" alt="eZeelo/@cityName/@franchiseID" src="/Content/Images/no_image.png" title="eZeelo/@cityName/@franchiseID" style="width: 100%;"></a> ////added /@franchiseId
+                                }*@
+                        </div>
+                        <script>
+                            var myIndex = 0;
+                            carousel();
+
+                            function carousel() {
+                                var i;
+                                var x = document.getElementsByClassName("mySlides");
+                                for (i = 0; i < x.length; i++) {
+                                    x[i].style.display = "none";
+                                    //x[i].style.height = "275px";
+                                }
+                                myIndex++;
+                                if (myIndex > x.length) { myIndex = 1 }
+                                x[myIndex - 1].style.display = "block";
+                                setTimeout(carousel, 5000);
+                            }
+                        </script>
+                    </div>
+                    @*<div class="col-sm-3" style=" padding-left: 0px; padding-right: 0px; margin-top: 6px;">
+                            @{ block = Model.Where(x => x.Name.ToLower().Trim() == "right banner").FirstOrDefault();}
+                            @if (block != null && block.blockItemsList != null)
+                            {
+                                int max = block.blockItemsList.Count;
+                                if (block.MaxLimit < block.blockItemsList.Count)
+                                {
+                                    max = block.MaxLimit;
+                                }
+                                for (int i = 0; i < max; i++)
+                                {
+                                    <div class="col-xs-6 col-sm-12 col-md-12" style="padding:0px;">
+                                    <a href="@block.blockItemsList[i].LinkUrl">
+                                            <img alt="@CultureInfo.CurrentCulture.TextInfo.ToTitleCase(block.blockItemsList[i].Tooltip.ToLower())" src="@block.blockItemsList[i].ImageName" class="" title="@CultureInfo.CurrentCulture.TextInfo.ToTitleCase(block.blockItemsList[i].Tooltip.ToLower())" onerror="this.src = '/Content/Images/no_image.png'" style="width: 100%; border: 1px solid #c8cacc;" />
+                                    </a>
+                                    </div>
+                                }
+                            }
+                        </div>*@
+
+                </div>
+                <div class="row-col-gap">
+                    @{ block = Model.Where(x => x.Name.ToLower().Trim() == "bottom banner").FirstOrDefault();}
+                    @if (block != null && block.blockItemsList != null)
+                    {
+                        int max = block.blockItemsList.Count;
+                        if (block.MaxLimit < block.blockItemsList.Count)
+                        {
+                            max = block.MaxLimit;
+                        }
+                        for (int i = 0; i < max; i++)
+                        {
+                            <div class="col-xs-12 col-sm-3 newcolbottom animated fadeInUp" style="margin-bottom:5px;">
+                                <a href="@block.blockItemsList[i].LinkUrl">
+                                    <img alt="@CultureInfo.CurrentCulture.TextInfo.ToTitleCase(block.blockItemsList[i].Tooltip.ToLower())" src="@block.blockItemsList[i].ImageName" class="" title="@CultureInfo.CurrentCulture.TextInfo.ToTitleCase(block.blockItemsList[i].Tooltip.ToLower())" onerror="this.src = '/Content/Images/no_image.png'" style="width: 100%;height:160px" />
+                                </a>
+                            </div>
+                        }
+                    }
+
+                </div>
+            </div>
+        </div>
+        <br />
+        <div class="row">
+            <div class="col-md-12">
+                <h3>New Product</h3>
+            </div>
+            <div>
+                @{ block = Model.Where(x => x.Name.ToLower().Trim() == "product gallery").FirstOrDefault();
+                 if (block != null && block.blockItemsList != null)
+                 {
+                     int max = block.blockItemsList.Count;
+                     if (block.MaxLimit < block.blockItemsList.Count)
+                     {
+                         max = block.MaxLimit;
+                     }
+
+                     for (int i = 0; i < max; i++)
+                     {
+                         //string productName = Regex.Replace(block.blockItemsList[i].ProductName.Substring(0, Math.Min(block.blockItemsList[i].ProductName.Length, 30)), @"[\/\\#,+()$~%.':*?<>{} ]", "-").Replace("&", "and").ToLower(); //old code
+                         string productName = block.blockItemsList[i].URLStructureName.ToLower();//Added for SEO URL Structure RULE by AShish
+                         decimal mrp = 0, salerate = 0;
+                         decimal.TryParse(block.blockItemsList[i].MRP.ToString(), out mrp);
+                         decimal.TryParse(block.blockItemsList[i].RetailerRate.ToString(), out salerate);
+                         if (i % 6 == 0)
+                         {
+                            @*<div class="clearfix" style="padding-left: 0px; padding-right: 0px; float: left;"></div>*@
+                         }
+
+                        <div class="col-xs-6 col-sm-4 col-md-3 col-lg-2">
+                            <div class="product animated fadeInUp" style="    margin-bottom: 10px;">
+                                <ul class="product-labels">
+                                    @*<li>New</li>*@
+
+                                    <div class=" ">
+                                        @if (mrp > salerate)
+                                        {
+                                            decimal offerValue = (mrp - salerate) / mrp * 100;
+                                            decimal offerPercentage = Math.Floor(offerValue);
+
+                                            if (offerPercentage > 0)
+                                            {
+
+                                                <ul class="product-labels" style="display:block">
+                                                    <li>@offerPercentage % OFF</li>
+                                                </ul>
+                                            }
+                                            else
+                                            {
+                                                <ul class="product-labels" style="display: none">
+                                                    <li class="offerPercentage"></li>
+                                                </ul>
+                                            }
+                                        }
+                                        else
+                                        {
+                                            <ul class="product-labels" style="display: none">
+                                                <li class="offerPercentage"></li>
+                                            </ul>
+                                        }
+
+                                    </div>
+                                </ul>
+                                @*Start Yashaswi Label For Retail Point*@
+                                <ul class="product-labelsRP">
+                                    <div class=" ">
+                                        <ul class="product-labelsRP" style="display:block">
+                                            <li>RP @block.blockItemsList[i].RetailPoint</li>
+                                        </ul>
+                                    </div>
+                                </ul>
+                                @*End Yashaswi Label For Retail Point*@
+                                <div class="product-img-wrap">
+                                    <a class="anchorRedirect" href="@Url.RouteUrl("pre-prod-name", new { itemId = block.blockItemsList[i].ProductID, itemName = productName, city = cityName, franchiseId = franchiseID })">
+                                        <img class="product-img" alt="@CultureInfo.CurrentCulture.TextInfo.ToTitleCase(block.blockItemsList[i].Tooltip.ToLower())" src="@block.blockItemsList[i].ImageName" title="@CultureInfo.CurrentCulture.TextInfo.ToTitleCase(block.blockItemsList[i].Tooltip.ToLower())" onerror="this.src = '/Content/Images/no_image.png'" />
+                                    </a>
+                                </div>
+                                @if (block.blockItemsList[i].Size.ToUpper().Trim() != "N/A")
+                                {
+                                    <span class="product-caption">Size - @block.blockItemsList[i].Size</span>
+                                }
+                                else
+                                {
+                                    <span class="product-caption">&nbsp;</span>
+                                }
+                                <div class="product-caption">
+                                    @if (block.blockItemsList[i].ProductName.Length > 30)
+                                    {
+
+                                        <h5 class="product-caption-title">@block.blockItemsList[i].ProductName.Substring(0, Math.Min(block.blockItemsList[i].ProductName.Length, 27))...</h5>
+                                    }
+                                    else
+                                    {
+                                        <h5 class="product-caption-title">@block.blockItemsList[i].ProductName</h5>
+                                    }
+
+                                    <div class="product-caption-price">
+                                        @if (mrp > salerate)
+                                        {
+                                            <span class="product-caption-price-old"><i class="fa fa-inr" aria-hidden="true"></i><del> @(mrp.ToString("0.00"))</del></span>
+                                        }
+                                        else
+                                        {
+                                            <span class="product-caption-price-new"></span>
+                                        }
+                                        <span class="product-caption-price-new" style="color:brown"><i class="fa fa-inr" aria-hidden="true"></i>  @(salerate.ToString("0.00"))</span>
+                                    </div>
+                                    <div class="product-caption-price">
+                                        <a class="btn btn-success" href="@Url.RouteUrl("pre-prod-name", new { itemId = block.blockItemsList[i].ProductID, itemName = productName, city = cityName, franchiseId = franchiseID })">view</a>
+                                        <input type="text" min="1" max="5" step="1" value="1" id="productQuantity" class="productQuantity" onchange="checkMaxQty(this)" style="width: 30px; height: 31px; text-align: center;">
+                                        @*<button class="btn btn-success" type="button">view</button>*@
+                                        @*<button class="btn btn-warning" type="button" onclick="AddProduct(@block.blockItemsList[i].ShopStockID,@block.blockItemsList[i].ProductID)" id="@block.blockItemsList[i].ProductID">Add<i class="fa fa-shopping-basket"></i></button>*@
+                                        @*Start Yashaswi 1/6/2018 Show Selected City And PinCode and Area*@
+                                        <button class="btn btn-warning" type="button" onclick="ShowPopUpForLocationAlert(@block.blockItemsList[i].ShopStockID,@block.blockItemsList[i].ProductID)" id="@block.blockItemsList[i].ProductID">Add<i class="fa fa-shopping-basket"></i></button>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+
+                     }
+                 }
+                }
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+    $(document).ready(function () {
+
+        //added for url routing - by snehal
+        var city = getCookie("CityCookie");
+        if (city == null || city == "" || city == undefined) {
+            //city = "nagpur";
+            city = "";
+            franchiseId = "";//added
+            //Update By Ajit For URL : "eZeelo"
+            //var _url = '@(Html.Raw(Url.RouteUrl("Default", new { city = "_city_" })))';//hide franchiseId
+            // history.replaceState(null, document.title, _url.replace("_city_", city));//hide franchiseId
+
+            var _url = '@(Html.Raw(Url.RouteUrl("Default", new { city = "_city_", franchiseId="_franchiseId_" })))';//added franchiseId by Ashish for multiple frnachise in same city
+            history.replaceState(null, document.title, _url.replace("_city_", city).replace("_franchiseId_", city.split("$")[2]));//added franchiseId by Ashish for multiple frnachise in same city
+        }
+        else if (window.location.href.indexOf(city.split("$")[1]) == -1) {
+            //var _url = '@(Html.Raw(Url.RouteUrl("Default", new { city = "_city_"})))';//hide franchiseId
+            //history.replaceState(null, document.title, _url.replace("_city_", city.split("$")[1].toLowerCase()));//hide franchiseId
+
+            var _url = '@(Html.Raw(Url.RouteUrl("Default", new { city = "_city_", franchiseId="_franchiseId_" })))';//added franchiseId by Ashish for multiple frnachise in same city
+            history.replaceState(null, document.title, _url.replace("_city_", city.split("$")[1].toLowerCase()).replace("_franchiseId_", city.split("$")[2]));//added franchiseId by Ashish for multiple frnachise in same city
+        }
+    });
+
+    function getCookie(name) {
+        var dc = document.cookie;
+        var prefix = name + "=";
+        var begin = dc.indexOf("; " + prefix);
+        if (begin == -1) {
+            begin = dc.indexOf(prefix);
+            if (begin != 0) return null;
+        } else {
+            begin += 2;
+        }
+        var end = document.cookie.indexOf(";", begin);
+        if (end == -1) {
+            end = dc.length;
+        }
+        return unescape(dc.substring(begin + prefix.length, end));
+    }
+</script>
+<script type="text/javascript">
+    @*function AddProduct(shopStockId, itemId) {
+        var _url = '@Url.Action("AddProductInShoppingCart", "Product")';
+        //alert(_url);
+        AddProductToShppingCart(shopStockId, itemId, _url);
+
+        //AddProductToShppingCartWithoutQuantity(shopStockId, itemId, _url);
+    }*@
+
+</script>
+<script type="text/javascript">
+    //Start Yashaswi 1/6/2018 Show Selected City And PinCode and Area
+    var _shopStockId;
+    var _itemId;
+    function Add_Product(shopStockId, itemId) {
+        var _urlHome = '@Url.Action("AddProductInShoppingCart", "Product")';
+        AddProductToShppingCart(shopStockId, itemId, _urlHome);
+        //AddProductToShppingCartWithoutQuantity(shopStockId, itemId, _url);
+    }
+
+
+    function ShowPopUpForLocationAlert(shopStockId, itemId) {
+
+        if (localStorage.getItem("IsLocConfirmed") != null) {
+            Add_Product(shopStockId, itemId);
+        }
+        else {
+            _shopStockId = shopStockId;
+            _itemId = itemId;
+            modalPinArea.style.display = "block";
+        }
+    }
+
+    function LocPopupContinue() {
+        CheckDeliveryPincodeLoc();
+
+    }
+
+    function LocPopupChange() {
+        modalPinArea.style.display = "none";
+        ShowMyModal();
+    }
+
+    function ShowMyModal() {
+        ////    var modal_ = document.getElementById('myModal');
+        ////    var span = document.getElementsByClassName("close")[0];
+        modal.style.display = "block";
+        if ($("#ddlSelectCity").val() !== null) {
+            $("#lblarea").text('');
+        }
+        $("#ddlSelectCity").val(0);
+        $("#txtSelectPincode").hide();
+        $("#ddlSelectArea").hide();
+        $("#txtSelectPincode").val('');
+        $("#ddlSelectArea").val('');
+        if (localStorage.getItem("CityID") != null) {
+            $("#ddlSelectCity").val(localStorage.getItem("CityID"));
+            $("#ddlSelectCity").change();
+        }
+        span.onclick = function () {
+            modal.style.display = "none";
+        }
+
+    }
+
+    function CheckDeliveryPincodeLoc() {
+        var pincode = localStorage.getItem("SelectedPincode");
+
+        if (pincode != '') {
+            $.ajax({
+                type: "POST",
+                url: '@Url.Action("CheckDeliveryPincode", "PreviewItem", new { city = cityName, franchiseId = franchiseID })',////added franchiseId=franchiseID
+                data: "{'pincode':" + pincode + "}",
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (response) {
+                    if (response == true) {
+                        localStorage.setItem("IsLocConfirmed", "Y");
+                        modalPinArea.style.display = "none";
+                        Add_Product(_shopStockId, _itemId);
+                    }
+                    else {
+                        modaldivCheckLoc.style.display = "block";
+                    }
+                },
+                failure: function (response) {
+
+                },
+                error: function (response) {
+
+                }
+            });
+        }
+    }
+    //End Yashaswi
+</script>
+<script>
+    $("#carouselMain div").first().addClass("active");
+</script>

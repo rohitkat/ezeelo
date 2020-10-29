@@ -1,0 +1,304 @@
+﻿@model ModelLayer.Models.OwnerBank
+
+@{
+    ViewBag.Title = "Edit";
+    Layout = null;
+}
+
+<link href="~/Content/css/style_asset.css" rel="stylesheet" />
+<script src="~/Content/assets/js/jquery.easing.min.js"></script>
+<link href="http://www.jqueryscript.net/css/jquerysctipttop.css" rel="stylesheet" type="text/css">
+@*<link href="~/Content/assets/css/form-design.css" rel="stylesheet" />*@
+<link href="~/Content/css/Site.css" rel="stylesheet" />
+
+<style>
+    .succes-msg {
+        color: #125400;
+        font-size: 20px;
+    }
+    </style>
+
+<div id="content" class="span10">
+    <div style="margin-top:20px;">
+        @if (ViewBag.Message != null)
+        {
+            <span class="succes-msg" style="margin: 0 12px;">@ViewBag.Message</span>
+        }
+    </div>
+
+    @using (Html.BeginForm())
+    {
+        @Html.AntiForgeryToken()
+
+        <div class="row-fluid">
+            <div class="box span12">
+                <div class="box-content">
+                    <form class="form-horizontal" id="msform1">
+                        <div class="form-horizontal" id="msform1">
+                            @Html.ValidationMessage("Message")
+                            @Html.ValidationSummary(true)
+                            @Html.HiddenFor(model => model.ID)
+
+                            @Html.HiddenFor(model => model.BusinessTypeID)
+                            @Html.ValidationMessageFor(model => model.BusinessTypeID)
+
+                            @Html.HiddenFor(model => model.OwnerID)
+                            @Html.ValidationMessageFor(model => model.OwnerID)
+
+                            @*<div class="control-group">
+                                @Html.LabelFor(model => model.UserLoginID, "UserLoginID", new { @class = "control-label col-md-2" })*@
+                            @*<div class="">*@
+                            @*@Html.("UserLoginID", String.Empty)
+                                      @Html.ValidationSummary(true)
+                                        @Html.HiddenFor(model => model.ID)
+
+                                    </div>
+                                </div>*@
+                            <div class="control-group mrg-btm">
+                                <div class="NameDescription">
+                                    @*<div class="control-group  mrg-left">
+                                        @Html.LabelFor(model => model.UserLoginID, "UserLoginID", new { @class = "control-label col-md-2" })*@
+                                    @*<div class="salutationList">*@
+                                    @*@Html.DropDownList("UserLoginID", String.Empty)
+                                                @Html.HiddenFor(model => model.UserLoginID)
+                                                @Html.ValidationMessageFor(model => model.UserLoginID)
+                                            </div>
+                                        </div>*@
+
+
+
+                                    <div class="control-group  mrg-left">
+                                        @Html.LabelFor(model => model.AccountName, new { @class = " col-md-2" })
+                                        <div class="">
+                                            @Html.TextBoxFor(model => model.AccountName, new { required = "required" })
+                                            @Html.ValidationMessageFor(model => model.AccountName)
+                                        </div>
+                                    </div>
+
+                                    <div class="control-group mrg-left">
+                                        @Html.LabelFor(model => model.BankID, "Bank", new { @class = "col-md-2" })
+                                        <div class="">
+                                            @Html.DropDownList("BankID", "Select Bank")
+                                            @Html.ValidationMessageFor(model => model.BankID)
+                                        </div>
+                                    </div>
+
+                                    <div class="control-group  mrg-left">
+                                        @Html.LabelFor(model => model.BranchName, new { @class = "col-md-2" })
+                                        <div class="">
+                                            @Html.EditorFor(model => model.BranchName)
+                                            @Html.ValidationMessageFor(model => model.BranchName)
+                                            @*<label for="txtToDate" class="pull-right"><i class="glyphicons-icon calendar"></i></label>*@
+                                        </div>
+
+                                    </div>
+                                    <div class="control-group  mrg-left">
+                                        @Html.LabelFor(model => model.IFSCCode, new { @class = "col-md-2" })
+                                        <div class="">
+                                            @*@Html.EditorFor(model => model.Gender)*@
+                                            @Html.TextBoxFor(model => model.IFSCCode, new { @maxlength = 11 })
+                                            @Html.ValidationMessageFor(model => model.IFSCCode)
+                                        </div>
+
+                                    </div>
+
+                                    <div class="clr"></div>
+                                </div>
+                            </div>
+
+                            <div class="control-group mrg-btm">
+                                <div class="NameDescription">
+
+
+
+                                    <div class="control-group mrg-left">
+                                        @Html.LabelFor(model => model.MICRCode, new { @class = "col-md-2" })
+                                        <div class="">
+                                            @Html.TextBoxFor(model => model.MICRCode, new { @maxlength = 50 })
+                                            @Html.ValidationMessageFor(model => model.MICRCode)
+                                        </div>
+                                    </div>
+
+                                    <div class="control-group  mrg-left">
+                                        @Html.LabelFor(model => model.AccountNumber, new { @class = "col-md-2" })
+                                        <div class="">
+                                            @Html.TextBoxFor(model => model.AccountNumber, new { @maxlength = 20 })
+                                            @Html.ValidationMessageFor(model => model.AccountNumber)
+                                        </div>
+                                    </div>
+
+                                    <div class="control-group  mrg-left">
+                                        @Html.LabelFor(model => model.BankAccountTypeID, "Bank Account Type", new { @class = "col-md-2" })
+                                        <div class="col-md-10">
+                                            @Html.DropDownList("BankAccountTypeID", "Select Bank Account Type")
+                                            @Html.ValidationMessageFor(model => model.BankAccountTypeID)
+                                        </div>
+                                    </div>
+
+                                    @*<div class="control-group  mrg-left">
+                                            @Html.LabelFor(model => model.PincodeID, "Pincode ID")
+
+                                            <div class="">
+                                                @Html.TextBox("Pincode", null, new { @id = "Pincode", @class = "form-control-Widout-block", @placeholder = "Enter Pincode", @onkeypress = "return isValidPincode(event)" })
+                                                <img id="Pincode_loading" src="~/Content/img/ajax_loader.gif" style="width: 30px; height: 30px; display: none" />
+                                                <div id="divPincodeError" style="width:10px; display: none; padding:5px" class="alert-danger focused"> </div>
+                                            </div>
+                                        </div>*@
+                                    <div class="clr"></div>
+                                </div>
+                            </div>
+                            @*<div class="control-group mrg-left">
+                                                                @Html.LabelFor(model => model.Address)
+                                    <div class="">
+                                        @Html.TextAreaFor(model => model.Address, new { @class = "discrip_box max-width" })
+                                        @Html.ValidationMessageFor(model => model.Address)
+                                    </div>
+                                </div>*@
+                            @*<div class="control-group mrg-btm">
+                                <div class="NameDescription">*@
+
+
+
+                            @*<div class="control-group  mrg-left">
+                                    @Html.LabelFor(model => model.IsActive, new { @class = "control-label col-md-2" })
+                                    <div class="col-md-10">
+                                        @Html.EditorFor(model => model.IsActive)
+                                        @Html.ValidationMessageFor(model => model.IsActive)
+                                    </div>
+                                </div>*@
+                            @*<div class="control-group  mrg-left">*@
+                            @*@Html.LabelFor(model => model.CreateDate, new { @class = "control-label col-md-2" })*@
+
+                            @*@Html.EditorFor(model => model.CreateDate)*@
+                            @*@Html.HiddenFor(model => model.CreateDate)
+                                @Html.ValidationMessageFor(model => model.CreateDate)*@
+
+                            @*</div>*@
+
+
+
+                            @*<div class="control-group  mrg-left">
+                                    @Html.LabelFor(model => model.PincodeID, "PincodeID", new { @class = "control-label col-md-2" })
+                                    <div class="col-md-10">
+                                        @Html.DropDownList("PincodeID", String.Empty)
+                                        @Html.ValidationMessageFor(model => model.PincodeID)
+                                    </div>
+                                </div>*@
+
+                            @*<div class="clr"></div>
+                                    </div>
+                                </div>*@
+                            <div class="clr"></div>
+
+                            @*<div class="control-group mrg-btm">
+                                <div class="NameDescription">
+
+
+                                    <div class="control-group  mrg-left">
+                                        @Html.LabelFor(model => model.CreateBy, "CreateBy", new { @class = "control-label col-md-2" })*@
+                            @*<div class="">*@
+                            @*@Html.DropDownList("CreateBy", String.Empty)*@
+                            @*@Html.HiddenFor(model => model.CreateBy)
+                                @Html.ValidationMessageFor(model => model.CreateBy)*@
+                            @*</div>
+                                </div>*@
+
+                            @*<div class="control-group  mrg-left">
+                                    @Html.LabelFor(model => model.IsActive, new { @class = "control-label col-md-2" })
+                                    <div class="col-md-10">
+                                        @Html.EditorFor(model => model.IsActive)
+                                        @Html.ValidationMessageFor(model => model.IsActive)
+                                    </div>
+                                </div>*@
+
+
+
+                            @*<div class="control-group  mrg-left">
+                                    @Html.LabelFor(model => model.PincodeID, "PincodeID", new { @class = "control-label col-md-2" })
+                                    <div class="col-md-10">
+                                        @Html.DropDownList("PincodeID", String.Empty)
+                                        @Html.ValidationMessageFor(model => model.PincodeID)
+                                    </div>
+                                </div>
+
+                                                    <div class="clr"></div>
+                                                </div>
+                                            </div>*@
+
+
+
+                            @*<div class="form-group">
+                                    @Html.LabelFor(model => model.IsActive, new { @class = "control-label col-md-2" })
+                                    <div class="col-md-10">
+                                        @Html.EditorFor(model => model.IsActive)
+                                        @Html.ValidationMessageFor(model => model.IsActive)
+                                    </div>
+                                </div>*@
+
+                            @*    <div class="form-group">
+                                     @Html.LabelFor(model => model.ModifyDate, new { @class = "control-label col-md-2" })
+                                     <div class="col-md-10">
+                                         @Html.EditorFor(model => model.ModifyDate)
+                                         @Html.HiddenFor(model => model.CreateDate)
+                                         @Html.ValidationMessageFor(model => model.ModifyDate)
+                                     </div>
+                                 </div>
+
+                                <div class="form-group">
+                                     @Html.LabelFor(model => model.ModifyBy, "ModifyBy", new { @class = "control-label col-md-2" })
+                                     <div class="col-md-10">
+                                         @Html.DropDownList("ModifyBy", String.Empty)
+                                         @Html.ValidationMessageFor(model => model.ModifyBy)
+                                     </div>
+                                 </div>
+
+                                 <div class="form-group">
+                                     @Html.LabelFor(model => model.NetworkIP, new { @class = "control-label col-md-2" })
+                                     <div class="col-md-10">
+                                         @Html.EditorFor(model => model.NetworkIP)
+                                         @Html.ValidationMessageFor(model => model.NetworkIP)
+                                     </div>
+                                 </div>
+
+                                 <div class="form-group">
+                                     @Html.LabelFor(model => model.DeviceType, new { @class = "control-label col-md-2" })
+                                     <div class="col-md-10">
+                                         @Html.EditorFor(model => model.DeviceType)
+                                         @Html.ValidationMessageFor(model => model.DeviceType)
+                                     </div>
+                                 </div>
+
+                                 <div class="form-group">
+                                     @Html.LabelFor(model => model.DeviceID, new { @class = "control-label col-md-2" })
+                                     <div class="col-md-10">
+                                         @Html.EditorFor(model => model.DeviceID)
+                                         @Html.ValidationMessageFor(model => model.DeviceID)
+                                     </div>
+                                 </div>*@
+
+
+                            <div class="control-group mrg-btm">
+                                <div class="mrg-left">
+                                    <div class="">
+                                        <input type="submit" value="Save" class="btn btn-primary btn-woner" />
+
+                                        @*<input type="button" name="next" class="btn next action-button btn-success" value="Next" />*@
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+
+
+
+                    </form>
+                </div>
+            </div>
+        </div>
+
+    }
+</div>
+<script src="~/Content/js/jquery-2.1.3.min.js"></script>
+
+
+<script src="~/Content/js/Validation.js"></script>

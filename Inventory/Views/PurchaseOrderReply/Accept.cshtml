@@ -1,0 +1,177 @@
+﻿@model ModelLayer.Models.ViewModel.PurchaseOrderReplyViewModel
+@{
+    ViewBag.Title = "Accept";
+}
+
+<style type="text/css">
+    #msform1 fieldset:not(:first-of-type) {
+        display: none;
+    }
+
+    .field-validation-error {
+        color: #000000 !important;
+    }
+
+    .succes-msg {
+        color: #31A012;
+        font-size: 20px;
+    }
+
+    .beatpicker-clearButton button {
+        display: none;
+    }
+
+    .input-parent button {
+        display: none;
+    }
+
+    .textarea-adjust {
+        width: 85%;
+    }
+    /*Beatpicker Css*/
+    .beatpicker-clearButton button {
+        display: none;
+    }
+
+    .input-parent button {
+        display: none;
+    }
+
+    .header-navbar-button {
+        position: absolute !important;
+    }
+
+    .beatpicker .main-nav .current-indicator {
+        text-align: center !important;
+    }
+
+    .beatpicker .main-nav .prev1 {
+        left: 0 !important;
+        width: 14%;
+        padding: 0px 10px;
+        color: #fff;
+        font-size: 16px;
+    }
+
+    .beatpicker .main-nav .next1 {
+        right: 0 !important;
+        width: 9%;
+        color: #fff;
+        font-size: 16px;
+    }
+
+    .beatpicker .main-nav .prev1:hover {
+        left: 0 !important;
+        width: 14%;
+        padding: 0px 10px;
+        color: #fff;
+        font-size: 20px;
+        cursor: pointer !important;
+    }
+
+    .beatpicker .main-nav .next1:hover {
+        right: 0 !important;
+        width: 9%;
+        color: #fff;
+        font-size: 20px;
+        cursor: pointer !important;
+    }
+
+    #divImages .remove {
+        background: url(/Content/img/remove-icon.png) no-repeat 0px 0px #fff;
+        float: left;
+        font-size: 0 !important;
+        width: 23px !important;
+        padding: 2px 4px;
+    }
+    /*Beatpicker Css End*/
+
+    #Remark {
+        width: 99%;
+    }
+</style>
+
+
+<link href="~/Content/css/BeatPicker.min.css" rel="stylesheet" />
+<script src="~/Content/js/jquery-1.11.0.min.js"></script>
+<script src="~/Content/js/BeatPicker.js"></script>
+<link href="~/Content/assets/css/style.css" rel="stylesheet" />
+<script src="~/Content/js/jquery-1.9.1.min.js"></script>
+<link href="http://www.jqueryscript.net/css/jquerysctipttop.css" rel="stylesheet" type="text/css">
+<link href="~/Content/assets/css/form-design.css" rel="stylesheet" />
+
+<div id="content" class="span10">
+   @using (Html.BeginForm("Accept", "PurchaseOrderReply", null, FormMethod.Post, new { id = "Form_" }))
+    {
+        @Html.AntiForgeryToken()
+        @Html.ValidationSummary(true)
+        <div class="row-fluid">
+            <div class="box span12">
+                <div class="box-header creatProduct clearfix" data-original-title="">
+                    <h2>
+                        <i class="icon-exclamation-sign"></i>
+                        <span class="break"></span>
+                      ACCEPT PURCHASE ORDER <span style="font-weight:bold"> [@Model.PurchaseOrderCode]</span>
+                    </h2>
+                </div>
+
+                <div class="box-content nameDscrp">
+                    <div class="form-group">
+                     
+                        <div class="control-group mrg-left">
+                            <div class="col-sm-3">
+                               Expected Delivery Date: <b>@Model.ExpetedDeliveryDate.ToString("dd/MM/yyyy") </b>
+                                @Html.HiddenFor(model=>model.PurchaseOrderID)
+                            </div>
+                            <div class="col-sm-6">                               
+                                                       
+                            </div>
+                        </div>
+                        <div class="clr"></div>                      
+
+                        @*<div class="NameDescription">*@
+                            <div class="control-group mrg-left">
+                                <div class="col-sm-3">
+                                   Actual Delivery Date
+                                </div>
+                                <div class="col-sm-6">
+                                    @Html.TextBoxFor(model => model.DeliveryDateTime, "{0:MM/dd/yyyy}", new { @readonly = "readonly", placeholder = "Delivery Date", @required = "required" })
+                                    @Html.ValidationMessageFor(model => model.DeliveryDateTime)
+                                    @Html.HiddenFor(model => model.DispatchDate)
+                                </div>
+                            </div>                            
+                            <div class="clr"></div>
+                        @*</div>*@
+                         
+                        @*<div class="NameDescription">*@                         
+
+                            <div class="mrg-left">
+                                <div class="col-sm-3">
+                                    Remark
+                                </div>
+                                <div class="col-sm-9">
+                                    @Html.TextAreaFor(model => model.SupplierRemark, new { placeholder = "Remark" })
+                                    @Html.ValidationMessageFor(model => model.SupplierRemark)
+                                </div>
+                            </div>
+
+                            <div class="clr"></div>
+                        @*</div>*@
+                        <p>
+                            <input type="submit" value="Accept" class="btn btn-success mrg-left mrg-top" />
+                            @Html.ActionLink("Back to List", "Index", null, new { @class = "btn btn-default mrg-left mrg-top" })
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+</div>
+
+<script language="javascript">
+  
+    $(document).ready(function () {
+        $('#DeliveryDateTime').datepicker({ dateFormat: 'mm/dd/yy' });
+    });
+
+</script>

@@ -1,0 +1,85 @@
+﻿@model ModelLayer.Models.ViewModel.UserListPromo
+
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_LeadersLayout.cshtml";
+}
+<script>
+     $(document).ready(function () {
+        if ('@TempData["Result"]' != '' && '@TempData["Result"]' != null) {
+            alert('@TempData["Result"]');
+            $("#UserLoginId").val("");
+            $("#EzzeMoney").val("");
+         }
+
+         $("#btnShow").click(function () {
+             window.location.href = "/Admin/BonusERP/ShowUserList";
+         })
+         $("#btnImport").click(function () {
+             window.location.href = "/Admin/BonusERP/ImportUserList";
+         })
+    });
+</script>
+<style>
+    table {
+        border-collapse: separate;
+        border-spacing: 15px;
+    }
+</style>
+<div class="container">
+    <div id="progress" class="modal">
+        <div class="center">
+            <img src="~/img/ajax-loading-gif-transparent-background-8.gif" />
+        </div>
+    </div>
+    <div class="card" id="maindiv">
+        <div class="card-header"><strong>Promotional ERP Payout Process </strong></div>
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <br />
+                <input type="button" value="Import List" id="btnImport" class="btn btn-info" />               
+            </div>
+        </div>
+        <div class="card-body card-block">
+
+            @using (Html.BeginForm())
+            {
+                @Html.AntiForgeryToken()
+                <div class="form-horizontal">
+                    @Html.ValidationSummary(true)
+                    <table>
+                        @*Start Yashaswi 06/12/2018 Promo ERP*@
+                        <tr>
+                            <td>
+                                Enter UserLoginId
+                            </td>
+                            <td>
+                                @Html.TextBoxFor(p => p.UserLoginId)
+                            </td>
+                            <td>
+                                Enter EzeeMoney
+                            </td>
+                            <td>
+                                @Html.TextBoxFor(p => p.EzzeMoney)
+                            </td>
+                        </tr>
+                        @*End Yashaswi 06/12/2018 Promo ERP*@
+
+
+                    </table>
+
+                    <div class="form-group">
+                        <div class="col-md-offset-2 col-md-10">
+                            <input type="submit" value="Add To List" class="btn btn-success" />
+                            &nbsp; &nbsp;
+                            <input type="button" value="Show User List" id="btnShow" class="btn btn-warning" />
+                        </div>
+                    </div>
+
+                </div>
+
+            }
+
+        </div>
+    </div>
+</div>

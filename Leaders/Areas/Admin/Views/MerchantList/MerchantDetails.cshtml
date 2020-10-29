@@ -1,0 +1,137 @@
+﻿@model ModelLayer.Models.MerchantDetails
+@{
+    /**/
+
+    ViewBag.Title = "ServiceIncomeCreate";
+    Layout = "~/Views/Shared/_LeadersLayout.cshtml";
+}
+
+<script src="~/Scripts/MerchantMenuOpenup.js"></script>
+<script>
+    $(document).ready(function () {
+        $("#erMsg").hide();
+        function CheckValue() {
+            var company = $("#Company").val();
+            var level0 = $("#Level0").val();
+            var level6 = $("#UptoLevel6").val();
+            var RM = $("#RMCommission").val();
+            var Part5th = $("#Part5th").val();
+            var result = Number(company) + Number(level0) + Number(level6) + Number(RM) + Number(Part5th);
+            if (result == 100) {
+                $("#btnSubmit").removeProp("disabled");
+                $("#erMsg").hide();
+                return 1;
+            }
+            else {
+                $("#btnSubmit").prop("disabled", "disabled");
+                $("#erMsg").show();
+                return 0;
+            }
+        }
+
+        $("#btnSubmit").click(function (e) {
+            var res = CheckValue();
+            if (res == 0) {
+                e.preventDefault();
+                return false;
+            }
+        });
+
+        $("#Company").blur(function () {
+            CheckValue();
+        })
+        $("#Level0").blur(function () {
+            CheckValue();
+        })
+        $("#UptoLevel6").blur(function () {
+            CheckValue();
+        })
+        $("#RMCommission").blur(function () {
+            CheckValue();
+        })
+        $("#Company").keyup(function () {
+            CheckValue();
+        })
+        $("#Level0").keyup(function () {
+            CheckValue();
+        })
+        $("#UptoLevel6").keyup(function () {
+            CheckValue();
+        })
+        $("#RMCommission").keyup(function () {
+            CheckValue();
+        })
+        $("#Part5th").blur(function () {
+            CheckValue();
+        })
+        $("#Part5th").keyup(function () {
+            CheckValue();
+        })
+    });
+</script>
+@if (TempData["Result"] != null)
+{
+    <script>
+        alert('@TempData["Result"]');
+    </script>
+}
+<div class="container">
+    @using (Html.BeginForm())
+    {
+        @Html.AntiForgeryToken()
+        @Html.ValidationSummary(true)
+        <div class="card">
+            <div class="card-header">
+                <strong>Merchant Details for @Model.ShopName</strong>
+            </div>
+            <div class="card-body card-block">
+                @Html.HiddenFor(model => model.MerchantId)
+                <label id="erMsg" style="color:red;display:none">Sum of share value must be 100</label>
+                <div class="form-group">
+                    <label for="company" class=" form-control-label">Company Share</label>
+                    @Html.TextBoxFor(model => model.Company, new { style = "width:50px" })%
+                    @Html.ValidationMessageFor(model => model.Company, null, new { @class = "text-danger" })
+                </div>
+                <div class="form-group">
+                    <label for="company" class=" form-control-label">Relationship Manager Share</label>
+                    @Html.TextBoxFor(model => model.RMCommission, new { style = "width:50px" })%
+                    @Html.ValidationMessageFor(model => model.RMCommission, null, new { @class = "text-danger" })
+                </div>
+                <div class="form-group">
+                    <label for="company" class=" form-control-label">Level 0 User Share </label>
+                    @Html.TextBoxFor(model => model.Level0, new { style = "width:50px" })%
+                    @Html.ValidationMessageFor(model => model.Level0, null, new { @class = "text-danger" })
+                </div>
+                <div class="form-group">
+                    <label for="company" class=" form-control-label">Upto Level 6 Share </label>
+                    @Html.TextBoxFor(model => model.UptoLevel6, new { style = "width:50px" })%
+                    @Html.ValidationMessageFor(model => model.UptoLevel6, null, new { @class = "text-danger" })
+                </div>
+                <div class="form-group">
+                    <label for="company" class=" form-control-label">5th Part </label>
+                    @Html.TextBoxFor(model => model.Part5th, new { style = "width:50px" })%
+                    @Html.ValidationMessageFor(model => model.Part5th, null, new { @class = "text-danger" })
+                </div>
+                <div class="form-group">
+                    <label for="company" class=" form-control-label">GST</label>
+                    @Html.EditorFor(model => model.GST)
+                    @Html.ValidationMessageFor(model => model.GST)
+                </div>
+                <div class="form-group">
+                    <label for="company" class=" form-control-label">Is GST Apply</label>
+                    @Html.EditorFor(model => model.IsGSTApply)
+                    @Html.ValidationMessageFor(model => model.IsGSTApply)
+                </div>
+                <div class="form-group">
+                    <div class="col-md-offset-2 col-md-10">
+                        <input type="submit" value="Save" class="btn btn-primary btn-sm" id="btnSubmit" />
+                        @Html.ActionLink("Back", "Registered", new { status = "1" }, new { @class = "btn btn-warning btn-sm" })
+
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    }
+</div>
+

@@ -1,0 +1,227 @@
+﻿@model ModelLayer.Models.ViewModel.EmployeeManagement
+
+@{
+    ViewBag.Title = "Create";
+}
+
+@*<h2>Create</h2>*@
+<div id="content" class="span10">
+    @using (Html.BeginForm())
+    {
+        @Html.AntiForgeryToken()
+
+
+
+        <div class="row-fluid sortable ui-sortable">
+            <div class="box span12">
+                <div data-original-title="" class="box-header">
+                    <h2><i class="icon-group"></i><span class="break"></span>EmployeeManagement</h2>
+
+                </div>
+                <div class="box-content">
+                    <form class="form-horizontal">
+                 
+                        @Html.ValidationSummary(true)
+                        @if (ViewBag.Message != null)
+                        { 
+                            <span style="color:red;font-weight:bold">@ViewBag.Message</span>
+                        }
+
+
+                        <div class="control-group clearfix">
+                            @Html.LabelFor(model => model.EmployeeCode, "Employee Code", new { @class = "control-label span2" })
+                            <div class="controls">
+                                @Html.DisplayFor(model => model.EmployeeCode)
+                                @Html.ValidationMessageFor(model => model.EmployeeCode)
+                            </div>
+                        </div>
+
+                        <div class="control-group clearfix">
+                            <label class="control-label span2" for="focusedInput">Owner Type</label>
+                            <div class="controls">
+                                @Html.DropDownList("OwnerType", (SelectList)ViewBag.OwnerType)
+                                <span id="OwnerTypeMsg"></span>
+                                @Html.ValidationMessageFor(model => model.OwnerID)
+                            </div>
+                        </div>
+                        <div class="control-group">
+                            <label class="control-label span2" for="focusedInput">Business Owner </label>
+                            <div class="controls">
+                                @Html.DropDownList("BusinessOwner", (SelectList)ViewBag.BusinessOwner)
+                                <span id="BusinessOwnerMsg"></span>
+                                @Html.ValidationMessageFor(model => model.OwnerID)
+                            </div>
+                        </div>
+
+                        <div class="control-group">
+                            <label class="control-label span2" for="focusedInput">Salutation </label>
+
+                            <div class="controls">
+                                @Html.DropDownList("Salutation", "Select")
+                                <span id="salutationMsg"></span>
+                                @Html.ValidationMessageFor(model => model.SalutationID)
+                            </div>
+                        </div>
+
+                        <div class="control-group">
+                            @Html.LabelFor(model => model.FirstName, "First Name", new { @class = "control-label span2" })
+                            <div class="controls">
+                                @Html.EditorFor(model => model.FirstName)
+                                @Html.ValidationMessageFor(model => model.FirstName)
+                            </div>
+                        </div>
+
+                        <div class="control-group">
+                            @Html.LabelFor(model => model.MiddleName, "Middle Name", new { @class = "control-label span2" })
+                            <div class="controls">
+                                @Html.EditorFor(model => model.MiddleName)
+                                @Html.ValidationMessageFor(model => model.MiddleName)
+                            </div>
+                        </div>
+
+                        <div class="control-group">
+                            @Html.LabelFor(model => model.LastName, "Last Name", new { @class = "control-label span2" })
+                            <div class="controls">
+                                @Html.EditorFor(model => model.LastName)
+                                @Html.ValidationMessageFor(model => model.LastName)
+                            </div>
+                        </div>
+
+                        <div class="control-group">
+                            @Html.LabelFor(model => model.Gender, new { @class = "control-label span2" })
+                            <div class="controls">
+                                @Html.DropDownList("Gender", "Select")
+                                @Html.ValidationMessageFor(model => model.Gender)
+                            </div>
+                        </div>
+
+
+                        <div class="control-group">
+                            @Html.LabelFor(model => model.Address, new { @class = "control-label span2" })
+                            <div class="controls">
+                                @Html.EditorFor(model => model.Address)
+                                @Html.ValidationMessageFor(model => model.Address)
+                            </div>
+                        </div>
+
+                        <div class="control-group">
+                            @Html.LabelFor(model => model.Mobile, new { @class = "control-label span2" })
+                            <div class="controls">
+                                @Html.EditorFor(model => model.Mobile)
+                                <span id="MobileError"></span>
+                                @Html.ValidationMessageFor(model => model.Mobile)
+                            </div>
+                        </div>
+
+                        <div class="control-group">
+                            @Html.LabelFor(model => model.AlternateMobile, "Alternate Mobile", new { @class = "control-label span2" })
+                            <div class="controls">
+                                @Html.EditorFor(model => model.AlternateMobile)
+                                @Html.ValidationMessageFor(model => model.AlternateMobile)
+                            </div>
+                        </div>
+                        <div class="control-group">
+                            @Html.LabelFor(model => model.Email, new { @class = "control-label span2" })
+                            <div class="controls">
+                                @Html.EditorFor(model => model.Email)
+                                <span id="EmailError"></span>
+                                @Html.ValidationMessageFor(model => model.Email)
+                            </div>
+                        </div>
+
+                        <div class="control-group">
+                            @Html.LabelFor(model => model.AlternateEmail, "Alternate Email", new { @class = "control-label span2" })
+                            <div class="controls">
+                                @Html.EditorFor(model => model.AlternateEmail)
+                                @Html.ValidationMessageFor(model => model.AlternateEmail)
+                            </div>
+                        </div>
+
+                        <div class="control-group">
+                            @Html.LabelFor(model => model.Password, new { @class = "control-label span2" })
+                            <div class="controls">
+                                @Html.EditorFor(model => model.Password)
+                                @Html.ValidationMessageFor(model => model.Password)
+                            </div>
+                        </div>
+
+
+                        <div class="control-group">
+                            @Html.LabelFor(model => model.IsActive, "Is Active", new { @class = "control-label span2" })
+                            <div class="controls">
+                                @Html.EditorFor(model => model.IsActive)
+                                @Html.ValidationMessageFor(model => model.IsActive)
+                            </div>
+                        </div>
+
+                        <div class="form-actions">
+                            <div class="col-md-offset-2 col-md-10">
+                                <input type="submit" value="Create" class="btn btn-Ifrm-submit" id="btnSubmit" />
+                                @Html.ActionLink("Back to List", "Index", string.Empty, new { @class = "btn btn-brown" })
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+    }
+</div>
+
+<script src="~/Scripts/jquery-1.10.2.min.js"></script>
+<script>
+
+    $(function () {
+        //MobileError
+        $('#Mobile').blur(function (e) {
+            var strMobile = $("#Mobile").val();
+            $.ajax({
+                type: "POST",
+                url: "checkMobile",
+                data: "{ strMobile: '" + strMobile + "'}",
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                async: true,
+                cache: false,
+                success: function (msg) {
+                    if (msg > 0) {
+                        $("#MobileError").text("Mobile No is Already Exist");
+                    }
+                    else
+                        $("#MobileError").text('');
+                },
+                error: function (x, e) {
+                    alert("unable to Retrive Mobile No ");
+                }
+
+            });
+        });
+    });
+
+    $(function () {
+        //MobileError
+        $('#Email').blur(function (e) {
+            var strEmail = $("#Email").val();
+            $.ajax({
+                type: "POST",
+                url: "checkEmail",
+                data: "{ strEmail: '" + strEmail + "'}",
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                async: true,
+                cache: false,
+                success: function (msg) {
+                    if (msg > 0)
+                        $("#EmailError").text("Email Address is Already Exist");
+                    else
+                        $("#EmailError").text('');
+                },
+                error: function (x, e) {
+                    alert("unable to Retrive Email No ");
+                }
+
+            });
+        });
+    });
+
+</script>

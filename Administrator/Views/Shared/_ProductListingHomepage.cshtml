@@ -1,0 +1,201 @@
+﻿@model IEnumerable<Administrator.Controllers.DynamicProductListViewModel>
+
+<style>
+    #divSpecification {
+        background: #EEE;
+        border: 1px solid #E4E5E6;
+        padding: 5px 3px;
+        min-height: 145px;
+    }
+
+    .ui-widget-header {
+        border: 0px !important;
+        background: #fff;
+    }
+
+    #myTable_filter {
+        margin-top: 20px !important;
+    }
+</style>
+<script src="~/Content/js/jquery-1.9.1.min.js"></script>
+<script src="~/Content/js/jquery.dataTables.min.js"></script>
+<script src="~/Content/js/bootstrap.min.js"></script>
+<script type="text/javascript">
+    $(document).ready(function () {
+        $("#myTable").DataTable({
+            "bDestroy": true,
+            //"sPaginationType": "full_numbers",
+            "bJQueryUI": true,
+            "bInfo": false,
+            "scrollY": 700,
+            "scrollCollapse": true,
+            "bPaginate": false,
+            "iDisplayLength": 20,
+            "bAutoWidth": false,
+
+        });
+
+    });
+</script>
+
+<a id="AddAll" onclick='AddAllRow();'> Add ALL</a>
+
+<div class="box-content">
+    @*<div class="" id="slider1"></div>*@
+    <table class="table  table-bordered dat-tbl" id="myTable">
+        <thead>
+            <tr>
+                <th>
+                    ProductID
+                </th>
+                <th>
+                    Name
+                </th>
+                <th></th>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+
+                <tr id="@item.ID">
+                    <td>
+                        @Html.DisplayFor(modelItem => item.ID)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Name)
+                    </td>
+                    <td>
+                        @*<a class='btnAdd btn-info btn-small btn'  onclick='AddRowToTable(@item.ID);'>ADD</a>*@
+                        <a class='btnAdd' onclick='AddRowToTable(@item.ID);'>ADD</a>
+                    </td>
+                </tr>
+
+            }
+        </tbody>
+    </table>
+</div>
+
+@*<div id="Pager">
+        <div class="wrap">
+            <div id="slider1" class="slider">
+                <ul class="appentPager">
+
+                </ul>
+
+            </div>
+
+
+        </div>
+    </div>*@
+
+@*<script type="text/javascript">
+        $('table.dat-tbl').each(function () {
+            var currentPage = 0;
+            var numPerPage = 10;
+            var $table = $(this);
+            $table.bind('repaginate', function () {
+                $table.find('tbody tr').hide().slice(currentPage * numPerPage, (currentPage + 1) * numPerPage).show();
+            });
+            $table.trigger('repaginate');
+            var numRows = $table.find('tbody tr').length;
+            var numPages = Math.ceil(numRows / numPerPage);
+            var $pager = $('#slider1');
+            var $pager2 = $('<ul></ul>');
+            //var append = $pager2.appendTo($pager);
+            for (var page = 0; page < numPages; page++) {
+                $('<li class="page-number"></li>').text(page + 1).bind('click', {
+                    newPage: page
+                }, function (event) {
+                    currentPage = event.data['newPage'];
+                    $table.trigger('repaginate');
+                    $(this).addClass('active').siblings().removeClass('active');
+                }).appendTo($pager2).addClass('clickable');
+            }
+            $pager2.insertAfter($table).find('li.page-number:first').addClass('active');
+            $pager2.appendTo($pager);
+        });
+    </script>*@
+
+@*<script>
+        $(document).ready(function () {
+            $("#Pager .page-number").click(function (e) {
+                $('#loader_img').show();
+                var pagecount = 0;
+                var page = parseInt($(this).html());
+                if (page > 1) {
+                    pagecount = 1;
+                }
+                var fromDate = "@ViewBag.fromDate";
+                var toDate = "@ViewBag.toDate";
+                var cityID = "@ViewBag.cityID";
+                $.ajax({
+                    url: '@Url.Action("GetProductList", "DynamicCategoryProduct")',
+                    data: { 'page': page, 'pagecount': pagecount, 'fromDate': fromDate, 'toDate': toDate, 'cityID': cityID },
+                    type: "POST",
+                    cache: false,
+                    success: function (data) {
+                        //alert(data);
+                        $('#loader_img').hide();
+                        $('#divReport').empty();
+                        $('#divReport').append(data);
+
+                    },
+                    error: function (data) {
+
+                    }
+                });
+            });
+
+        });
+
+    </script>*@
+
+@*<script>
+    function AddAllRow() {
+        debugger
+        $('#myTable > tbody  > tr').each(function () {
+            /* To set color of added row*/
+            $("[id*=" + id + "]").css('background-color', '#c4eccc');
+            /*Disable Add Button*/
+            $("[id*=" + id + "]").css('pointer-events', 'none');
+            $("[id*=" + id + "]").css('cursor', 'default');
+
+            var tRow = $("[id*=" + id + "]").html();
+            $("#thirdLevelCategory tr:first").after("<tr>" + tRow + "</tr>");
+            // $("[id*=thirdLevelCategory]").append("<tr>" + tRow + "</tr>");
+            $("#thirdLevelCategory tr td a").replaceWith("<a href='#noname'>Remove</a>");
+            ProductIDList.push(id);
+            $("[id*=ProductList]").val(ProductIDList);
+        });
+
+
+
+        $("#thirdLevelCategory tr td a").click(function () {
+            debugger
+            $(this).parent().parent().remove();
+            var cid = $(this).parent().parent().children("td:first").html();
+
+            ProductIDList.splice(ProductIDList.indexOf(parseInt(cid)), 1);
+
+            $("[id*=ProductList]").val(ProductIDList);
+
+            //alert(ProductIDList.indexOf(parseInt(cid)));
+
+            $("[id*=" + cid + "]").css("background-color", "white");
+            /*Enable Add Button*/
+            $("[id*=" + cid + "]").css('pointer-events', 'auto');
+            $("[id*=" + cid + "]").css('cursor', 'pointer');
+        });
+    }</script>*@
+
+
+@*<script src="~/Content/js/lemmon-slider.js"></script>*@
+@*<script type="text/javascript">
+        $(document).ready(function () {
+            $('#slider1').lemmonSlider({
+                infinite: false
+            });
+
+        });
+
+    </script>*@

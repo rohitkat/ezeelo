@@ -1,0 +1,141 @@
+﻿@model IEnumerable<ModelLayer.Models.ViewModel.MenuViewModel>
+@using System.Text.RegularExpressions;
+@using System.Globalization;
+<style>
+    .mtree-demo .mtree {
+        background: #EEE;
+        margin: 20px auto;
+        max-width: 320px;
+        border-radius: 3px;
+    }
+
+    .mtree-skin-selector {
+        text-align: center;
+        background: #EEE;
+        padding: 10px 0 15px;
+    }
+
+        .mtree-skin-selector li {
+            display: inline-block;
+            float: none;
+        }
+
+        .mtree-skin-selector button {
+            padding: 5px 10px;
+            margin-bottom: 1px;
+            background: #BBB;
+        }
+
+            .mtree-skin-selector button:hover {
+                background: #999;
+            }
+
+            .mtree-skin-selector button.active {
+                background: #999;
+                font-weight: bold;
+            }
+
+            .mtree-skin-selector button.csl.active {
+                background: #FFC000;
+            }
+</style>
+@*<link href="~/Content/css/Site.css" rel="stylesheet" />*@
+<link href="~/Content/css/Site.css" rel="stylesheet" />
+@{
+    string cityName = "";
+    string cityID = "";
+    int franchiseID = 0;////added
+    if (Request.Cookies["CityCookie"] != null && Request.Cookies["CityCookie"].Value != "")
+    {
+        cityName = Request.Cookies["CityCookie"].Value.Split('$')[1].ToLower();
+        cityID = Request.Cookies["CityCookie"].Value.Split('$')[0].Trim();
+        franchiseID = Convert.ToInt32(Request.Cookies["CityCookie"].Value.Split('$')[2]);////added
+    }
+}
+<div class="row">
+    <div class="col-md-10new">
+        <h4 style="padding:5px;">Deals on eZeelo</h4>
+    </div>
+</div>
+@foreach (var item in Model)
+{
+    <ul class="mtree transit">
+        <li>
+            <a href="#">@CultureInfo.CurrentCulture.TextInfo.ToTitleCase(item.CategoryName.ToLower())</a>
+            @if (item.LevelTwoListing != null)
+            {
+                foreach (var ltwo in item.LevelTwoListing)
+                {
+                    <ul>
+                        <li>
+                            <a href="#">@CultureInfo.CurrentCulture.TextInfo.ToTitleCase(ltwo.CategoryName.ToLower())</a>
+                            @if (ltwo.LevelThreeListing != null)
+                            {
+                                foreach (var lthree in ltwo.LevelThreeListing)
+                                {
+                                    string itemName = Regex.Replace(lthree.CategoryName.Substring(0, Math.Min(lthree.CategoryName.Length, 30)), @"[\/\\#,+()$~%.':*?<>{} ]", "-").Replace("&", "and").ToLower();
+                                    <ul>
+                                        @if (!lthree.IsManaged)
+                                        {
+                                            <li><a href="@Url.RouteUrl("ProductsByCategory", new { item = itemName, parentCategoryId = lthree.ID, city = cityName, franchiseId = franchiseID })">@CultureInfo.CurrentCulture.TextInfo.ToTitleCase(lthree.CategoryName.ToLower())</a></li> @*////added franchiseId=franchiseID*@
+                                        }
+                                        else
+                                        {
+                                            <li><a href="@Url.RouteUrl("Managed", new { CatName = itemName, ParentCatID = lthree.ID, Level = lthree.Level, cityId = cityID, city = cityName, franchiseId = franchiseID })">@CultureInfo.CurrentCulture.TextInfo.ToTitleCase(lthree.CategoryName.ToLower())</a></li> @*////added franchiseId=franchiseID*@
+                                        }
+
+                                    </ul>
+                                }
+                            }
+                        </li>
+                    </ul>
+                }
+            }
+        </li>
+    </ul>
+}
+
+@*<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+    <script src='http://cdnjs.cloudflare.com/ajax/libs/velocity/0.2.1/jquery.velocity.min.js'></script>*@
+<script src="~/Content/js/mtree.js"></script>
+<script>
+    $(document).ready(function () {
+        var mtree = $('ul.mtree');
+
+        // Skin selector for demo
+        mtree.wrap('<div class=mtree-demo></div>');
+        var skins = ['bubba', 'skinny', 'transit', 'jet', 'nix'];
+        mtree.addClass(skins[0]);
+        $('body').prepend('<div class="mtree-skin-selector"><ul class="button-group radius"></ul></div>');
+        var s = $('.mtree-skin-selector');
+        $.each(skins, function (index, val) {
+            s.find('ul').append('<li><button class="small skin">' + val + '</button></li>');
+        });
+        s.find('ul').append('<li><button class="small csl active">Close Same Level</button></li>');
+        s.find('button.skin').each(function (index) {
+            $(this).on('click.mtree-skin-selector', function () {
+                s.find('button.skin.active').removeClass('active');
+                $(this).addClass('active');
+                mtree.removeClass(skins.join(' ')).addClass(skins[index]);
+            });
+        })
+        s.find('button:first').addClass('active');
+        s.find('.csl').on('click.mtree-close-same-level', function () {
+            $(this).toggleClass('active');
+        });
+    });
+</script>
+<script type="text/javascript">
+
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-36251023-1']);
+    _gaq.push(['_setDomainName', 'jqueryscript.net']);
+    _gaq.push(['_trackPageview']);
+
+    (function () {
+        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+
+</script>

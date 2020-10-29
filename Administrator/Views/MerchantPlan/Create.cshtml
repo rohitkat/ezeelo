@@ -1,0 +1,141 @@
+﻿@*//-----------------------------------------------------------------------
+        // <copyright file="Create.cshtml" company="Ezeelo Consumer Services Pvt. Ltd.">
+        //     Copyright (c) Ezeelo Consumer Services Pvt. Ltd. All rights reserved.
+        //
+    </copyright>
+        // <author>Snehal Shende</author>
+        //-----------------------------------------------------------------------*@
+@model ModelLayer.Models.OwnerPlan
+
+@{
+    ViewBag.Title = "Create";
+}
+
+<script src="~/Content/js/jquery-1.9.1.min.js"></script>
+<link href="~/Content/css/Site.css" rel="stylesheet" />
+<script src="~/Content/js/js/BeatPicker.js"></script>
+
+<script>
+    $('.show-picker').click(function (e) {
+        e.stopPropagation();
+        myPicker.show();
+    });
+    $('.hide-picker').click(function (e) {
+        e.stopPropagation();
+        myPicker.hide();
+    })
+</script>
+<style>
+    .beatpicker-clear {
+        display: none;
+    }
+</style>
+
+@using (Html.BeginForm("Create", "MerchantPlan", Model, FormMethod.Post))
+{
+    @Html.AntiForgeryToken()
+
+    <div class="span10" id="content">
+        <ul class="breadcrumb">
+            <li>
+                <i class="icon-group"></i>
+                <a href="#">Merchant Plan</a>
+                @*<i class="icon-angle-right"></i>*@
+            </li>
+            @*<li><a href="#">Tables</a></li>*@
+        </ul>
+        <div class="row-fluid">
+            <div class="box span12">
+                <div class="box-header">
+                    <h2><i class="icon-edit"></i><span class="break">Create</span></h2>
+
+                </div>
+                <div class="box-content">
+
+                    <form class="form-horizontal">
+                        @*<h4>Merchant Plan</h4>*@
+                        <hr />
+                        @Html.ValidationSummary(true)
+                        @Html.ValidationMessage("CustomError")
+                        <div class="control-group">
+                            @Html.LabelFor(model => model.PlanID, "Plan", new { @class = "control-label span2" })
+                            <div class="controls">
+                                @Html.DropDownList("PlanID", "Select Plan")
+                                @Html.ValidationMessageFor(model => model.PlanID)
+                            </div>
+                        </div>
+
+                        <div class="control-group">
+                            @Html.LabelFor(model => model.OwnerID, "Owner", new { @class = "control-label span2" })
+                            <div class="controls">
+                                @Html.DropDownList("OwnerID", null, "Select Merchant", new { @readonly = "readonly" })
+                                @Html.ValidationMessageFor(model => model.OwnerID)
+                            </div>
+                        </div>
+
+                        <div class="control-group">
+                            @Html.LabelFor(model => model.StartDate, "Start Date", new { @class = "control-label span2" })
+                            <div class="controls">
+                                @*@Html.TextBox("StartDate1", null, new { id = "StartDate1", @class = "datepicker" })*@
+                                <input type="text" id="StartDate1" name="StartDate1" value="@ViewBag.StartDate1" data-beatpicker="true" data-beatpicker-position="['*','*']" />
+                                @Html.ValidationMessageFor(model => model.StartDate)
+                            </div>
+                        </div>
+
+                        @*<div class="form-group">
+                                @Html.LabelFor(model => model.EndDate, new { @class = "control-label col-md-2" })
+                                <div class="col-md-10">
+                                    @Html.EditorFor(model => model.EndDate)
+                                    @Html.ValidationMessageFor(model => model.EndDate)
+                                </div>
+                            </div>*@
+
+                        @*<div class="control-group">
+                                @Html.LabelFor(model => model.IsActive, "Is Active", new { @class = "control-label span2" })
+                                <div class="controls">
+                                    @Html.EditorFor(model => model.IsActive)
+                                    @Html.ValidationMessageFor(model => model.IsActive)
+                                </div>
+                            </div>*@
+
+                        <div class="form-actions">
+                            <div class="col-md-offset-2 col-md-10">
+                                <input type="submit" value="Create" class="btn btn-primary" />
+                                @if (ViewBag.PlanType == "GBMR")
+                                {
+                                    @Html.ActionLink("Back to List", "Index", "MerchantPendingApprovals", new { franchiseID = ViewBag.FranchiseID }, new { @class = "btn" })
+                                }
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        var statusGenerator = function (text) {
+            var statusElem = $(".status-box");
+            var child = $("<span style='display: block'></span>").text(text);
+            statusElem.append(child);
+        };
+        myDatePicker.on("select", function (data) {
+            statusGenerator(data.string + " selected")
+        });
+        myDatePicker.on("change", function (data) {
+            statusGenerator("Date picker changed current date: " + data.string);
+        });
+        myDatePicker.on("show", function () {
+            statusGenerator("Date picker show")
+        });
+        myDatePicker.on("clear", function (data) {
+            statusGenerator("Date picker cleared. cleared date: " + data.string)
+        });
+        myDatePicker.on("hide", function () {
+            statusGenerator("Date picker hide")
+        });
+    })
+
+</script>

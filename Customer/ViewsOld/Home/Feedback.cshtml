@@ -1,0 +1,139 @@
+﻿@model ModelLayer.Models.FeedbackManagment
+
+@{
+    ViewBag.Title = "Feedback";
+    Layout = "~/Views/Shared/_Layout_Internal.cshtml";
+}
+<style>
+    .newselect {
+        border: none;
+        border-radius: 0px 0px 0px 0px !important;
+        background: transparent;
+        width: 150px;
+        padding: 5px 35px 5px 5px;
+        font-size: .875rem;
+        border: 1px solid #eaeaea;
+        height: 34px;
+        /*-webkit-appearance: none;*/
+        /*-moz-appearance: none;*/
+        appearance: none;
+        /*background: url("../../Content/Images/drop.gif") no-repeat 98% 10px;
+        background-image: url('../../Content/Images/drop.gif');*/
+        background-position: 98% 10px;
+        background-repeat: no-repeat;
+    }
+
+    .example {
+        padding: .625rem 1.825rem .625rem 2.5rem;
+        border: 2px solid #eaeaea !important;
+        box-shadow: 3px 5px 25px #eaeaea !important;
+        position: relative;
+        background-color: #fff;
+        width: 70%;
+        margin: auto !important;
+    }
+
+    .textareamode {
+        width: 100%;
+        height: 100px;
+        font-size: 14px;
+        border: 1px solid #673AB7;
+        margin-bottom: 16px;
+    }
+
+    body {
+        padding-top: 0px;
+    }
+
+    .valColor {
+        color: red !important;
+        padding-bottom: 10px;
+    }
+
+    .spanmobile {
+        float: left;
+        margin-top: 8px !important;
+    }
+
+    .startshpping {
+        background-color: #f0ad4e !important;
+        border-color: #eea236 !important;
+        padding-top: 3px;
+        color: white;
+        padding-bottom: 3px;
+        margin-top: 0px;
+    }
+
+        .startshpping:hover {
+            background-color: #f0ad4e !important;
+            border-color: #eea236 !important;
+            padding-top: 3px;
+            color: white !important;
+            padding-bottom: 3px;
+            margin-top: 0px;
+        }
+</style>
+<div class="gap"></div>
+<div class="row box" data-gutter="15" style="min-height:340px;">
+    <img src="~/Content/Images/tags/feedback.jpg" style="width:100%;margin-bottom:5px;"/>
+    <div class="col-md-12">
+        @using (Html.BeginForm("Create", "Feedback", FormMethod.Post))
+        {
+            @Html.AntiForgeryToken()
+            @Html.ValidationSummary(true)
+            if (TempData["message"] != "" && TempData["message"] != null)
+            {
+                <h5 class="messageDiv" style="color:red">@TempData["message"]</h5>
+            }
+
+            <div class="col-md-6">
+                <label>Email <span style="color:red">*</span></label>
+
+                @if (ViewBag.email != null)
+                {
+                    @Html.TextBox("Email", (string)ViewBag.email, new { @class = "form-control", placeholder = "Email" })
+                }
+                else
+                {
+                    @Html.TextBoxFor(model => model.Email, new { @class = "form-control" })
+                }
+                @Html.ValidationMessageFor(model => model.Email, null, new { @class = "valColor" })
+
+            </div>
+            <div class="col-md-6">
+                <label>Mobile <span style="color:red">*</span></label>
+
+                @if (ViewBag.mobile != null)
+                {
+                    @Html.TextBox("Mobile", (string)ViewBag.mobile, new { @maxlength = "10", @class = "form-control", placeholder = "Mobile No" })
+                }
+                else
+                {
+                    @Html.TextBoxFor(model => model.Mobile, new { @maxlength = "10", @class = "form-control" })
+                }
+                @Html.ValidationMessageFor(model => model.Mobile, null, new { @class = "valColor" })
+
+            </div>
+            <div class="col-md-6" >
+                <label>Feedback Categary<span style="color:red">*</span></label>
+                @Html.DropDownList("FeedbackCategaryID", null, "Select", new { @class = " form-control", required = "required" })
+                @Html.ValidationMessageFor(model => model.FeedbackCategaryID, null, new { @class = "valColor" })
+
+            </div>
+    <div class="col-md-6" style="position:inherit!important">
+        <label>Message<span style="color:red">*</span></label>
+        @Html.TextAreaFor(model => model.Message, new { @class = "textareamode form-control", required = "required", placeholder = "Message" })
+        @Html.ValidationMessageFor(model => model.Message, null, new { @class = "valColor" })
+
+    </div>
+            <div class="col-md-12">
+                <button type="submit" value="Create" class="btn btn-success">Submit</button>
+                <a class="btn btn-warning" href="http://www.ezeelo.com/">
+                    Continue Shopping
+                </a>
+            </div>
+        }
+    </div>
+
+</div>
+<div class="gap"></div>

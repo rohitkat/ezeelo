@@ -1,0 +1,849 @@
+﻿@model ModelLayer.Models.ViewModel.PurchaseOrderReplyViewModel
+@using ModelLayer.Models.ViewModel
+
+@{
+    Layout = null;
+}
+
+
+<script src="~/Content/js/jquery-1.11.0.min.js"></script>
+<link href="~/Content/assets/css/style.css" rel="stylesheet" />
+<script src="~/Content/js/jquery-1.9.1.min.js"></script>
+<link href="http://www.jqueryscript.net/css/jquerysctipttop.css" rel="stylesheet" type="text/css">
+<link href="~/Content/assets/css/form-design.css" rel="stylesheet" />
+<link href="~/Content/assets/css/font-awesome.min.css" rel="stylesheet" />
+
+<link href="~/Content/css/site.css" rel="stylesheet" />
+<link href="~/Content/css/bootstrap.min.css" rel="stylesheet" />
+<link href="~/Content/css/bootstrap-responsive.min.css" rel="stylesheet" />
+
+<link href="~/Content/css/style-responsive.css" rel="stylesheet" />
+<link href="~/Content/css/halflings.css" rel="stylesheet" />
+<link href="~/Content/css/jquery-ui-1.8.21.custom.css" rel="stylesheet" />
+<link href="~/Content/css/jquery.cleditor.css" rel="stylesheet" />
+<link href="~/Content/css/uniform.default.css" rel="stylesheet" />
+
+
+
+
+
+
+
+<script src="~/Content/js/jquery-2.1.3.min.js"></script>
+<link href="~/Content/css/jquery.dataTables.css" rel="stylesheet" />
+<script src="~/Content/js/jquery.dataTables.js" language="jascript"></script>
+
+<script type="text/javascript" class="init">
+    $(document).ready(function () {
+        $('#tblData').DataTable({
+            dom: 'T<"clear">lfrtip',
+            "processing": true,
+            "serverSide": true,
+        });
+        //alert("1");
+    });
+</script>
+
+
+
+<style>
+    table, th, td {
+        border: 1px solid #333;
+    }
+</style>
+<style>
+    .break {
+        page-break-before: always;
+    }
+    /*header {
+        display: block;
+        text-align: center;
+        position: running(header);
+    }*/
+    thead {
+        display: table-header-group;
+    }
+</style>
+
+<div>
+
+
+
+    @*<div id="header">HEADER</div>*@
+    @*<div style="position:fixed; text-align:right; padding-left:20px;">
+            <input class="btn btn-primary" type="button" value="Print" id="btnPrint" />
+        </div>*@
+    <div id="dvContainer" style=" border: solid 1px black;">
+        <div class="row-fluid">
+            <div class="box span12">
+
+                <div class="box-header" data-original-title="" style="text-align: center; font-family:Open Sans;">
+                    <h2>
+                        INVOICE
+                    </h2>
+                </div>
+
+
+
+                <div class="box-content" style="margin-top: 3%; border:0;>
+
+
+
+
+                    <div class=" form-horizontal">
+
+
+                        <table style=" width:100%;">
+                            <thead>
+                                <tr>
+
+                                    <td style="padding: 15px; width: 40%;">
+                                        @*<div><img src="http://img.ezeelo.in/hpi/11187/26/1/8.png" style="height:60px;" /></div>
+                                            <br />*@
+                                        <div style="text-align: left"><img src="@System.Configuration.ConfigurationManager.AppSettings["EZEELO_IMG_URL"]/hpi/11187/26/1/8.png" style="height:60px;" /></div>
+                                        @*<div class="display-label" style="font-family:Open Sans;font-size:x-large;color:navy"><b>@Model.WarehouseName</b> </div>*@
+                                        @*<div class="display-label">@Model.WarehouseAddress </div>*@
+
+
+                                        @*<div class="display-label"><i class="fa fa-phone"></i> @Model.WarehouseMobile </div>*@
+                                        <div class="display-label" style="padding:5px 0 ;font-family:Open Sans;font-size:x-large;color:navy;"><b>Ezeelo Consumer Services Private Limited</b></div>
+                                        <div class="display-label">CIN Number : U51909MH2017PTC295646 </div>
+                                        <div class="display-label" style="padding-bottom: 5px;"> Registered Office: 9A, 4th Floor ,JB Wing (Mangalwari Complex), </div>
+                                        <div class="display-label" style="padding-bottom: 5px;">Mangalwari Bazar,Sadar, Nagpur, Maharashtra,440001</div>
+                                        <div class="display-label" style="padding-bottom: 5px;">Phone : 9172221910 </div>
+                                        <div class="display-label">Website :www.ezeelo.com </div>
+                                    </td>
+                                    @*<td style="text-align: left; width: 30%;"></td>*@
+
+                                </tr>
+                            </thead>
+                        </table>
+                        @*<hr />*@
+
+                    </div>
+                </div>
+            </div>
+
+            <div class="box-content" style="display: inline-block; width: 100%; border: 0">
+                <div class="form-horizontal">
+                    <table style="width:100%;">
+
+                        <tr class="col-lg-12 col-md-12" style="">
+
+
+
+                            @* Purchase From*@
+                            <td style="">
+                                <div class="display-label " style="padding: 0 0 5px 10px; display: inline-block; width: 100%;"><b>Vendor Address:</b></div>
+                                @*<div class="display-label" style="padding-bottom:5px; ">@Model.SupplierName </div>*@
+                                <div class="display-label" style="padding: 0 0 5px 10px; display: inline-block; width: 100%;">@Model.SupplierName </div>
+                                <div class="display-label" style="padding: 0 0 5px 10px; display: inline-block; width: 100%;">@Model.SupplierAddress</div>
+                                <div class="display-label" style="padding: 0 0 5px 10px; display: inline-block; width: 100%;">@Model.SupplierMobile </div>
+                                <div class="display-label" style="padding: 0 0 5px 10px; display: inline-block; width: 100%;">@Model.SupplierEmail </div>
+
+                                <div class="display-label" style="padding: 0 0 5px 10px; display: inline-block; width: 100%;">@Model.SupplierContactPerson</div>
+
+                            </td>
+
+
+
+                            <td style="text-align:left; width: 50% ;padding: 15px;">
+
+
+                                <div class="display-label">Invoice No: <b>@Model.InvoiceCode</b></div>
+
+                                <div class="display-label">PO Code: <b>@Model.PurchaseOrderCode</b></div>
+
+
+
+                                <div class="display-label" style="padding-bottom:5px; "> Invoice Date: <b>@Model.CreateDate.ToString("dd/MM/yyyy")</b></div>
+                                <div class="display-label" style="padding-bottom:5px; "> PO  Expiry Date: <b>@Model.ExpetedDeliveryDate.ToString("dd/MM/yyyy")</b></div>
+
+                                @*<div class="display-label">Expected Delivery Date: <b>@Model.ExpetedDeliveryDate.ToString("dd/MM/yyyy")</b></div>*@
+                                <div class="display-label" style="padding-bottom:5px; ">Vendor NO: <b>@Model.SupplierCode</b></div>
+                                <div class="display-label" style="padding-bottom:5px; "> Currency:<b>  INR</b></div>
+                                @*<div class="display-label">Supplier PAN.NO:  <b>@Model.SupplierPanNumber</b></div>*@
+                            </td>
+                        </tr>
+
+                        <tr class="col-lg-12 col-md-12" style="text-align: left; width: 50%; padding: 15px;">
+                            <td style="">
+                                <div class="display-label" style="padding:0 0 5px 10px;"><b>Delivered By :</b></div>
+                                <div class="display-label" style="padding: 0 0 5px 10px;">@Model.SupplierName </div>
+                                @*<div class="display-label"><b>Contact Name:</b></div>*@
+                                <div class="display-label" style="padding: 0 0 5px 10px;"><b>Contact Name:</b>  @Model.SupplierContactPerson</div>
+
+                                <div class="display-label" style="padding: 0 0 5px 10px;"><i class="fa fa-phone"></i> @Model.SupplierMobile</div>
+
+
+                            </td>
+
+
+
+                            <td style=" padding: 15px; border-right: 3px solid #333; width: 50%;">
+
+                                @*" payment terms "*@
+                                @*<div class=" display-label" style="padding:0 0 5px 0;">
+                                                                        <b>Payment Terms :</b>
+                                    </div>*@
+                                @*<div class="col-sm-6" style="padding:0 0 5px 0;">
+                                                                    @Html.DropDownList("ExportOption", new List<SelectListItem>
+                                     {
+                                             new SelectListItem{ Text="Due in 1 Days  ", Value = "0" },
+                                             new SelectListItem{ Text="Due in 2 Days ", Value = "1" },
+                                             new SelectListItem{ Text="Due in 7 Days ", Value = "2" },
+                                               new SelectListItem{ Text="Due in 10 Days ", Value = "3" },
+                                                new SelectListItem{ Text="Due in 15 Days ", Value = "4" },
+                                                 new SelectListItem{ Text="Due in 21 Days ", Value = "5" },
+                                                  new SelectListItem{ Text="Due in 30 Days ", Value = "6" },
+                                                      new SelectListItem{ Text="Due in 45 Days ", Value = "7" },
+                                                          new SelectListItem{ Text="Due in 60 Days ", Value = "8" },
+                                                              new SelectListItem{ Text="Due in  90 Days ", Value = "9" },
+                                                                  new SelectListItem{ Text="Due above 90 Days ", Value = "10" },
+
+
+                                    })
+                                                                </div>*@
+                                @*<div class="display-label">Payment Terms: <b>@Model.PaymentInTermsname</b></div>*@
+                                @*<div class="display-label" style="padding:0 0 5px 0;">Last Date of Dispatch: <b>@Model.ExpetedDeliveryDate.ToString("dd/MM/yyyy")</b></div>*@
+                                <div class="display-label" style="padding:0 0 5px 0;">GST NO.: <b>@Model.SupplierGSTNumber</b></div>
+                                @*<div class="display-label" style="padding:0 0 5px 0;">INCO Terms : <b> DDP</b></div>*@
+                                <div class="display-label" style="padding:0 0 5px 0;">FSSAI License No:<b></b>@Model.FSSILicenseNo</div>
+                                <div class="display-label" style="padding:0 0 5px 0;">Supplier PAN No:<b></b>@Model.SupplierPanNo</div>
+                                <div class="display-label">State Code:<b></b>@Model.StateCode</div>
+                            </td>
+                        </tr>
+
+
+
+
+                        <tr class="col-lg-12 col-md-12">
+                            <td style="padding:15px;">
+
+                                @*<div class="display-label" style="padding-bottom:5px;"><b> Biling Address :</b></div>*@
+                                <div class="display-label" style="padding-bottom:5px;"><b> Billing To :</b></div>
+
+                                <div class="display-label">@Model.WarehouseName </div>
+                                <div class="display-label">@Model.WarehouseAddress </div>
+
+                                <br />
+                                <div class="display-label"><b>Contact Name:</b></div>
+                                <div class="display-label">@Model.WarehouseContactPerson</div>
+                                <div class="display-label"><i class="fa fa-phone"></i> @Model.WarehouseMobile </div>
+                            </td>
+
+
+
+                            <td style="padding:15px;">
+
+                                <div class="display-label" style="padding-bottom:5px;">GST NO.: <b>@Model.WarehouseGSTNumber</b></div>
+
+
+                                <div class="display-label" style="padding-bottom:5px;">State Code:<b></b>@Model.StateCode1</div>
+                                <div class="display-label">PAN Number:<b></b></div>
+                                <div class="display-label">TIN Number:<b></b></div>
+
+
+                            </td>
+                        </tr>
+
+
+
+                        <tr class="col-lg-12 col-md-12" style="border:1px solid #333;">
+
+
+                            <td style="padding:15px;">
+                                @*"Ship TO"*@
+                                <div class="display-label" style="padding-bottom:5px;"><b>Deliver TO :</b></div>
+
+                                @*<div class="display-label">@Model.SupplierName </div>
+                                    <div class="display-label">@Model.SupplierAddress</div>*@
+                                <div class="display-label">@Model.WarehouseName </div>
+                                <div class="display-label">@Model.WarehouseAddress </div>
+
+
+                                <br />
+
+
+
+                                <br />
+
+
+                            </td>
+                            <td style="padding:15px;">
+
+                                @*<div class="display-label"><b>Contact Name:</b>@Model.SupplierContactPerson</div>
+                                    <div class="display-label"><i class="fa fa-phone"></i> @Model.SupplierMobile</div>*@
+                                <div class="display-label"><b>Contact Name:</b></div>
+                                <div class="display-label">@Model.WarehouseContactPerson</div>
+                                <div class="display-label"><i class="fa fa-phone"></i> @Model.WarehouseMobile </div>
+
+                            </td>
+                        </tr>
+
+                    </table>
+                    </table>
+                </div>
+            </div>
+
+
+            </tr>
+            </table>
+        </div>
+
+
+        <div class="box" style="margin-top:3%;">
+            <div class="box-header" data-original-title="">
+                <h2></h2>
+            </div>
+            <div class="box-content" style="">
+                <div class="NameDescription">
+                    <div class="box-content box-content1" style="padding-left:0px;width:100%;z-index:1;">
+
+
+                        @*List<PurchaseOrderReplyDetailViewModel> objList = (List<PurchaseOrderReplyDetailViewModel>)Session["lPurchaseOrderDetailsViewModel"];*@
+
+
+                        <div class="box-content box-content1" style="padding-left:0px;width:99%;z-index:1;">
+
+                            <table class="table table-striped table-bordered bootstrap-datatable datatable dataTable items" width="95%" cellpadding="1" cellspacing="0" border="1">
+                                <tr>
+
+
+                                <tr>
+                                    <th style="text-align:center">Sr.<br />No</th>
+                                    <th style="text-align:center;width: 16%;">
+                                        Artical EAN<br />Artical Code<br />Description of<br />Goods<br />
+                                    </th>
+                                    <th style="text-align:center">SKU<br />Unit</th>
+                                    @*<th style="text-align:left">Item Description</th>*@
+                                    <th style="text-align:center">HSN Code</th>
+
+                                    <th style="text-align:center">MRP</th>
+                                    <th style="text-align:center">Qty</th>
+                                    @*<th style=" text-align:center">UOM</th>*@
+                                    @*<th style=" text-align:center">Basic Cost</th>*@
+                                    <th style="text-align: center;">
+                                        Buy Rate Per<br />
+                                        Unit
+                                    </th>
+                                    <th style="text-align:center;">
+                                        Disc%<br />
+                                        Disc
+                                        <br />Amt
+                                    </th>
+                                    <th style=" text-align:center">Taxable Value</th>
+
+                                    <th style=" text-align:center">CGSTAmt <br />%</th>
+                                    <th style=" text-align:center">SGSTAmt <br />%</th>
+                                    @*<th style="text-align:center">
+                                            GST%<br />GST Amount<br />
+                                        </th>*@
+
+                                    <th style="text-align: center;padding-right: 7%;">TotalAmt</th>
+                                    @*<th style="text-align:center"> Total</th>*@
+                                </tr>
+
+                                @{
+                                    var srno = 1;
+                                    decimal TotalGSTAmount = 0;
+                                }
+                                @for (int i = 0; i < Model.lPurchaseOrderReplyDetailViewModels.Count; i++)
+                                {
+                                    <tr>
+                                        <td>
+                                            @srno
+                                            @{ srno = srno + 1; }
+                                        </td>
+                                        @*<td class="table-shopping-cart-img" style="text-align: left;">
+                                                <img id=" imgproductimage" src="@Model.lPurchaseOrderReplyDetailViewModels[i].StockThumbPath" onerror="this.src = '/Content/Images/no_image.png'" style="width: 70px; height:70px;" alt=" eZeelo " />
+                                            </td>*@
+
+
+                                        <td>
+                                            @Model.lPurchaseOrderReplyDetailViewModels[i].EANCode<br />
+                                            @Model.lPurchaseOrderReplyDetailViewModels[i].SKUID<br />
+                                            @Model.lPurchaseOrderReplyDetailViewModels[i].ItemName<br />
+
+                                        </td>
+                                        <td>@Model.lPurchaseOrderReplyDetailViewModels[i].SKUUnit</td>
+
+                                        <td>@Model.lPurchaseOrderReplyDetailViewModels[i].HSNCode</td>
+                                        <td>@Model.lPurchaseOrderReplyDetailViewModels[i].MRP</td>
+                                        @*<td>@Model.lPurchaseOrderReplyDetailViewModels[i].EANCode</td>*@    @*Added by Priti on Products on 5/7/2018*@
+                                        <td style="text-align:center">
+                                            @Html.LabelFor(model => @Model.lPurchaseOrderReplyDetailViewModels[i].Quantity, @Model.lPurchaseOrderReplyDetailViewModels[i].Quantity.ToString(), new { Style = "width:30px" })
+                                        </td>
+                                        @*<td style="text-align:center">
+                                                @Html.LabelFor(model => @Model.lPurchaseOrderReplyDetailViewModels[i].BasicCost, @Model.lPurchaseOrderReplyDetailViewModels[i].BasicCost.ToString(), new { Style = "width:30px" })
+                                            </td>*@
+
+
+                                        <td style="text-align:center">
+                                            @Html.LabelFor(model => @Model.lPurchaseOrderReplyDetailViewModels[i].BuyRatePerUnit, @Model.lPurchaseOrderReplyDetailViewModels[i].BuyRatePerUnit.ToString(), new { Style = "width:30px" })
+                                        </td>
+                                        <td style="text-align:center">
+                                            @Html.LabelFor(model => @Model.lPurchaseOrderReplyDetailViewModels[i].DiscountAmount, @Model.lPurchaseOrderReplyDetailViewModels[i].DiscountAmount.ToString(), new { Style = "width:30px" })
+                                        </td>
+                                        <td style="text-align:center">
+                                            @Html.LabelFor(model => @Model.lPurchaseOrderReplyDetailViewModels[i].TaxableValue, @Model.lPurchaseOrderReplyDetailViewModels[i].TaxableValue.ToString(), new { Style = "width:30px" })
+                                        </td>
+
+
+                                        <td>
+                                            @Html.LabelFor(model => @Model.lPurchaseOrderReplyDetailViewModels[i].CGSTAmount, @Model.lPurchaseOrderReplyDetailViewModels[i].CGSTAmount.ToString())
+                                            @Html.HiddenFor(model => @Model.lPurchaseOrderReplyDetailViewModels[i].CGSTAmount)
+                                            <span>(@Convert.ToDecimal(@Model.lPurchaseOrderReplyDetailViewModels[i].GSTInPer / Convert.ToDecimal(2))%)</span>
+
+                                        </td>
+
+                                        @*<td>
+                                                @Html.LabelFor(model => @Model.lPurchaseOrderReplyDetailViewModels[i].BuyRatePerUnit, @Model.lPurchaseOrderReplyDetailViewModels[i].BuyRatePerUnit.ToString(), new { placeholder = "0", Style = "width:30px" })
+                                            </td>*@
+
+                                        <td>
+                                            @Html.LabelFor(model => @Model.lPurchaseOrderReplyDetailViewModels[i].SGSTAmount, @Model.lPurchaseOrderReplyDetailViewModels[i].SGSTAmount.ToString())
+                                            @Html.HiddenFor(model => @Model.lPurchaseOrderReplyDetailViewModels[i].SGSTAmount)
+                                            <span>(@Convert.ToDecimal(@Model.lPurchaseOrderReplyDetailViewModels[i].GSTInPer / Convert.ToDecimal(2))%)</span>
+                                        </td>
+                                        <td style="display:none">
+                                            @*//PRITI 28/6/2018*@
+                                            @Html.LabelFor(model => @Model.lPurchaseOrderReplyDetailViewModels[i].IGSTAmount, @Model.lPurchaseOrderReplyDetailViewModels[i].IGSTAmount.ToString())
+                                            @Html.HiddenFor(model => @Model.lPurchaseOrderReplyDetailViewModels[i].IGSTAmount)
+                                        </td>
+                                        <td style="font-weight:bold"><b>@Html.LabelFor(model => @Model.lPurchaseOrderReplyDetailViewModels[i].ProductAmount, @Model.lPurchaseOrderReplyDetailViewModels[i].ProductAmount.ToString(), new { Style = "width:40px" })</b></td>
+                                        @*<td>
+                                                @Html.LabelFor(model => @Model.lPurchaseOrderReplyDetailViewModels[i].ProductRemark, Convert.ToString(@Model.lPurchaseOrderReplyDetailViewModels[i].ProductRemark), new { Style = "width:180px" })
+                                            </td>*@
+                                    </tr>
+
+                                    TotalGSTAmount = TotalGSTAmount + Convert.ToDecimal(@Model.lPurchaseOrderReplyDetailViewModels[i].CGSTAmount) + Convert.ToDecimal(@Model.lPurchaseOrderReplyDetailViewModels[i].SGSTAmount);
+
+                                }
+
+                                <tr>
+                                    <td style="text-align: left;">
+                                        <b> <br /></b>
+                                    </td>
+                                    <td style="text-align: left;">
+                                        <b>Total <br /><br /></b>
+                                    </td>
+                                    <td style="text-align: left;"></td>
+                                    <td style="text-align: left;"></td>
+                                    @*<td style="text-align: left;"></td>*@
+                                    <td style="text-align: left;">
+
+                                        <b> @Model.lPurchaseOrderReplyDetailViewModels.Sum(p => p.MRP)</b>
+                                    </td>
+
+                                    <td style="text-align: left;">
+                                        <b>  @Model.lPurchaseOrderReplyDetailViewModels.Sum(p => p.Quantity)</b>
+                                    </td>
+
+                                    <td style="text-align: left;">
+                                        <b>   @Model.lPurchaseOrderReplyDetailViewModels.Sum(p => p.BuyRatePerUnit)</b>
+                                    </td>
+                                    @*<td style="text-align: left;">
+                                            <b>  @Model.lPurchaseOrderReplyDetailViewModels.Sum(p => p.UnitPrice)</b>
+                                        </td>*@
+                                    <td style="text-align: left;">
+                                        <b>  @Model.lPurchaseOrderReplyDetailViewModels.Sum(p => p.DiscountAmount)</b>
+                                    </td>
+                                    <td style="text-align: left;">
+                                        <b>  @Model.lPurchaseOrderReplyDetailViewModels.Sum(p => p.TaxableValue)</b>
+                                    </td>
+                                    <td style="text-align: left;">
+                                        <b>  @Model.lPurchaseOrderReplyDetailViewModels.Sum(p => p.CGSTAmount)</b>
+                                    </td>
+                                    <td style="text-align: left;">
+                                        <b>  @Model.lPurchaseOrderReplyDetailViewModels.Sum(p => p.SGSTAmount)</b>
+                                    </td>
+                                    <td style="text-align:left;">
+                                        <b>  @Model.lPurchaseOrderReplyDetailViewModels.Sum(p => p.ProductAmount)</b>
+                                    </td>
+                                </tr>
+
+
+
+
+                            </table>
+                        </div>
+
+
+
+                        <br /> <br /> <br />
+
+
+                        <div class="box-content box-content1">
+                            <table id="Tblgst" class="table table-striped table-bordered bootstrap-datatable datatable dataTable items">
+                                <tr style="text-align:center">
+                                    <th></th>
+                                    <th>
+                                        Taxable Value
+                                    </th>
+                                    <th colspan="2">
+                                        Central Tax
+                                    </th>
+                                    <th colspan="2">
+                                        State Tax
+                                    </th>
+                                    <th>
+                                        Total Tax Amount
+                                    </th>
+                                    <th>
+                                        Total Amount
+                                    </th>
+                                </tr>
+                                <tr>
+                                    <th></th>
+                                    <th></th>
+                                    <th>
+                                        Value
+                                    </th>
+                                    <th>
+                                        Amount
+                                    </th>
+                                    <th>
+                                        Value
+                                    </th>
+                                    <th>
+                                        Amount
+                                    </th>
+                                    <th></th>
+                                    <th></th>
+                                </tr>
+                                @if (Model.lGst.Count != 0)
+                                {
+                                    foreach (var item in Model.lGst)
+                                    {
+                                        <tr>
+                                            <td></td>
+                                            <td>
+                                                @item.TaxableAmt
+                                            </td>
+                                            <td>
+                                                @item.CGST%
+                                            </td>
+                                            <td>
+
+                                                @item.CGSTAmt
+                                            </td>
+                                            <td>
+                                                @item.SGST%
+                                            </td>
+                                            <td>
+                                                @item.SGSTAmt
+                                            </td>
+                                            <td>
+                                                @item.TaxAmt
+                                            </td>
+                                            <td>
+                                                @item.TotalAmt
+                                            </td>
+                                        </tr>
+                                    }
+                                    <tr>
+                                        <td>
+                                            <b>Total</b>
+                                        </td>
+                                        <td>
+                                            <b> @Model.lGst.Sum(p => p.TaxableAmt)</b>
+                                        </td>
+                                        <td></td>
+                                        <td>
+                                            <b> @Model.lGst.Sum(p => p.CGSTAmt) </b>
+                                        </td>
+                                        <td></td>
+                                        <td>
+                                            <b> @Model.lGst.Sum(p => p.SGSTAmt) </b>
+                                        </td>
+                                        <td>
+                                            <b> @Model.lGst.Sum(p => p.TaxAmt)</b>
+                                        </td>
+                                        <td>
+                                            <b> @Model.lGst.Sum(p => p.TotalAmt) </b>
+                                        </td>
+                                    </tr>
+                                }
+                            </table>
+                        </div>
+
+
+                    </div>
+                    @*Table end here *@
+                    @*<p style="page-break-before: always">
+
+                        <table style=" width:100%;">
+                            <thead>
+                                <tr>
+
+                                    <td style="padding: 15px; width: 40%;">
+
+                                        <div class="display-label" style="padding:5px 0 ;font-family:Open Sans;font-size:x-large;color:navy;"><b>Ezeelo Consumer Services Private Limited</b></div>
+                                        <div class="display-label">CIN Number : U51909MH2017PTC295646 </div>
+                                        <div class="display-label" style="padding-bottom: 5px;"> Registered Office: 9A, 4th Floor ,JB Wing (Mangalwari Complex), </div>
+                                        <div class="display-label" style="padding-bottom: 5px;">Mangalwari Bazar,Sadar, Nagpur, Maharashtra, 440001</div>
+                                        <div class="display-label" style="padding-bottom: 5px;">Phone : 9172221910 </div>
+                                        <div class="display-label">Website :www.ezeelo.com </div>
+                                    </td>
+
+
+                                </tr>
+                            </thead>
+                        </table>
+
+
+
+                        <table style=" width:100%;">
+                            <thead>
+                                <tr>
+
+                                    <td style="padding: 15px; width: 40%;">
+                                        <div class="display-label" style="padding-bottom:5px; ">Invoice No: <b>@Model.InvoiceCode</b></div>
+
+                                    </td>
+
+
+                                </tr>
+                            </thead>
+                        </table>*@
+
+
+
+
+
+                    <br /><br />
+
+                    @*Terms & Start here *@
+                    @* <div>
+
+                            <tr>
+                                <td style="width:20%"><b style="padding-left: 2%;"> Terms and Condition Invoice </b><br /></td>
+                                <td style="width:20%"><b style="padding-left: 2%;"> Offers as per Negotiation </b><br /></td>
+                                <td style="width:20%"><b style="padding-left: 2%;"> Invoice to accompany every delivery  </b><br /></td>
+                                <td style="width:20%"><b style="padding-left: 2%;"> Invoice to be raised on  EZEELO CONSUMER SERVICES PVT.LTD </b></td>
+                                <ol>
+                                    <li>
+
+
+                                        (1). The goods / products for delivery to our warehouse / store should always be accompanied with a duly signed and
+                                        stamped original invoice (P.O number incorporated therein) and a copy of P.O. (in case of computer generated invoice
+                                        and not duly signed, please mention on the Invoice that "this is an approved electronically generated and confirmed
+                                        invoice does not require any signature ").
+                                    </li>
+                                    <li>
+                                        (2). The supply of goods / products should be strictly as per the PO and should have been packed in good condition and
+                                        order.
+                                    </li>
+                                    <li>
+                                        (3). Any excess quantity and / or mismatch of goods / products as compared to PO and delay in delivery will result in
+                                        return of the goods / products back to the Supplier / Vendor, solely at the cost, risk and for such return no prior
+                                        approval from the Supplier / Vendor is required.
+                                    </li>
+                                    <li>
+                                        (4). All supplies should be strictly according before delivery date mentioned in the P.O.
+                                    </li>
+                                    <li>
+                                        (5). Wherever applicable, all regulatory compliances must be fulfilled including but not limited to legal metrology / Food
+                                        Safety and Standards Act / Rules before delivery of goods / products to Max Hypermarket warehouse / store.
+                                    </li>
+                                    <li>
+                                        (6). All disputes will be subject to exclusive jurisdiction of Courts at Nagpur only.
+                                    </li>
+                                    <li>
+                                        (7). All suppliers should strictly raise one invoice for one P.O for one delivery location.
+                                    </li>
+                                    <li>
+                                        (8)0. If there is any change or difference in MRP / Cost / Tax etc., of the Invoiced goods / products as compared to that of
+                                        the details mentioned in the PO, then at the time of delivery, the change / difference should be brought to the notice
+                                        of the Officials of Max Hypermarket India Private Limited and supplier/vendor need to endeavor to resolve associated
+                                        issue.
+                                    </li>
+                                    <li>
+                                        (9).Standard delivery timing for all goods / products (except fresh produce) is between 9.00am and 4.00pm during working
+                                        days except on Sunday's, festival and national holidays. For actual delivery time contact respective delivery
+                                        location.
+                                    </li>
+                                    <li>
+                                        (10)  Balance shelf life should not be below 80%at the time of delivery.
+                                    </li>
+
+
+
+
+
+
+
+                                </ol>
+                                <td style="width:40%; text-align:right;padding-right:15px"><b>Other Condition </b> <br /><br />Subject to the Jurisdiction of Nagpur:</td>
+
+                            </tr>
+
+                        </div>*@
+
+
+
+
+                    <div>
+                        <table width="100%">
+
+                            <tr>
+
+                                <td style="width:40%"><b>Prepared By:</b><br /><br />@Model.CreateByName<br />  <br /></td>
+                                <td style="width:20%"><b>Checked By  </b><br /><br />@Model.ModifyByName<br /><b></b> </b> </td>
+                                <td style="width:20%">
+                                    <b>
+                                        Ezeelo Consumer Services Private Limited <br /><br />
+                                        Authorised By<br />
+                                        Authorised Signatory
+                                        </br>
+                                </td>
+                                @*<td style="width:20%"><b> Invoice to be raised on  EZEELO CONSUMER SERVICES  </b></td>*@
+
+
+
+
+                                @*<td style="width:40%; text-align:right;padding-right:15px"><b>Subject to the Juridiction of Nagpur:</b></td>*@
+                            </tr>
+                        </table>
+                    </div>
+
+                    @*Terms & End here *@
+                    <p style="page-break-before: always">
+
+                        <table style=" width:100%;">
+                            <thead>
+                                <tr>
+
+                                    <td style="padding: 15px; width: 40%;">
+                                        @*<div><img src="http://img.ezeelo.in/hpi/11187/26/1/8.png" style="height:60px;" /></div>
+                                            <br />*@
+                                        @*<div class="display-label" style="font-family:Open Sans;font-size:x-large;color:navy"><b>@Model.WarehouseName</b> </div>*@
+                                        @*<div class="display-label">@Model.WarehouseAddress </div>*@
+
+
+                                        @*<div class="display-label"><i class="fa fa-phone"></i> @Model.WarehouseMobile </div>*@
+                                        <div class="display-label" style="padding:5px 0 ;font-family:Open Sans;font-size:x-large;color:navy;"><b>Ezeelo Consumer Services Private Limited</b></div>
+                                        <div class="display-label">CIN Number : U51909MH2017PTC295646 </div>
+                                        <div class="display-label" style="padding-bottom: 5px;"> Registered Office: 9A, 4th Floor ,JB Wing (Mangalwari Complex), </div>
+                                        <div class="display-label" style="padding-bottom: 5px;">Mangalwari Bazar,Sadar, Nagpur, Maharashtra,440001</div>
+                                        <div class="display-label" style="padding-bottom: 5px;">Phone : 9172221910 </div>
+                                        <div class="display-label">Website :www.ezeelo.com </div>
+                                    </td>
+
+
+                                </tr>
+                            </thead>
+                        </table>
+
+
+
+                        <table style=" width:100%;">
+                            <thead>
+                                <tr>
+
+                                    <td style="padding: 15px; width: 40%;">
+                                        <div class="display-label" style="padding-bottom:5px; ">Invoice No: <b>@Model.InvoiceCode</b></div>
+                                        @*<div class="display-label" style="padding-bottom:5px; "> PO Date: <b>@Model.OrderDate.ToString("dd/MM/yyyy")</b></div>*@
+                                    </td>
+                                    @*<td style="text-align: left; width: 30%;"></td>*@
+
+                                </tr>
+                            </thead>
+                        </table>
+
+
+
+                        <div class="box-header" data-original-title="" style="text-align: center; font-family:Open Sans">
+                            <h2>
+                                ANNEXURE
+                            </h2>
+                        </div>
+                        @if (Session["lPurchaseOrderReplyDetailViewModelsAnnextureViewModel"] != null)
+                        {
+                            List<PurchaseOrderReplyDetailViewModel> objList1 = (List<PurchaseOrderReplyDetailViewModel>)Session["lPurchaseOrderReplyDetailViewModelsAnnextureViewModel"];
+                            <table class="table table-striped table-bordered bootstrap-datatable datatable dataTable items" width="100%" cellpadding="1" cellspacing="0" border="1">
+                                <tr>
+
+                                    <th style="text-align:center">
+                                        Sr.No
+
+                                    </th>
+                                    <th style="text-align:center">
+                                        Brand ID
+
+                                    </th>
+                                    <th>Brand Name</th>
+
+                                    <th>QTY</th>
+                                    <th> Total Value</th>
+                                    <th>Discount Value</th>
+                                    <th>MRP Value</th>
+
+
+
+
+                                </tr>
+
+
+                                @{
+                                    var y = 1;
+                                    decimal Total = 0;
+                                }
+                                @foreach (var item in objList1)
+                                {
+                                    <tr>
+                                        <td style="text-align:center">
+                                            @y
+                                            @{
+                                                y = y + 1;
+                                            }
+
+
+                                        </td>
+
+
+
+                                        <td>@item.BrandID</td>
+                                        <td>@item.BrandName</td>
+                                        @*<td>@item.POValue</td>*@
+                                        <td>@item.Quantity</td>
+                                        <td>@item.ProductAmount</td>
+                                        <td>@item.DiscountAmount</td>
+                                        <td>@item.MRP</td>
+
+                                    </tr>
+
+                                }
+                            </table>
+                        }
+                </div>
+
+
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+
+<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
+<script type="text/javascript">
+    $("#btnPrint").live("click", function () {
+        var divContents = $("#dvContainer").html();
+        var printWindow = window.open('', '', 'height=400,width=800');
+
+        printWindow.document.write('<html><head><title>PURCHASE ORDER</title>');
+        @*printWindow.document.write('<html><head><title> </title>');
+
+        @*printWindow.document.write("     <table style=' width:100%;'><thead><tr><td style='padding: 15px; width: 40%;'><br /><div class='display-label' style='font-family:Open Sans;font-size:x-large;color:navy'><b>@Model.WarehouseName</b></div><div class='display-label'>@Model.WarehouseAddress </div><div class='display-label'><i class='fa fa-phone'></i> @Model.WarehouseMobile </div><div class='display-label' style='padding:5px 0 ;font-family:Open Sans;font-size:x-large;color:navy;'><b>Ezeelo Consumer Services Private Limited</b></div><div class='display-label' style='padding-bottom: 5px;'>9A, 4th Floor ,JB Wing(Mangalwari Complex), </div><div class='display-label' style='padding-bottom: 5px;'>Magalwari Bazar,Sadar, Nagpur, Maharashtra,440001</div><div class='display-label' style='padding-bottom: 5px;'>Phone : 9172221910 </div></td><td style='text-align: left; width: 30%;'></td></tr></thead></table>");*@
+
+        printWindow.document.write('<link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" />');
+        printWindow.document.write('<html><head><strong>Ezeelo Consumer Services Private Limited</strong></head></html>');
+        //printWindow.document.write('<table style=><thead><tr><td style=><br /><div class='display-label' style='font-family:Open Sans;font-size:x-large;color:navy'><b>@Model.WarehouseName</b></div><div class='display-label'>@Model.WarehouseAddress </div><div class='display-label'><i class='fa fa-phone'></i> @Model.WarehouseMobile </div><div class='display-label' style='padding:5px 0 ;font-family:Open Sans;font-size:x-large;color:navy;'><b>Ezeelo Consumer Services Private Limited</b></div><div class='display-label' style='padding-bottom: 5px;'>9A, 4th Floor ,JB Wing(Mangalwari Complex), </div><div class='display-label' style='padding-bottom: 5px;'>Magalwari Bazar,Sadar, Nagpur, Maharashtra,440001</div><div class='display-label' style='padding-bottom: 5px;'>Phone : 9172221910 </div></td><td style='text-align: left; width: 30%;'></td></tr></thead></table></head><body >');
+        //printWindow.document.write("");
+        printWindow.document.write(divContents);
+        printWindow.document.write('</body></html>');
+        printWindow.document.close();
+        printWindow.print();
+    });
+</script>

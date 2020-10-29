@@ -1,0 +1,177 @@
+﻿@{
+    ViewBag.Title = "Franchise DashBoard Report";
+}
+
+
+@model ModelLayer.Models.ViewModel.DashboardFranchiseViewModel
+<style>
+    .small-box h3 {
+        font-size: 28px;
+    }
+</style>
+<div id="divToPrint">
+    <div class="row">
+        @if (Model != null)
+        {
+            //foreach (var item in Model)
+            //{
+            <div class="col-lg-4 col-md-6 col-xs-12">
+                <!-- small box -->
+                <div class="small-box bg-yellow">
+                    <div class="inner">
+                        <h3>@Model.TOTALFRANCHISE_NAME</h3>
+                        <h4>MCO</h4>
+                    </div>
+                    <div class="icon">
+                        <i class="ion ion-person-add"></i>
+                    </div>
+                    <label class="small-box-footer">&nbsp;</label>
+                </div>
+            </div>
+        <!-- ./col -->
+            <div class="col-lg-4 col-md-6 col-xs-12">
+                <!-- small box -->
+                <div class="small-box bg-aqua">
+                    <div class="inner">
+                        <h3>@Model.TOTALPALCED</h3>
+                        <h4>Orders</h4>
+                    </div>
+                    <div class="icon">
+                        <i class="ion ion-bag"></i>
+                    </div>
+                    <label class="small-box-footer">&nbsp;</label>
+                </div>
+
+            </div>
+        <!-- ./col -->
+
+            <div class="col-lg-4 col-md-6 col-xs-12">
+                <!-- small box -->
+                <div class="small-box bg-green">
+                    <div class="inner">
+                        <h3>@Model.TOTALDELIVERED</h3>
+                        <h4>Delivered</h4>
+                    </div>
+                    <div class="icon">
+                        <i class="ion ion-pie-graph"></i>
+                    </div>
+                    <label class="small-box-footer">&nbsp;</label>
+                </div>
+            </div>
+
+        <!-- ./col -->
+
+            <div class="col-md-6" id="">
+
+                <div>
+                    @if (ViewBag.FranchisesSelID != null && @Model != null)
+                    {
+                        <h3>Delivery Slot</h3>
+
+
+                        <div class="box-footer no-padding">
+                            @{ var cnt = Model.dashboardLogisticViewModel.Count();}
+
+
+                            <table class="table table-bordered">
+                                <tr>
+                                    <th>DELIVERY SLOTS</th>
+                                    <th>TOTAL PLACED</th>
+                                    <th>TOTAL DELIVERED</th>
+                                </tr>
+                                @if (cnt != 0)
+                                {
+
+                                    foreach (var item in Model.dashboardLogisticViewModel)
+                                    {
+
+                                        <tr>
+                                            <td>@item.DISPLAYNAME</td>
+                                            <td><span class="pull-left badge bg-green">@item.TOTALPLACEDCOUNT </span></td>
+                                            <td><span class="pull-left badge bg-green">@item.TOTALDELIVEREDCOUNT</span></td>
+                                        </tr>
+
+
+                                        @*<ul class="nav nav-stacked">
+                                                <li><a href="#">@item.DISPLAYNAME<span class="pull-right badge bg-aqua">@item.TOTALPLACEDCOUNT</span>
+                                                        <span class="pull-right badge bg-aqua">@item.TOTALDELIVEREDCOUNT</span></a></li>
+                                            </ul>*@
+
+                                    }
+                                }
+                                else
+                                {
+                                    <tr>
+                                        <td
+                                             colspan="3">
+                                             No Data Found
+                                        </td>
+                                    </tr>
+                                }
+                            </table>
+
+
+                        </div>
+                    }
+                </div>
+
+            </div>
+
+            <div class="col-md-6" id="">
+
+                <div>
+                    @if (ViewBag.FranchisesSelID != null && @Model != null)
+                    {
+                        <h3>Pincode</h3>
+
+                        <div class="box-footer no-padding" style="height: auto; overflow: auto; min-height: 250px;max-height: 250px;">
+                            <table class="table table-bordered ">
+                                <tr>
+                                    <th>PINCODE</th>
+                                    <th>TOTAL PLACED</th>
+                                    <th>TOTAL DELIVERED</th>
+                                </tr>
+                                @{ var cnt = Model.dashboardFranchisePincodeViewModel.Count();}
+
+                                @if(cnt!=0)
+                                { 
+
+                                foreach (var item in Model.dashboardFranchisePincodeViewModel)
+                                {
+
+                                    <tr>
+                                        <td>@item.PINCODE</td>
+                                        <td><span class="pull-left badge bg-green">@item.ORDERCOUNTPLACED </span> </td>
+                                        <td><span class="pull-left badge bg-green">@item.ORDERCOUNTDELIVERED</span> </td>
+                                    </tr>
+
+
+                                    @*<ul class="nav nav-stacked">
+                                            <li><a href="#">@item.DISPLAYNAME<span class="pull-right badge bg-aqua">@item.TOTALPLACEDCOUNT</span>
+                                                    <span class="pull-right badge bg-aqua">@item.TOTALDELIVEREDCOUNT</span></a></li>
+                                        </ul>*@
+
+                                }
+                                }
+                                else
+                                {
+                                    <tr><td colspan="3">No Data Found</td></tr>
+                                }
+                            </table>
+                        </div>
+                    }
+                </div>
+
+            </div>
+        }
+    </div>
+    @*@if (ViewBag.TotalCustomerCount != null)
+        {
+            <h4 style="margin-top:0px;">
+                [Total Customer Count : @ViewBag.TotalCustomerCount]
+
+            </h4>
+        }*@
+</div>
+<br /><br />
+<br />

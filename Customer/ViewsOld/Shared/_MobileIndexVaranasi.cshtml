@@ -1,0 +1,191 @@
+﻿@{
+    Layout = null;
+}
+<script type="text/javascript">
+    function AddProduct(shopStockId, itemId) {
+        var _url = '@Url.Action("AddProductInShoppingCart", "Product")';
+        AddProductToShppingCartWithoutQuantity(shopStockId, itemId, _url);
+    }
+</script>
+<!--Create Parcial for only mobile device create date 06/11/2015 create by Gopal-->
+<style type="text/css">
+    .clr {
+        clear: both;
+    }
+
+    .mob-offer-cat {
+    }
+
+        .mob-offer-cat ul li {
+            margin-bottom: 0.5%;
+            display: inline-block;
+            float: left;
+            width: 49%;
+        }
+
+            .mob-offer-cat ul li:nth-child(odd) {
+                margin-right: 0.5%;
+            }
+
+            .mob-offer-cat ul li img {
+                width: 100%;
+            }
+
+            .mob-offer-cat ul li a {
+                display: block;
+                position: relative;
+            }
+
+                .mob-offer-cat ul li a span {
+                    display: block;
+                    position: absolute;
+                    bottom: 0;
+                    left: 0;
+                    width: 100%;
+                    height: 30px;
+                    padding: 4px;
+                    color: #fff;
+                    font-size: 14px;
+                    background: rgba(153,144,137,0.7);
+                }
+
+        .mob-offer-cat .cat-heading {
+            font-size: 14px;
+            padding: 4px 6px;
+            color: #fff;
+            background: rgba(59,103,1,0.8);
+            clear: both;
+            line-height: 30px;
+        }
+</style>
+@{
+    string cityName = "";
+    if (Request.Cookies["CityCookie"] != null && Request.Cookies["CityCookie"].Value != "")
+    {
+        cityName = Request.Cookies["CityCookie"].Value.Split('$')[1].ToLower();
+    }
+}
+<div id="boxes">
+    <div style="top:25%; left:20%; display: none;position:fixed" id="dialog" class="window">
+        <div class="innerwindow">
+            <a href="#" class="windowclose"></a>
+            @Html.Partial("_ChangeCity")
+        </div>
+    </div>
+</div>
+<div id="main-wrap">
+    <div class="mob-offer-cat">
+        <div class="mob-offer">
+            <ul>
+                <li><a href="@Url.RouteUrl("pre-prod-name", new { itemId = 43112, itemName = "Mix Fruit Egg Cake".ToLower().Replace(' ', '-'), city = cityName })"><img src="~/Content/update(5-10)/images/varanasi_images/offer_1.jpg" class=" off-1"></a></li>
+                <li><a href="@Url.RouteUrl("pre-prod-name", new { itemId = 43283, itemName = "Usha 3212 1300-Watts Halogen Oven".ToLower().Replace(' ', '-'), city = cityName })"><img src="~/Content/update(5-10)/images/varanasi_images/offer_2.jpg" class="off-2"></a></li>
+                <li><a href="@Url.RouteUrl("pre-prod-name", new { itemId = 43279, itemName = "Cello Oscar Casseroles Set".ToLower().Replace(' ', '-'), city = cityName })"><img src="~/Content/update(5-10)/images/varanasi_images/offer_3.jpg" class=" off-3"></a></li>
+                <li><a href="@Url.RouteUrl("pre-prod-name", new { itemId = 42417, itemName = "Reebok Men's Ziglite LP Running Shoes".ToLower().Replace(' ', '-'), city = cityName })"><img src="~/Content/update(5-10)/images/varanasi_images/offer_4.jpg" class="off-4"></a></li>
+            </ul>
+            <div class="clr"></div>
+        </div>
+        <div class="mob-cat">
+            <h2 class="cat-heading">CATEGORIES</h2>
+            <ul>
+                @if (Request.Cookies["CityCookie"] != null)
+                {
+                    string city = Request.Cookies["CityCookie"].Value.Split('$')[0];
+                    <li><a href="http://foodbagh.gandhibagh.com/#/products?ParentCatID=1281&Level=3&CatName=Fruits&cityId=@city" target="_blank" class="cat-1" title="Fruits & Vegetables"><span>Fruits &amp; Vegetables</span></a></li>
+
+                }
+                @if (Request.Cookies["CityCookie"] != null)
+                {
+                    string city = Request.Cookies["CityCookie"].Value.Split('$')[0];
+                    <li><a href="http://foodbagh.gandhibagh.com/#/products?ParentCatID=1136&Level=3&CatName=Other%20Grocery&cityId=@city" target="_blank" class="cat-2" title="Food & Groceries"><span>Food &amp; Groceries</span></a></li>
+
+                }
+                @if (Request.Cookies["CityCookie"] != null)
+                {
+                    string city = Request.Cookies["CityCookie"].Value.Split('$')[0];
+                    <li><a href="http://foodbagh.gandhibagh.com/#/products?ParentCatID=88&Level=3&CatName=Mutton&cityId=@city" target="_blank" class="cat-3" title="Poultry"><span>Meat &amp; Poultry</span></a></li>
+
+                }
+                @if (Request.Cookies["CityCookie"] != null)
+                {
+                    string city = Request.Cookies["CityCookie"].Value.Split('$')[0];
+                    <li><a href="http://foodbagh.gandhibagh.com/#/products?ParentCatID=1155&Level=3&CatName=Facewash&cityId=@city" target="_blank" class="cat-4 " title="Beauty & Personal Care"><span>Beauty &amp; Personal Care</span></a></li>
+                }
+
+
+                <li><a href='@Url.RouteUrl("WinterWear", new { city = cityName })' class="cat-5" title="Winter Collection"><span>Winter Collection</span></a></li>
+                <li><a href='@Url.RouteUrl("LifestyleAndFashionStreet", new { city = cityName })' class="cat-6" title="Lifestyle & Fashion"><span>Lifestyle &amp; Fashion</span></a></li>
+                <li><a href='@Url.RouteUrl("ElectronicsAvenue", new { city = cityName })' class="cat-7" title="Health & Fitness"><span>Electronics Avenue</span></a></li>
+                <li><a href='@Url.RouteUrl("HomeAndKitchenAppliances", new { city = cityName })' class="cat-8" title="Health & Fitness"><span>Home &amp; Kitchen</span></a></li>
+                <li><a href='@Url.RouteUrl("SweetAndConfectionery", new { city = cityName })' class="cat-9" title="Health & Fitness"><span>Sweet &amp; Confectionery</span></a></li>
+                <li><a href='@Url.RouteUrl("BuildingMaterialAndHardware", new { city = cityName })' class="cat-10" title="Health & Fitness"><span>Building Material  &amp; Hardware</span></a></li>
+                <li><a href='@Url.RouteUrl("AutomotiveMarket", new { city = cityName })' class="cat-11" title="Automotive Market"><span>Automotive Market</span></a></li>
+                <li><a href='@Url.RouteUrl("ElectricalMarket", new { city = cityName })' class="cat-12" title="Electrical Market"><span>Electrical Market</span></a></li>
+                <li><a href='@Url.RouteUrl("BooksAndMedia", new { city = cityName })' class="cat-14" title="Books & Media Arcade"><span>Books &amp; Media Arcade</span></a></li>
+                <li><a href='@Url.RouteUrl("HealthAndFitness", new { city = cityName })' class="cat-14" title="Health And Fitness"><span>Health And Fitness</span></a></li>
+            </ul>
+            <div class="clr"></div>
+        </div>
+    </div>
+</div>
+<script src="~/Content/update(5-10)/js/jquery-1.11.2.min.js"></script>
+<script type="text/javascript">
+    $(window).ready(function () {
+        var img1 = $("<img />").attr('src', '../Content/mobile-img/offer_1V.jpg').load(function () {
+            $(".off-1").append(img1);
+            // When the image has loaded, stick it in a div
+        });
+
+        var img2 = $("<img />").attr('src', '../Content/mobile-img/offer_2V.jpg').load(function () {
+            $(".off-2").append(img2);
+        });
+        var img3 = $("<img />").attr('src', '../Content/mobile-img/offer_3V.jpg').load(function () {
+            $(".off-3").append(img3);
+        });
+        var img4 = $("<img />").attr('src', '../Content/mobile-img/offer_4V.jpg').load(function () {
+            $(".off-4").append(img4);
+        });
+
+        var img5 = $("<img />").attr('src', '../Content/mobile-img/mob-cat/cat12.png').load(function () {
+            $(".cat-1").append(img5);
+        });
+        var img6 = $("<img />").attr('src', '../Content/mobile-img/mob-cat/cat5.png').load(function () {
+            $(".cat-2").append(img6);
+        });
+        var img7 = $("<img />").attr('src', '../Content/mobile-img/mob-cat/meat_poultry.jpg').load(function () {
+            $(".cat-3").append(img7);
+        });
+        var img8 = $("<img />").attr('src', '../Content/mobile-img/mob-cat/cat1.jpg').load(function () {
+            $(".cat-4").append(img8);
+        });
+        var img9 = $("<img />").attr('src', '../Content/mobile-img/mob-cat/Vwinter_wear.jpg').load(function () {
+            $(".cat-5").append(img9);
+        });
+        var img10 = $("<img />").attr('src', '../Content/mobile-img/mob-cat/Vlifestyle.jpg').load(function () {
+            $(".cat-6").append(img10);
+        });
+        var img11 = $("<img />").attr('src', '../Content/mobile-img/mob-cat/Velectronics_avenue.jpg').load(function () {
+            $(".cat-7").append(img11);
+        });
+        var img12 = $("<img />").attr('src', '../Content/mobile-img/mob-cat/VKitchen.png').load(function () {
+            $(".cat-8").append(img12);
+        });
+        var img13 = $("<img />").attr('src', '../content/mobile-img/mob-cat/v_restaurant.jpg').load(function () {
+            $(".cat-9").append(img13);
+        });
+        var img14 = $("<img />").attr('src', '../Content/mobile-img/mob-cat/VBuildingMate.png').load(function () {
+            $(".cat-10").append(img14);
+        });
+        var img15 = $("<img />").attr('src', '../Content/mobile-img/mob-cat/automotive_cat.jpg').load(function () {
+            $(".cat-11").append(img15);
+        });
+        var img16 = $("<img />").attr('src', '../Content/mobile-img/mob-cat/cat3.png').load(function () {
+            $(".cat-12").append(img16);
+        });
+        var img17 = $("<img />").attr('src', '../Content/mobile-img/mob-cat/Vbooks_media.jpg').load(function () {
+            $(".cat-13").append(img17);
+        });
+        var img17 = $("<img />").attr('src', '../Content/mobile-img/mob-cat/cat8.png').load(function () {
+            $(".cat-14").append(img18);
+        });
+    });
+</script>

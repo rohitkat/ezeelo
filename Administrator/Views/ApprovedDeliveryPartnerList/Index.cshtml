@@ -1,0 +1,90 @@
+﻿@*//-----------------------------------------------------------------------
+        // <copyright file="Index.cshtml" company="Ezeelo Consumer Services Pvt. Ltd.">
+        //     Copyright (c) Ezeelo Consumer Services Pvt. Ltd. All rights reserved.
+        //
+    </copyright>
+        // <author>Snehal Shende</author>
+        //-----------------------------------------------------------------------*@
+
+@model ModelLayer.Models.ViewModel.DeliveryPartnerApprovalViewModelList
+
+@{
+    ViewBag.Title = "Index";
+}
+<style>
+    .dataTables_length {
+        margin-left: 0px;
+        margin-top: 7px;
+    }
+
+    .pagination {
+        margin: 0 40px;
+    }
+</style>
+@*<h2>Pending Request of Franchise Approval</h2>*@
+<div id="content" class="span10" style="min-height: 403px;">
+    <div class="row-fluid">
+        <div class="box span12">
+            <div class="box-header">
+                <h2><i class="halflings-icon user"></i><span class="break"></span>Approved Delivery Partner List</h2>
+            </div>
+            <div class="box-content">
+                <table class="table table-striped table-bordered bootstrap-datatable datatable dataTable">
+                    <thead>
+                        <tr>
+                            <th>
+                                Delivery Partner Name
+                            </th>
+
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    @for (int i = 0; i < Model.dpList.Count; i++)
+                    {
+                        using (Html.BeginForm("Disapprove", "ApprovedDeliveryPartnerList", new { UID = Model.dpList[i].UserLoginID, ownerId = Model.dpList[i].OwnerId }, FormMethod.Post))
+                        {
+                            <tr>
+                                <td>
+                                    @Html.DisplayFor(modelItem => modelItem.dpList[i].Name)
+                                </td>
+
+                                <td>
+                                    <input type="submit" class=" btn btn-small btn-danger" value="Disapprove" onclick="disapprove(@Model.dpList[i].UserLoginID,@Model.dpList[i].OwnerId);" />
+                                </td>
+                            </tr>
+                        }
+                    }
+
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="~/Scripts/jquery-1.10.2.js"></script>
+
+<script type="text/javascript">
+
+
+    //$(document).ready(function(){
+    //    $("#Disapprove").click(function(e){
+    function disapprove(uid,ownerId)
+    {
+            $.ajax({
+                type: "POST",
+                url: '@Url.Action("Disapprove", "ApprovedDeliveryPartnerList")',
+                data: { 'UID': uid,'ownerId': ownerId},
+                //dataType: "json",
+                cache: false,
+                success: function (msg) {
+                    window.location.reload(true);
+                },
+                error: function (x, e) {
+                    //alert('Failure');
+                    //alert("The call to the server side failed. " + x.responseText);
+                }
+            });
+        };
+    //});
+
+
+</script>

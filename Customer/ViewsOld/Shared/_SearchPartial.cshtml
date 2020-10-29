@@ -1,0 +1,337 @@
+﻿@{
+    Layout = null;
+    string cityName = "", cityID = "";
+    int franchiseID = 0;////added
+    if (Request.Cookies["CityCookie"] != null && Request.Cookies["CityCookie"].Value != "")
+    {
+        cityName = Request.Cookies["CityCookie"].Value.Split('$')[1].ToLower();
+        cityID = Request.Cookies["CityCookie"].Value.Split('$')[0];
+        franchiseID = Convert.ToInt32(Request.Cookies["CityCookie"].Value.Split('$')[2]);////added
+    }
+
+}
+<script>
+    $.noConflict();
+    // Code that uses other library's $ can follow here.
+</script>
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js" type="text/javascript">
+    $.noConflict();
+</script>
+<script src="~/Scripts/jquery-ui-1.8.20.js">
+    $.noConflict();
+</script>
+<script>
+    var searchKeyword = "";
+</script>
+
+<style type="text/css">
+    .ui-autocomplete {
+        top: 1px;
+        position: fixed !important;
+    }
+        .ui-autocomplete li:first-child {
+            margin-top: 10px;
+        }
+
+        .ui-autocomplete li {
+            line-height: 1px;
+            font-size: 13px;
+            padding: 5px 0;
+            cursor: pointer;
+        }
+
+            .ui-autocomplete li div {
+                display: inline-block;
+                margin-right: 3px;
+            }
+
+            .ui-autocomplete li a {
+                display: inline-block;
+                color: #57327b;
+                line-height: 13px;
+            }
+
+    .separatorDiv {
+        display: block !important;
+    }
+
+    .breakDiv {
+        display: block !important;
+        position: relative;
+        margin: 10px 0;
+    }
+
+        .breakDiv hr {
+        }
+
+        .breakDiv span {
+            position: absolute;
+            left: 15px;
+            top: -2px;
+            background-color: #fff;
+            padding: 2px 5px;
+        }
+
+    .InDiv {
+        font-weight: 600;
+    }
+
+
+
+    .ui-autocomplete li:hover {
+        border-bottom: 1px solid #F2F2F2;
+    }
+
+    #search {
+    }
+
+    #InDiv {
+        padding-left: 5px;
+    }
+
+    .ui-autocomplete {
+        z-index: 10000 !important;
+        top: -116.283px;
+        left: 22%;
+        display: block;
+        position: fixed;
+        width: 29%;
+        background-color: white;
+        border-bottom: 1px solid black;
+        border-left: 1px solid black;
+        border-right: 1px solid black;
+        margin-left: 4px !important;
+    }
+
+    .separatorDiv div {
+        padding-left: 5px;
+    }
+
+    select {
+        border: none;
+        border-radius: 15px 0px 0px 15px;
+        background: transparent;
+        width: 150px;
+        padding: 5px 35px 5px 5px;
+        /*font-size: .875rem;*/
+        border: 1px solid #eaeaea;
+        height: 37px;
+        /*-webkit-appearance: none;*/
+        /*-moz-appearance: none;*/
+        appearance: none;
+        /*background: url(../Content/Images/drop.gif) 85% / 15% no-repeat #fff;*/
+    }
+
+    .ProductDiv {
+        width: 100%;
+    }
+
+        .ProductDiv ul {
+            margin-left: 0;
+            clear: both;
+            padding-left: 5px;
+        }
+
+            .ProductDiv ul li:hover {
+                box-shadow: 0 0 2px #c0c0c0;
+                background-color: #fff;
+                cursor: pointer;
+                overflow: hidden;
+            }
+
+            .ProductDiv ul li {
+                display: inline-block;
+                width: 23%;
+                margin: 0.90%;
+                text-align: center;
+                overflow:hidden;
+            }
+
+                .ProductDiv ul li a div img {
+                    width: 85px;
+                    height: 85px;
+                    display: block;
+                    margin: 5px auto;
+                    overflow: hidden;
+                }
+
+                .ProductDiv ul li a div div {
+                    display: block;
+                    height: 14px;
+                    overflow: hidden;
+                    margin-bottom: 5px;
+                    line-height: 13px;
+                }
+
+    .ui-autocomplete {
+        border: 1px solid #c4c4c4;
+    }
+
+    .ProductDiv:hover {
+        background-color: #fff;
+    }
+
+    .cellmar {
+        margin-top: -5px;
+    }
+
+    .successorg {
+        background-color: rgba(250, 134, 32, 0.65) !important;
+        color: white !important;
+        border-radius: 0px;
+        height: 37px;
+        border: 1px solid rgba(250, 134, 32, 0.88);
+    }
+    /*target Internet Explorer 9 and Internet Explorer 10:*/
+</style>
+<div class="navbar-form navbar-left navbar-main-search navbar-main-search-category" role="search">
+    <div class="form-category">
+        @Html.DropDownList("SearchBy", new List<SelectListItem> {
+                               new SelectListItem { Text = "Product", Value = "2" },
+                               new SelectListItem { Text = "Shop", Value = "1" },
+                               new SelectListItem { Text = "All", Value = "0", Selected = true }}, new { @class = "navbar-main-search-category-select" })
+    </div>
+    <div class="form-group" style="margin-bottom: 0px;">@Html.TextBox("search", null, new { @class = "form-control", placeholder = "Search for over 20,000 products, e.g. rice, apple..." })</div><a class="fa fa-search navbar-main-search-submit" onclick="Search();"></a>
+
+</div>
+<script type="text/javascript">
+    $('#search').keypress(function (event) {
+
+        var keycode = (event.keyCode ? event.keyCode : event.which);
+        if (keycode == '13') {
+            if ($('#search').val().length >= 2) {
+
+                Search();
+            }
+        }
+    });
+
+    function GotoPage(ele) {
+        if (ele.id != "") {
+            var name = ele.id.split("$")[1].replace(/&/g, 'and').replace(/[\/\\#,+()$~%.'":*?<>{} ]/g, '-');
+            var _url = '@(Html.Raw(Url.RouteUrl("pre-prod-name", new { itemID = "_itemID_", itemName = "_itemName_", city = cityName, franchiseId = franchiseID })))';  ////added franchiseId=franchiseID
+            window.location.href = _url.replace('_itemID_', ele.id.split("$")[0]).replace('_itemName_', name);
+        }
+    }
+
+    function Search() {
+        var name = $("#search").val().toLowerCase().replace(" & ", "+%26+").replace(/ /g, '+');
+
+        if (($("#SearchBy").val() == 2 || $("#SearchBy").val() == 0) && $('#search').val().length >= 2) {
+            var _addname = '@(Html.Raw(Url.RouteUrl("Product1", new { item = "_name_", city = cityName, franchiseId = franchiseID })))'; ////added franchiseId=franchiseID
+            window.location.href = _addname.replace('_name_', name);//.replace(/&/g, 'and').replace(/[\/\\#,+()$~%.'":*?<>{} ]/g, '-'));
+        }
+        else if ($("#SearchBy").val() == 1 && $('#search').val().length >= 2) {
+            var _addShopName = '@(Html.Raw(Url.Action("ShopSearch", "Product", new { shopName = "_shopName_", city = cityName, franchiseId = franchiseID })))'; ////added franchiseId=franchiseID
+            window.location.href = _addShopName.replace('_shopName_', name);
+        }
+
+    }
+
+    $('#search').autocomplete({
+        source: function (request, response) {
+            if ($('#search').val().length < 2)
+                return false;
+            var _url = '@(Html.Raw(Url.Action("Index", "AutoComplete", new { term = "_term_", searchBy = "_searchBy_", city = cityName, franchiseId = franchiseID })))'; ////added franchiseId=franchiseID
+            var autocompleteUrl = _url.replace('_term_', $("#search").val()).replace('_searchBy_', $("#SearchBy").val());
+
+            $.ajax({
+                url: autocompleteUrl,
+                type: 'GET',
+                cache: false,
+                dataType: 'json',
+                success: function (json) {
+                    // call autocomplete callback method with results
+                    response($.map(json, function (data, id) {
+                        return {
+                            ID: data.ID,
+                            label: data.Name,
+                            Head: data.Head,
+                            Abbr: data.Abbr,
+                            Seperator: data.Seperator,
+                            Products: data.Products,
+                            IsManagedItem: data.IsManagedItem,
+                            CategoryLevel: data.CategoryLevel,
+                            CategoryName: data.CategoryName
+
+                        };
+                    }));
+                },
+                error: function (xmlHttpRequest, textStatus, errorThrown) {
+                    console.log('some error occured', textStatus, errorThrown);
+                }
+            });
+        },
+        minLength: 2,
+        focus: function (event, ui) {
+            $('[id*=search]').val(ui.item.label);
+
+            return false;
+        },
+        select: function (event, ui) {
+            $('#search').val(ui.item.label);
+            if (ui.item.Head == "Product") {
+                var name = ui.item.label.toLowerCase().replace(/&/g, 'and').replace(/[\/\\#,+()$~%.'":*?<>{} ]/g, '-');
+                var _url = '@(Html.Raw(Url.RouteUrl("pre-prod-name", new { itemID = "_itemID_", itemName = "_itemName_", city = cityName, franchiseId = franchiseID })))'; ////added franchiseId=franchiseID
+                window.location.href = _url.replace('_itemID_', ui.item.ID).replace('_itemName_', name);
+            }
+            else if (ui.item.Head == "Category") {
+
+                var name = ui.item.label.split(" - ")[1].toLowerCase().replace(/&/g, 'and').replace(/[\/\\#,+()$~%.'":*?<>{} ]/g, '-');
+                if (ui.item.IsManagedItem == true) {
+                    var _url = '@(Html.Raw(Url.RouteUrl("Managed", new { ParentCatID = "_ParentCatID_", Level = "_Level_", CatName = "_CatName_", cityId = cityID, city = cityName, franchiseId = franchiseID })))'; ////added franchiseId=franchiseID
+                    window.location.href = _url.replace('_ParentCatID_', ui.item.ID).replace('_Level_', ui.item.CategoryLevel).replace("_CatName_", name);
+                }
+                else {
+                    var _url = '@(Html.Raw(Url.RouteUrl("ProductsByCategory", new { item = "_item_", parentCategoryId = "_parentCategoryId_", city = cityName, franchiseId = franchiseID })))'; ////added franchiseId=franchiseID
+                    //- Changes made by Avi Verma. 15-June-2016. For Particular Search.
+                    //window.location.href = _url.replace('_item_', name).replace('_parentCategoryId_', ui.item.ID);
+                    window.location.href = _url.replace('_item_', searchKeyword).replace('_parentCategoryId_', ui.item.ID);
+
+                }
+            }
+            else {
+                var name = ui.item.label.toLowerCase().replace(/&/g, 'and').replace(/[\/\\#,+()$~%.'":*?<>{} ]/g, '-');
+                var _url = '@(Html.Raw(Url.RouteUrl("ShopSearch2", new { shopID = "_shopID_", shopName = "_shopName_", city = cityName, franchiseId = franchiseID })))'; ////added franchiseId=franchiseID
+                window.location.href = _url.replace('_shopID_', ui.item.ID).replace('_shopName_', name);
+            }
+
+            return false;
+        }
+
+
+    });
+    $(function () {
+        $("#search").val("");
+        $("#search").keyup(function () {
+            searchKeyword = $("#search").val() + " ";
+            //alert(searchKeyword);
+        });
+
+    });
+
+    function getCookie(name) {
+        var dc = document.cookie;
+        var prefix = name + "=";
+        var begin = dc.indexOf("; " + prefix);
+        if (begin == -1) {
+            begin = dc.indexOf(prefix);
+            if (begin != 0) return null;
+        } else {
+            begin += 2;
+        }
+        var end = document.cookie.indexOf(";", begin);
+        if (end == -1) {
+            end = dc.length;
+        }
+        return unescape(dc.substring(begin + prefix.length, end));
+    }
+</script>
+
+<script type="text/javascript">
+
+    function getNoImgPath(src) {
+        var newSrc = "/Content/Images/no_image.png";
+        return newSrc;
+    }
+</script>

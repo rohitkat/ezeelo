@@ -1,0 +1,113 @@
+﻿@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Index</h2>
+@*<!-- Facebook Pixel Code(Added By harshada on 12/1/2017) -->
+<script>
+
+    var email = $("[id*=email]").val();
+    !function (f, b, e, v, n, t, s) {
+        if (f.fbq) return; n = f.fbq = function () {
+            n.callMethod ?
+            n.callMethod.apply(n, arguments) : n.queue.push(arguments)
+        }; if (!f._fbq) f._fbq = n;
+        n.push = n; n.loaded = !0; n.version = '2.0'; n.queue = []; t = b.createElement(e); t.async = !0;
+        t.src = v; s = b.getElementsByTagName(e)[0]; s.parentNode.insertBefore(t, s)
+    }(window,
+    document, 'script', 'https://connect.facebook.net/en_US/fbevents.js');
+    fbq('init', '836970266428365', {
+        em: email
+    });
+    fbq('track', 'PageView');
+</script>
+<noscript>
+    <img height="1" width="1" style="display:none"
+         src="https://www.facebook.com/tr?id=836970266428365&ev=PageView&noscript=1" />
+</noscript>
+<!-- DO NOT MODIFY -->
+<!-- End Facebook Pixel Code (Added By harshada on 12/1/2017)-->*@
+<style>
+    .linkpadding {
+        margin-left: 30px;
+    }
+
+    #btnForgotPassword {
+        border: none !important;
+        color: #5B7EC8;
+        text-decoration: underline;
+    }
+
+        #btnForgotPassword:hover {
+            border: none !important;
+            color: #000;
+            text-decoration: none;
+        }
+</style>
+@using (Html.BeginForm("Login", "Login", new { isExpressBuy = false, returnUrl = Request.QueryString["returnUrl"] }))
+{
+    @Html.AntiForgeryToken()
+    <div class="example" data-text="">
+        @Html.Hidden("externalCallbackType", "google")
+
+        <div class="grid">
+            @if (TempData["Message"] != null)
+            {
+                <div class="breadcrumbs dark">
+                    @TempData["Message"]
+                </div>
+            }
+            @Html.ValidationSummary(true)
+            @{
+            string cityName = "";
+            if (Request.Cookies["CityCookie"] != null && Request.Cookies["CityCookie"].Value != "")
+            {
+                cityName = Request.Cookies["CityCookie"].Value.Split('$')[1].ToLower();
+            }
+            }
+            <div class="row cells2">
+                <div class="cell">
+                    <label>Email ID</label>
+                    @if (ViewBag.returnurl != null)
+                    {
+                        @Html.Hidden("returnurl", (string)ViewBag.returnurl)
+                    }
+                    <div class="input-control text full-size">
+                        @Html.TextBox("email1", (string)ViewBag.email, new { maxlength = 150, autocomplete = "off" })
+                        @Html.Hidden("email", (string)ViewBag.email)
+                    </div>
+                    <div style="margin-top: 15px;">
+                        <button id="btnLogin" type="submit" style="float:left;" value="Login" class="button success"><span id="spnLoader" style="display:none;float:left;" class="mif-spinner4 mif-ani-spin"></span>Continue</button>
+                    </div>
+                    <br />
+                </div>
+                <div class="cell">
+                    <h4>Advantages Of Registration</h4>
+                    <div>
+                        <div>
+                            <span class="mif-truck "></span>
+                            <span>
+                                Manage your Orders
+                                Easily Track Orders, Hassle free Returns
+                            </span>
+                        </div>
+                        <div>
+                            <span class="mif-bell"></span>
+                            <span>
+                                Make Informed Decisions
+                                Get Relevant Alerts and Recommendations
+                            </span>
+                        </div>
+                        <div>
+                            <span class="mif-heart"></span>
+                            <span>
+                                Engage Socially
+                                With wish lists, Reviews, Ratings
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}

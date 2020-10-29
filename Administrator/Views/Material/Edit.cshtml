@@ -1,0 +1,71 @@
+﻿@model ModelLayer.Models.Material
+
+@{
+    ViewBag.Title = "Edit";
+}
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+    
+    <div class="span10" id="content">
+        <div class="row-fluid">
+            <div class="box span6">
+                <div class="box-header">
+                    <h2><i class="halflings-icon user"></i><span class="break"></span>Material Edit</h2>
+
+                </div>
+                <div class="box-content">
+                    @if (ViewBag.Messaage != null)
+                    {
+                        @Html.Label("Messaage", (string)ViewBag.Messaage, new { @class = "deleteMsg" })
+                    }
+                    else
+                    {
+                        @Html.Label("Messaage", "", new { @class = "deleteMsg" })
+                    }
+                    <div class="form-horizontal">
+                        @Html.ValidationSummary(true)
+                        @Html.HiddenFor(model => model.ID)
+
+                        <div class="control-group">
+                            @Html.LabelFor(model => model.Name, new { @class = "control-label col-md-2" })
+                            <div class="col-md-10 controls">
+                                @Html.EditorFor(model => model.Name)
+                                @Html.ValidationMessageFor(model => model.Name)
+                            </div>
+                        </div>
+
+                        <div class="control-group">
+                            @Html.LabelFor(model => model.IsActive, new { @class = "control-label col-md-2" })
+                            <div class="col-md-10 controls">
+                                @Html.EditorFor(model => model.IsActive)
+                                @Html.ValidationMessageFor(model => model.IsActive)
+                            </div>
+                        </div>
+
+                        <div class="form-actions">
+                            <div class="col-md-offset-2 col-md-10">
+                                <input type="submit" value="Save" class="btn btn-success" />
+                                @Html.ActionLink("Back to List", "Index", string.Empty, new { @class = "btn " })
+                            </div>
+                            @if (ViewBag.lblError != null)
+                            {
+                                @Html.Label("lblError", (string)ViewBag.lblError)
+                            }
+                        </div>
+                    </div>
+                    <div>
+                        
+                    
+                    </div>
+                </div>
+            </div>
+        </div>
+     </div>
+}
+
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}

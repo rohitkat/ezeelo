@@ -1,0 +1,167 @@
+﻿@model ModelLayer.Models.ViewModel.CustomerRegistrationViewModel
+@{
+    int franchiseID = 0;////added
+    if (Request.Cookies["CityCookie"] != null)
+    {
+        string cityName = Request.Cookies["CityCookie"].Value.Split('$')[1];
+        franchiseID = Convert.ToInt32(Request.Cookies["CityCookie"].Value.Split('$')[2]);////added
+
+    }
+    Layout = "~/Views/Shared/_Layout_Internal.cshtml";
+    ViewBag.Title = "eZeelo: Electronics, Fashion, Coupons, Home Appliances | Lowest Price"; //Yashaswi 01/12/2018 Default City Change 
+}
+<style>
+    body {
+        background-color: white;
+    }
+
+    .newselect {
+        border: none;
+        border-radius: 0px 0px 0px 0px !important;
+        background: transparent;
+        width: 150px;
+        padding: 5px 35px 5px 5px;
+        font-size: .875rem;
+        border: 1px solid #eaeaea;
+        height: 34px;
+        /*-webkit-appearance: none;*/
+        /*-moz-appearance: none;*/
+        appearance: none;
+        /*background: url(../Content/Images/drop.gif) 98% / 3% no-repeat #fff !important;*/
+    }
+</style>
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+    <div class="row" style="text-align: center;">
+        <span id="errorMessage" class="breadcrumbs dark" style="width:100%;text-align:center"></span>
+    </div>
+    <div class="col-lg-3 col-md-3 col-sm-3"></div>
+    <div class="form-horizontal  col-lg-6 col-md-6 col-sm-6">
+        <div class="example" style="border: 2px solid #eaeaea;box-shadow: 3px 5px 25px #eaeaea;">
+            <div class="grid">
+                <h4 style="margin-left:0px;">Register</h4>
+                @if (ViewBag.Message != null)
+                {
+                    <div class="breadcrumbs dark">
+                        @ViewBag.Message
+                        <a href="@Url.Action("login", "Login")" style="text-decoration:underline;margin-left:5px;" title="login">
+                            Login to continue
+                        </a>
+                    </div>
+                }
+
+                <div class="cell" style="height:60px;">
+                    <div class="input-control text full-size">
+                        @Html.TextBoxFor(model => model.FirstName, new { placeholder = "Name", maxlength = 50, autocomplete = "off" })
+                        @Html.ValidationMessageFor(model => model.FirstName)
+                    </div>
+                </div>
+                <div class="cell" style="height:60px;">
+                    <div class="input-control text full-size">
+                        @Html.TextBoxFor(model => model.MobileNo, new { placeholder = "Mobile No", maxlength = 10, autocomplete = "off" })
+                        @Html.ValidationMessageFor(model => model.MobileNo)
+                    </div>
+                </div>
+                <div class="cell" style="height:60px;">
+                    <div class="input-control text full-size">
+                        @Html.TextBoxFor(model => model.EmailId, new { placeholder = "Email Id", maxlength = 150, autocomplete = "off", onchange = "ValidateEmail(this)" })
+                        @Html.ValidationMessageFor(model => model.EmailId)
+                    </div>
+                </div>
+                <div class="cell" style="display:none">
+                    <div class="input-control text full-size">
+                        @Html.DropDownListFor(model => model.ID, (SelectList)ViewBag.salutation, new { @class = "newselect " })
+                        @Html.ValidationMessageFor(model => model.ID)
+                        @Html.HiddenFor(model => model.ID)
+                    </div>
+                </div>
+
+                <div class="row " style="display:none">
+                    <div class="cell">
+                        <div class="input-control text full-size">
+                            @Html.TextBoxFor(model => model.MiddleName, new { placeholder = "Middle Name", maxlength = 50, autocomplete = "off" })
+                            @Html.ValidationMessageFor(model => model.MiddleName)
+                        </div>
+                    </div>
+                    <div class="cell">
+                        <div class="input-control text full-size">
+                            @Html.TextBoxFor(model => model.LastName, new { placeholder = "Last Name", maxlength = 50, autocomplete = "off" })
+                            @Html.ValidationMessageFor(model => model.LastName)
+                        </div>
+                    </div>
+                </div>
+
+                <div class="cell" style="height:60px;">
+                    <div class="input-control text full-size">
+                        @Html.PasswordFor(model => model.Password, new { placeholder = "Password", maxlength = 100, autocomplete = "off" })
+                        @Html.ValidationMessageFor(model => model.Password)
+                    </div>
+                </div>
+                <div class="cell" style="height:60px;">
+                    <div class="input-control text full-size">
+                        @Html.PasswordFor(model => model.ConfirmPassword, new { placeholder = "Confirm Password", maxlength = 100, autocomplete = "off" })
+                        @Html.ValidationMessageFor(model => model.ConfirmPassword)
+                    </div>
+                </div>
+                <div class="cell">
+                    <button type="submit" value="Create" id="submit" class="button success">Register</button>
+                    <br />
+                </div>
+
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-3 col-md-3 col-sm-3"></div>
+}
+
+<script>
+    function ValidateEmail(obj) {
+        var email = $(obj).val();
+        var filter = /^([\w-\.]+@@([\w-]+\.)+[\w-]{2,4})?$/;
+        $('#divEmailError').hide();
+        if (filter.test(email)) {
+            return true;
+        }
+        else {
+            $('#divEmailError').show();
+            $('#divEmailError').html('Invalid Email [' + email + ']');
+            $('#userLogin_Email').val('');
+            $('#userLogin_Email').focus();
+            $("#mask").hide();
+            return false;
+        }
+    }
+    $(document).ready(function () {
+
+        $('#submit').click(function () {
+            var EmailId = $("#EmailId").val();
+            var MobileNo = $("#MobileNo").val();
+            var pwd = $("#Password").val();
+            var cnfrmPwd = $("#ConfirmPassword").val();
+
+            var Emailfilter = /^([\w-\.]+@@([\w-]+\.)+[\w-]{2,4})?$/;
+            var MobileFilter = /^([6-9]{1}[0-9]{9})$/;
+
+            if (EmailId == '' && MobileNo == '') {
+                // alert('Please Provide Mobile No or Email ID');
+                $("#errorMessage").html('Please Provide your Email or Mobile No...!!');
+                $("#mask").hide();
+                return false;
+            }
+            else if (!Emailfilter.test(EmailId) || !MobileFilter.test(MobileNo) || (pwd != cnfrmPwd)) {
+                $("#mask").hide();
+            }
+            else {
+                $("#mask").show();
+            }
+
+        });
+
+    });
+</script>
+
+
+@section Scripts{
+    @Scripts.Render("~/bundles/jqueryval")
+}

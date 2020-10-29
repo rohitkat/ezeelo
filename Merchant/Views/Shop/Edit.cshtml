@@ -1,0 +1,509 @@
+﻿@model ModelLayer.Models.Shop
+
+@{
+    ViewBag.Title = "Edit";
+    Layout = null;
+}
+<style>
+    .field-validation-error {
+        color: #000000 !important;
+        margin-top:-8px!important;
+    }
+    .succes-msg {
+        color: #31A012;
+        font-size: 20px;
+    }
+    
+</style>
+
+
+<script type="text/javascript" src="http://code.jquery.com/jquery.min.js"></script>
+<script type="text/javascript">
+   $(document).ready(function () {
+       $('#CheckOutsource').change(function () {
+           if ('#CheckOutsource'.checked)
+                $('.freeDeliveryBox').toggle();
+            else
+               $('.freeDeliveryBox').toggle();
+
+        });
+   });
+   $(document).ready(function () {
+       $('#CheckFreeDelivery').change(function () {
+           if ('#CheckOutsource'.checked)
+               $('.freeDeliveryBox2').toggle();
+           else
+               $('.freeDeliveryBox2').toggle();
+
+       });
+   });
+
+</script>
+
+<link href="~/Content/assets/css/style.css" rel="stylesheet"/>
+<script src="~/Content/js/jquery-1.9.1.min.js"></script>
+@*<script src="~/Content/js/jquery.easing.min.js"></script>*@
+<link href="http://www.jqueryscript.net/css/jquerysctipttop.css" rel="stylesheet" type="text/css">
+<link href="~/Content/assets/css/form-design.css" rel="stylesheet" />
+
+<div id="content" class="span10">
+    <div style ="margin-top:20px;">
+        @if (ViewBag.Message != null)
+{
+    <span class="succes-msg" style="margin: 0 12px;">@ViewBag.Message</span>
+}
+    </div>
+    @using (Html.BeginForm())
+    {
+        @Html.AntiForgeryToken()
+        <div class="row-fluid">
+            <div class="box span12">
+                <div class="box-content">
+
+                    <div class="form-horizontal" id="msform1">
+                        @Html.ValidationSummary(true)
+                        @Html.HiddenFor(model => model.ID)
+                        <div class="control-group mrg-btm clearfix">
+                            <div class="NameDescription">
+                                <div class="control-group mrg-left">
+
+                                    @Html.LabelFor(model => model.Name, new { @class = " " })
+                                    <div class="">
+                                        @Html.TextBoxFor(model => model.Name, new {required="required" ,@class="input-width"} )
+                                        @Html.ValidationMessageFor(model => model.Name)
+                                    </div>
+                                </div>
+
+                                <div class="control-group mrg-left">
+                                    @Html.LabelFor(model => model.Website, new { @class = " " })
+                                    <div class="">
+                                        @Html.TextBoxFor(model => model.Website, new { @class = "input-width" })
+                                        @Html.ValidationMessageFor(model => model.Website)
+                                    </div>
+                                </div>
+
+                                <div class="control-group mrg-left">
+                                    @Html.LabelFor(model => model.Lattitude, new { @class = " " })
+                                    <div class="">
+                                        @Html.TextBoxFor(model => model.Lattitude, new { @class = "input-width" })
+                                        @Html.ValidationMessageFor(model => model.Lattitude)
+                                    </div>
+                                </div>
+                                <div class="control-group mrg-left">
+                                    @Html.LabelFor(model => model.Longitude, new { @class = " " })
+                                    <div class="">
+                                        @Html.TextBoxFor(model => model.Longitude, new { @class = "input-width" })
+                                        @Html.ValidationMessageFor(model => model.Longitude)
+                                    </div>
+                                </div>
+                               
+                                <div class="control-group mrg-left">
+                                    @Html.LabelFor(model => model.OpeningTime, "Opening Time", new { })
+                                    <div class="">
+                                        @Html.TextBoxFor(model => model.OpeningTime, new { @type = "time", @class = "input-width" })
+                                        @Html.ValidationMessageFor(model => model.OpeningTime)
+                                    </div>
+                                </div>
+                                <div class="control-group mrg-left">
+                                    @Html.LabelFor(model => model.ClosingTime, "Closing Time", new { })
+                                    <div class="">
+                                        @Html.TextBoxFor(model => model.ClosingTime, new { @type = "time", @class = "input-width" })
+                                        @Html.ValidationMessageFor(model => model.ClosingTime)
+                                    </div>
+                                </div>
+                               
+
+                              
+                                <div class="control-group mrg-left">
+                                    @Html.LabelFor(model => model.PincodeID, "Pincode ID")
+                                    <div class="">
+                                      
+                                        @Html.TextBox("Pincode", null, new { @id = "Pincode", @class = "form-control-Widout-block input-width", @placeholder = "Enter Pincode", @onkeypress = "return isValidPincode(event)", required = "required" })
+                                        <img id="Pincode_loading" src="~/Content/Images/ajax_loader.gif" style="height: 20px; float:right; display:none" />
+                                        <div id="divPincodeError" class="alert-danger focused divPincodeError-Class" style="display:none;">  </div>
+
+                                    </div>
+                                </div>
+                                <div class="control-group mrg-left" id="divAddress2">
+                                    @Html.LabelFor(model => model.Area)
+
+                                    <div class="">
+                                        @Html.DropDownList("AreaID", String.Empty)
+                                        @Html.ValidationMessageFor(model => model.AreaID)
+                                    </div>
+                                    </div>
+                                <div class="control-group mrg-left" id="divAddress">
+                                 
+                                </div>
+                            </div>
+                        </div>
+                        <div style="margin-top:20px" class="mrg-left">
+                            <div class="control-group clearfix">
+                               
+                                <div class="">
+                                    @Html.TextAreaFor(model => model.Address, new { @class = "discrip_box max-width max-width-1 ", placeholder = "Address" })
+                                    @Html.ValidationMessageFor(model => model.Address)
+                                </div>
+                            </div>
+                        </div>
+                      <div class="control-group mrg-btm clearfix">
+                            <div class="NameDescription">
+                                <div class="control-group mrg-left">
+                                    @Html.LabelFor(model => model.NearestLandmark, "Nearest Landmark", new { @class = " " })
+                                    <div class="">
+                                        @Html.TextBoxFor(model => model.NearestLandmark, new { @class = "input-width" })
+                                        @Html.ValidationMessageFor(model => model.NearestLandmark)
+                                    </div>
+                                </div>
+                                <div class="control-group mrg-left">
+                                    @Html.LabelFor(model => model.ContactPerson, "Contact Person", new { @class = " " })
+                                    <div class="">
+                                        @Html.TextBoxFor(model => model.ContactPerson, new { required = "required",@class ="input-width" })
+                                        @Html.ValidationMessageFor(model => model.ContactPerson)
+                                    </div>
+                                </div>
+
+                                <div class="control-group mrg-left">
+                                    @Html.LabelFor(model => model.Email, new { @class = " " })
+                                    <div class="">
+                                        @Html.TextBoxFor(model => model.Email, new { required = "required", @class = " input-width" })
+                                        @Html.ValidationMessageFor(model => model.Email)
+                                    </div>
+                                </div>
+                                <div class="control-group mrg-left">
+                                    @Html.LabelFor(model => model.Mobile, new { @class = " " })
+                                    <div class="">
+                                        @Html.TextBoxFor(model => model.Mobile, new { required = "required", @class = " input-width" })
+                                        @Html.ValidationMessageFor(model => model.Mobile)
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="control-group mrg-btm clearfix">
+                            <div class="NameDescription">
+
+
+                                <div class="control-group mrg-left">
+                                    @Html.LabelFor(model => model.Landline, new { @class = " " })
+                                    <div class="">
+                                        @Html.TextBoxFor(model => model.Landline, new { @class = "input-width" })
+                                        @Html.ValidationMessageFor(model => model.Landline)
+                                    </div>
+                                </div>
+
+                                <div class="control-group mrg-left">
+                                    @*Modified by Zubair on 30-06-2017*@
+                                    @*@Html.LabelFor(model => model.FAX, new { @class = " " })*@
+                                    <label for="GST" id="lblGstNo">GST Number</label>
+                                    @*End*@
+                                    <div class="">
+                                        @Html.TextBoxFor(model => model.FAX, new {maxlength = 15, @class = "input-width" })
+                                        @Html.ValidationMessageFor(model => model.FAX)
+                                    </div>
+                                </div>
+                                <div class="control-group mrg-left">
+                                    @Html.LabelFor(model => model.VAT, new { @class = " " })
+                                    <div class="">
+                                        @Html.TextBoxFor(model => model.VAT, new { @class = "input-width" })
+                                        @Html.ValidationMessageFor(model => model.VAT)
+                                    </div>
+                                </div>
+
+                                <div class="control-group mrg-left">
+                                    @Html.LabelFor(model => model.TIN, new { @class = " " })
+                                    <div class="">
+                                        @Html.TextBoxFor(model => model.TIN, new { @class = "input-width" })
+                                        @Html.ValidationMessageFor(model => model.TIN)
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="control-group mrg-btm clearfix">
+                            <div class="NameDescription">
+                                <div class="control-group mrg-left">
+                                    @Html.LabelFor(model => model.PAN, new { @class = " " })
+                                    <div class="">
+                                        @Html.TextBoxFor(model => model.PAN, new { @class = "input-width" })
+                                        @Html.ValidationMessageFor(model => model.PAN)
+                                    </div>
+                                </div>
+                                <div class="control-group mrg-left">
+                                    @Html.LabelFor(model => model.WeeklyOff, "Weekly Off", new { @class = " " })
+                                    <div class="">
+                                        @Html.TextBoxFor(model => model.WeeklyOff, new { @class = "input-width" })
+                                        @Html.ValidationMessageFor(model => model.WeeklyOff)
+                                    </div>
+                                </div>
+                             
+                                <div class="control-group mrg-left">
+                                    
+                                    <div class="">
+                                        @Html.HiddenFor(model => model.DeliveryPartnerId)
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+
+                        <div style="margin-top:20px">
+                            <div class="NameDescription">
+                                <div class="control-group mrg-left">
+                                    @Html.LabelFor(model => model.SearchKeywords, "Search Keywords ", new{ })
+                                    <div class="">
+                                        @Html.TextBoxFor(model => model.SearchKeywords, new { required = "required", @class = "input-width" })
+                                        @Html.ValidationMessageFor(model => model.SearchKeywords)
+                                    </div>
+                                </div>
+
+                                <div class="control-group mrg-left">
+                                    @Html.LabelFor(model => model.ReturnDurationInDays, "Return Duration In Days", new { @class = "" })
+                                    <div class="">
+                                        @Html.TextBoxFor(model => model.ReturnDurationInDays,new{ required ="required", @class = "input-width" })
+                                        @Html.ValidationMessageFor(model => model.ReturnDurationInDays)
+                                    </div>
+                                </div>
+
+                                <div class="control-group mrg-left">
+                                   
+                                    <div class="">
+                                        @Html.HiddenFor(model => model.FranchiseID)
+                                       
+                                    </div>
+                                </div>
+                                <div class="control-group mrg-left max-width">
+                                   
+                                    <div class="">
+                                      
+                                        @Html.HiddenFor(model => model.CreateBy)
+                                        @Html.ValidationMessageFor(model => model.CreateBy)
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="box-content">
+                            <div style="margin-top:20px" class="mrg-left">
+                                <div class="NameDescription">
+                                    <div class="control-group deco-Checkbox clearfix">
+                                        <ul>
+                                            <li>
+                                                <label class="checkbox inline">
+                                                    <span>
+                                                        @Html.EditorFor(model => model.IsActive )
+                                                        @Html.ValidationMessageFor(model => model.IsActive)
+                                                    </span>
+                                                    @Html.LabelFor(model => model.IsActive, "Is Active", new { @class = "control-label " })
+                                                </label>
+                                            </li>
+                                            <li>
+                                                <label class="checkbox inline">
+                                                    <span>
+                                                        @Html.EditorFor(model => model.CurrentItSetup)
+                                                        @Html.ValidationMessageFor(model => model.CurrentItSetup)
+                                                    </span>
+                                                    @Html.LabelFor(model => model.CurrentItSetup, "Current It Setup", new { @class = "control-label" })
+                                                </label>
+
+                                            </li>
+                                            <li>
+                                                <label class="checkbox inline">
+                                                    <span>
+                                                        @Html.EditorFor(model => model.InstitutionalMerchantPurchase)
+                                                        @Html.ValidationMessageFor(model => model.InstitutionalMerchantPurchase)
+                                                    </span>
+                                                    @Html.LabelFor(model => model.InstitutionalMerchantPurchase, "Institutional Merchant Purchase", new { @class = "control-label" })
+                                                </label>
+
+                                            </li>
+                                            <li>
+                                                <label class="checkbox inline">
+                                                    <span>
+                                                        @Html.EditorFor(model => model.InstitutionalMerchantSale)
+                                                        @Html.ValidationMessageFor(model => model.InstitutionalMerchantSale)
+                                                    </span>
+                                                    @Html.LabelFor(model => model.InstitutionalMerchantSale, "Institutional Merchant Sale", new { @class = "control-label" })
+                                                </label>
+
+
+                                            </li>
+                                            <li>
+                                                <label class="checkbox inline">
+                                                    <span>
+                                                        @Html.EditorFor(model => model.NormalSale)
+                                                        @Html.ValidationMessageFor(model => model.NormalSale)
+                                                    </span>
+                                                    @Html.LabelFor(model => model.NormalSale, "Normal Sale", new { @class = "control-label" })
+                                                </label>
+
+
+                                            </li>
+                                            <li>
+                                                <label class="checkbox inline">
+                                                    <span>
+                                                        @Html.EditorFor(model => model.IsAgreedOnReturnProduct)
+                                                        @Html.ValidationMessageFor(model => model.IsAgreedOnReturnProduct)
+                                                    </span>
+                                                    @Html.LabelFor(model => model.IsAgreedOnReturnProduct, "Is Agreed On Return Product", new { @class = " control-label" })
+                                                </label>
+                                            </li>
+                                        </ul>
+                                      
+                                        <ul>
+                                           
+
+                                            <li>
+                                                <label class="checkbox inline">
+                                                    <span>
+                                                        @Html.EditorFor(model => model.IsLive)
+                                                        @Html.ValidationMessageFor(model => model.IsLive)
+                                                    </span>
+                                                    @Html.LabelFor(model => model.IsLive, "Is Live", new { @class = " control-label" })
+                                                </label>
+
+                                            </li>
+                                            <li>
+                                                <label class="checkbox inline">
+                                                    <span>
+                                                        @Html.EditorFor(model => model.IsManageInventory)
+                                                        @Html.ValidationMessageFor(model => model.IsManageInventory)
+                                                    </span>
+                                                    @Html.LabelFor(model => model.IsManageInventory, "Is Manage Inventory", new { @class = " control-label" })
+                                                </label>
+
+                                            </li>
+                                            <li>
+                                                <label class="checkbox inline">
+                                                    <span>
+                                                       
+                                                        @Html.CheckBoxFor(model => model.IsDeliveryOutSource, new { @id = "CheckOutsource", @checked="checked"})
+                                                        @Html.ValidationMessageFor(model => model.IsDeliveryOutSource)
+                                                    </span>
+                                                    @Html.LabelFor(model => model.IsDeliveryOutSource, "Is Delivery Out Source", new { @class = " control-label" })
+                                                </label>
+                                                <div class="freeDeliveryBox" style="display:block;">
+                                                    <label class="checkbox inline">
+                                                        <span>
+
+                                                            @Html.CheckBoxFor(model => model.IsFreeHomeDelivery, new { @id = "CheckFreeDelivery" })
+                                                            @Html.ValidationMessageFor(model => model.IsFreeHomeDelivery)
+                                                        </span>
+                                                        @Html.LabelFor(model => model.IsFreeHomeDelivery, "Is Free Home Delivery", new { @class = " control-label" })
+                                                    </label>
+                                                    <div class="freeDeliveryBox2" style="display:none;">
+                                                        @Html.LabelFor(model => model.MinimumAmountForFreeDelivery, "Minimum Amount Fo rFree Delivery", new { @class = " " })
+                                                        <div class="set-input-wdth">
+                                                            @Html.TextBoxFor(model => model.MinimumAmountForFreeDelivery, new { required = "required" })
+                                                            @Html.ValidationMessageFor(model => model.MinimumAmountForFreeDelivery)
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                               
+
+                                            </li>
+
+
+                                        </ul>
+
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                        <div class="box-content" style="width:200px;">
+                            <input type="submit" value="Save" class="btn btn-default btn-Ifrm-submit mrg-left mrg-top" />
+                        </div>
+
+                        </div>
+                </div>
+
+            </div>
+
+        </div>
+    }
+</div>
+
+<script src="~/Content/js/jquery-2.1.3.min.js"></script>
+<script type="text/javascript">
+    //alert("1");
+    var lPincode = $('#Pincode').val()
+    //alert("2");
+    $('#Pincode').bind('input propertychange', function () {
+        var lPincode = $('#Pincode').val()
+        $('#divPincodeError').hide();
+
+        if (lPincode.length == 6) {
+            $('#Pincode_loading').show();
+            $.ajax({
+                url: '@Url.Action("GetAddress", "Shop")?Pincode=' + lPincode,
+                type: "GET",
+                //success: function (result) {
+                //    //$('#divAddress').html(result);
+                //    $('#Pincode_loading').hide();
+                //    $('#divPincodeError').hide();
+                //    if (result == "1") {
+                //        $('#divPincodeError').show();
+                //        $('#divPincodeError').html('Pincode [' + lPincode + '] dose not exist, please Contact to ADMIN');
+                //        $('#Pincode').val('');
+                //    }
+                //},
+                //error: function (data) {
+                //    //alert('Pincode : ' + lPincode + ' Dose Not Exist, please Contact to ADMIN');
+                //    //$('#divAddress').empty();
+                //    //$('#Pincode_loading').hide();
+                //    $('#divPincodeError').hide();
+                //    //$('#divPincodeError').html('Pincode [' + lPincode + '] dose not exist, please Contact to ADMIN');
+                //    //$('#Pincode').val('');
+                //}
+                success: function (result) {
+                    $('#divAddress').html(result);
+                    $('#divAddress2').hide();
+                    $('#Pincode_loading').hide();
+                    $('#divPincodeError').hide();
+                },
+                error: function (data) {
+                    //alert('Pincode : ' + lPincode + ' Dose Not Exist, please Contact to ADMIN');
+                    $('#divAddress').empty();
+                    $('#Pincode_loading').hide();
+                    $('#divPincodeError').show();
+                    $('#divPincodeError').html('[' + lPincode + '] dose not exist, Contact to ADMIN');
+                    $('#Pincode').val('');
+                }
+            });
+        }
+    });
+
+
+
+    $("select#Pincode").bind('change', function () {
+
+        var Pincode = $("select#Pincode option:selected").val();
+
+        $.ajax({
+            type: "POST",
+            url: '@Url.Action("GetAreaIDByPincodeID", "Shop")',
+            data: { 'Pincode': Pincode },
+            //dataType: "json",
+            cache: false,
+            success: function (msg) {
+                $('#ddlArea').empty();
+                //$('#ddlCategoryLevel2').empty();
+                //$('#ddlProduct').empty();
+                $('#ddlArea').append('<option value=0>--Select--</option>');
+                //$('#ddlArea').append('<option value=0>--Select--</option>');
+                //$('#ddlProduct').append('<option value=0>--Select--</option>');
+                $.each(msg, function (index, item) {
+                    $('#ddlArea').append('<option value=' + item.ID + '>' + item.Name + '</option>');
+                });
+            },
+            error: function (x, e) {
+                //alert('Failure');
+                //alert("The call to the server side failed. " + x.responseText);
+            }
+        });
+
+        //}
+    });
+
+</script>

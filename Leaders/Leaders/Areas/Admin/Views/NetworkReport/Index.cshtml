@@ -1,0 +1,94 @@
+﻿@model ModelLayer.Models.NetworkReportViewModel
+
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_LeadersLayout.cshtml";
+}
+
+@section styles{
+    @Styles.Render("//cdn.datatables.net/1.10.19/css/jquery.dataTables.min.css")
+
+    <style>
+        .pro_th thead tr th {
+            font-size: 12px;
+            border-bottom: 1px solid #EEE;
+            padding: 6px 0;
+            background-color: #26A69A;
+        }
+
+        .pro_th tbody td {
+            font-size: 12px;
+            text-align: center;
+            border: 1px solid #EEE;
+        }
+
+            .pro_th tbody td.btn-set {
+                white-space: nowrap;
+            }
+
+        .dataTables_length {
+            margin-left: 0px !important;
+            margin-top: 7px;
+        }
+
+        .pagination {
+            margin: 0 26px;
+        }
+
+        form {
+            margin: 0 0 -15px;
+        }
+    </style>
+
+}
+<div class="row">
+    <div class="col-2">
+        <legend>Network Report Of</legend>
+
+    </div>
+    <div class="col-2">
+        <legend style="color:blue;">@ViewBag.UserName</legend>
+
+    </div>
+    <div class="col-2">
+        <legend style="color:blue;">@ViewBag.Email</legend>
+    </div>
+</div>
+<div class="row">
+    <div class="col-2">
+        <legend style="color:blue;">@ViewBag.Designation</legend>
+    </div>
+
+    <div class="col-2">
+        <legend style="color:blue;">@ViewBag.Mobile</legend>
+    </div>
+    <div class="col-2">
+        <legend style="color:blue;">@ViewBag.MemberCount</legend>
+    </div>
+    <div class="col-2">
+        <legend style="color:blue;">@ViewBag.DateRange</legend>
+    </div>
+</div>
+@Html.HiddenFor(x => x.UserID)
+<div class="row">
+    <label for="txt_search">Search : </label>
+    <input type="text" id="txt_search" name="search" placeholder="Name/Mobile" autocomplete="off" />
+    <input type="button" class="btn btn-primary" value="Search" name="btnSearch" id="btnSearch" />
+</div>
+<div class="row">
+    <div class="col-md-12 col-sm-12 col-xs-12">
+        <div class="table-responsive" style="background-color:#fff;">
+            <table id="grid-networkReportList" class="table table-striped table-bordered dt-responsive nowrap" style="width: 100%;" cellspacing="0">
+            </table>
+        </div>
+    </div>
+</div>
+
+<a href="@Url.Action("Index", "MLMUser", new {area="Admin" })">Back To List</a>
+
+<div class="col-2">
+    <input type="button" name="btnExcel" id="btnExcel" value="Export To Excel" class="btn btn-primary" />
+</div>
+@section scripts{
+    @Scripts.Render("//cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js", "~/Areas/Admin/Scripts/NetworkReport/index.js")
+}

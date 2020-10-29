@@ -1,0 +1,97 @@
+﻿@model IEnumerable<ModelLayer.Models.Career>
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<style>
+    .dataTables_length {
+        margin-left: 0px;
+    }
+
+    .pagination {
+        margin: 0 40px;
+    }
+</style>
+<div id="content" class="span10">
+    <ul class="breadcrumb">
+        <li>
+            <a href="#">Career/Index</a>
+        </li>
+    </ul>
+
+    <div class="row-fluid">
+
+        <div class="box span12">
+            <div class="box-header">
+                <h2><i class="icon-edit"></i><span class="break"></span>@Html.ActionLink("Create New", "Create")</h2>
+
+            </div>
+            <div class="box-content">
+                <table class="table table-striped table-bordered bootstrap-datatable datatable">
+                    <thead>
+                        <tr>
+                            <th style="width: 60px">
+                                Job Title
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.Education)
+                            </th>
+                            <th style=" width: 145px;">
+                               Experience Required
+                            </th>
+                            <th>
+                               Skill Required
+                            </th>
+                            <th style=" width: 95px;">
+                                No Of Opening 
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.Location)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.IsActive)
+                            </th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model)
+                        {
+                            <tr>
+                                <td style="width: 60px">
+                                    @Html.DisplayFor(modelItem => item.Jobtitle)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Education)
+                                </td>
+                                <td style=" width: 145px;">
+                                    @Html.DisplayFor(modelItem => item.ExperienceRequired)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.SkillRequired)
+                                </td>
+                                <td style=" width: 95px;">
+                                    @Html.DisplayFor(modelItem => item.NoOfOpening)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Location)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.IsActive)
+                                </td>
+                                <td style="width:120px;">
+                                    @Html.ActionLink("Edit", "Edit", new { id = item.ID }, new { @class = "btn btn-small btn-success" })
+                                    @Html.ActionLink("Details", "Details", new { id = item.ID }, new { @class = "btn btn-small btn-primary" })
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div><!--/span-->
+
+    </div>
+
+</div>
+

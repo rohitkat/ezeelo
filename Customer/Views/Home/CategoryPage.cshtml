@@ -1,0 +1,286 @@
+﻿@model IEnumerable<ModelLayer.Models.ViewModel.CategoryPageViewModel>
+@using System.Text.RegularExpressions;
+@using System.Globalization;
+<style>
+    .product-caption {
+        padding: 10px 2px;
+        position: relative;
+    }
+
+    .row[data-gutter="15"] > [class^="col-"] {
+        padding-left: 2.5px;
+        padding-right: 2.5px;
+        margin-bottom: 15px;
+    }
+
+    .product-img-wrap:hover {
+        -webkit-transform: scale(1.1);
+        transform: scale(1.1);
+    }
+</style>
+<script type="text/javascript">
+    //-------------Code By Mohit To save GB Track for ----------------//
+    $(function () {
+        // alert("ggggg");
+        $.ajax({
+            url: '@Url.Action("InsertGBTrack", "GBTrack")?URL=' + window.location.href,
+            type: "GET",
+            success: function (result) {
+            },
+            error: function (data) {
+            }
+        });
+    });
+    //-------------End of Code By Mohit To save GB Track for ----------------//
+
+</script>
+@*<script src="~/Content/update(5-10)/js/jquery-1.11.2.min.js"></script>*@
+<script type="text/javascript">
+    function AddProduct(shopStockId, itemId) {
+        var _url = '@Url.Action("AddProductInShoppingCart", "Product")';
+        AddProductToShppingCart(shopStockId, itemId, _url);
+        //alert(itemId);
+        //AddProductToShppingCartWithoutQuantity(shopStockId, itemId, _url);
+        //alert(_url)
+    }
+</script>
+<script>
+    $(document).ready(function () {
+        if ($(window).width() <= 960) {
+            //alert('Less than 960');
+            $(".cateogry-filters-list").removeClass("in");
+        }
+        else {
+            //alert('More than 960');
+            $(".cateogry-filters-list").addClass("in");
+        }
+    });
+</script>
+
+<script>
+    $(document).ready(function () {
+        $("[id*=filtercate]").click(function () {
+            //$(".cateogry-filters-list").toggle(1000);
+            $(this).parent().find(".cateogry-filters-list").toggle(1000);
+        });
+    });
+</script>
+<script src="~/Scripts/Products.js"></script>
+@{
+    string cityName = "";
+    string cityID = "";
+    int franchiseID = 0;////added
+    if (Request.Cookies["CityCookie"] != null && Request.Cookies["CityCookie"].Value != "")
+    {
+        cityName = Request.Cookies["CityCookie"].Value.Split('$')[1].ToLower();
+        cityID = Request.Cookies["CityCookie"].Value.Split('$')[0].Trim();
+        franchiseID = Convert.ToInt32(Request.Cookies["CityCookie"].Value.Split('$')[2]);////added
+    }
+}
+
+@using (Html.BeginForm())
+{
+    if (ViewBag.SessionValue == null || ViewBag.SessionValue == 0)
+    {
+        @Html.Hidden("hdnSessionValue", "0")
+    }
+    else
+    {
+        @Html.Hidden("hdnSessionValue", (long)ViewBag.SessionValue)
+    }
+
+}
+@{string lOneCatName = Regex.Replace(ViewBag.CatName.Substring(0, Math.Min(ViewBag.CatName.Length, 30)), @"[\/\\#,+()$~%.':*?<>{} ]", "-").Replace("&", "and").ToLower();}
+
+@foreach (var item in Model)
+{
+    <div class="gap for-cat-age"></div>
+    <div class="col-md-3 panel-group">
+        <aside class="category-filters animated fadeInUp">
+            <div class="category-filters-section">
+                @if (item.CategoryName != null)
+                {
+                    string itemName = Regex.Replace(item.CategoryName.Substring(0, Math.Min(item.CategoryName.Length, 30)), @"[\/\\#,+()$~%.':*?<>{} ]", "-").Replace("&", "and").ToLower();
+                    //***** SEO URL Structure RULE by Ashish 18/11/2016 ******//
+                    itemName = Regex.Replace(itemName, @"\-+", "-");
+                    itemName = itemName.Trim(new[] { '-' });
+                    //***** END SEO URL Structure RULE by Ashish 18/11/2016 ******//
+
+                    <h3 class="widget-title-sm" id="filtercate_@item.ID">
+                        @*<a href="@Url.RouteUrl("CategoryPages", new { catName = itemName, catID = item.ParentCategoryID, secLvlCatID = item.ID, city = cityName, franchiseId = franchiseID })">
+                                 @item.CategoryName
+                            </a>*@
+
+                        <a style="color: #663399;font-weight:800;" href="@Url.RouteUrl("SecondLevelCategoryPages", new { catName = itemName, catID = item.ParentCategoryID, secLvlCatID = item.ID, FirstLvtName = lOneCatName, city = cityName, franchiseId = franchiseID })">
+                            @item.CategoryName
+                        </a>
+                        <i class="fa fa-chevron-circle-down" style="float: right; color: #663399"></i>
+                    </h3>
+                }
+                @if (item.LevelThreeListing != null)
+                {
+                    <div class="product-featured clearfix">
+                        <div class="">
+
+                            <ul class="cateogry-filters-list cpy panel-collapse collapse in" id="collapse1_@item.ID">
+                                @foreach (var lthree in item.LevelThreeListing)
+                                {
+                                    string itemName = Regex.Replace(lthree.CategoryName.Substring(0, Math.Min(lthree.CategoryName.Length, 30)), @"[\/\\#,+()$~%.':*?<>{} ]", "-").Replace("&", "and").ToLower();
+                                    //***** SEO URL Structure RULE by Ashish 18/11/2016 ******//
+                                    itemName = Regex.Replace(itemName, @"\-+", "-");
+                                    itemName = itemName.Trim(new[] { '-' });
+                                    //***** END SEO URL Structure RULE by Ashish 18/11/2016 ******//
+                                    <li>
+                                        <a href="@Url.RouteUrl("ProductsByCategory", new { item = itemName, parentCategoryId = lthree.ID, city = cityName, franchiseId=franchiseID })">@CultureInfo.CurrentCulture.TextInfo.ToTitleCase(lthree.CategoryName.ToLower())</a>
+                                    </li>
+                                }
+                            </ul>
+
+
+                        </div>
+                    </div>
+                }
+            </div>
+        </aside>
+    </div>
+    <div class="col-md-9 secondLevelOfCateProducts">
+        <!-- add this class secondLevelOfCateProducts by paras 08-08-2018 -->
+        @{
+    if (item.ProductListing != null)
+    {
+        <div class="col-md-12">
+            <div class="row" data-gutter="15">
+
+                @foreach (var product in item.ProductListing)
+                {
+                    ////string productName = Regex.Replace(product.Name.Substring(0, Math.Min(product.Name.Length, 30)), @"[\/\\#,+()$~%.':*?<>{} ]", "-").Replace("&", "and").ToLower();//// hide old
+                    string productName = product.URLStructureName.ToLower();//// New for URL Structure
+                    //***** SEO URL Structure RULE by Ashish 18/11/2016 ******//
+
+                    <div class="col-xs-6 col-sm-4 col-md-3 col-lg-3">
+                        <div class="product animated fadeInUp ">
+                            <div class=" ">
+                                @if (product.MRP > product.RetailerRate)
+                                {
+                                    decimal offerValue = (product.MRP - product.RetailerRate) / product.MRP * 100;
+                                    decimal offerPercentage = Math.Floor(offerValue);
+
+                                    if (offerPercentage > 0)
+                                    {
+
+                                        <ul class="product-labels" style="display:block">
+                                            <li>@offerPercentage % OFF</li>
+                                        </ul>
+                                    }
+                                    else
+                                    {
+                                        <ul class="product-labels" style="display: none">
+                                            <li class="offerPercentage"></li>
+                                        </ul>
+                                    }
+                                }
+                                else
+                                {
+                                    <ul class="product-labels" style="display: none">
+                                        <li class="offerPercentage"></li>
+                                    </ul>
+                                }
+
+                            </div>
+                            @*start RetailPoint Yashaswi 9-7-2018*@
+                            @*<div class=" ">*@
+                            <ul class="product-labelsRP">
+                                <li>
+                                    RP
+                                    <span> @Convert.ToInt64(product.RetailPoint) </span>
+                                </li>
+                            </ul>
+                            <ul class="product-labelsCB">
+                                <li>
+                                    CP
+                                    <span> @Convert.ToInt64(product.CashbackPoint) </span>
+                                </li>
+                            </ul>
+                            @*</div>*@
+                            @*End Retail Point Yashaswi 9-7-2018*@
+
+                            <div class="left-block">
+                                <div class="product-img-wrap">
+                                    <a class="anchorRedirect" href="@Url.RouteUrl("pre-prod-name", new { itemId = product.ID, itemName = productName, city = cityName, franchiseId = franchiseID })">
+                                        @*////added new franchise*@
+
+                                        <img class="product-img" src="@product.ImagePath" alt="@product.Name" onerror="this.src = '/Content/Images/no_image.png'">
+                                    </a>
+                                </div>
+
+                                @if (!string.IsNullOrEmpty(product.Size))
+                                {
+                                    <span class="product-caption">Size - @product.Size</span>
+                                }
+                                else
+                                {
+                                    <span class="product-caption">&nbsp;</span>
+                                }
+                                <div class="product-caption">
+                                    <h6 class="product-name" style="height: 27px;overflow:hidden;">
+                                        <a href="@Url.RouteUrl("pre-prod-name", new { itemId = product.ID, itemName = productName, city = cityName, franchiseId = franchiseID })">@product.Name</a>@*////added  franchiseId=franchiseID*@ @*////added new franchise*@
+                                    </h6>
+                                    <div class="product-caption-price">
+                                        @if (product.MRP > product.RetailerRate)
+                                        {
+
+                                            <span class="product-caption-price-old"><i class="fa fa-inr" aria-hidden="true"></i><del> @(product.MRP.ToString())</del></span>
+
+                                        }
+                                        else
+                                        {
+                                            <span class="product-caption-price-old"></span>
+                                        }
+                                        <span class="product-caption-price-new" style="color:brown"><i class="fa fa-inr" aria-hidden="true"></i> @(product.RetailerRate.ToString())</span>
+                                    </div>
+                                </div>
+                                <div class="product-caption">
+                                    <a class="btn btn-success" href="@Url.RouteUrl("pre-prod-name", new { itemId = product.ID, itemName = productName, city = cityName, franchiseId = franchiseID })">
+                                        view
+                                    </a>
+                                    <input type="text" min="1" max="5" step="1" value="1" id="productQuantity" class="productQuantity" onchange="checkMaxQty(this);" style="width: 30px; height: 30px;margin-top: -2px;  text-align: center;">
+                                    @*<button class="btn btn-success" type="button">view</button>*@
+                                    <button class="btn btn-warning" type="button" onclick="AddProduct(@product.ShopStockID,@product.ID)" id="@product.ID">Add<i class="fa fa-shopping-basket"></i></button>
+                                </div>
+                            </div>
+
+                        </div>
+
+                    </div>
+                }
+
+            </div>
+        </div>
+    }
+        }
+    </div>
+}
+<div class="gap"></div>
+<div style=" font-size: 11px; width: 100%; text-align: justify; line-height: 13px;">
+    <div class="FootTextDiv">
+        <p class="indent-paragraph " style="text-align:justify;">
+            @Html.Raw(ViewBag.CatDescription)
+        </p>
+    </div>
+</div>
+<script src="~/Scripts/jquery-1.10.2.min.js"></script>
+@*<script>
+        $(document).ready(function () {
+            $("#MenuListing").mouseout(function () {
+                //alert("1");
+                $("#MenuListing").css('display', 'none');
+
+            });
+            $("#MenuListing").mouseover(function () {
+                //alert("1");
+                $("#MenuListing").css('display', 'block');
+
+            });
+        })
+
+    </script>*@

@@ -1,0 +1,103 @@
+﻿@using PagedList;
+@using PagedList.Mvc;
+@model ModelLayer.Models.ViewModel.LeadersTabularViewParameterViewModel
+
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_LeaderUsersLayout.cshtml";
+}
+
+@using PagedList;
+@using PagedList.Mvc;
+
+<link rel="stylesheet" href="~/Templates/UsersTemplate/css/material-design.minfd53.css">
+<link rel="stylesheet" href="~/Templates/UsersTemplate/css/style3.css">
+<link rel="stylesheet" href="~/Templates/UsersTemplate/css/dropify.minfd53.css">
+<link rel="stylesheet" href="~/Templates/UsersTemplate/css/custom.css">
+<link rel="stylesheet" href="~/Templates/UsersTemplate/css/tablesaw.css">
+<link rel="stylesheet" href="~/Templates/UsersTemplate/css/footable.minfd53.css">
+<link rel="stylesheet" href="~/Templates/UsersTemplate/css/site.minfd53.css.css">
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<title>leaders Ezeelo</title>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+
+<link href="//cdn.datatables.net/1.10.19/css/jquery.dataTables.min.css" rel="stylesheet" />
+<script src="//cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/responsive/2.2.3/js/dataTables.responsive.min.js"></script>
+<link href="https://cdn.datatables.net/responsive/2.2.3/js/responsive.bootstrap.min.js" rel="stylesheet">
+
+
+<script>
+    $(document).ready(function () {
+        hideSymbol();
+        function hideSymbol() {
+            var listItems = $(".pagination li");
+            listItems.each(function (li) {
+                if ($(this).text() == "»") {
+                    $(this).hide();
+                }
+                if ($(this).text() == "«") {
+                    $(this).hide();
+                }
+            });
+        }
+
+        $("#SearchInListDDBTN").removeClass("show");
+        $("#shoColname").click(function () {
+            if ($("#SearchInListDDBTN").css('display') == 'none') {
+                $("#SearchInListDDBTN").addClass("show");
+            }
+            else {
+                $("#SearchInListDDBTN").removeClass("show");
+            }
+        });
+        $("#btnSubmitShow").click(function () {
+            $("#SearchInListDDBTN").removeClass("show");
+            $("#pageNo").val(1);
+            $('#btnsubmit').click();
+        });
+        $("#btnSubmit").click(function () {
+            $("#SearchInListDDBTN").removeClass("show");
+            $("#pageNo").val(1);
+            return true;
+        });
+        $()
+    })
+    $(document).on('click', '.pagination a', function () {
+        var pageVal = $(this).text();
+        $("#pageNo").val(pageVal);
+        $('#btnsubmit').click();
+        return false;
+    });
+</script>
+
+
+<section class="maintabularPageView">
+    <h4 class="example-title"></h4>
+    <div class="maintabularPageView-child">
+        <div class="maintabularPageView-heading">
+            <h3 class="panel-title">Tabular List of Network view</h3>
+            
+        </div>
+        <div id="ReportDiv">
+
+            @if(Model.listDownline != null) {
+
+
+                var m = Model.listDownline.ToPagedList(@Model.pageNo, 1000);
+
+                Html.RenderPartial("~/Views/LeadersNetworkReport/_ReportDownline.cshtml", m); }
+            else
+            {
+
+                <spam>No Record Found...</spam>
+
+            }
+
+        </div>
+
+
+    </div>
+</section>

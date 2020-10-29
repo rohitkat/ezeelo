@@ -1,0 +1,99 @@
+﻿@model ModelLayer.Models.ViewModel.ForgotPasswordViewModel
+
+@{
+    ViewBag.Title = "Forget Password";
+    Layout = "~/Views/Shared/_Login_header.cshtml";
+}
+
+<br />
+<br />
+<br />
+<br />
+<br />
+
+<style>
+    .neweditdiv {
+        margin-left: 35px;
+        border: 1px solid #ccc;
+        padding: 22px 25px;
+    }
+
+        .neweditdiv p {
+            color: #62830F;
+        }
+
+        .neweditdiv emailIdClass {
+        }
+
+        .neweditdiv label {
+            color: #837B7B;
+        }
+
+        .neweditdiv .btn-success {
+            padding: 4px 10px;
+            margin-top: 8px;
+            padding: 4px 10px;
+            border: 1px solid #47A447;
+        }
+
+        .neweditdiv span {
+            color: red;
+        }
+
+    #EmailId {
+        border: 1px solid rgb(204, 204, 204);
+        width: 170px;
+        height: 28px;
+    }
+    .breadcrumbs {
+        margin-left: 35px;
+        color: #BF5212;
+    }
+</style>
+
+<div>
+    @using (Html.BeginForm())
+    {
+        @Html.AntiForgeryToken()
+
+        <div class="form-horizontal neweditdiv">
+            <div data-text="Forgot Password">
+                <div>
+                    <p> Enter the e-mail address associated with your account, and then click Submit. We'll email you a link to a page where you can easily create a new password.</p>
+                    <div>
+                        <div class="emailIdClass">
+                            <b><label>Email Id:</label></b>
+                            <div class="input-control text full-size">
+                                @Html.TextBoxFor(model => model.EmailId, new { placeholder = "Email Id", maxlength = 150, autocomplete = "off" })
+                                @Html.ValidationMessageFor(model => model.EmailId)
+                            </div>
+                        </div>
+                    </div>
+                    <div>
+                        <input type="submit" value="Submit" class="btn-success" id="btnSubmit"/>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <br />
+        if (ViewBag.Message != null)
+        {
+            <div class="breadcrumbs dark">
+                @ViewBag.Message
+            </div>
+        }
+    }
+</div>
+
+@*<script src="~/Scripts/jquery-1.10.2.min.js"></script>
+<script>
+    $(function () {        
+        $("input#btnSubmit").on('click', function () {
+            $('#btnSubmit').attr('disabled', 'disabled');
+        });
+    });
+</script>*@
+
+@section Scripts{
+    @Scripts.Render("~/bundles/jqueryval")
+}

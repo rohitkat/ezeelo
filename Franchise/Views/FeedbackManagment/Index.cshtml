@@ -1,0 +1,513 @@
+﻿@using PagedList;
+@using PagedList.Mvc;
+@*@model IPagedList<ModelLayer.Models.FeedbackManagment>*@
+@*@model IPagedList<ModelLayer.Models.FeedbackGroupWise>*@
+@model ModelLayer.Models.FeedbackGroupWise
+
+
+@{
+    ViewBag.Title = "List [ Feedback ]";
+    Layout = "~/Views/Shared/_Layout_franchise2.cshtml";
+}
+
+@*<link href="~/Content/css/style.css" rel="stylesheet" />*@
+
+<style>
+    body {
+        background-color: #fff;
+    }
+
+    body {
+        background-image: none !important;
+    }
+    .setwidth {
+        width: 120px;
+    }
+
+    #divtable h3 {
+    }
+
+    /*.dropdown-menu {
+        left: 130px !important;
+        z-index: 1000 !important;
+    }*/
+
+    .widget-header + .widget-content {
+        border-top: none;
+        -webkit-border-top-left-radius: 0;
+        -webkit-border-top-right-radius: 0;
+        -moz-border-radius-topleft: 0;
+        -moz-border-radius-topright: 0;
+        border-top-left-radius: 0;
+        border-top-right-radius: 0;
+    }
+
+    .widget-content {
+        zoom: 1;
+    }
+
+    .widget-content {
+        padding: 20px 15px 15px;
+        background: #FFF;
+        border: 1px solid #D5D5D5;
+        -moz-border-radius: 5px;
+        -webkit-border-radius: 5px;
+        border-radius: 5px;
+    }
+</style>
+<div class="row">
+    <div class="span12" id="divtable">
+        <div class="widget">
+            <div class="widget-header">
+                <i class="icon-list-alt"></i>
+                <h3>List [ Feedback ]</h3>
+            </div>
+            <!-- /widget-header -->
+            <div class="widget-content">
+                <div class="widget big-stats-container">
+                    <div class="widget-content matchdivheight">
+
+                        @using (Html.BeginForm("Index", "FeedbackManagment", FormMethod.Post))
+                        {   @Html.AntiForgeryToken()
+                            <div class="form-horizontal">
+                                <table style="width:100%">
+
+                                    <tr>
+                                        <td>
+                                            <div class="control-group mrg-left col-sm-3">
+                                                <label>From Date</label>
+                                                <div class="col-sm-12">
+                                                    @Html.TextBox("FromDate", null, new { @readonly = "readonly" })
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="control-group mrg-left col-sm-3">
+                                                <label>&nbsp;&nbsp;&nbsp;To Date</label>
+                                                <div class="col-sm-12">
+                                                    @Html.TextBox("ToDate", null, new { @readonly = "readonly" })
+                                                </div>
+                                            </div>
+                                        </td>
+                                       
+                                        <td>
+                                            <div class="control-group mrg-left col-sm-3">
+                                                <label>&nbsp;&nbsp;&nbsp;Response</label>
+                                                <div class="col-sm-12">
+                                                    @Html.DropDownList("FeedBackTypeID", "All")
+                                                </div>
+                                            </div>
+                                        </td>
+
+                                        <td style="white-space:nowrap;">
+                                            <button type="submit" value="Search" class="btn btn-small btn-warning">
+                                                <span class="glyphicon glyphicon-search"></span> Search
+                                            </button>
+                                            <button type="button" class="btn btn-small btn-info" id="btn_clear">Clear</button>
+                                        </td>
+                                        <td>
+                                            @*<div class="control-group mrg-left col-sm-3">
+                <label style="white-space:nowrap;">&nbsp;&nbsp;&nbsp;Feedback For</label>
+                <div class="col-sm-12">
+                    @Html.DropDownList("FeedbackCategaryID", "All")
+                </div>
+            </div>*@
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="5">
+                                            <div>
+                                                <ul class="nav nav-tabs">
+                                                    <li class="active"><a data-toggle="tab" href="#home">All Feedback</a></li>
+                                                    <li><a data-toggle="tab" href="#menu1">OrderWise Feedback</a></li>
+                                                    <li><a data-toggle="tab" href="#menu2">Product Requirement Feedback</a></li>
+                                                 
+                                                </ul>
+                                                <div class="tab-content">
+                                                    <div id="home" class="tab-pane fade in active">
+                                                        <h3>All Feedback</h3>
+                                                        <div class="box-content" id="">
+                                                            <table class="table table-bordered table-hover table-responsive table-striped for_tbleFst">
+                                                                <tr>
+                                                                    <th style="width:20px;">Sr.No</th>
+                                                                    <th style="width:50px;">
+                                                                        Email
+                                                                    </th>
+                                                                    <th style="width:70px;">
+                                                                        Mobile
+                                                                    </th>
+                                                                    <th style="width:78px;">
+                                                                        Feedback For
+                                                                    </th>
+                                                                    <th style="width:80px;">
+                                                                        Message
+                                                                    </th>
+                                                                    <th style="width:80px;">
+                                                                        Response
+                                                                    </th>
+                                                                    <th style="width:150px;">
+                                                                        Date
+                                                                    </th>
+                                                                    <th style="width:20px;">
+                                                                        Action
+                                                                    </th>
+                                                                </tr>
+
+                                                                @if (Model.AllFeedback.Count() == 0)
+                                                                {
+                                                                    <tr>
+                                                                        <td colspan="6" class="text-center"><h3>No Record Found...</h3></td>
+                                                                    </tr>
+                                                                }
+                                                                else
+                                                                {
+                                                                    
+                                                                    int i = 1;
+                                                                    foreach (var item in Model.AllFeedback)
+                                                                    {
+                                                                        <tr>
+                                                                            <td>@{int SrNo = ((ViewBag.AllFeedbackPageNumber - 1) * ViewBag.PageSize) + i; i = i + 1; } @SrNo</td>
+                                                                            <td style="word-break: break-all;width:auto;min-width:75px;">
+                                                                                @Html.DisplayFor(modelItem => item.Email)
+                                                                            </td>
+                                                                            <td style="width:100px;">
+                                                                                @Html.DisplayFor(modelItem => item.Mobile)
+                                                                            </td>
+                                                                            <td>
+                                                                                @Html.DisplayFor(modelItem => item.FeedbackCategary.Name)
+                                                                            </td>
+                                                                            <td style="word-break: break-all;width:auto;min-width:75px;">
+                                                                                @{
+                                                                            string lMsgString = item.Message;
+                                                                            if (lMsgString.Length > 15)
+                                                                            {
+                                                                                lMsgString = lMsgString.Substring(0, 14) + "...";
+                                                                            }
+                                                                                }
+                                                                                @lMsgString
+                                                                            </td>
+                                                                            <td>
+                                                                                @Html.DisplayFor(modelItem => item.FeedBackType.Name)
+                                                                            </td>
+                                                                            <td style="width:160px;">
+                                                                                @item.CreateDate.ToString("dd/MM/yyyy hh:mm:ss tt")
+                                                                            </td>
+                                                                            <td style="width:20px;">
+                                                                                @*<button class="btn btn-small btn-success" onclick="Edit(@item.ID)">Edit</button>*@
+                                                                                <a href="@Url.Action("Edit", "FeedbackManagment", new { id = item.ID })" onclick="Edit(@item.ID)" target="frameEdit" class="btn btn-small btn-success a_white">Edit</a>
+                                                                            </td>
+                                                                        </tr>
+                                                                    }
+                                                                }
+
+                                                            </table>
+                                                        </div>
+
+                                                        <div class="pager">
+                                                            @Html.PagedListPager(Model.AllFeedback, Page => Url.Action("Index", new
+                       {
+                           AllFeedbackpage = Page,
+                           SearchString = ViewBag.SearchString,
+                           FromDate = ViewBag.FromDate,
+                           ToDate = ViewBag.ToDate,
+                           FeedbackCategaryID = ViewBag.FeedbackCategaryID1,
+                           FeedBackTypeID = ViewBag.FeedBackTypeID1
+                       }),
+                                                                    new PagedListRenderOptions()
+                                                                    {
+                                                                        Display = PagedListDisplayMode.IfNeeded
+                                                                    })
+                                                        </div>
+                                                    </div>
+                                                    <div id="menu1" class="tab-pane fade">
+                                                        <h3>OrderWise Feedback</h3>
+                                                       
+                                                        <div class="box-content" id="">
+                                                            <table class="table table-bordered table-hover table-responsive table-striped for_tbleFst">
+                                                                <tr>
+                                                                    <th style="width:20px;">Sr.No</th>
+                                                                    <th style="width:50px;">
+                                                                        Email
+                                                                    </th>
+                                                                    <th style="width:70px;">
+                                                                        Mobile
+                                                                    </th>
+                                                                    <th style="width:78px;">
+                                                                        Order Code
+                                                                    </th>
+                                                                    <th style="width:80px;">
+                                                                        Message
+                                                                    </th>
+                                                                    <th style="width:80px;">
+                                                                        Response
+                                                                    </th>
+                                                                    <th style="width:150px;">
+                                                                        Date
+                                                                    </th>
+                                                                    <th style="width:20px;">
+                                                                        Action
+                                                                    </th>
+                                                                </tr>
+                                                               
+                                                                @if (Model.OrderWiseFeedback.Where(x => x.CustOrderCode != null).Count() == 0)
+                                                                {
+                                                                    <tr>
+                                                                        <td colspan="6" class="text-center"><h3>No Record Found...</h3></td>
+                                                                    </tr>
+                                                                }
+                                                                else
+                                                                {
+                                                                   // var orderWiseFeedback = Model.AllFeedback.Where(x => x.CustOrderCode != null).ToList();
+                                                                    int i = 1;
+                                                                    foreach (var item in Model.OrderWiseFeedback)
+                                                                    {
+                                                                        <tr>
+                                                                            <td>@{int SrNo = ((ViewBag.OrderWiseFeedbackPageNumber - 1) * ViewBag.PageSize) + i; i = i + 1; } @SrNo</td>
+                                                                            <td style="word-break: break-all;width:auto;min-width:75px;">
+                                                                                @Html.DisplayFor(modelItem => item.Email)
+                                                                            </td>
+                                                                            <td style="width:100px;">
+                                                                                @Html.DisplayFor(modelItem => item.Mobile)
+                                                                            </td>
+                                                                            <td>
+                                                                                @Html.DisplayFor(modelItem => item.CustOrderCode)
+                                                                            </td>
+                                                                            <td style="word-break: break-all;width:auto;min-width:75px;">
+                                                                                @{
+                                                                            string lMsgString = item.Message;
+                                                                            if (lMsgString.Length > 15)
+                                                                            {
+                                                                                lMsgString = lMsgString.Substring(0, 14) + "...";
+                                                                            }
+                                                                                }
+                                                                                @lMsgString
+                                                                            </td>
+                                                                            <td>
+                                                                                @Html.DisplayFor(modelItem => item.FeedBackType.Name)
+                                                                            </td>
+                                                                            <td style="width:160px;">
+                                                                                @item.CreateDate.ToString("dd/MM/yyyy hh:mm:ss tt")
+                                                                            </td>
+                                                                            <td style="width:20px;">
+                                                                                @*<button class="btn btn-small btn-success" onclick="Edit(@item.ID)">Edit</button>*@
+                                                                                <a href="@Url.Action("Edit", "FeedbackManagment", new { id = item.ID })" onclick="Edit(@item.ID)" target="frameEdit" class="btn btn-small btn-success a_white">Edit</a>
+                                                                            </td>
+                                                                        </tr>
+                                                                    }
+                                                                }
+
+                                                            </table>
+                                                            <div class="pager">
+                                                                @Html.PagedListPager(Model.OrderWiseFeedback, Page => Url.Action("Index", new
+                       {
+                           OrderWiseFeedbackpage = Page,
+                           SearchString = ViewBag.SearchString,
+                           FromDate = ViewBag.FromDate,
+                           ToDate = ViewBag.ToDate,
+                           FeedbackCategaryID = ViewBag.FeedbackCategaryID1,
+                           FeedBackTypeID = ViewBag.FeedBackTypeID1
+                       }),
+                                                                    new PagedListRenderOptions()
+                                                                    {
+                                                                        Display = PagedListDisplayMode.IfNeeded
+                                                                    })
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div id="menu2" class="tab-pane fade">
+                                                        <h3>Product Requirement Feedback</h3>
+                                                        <div class="box-content" id="">
+                                                            <table class="table table-bordered table-hover table-responsive table-striped for_tbleFst">
+                                                                <tr>
+                                                                    <th style="width:20px;">Sr.No</th>
+                                                                    <th style="width:50px;">
+                                                                        Email
+                                                                    </th>
+                                                                    <th style="width:70px;">
+                                                                        Mobile
+                                                                    </th>
+                                                                    <th style="width:78px;">
+                                                                        Feedback For
+                                                                    </th>
+                                                                    <th style="width:80px;">
+                                                                        Message
+                                                                    </th>
+                                                                    <th style="width:80px;">
+                                                                        Response
+                                                                    </th>
+                                                                    <th style="width:150px;">
+                                                                        Date
+                                                                    </th>
+                                                                    <th style="width:20px;">
+                                                                        Action
+                                                                    </th>
+                                                                </tr>
+
+                                                                @if (Model.ProductRequirementFeedback.Count() == 0)
+                                                                {
+                                                                    <tr>
+                                                                        <td colspan="6" class="text-center"><h3>No Record Found...</h3></td>
+                                                                    </tr>
+                                                                }
+                                                                else
+                                                                {
+                                                                    int i = 1;
+                                                                    foreach (var item in Model.ProductRequirementFeedback)
+                                                                    {
+                                                                        <tr>
+                                                                            <td>@{int SrNo = ((ViewBag.LookingForFeedbackPageNumber - 1) * ViewBag.PageSize) + i; i = i + 1; } @SrNo</td>
+                                                                            <td style="word-break: break-all;width:auto;min-width:75px;">
+                                                                                @Html.DisplayFor(modelItem => item.Email)
+                                                                            </td>
+                                                                            <td style="width:100px;">
+                                                                                @Html.DisplayFor(modelItem => item.Mobile)
+                                                                            </td>
+                                                                            <td>
+                                                                                @Html.DisplayFor(modelItem => item.FeedbackCategary.Name)
+                                                                            </td>
+                                                                            <td style="word-break: break-all;width:auto;min-width:75px;">
+                                                                                @{
+                                                                            string lMsgString = item.Message;
+                                                                            if (lMsgString.Length > 15)
+                                                                            {
+                                                                                lMsgString = lMsgString.Substring(0, 14) + "...";
+                                                                            }
+                                                                                }
+                                                                                @lMsgString
+                                                                            </td>
+                                                                            <td>
+                                                                                @Html.DisplayFor(modelItem => item.FeedBackType.Name)
+                                                                            </td>
+                                                                            <td style="width:160px;">
+                                                                                @item.CreateDate.ToString("dd/MM/yyyy hh:mm:ss tt")
+                                                                            </td>
+                                                                            <td style="width:20px;">
+                                                                                <a href="@Url.Action("Edit", "FeedbackManagment", new { id = item.ID })" onclick="Edit(@item.ID)" target="frameEdit" class="btn btn-small btn-success a_white">Edit</a>
+                                                                            </td>
+                                                                        </tr>
+                                                                    }
+                                                                }
+
+                                                            </table>
+                                                            <div class="pager">
+                                                                @Html.PagedListPager(Model.ProductRequirementFeedback, Page => Url.Action("Index", new
+                       {
+                           LookingForFeedbackpage = Page,
+                           SearchString = ViewBag.SearchString,
+                           FromDate = ViewBag.FromDate,
+                           ToDate = ViewBag.ToDate,
+                           FeedbackCategaryID = ViewBag.FeedbackCategaryID1,
+                           FeedBackTypeID = ViewBag.FeedBackTypeID1
+                       }),
+                                                                    new PagedListRenderOptions()
+                                                                    {
+                                                                        Display = PagedListDisplayMode.IfNeeded
+                                                                    })
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                  
+                                                </div>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    
+                                </table>
+                            </div>
+                        }
+                       
+                        @*<div class="pager">
+                            @Html.PagedListPager(Model, Page => Url.Action("Index", new
+                       {
+                           page = Page,
+                           SearchString = ViewBag.SearchString,
+                           FromDate = ViewBag.FromDate,
+                           ToDate = ViewBag.ToDate,
+                           FeedbackCategaryID = ViewBag.FeedbackCategaryID1,
+                           FeedBackTypeID = ViewBag.FeedBackTypeID1
+                       }),
+                                                                    new PagedListRenderOptions()
+                                                                    {
+                                                                        Display = PagedListDisplayMode.IfNeeded
+                                                                    })
+                        </div>*@
+                    </div>
+
+                    <!-- /widget-content -->
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- /span12 -->
+    <div class="span4">
+        <div class="loader">
+            <img id="loader_img" src="~/Content/Images/loader.gif" style="display: none" />
+        </div>
+        <div id="Details">
+            <iframe id="frameEdit" name="frameEdit" src='' width="100%" height="800px" frameborder="0" style="margin:0px; padding:0px;"></iframe>
+        </div>
+
+    </div>
+
+</div>
+
+@section MyScripts{
+    <script>
+        //----------------------------------------------------------------------For datepicker---//
+        //<![CDATA[
+        $(window).load(function () {
+            //$('#DOB').datepicker('setDate', new Date());
+            $('#FromDate').datepicker('update');
+            $('#ToDate').datepicker('update');
+        });//]]>
+
+        function Edit(id) {
+            $('#divtable').removeClass('span12');
+            $('#divtable').addClass('span7');
+            //  $('.control-group').addClass('setwidth');
+            window.parent.$("[id$=Details]").show();
+            //$('#loader_img').show();
+            @*$.ajax({
+                url: '@Url.Action("Details", "CustomerDetail")?id=' + id,
+                type: "GET",
+                success: function (result) {
+                    $('#loader_img').hide();
+                    $('#Details').html(result);
+                },
+                error: function (data) {
+                    $('#Details').empty();
+                    $('#loader_img').hide();
+                }
+            });*@
+            //if ($("#Details").length > 0) {
+            //    $("#divtable").css('width', '745px');
+
+            //    $(".spanLeft").css('width', '28%');
+            //    $(".search").css('width', '80px');
+            //    //$(".excel-group").after('float','left');
+            //} else {
+            //    $("#divtable").css('width', '100%');
+            //}
+        }
+
+        function PrintDivContent(divId) {
+            var printContent = document.getElementById(divId);
+            var WinPrint = window.open('', '', 'left=0,top=0,toolbar=0,sta­tus=0');
+            WinPrint.document.write(printContent.innerHTML);
+            WinPrint.document.close();
+            WinPrint.focus();
+            WinPrint.print();
+        }
+    </script>
+    @*<script type="text/javascript">
+            function Back() {
+            $("#divtable").css('width', '100%');
+            }
+
+
+        </script>*@
+}
+
+
+
+

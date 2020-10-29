@@ -1,0 +1,223 @@
+﻿@model IEnumerable<ModelLayer.Models.ViewModel.EarnAndReferDetailReportViewModel>
+
+@{
+    Layout = null;
+}
+<script src="~/Content/js/bootstrap.js"></script>
+<script src="~/Content/js/jquery-1.9.1.min.js"></script>
+<script src="~/Content/js/jquery.dataTables.min.js"></script>
+<script src="~/Content/js/bootstrap.min.js"></script>
+<script type="text/javascript">
+    $(document).ready(function () {
+        $("#myTable").DataTable({
+            "bDestroy": true,
+            //"sPaginationType": "full_numbers",
+            "bJQueryUI": true,
+            "bInfo": false,
+            "scrollY": 700,
+            "scrollCollapse": true,
+            "bPaginate": false,
+            "iDisplayLength": 20,
+            "bAutoWidth": false,
+
+        });
+
+    });
+</script>
+<div class="section">
+    <div class="widget-content">
+        <div class="table container_tbl" style="max-height:600px;overflow:auto">
+            <table class="table">
+                <thead style="background:#ccc">
+                    <tr class="header">
+                        @*<th>
+                                @Html.DisplayNameFor(model => model.ReferenceID)
+                            </th>*@
+                        <th style="width:50px">
+                            Sr.No.
+                        </th>
+                        <th>
+                            Referrer Name
+                        </th>
+                        <th>
+                            Referred Date
+                        </th>
+                        <th>
+                            Email Referee
+                        </th>
+                        <th>
+                            Mobile Referee
+                        </th>
+                        <th>
+                            Referee Status
+                        </th>
+                        <th>
+                            Earn Amount
+                        </th>
+                        <th>
+                            Order Amount
+                        </th>
+                        <th style="width:140px;">
+                            Order Number
+                        </th>
+                        <th>
+                            Franchise Name
+                        </th>
+                        <th>
+                            Scheme Name
+                        </th>
+                        @*<th></th>*@
+                    </tr>
+                </thead>
+                <tbody>
+                    @{int i = 1;}
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            @*<td>
+                                    @Html.DisplayFor(modelItem => item.ReferenceID)
+                                </td>*@
+                            <td style="width:50px">@{int SrNo = ((ViewBag.PageNumber - 1) * ViewBag.PageSize) + i; } @SrNo</td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.UserName)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.ReferredDate)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Email)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Mobile)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.RefereeStatus)
+                            </td>
+                            @if (item.EarnAmount == null)
+                            {
+                                <td>-</td>
+                            }
+                            else
+                            {
+                                <td>
+
+                                    @Html.DisplayFor(modelItem => item.EarnAmount)
+                                </td>
+                            }
+                            @if (item.EarnAmount == null)
+                            {
+                                <td>-</td>
+                            }
+                            else
+                            {
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.OrderAmount)
+                                </td>
+                            } @if (item.EarnAmount == null)
+                            {
+                                <td>-</td>
+                            }
+                            else
+                            {
+                                <td style="width:140px;">
+                                    @Html.DisplayFor(modelItem => item.OrderCode)
+                                </td>
+                            }
+                            <td>
+                                @Html.DisplayFor(modelItem => item.FranchiseName)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.SchemeName)
+                            </td>
+                            @*<td>
+                                    @Html.ActionLink("Edit", "Edit", new { id=item.ID }) |
+                                    @Html.ActionLink("Details", "Details", new { id=item.ID }) |
+                                    @Html.ActionLink("Delete", "Delete", new { id=item.ID })
+                                </td>*@
+                        </tr>
+
+                            i++;
+                    }
+                    <tr>
+                        <td><h4><span>Total&nbsp;Count:&nbsp;@ViewBag.TotalCount</span></h4></td>
+                    </tr>
+                </tbody>
+
+            </table>
+        </div>
+        @*<div id="Pager">
+            <div class="wrap">
+                <div id="slider1" class="slider">
+                    <ul>
+                        @for (int c = 1; c <= @ViewBag.TotalPages; c++)
+                        {
+                            <li><a class="page-number" href="javascript:void();">@c</a></li>
+
+                        }
+
+                    </ul>
+
+                </div>
+
+                <div class="controls" style="margin-top:-27px; background:#F9F9F9">
+                    <a href="#noname" class="prev-slide"><<</a>
+                    <a href="#noname" class="next-slide" style="float: right; margin-right: 299px;">>></a>
+                </div>
+            </div>
+            <span class="totalcount"><b>Showing @ViewBag.PageSize of @ViewBag.TotalCount enteries</b></span>
+        </div>*@
+    </div>
+</div>
+
+
+<script>
+    $(document).ready(function () {
+        $("#Pager .page-number").click(function (e) {
+            $('#loader_img').show();
+            var pagecount = 0;
+            var page = parseInt($(this).html());
+            if (page > 1) {
+                pagecount = 1; 
+                var print = 0;
+                var ToDate = $('#ToDate').val();
+                var FromDate = $('#FromDate').val();
+                var CityId = $('#CityID :selected').val();
+                var FranchiseID = null;
+                FranchiseID = $('#FranchiseID :selected').val();
+                var SearchUserName = null;
+                var SearchUserName = $('#SearchUserName').val();
+                var SearchEmail = null;
+                var SearchEmail = $('#SearchEmail').val();
+                var SearchMobile = null;
+                var SearchMobile = $('#SearchMobile').val();
+                var SearchSchemeName = null;
+                var SearchSchemeName = $('#SearchSchemeName').val();
+                var Mode = $('#Mode:checked').val();
+                var option = 0;
+
+                var isValid = ValidateDate(FromDate, ToDate);
+                if (isValid == false) {
+                    $('#loader_img').hide();
+                    return;
+                }
+                $.ajax({
+                    url: '@Url.Action("GetReport", "ReferAndEarnTransactionReport")',
+                    data: { 'page': page, 'option': option, 'SearchUserName': SearchUserName, 'SearchEmail': SearchEmail, 'SearchMobile': SearchMobile, 'SearchSchemeName': SearchSchemeName, 'Mode': Mode, 'FromDate': FromDate, 'FranchiseID': FranchiseID, 'CityID': CityId, 'ToDate': $('#ToDate').val(), 'print': print },
+                    type: "POST",
+                    cache: false,
+                    success: function (data) {
+                        //alert(data);
+                        $('#loader_img').hide();
+                        $('#divReport').empty();
+                        $('#divReport').append(data);
+
+                    },
+                    error: function (data) {
+
+                    }
+                });
+            }
+        });
+        });
+
+</script>

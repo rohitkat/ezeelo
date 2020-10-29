@@ -1,0 +1,74 @@
+﻿@model ModelLayer.Models.ViewModel.RatingViewModel
+@{
+    ViewBag.Title = "Feedback";
+}
+<div class="feedback" style="margin-top:50px;">
+    <div data-text="" class="example feedRadius">
+        <h2>eZeelo</h2>
+        <p>
+            Dear
+            Thank you for shopping through eZeelo.
+            We value your association &amp; feel that you will continue shopping through eZeelo
+            Improvment is a continuous process and we at eZeelo are commeted is give your the best of shopping &amp; prices.
+        </p>
+        <p>
+            Kindly spare a few movment please.
+        </p>
+        <p>
+            Your Feeback
+        </p>
+        @Html.Hidden("hdnOwnerID", Model.CustomerOrderID)
+        @*star-reting*@
+        <div class="example" data-text="Order rating">
+            <div class="grid">
+                <div class="row cells4">
+                    @for (int i = 0; i < Model.MasterRating.Count(); i++)
+                    {
+                        <div id="@Model.MasterRating[i].RatingID" class="cell">
+                            @Html.Hidden("RatingID", @Model.MasterRating[i].RatingID)
+                            <h5>@Model.MasterRating[i].RatingName</h5>
+                            <div class="rating" data-role="rating" data-value="2" data-color-rate="true"></div>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+        @Html.Hidden("hdnRatings", "8:5$10:5$11:5$13:5")
+        <div class="cell">
+            <label>Comments, if any</label>
+            <div class="input-control text full-size">
+                <input id="txtComment" type="text">
+            </div>
+            <button onclick="Submit();" class="button success">Submit</button>
+            <span style="color:green" id="spnThank"></span>
+        </div>
+    </div>
+</div>
+<script>
+    function Submit() {
+
+
+        $.ajax({
+            type: "POST",
+            url: "/Feedback/SubmitRating",
+            data: "{ratings:'" + $("#hdnRatings").val() + "',comment:'" + $("#txtComment").val() + "',OwnerID: " + $("#hdnOwnerID").val() + "}",
+            contentType: "application/json; charset = utf-8",
+            dataType: "json",
+            success: function (response) {
+
+                $("#spnThank").text("Thanks for your feedback.");
+            },
+            //success: OnSuccess,
+            failure: function (response) {
+
+                $("#spnThank").text("Thanks for your feedback.");
+            },
+            error: function (response) {
+
+                $("#spnThank").text("Thanks for your feedback.");
+            }
+            //error: OnSuccess
+        });
+
+    }
+</script>

@@ -1,0 +1,154 @@
+﻿@model IEnumerable<ModelLayer.Models.FranchiseTaxDetail>
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<style>
+    .ui-widget-header {
+        border: 0px solid #aaaaaa;
+        background: #fafafa !important;
+    }
+</style>
+
+<script src="~/Content/js/bootstrap.js"></script>
+<script src="~/Content/js/jquery-1.9.1.min.js"></script>
+<script src="~/Content/js/jquery.dataTables.min.js"></script>
+<script src="~/Content/js/bootstrap.min.js"></script>
+<script type="text/javascript">
+    $(document).ready(function () {
+        $("#myTable").DataTable({
+            "bDestroy": true,
+            //"sPaginationType": "full_numbers",
+            "bJQueryUI": true,
+            "bInfo": false,
+            "scrollY": 700,
+            "scrollCollapse": true,
+            "bPaginate": false,
+            "iDisplayLength": 20,
+            "bAutoWidth": false,
+
+        });
+
+    });
+</script>
+
+<div id="content" class="span10">
+    <ul class="breadcrumb">
+        <li>
+            <a href="#">Index</a>
+        </li>
+    </ul>
+    <div class="row-fluid">
+        <div class="box span12">
+            <div class="box-header">
+                <h2><i class="icon-edit"></i><span class="break"></span>@Html.ActionLink("Create New", "Create")</h2>
+
+            </div>
+            <div class="box-content">
+                <table class="table" id="myTable">
+                    <thead>
+                        <tr>
+                            <th>
+                                Franchise  @Html.DisplayNameFor(model => model.Franchise.ContactPerson)
+                            </th>
+                            <th>
+                                Tax   @Html.DisplayNameFor(model => model.TaxationMaster.Prefix)
+                            </th>
+
+                            <th>
+                                @Html.DisplayNameFor(model => model.InPercentage)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.InRupees)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.IsDirect)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.IsCustomerSide)
+                            </th>
+
+                            <th>
+                                @Html.DisplayNameFor(model => model.IsPercentage)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.LowerLimit)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.UpperLimit)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.IsOnTaxSum)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.IsMinusTaxs)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.IsIncludeSaleRate)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.IsActive)
+                            </th>
+
+                            <th></th>
+                        </tr>
+                    </thead>
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Franchise.ContactPerson)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.TaxationMaster.Name)
+                            </td>
+
+                            <td>
+                                @Html.DisplayFor(modelItem => item.InPercentage)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.InRupees)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.IsDirect)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.IsCustomerSide)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.IsPercentage)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.LowerLimit)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.UpperLimit)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.IsOnTaxSum)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.IsMinusTaxs)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.IsIncludeSaleRate)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.IsActive)
+                            </td>
+
+                            <td style="white-space:nowrap;">
+                                @Html.ActionLink("Edit", "Edit", new { id = item.ID }, new { @class = "btn btn-small btn-success" })
+                                @Html.ActionLink("Details", "Details", new { id = item.ID }, new { @class = "btn btn-small btn-primary" })
+                                @*@Html.ActionLink("Delete", "Delete", new { id = item.ID }, new { @class = "btn btn-small btn-danger" })*@
+                            </td>
+                        </tr>
+                    }
+
+                </table>
+            </div>
+        </div>
+    </div>
+</div>

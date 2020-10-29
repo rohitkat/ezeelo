@@ -1,0 +1,165 @@
+﻿@model IEnumerable<ModelLayer.Models.ReactivationMaster>
+
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_LeadersLayout.cshtml";
+}
+
+<script src="~/Scripts/jquery-1.12.4.js"></script>
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+
+<link href="https://cdn.datatables.net/1.10.19/css/jquery.dataTables.min.css" rel="stylesheet" />
+
+<script src="https://code.jquery.com/jquery-3.3.1.js"></script>
+<script src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
+
+
+<div class="container">
+    <p>
+        @Html.ActionLink("Create New", "Create")
+    </p>
+    
+        <div class="card">
+           
+            <div class="card-header">
+                <strong class="card-title">Reactivation Master</strong>
+            </div>
+            <div class="card-body">
+                <table class="table table-striped">
+
+                    <thead>
+                        <tr>
+                            <th scope="col">
+                                @Html.DisplayNameFor(model => model.Leaders_Status)
+                            </th>
+                            <th scope="col">
+                                @Html.DisplayNameFor(model => model.Display_Status)
+                            </th>
+
+                            <th scope="col">
+                                @Html.DisplayNameFor(model => model.No_Of_Days)
+                            </th>
+                            <th scope="col">
+                                @Html.DisplayNameFor(model => model.Activation_Fees)
+                            </th>
+                            <th scope="col">
+                                @Html.DisplayNameFor(model => model.Penalty_Percentage)
+                            </th>
+                            <th scope="col">
+                                @Html.DisplayNameFor(model => model.Penalty_Amount)
+                            </th>
+                            <th scope="col">
+                                @Html.DisplayNameFor(model => model.Penalty_On)
+                            </th>
+                           
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model)
+                        {
+                            <tr>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Leaders_Status)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Display_Status)
+                                </td>
+
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.No_Of_Days)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Activation_Fees)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Penalty_Percentage)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Penalty_Amount)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Penalty_On)
+                                </td>
+                               
+                                <td>
+                                    @Html.ActionLink("Edit", "Edit", new { id = item.ID })
+
+                                   @* @Html.ActionLink("Delete", "Delete", new { id = item.ID })*@
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+
+                </table>
+            </div>
+            </div>
+
+
+            <div class="card">
+                <div class="card-header">
+                    <strong class="card-title">Log Table</strong>
+                </div>
+                <div class="card-body">
+                    <table class="table table-striped"  id="LogTable">
+                        <thead>
+                            <tr>
+
+                                <th scope="col">No Of Days</th>
+                                <th scope="col">Activation Fees</th>
+                                <th scope="col">Penalty Percentage</th>
+                                <th scope="col">Penalty Amount</th>
+                                <th scope="col">Penalty On</th>
+                                <th scope="col">Leaders Status</th>
+
+                                <th>Last Modify Date</th>
+
+                            </tr>
+                        </thead>
+
+                    </table>
+                </div>
+            </div>
+        </div>
+        <script>
+            $(document).ready(function () {
+
+
+                $("#LogTable").DataTable({
+
+                    "ajax": {
+                        "url": "/ReactivationMaster/LogIndex",
+                        "type": "POST",
+                        "datatype": "json"
+                    },
+
+                    "columns": [
+                        { "data": "No_Of_Days", "name": "No_Of_Days", "autoWidth": true },
+                        { "data": "Activation_Fees", "name": "Activation_Fees", "autoWidth": true },
+                        { "data": "Penalty_Percentage", "name": "Penalty_Percentage", "autoWidth": true },
+
+
+
+                        { "data": "Penalty_Amount", "name": "Penalty_Amount", "autoWidth": true },
+                        { "data": "Penalty_On", "name": "Penalty_On", "autoWidth": true },
+                        { "data": "Leaders_Status", "name": "Leaders_Status", "autoWidth": true },
+
+                        {
+                            "data": "Last_Create_Date", "name": "Last_Create_Date", "autoWidth": true,
+                            "render": function (value) {
+                                if (value === null) return "";
+
+                                var pattern = /Date\(([^)]+)\)/;
+                                var results = pattern.exec(value);
+                                var dt = new Date(parseFloat(results[1]));
+
+                                return (dt.getMonth() + 1) + "/" + dt.getDate() + "/" + dt.getFullYear();
+                            }
+                        },
+
+                    ]
+
+                });
+            });
+
+        </script>

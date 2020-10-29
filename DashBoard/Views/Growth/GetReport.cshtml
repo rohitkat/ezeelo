@@ -1,0 +1,101 @@
+﻿@model IEnumerable<ModelLayer.Models.ViewModel.DashboardGrowthViewModel>
+@{
+    ViewBag.Title = "Growth Report";
+}
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('#ActualOrder').click(function () {
+            $('#DivMCO').removeClass('hidden');
+        });
+        $('#ActualGMV').click(function () {
+            $('#DivMCO').removeClass('hidden');
+        });
+    });
+
+    function showdiv(index) {
+        document.getElementById('FranchiseID').value = index;
+        //document.getElementById('DivMCO').style.display = "block";
+        // alert(document.getElementById('FranchiseID').value);
+    }
+    function GetType(val) {
+        //alert(val);
+        document.getElementById('ReqType').value = val;
+        document.getElementById('DivMCO').style.display = "block";
+        //alert(document.getElementById('ReqType').value);
+    }
+</script>
+@using (Html.BeginForm("GetFranchiseIDDetailsReport", "Growth", FormMethod.Post))
+{
+    <div class="row">
+        <div class="col-md-8">
+            <div class="box">
+                <div class="box-body">
+                    <table class="table table-bordered">
+                        <tr>
+                            <th>Order</th>
+                            <th>Avg(Order)</th>
+                            <th>GMV</th>
+                            <th>Avg(GMV)</th>
+                        </tr>
+                        @foreach (var item in Session["dList"] as List<ModelLayer.Models.ViewModel.DashboardGrowthViewModel>)
+                        {
+                            if ((item.ActualGMV != "" || item.ActualOrder != 0) && (item.ID == 0))
+                            {
+
+                                <tr>
+                                    <td><input type="button" id="Order" name="ActualOrder" value="@item.ActualOrder" class="btn btn-info btn-sm" onclick="GetType('Order')" /></td>
+                                    <td>@item.AvgOrder</td>
+                                    <td><input type="button" id="GMV" name="ActualGMV" value="@item.ActualGMV" class="btn btn-info btn-sm" onclick="GetType('GMV')" /></td>
+                                    <td>@item.AvgGMV</td>
+                                </tr>
+                            }
+                        }
+                        <input type="hidden" name="ReqType" id="ReqType" value=" " />
+                    </table>
+                </div>
+            </div>
+            <div id="DivMCOWise">
+                @if (Model != null)
+                {
+
+                    @Html.Partial("GetFranchiseIDDetails", Model)
+
+                }
+            </div>
+        </div>
+        <div class="col-md-4 " id="DivMCO" style="display:none">
+            <div class="box">
+                <div class="box-body">
+                    <table class="table table-bordered">
+                        @*@if (ViewBag.lDashboardGrowthViewModels1 != null)
+                                {
+                            @foreach (var item in TempData["DashboardGrowthViewModel"] as List<ModelLayer.Models.ViewModel.DashboardGrowthViewModel>)*@
+                        @{int i = 1;}
+                        @foreach (var item in Session["dList"] as List<ModelLayer.Models.ViewModel.DashboardGrowthViewModel>)
+                        {
+                            if (item.Name != null || item.ID != 0)
+                            {
+
+                                //if (ViewBag.FranchiseID == null)
+                                //{
+
+                                <tr>
+                                    <td>
+                                        <input type="hidden" name="Franchise" id="Franchise@(i)" value="@item.ID" />
+                                        <input type="submit" name="SearchMCOIDWise" id="SearchMCOIDWise" value="@item.Name" class="btn-link" onclick="showdiv(@item.ID);" />
+
+                                    </td>
+                                </tr>
+                            }
+                        }
+                        <input type="hidden" name="FranchiseID" id="FranchiseID" value=" " />
+                        @*<input type="hidden" name="submit" id="submit" value="Month" />*@
+                        @*}
+                            //}*@
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+}

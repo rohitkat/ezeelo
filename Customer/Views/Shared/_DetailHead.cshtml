@@ -1,0 +1,134 @@
+﻿@model ModelLayer.Models.ViewModel.ProductViewModel
+
+<style>
+    table {
+        color: black;
+    }
+
+    .paddingnew {
+        padding-top: 0px !important;
+        width: 192px !important;
+    }
+
+    .titleDitail {
+        margin-left: .625rem;
+    }
+
+    .contentDitail {
+        padding: .625rem;
+        height: auto;
+    }
+
+    .headingnew {
+        height: 33px !important;
+        font: 500 0.88em/1.1 "Segoe UI", "Open Sans", serif !important;
+    }
+
+    .clearright {
+        float: right;
+        padding-right: 5px;
+        margin-top: -6px !important;
+    }
+
+    .clearrightsub {
+        float: right;
+        padding-right: 10px;
+        color: black;
+    }
+
+    .contentDitail {
+        color: black !important;
+    }
+
+    #tblSubSpecification {
+        line-height: 17px;
+    }
+
+    .detailHeadCheckBox {
+        vertical-align: -2px !important;
+    }
+
+    .contentDetailHead {
+        padding: .15rem;
+        height: auto;
+        min-height: 40px;
+        max-height: 150px;
+        overflow: auto;
+    }
+
+    .detailsubspan {
+        background-color: rgb(184, 228, 71);
+        width: 240px;
+        padding-left: 10px;
+    }
+
+    .titleDetailHead {
+        margin-left: .625rem;
+    }
+</style>
+<script type="text/javascript">
+    $(document).ready(function () {
+        $(".contentDetailHead").show(200);
+        $(".titleDetailHead").click(function () {
+            $(".contentDetailHead").toggle();
+        });
+    });
+</script>
+
+@if (Model != null)
+{
+    if (Model.detailHeadList != null)
+    {
+        if (Model.detailHeadList.Count() > 0)
+        {
+            <div class="">
+                @for (var i = 0; i < Model.detailHeadList.Select(x => new { x.SpecificationID, x.SpecificationName }).Where(x => x.SpecificationID != 0 && x.SpecificationName != string.Empty).ToList().Distinct().Count(); i++)
+                {
+                    if (Model.detailHeadList.Select(x => new { x.SpecificationID, x.SpecificationValue }).Where(x => x.SpecificationID != 0 && x.SpecificationValue != string.Empty && x.SpecificationID == Model.detailHeadList[i].SpecificationID).ToList().Distinct().Count() > 1)
+                    {
+                        <div class="">
+                            <div class="tile-group11 double paddingnew">
+                                <div class="cell newcell">
+                                    <div class="panel" data-role="panel">
+
+                                        <div class="heading headingnew">
+                                            @Html.HiddenFor(it => it.detailHeadList[i].SpecificationID)
+                                            @Html.HiddenFor(it => it.detailHeadList[i].SpecificationName)
+                                            <span class="titleDetailHead">@Model.detailHeadList[i].SpecificationName</span>
+                                            <input type="hidden" class="titleDetailHead" value="@Model.detailHeadList[0].SpecificationID" />
+                                            <button class="button link mini-button clearDetailHead clearright" style=" ">Clear</button>
+                                        </div>
+
+                                        <div class="contentDetailHead" style="">
+
+                                            <table id="tblSubSpecification">
+                                                <tbody>
+                                                    @for (var j = 0; j < Model.detailHeadList.Select(x => new { x.SpecificationID, x.SpecificationValue }).Where(x => x.SpecificationID != 0 && x.SpecificationValue != string.Empty).ToList().Distinct().Count(); j++)
+                                                    {
+                                                        if (Model.detailHeadList[j].SpecificationID == Model.detailHeadList[i].SpecificationID)
+                                                        {
+                                                            <tr>
+                                                                <td>
+                                                                    @Html.CheckBoxFor(it1 => it1.detailHeadList[j].IsSelected, new { onchange = "this.form.submit();", Style = "vertical-align:3px}", @class = "detailHeadCheckBox" })
+                                                                    @Html.HiddenFor(it1 => it1.detailHeadList[j].SpecificationID)
+                                                                    @Html.HiddenFor(it1 => it1.detailHeadList[j].SpecificationName)
+                                                                    @Html.HiddenFor(it1 => it1.detailHeadList[j].ProductSpecificationID)
+                                                                    @Html.HiddenFor(it1 => it1.detailHeadList[j].SpecificationValue)
+                                                                    <span>@Model.detailHeadList[j].SpecificationValue</span>
+                                                                </td>
+                                                            </tr>
+                                                        }
+                                                    }
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                }
+            </div>
+        }
+    }
+}

@@ -1,0 +1,181 @@
+﻿@model ModelLayer.Models.ViewModel.LeadersOrderViewModel
+
+@{
+    ViewBag.Title = "AccountIndex";
+    Layout = "~/Views/Shared/_AccountsLayout.cshtml";
+}
+
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title></title>
+    <script src="~/Scripts/jquery-1.12.4.js"></script>
+
+    
+
+</head>
+
+<style type="text/css">
+    #loading {
+        display: none;
+        position: fixed;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(255,255,255,0.8);
+        z-index: 1000;
+    }
+
+    #loadingcontent {
+        display: table;
+        position: fixed;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+    }
+
+    #loadingspinner {
+        display: table-cell;
+        vertical-align: middle;
+        width: 100%;
+        text-align: center;
+        font-size: larger;
+        padding-top: 80px;
+    }
+</style>
+<body>
+    <div id="dataDiv">
+
+    </div>
+    <div class="container">
+
+        <div class="LeadersTable">
+
+
+        </div>
+        <div class="FilterTable">
+
+        </div>
+        <br />
+
+    </div>
+</body>
+
+</html>
+
+
+<script>
+
+    $(document).ready(function () {
+
+        $.ajax({
+            type: "GET",
+            url: "@Url.Action("partialPayoutDetailsToBank", "BankPayoutReport")",
+            contentType: "application/json; charset=utf-8",
+            //data: '{"startDate":"' + $("#min").val() + '","endDate":"' + $("#max").val() + '"}',
+            data: {},
+            dataType: "html",
+
+            success: function (data, status, xhr) {
+
+
+                $(".LeadersTable").html(data);
+
+
+            },
+            error: function (xhr, status, error) {
+                $("#dataDiv").html("data: " + status + " " + error + " " + xhr.status + " " + xhr.statusText)
+            }
+        });
+
+    });
+
+
+
+    $("#btnSearch").click(function () {
+
+        $.ajax({
+            type: "POST",
+            url: "@Url.Action("ListBetweenDate", "BankPayoutReport")",
+            contentType: "application/json; charset=utf-8",
+            data: '{"startDate":"' + $("#min").val() + '","endDate":"' + $("#max").val() + '"}',
+            dataType: "html",
+
+            success: function (data, status, xhr) {
+
+                $(".LeadersTable").empty();
+
+
+                $(".FilterTable").html(data);
+
+
+            },
+            error: function (xhr, status, error) {
+                $("#dataDiv").html("data: " + status + " " + error + " " + xhr.status + " " + xhr.statusText)
+            }
+        });
+
+    });
+
+</script>
+@*<script>
+        function exportexcel() {
+
+            var sDate = $("#min").val();
+            var eDate = $("#max").val();
+
+            window.location.href = "/BankPayoutReport/Export?toDate=" + eDate + "&fromDate=" + sDate;
+
+
+        }
+    </script>*@
+<script>
+
+
+    $('#btnExcel').click(function () {
+        var sDate = $("#min").val();
+        var eDate = $("#max").val();
+
+        window.location.href = "/BankPayoutReport/ExportToExcel?toDate=" + eDate + "&fromDate=" + sDate;
+
+    })
+
+</script>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $("#min").datepicker();
+        $("#max").datepicker();
+
+    });
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

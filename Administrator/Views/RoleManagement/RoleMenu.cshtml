@@ -1,0 +1,109 @@
+﻿@model ModelLayer.Models.RoleMenu
+
+@{
+    ViewBag.Title = "RoleMenu";
+}
+@using (Html.BeginForm())
+{
+    <div class="span10" id="content">
+        <div class="row-fluid">
+            <div class="box">
+                <div class="box-header">
+                    <h2><i class="icon-edit"></i><span class="break"></span>Role Menu</h2>
+
+                </div>
+                <form class="form-horizontal">
+
+                    <hr />
+                    @Html.ValidationSummary(true)
+                    <div id="pageloaddiv"></div>
+
+                    @if (ViewBag.Message != null)
+                    {
+                        <span style="color:red; font-weight:bold;"></span> @ViewBag.Message
+                    }
+                    
+                        <div class="control-group">
+                            @*@Html.LabelFor(model => model.CategoryID, "CategoryID", new { @class = "control-label col-md-2" })*@
+                            <label class="control-label span2" style="padding-left:10px;">Select Role </label>
+                            <div class="controls">
+                                @Html.DropDownList("RoleList",(SelectList) ViewBag.RoleList, "Select Role")                                
+                            </div>
+                        </div>
+                        <div class="control-group ">
+                            <label class="control-label span2" style="padding-left:10px;">Select Module</label>
+                            @*@Html.LabelFor(model => model.CategoryID, "CategoryID", new { @class = "control-label col-md-2" })*@
+                            <div class="controls">
+                                @Html.DropDownList("MasterMenu", (SelectList)ViewBag.MasterMenu, "Select Menu")                                
+                            </div>
+                        </div>                        
+                   
+                    
+                    <div id="divSpecification" style="display:block;"></div>
+                    <div class="form-actions">
+                        <div class="col-md-offset-2 col-md-10">
+                            @*<input type="submit" value="Create" class="btn btn-default" />*@
+                            @Html.ActionLink("Back to List", "Index", string.Empty, new { @class = "btn btn-brown" })
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+}
+
+
+<script src="~/Scripts/jquery-1.10.2.min.js"></script>
+
+
+<style type="text/css">
+    #pageloaddiv {
+        position: fixed;
+        left: 0px;
+        top: 0px;
+        width: 100%;
+        height: 100%;
+        z-index: 1000;
+        background: url('../Content/Images/ajax_loader.gif') no-repeat center center;
+        background-size: 100px;
+        display: none;
+    }
+</style>
+
+<script>
+    $(document).ready(function () {
+
+
+        $("#MasterMenu").change(function () {
+            /* Get the selected value of dropdownlist */
+            var selectedID = $(this).val();
+            var roleList = $("#RoleList").val();
+
+            /*Check Condition*/
+            $('#divSpecification').html(null);
+
+            /*Processing Image*/
+            $("#pageloaddiv").css('display', 'block');
+            $("#pageloaddiv").fadeOut(1000);
+
+
+            /* Request the partial view with .get request. */
+            $.get('/RoleManagement/PartialRoleMenu/?MasterMenu=' + selectedID + '&RoleList=' + roleList, function (data) {
+                /* data is the pure html returned from action method, load it to your page */
+                $('#divSpecification').html(data);
+                /* little fade in effect */
+                $('#divSpecification').fadeIn('fast');
+            });
+
+            $("#pageloaddiv").css('display', 'none');
+            $("#pageloaddiv").fadeOut(1000);
+
+        });
+    });
+
+    
+
+
+
+
+</script>

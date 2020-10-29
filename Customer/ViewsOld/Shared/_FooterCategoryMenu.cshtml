@@ -1,0 +1,41 @@
+﻿@model IEnumerable<ModelLayer.Models.ViewModel.MenuViewModel>
+@using System.Text.RegularExpressions;
+@using System.Globalization;
+
+@{
+    string cityName = "";
+    string cityID = "";
+    int franchiseID = 0;////added
+    if (Request.Cookies["CityCookie"] != null && Request.Cookies["CityCookie"].Value != "")
+    {
+        cityName = Request.Cookies["CityCookie"].Value.Split('$')[1].ToLower();
+        cityID = Request.Cookies["CityCookie"].Value.Split('$')[0].Trim();
+        franchiseID = Convert.ToInt32(Request.Cookies["CityCookie"].Value.Split('$')[2]);////added
+    }
+}
+<div class="row">
+    <div class="col-md-10new">
+        <h4 style="padding-left:15px;">Deals on eZeelo </h4>
+    </div>
+</div>
+@foreach (var item in Model)
+{
+    <div class="col-sm-12" style="line-height: 15px;padding-left:0px;">
+        <ul id="trademark-search-list" class="main-footer-links-list" style="margin:0px;">
+            <li class="trademark-text-tit">@item.CategoryName :</li>
+            @if (item.LevelTwoListing != null)
+            {
+                string itemName = Regex.Replace(item.CategoryName.Substring(0, Math.Min(item.CategoryName.Length, 30)), @"[\/\\#,+()$~%.':*?<>{} ]", "-").Replace("&", "and").ToLower();
+
+                foreach (var ltwo in item.LevelTwoListing)
+                {  //{city}/{franchiseId}/{catName}/{catID}/{secLvlCatID}/category"
+                    string ltwoCatName = Regex.Replace(ltwo.CategoryName.Substring(0, Math.Min(ltwo.CategoryName.Length, 30)), @"[\/\\#,+()$~%.':*?<>{} ]", "-").Replace("&", "and").ToLower();
+                    @*<li>@Html.RouteLink(CultureInfo.CurrentCulture.TextInfo.ToTitleCase(ltwo.CategoryName.ToLower()), "CategoryPages", new { city = cityName, franchiseId = franchiseID, catName = itemName, catID = item.ID, secLvlCatID =ltwo.ID})</li>*@ //new { catName = itemName, catID = item.ID, city = cityName, franchiseId = franchiseID }
+                    <li>@Html.RouteLink(CultureInfo.CurrentCulture.TextInfo.ToTitleCase(ltwo.CategoryName.ToLower()), "SecondLevelCategoryPages", new { catName = ltwoCatName, catID = item.ID, FirstLvtName = itemName, secLvlCatID = ltwo.ID, city = cityName, franchiseId = franchiseID }, new { @title = ltwo.CategoryName })</li>                                                                                                                                                                                                                                    
+               @*<a href='@Url.RouteUrl("CategoryPages", new { city = cityName, franchiseId = franchiseID, catName = itemName, catID = item.ID, secLvlCatID = ltwo.ID })'>@CultureInfo.CurrentCulture.TextInfo.ToTitleCase(ltwo.CategoryName.ToLower())</a>*@
+               
+               }
+            }
+        </ul>
+    </div>
+}

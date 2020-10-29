@@ -1,0 +1,298 @@
+﻿@{
+    ViewBag.Title = "Index";
+}
+<style>
+    #loaddiv {
+        position: fixed;
+        left: 0px;
+        top: 0px;
+        width: 100%;
+        height: 100%;
+        z-index: 1000;
+        background: url('../Content/Images/ajax_loader.gif') no-repeat center center;
+        background-size: 100px;
+        display: none;
+    }
+    .CategoryDiv {
+        width: 233px;
+        float: left;
+        padding: 10px;
+    }
+
+        .CategoryDiv span {
+            display: block;
+            font-size: 15px;
+            font-weight: 600;
+        }
+
+        .CategoryDiv select {
+            display: block;
+        }
+
+    .textDiv {
+        margin-left: 10px;
+        width: 100%;
+        float: left;
+    }
+
+    #Content {
+    }
+    /*.box-content {
+        position: relative;
+        z-index: 50;
+        margin-top: -25px;
+        padding: 10px;
+        background: #fff !important;
+    }*/
+</style>
+
+<div id="content" class="span10">
+    <ul class="breadcrumb">
+        <li>
+            Premium Shop Priority (For Mobile)
+            <a href="#">Index</a>
+        </li>
+    </ul>
+
+    <div id="loaddiv"></div>
+
+    <div class="row-fluid">
+        <div class="box span12">
+            <div class="box-header" >
+                <h2><i class="icon-edit"></i><span class="break"></span>@Html.ActionLink("Add New Primary Market", "PremiumShopPrimaryMarket_Create")</h2>
+            </div>
+            <div class="box-header ">
+                <h2><i class="icon-edit"></i><span class="break"></span>@Html.ActionLink("Add New Shop", "Shop_Create")</h2>
+            </div>
+            <div class="box-header ">
+                <h2><i class="icon-edit"></i><span class="break"></span>@Html.ActionLink("New Second Level Category", "PremiumShopSecondLevelCategory_Create")</h2>
+            </div>
+            <div class="box-header" >
+                <h2><i class="icon-edit"></i><span class="break"></span>@Html.ActionLink("New Third level Category", "Create")</h2>
+            </div>
+            
+            <div class="box-content">
+                <div style="width:100%;">
+                    <div class="CategoryDiv">
+                        <span>Select Franchise</span>
+                        @Html.DropDownList("FranchiseList", "Select Franchise")
+                    </div>
+                    <div class="CategoryDiv">
+                        <span>Select Category</span>
+                        @Html.DropDownList("LevelOneCategoryList", "Select Category")
+                    </div>
+                    <div class="CategoryDiv">
+                        <span>Select Shop</span>
+                        @Html.DropDownList("ShopID", "Select Shop")
+                    </div>
+                    <div class="CategoryDiv">
+                        <span>Select Category</span>
+                        @Html.DropDownList("LevelTwoCategoryList", "Select Category")
+                    </div>
+                </div>
+                @if (TempData["Message"] != null)
+                {
+                    <br />
+                    <span style="font-weight:bold; color:red;"> @TempData["Message"]  </span>
+                }
+
+                <div id="divSpecification" style="display:block;">
+
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+    
+    
+   </div>
+<script src="~/Scripts/jquery-1.10.2.min.js"></script>
+<script>
+
+    $(document).ready(function () {
+
+        $("#FranchiseList").change(function () {
+            var fId = $("#FranchiseList  option:selected").val();
+
+            $("#loaddiv").css('display', 'block');
+            $("#loaddiv").fadeOut(1000);
+                       
+
+            $.ajax({
+                type: "POST",               
+                url: "/PremiumShopPriority/FranchiseCategoryList_ForIndex",
+                data: "{ franchiseID: " + fId + "}",
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                async: true,
+                cache: false,
+                success: function (msg) {
+
+                    $('#LevelOneCategoryList').empty();
+                    $('#LevelOneCategoryList').append('<option value=0>Select Category</option>');
+
+                    $.each(msg, function (index, item) {
+
+                        $('#LevelOneCategoryList').append('<option value=' + item.ID + '>' + item.Name + '</option>');
+                    });
+                },
+                error: function (x, e) {
+                    alert("unable to Retrive Data No ");
+                }
+            });
+
+            if (fId > 0) {
+                $("#loaddiv").css('display', 'block');
+                $("#loaddiv").fadeOut(1000);
+                /* Request the partial view with .get request. */
+                $.get('/PremiumShopPriority/GetFranchisePremiumShopMarket?FranchiseID=' + fId, function (data) {
+                    /* data is the pure html returned from action method, load it to your page */
+                    $('#divSpecification').html(data);
+                    /* little fade in effect */
+                    $('#divSpecification').fadeIn('fast');
+                });
+
+                $("#loaddiv").css('display', 'none');
+                $("#loaddiv").fadeOut(1000);
+            }
+            else {
+                $('#divSpecification').html('');
+                $('#divSpecification').fadeIn('fast');
+            }
+            $('#divSpecification').html('');
+            $('#divSpecification').fadeIn('fast');
+
+            $("#loaddiv").css('display', 'none');
+            $("#loaddiv").fadeOut(1000);
+        });
+        
+        $('#LevelOneCategoryList').change(function (e) {
+
+            var fId = $("#FranchiseList  option:selected").val();
+            var cId = $("#LevelOneCategoryList  option:selected").val();
+
+            if (cId > 0) {
+                $("#pageloaddiv").css('display', 'block');
+                $("#pageloaddiv").fadeOut(1000);
+                /* Request the partial view with .get request. */
+                $.get('/PremiumShopPriority/GetFranchiseFirstLevel_ShopList?FranchiseID=' + fId + '&CategoryID=' + cId, function (data) {
+                    /* data is the pure html returned from action method, load it to your page */
+                    $('#divSpecification').html(data);
+                    /* little fade in effect */
+                    $('#divSpecification').fadeIn('fast');
+                });
+
+                $("#pageloaddiv").css('display', 'none');
+                $("#pageloaddiv").fadeOut(1000);
+            }
+            else {
+                $('#divSpecification').html('');
+                $('#divSpecification').fadeIn('fast');
+            }
+
+            $.ajax({
+                type: "POST",
+                //URL: "/ShopPriority/SelectLevelOneCategoryByFranchise?id=" + id,
+                url: "/PremiumShopPriority/GetShopByFranchiseAndCategory?FranchiseID=" + fId + "&CategoryID=" + cId,
+                // data: '{ FranchiseID:' + fId + '&CategoryID:' + cId + '}',
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                async: true,
+                cache: false,
+                success: function (msg) {
+                    $('#ShopID').empty();
+                    $('#ShopID').append('<option value=0>Select Shop</option>');
+
+                    $.each(msg, function (index, item) {
+                        //alert(item.ShopName)
+
+                        $('#ShopID').append('<option value=' + item.ShopID + '>' + item.ShopName + '</option>');
+                    });
+                },
+                error: function (x, e) {
+                    alert("unable to Retrive Data No ");
+                }
+            });
+
+
+
+        });
+        
+        $('#ShopID').change(function (e) {
+
+            var sId = $("#ShopID  option:selected").val();
+            var fId = $("#FranchiseList  option:selected").val();
+            if (sId > 0) {
+                $("#pageloaddiv").css('display', 'block');
+                $("#pageloaddiv").fadeOut(1000);
+                /* Request the partial view with .get request. */
+                $.get('/PremiumShopPriority/GetShopSecondLevelCategoryList?ShopID=' + sId + '&CategoryID=0', function (data) {
+                    /* data is the pure html returned from action method, load it to your page */
+                    $('#divSpecification').html(data);
+                    /* little fade in effect */
+                    $('#divSpecification').fadeIn('fast');
+                });
+
+                $("#pageloaddiv").css('display', 'none');
+                $("#pageloaddiv").fadeOut(1000);
+            }
+            else {
+                $('#divSpecification').html('');
+                $('#divSpecification').fadeIn('fast');
+            }
+
+
+            $.ajax({
+                type: "POST",
+                //URL: "/ShopPriority/SelectLevelOneCategoryByFranchise?id=" + id,
+                url: "/PremiumShopPriority/ShopSecondCategoryList_DDL?FranchiseID=" + fId + "&ShopID=" + sId,
+                // data: '{ FranchiseID:' + fId + '&CategoryID:' + cId + '}',
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                async: true,
+                cache: false,
+                success: function (msg) {
+                    $('#LevelTwoCategoryList').empty();
+                    $('#LevelTwoCategoryList').append('<option value=0>Select Category</option>');
+
+                    $.each(msg, function (index, item) {
+                        //alert(item.ShopName)
+
+                        $('#LevelTwoCategoryList').append('<option value=' + item.ID + '>' + item.Name + '</option>');
+                    });
+                },
+                error: function (x, e) {
+                    alert("unable to Retrive Data No ");
+                }
+            });
+        });
+        
+        $('#LevelTwoCategoryList').change(function (e) {
+
+            var sId = $("#ShopID  option:selected").val();
+            var cId = $("#LevelTwoCategoryList  option:selected").val();
+            if (sId > 0) {
+                $("#pageloaddiv").css('display', 'block');
+                $("#pageloaddiv").fadeOut(1000);
+                /* Request the partial view with .get request. */
+                $.get('/PremiumShopPriority/GetFranchiseCategoryList?ShopID=' + sId + '&CategoryID='+ cId, function (data) {
+                    /* data is the pure html returned from action method, load it to your page */
+                    $('#divSpecification').html(data);
+                    /* little fade in effect */
+                    $('#divSpecification').fadeIn('fast');
+                });
+
+                $("#pageloaddiv").css('display', 'none');
+                $("#pageloaddiv").fadeOut(1000);
+            }
+            else {
+                $('#divSpecification').html('');
+                $('#divSpecification').fadeIn('fast');
+            }
+
+        });
+    });
+
+</script>
+

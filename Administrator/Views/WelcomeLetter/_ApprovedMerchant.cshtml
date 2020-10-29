@@ -1,0 +1,54 @@
+﻿@*//-----------------------------------------------------------------------
+        // <copyright file="Index.cshtml" company="Ezeelo Consumer Services Pvt. Ltd.">
+        //     Copyright (c) Ezeelo Consumer Services Pvt. Ltd. All rights reserved.
+        //
+    </copyright>
+        // <author>Pradnyakar Badge</author>
+        //-----------------------------------------------------------------------*@
+@model IEnumerable<ModelLayer.Models.ViewModel.MerchantPendingApprovalViewModel>
+
+@{
+    ViewBag.Title = "Index";
+    
+}
+
+@*<h2>Pending Request of Merchant Approval</h2>*@
+<div id="content" class="span10" style="min-height: 403px;">
+    <div class="row-fluid">
+        <div class="box span12">
+            <div class="box-header">
+                <h2><i class="halflings-icon user"></i><span class="break"></span>Pending Request of Merchant Approval</h2>
+            </div>
+            <div class="box-content">
+                <table class="table table-striped table-bordered bootstrap-datatable datatable dataTable">
+                    <tr>
+                        <th>
+                            Merchant Name
+                        </th>
+
+                        <th>Actions</th>
+                    </tr>
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Name)
+                            </td>
+
+                            <td>
+                                @Html.ActionLink("Approve", "Approve", new { userLoginId = item.UserLoginID }, new { @class = "btn btn-primary" })
+                            </td>
+                        </tr>
+                    }
+
+                </table>
+            </div>
+            <div class="control-actions">
+                <div class="col-md-offset-2 col-md-10">
+                    @Html.ActionLink("Back to Franchise List", "ShowFranchiseList", "MerchantApproval", new { @class = "btn" })
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+

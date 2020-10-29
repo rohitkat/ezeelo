@@ -1,0 +1,214 @@
+﻿@model ModelLayer.Models.ViewModel.ProductRateViewModel
+
+@{
+    ViewBag.Title = "SaveProductRate";
+}
+
+<style>
+    .HeadingTD {
+        width: 30% !important;
+        text-align: right !important;
+    }
+
+        .HeadingTD span {
+            color: red !important;
+        }
+</style>
+<script language="javascript">
+    $(document).ready(function () {
+        $('#RateExpiry').datepicker({ dateFormat: 'mm/dd/yy' });
+
+        $("#btnCalRate").click(function () {
+            $("#btnRowCalRate").addClass('animated fadeOutUp');
+            $("#tblRowCalRate").show();
+            $("#tblRowCalRate").addClass('animated fadeInDown');
+            $("#Ratemsg").show();
+            $('input[type=text]').attr("readonly", "readonly");
+            $("#RateExpiry").attr("readonly", false);
+        });
+    });
+
+</script>
+
+<div id="content" class="span10">
+
+    @using (Html.BeginForm("SaveProductRate", "ProductRate", null, FormMethod.Post, new { id = "Form_" }))
+    {
+        @Html.AntiForgeryToken()
+        <div class="row-fluid">
+            <div class="box span12">
+                <div class="box-content">
+                    <div class="form-horizontal">
+                        <div class="row-fluid">
+                            <div class="box span12">
+                                <div class="box-header creatProduct clearfix" data-original-title="">
+                                    <h2>
+                                        <i class="icon-exclamation-sign"></i>
+                                        <span class="break"></span>
+                                        Product Rate Master
+                                    </h2>
+                                </div>
+                                <div class="form-horizontal">
+                                    <hr />
+                                    @Html.ValidationSummary(true)
+                                    @Html.HiddenFor(model => model.ProductId)
+                                    @Html.HiddenFor(model => model.ProductVarientId)
+                                    <table style="text-align:center;width:100%">
+                                        <tr>
+                                            <td>
+                                                <h1 style="color:#083a5f;margin-top:-15px "><b><u> @Model.ProductName </u></b></h1>
+                                                <h1 style="color:#083a5f"><b><u> @Model.ProductVarientName</u></b></h1>
+                                                <h2>HSN Code : @Model.HSNCode </h2>
+                                                <p style="color:red">Required field mark with *</p>
+                                                <p style="color:red;display:none;position:static;font:bold" id="Ratemsg"><b>Please Wait.  Calculating Rate.......</b></p>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                    <center>                                        
+                                        <table class="table table-responsive" style="width:80%">
+                                            <tr>
+                                                <td class="HeadingTD">
+                                                    <label> MRP<span>*</span>: </label>
+                                                </td>
+                                                <td style="width:50%">
+                                                    @Html.TextBoxFor(model => model.MRP)
+                                                    @Html.ValidationMessageFor(model => model.MRP)
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td class="HeadingTD">
+                                                    <label> Purchase Rate For Ezeelo<span>*</span>: </label>
+                                                </td>
+                                                <td>
+                                                    @Html.TextBoxFor(model => model.EzeeloPurchaseRate)
+                                                    @Html.ValidationMessageFor(model => model.EzeeloPurchaseRate)
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td class="HeadingTD">
+                                                    <label> GST(%)<span>*</span>: </label>
+                                                </td>
+                                                <td>
+                                                    @Html.TextBoxFor(model => model.GSTInPer)
+                                                    @Html.ValidationMessageFor(model => model.EzeeloPurchaseRate)
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td class="HeadingTD">
+                                                    <label> Ezeelo Margin (%)<span>*</span>: </label>
+                                                </td>
+                                                <td>
+                                                    @Html.TextBoxFor(model => model.EzeeloMarginInPercentage)
+                                                    @Html.ValidationMessageFor(model => model.EzeeloPurchaseRate)
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td class="HeadingTD">
+                                                    <label>Rate Valid UpTo<span>*</span>: </label>
+                                                </td>
+                                                <td>
+                                                    <span> @Html.TextBoxFor(model => model.RateExpiry, "{0:MM/dd/yyyy}", new { @readonly = "readonly", placeholder = "Rate Valid UpTo", @required = "required" }) <span style="color:red"> &nbsp; <i class="icon-info-sign"></i> MM/dd/yyyy </span> </span>
+                                                    @Html.ValidationMessageFor(model => model.RateExpiry)
+                                                </td>
+                                            </tr>
+                                            <tr id="btnRowCalRate">
+                                                <td colspan="2">
+                                                    <center>
+                                                        <br />
+                                                        <input type="button" value="Calculate Rate" class="btn btn-success mrg-left mrg-top" id="btnCalRate" />
+                                                    </center>
+                                                </td>
+                                            </tr>
+                                        </table>
+                                        <table id="tblRowCalRate" class="table table-responsive disabled" style="width:80%;margin-left:13%;display:none;margin-top:-7%">
+                                            <tr>
+                                                <td class="HeadingTD">
+                                                    <label>GST Amount: </label>
+                                                </td>
+                                                <td>
+                                                    @Html.TextBoxFor(model => model.GSTAmount)
+                                                    @Html.ValidationMessageFor(model => model.GSTAmount)
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td class="HeadingTD">
+                                                    <label>Actual Purchase Rate: </label>
+                                                </td>
+                                                <td>
+                                                    @Html.TextBoxFor(model => model.ActualPurchaseRate)
+                                                    @Html.ValidationMessageFor(model => model.ActualPurchaseRate)
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td class="HeadingTD">
+                                                    <label>Margin(Rs): </label>
+                                                </td>
+                                                <td>
+                                                    @Html.TextBoxFor(model => model.MarginInRs)
+                                                    @Html.ValidationMessageFor(model => model.MarginInRs)
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td class="HeadingTD">
+                                                    <label>Margin(%): </label>
+                                                </td>
+                                                <td>
+                                                    @Html.TextBoxFor(model => model.MarginInPercentage)
+                                                    @Html.ValidationMessageFor(model => model.MarginInPercentage)
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td class="HeadingTD">
+                                                    <label>Max Sale Rate: </label>
+                                                </td>
+                                                <td>
+                                                    @Html.TextBoxFor(model => model.MaxSaleRate)
+                                                    @Html.ValidationMessageFor(model => model.MaxSaleRate)
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td class="HeadingTD">
+                                                    <label>Final Sale Rate: </label>
+                                                </td>
+                                                <td>
+                                                    @Html.TextBoxFor(model => model.FinalSaleRate)
+                                                    @Html.ValidationMessageFor(model => model.FinalSaleRate)
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td class="HeadingTD">
+                                                    <label>Total GST: </label>
+                                                </td>
+                                                <td>
+                                                    @Html.TextBoxFor(model => model.TotalGST)
+                                                    @Html.ValidationMessageFor(model => model.TotalGST)
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td class="HeadingTD">
+                                                    <center>
+                                                        <br />
+                                                        <input type="submit" value="Save Rate" class="btn btn-success" style="margin-left:120%" />
+                                                    </center>
+                                                </td>
+                                            </tr>
+                                        </table>
+                                        <br />
+                                        @Html.ActionLink("Back to Product Varient List", "ProductVarientList", new { ProductId = @Model.ProductId }, new { @class = "btn btn-default mrg-left mrg-top" })
+                                        @Html.ActionLink("Back to Product List", "ProductList", null, new { @class = "btn btn-default mrg-left mrg-top" })
+                                        <br />
+                                        <br />
+                                        <br />
+                                        <br />
+                                    </center>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+
+</div>

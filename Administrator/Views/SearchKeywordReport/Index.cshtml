@@ -1,0 +1,136 @@
+﻿
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Index</h2>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+
+<link href="//cdn.datatables.net/1.10.19/css/jquery.dataTables.min.css" rel="stylesheet" />
+<script src="//cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
+<script src="~/Scripts/jquery-ui-1.12.1.min.js"></script>
+<link href="~/Content/css/datepicker.css" rel="stylesheet" />
+<link href="~/Content/css/jquery-ui-1.8.21.custom.css" rel="stylesheet" />
+
+<div class="container">
+
+    @*<div style="margin-left:80%;">
+                <input type="button" name="btnExcel" id="btnExcel" value="Export To Excel" class="btn btn-primary" />
+            </div>
+
+            <table border="0" cellspacing="5" cellpadding="5">
+                <tbody>
+                    <tr>
+                        <td>Start Date:</td>
+                        <td><input type="datetime" id="sDate" name="min" readonly="readonly"></td>
+                    </tr>
+                    <tr>
+                        <td>End Date:</td>
+                        <td><input type="datetime" id="eDate" name="max" readonly="readonly"></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <input type="button" value="Search" name="btnSearch" id="btnBetweenDate" />*@
+
+    <div class="Report6Table">
+
+    </div>
+    <div class="filterTable">
+
+    </div>
+    <br />
+    <br />
+    <div class="col-2">
+        <input type="datetime" id="sDate" name="min" readonly="readonly" placeholder="Start Date">
+    </div>
+    <div class="col-2">
+        <input type="datetime" id="eDate" name="max" readonly="readonly" placeholder="End Date">
+    </div>
+    <div class="col-2">
+        <input type="button" class="btn-primary" value="Search" name="btnSearch" id="btnBetweenDate" />
+    </div>
+    <div class="col-2">
+        <input type="button" name="btnExcel" id="btnExcel" value="Export To Excel" class="btn btn-primary" />
+    </div>
+</div>
+
+
+
+
+<script>
+
+    $(document).ready(function () {
+
+        $.ajax({
+            type: "GET",
+            url: "@Url.Action("partialSearchKeywordReport", "SearchKeywordReport")",
+            contentType: "application/json; charset=utf-8",
+            //data: '{"startDate":"' + $("#min").val() + '","endDate":"' + $("#max").val() + '"}',
+            data: {},
+            dataType: "html",
+
+            success: function (data, status, xhr) {
+
+                $(".filterTable").empty();
+
+               $(".Report6Table").html(data);
+
+
+            },
+            error: function (xhr, status, error) {
+                //$("#dataDiv").html("Result: " + status + " " + error + " " + xhr.status + " " + xhr.statusText)
+            }
+        });
+
+
+
+
+    });
+
+
+
+    $("#btnBetweenDate").click(function () {
+
+
+        $.ajax({
+            type: "POST",
+            url: "@Url.Action("FilterDateList", "SearchKeywordReport")",
+            contentType: "application/json; charset=utf-8",
+            data: '{"startDate":"' + $("#sDate").val() + '","endDate":"' + $("#eDate").val() + '"}',
+            dataType: "html",
+
+            success: function (data, status, xhr) {
+
+                $(".Report6Table").empty();
+                $(".filterTable").html(data);
+
+
+            },
+            error: function (xhr, status, error) {
+                //$("#dataDiv").html("Result: " + status + " " + error + " " + xhr.status + " " + xhr.statusText)
+            }
+        });
+
+    });
+
+    $('#btnExcel').click(function () {
+        var sDate = $("#sDate").val();
+        var eDate = $("#eDate").val();
+
+        window.location.href = "/SearchKeywordReport/ExportToExcel?toDate=" + eDate + "&fromDate=" + sDate;
+
+
+
+    })
+
+</script>
+
+<script>
+    $(document).ready(function () {
+        $("#sDate").datepicker();
+        $("#eDate").datepicker();
+
+    });
+</script>

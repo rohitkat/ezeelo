@@ -1,0 +1,150 @@
+﻿@model ModelLayer.Models.ViewModel.BBPViewModel
+
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_LeadersLayout.cshtml";
+}
+
+<link href="//cdn.datatables.net/1.10.19/css/jquery.dataTables.min.css" rel="stylesheet" />
+<script src="//cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
+<script src="~/Scripts/BBPMenuOpenup.js"></script>
+<style>
+    table {
+        border-collapse: separate;
+        border-spacing: 15px;
+    }
+
+    .nav-link {
+        color: #007bff !important;
+    }
+
+    a.nav-link.active.show {
+        color: black !important;
+    }
+</style>
+@if (TempData["BBPResult"] != null)
+{
+    <script>
+    alert("@TempData["BBPResult"]");
+    </script>
+}
+<script>
+    $(document).ready(function () {
+        $("#Payout").attr("disabled", "disabled");
+        $("#btnExport").click(function () {
+            window.location = "/admin/BBPReports/ExportToExcel_InactivePoints";
+        })
+
+    });
+</script>
+<div class="container">
+    <div id="progress" class="modal">
+        <div class="center">
+            <img src="~/img/ajax-loading-gif-transparent-background-8.gif" />
+        </div>
+    </div>
+    <div class="card" id="maindiv">
+        <div class="card-header"><strong>Business Booster Plan Inactive Point Payout Process </strong></div>
+        <div class="card-body card-block">
+            @using (Html.BeginForm("BBPInactivePointReport", "BBPReports"))
+            {
+                @Html.AntiForgeryToken()
+                <table>
+                    <tr>
+                        <td>
+                            <div>
+                                @Html.DropDownListFor(m => m.FilterID, Model.PayoutDateFilter, "Select Payout Week", new { @class = "form-control" })
+                            </div>
+                        </td>
+                        <td>
+                            <div class="form-group">
+                                @Html.CheckBoxFor(m => m.OnlyPaid, new { @class = "form-control" })
+                                OnlyPaid
+                            </div>
+                        </td>
+                        <td>
+                            <input id="GO" type="submit" value="Go" name="GO" class="btn btn-info" />
+                        </td>
+                        <td>
+                            <input id="btnExport" type="button" value="Export To Excel" class="btn btn-warning" />
+                        </td>
+                    </tr>
+                </table>
+            }
+            @if (Model != null)
+            {
+                <div class="tab-pane fade" id="Pdetails" style="max-width:1000px;overflow:auto">
+
+                    <table id="tblData" class="table table-bordered table-striped table-condensed display" width="100%">
+                        <thead>
+                            <tr>
+                                <th>Sr.No.</th>
+                                <th>Payout Week</th>
+                                <th>UserLoginId</th>
+                                <th>Name</th>
+                                <th>Email</th>
+                                <th>Phone No</th>
+                                <th>Inactive Points</th>
+                                <th>Ref Payout Week</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @{ var i = 0; }
+                            @if (@Model.List_InactivePoints != null)
+                            {
+                                foreach (var item in @Model.List_InactivePoints)
+                                {
+                                    <tr>
+                                        <td>
+                                            @{
+                                                i = i + 1;
+                                            }
+                                            @i
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.PayoutWeek)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.UserLoginID)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.Name)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.Email)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.Mobile)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.InactivePoints)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.RefPayoutWeek)
+                                        </td>
+                                    </tr>
+                                }
+                            }
+                            else
+                            {
+                                <tr>
+                                    <td colspan="9" style="min-width:960px;max-width:960px">
+                                        <label style=" color: #138afc; ">No Record Found.... </label>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                    <script type="text/javascript">
+                        $(document).ready(function () {
+                            $('#tblData').DataTable();
+                            $("#Pdetails").addClass("active show");
+                        });
+                    </script>
+
+                </div>
+
+            }
+        </div>
+    </div>
+</div>

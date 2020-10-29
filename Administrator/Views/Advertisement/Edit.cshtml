@@ -1,0 +1,107 @@
+﻿@model ModelLayer.Models.Advertisement
+@{
+    ViewBag.Title = "Edit";
+}
+<div class="span10" id="content">
+    <ul class="breadcrumb"><li><a href="#">Advertisement/Edit</a></li></ul>
+    <div class="row-fluid">
+        <div class="box span12">
+            <div class="box-header">
+                <h2><i class="icon-edit"></i><span class="break"></span>Edit Advertisement</h2>
+            </div>
+            <div class="box-content">
+                <div class="form-horizontal">
+                    @if (ViewBag.Messaage != null)
+                    {
+                        @Html.Label("Messaage", (string)ViewBag.Messaage, new { @class = "deleteMsg" })
+                    }
+                    else
+                    {
+                        @Html.Label("Messaage", "", new { @class = "deleteMsg" })
+                    }
+                    @using (Html.BeginForm())
+                    {
+                        @Html.AntiForgeryToken()
+                        @Html.ValidationSummary(true)
+                        @Html.HiddenFor(model => model.ID)
+                        <fieldset>
+                            <div class="control-group">
+                                <label class="control-label" for="focusedInput">Name</label>
+                                <div class="controls">
+                                    @*<input class="input-xlarge focused" id="focusedInput" type="text" value="This is focused…">*@
+                                    @Html.EditorFor(model => model.PageName)
+                                    @Html.ValidationMessageFor(model => model.PageName)
+                                </div>
+                            </div>
+                            <div class="control-group">
+                                <label class="control-label" for="focusedInput">Width In Pixel</label>
+                                <div class="controls">
+                                    @*<input class="input-xlarge focused" id="focusedInput" type="text" value="This is focused…">*@
+                                    @Html.EditorFor(model => model.WidthInPixel)
+                                    @Html.ValidationMessageFor(model => model.WidthInPixel)
+                                </div>
+                            </div>
+                            <div class="control-group">
+                                <label class="control-label" for="focusedInput">Height In Pixel</label>
+                                <div class="controls">
+                                    @*<input class="input-xlarge focused" id="focusedInput" type="text" value="This is focused…">*@
+                                    @Html.EditorFor(model => model.HeightInPixel)
+                                    @Html.ValidationMessageFor(model => model.HeightInPixel)
+                                </div>
+                            </div>
+                            <div class="control-group">
+                                <label class="control-label" for="focusedInput">Alignment</label>
+                                <div class="controls">
+                                    @*<input class="input-xlarge focused" id="focusedInput" type="text" value="This is focused…">*@
+                                    @Html.EditorFor(model => model.Alignment)
+                                    @Html.ValidationMessageFor(model => model.Alignment)
+                                </div>
+                            </div>
+                            <div class="control-group">
+                                <label class="control-label" for="focusedInput">Number Of Days</label>
+                                <div class="controls">
+                                    @*<input class="input-xlarge focused" id="focusedInput" type="text" value="This is focused…">*@
+                                    @Html.EditorFor(model => model.NumberOfDays)
+                                    @Html.ValidationMessageFor(model => model.NumberOfDays)
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label" for="optionsCheckbox2">Fees In Rs.</label>
+                                <div class="col-md-10 controls">
+                                    @Html.EditorFor(model => model.FeesInRs)
+                                    @Html.ValidationMessageFor(model => model.FeesInRs)
+                                </div>
+                            </div>
+                            <div class="control-group">
+                                <label class="control-label" for="focusedInput">Description</label>
+                                <div class="controls">
+                                    @*<input class="input-xlarge focused" id="focusedInput" type="text" value="This is focused…">*@
+
+                                    @Html.EditorFor(model => model.Description)
+                                    @Html.ValidationMessageFor(model => model.Description)
+                                </div>
+                            </div>
+                            <div class="control-group">
+                                <label class="control-label" for="optionsCheckbox2">Is Active</label>
+                                <div class="controls">
+                                    <label class="checkbox">
+                                        @Html.EditorFor(model => model.IsActive)
+                                        @Html.ValidationMessageFor(model => model.IsActive)
+
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="form-actions">
+                                <input type="submit" value="Save" class="btn btn-primary" />
+                                <button class="btn">@Html.ActionLink("Back to List", "Index")</button>
+                            </div>
+                        </fieldset>
+                    }
+                </div>
+            </div>
+        </div><!--/span-->
+    </div>
+</div>
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}

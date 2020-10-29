@@ -1,0 +1,104 @@
+﻿@model ModelLayer.Models.WarehouseReason
+
+@{
+    ViewBag.Title = "Edit";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<script>
+    $(document).ready(function () {
+        $("#ParentReasonId").change(function () {
+            $.ajax({
+                type: "POST",
+                url: '@Url.Action("Get_Category", "WarehouseReason")',
+                data: { 'ID': $(this).val()},
+                //dataType: "json",
+                cache: false,
+                success: function (data) {
+                    $("#txtCat").text(data);
+                },
+            });
+        });
+    })
+</script>
+<div id="content" class="span10">
+
+    @using (Html.BeginForm("EditSubReason", "WarehouseReason", new { id = Model.ID }, FormMethod.Post, new { id = "Form_" }))
+    {
+        @Html.AntiForgeryToken()
+
+        <div class="form-horizontal">
+
+            @Html.ValidationSummary(true)
+            @Html.HiddenFor(model => model.ID)
+            <div class="row-fluid">
+                <div class="box span12">
+                    <div class="box-content">
+                        <div class="form-horizontal">
+                            <div class="box-header creatProduct clearfix" data-original-title="">
+                                <h2>
+                                    <i class="icon-exclamation-sign"></i>
+                                    <span class="break"></span>
+                                    Edit Sub Reason
+                                </h2>
+                            </div>
+                            <div class="box-content nameDscrp">
+                                <div class="form-horizontal">
+                                    <div class="NameDescription">
+                                        <div class="form-group">
+                                            <div class="col-sm-3">
+                                                Category
+                                            </div>
+                                            <div class="col-sm-6">
+                                                <label id="txtCat">@ViewBag.Category</label>
+                                            </div>
+                                        </div>
+                                        <div class="control-group mrg-left">
+                                            <div class="col-sm-3">
+                                                Reason
+                                            </div>
+
+                                            <div class="col-sm-6">
+                                                @Html.DropDownList("ParentReasonId", Model.WarehouseReasonlist, "Select Main Reason", null)
+                                                @Html.ValidationMessageFor(model => model.ParentReasonId)
+                                            </div>
+
+                                        </div>
+                                        <div class="control-group mrg-left">
+                                            <div class="col-sm-3">
+                                                Sub Reason
+                                            </div>
+
+                                            <div class="col-sm-6">
+                                                <textarea id="Reason" name="Reason" style="width:30%;height:10%">@Model.Reason</textarea>
+                                                @Html.ValidationMessageFor(model => model.Reason)
+                                                
+                                            </div>
+
+                                        </div>
+                                        <div class="control-group mrg-left">
+                                            <div class="col-sm-3">
+                                                Is Active
+                                            </div>
+
+                                            <div class="col-sm-6">
+                                                @Html.EditorFor(model => model.IsActive)
+                                                @Html.ValidationMessageFor(model => model.IsActive)
+                                            </div>
+
+                                        </div>
+                                        <p>
+                                            <input type="submit" value="Save" class="btn btn-success mrg-left mrg-top" />
+                                            @Html.ActionLink("Back to List", "IndexSubReason", null, new { @class = "btn btn-default mrg-left mrg-top" })
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+</div>
+

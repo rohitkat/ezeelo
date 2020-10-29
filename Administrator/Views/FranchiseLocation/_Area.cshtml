@@ -1,0 +1,201 @@
+﻿@model IEnumerable<ModelLayer.Models.ViewModel.StateCityFranchiseMerchantViewModel>
+@{
+    ViewBag.Title = "Area";
+    Layout = null;
+}
+
+@*<script src="~/Content/js/jquery-1.9.1.min.js"></script>
+    @*<script src="~/Content/js/jquery.dataTables.min.js"></script>
+    <script src="~/Content/js/bootstrap.min.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $("[id*=myTable]").DataTable({
+                "bDestroy": true,
+                "bJQueryUI": true,
+                "scrollY": 700,
+                "scrollCollapse": true,
+                "iDisplayLength": 20,
+
+            });
+
+        });
+    </script>*@
+<style>
+    .btn-primary {
+        margin-left: -35px;
+        margin-bottom: 5px;
+    }
+
+    /*.add-btn {
+        margin-left: 125px;
+        display: block;
+    }*/
+    .btn-add {
+        position: relative;
+        top: 42px;
+        z-index: 10;
+        padding: 3px 10px;
+        margin-left: 27px;
+    }
+    .for-addBtn {
+        margin-top: 15px;
+    }
+</style>
+
+<link href="~/Content/css/Site.css" rel="stylesheet" />
+@*<link href="~/Content/css/searching.css" rel="stylesheet" />
+<link href="~/Content/css/sortable.css" rel="stylesheet" />
+<script src="~/Content/js/jquery-1.11.1.min.js"></script>
+<script src="~~/Content/js/jQuery-Table-Plugin.js"></script>*@
+
+
+<div>
+    <div>
+        <input type="button" id="btnAddAll" class="btn-add btn-primary" value="Add All" onclick="AddAllCities();" />
+    </div>
+    <div id="content" class="span10">
+
+        <div class="row-fluid sortable ui-sortable for-addBtn">
+            <div class="box span12">
+                <div class="box-header">
+                    <h2><i class="icon-home"></i><span class="break"></span>Add Location</h2>
+
+                </div>
+                <div class="box-content">
+                    <div class="div_class">
+                        <select name="nazwa" class="quantity">
+                            <option>10</option>
+                            <option>20</option>
+                            <option>30</option>
+                            <option>40</option>
+                            <option>50</option>
+                        </select>
+                        @*<div class="search_div">
+                            <input type="text" class="search_input" placeholder="Search..." />
+                            <a class="clearlink" title="Clear textbox"></a>
+                        </div>*@
+                        <table id="tblLocationdata" class="sortable resizable searchable pagination table_style_3 css_class table-bordered searchTable">
+                            <thead>
+                                <tr>
+                                    <th>
+                                        Area Name
+                                    </th>
+                                    <th class="add-btn">
+                                        Add
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var item in Model)
+                                {
+                                    <tr>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.AreaName)
+                                            <input type="hidden" value="@item.AreaID" class="hdnAreaID" />"
+                                        </td>
+                                        <td></td>
+                                        <td><input id="@item.AreaID" type="button" value="Add" class="btn btn-primary" onclick="AddLocationToDatabase(this.id);" /><span class='savemsg' style='color:Green'><img id="@item.AreaID" src="~/Content/Images/ajax_loader.gif" style="display: none" height="20" width="20" /></span></td>
+
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                        <div class="pagination_div"><a class="first_page">«« First </a><a class="prev_page">« Prev</a><span class="current_page">1</span><a class="next_page">Next »</a><a class="last_page">Last »»</a></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@*<div id="Pager">
+
+        @for (int c = 1; c <= @ViewBag.TotalPages; c++)
+        {
+            <a class="page-number" href="javascript:void();">@c</a>
+
+        }
+        @*<span class="totalcount"><b>Showing  @ViewBag.TotalCount enteries</b></span>
+    </div>*@
+<div class="loader">
+    <img id="loader_img" src="~/Content/img/loader.gif" style="display: none" />
+</div>
+@*@ViewBag.PageSize of*@
+<script>
+    function AddAllCities() {
+        var rowCount = $('#tblLocationdata tr:visible').length;
+        //alert(rowCount);
+        var count = 1;
+        $("#tblLocationdata tr:gt(0)").each(function () {
+            //alert(count);
+            if (count == rowCount)
+            {
+                return false;
+            }
+            AreaID = $(this).closest('tr').find('.hdnAreaID').val();
+            AddLocationToDatabase(AreaID);
+            count++;
+        });
+
+    }
+    function AddLocationToDatabase(AreaID) {
+        var FranchiseID = $("select#franchise option:selected").val();
+        $("[id*='" + AreaID + "']").show();
+        if (FranchiseID == "") {
+            alert('Please select Franchise');
+            $("[id*='" + AreaID + "']").hide();
+            return false;
+        }
+        $.ajax({
+            url: '@Url.Action("AddLocationToDatabase", "FranchiseLocation")',
+            data: { 'FranchiseID': FranchiseID, 'AreaID': AreaID },
+            type: "POST",
+            cache: false,
+            success: function (data) {
+                var msg = $("[id='" + AreaID + "']").closest('tr').find('.savemsg');
+                $(msg).text(data);
+                $(msg).show();
+                setTimeout(function () { $(msg).hide(); }, 5000);
+                if (data == "Saved") {
+                    $("[id*='" + AreaID + "']").closest('tr').remove();
+                }
+                GetAddedArea(FranchiseID);
+                $("[id*='" + AreaID + "']").hide();
+            },
+            error: function (data) {
+
+            }
+        });
+    }
+
+    function GetAddedArea(FranchiseID) {
+
+        var FranchiseID = $("select#franchise option:selected").val();
+        $.ajax({
+            type: "POST",
+            url: '@Url.Action("GetAddedArea", "FranchiseLocation")',
+            data: { 'FranchiseID': FranchiseID },
+
+            cache: false,
+            success: function (data) {
+                //alert(data);
+                $('#loader_img').hide();
+                $("[id*=divAddedArea]").empty();
+                $("[id*=divAddedArea]").append(data);
+
+            },
+            error: function (x, e) {
+                alert('Failure');
+
+            }
+        });
+
+
+
+    }
+</script>
+
+
+@*<script src="~/Content/js/jquery-2.1.3.min.js"></script>*@
+@*<link href="~/content/css/jquery.datatables.css" rel="stylesheet" />*@
+@*<script src="~/Content/js/jquery.dataTables.js" language="jascript"></script>*@

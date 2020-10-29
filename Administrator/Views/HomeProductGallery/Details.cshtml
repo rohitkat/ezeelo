@@ -1,0 +1,95 @@
+﻿@model IEnumerable<ModelLayer.Models.BlockItemsList>
+
+@{
+    ViewBag.Title = "Details";
+}
+<style>
+    .pagination {
+        margin: 0 40px;
+    }
+</style>
+
+
+<div id="content" class="span10" style="min-height: 403px;">
+    <ul class="breadcrumb">
+        <li>
+            <a href="#">Details</a>
+        </li>
+    </ul>
+    <div class="row-fluid">
+        <div class="box span12">
+           
+                @if (TempData["Message"] != null)
+                {
+                    <div style="font-weight:bold; color:red;">@TempData["Message"]</div>
+                }
+                <div class="box-header no-color">
+                    @Html.ActionLink("Back to Franchise List", "Index", null, new { @class = "btn btn-default mrg-top" })
+                </div>
+            <div class="box-content">
+                <table class="table table-striped table-bordered bootstrap-datatable datatable dataTable">
+                    <thead>
+                        <tr>
+                            <th>
+                                Sequence
+                            </th>
+                            @*<th>
+                    @Html.DisplayNameFor(model => model.ImageName)
+                </th>*@
+                            <th>
+                                Product Name
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.StartDate)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.EndDate)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.Tooltip)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.IsActive)
+                            </th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.SequenceOrder)
+                            </td>
+                            @*<td>
+                        @Html.DisplayFor(modelItem => item.ImageName)
+                    </td>*@
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Product.Name)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.StartDate)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.EndDate)
+                            </td>
+                            <td width="20%">
+                                @Html.DisplayFor(modelItem => item.Tooltip)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.IsActive)
+                            </td>
+                            <td width="10%">
+                                @Html.ActionLink("Edit", "Edit", new { id = item.ID }, new { @class = "btn btn-small btn-primary" }) |
+                                @Html.ActionLink("Delete", "Delete", new { id = item.ID }, new { @class = "btn btn-small btn-danger" })
+                            </td>
+                        </tr>
+                    }
+
+                </table>
+                <div class="form-actions no-color">
+                    @Html.ActionLink("Back to Franchise List", "Index", null, new { @class = "btn btn-default" })
+                </div>
+            </div>
+            </div>
+        </div>
+    </div>

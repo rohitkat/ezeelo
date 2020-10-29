@@ -1,0 +1,71 @@
+﻿@model ModelLayer.Models.SubscriptionPlanFacility
+
+@{
+    ViewBag.Title = "Create";
+}
+<div id="content" class="span10">
+    <ul class="breadcrumb">
+        <li>
+            <a href="#">Subscription Plan Facility</a>
+        </li>
+    </ul>
+    <div class="row-fluid">
+        <div class="box span12">
+            <div class="box-header">
+                <h2><i class="icon-edit"></i><span class="break"></span>Create</h2>
+            </div>
+            <div class="box-content">
+               
+                @using (Html.BeginForm())
+                {
+                    @Html.AntiForgeryToken()
+
+                    <div class="form-horizontal">
+                        @Html.ValidationSummary(true)
+
+                        <div class="control-group">
+                            @Html.LabelFor(model => model.SubscriptionPlanID, "SubscriptionPlanID", new { @class = "control-label" })
+                            <div class="controls">
+                                @Html.DropDownList("SubscriptionPlanID", String.Empty)
+                                @Html.ValidationMessageFor(model => model.SubscriptionPlanID)
+                            </div>
+                        </div>
+
+                        <div class="control-group">
+                            @Html.LabelFor(model => model.SubscriptionFacilityID, "SubscriptionFacilityID", new { @class = "control-label" })
+                            <div class="controls">
+                                @Html.DropDownList("SubscriptionFacilityID", String.Empty)
+                                @Html.ValidationMessageFor(model => model.SubscriptionFacilityID)
+                            </div>
+                        </div>
+
+                        <div class="control-group">
+                            @Html.LabelFor(model => model.FacilityValue, new { @class = "control-label" })
+                            <div class="controls">
+                                @Html.TextBoxFor(model => model.FacilityValue)
+                                @Html.ValidationMessageFor(model => model.FacilityValue)
+                            </div>
+                        </div>
+
+                        <div class="control-group">
+                            @Html.LabelFor(model => model.IsActive, new { @class = "control-label" })
+                            <div class="controls">
+                                @Html.EditorFor(model => model.IsActive)
+                                @Html.ValidationMessageFor(model => model.IsActive)
+                            </div>
+                        </div>
+
+                        <div class="form-actions">
+                                <input type="submit" value="Create" class="btn btn-success" />
+                            @Html.ActionLink("Back to List", "Index", null, new { @class = "btn" })
+                        </div>
+                    </div>
+                }
+
+                @section Scripts {
+                    @Scripts.Render("~/bundles/jqueryval")
+                }
+            </div>
+        </div>
+    </div>
+</div>

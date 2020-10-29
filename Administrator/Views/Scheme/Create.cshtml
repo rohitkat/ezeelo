@@ -1,0 +1,239 @@
+﻿@model ModelLayer.Models.ViewModel.Scheme
+
+@{
+    ViewBag.Title = "Create";
+}
+
+<style type="text/css">
+    #pageloaddiv {
+        position: fixed;
+        left: 0px;
+        top: 0px;
+        width: 100%;
+        height: 100%;
+        z-index: 1000;
+        background: url('../Content/Images/ajax_loader.gif') no-repeat center center;
+        background-size: 100px;
+        display: none;
+    }
+</style>
+<div id="content" class="span10">
+    <ul class="breadcrumb">
+        <li>
+            <a href="#">Create</a>
+        </li>
+    </ul>
+    <div class="row-fluid ">
+        <div class="box span12">
+            <div class="box-header">
+                <h2><i class="icon-edit"></i><span class="break"></span>Create Scheme</h2>
+            </div>
+            <div class="box-content">
+                @using (Html.BeginForm())
+                {
+                    @Html.AntiForgeryToken()
+                    <div id="pageloaddiv"></div>
+                    <div class="form-horizontal">
+                     
+                        @Html.ValidationSummary(true)
+                        <span style="color:red;"> @ViewBag.Message</span>
+                        <label id="lblMsg" style="color:red"></label>
+                       
+                        <div class="control-group">
+                            @Html.LabelFor(model => model.Name, new { @class = "control-label" })
+                            <div class="controls">
+                                @*@Html.EditorFor(model => model.Name)*@
+                                @Html.TextBoxFor(model => model.Name, new { required = "requird" })
+                                @Html.ValidationMessageFor(model => model.Name)
+                            </div>
+                        </div>
+
+                        <div class="control-group">
+                            @Html.LabelFor(model => model.ValueInRs, new { @class = "control-label" })
+                            <div class="controls">
+                                @*@Html.EditorFor(model => model.ValueInRs)*@
+                                @Html.TextBoxFor(model => model.ValueInRs,new{ required = "requird"})
+                                @Html.ValidationMessageFor(model => model.ValueInRs)
+                            </div>
+                        </div>
+
+                        <div class="control-group">
+                            @Html.LabelFor(model => model.ApplicableOnPurchaseOfRs, new { @class = "control-label"})
+                            <div class="controls">
+                                @*@Html.EditorFor(model => model.ApplicableOnPurchaseOfRs)*@
+                                @Html.TextBoxFor(model => model.ApplicableOnPurchaseOfRs, new { required = "requird" })
+                                @Html.ValidationMessageFor(model => model.ApplicableOnPurchaseOfRs)
+                            </div>
+                        </div>
+
+                        @*<div class="control-group">
+                                @Html.LabelFor(model => model.SchemeCode, new { @class = "control-label" })
+                                <div class="controls">
+                                    @Html.EditorFor(model => model.SchemeCode)
+                                    @Html.ValidationMessageFor(model => model.SchemeCode)
+                                </div>
+                            </div>
+
+                            <div class="control-group">
+                                @Html.LabelFor(model => model.OwnerId, new { @class = "control-label" })
+                                <div class="controls">
+                                    @Html.EditorFor(model => model.OwnerId)
+                                    @Html.ValidationMessageFor(model => model.OwnerId)
+                                </div>
+                            </div>*@
+
+                        <div class="control-group">
+                            @Html.LabelFor(model => model.BusinessTypeID, new { @class = "control-label" })
+                            <div class="controls">
+
+                                @*@Html.DropDownList("BusinessTypeID", (SelectList)ViewBag.BussinessType, "Select Bussiness Type")*@
+
+                                @Html.DropDownList("BusinessTypeID", new List<SelectListItem>
+                                      {
+                                        new SelectListItem{ Text="SuperAdmin", Value = "5" }
+                                      })
+                                @Html.ValidationMessageFor(model => model.BusinessTypeID)
+                            </div>
+                        </div>
+
+                        <div class="control-group">
+                            @Html.LabelFor(model => model.IsActive, new { @class = "control-label" })
+                            <div class="controls">
+                                @Html.EditorFor(model => model.IsActive)
+                                @Html.ValidationMessageFor(model => model.IsActive)
+                            </div>
+                        </div>
+
+                        <div class="control-group">
+                            @Html.LabelFor(model => model.StartDatetime, new { @class = "control-label" })
+                            <div class="controls">
+                                @*@Html.TextBoxFor(model => model.StartDatetime, new { @class = "datepicker " }) <i class="icon-calendar"></i>*@
+                                @Html.TextBox("StartDatetime1", null, new { id = "StartDatetime1", @class = "span10  datepicker glyphicons-iconcalendar", required = "requird" })
+                                @Html.ValidationMessageFor(model => model.StartDatetime)
+                            </div>
+                        </div>
+
+                        <div class="control-group">
+                            @Html.LabelFor(model => model.EndDatetime, new { @class = "control-label" })
+                            <div class="controls">
+                                @*@Html.TextBoxFor(model => model.EndDatetime, new { @class = "datepicker " }) <i class="icon-calendar"></i>*@
+                                @Html.TextBox("EndDatetime1", null, new { id = "EndDatetime1", @class = "span10  datepicker glyphicons-iconcalendar", required = "requird" })
+                                @*@Html.ValidationMessageFor(model => model.EndDatetime)*@
+                            </div>
+                        </div>
+
+                        <div id="divSpecification" style="display:block;"></div>
+
+                        <div class="form-actions" style="padding-left:25px;">
+                            <input type="submit" value="Create" class="btn btn-primary" onclick="return DateValidation()" />
+                            @Html.ActionLink("Back to List", "Index", null, new { @class = "btn btn-default" })
+                        </div>
+                    </div>
+                }
+
+               </div>
+            </div>
+        </div>
+    </div>
+                <script src="~/Content/js/jquery-2.1.3.min.js"></script>
+                <script type="text/javascript">
+                    //$(document).ready(function () {
+
+                    $("#BusinessTypeID").change(function () {
+
+                        var selectedVal = $("#BusinessTypeID option:selected").val();
+
+                        var data = null;
+
+                        $('#divSpecification').html(data);
+                        /* little fade in effect */
+                        $('#divSpecification').fadeIn('fast');
+
+                        /*Processing Image*/
+                        $("#pageloaddiv").css('display', 'block');
+                        $("#pageloaddiv").fadeOut(1000);
+
+                        $.ajax({
+                            type: "POST",
+                            url: "GetCouponOwners",
+                            data: "{ bussinessTypeID: '" + selectedVal + "'}",
+                            contentType: "application/json; charset=utf-8",
+                            dataType: "json",
+                            async: true,
+                            cache: false,
+                            success: function (msg) {
+
+                                $('#BusinessTypeID').empty();
+                                //$('#BusinessTypeID').append('<option value=0>Select Category</option>');
+                                //$.each(msg, function (index, item) {
+                                //   // alert(item.UserName);
+                                //    $('#divSpecification').append('<option value=' + item.OwnerID + '>' + item.UserName + '</option>');
+                                //});
+                                $('#BusinessTypeID').append('<option value=0>Select Category</option>');
+                                $.each(msg, function (index, item) {
+                                    // alert(item.UserName);
+                                    $('#divSpecification').append('<option value=' + item.OwnerID + '>' + item.UserName + '</option>');
+                                });
+                                $("#pageloaddiv").css('display', 'none');
+                                $("#pageloaddiv").fadeOut(1000);
+                            },
+                            error: function (x, e) {
+                                alert("Unable to Load Category");
+                                $("#pageloaddiv").css('display', 'none');
+                                $("#pageloaddiv").fadeOut(1000);
+                            }
+
+                        });
+                    });
+                    //});
+
+                </script>
+
+<script type="text/javascript">
+    function DateValidation() {
+        var FromDate = $('#StartDatetime1').val();
+        var ToDate = $('#EndDatetime1').val();
+        if (FromDate != null && ToDate != null) {
+            if (FromDate != '' && ToDate != '') {
+                FirstDate = FromDate.split('/');
+                SecondDate = ToDate.split('/');
+                var from = new Date(FirstDate[2], FirstDate[1], FirstDate[0]); //Year, Month, Date
+                var to = new Date(SecondDate[2], SecondDate[1], SecondDate[0]);
+                if (from > to) {
+                    $('[id*=lblMsg]').text('To Date must be greater than From Date.');
+                    return false;
+                }
+                else {
+                    $('[id*=lblMsg]').text('');
+                    return true;
+                }
+            }
+        }
+    }
+
+    //***************Code added by harshada on 10/01/2017 for validating amount*************************//
+    $('#ApplicableOnPurchaseOfRs').on("change", function () {
+        var ValueInRs = $('#ValueInRs').val();
+        var ApplicableOnPurchaseOfRs = $('#ApplicableOnPurchaseOfRs').val();
+        if (ValueInRs > ApplicableOnPurchaseOfRs) {
+            alert('true');       
+            $('[id*=lblMsg]').text('Purchase amount should be grater than ValueInRs.');
+        }
+        else
+        {
+            $('[id*=lblMsg]').text('');
+        }
+    });
+    $('#ValueInRs').on("change", function () {
+        var ValueInRs = $('#ValueInRs').val();
+        var ApplicableOnPurchaseOfRs = $('#ApplicableOnPurchaseOfRs').val();
+        if (ValueInRs > ApplicableOnPurchaseOfRs && ApplicableOnPurchaseOfRs.length!=0) {
+                $('[id*=lblMsg]').text('Purchase amount should be grater than ValueInRs.');
+            }
+            else {
+                $('[id*=lblMsg]').text('');
+            }
+    });
+    //***************END Code added by harshada on 10/01/2017 for validating amount*************************//
+</script>
+

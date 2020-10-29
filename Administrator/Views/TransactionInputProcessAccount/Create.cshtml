@@ -1,0 +1,231 @@
+﻿@model ModelLayer.Models.TransactionInputProcessAccount
+
+@{
+    ViewBag.Title = "Create";
+}
+<style>
+    textarea {
+        width: 80%;
+    }
+</style>
+<br />
+<div class="row-fluid" style="margin-left:15px;">
+    <div class="box span12">
+        <div class="box-header">
+            <h2><i class="icon-edit"></i><span class="break"></span>Transaction Process Account / Create</h2>
+        </div>
+        <div class="box-content">
+            <div class="form-horizontal">
+                @if (TempData["Messaage"] != null)
+                {
+                    @Html.Label("Messaage", (string)TempData["Messaage"], new { @class = "deleteMsg" })
+                }
+                else
+                {
+                    @Html.Label("Messaage", "", new { @class = "deleteMsg" })
+                }
+                @using (Html.BeginForm())
+                {
+                    @Html.AntiForgeryToken()
+                    <fieldset>
+                        <hr />
+                        @Html.ValidationSummary(true)
+
+                        <div class="control-group">
+                            <label class="control-label" for="focusedInput">Leadger Head</label>
+                            <div class="controls">
+                                @Html.DropDownList("LeadgerHeadID", "Select")
+                                @Html.ValidationMessageFor(model => model.LeadgerHeadID)
+                            </div>
+                        </div>
+
+                        <div class="control-group">
+                            <label class="control-label" for="focusedInput">Receipt Payment Mode</label>
+                            <div class="controls">
+                                @Html.DropDownList("ReceivedPaymentModeID", "Select")
+                                @Html.ValidationMessageFor(model => model.ReceivedPaymentModeID)
+                            </div>
+                        </div>
+
+                        <div class="control-group">
+                            <label class="control-label" for="focusedInput">Order Code</label>
+                            <div class="controls">
+                                @Html.TextBox("OrderCode", null, new { @id = "OrderCode", @class = "form-control-Widout-block", @placeholder = "Enter OrderCode", required = "required" })
+                                <img id="Pincode_loading" src="~/Content/Images/ajax_loader.gif" style="width: 30px; height: 30px; display: none" />
+                                <div id="divOrderCodeError" style="width:400px; display: none; padding:5px" class="alert-danger focused">  </div>
+                            </div>
+                        </div>
+                        <div id="divOrderCode">
+                            @*to load Order Details*@
+                        </div>
+
+
+                        @*<div class="control-group">
+                                <label class="control-label" for="focusedInput">Amount Received</label>
+                                <div class="controls">
+                                    @Html.EditorFor(model => model.Amount)
+                                    @Html.ValidationMessageFor(model => model.Amount)
+                                </div>
+                            </div>*@
+
+                        <div class="control-group">
+                            <label class="control-label" for="focusedInput">Paid By</label>
+                            <div class="controls">
+                                @Html.TextBox("ReceivedBy", null, new { @id = "ReceivedBy", @class = "form-control-Widout-block", @placeholder = "Enter Username", required = "required" })<input type="button" class="btn btn-warning" id="btnSearchUser" value="Search"><div id="divReceivedBy">@*to load Order Details*@</div>
+                                <img id="Pincode_loading1" src="~/Content/Images/ajax_loader.gif" style="width: 30px; height: 30px; display: none" />
+                                <div id="divReceivedByError" style="width:400px; display: none; padding:5px" class="alert-danger focused">  </div>
+                            </div>
+                        </div>
+
+                        <div class="control-group">
+                            <label class="control-label" for="focusedInput">POD Received</label>
+                            <div class="controls">
+                                @Html.EditorFor(model => model.PODReceived)
+                                @Html.ValidationMessageFor(model => model.PODReceived)
+                            </div>
+                        </div>
+
+                        <div class="control-group">
+                            <label class="control-label" for="focusedInput">Narration</label>
+                            <div class="controls">
+                                @Html.TextAreaFor(model => model.Narration)
+                                @Html.ValidationMessageFor(model => model.Narration)
+                            </div>
+                        </div>
+
+                        @*<div class="form-group">
+                            <div class="col-md-offset-2 col-md-10">
+                                <input type="submit" value="Create" class="btn btn-default" />
+                            </div>
+                        </div>
+                        <div>
+                            @Html.ActionLink("Back to List", "Index")
+                        </div>*@
+
+                        <div class="form-actions">
+                            <input type="submit" value="Create" class="btn btn-success" />
+                            @Html.ActionLink("Back to List", "Index", null, new { @class = "btn" })
+                        </div>
+                    </fieldset>
+                }
+            </div>
+            <div>
+                @{ Html.RenderAction("GetAccountPendingReport"); }
+            </div>
+        </div>
+
+    </div>
+</div>
+
+
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.2/jquery.min.js"></script>
+
+<script>
+    $('#OrderCode').bind('input propertychange', function () {
+        var lOrderCode = $('#OrderCode').val();
+
+        // $('#divOrderCodeError').hide();
+        if (lOrderCode.length == 15) {
+            $('#Pincode_loading').show();
+            $.ajax({
+                url: '@Url.Action("GetCustomerOrder", "TransactionInputProcessAccount")?GBOD=' + lOrderCode,
+                type: "GET",
+                success: function (result) {
+                    $('#divOrderCode').html(result);
+                    $('#Pincode_loading').hide();
+                    $('#divOrderCodeError').hide();
+                },
+                error: function (data) {
+                    //alert('Pincode : ' + lPincode + ' Dose Not Exist, please Contact to ADMIN');
+                    $('#divOrderCode').empty();
+                    $('#Pincode_loading').hide();
+                    $('#divOrderCodeError').show();
+                    $('#divOrderCodeError').html('OrderCode [' + lOrderCode + '] dose not exist.');
+                    $('#OrderCode').val('');
+                }
+            });
+        }
+    });
+
+    @*$('#ReceivedBy').bind('input propertychange', function () {
+        var lReceivedBy = $('#ReceivedBy').val();
+
+        // $('#divOrderCodeError').hide();
+        if (ReceivedBy.length == 15) {
+            $('#Pincode_loading1').show();
+            $.ajax({
+                url: '@Url.Action("GetCustomerOrder", "TransactionInputProcessAccount")?Username=' + lReceivedBy,
+                type: "GET",
+                success: function (result) {
+                    $('#divReceivedBy').html(result);
+                    $('#Pincode_loading1').hide();
+                    $('#divReceivedByError').hide();
+                },
+                error: function (data) {
+                    //alert('Pincode : ' + lPincode + ' Dose Not Exist, please Contact to ADMIN');
+                    $('#divReceivedBy').empty();
+                    $('#Pincode_loading1').hide();
+                    $('#divReceivedByError').show();
+                    $('#divReceivedByError').html('User [' + lReceivedBy + '] dose not exist.');
+                    $('#ReceivedBy').val('');
+                }
+            });
+        }
+    });*@
+
+    $('#btnSearchUser').click(function () {
+        var lReceivedBy = $('#ReceivedBy').val();
+        //if (ReceivedBy.length == 15) {
+        $('#Pincode_loading1').show();
+        $.ajax({
+            url: '@Url.Action("GetUserDetail", "TransactionInputProcessAccount")?Username=' + lReceivedBy,
+            type: "GET",
+            success: function (result) {
+                $('#divReceivedBy').html(result);
+                $('#Pincode_loading1').hide();
+                $('#divReceivedByError').hide();
+            },
+            error: function (data) {
+                //alert('Pincode : ' + lPincode + ' Dose Not Exist, please Contact to ADMIN');
+                $('#divReceivedBy').empty();
+                $('#Pincode_loading1').hide();
+                $('#divReceivedByError').show();
+                $('#divReceivedByError').html('User [' + lReceivedBy + '] dose not exist.');
+                $('#ReceivedBy').val('');
+            }
+        });
+        //}
+    });
+
+</script>
+
+<script>
+    $('.ordercode').click(function () {
+        //alert($(this).html());
+        var lOrderCode = $(this).html();
+        $('#OrderCode').val(lOrderCode);
+        $('#Pincode_loading').show();
+        $.ajax({
+            url: '@Url.Action("GetCustomerOrder", "TransactionInputProcessAccount")?GBOD=' + lOrderCode,
+            type: "GET",
+            success: function (result) {
+                $('#divOrderCode').html(result);
+                $('#Pincode_loading').hide();
+                $('#divOrderCodeError').hide();
+            },
+            error: function (data) {
+                //alert('Pincode : ' + lPincode + ' Dose Not Exist, please Contact to ADMIN');
+                $('#divOrderCode').empty();
+                $('#Pincode_loading').hide();
+                $('#divOrderCodeError').show();
+                $('#divOrderCodeError').html('OrderCode [' + lOrderCode + '] dose not exist.');
+                $('#OrderCode').val('');
+            }
+        });
+    })
+</script>

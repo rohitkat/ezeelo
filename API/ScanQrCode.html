@@ -1,0 +1,114 @@
+﻿<html>
+<head>
+    <title>Ezeelo-MarketPlace scan QRCode</title>
+    <link rel="icon" type="image/png" href="favicon.png">
+    <link href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
+    <link href="../../Scripts/QRCode/style.css" rel="stylesheet" />
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/webrtc-adapter/3.3.3/adapter.min.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.1.10/vue.min.js"></script>
+    <script type="text/javascript" src="https://rawgit.com/schmich/instascan-builds/master/instascan.min.js"></script>
+</head>
+<body>
+    <!--<a href="https://github.com/schmich/instascan"><img style="position: absolute; top: 0; right: 0; border: 0; z-index: 1" src="https://camo.githubusercontent.com/365986a132ccd6a44c23a9169022c0b5c890c387/68747470733a2f2f73332e616d617a6f6e6177732e636f6d2f6769746875622f726962626f6e732f666f726b6d655f72696768745f7265645f6161303030302e706e67" alt="Fork me on GitHub" data-canonical-src="https://s3.amazonaws.com/github/ribbons/forkme_right_red_aa0000.png"></a>-->
+    <div id="app">
+        <div class="sidebar" style="display:none">
+            <section class="cameras">
+                <h2>Cameras</h2>
+                <ul>
+                    <li v-if="cameras.length === 0" class="empty">No cameras found</li>
+                    <li v-for="camera in cameras">
+                        <span v-if="camera.id == activeCameraId" :title="formatName(camera.name)" class="active">
+                            {{ formatName(camera.name) }}
+                        </span>
+                        <span v-if="camera.id != activeCameraId" :title="formatName(camera.name)">
+                            <a @click.stop="selectCamera(camera)">{{ formatName(camera.name) }}</a>
+                        </span>
+                    </li>
+                </ul>
+            </section>
+            <section class="scans">
+                <h2>Scans</h2>
+                <ul v-if="scans.length === 0">
+                    <li class="empty">No scans yet</li>
+                </ul>
+                <transition-group name="scans" tag="ul">
+                    <li v-for="scan in scans" :key="scan.date" :title="scan.content">{{ scan.content }}</li>
+                </transition-group>
+            </section>
+        </div>
+        <div class="preview-container" id="ScannerDiv">
+            <span>Scan Ezeelo Merchant Qr Code</span>
+            <video id="preview" style="width:90%;height:130%"></video>
+        </div>
+
+        <div id="LoaderDiv" class="preview-container" style="display:none">
+            <span>Please wait... Reading QR Code!!!</span>
+            <img src="../../Scripts/QRCode/spinner-loading.gif" />
+        </div>
+
+        <div id="MerchantFoundDiv" class="preview-container" style="display:none">
+            <label style=" margin-top:-90px !important;">Ezeelo - Market  Place</label>
+            <br />
+            <br />
+            <img alt="ezeelo.com" src="http://img.ezeelo.com/Images/Marchant/logo.png" id="gblogo" title="ezeelo.com" onerror="this.src = '/Content/Images/no_image.png'">
+            <label style=" color:green !important; padding-bottom:25px !important"><i class="fa fa-check"></i> Shop Found</label>
+            <label id="MerchantName"></label>
+            <label id="CityName"></label>
+            <br />
+            <br />
+            <label style="font-size:40px !important;">Please Enter Bill Amount</label>
+            <span style="margin-top:5% !important"> <i style="" class='fa fa-INR'></i> <input type="number" placeholder="0.00" min="1" max="5" class="textbox" id="txtBillAmt" /> </span>
+            <br />
+            <input type="hidden" id="MerchantId" />
+            <input type="hidden" id="UserLoginId" />
+            <input type="button" value="Submit" class="button" id="submit" />
+            <br />
+            <br />
+            <a class="link">Scan QR Code !!!</a>
+        </div>
+        <div id="MerchantNotFoundDiv" class="preview-container" style="display:none">
+            <label style=" margin-top:-90px !important;">Ezeelo - Market  Place</label>
+            <br />
+            <br />
+            <img alt="ezeelo.com" src="http://img.ezeelo.com/Images/Marchant/logo.png" id="gblogo" title="ezeelo.com" onerror="this.src = '/Content/Images/no_image.png'">
+            <label style=" color:red !important; padding-bottom:25px !important"><i class="fa fa-Warning"></i> Shop Not Found</label>
+            <br />
+            <label style="font-size:40px !important;">Please Try Again!!!</label>
+            <br />
+            <br />
+            <a class="link">Scan QR Code !!!</a>
+        </div>
+        <div id="SuccedDiv" class="preview-container" style="display:none">
+            <label style=" margin-top:-90px !important;">Ezeelo - Market  Place</label>
+            <br />
+            <br />
+            <img src="../../Scripts/QRCode/Done.gif" />
+            <label style=" color:green !important; padding-bottom:25px !important"><i class="fa fa-check"></i> Transaction Saved Successfully!!!</label>
+            <label>For</label>
+            <label id="MerchantName_"></label>
+            <label id="CityName_"></label>
+            <span style="margin-top:3% !important;margin-bottom:3% !important"> <i style="" class='fa fa-INR'></i> <label style="padding-left:5px !important" id="BillAmt"></label> </span>
+            <label style="font-size:40px !important">Transaction Id</label>
+            <label style="font-size:40px !important" id="TransId"></label>
+            <span><a href="http://www.ezeelo.com" style="color:#2a6df6;">Thanks- Team Ezeelo</a></span>
+        </div>
+        <div id="FailedDiv" class="preview-container" style="display:none">
+            <label style=" margin-top:-90px !important;">Ezeelo - Market  Place</label>
+            <br />
+            <br />
+            <img src="../../Scripts/QRCode/Failed.png" />
+            <label style=" color:red !important; padding-bottom:25px !important"> Transaction Failed</label>
+            <br />
+            <label style="font-size:40px !important;">Please Try Again!!!</label>
+            <br />
+            <br />
+            <a class="link">Scan QR Code !!!</a>
+        </div>
+    </div>
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js"
+            integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo="
+            crossorigin="anonymous"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="../../Scripts/QRCode/app.js"></script>
+</body>
+</html>

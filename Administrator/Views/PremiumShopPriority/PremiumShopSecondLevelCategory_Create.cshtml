@@ -1,0 +1,311 @@
+﻿@model ModelLayer.Models.PremiumShopsPriority
+
+@{
+    ViewBag.Title = "PremiumShopSecondLevelCategory_Create";
+}
+
+<style>
+    .CategoryDiv {
+        width: 233px;
+        float: left;
+        padding: 10px;
+    }
+
+        .CategoryDiv span {
+            display: block;
+            font-size: 15px;
+            font-weight: 600;
+        }
+
+        .CategoryDiv label {
+            display: block;
+            font-size: 15px;
+            font-weight: 600;
+            text-align: left !important;
+        }
+
+        .CategoryDiv select {
+            display: block;
+        }
+
+    .form-horizontal .form-actions {
+        padding-left: 10px !important;
+    }
+
+    .textDiv {
+        margin-left: 10px;
+        width: 100%;
+        float: left;
+    }
+
+    #Content {
+    }
+
+    .uploader {
+        width: 195px !important;
+    }
+
+    .action {
+        border: 1px solid#ccc;
+        color: #fff;
+        background-color: #2271D2;
+        text-shadow: none !important;
+        cursor: pointer !important;
+    }
+
+    div.uploader span.filename {
+        border-right: none;
+    }
+
+    #dvPreview {
+        /*float: left;*/
+        width: 120px;
+    }
+
+    .uploader {
+        margin-top: 35px;
+    }
+
+    #dvPreview img {
+        border: 3px solid#CEC4C4;
+        margin-bottom: 10px;
+        height: 124px;
+    }
+
+    div.uploader {
+        left: -12px;
+        top: 121px;
+    }
+
+    .top_cat {
+        margin-top: 2px; /*margin-bottom:45px;*/
+        border: 1px solid #ccc;
+        width: 173px;
+        height: 135px;
+    }
+
+    #dvPreview {
+        margin-top: -60px;
+        width: 164px;
+        padding: 0px 1px;
+    }
+</style>
+
+<div id="content" class="span10">
+    <ul class="breadcrumb">
+        <li>
+            <a href="#">Create</a>
+        </li>
+    </ul>
+
+    <div class="row-fluid">
+
+        <div class="box span12">
+            <div class="box-header">
+                <h2><i class="icon-edit"></i><span class="break"></span>Premium Shop Priority</h2>
+
+            </div>
+            <div class="box-content">
+
+                @using (Html.BeginForm("PremiumShopSecondLevelCategory_Create", "PremiumShopPriority", FormMethod.Post))
+                {
+                    @Html.AntiForgeryToken()
+                    if (ViewBag.Messaage != null)
+                    {
+                        <div style="font-weight:bold; color:red;">@ViewBag.Messaage</div>
+                    }
+                    <div class="form-horizontal">
+
+                        @Html.ValidationSummary(true)
+
+
+                        <div class="pull-left">
+                            <div class="CategoryDiv">
+
+                                <span>Select Franchise</span>
+                                @Html.DropDownList("FranchiseID", "Select Franchise")
+                                <span id="FranchiseListErro" style="font-weight:bold;color:red;"></span>
+                            </div>
+                            <div class="CategoryDiv">
+                                <span>Select Shop</span>
+                                @Html.DropDownList("ShopID", "Select Shop")
+                                <span id="ShopErro" style="font-weight:bold;color:red;"></span>
+                            </div>
+
+                            <div class="CategoryDiv">
+                                <span>Select Level Three Category</span>
+                                @Html.DropDownList("CategoryID", "Select Category")
+                                <span id="CategoryErro" style="font-weight:bold;color:red;"></span>
+                            </div>
+
+                            <div class="clr"></div><div class="clearfix"></div>
+
+                            <div><span id="CategoryErro" style="font-weight:bold;color:red;"></span></div>
+
+                            <div class="CategoryDiv">
+                                @Html.LabelFor(model => model.PriorityLevel, new { @class = "control-label col-md-2" })
+                                @Html.EditorFor(model => model.PriorityLevel)
+                                @Html.ValidationMessageFor(model => model.PriorityLevel)
+                                <span id="SequenceOrderErro" style="font-weight:bold;color:red;"></span>
+
+                            </div>
+                            @*<div class="CategoryDiv" style="margin-left:-11px;">
+                                    @Html.LabelFor(model => model.CategoryName, new { @class = "control-label col-md-2" })
+                                    @Html.EditorFor(model => model.CategoryName)
+                                    @Html.ValidationMessageFor(model => model.CategoryName)
+                                    <span id="CategoryNameErro" style="font-weight:bold;color:red;"></span>
+                                </div>*@
+                            <div class="CategoryDiv">
+                                @Html.LabelFor(model => model.IsActive, new { @class = "control-label col-md-2" })
+                                @Html.EditorFor(model => model.IsActive)
+                                @Html.ValidationMessageFor(model => model.IsActive)
+                                <span id="IsActiveErro" style="font-weight:bold;color:red;"></span>
+                            </div>
+                            <div class="clr"></div>
+                        </div>
+
+                        <div class="clearfix"></div>
+                        <div class="form-actions" style="clear:both;">
+
+                            <input type="submit" value="Save" class="btn btn-success" />
+                            @Html.ActionLink("Back to List", "Index", null, new { @class = "btn btn-brown" })
+                        </div>
+                    </div>
+                }
+
+
+
+            </div>
+        </div>
+    </div>
+</div>
+<script src="~/Scripts/jquery-1.10.2.min.js"></script>
+<script>
+
+    $(document).ready(function () {
+
+        $(".btn-success").click(function () {
+            var ErrorCount = 0;
+            var isActive = $("#IsActive option:selected").text().toUpperCase();
+            var franchise = $("#FranchiseID option:selected").text().toUpperCase();
+            var LevelOne = $("#CategoryID option:selected").text().toUpperCase();
+            var Shop = $("#ShopID option:selected").text().toUpperCase();
+            var PriorityLevel = $("#PriorityLevel").val();
+
+            alert
+            if (isActive == 'NOT SET') {
+                $('#IsActiveErro').html('Please Select the IsActive');
+                ErrorCount = ErrorCount + 1;
+            }
+            else {
+                $('#IsActiveErro').html('');
+            }
+
+            if (franchise == 'SELECT FRANCHISE') {
+                $('#FranchiseListErro').html('Please Select Franchise');
+                ErrorCount = ErrorCount + 1;
+            }
+            else {
+                $('#FranchiseListErro').html('');
+            }
+
+            if (LevelOne == 'SELECT CATEGORY') {
+                $('#CategoryErro').html('Please Select Category');
+                ErrorCount = ErrorCount + 1;
+            }
+            else {
+                $('#CategoryErro').html('');
+            }
+
+
+            if (Shop == 'SELECT SHOP') {
+                $('#ShopErro').html('Please Select Shop');
+                ErrorCount = ErrorCount + 1;
+            }
+            else {
+                $('#ShopErro').html('');
+            }
+
+            if (PriorityLevel == '') {
+                $('#SequenceOrderErro').html('Please Select PriorityLevel or Set to Zero (0)');
+                ErrorCount = ErrorCount + 1;
+            }
+            else {
+                $('#SequenceOrderErro').html('');
+            }
+
+            if (ErrorCount > 0) {
+                return false;
+            }
+        });
+
+        $("#FranchiseID").change(function () {
+
+            var fId = $("#FranchiseID  option:selected").val();
+            //alert(fId);
+            $.ajax({
+                type: "POST",
+                //URL: "/ShopPriority/SelectLevelOneCategoryByFranchise?id=" + id,
+                url: "/PremiumShopPriority/FranchiseShop",
+                data: "{ franchiseID: " + fId + "}",
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                async: true,
+                cache: false,
+                success: function (msg) {
+
+                    $('#ShopID').empty();
+                    $('#ShopID').append('<option value=0>Select Shop</option>');
+
+                    $.each(msg, function (index, item) {
+                        $('#ShopID').append('<option value=' + item.ID + '>' + item.Name + '</option>');
+                    });
+                },
+                error: function (x, e) {
+                    alert("unable to Retrive Data No ");
+                }
+            });
+        });
+
+        $('#ShopID').change(function (e) {
+            var id = $("#ShopID  option:selected").val();
+            var fId = $("#FranchiseID  option:selected").val();
+            $("#pageloaddiv").css('display', 'block');
+            $("#pageloaddiv").fadeOut(1000);
+            $.ajax({
+                type: "POST",
+                //URL: "/ShopPriority/SelectLevelOneCategoryByFranchise?id=" + id,
+                url: "/PremiumShopPriority/ShopSecondCategoryList",
+                data: "{ FranchiseID:" + fId + ",ShopID: " + id + "}",
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                async: true,
+                cache: false,
+                success: function (msg) {
+
+                    $('#CategoryID').empty();
+                    $('#CategoryID').append('<option value=0>Select Category</option>');
+
+                    $.each(msg, function (index, item) {
+
+                        $('#CategoryID').append('<option value=' + item.ID + '>' + item.Name + '</option>');
+                    });
+                    $("#pageloaddiv").css('display', 'none');
+                    $("#pageloaddiv").fadeOut(1000);
+                },
+                error: function (x, e) {
+                    alert("unable to Retrive Data No ");
+                    $("#pageloaddiv").css('display', 'none');
+                    $("#pageloaddiv").fadeOut(1000);
+                }
+
+            });
+        });
+
+      
+
+    });
+
+</script>
+
+

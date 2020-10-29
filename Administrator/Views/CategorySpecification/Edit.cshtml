@@ -1,0 +1,68 @@
+﻿@model ModelLayer.Models.CategorySpecification
+
+@{
+    ViewBag.Title = "Edit";
+}
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+
+    <div class="span10" id="content">
+        <div class="row-fluid">
+            <div class="box">
+                <div class="box-header">
+                    <h2><i class="icon-edit"></i><span class="break"></span>Category Specification</h2>
+                </div>
+                <div id="pageloaddiv"></div>
+                <div class="box-content">
+                    <form class="form-horizontal">
+
+                        <hr />
+                        @Html.ValidationSummary(true)
+                        @Html.HiddenFor(model => model.ID)
+
+                        <div class="control-group">
+                            @Html.LabelFor(model => model.CategoryID, "Category Name", new { @class = "control-label span2" })
+                            <div class="">
+                                @Html.DropDownList("CategoryID", String.Empty)
+                                @Html.ValidationMessageFor(model => model.CategoryID)
+                            </div>
+                        </div>
+
+                        <div class="control-group">
+                            @Html.LabelFor(model => model.SpecificationID, "Specification Name", new { @class = "control-label span2" })
+                            <div class="">
+                                @Html.DropDownList("SpecificationID", String.Empty)
+                                @Html.ValidationMessageFor(model => model.SpecificationID)
+                            </div>
+                        </div>
+
+                        <div class="control-group">
+                            @Html.LabelFor(model => model.IsActive, new { @class = "control-label span2" })
+                            <div class="">
+                                @Html.EditorFor(model => model.IsActive)
+                                @Html.ValidationMessageFor(model => model.IsActive)
+                            </div>
+                        </div>
+
+                        <div class="form-actions" style="padding-left:150px;">
+                            <div class="col-md-offset-2 col-md-10">
+                                <input type="submit" value="Save" class="btn btn-success" />
+                                @Html.ActionLink("Back to List", "Index", string.Empty, new { @class = "btn btn-brown" })
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+@*<div>
+        @Html.ActionLink("Back to List", "Index")
+    </div>*@
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}

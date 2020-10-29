@@ -1,0 +1,26 @@
+﻿@{
+    Layout = "~/Views/Shared/_Layout_franchise2.cshtml";
+}
+<div align="center" class="widget">
+    <div class="widget-header" style="text-align: left;">
+        <h3 class="box-title">Order List</h3>
+    </div>
+    <div class="widget-content">
+        <div id="divEditList">
+            @try
+            {
+                Html.RenderAction("EditOrderList", new { COID = Request.QueryString["COID"] });
+            }
+            catch (Exception ex)
+            {
+                //throw;
+                long lCOID = Convert.ToInt64(Request.QueryString["COID"]);
+                Response.Redirect("/CustomerOrderDetailAlignment?COID=" + lCOID);
+            }
+        </div>
+
+        <div id="divProductList" style="width: 85%;">
+            @*to load Product Details*@
+        </div>
+    </div>
+</div>

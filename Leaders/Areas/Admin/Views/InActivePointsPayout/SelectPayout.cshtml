@@ -1,0 +1,102 @@
+﻿@model ModelLayer.Models.ViewModel.EzeeMoneyPayoutViewModel
+
+@{
+    ViewBag.Title = "SelectPayout";
+    Layout = "~/Views/Shared/_LeadersLayout.cshtml";
+}
+<div class="container">
+    <div id="progress" class="modal">
+        <div class="center">
+            <img src="~/img/ajax-loading-gif-transparent-background-8.gif" />
+        </div>
+    </div>
+    <div class="card" id="maindiv">
+        <div class="card-header"><strong>InActive Points Payout Process </strong></div>
+        <div class="card-body card-block">
+            <strong>
+                Last InActive Points Payout Date :=>
+                @if (@Model.LastToPayoutDate.ToString("dd/MM/yyyy") != "01/01/0001")
+                {
+                    <span style="color: #0cba23;font-weight:normal"> Last Payout: @Model.LastFromPayoutDate.ToString("dd/MM/yyyy") To @Model.LastToPayoutDate.ToString("dd/MM/yyyy") </span>
+                }
+            </strong>
+
+            @using (Html.BeginForm("", "InActivePointsPayout"))
+            {
+                <table>
+                    <tr>
+                        <td>
+                            Select Payout Cycle
+                            @Html.DropDownListFor(m => m.PayoutDateFilter, Model.PayoutDateFilter, "--Select--", new { @class = "BuildType", @id = "PayoutDateFilterid" })
+                        </td>
+                        <td>
+                            &nbsp;&nbsp;&nbsp;
+                            <input id="btnGo" type="button" value="Go" class="btn btn-info" />
+                        </td>
+                        <td>
+                            &nbsp;&nbsp;&nbsp;
+                            <input id="btnExport" type="button" value="Export" class="btn btn-warning" />
+                        </td>
+                        <td>
+                            &nbsp;&nbsp;&nbsp;
+                            <input id="btnPayout" type="button" value="Pay" class="btn btn-success" />
+                        </td>
+                    </tr>
+                </table>
+                <div id="EzeeMoneyPayoutDetailDiv">
+
+                </div>
+            }
+
+        </div>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function () {
+        $("#btnPayout").hide();
+        $("#btnGo").click(function () {
+            var id = $("#PayoutDateFilterid").val();
+            if (id != "") {
+                $("#btnPayout").show();
+                $("#EzeeMoneyPayoutDetailDiv").load("/Admin/InActivePointsPayout/GetReport_InactivePoints?EzeeMoneyPayoutId=" + id + "&flag=0");
+            } else {
+                alert("Select Payout Cycle!!!");
+            }
+        });
+        $("#btnExport").click(function () {
+            var id = $("#PayoutDateFilterid").val();
+            if (id != "") {
+                window.location = "/admin/InActivePointsPayout/ExportToExcel?EzeeMoneyPayoutId=" + id;
+            } else {
+                alert("Select Payout Cycle!!!");
+            }
+        })
+
+        $("#btnPayout").click(function () {
+            var id = $("#PayoutDateFilterid").val();
+            if (id == "") {
+                alert("Select Payout Cycle!!!");
+            }
+            else {
+                var r = confirm("Coutinue to Inactive points Payout for Payout cycle " + $("#PayoutDateFilterid option:selected").text());
+                if (r == true) {
+                    $.ajax({
+                        type: "POST",
+                        dataType: "text",
+                        url: '/InActivePointsPayout/InactivePointsPayout?EzeeMoneyPayoutId=' + id + "&flag=1",
+                        contentType: "application/json; charset=utf-8",
+                        success: function (data) {
+                            alert(data);
+                            window.location.reload();
+                        },
+                        error: function (xhr) {
+
+                        }
+                    });
+                }
+            }
+        });
+    });
+</script>
+

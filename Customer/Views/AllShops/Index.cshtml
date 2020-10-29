@@ -1,0 +1,85 @@
+﻿@*@using ModelLayer.Models.ViewModel;*@
+@*@model ModelLayer.Models.ViewModel.AllShopsCollectionViewModel*@
+@model ModelLayer.Models.ViewModel.AllShops
+
+@using System.Text.RegularExpressions;
+@using System.Globalization;
+
+@{
+    Layout = "~/Views/Shared/_Layout_Internal.cshtml";
+    ViewBag.Title = "eZeelo: Online Jewellery, Home Appliances, Electronics & Fashion Store";
+}
+<script type="text/javascript" src="~/Scripts/AllShops.js"></script>
+<style>
+    .product-sm-left .product-caption-title {
+        font-size: 13px;
+        font-weight: 700;
+        height: 35px;
+    }
+</style>
+
+@Html.Hidden("CityID", Request.Cookies["CityCookie"].Value)
+<script>
+    $(function () {
+        $('a[href*="#"]:not([href="#"])').click(function () {
+            if (location.pathname.replace(/^\//, '') == this.pathname.replace(/^\//, '') && location.hostname == this.hostname) {
+                var target = $(this.hash);
+                target = target.length ? target : $('[name=' + this.hash.slice(1) + ']');
+                if (target.length) {
+                    $('html, body').animate({
+                        scrollTop: target.offset().top - 250
+                    }, 3000);
+                    return false;
+                }
+            }
+        });
+    });
+</script>
+<div class="gap"></div>
+<div class="row box" data-gutter="15">
+    <h3>CATEGORIES</h3>
+    @if (Model.CategoryList != null)
+    {
+        foreach (var item in Model.CategoryList)
+        {
+            <div class="col-xs-6 col-sm-3 col-md-2">
+                <a onclick="GetShopList(@item.FirstLevel_ID)" href="#divShopList">
+                    <div class="product product-sm-left ">
+                        <div class="product-img-wrap" style="width: 100%; cursor: pointer;">
+                            <img src="@(item.FirstLevel_Image != null ? item.FirstLevel_Image.Replace("_Priority", "") : "/Content/Images/no_image.png")" data-role="fitImage" alt="@item.FirstLevel_Name" onerror="this.src = '/Content/Images/no_image.png'" class="selected" style="width: 50px; height: 50px; border-radius: 27px;">
+                            <h5 class="product-caption-title">@item.FirstLevel_Name</h5>
+                        </div>
+                    </div>
+                </a>
+            </div>
+        }
+    }
+    <div class="gap"></div>
+    <h3 >Top Stores</h3>
+    <div id="divShopList">
+        @Html.Partial("_ShopList", Model)
+    </div>
+</div>
+<div class="gap"></div>
+<div align="center" id="ajax_loading_message" class="loader" style="display:none">
+    <img src="~/Content/Images/ajax_loader.gif" style="width: 55px; margin-top: 10%" />
+</div>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+<script src="js/grid.js"></script>
+<script>
+    $(window).load(function () {
+        $(".frame:first").addClass('color');
+    });
+</script>
+<script>
+    $(function () {
+        Grid.init();
+    });
+</script>
+<script>
+    var addclass = 'color';
+    var $cols = $('.shopDiv').click(function (e) {
+        $(".frame").removeClass(addclass);
+        $(this).find('.frame').addClass(addclass);
+    });
+</script>

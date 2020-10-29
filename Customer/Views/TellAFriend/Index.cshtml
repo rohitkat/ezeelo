@@ -1,0 +1,105 @@
+﻿@{//Yashaswi 01/12/2018 Default City Change 
+    ViewBag.Title = "eZeelo: Largest Online Shopping store For All Types Of Products";
+    string cityName = "";
+    int franchiseID = 0;////added
+    if (Request.Cookies["CityCookie"] != null && Request.Cookies["CityCookie"].Value != "")
+    {
+        cityName = Request.Cookies["CityCookie"].Value.Split('$')[1].ToLower();
+        franchiseID = Convert.ToInt32(Request.Cookies["CityCookie"].Value.Split('$')[2]);////added
+    }
+}
+<style>
+    .events {
+        padding-left: 30px !important;
+    }
+
+    .twitter-share-button {
+        margin: 30px !important;
+        float: left !important;
+    }
+
+    .googlediv, #___plus_0, #twitter-widget-0, .fb-share-button {
+        margin: 30px !important;
+        float: left !important;
+    }
+</style>
+
+<div id="navbar">
+    <ol class="breadcrumb page-breadcrumb">
+        <li>
+            @Html.RouteLink("Home", "Home", new { city = cityName, franchiseId = franchiseID })
+        </li>
+        <li>
+            @Html.RouteLink("My Account", "CustomerOrder/myorders", new { city = cityName, franchiseId = franchiseID })
+        </li>
+        <li class="active">Tell a Friend</li>
+    </ol>
+    @*<ul class="nav navbar-nav">
+            <li>@Html.RouteLink("Home >>", "Home", new { city = cityName }, new { @class = "ahomelink" })</li>
+            <li>@Html.RouteLink("My Account >>", "CustomerOrder/myorders", new { city = cityName }, new { @class = "ahomelink" }) </li>
+            <li><a class="ahomelink">Tell a Friend</a></li>
+        </ul>*@
+</div>
+@Html.Partial("_CustomerDashboardMenu")
+<div class="gap"></div>
+<div class="row box animated fadeInUp" data-gutter="15">
+    <h3>Tell A Friend</h3>
+    <div class="events-area">
+
+        <div class="g-plus googlediv" data-action="share" data-annotation="vertical-bubble" data-height="60" data-href="http://www.eZeelo"></div>
+        <div>
+            <a href="https://twitter.com/share" class="twitter-share-button" data-url="http://www.eZeelo" data-text="Programming sharing portal"
+               data-via="instinctcoder" data-count="vertical">Tweet</a>
+        </div>
+        <div id="fb-root"> </div>
+        <!--====================== javascript for Facebook =================================-->
+
+        <script type="text/javascript">
+            (function (d, s, id) {
+                var js, fjs = d.getElementsByTagName(s)[0];
+                if (d.getElementById(id)) return;
+                js = d.createElement(s); js.id = id;
+                js.src = "//connect.facebook.net/en_US/sdk.js#xfbml=1&version=v2.3";
+
+                fjs.parentNode.insertBefore(js, fjs);
+            }(document, 'script', 'facebook-jssdk'));</script>
+
+        <script type="text/javascript">
+
+            var url = "http://www.eZeelo";
+            document.write('<div class="fb-share-button" data-href="' + url + '" data-layout="button_count"></div>');
+
+        </script>
+
+    </div>
+
+</div>
+<div class="gap"></div>
+<!--====================== javascript for google plus =================================-->
+<!-- Place this tag where you want the share button to render. -->
+<!-- Place this tag after the last share tag. -->
+<script type="text/javascript">
+    (function () {
+        var po = document.createElement('script');
+        po.type = 'text/javascript';
+        po.async = true;
+        po.src = 'https://apis.google.com/js/platform.js';
+        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(po, s);
+    })();
+</script>
+
+<!--====================== javascript for Twitter =================================-->
+
+
+
+<script>
+    !function (d, s, id) {
+        var js, fjs = d.getElementsByTagName(s)[0], p = /^http:/.test(d.location) ? 'http' : 'https';
+        if (!d.getElementById(id)) {
+            js = d.createElement(s);
+            js.id = id; js.src = p + '://platform.twitter.com/widgets.js';
+            fjs.parentNode.insertBefore(js, fjs);
+        }
+    }(document, 'script', 'twitter-wjs');</script>
+
+

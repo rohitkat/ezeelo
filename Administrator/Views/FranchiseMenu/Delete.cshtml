@@ -1,0 +1,133 @@
+﻿@model ModelLayer.Models.FranchiseMenu
+
+@{
+    ViewBag.Title = "Delete";
+}
+
+<style>
+    /*.dl-horizontal dt {
+        border: 1px solid#EFEAEA;
+        margin-bottom: 5px;
+        color: #736D6D;
+        padding-right: 8px;
+    }*/
+    .dl-horizontal dt {
+        width: 175px; text-align:left;
+    }
+
+    .dl-horizontal dd {
+        margin-left: 200px;
+    }
+
+        .dl-horizontal dd:nth-of-type(1) {
+            margin-left: -1px;
+            margin-bottom: 100px;
+            margin-top: 7px;
+        }
+
+    .dl-horizontal img {
+        border: 2px solid#ccc; padding:2px;
+        width: 140px;
+        height: 115px;
+    }
+
+    /*.dl-horizontal dd:nth-of-type(3) {
+        margin-top: 10px;
+    }
+
+    .dl-horizontal dd:nth-of-type(4) {
+        margin-top: 8px;
+    }
+
+    .dl-horizontal dd:nth-of-type(5) {
+        margin-top: 6px;
+    }
+
+    .dl-horizontal dd:nth-of-type(6) {
+        margin-top: 3px;
+    }*/
+</style>
+
+<div id="content" class="span10">
+    <ul class="breadcrumb">
+        <li>
+            <a href="index.html">Franchise Menu</a>
+        </li>
+    </ul>
+    <div class="row-fluid">
+        <div class="box span12">
+            <div class="box-header">
+                <h2><i class="halflings-icon user"></i><span class="break"></span>Delete</h2>
+            </div>
+
+            <p class="deleteMsg">Are you sure you want to delete this?</p>
+            <div class="box-content">
+
+                    @if (ViewBag.Messaage != null)
+                    {
+                        <span>@ViewBag.Messaage</span>
+                    }
+
+                    <dl class="dl-horizontal">
+                        <dd>
+                            <img src="@Model.ImageName" onerror="this.src = '../../Content/Images/No_thumbnail.png'" width="100px" height="100px" />
+                        </dd>
+                        <dt>
+                            FRANCHISE NAME
+                        </dt>
+
+                        <dd>
+                            <span>@ViewBag.FranchiseName</span>
+                        </dd>
+
+                        <dt>
+                             CATEGORY NAME
+                        </dt>
+
+                        <dd>
+                            <span>
+                                @ViewBag.CategoryName (Level:= @ViewBag.Level)
+                            </span>
+                        </dd>
+
+                        <dt>
+                           FRANCHISE CATEGORY NAME
+                        </dt>
+
+                        <dd>
+                            @Html.DisplayFor(model => model.CategoryName)
+                        </dd>
+
+                        <dt>
+                            SEQUENCE ORDER
+                        </dt>
+
+                        <dd>
+                            @Html.DisplayFor(model => model.SequenceOrder)
+                        </dd>
+
+                        <dt>
+                            IS ACTIVE
+                        </dt>
+
+                        <dd>
+                            @Html.DisplayFor(model => model.IsActive)
+                        </dd>
+
+
+                    </dl>
+
+                    @using (Html.BeginForm())
+                    {
+                        @Html.AntiForgeryToken()
+
+                        <div class="form-actions no-color">
+                            <input type="submit" value="Delete" class="btn btn-danger" /> |
+                            @Html.ActionLink("Back to List", "Index", null, new { @class = "btn" })
+                        </div>
+                    }
+                
+            </div>
+        </div>
+    </div>
+</div>

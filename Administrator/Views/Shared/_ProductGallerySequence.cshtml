@@ -1,0 +1,236 @@
+﻿@model ModelLayer.Models.ViewModel.ProductGalleryList
+
+<style>
+    .img_cat img {
+        width: 50px;
+        height: 50px;
+    }
+
+    .box-header h3 {
+        line-height: 0px;
+    }
+
+    .fixed_headers {
+        table-layout: fixed;
+        border-collapse: collapse;
+    }
+
+    td:nth-child(1), th:nth-child(1) {
+        min-width: 100px;
+        word-wrap: break-word;
+    }
+
+    td:nth-child(2), th:nth-child(2) {
+        min-width: 274px;
+        word-wrap: break-word;
+    }
+
+    td:nth-child(3), th:nth-child(3) {
+        width: 385px;
+        word-wrap: break-word;
+    }
+
+    td:nth-child(4), th:nth-child(4) {
+        min-width: 80px;
+        word-wrap: break-word;
+    }
+
+    td:nth-child(5), th:nth-child(5) {
+        min-width: 34px;
+        word-wrap: break-word;
+    }
+
+    td:nth-child(6), th:nth-child(6) {
+        width: 46px;
+        word-wrap: break-word;
+    }
+
+    thead {
+        background-color: #ccc;
+        color: #fff;
+    }
+
+    tr {
+        display: block;
+        position: relative;
+    }
+
+
+    tbody {
+        display: block;
+        overflow: auto;
+        width: 100%;
+        max-height: 500px;
+    }
+
+    .old_ie_wrapper {
+        height: 200px;
+        width: 100%;
+        overflow-x: hidden;
+        overflow-y: auto;
+    }
+</style>
+
+
+@using (Html.BeginForm("ProductSequence", "HomeProductGallery"))
+{
+    <div>
+        <div class="form-actions" style="clear:both;">
+            <input type="submit" name="submit" id="btnSubmit" class="btn btn-success" />
+            @Html.ActionLink("Back to Franchise List", "Index", string.Empty, new { @class = "btn btn-brown" })
+        </div>
+        <div style="color:red; font-weight:bold;">
+            <marquee behavior="alternate">Note:-  UP/DOWN Priority Will only Affected After Submit</marquee>
+        </div>
+        @*@if (ViewBag.CategoryID != null)
+            {
+                @Html.Hidden("CategoryID", (Int64)ViewBag.CategoryID)
+            }*@
+        @if (ViewBag.Franchise != null)
+        {
+            @Html.Hidden("Franchise", (int)ViewBag.Franchise)
+        }
+        <div style="width:100%; margin-top:10px;"></div>
+        <div class="my_table">
+            <table class="table table-bordered ">
+                <thead>
+                    <tr id="toptr">
+
+                        <th>
+                            Sequence
+                        </th>
+                        <th>
+                            Category Name
+                        </th>
+                        <th>
+                            Product Name
+                        </th>
+                        <th>Is Active</th>
+
+                        <th></th>
+                        <th></th>
+
+                    </tr>
+                </thead>
+
+                @for (int i = 0; i < Model.productList.Count(); i++)
+                {
+
+                    <tr>
+                        <td class="shopPriority">
+
+                            @Html.HiddenFor(x => x.productList[i].ID)
+                            @Html.HiddenFor(x => x.productList[i].SequenceOrder)
+                            @Html.DisplayFor(x => x.productList[i].SequenceOrder)
+                            @Html.HiddenFor(x => x.productList[i].ProductID)
+
+                        </td>
+                        <td class="shop">
+                            @Html.DisplayFor(x => x.productList[i].CategoryName)
+                        </td>
+                        <td class="shop">
+                            @Html.DisplayFor(x => x.productList[i].ProductName)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(x => x.productList[i].IsActive)
+                        </td>
+                        <td> <a href="#noname" class='up'>Up</a></td>
+                        <td> <a href="#noname" class='down'>Down</a></td>
+
+                        @*<td>
+                                @Html.ActionLink("Edit", "Edit", new { id = Model.franchiseMenuList[i].ID }, new { @class = "btn btn-small btn-success" })
+                                @Html.ActionLink("Details", "Details", new { id = Model.franchiseMenuList[i].ID }, new { @class = "btn btn-small btn-primary" })
+                                @Html.ActionLink("Delete", "Delete", new { id = Model.franchiseMenuList[i].ID }, new { @class = "btn btn-small btn-danger" })
+                            </td>*@
+                    </tr>
+                }
+
+            </table>
+        </div>
+    </div>
+}
+
+<div class="form-actions">
+
+    @Html.ActionLink("Back to Franchise List", "Index", string.Empty, new { @class = "btn btn-brown" })
+
+</div>
+
+
+@*<script src="~/Scripts/jquery-1.10.2.min.js"></script>*@
+<script>
+    $(document).ready(function () {
+
+        $(".up,.down").click(function () {
+
+            var $element = this;
+            var row = $($element).parents("tr:first");
+            var val = $($element).parents("tr:first").children("td:first").text();
+
+            if ($(this).is('.up')) {
+                $('.table').find('tr').removeAttr('style');
+
+                if (row.prev('tr').html() != undefined) {
+
+                    var ProductID = row.children("td:nth-child(1)").find("[id*=ProductID]").val();
+                    var CategoryName = row.children("td:nth-child(2)").html();
+                    var ProductName = row.children("td:nth-child(3)").html();
+                    var IsActive = row.children("td:nth-child(4)").find(".check-box").prop('checked');
+
+                    var prevProductID = row.prev().children("td:nth-child(1)").find("[id*=ProductID]").val();
+                    var prevCategoryName = row.prev().children("td:nth-child(2)").html();
+                    var prevProductName = row.prev().children("td:nth-child(3)").html();
+                    var prevIsActive = row.prev().children("td:nth-child(4)").find(".check-box").prop('checked');
+
+                    row.children("td:nth-child(1)").find("[id*=ProductID]").val(prevProductID);
+                    row.children("td:nth-child(2)").html(prevCategoryName);
+                    row.children("td:nth-child(3)").html(prevProductName);
+                    row.children("td:nth-child(4)").find(".check-box").prop('checked', prevIsActive);
+
+                    row.prev().children("td:nth-child(1)").find("[id*=ProductID]").val(ProductID);
+                    row.prev().children("td:nth-child(2)").html(CategoryName);
+                    row.prev().children("td:nth-child(3)").html(ProductName);
+                    row.prev().children("td:nth-child(4)").find(".check-box").prop('checked', IsActive);
+                    row.prev('tr').css('background-color', '#ace8a9');
+                }
+            }
+            else {
+
+                $('.table').find('tr').removeAttr('style');
+                if ($(this).parents().not("tr:last")) {
+                    if (row.next('tr').html() != undefined) {
+
+                        var ProductID = row.children("td:nth-child(1)").find("[id*=ProductID]").val();
+                        var CategoryName = row.children("td:nth-child(2)").html();
+                        var ProductName = row.children("td:nth-child(3)").html();
+                        var IsActive = row.children("td:nth-child(4)").find(".check-box").prop('checked');
+
+                        var nextProductID = row.next().children("td:nth-child(1)").find("[id*=ProductID]").val();
+                        var nextCategoryName = row.next().children("td:nth-child(2)").html();
+                        var nextProductName = row.next().children("td:nth-child(3)").html();
+                        var nextIsActive = row.next().children("td:nth-child(4)").find(".check-box").prop('checked');
+
+                        row.children("td:nth-child(1)").find("[id*=ProductID]").val(nextProductID);
+                        row.children("td:nth-child(2)").html(nextCategoryName);
+                        row.children("td:nth-child(3)").html(nextProductName);
+                        row.children("td:nth-child(4)").find(".check-box").prop('checked', nextIsActive);
+
+                        row.next().children("td:nth-child(1)").find("[id*=ProductID]").val(ProductID);
+                        row.next().children("td:nth-child(2)").html(CategoryName);
+                        row.next().children("td:nth-child(3)").html(ProductName);
+                        row.next().children("td:nth-child(4)").find(".check-box").prop('checked', IsActive);
+                        row.next('tr').css('background-color', '#ace8a9');
+
+                    }
+                }
+            }
+        });
+
+    });
+
+</script>
+<script src="~/Content/js/custom.js"></script>
+<script src="~/Content/js/jquery.dataTables.min.js"></script>
+
+
+

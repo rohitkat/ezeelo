@@ -1,0 +1,645 @@
+﻿@model IEnumerable<ModelLayer.Models.ViewModel.CorporateDetail>
+@{
+    ViewBag.Title = "Testing";
+}
+<style>
+    .success {
+        background: #60a917;
+        color: #ffffff;
+        border-color: #60a917;
+    }
+
+    .cellnew {
+        width: 33%;
+        float: left;
+        margin-right: 3px;
+    }
+
+    .newselect {
+        border: none;
+        border-radius: 0px 0px 0px 0px !important;
+        background: transparent;
+        width: 150px;
+        padding: 5px 35px 5px 5px;
+        font-size: .875rem;
+        border: 1px solid #eaeaea;
+        height: 34px;
+        /*-webkit-appearance: none;*/
+        /*-moz-appearance: none;*/
+        appearance: none;
+        /*background: url(../Content/Images/drop.gif) 98% / 3% no-repeat #fff !important;*/
+    }
+
+    #tblAddress {
+        width: 100%;
+        float: left;
+        min-height: 50px;
+        max-height: 250px;
+        overflow: auto;
+        height: auto;
+    }
+
+    .cell1 {
+        width: 100%;
+        float: left;
+        height: auto;
+        min-height: 155px;
+        max-height: 250px;
+    }
+
+    .selectadd {
+        width: 33%;
+        float: left;
+    }
+
+    .tablenew {
+        font-family: Calibri;
+        border: 1px solid rgba(128, 128, 128, 0.35);
+    }
+    /* added custom font-family  */
+
+    table.one {
+        margin-bottom: 3em;
+        border-collapse: collapse;
+    }
+
+    .tablenew td { /* removed the border from the table data rows  */
+        text-align: center;
+        width: 10em;
+        padding: 5px;
+    }
+
+    .tablenew th { /* removed the border from the table heading row  */
+        text-align: center;
+        padding: 5px;
+        background-color: #4390df; /* added a red background color to the heading cells  */
+        color: white;
+    }
+    /* added a white font color to the heading text */
+
+    .tablenew tr {
+        height: 1em;
+    }
+
+    .giftname {
+        font-size: 12px;
+        font-weight: 700;
+        height: 50px;
+    }
+
+    .tablenew tr:nth-child(even) { /* added all even rows a #eee color  */
+        background-color: rgb(238, 238, 238);
+    }
+
+    .tablenew tr:nth-child(odd) { /* added all odd rows a #fff color  */
+        background-color: #fff;
+    }
+
+    .starico {
+        color: red;
+        float: right;
+        display: in;
+        margin-top: -34px;
+        z-index: 101;
+        position: relative;
+        font-weight: bold;
+        margin-right: 6px;
+        /*display:none;*/
+    }
+
+    .success {
+        background: #60a917 !important;
+        color: #fff !important;
+        border-color: #60a917 !important;
+    }
+
+    .button {
+        padding: 0 1rem;
+        height: 2.125rem;
+        text-align: center;
+        background-color: #fff;
+        border: 1px solid #d9d9d9;
+        color: #262626;
+        cursor: pointer;
+        display: inline-block;
+        font-size: .875rem;
+        line-height: 1;
+        margin: .15625rem 0;
+        position: relative;
+    }
+
+    .Remove_Icon {
+        background: url(../../Content/Images/remove-icon.png) no-repeat 6px 8px;
+    }
+</style>
+@foreach (var v in Model)
+{
+    var TotalOrderAmount = v.TotalProductAmount + v.TotalDeliveryCharge + v.TotalFacilityCharge;
+    <table class="tablenew" style="width:100%">
+        <tr>
+            <th>Total Quantity</th>
+            <th>Order Amount</th>
+            <th>Delivery Charges</th>
+            <th>Facility Charge</th>
+            <th>Total Order Amount</th>
+        </tr>
+        <tr>
+            <td><span class="TotalQuantity">@v.TotalQuantity</span></td>
+            <td><span class="OrderAmount">Rs. @v.TotalProductAmount</span></td>
+            <td><span class="TotalDeliveryCharges">Rs. @v.TotalDeliveryCharge</span></td>
+            <td>
+                @if (v.TotalFacilityCharge != null && v.TotalFacilityCharge > 0)
+                {
+                    <span class="TotalFacilityCharge">
+                        Rs. @v.TotalFacilityCharge
+                    </span>
+                }
+                else
+                {
+                    <span class="TotalFacilityCharge">
+                        Rs. 0.00
+                    </span>
+                }
+            </td>
+            <td>
+                <span class="TotalOrderAmount giftname">Rs. @TotalOrderAmount</span>
+            </td>
+        </tr>
+    </table>
+}
+<div><span style="color:red" class="ErrorMsg"></span></div>
+<div>
+    <h5>From Address</h5>
+    <div class="row cells1">
+        <div class="cell cellnew">
+            <div class="input-control text full-size">
+                <input type="text" id="txtFromAddress" class="txtFromAddress" placeholder="Address" />
+                <span id="spantxtFromAddress" class="starico" style="display:none">*</span>
+            </div>
+        </div>
+        <div class="cell cellnew">
+            <div class="input-control text full-size">
+                <input type="text" id="txtFromPincode" placeholder="Pincode" class="txtFromPincode" onkeypress="return validatePincode(event);" onkeyup="GetArea(this.id);" /><input type="hidden" id="hdnPincodeID" class="hdnFromPincodeID" value="0" /><span id="msg" style="color:Red" />
+                <span id="spantxtFromPincode" class="starico" style="display:none">*</span>
+            </div>
+        </div>
+        <div class="cell cellnew">
+            <div class="input-control text full-size">
+                <select id="ddlFromAreaID" class="ddlFromAreaID newselect"></select>
+            </div>
+        </div>
+    </div>
+
+    <div class="row cells3">
+        <h5>To Address</h5>
+        <span class="spnMsgMobileno" style="display:none;color:red">* Please enter valid mobile number</span>
+        <div class="cell3">
+            <div class="selectadd">
+                <input type="radio" value="1" name="rbAddress" /> Same Address
+                <input type="radio" value="2" name="rbAddress" /> Different Address
+            </div>
+            <div class="addnextaddress"><input type='button' id='btnAdd' value='Add Address' class='warning' onclick='AddNewRow()' style="display:none" /><span></span></div>
+            <span class="classAddress" style="color:green"></span>
+        </div>
+    </div>
+    <table>
+        <tr></tr>
+    </table>
+</div>
+
+<div id="tblAddress">
+
+</div>
+
+<div>
+    <button id="btnSave" type="submit" style="float:left;display:none" class="button success" onclick="SaveAddress()"><span id="spnLoader" style="display:none;float:left;" class="mif-spinner4 mif-ani-spin"></span>Submit</button>
+</div>
+<script type="text/javascript">
+    $(document).ready(function () {
+        var flag = false;
+        $('input[type=radio][name=rbAddress]').change(function () {
+
+
+            if ($("#txtFromAddress").val() == '') {
+                $('#spantxtFromAddress').css('display', 'block');
+                flag = true;
+            }
+            else {
+                $('#spantxtFromAddress').css('display', 'none');
+                flag = false;
+            }
+            if ($("#txtFromPincode").val() == '') {
+                $('#spantxtFromPincode').css('display', 'block');
+                flag = true;
+            }
+            else {
+                var PincodeID = $('.hdnFromPincodeID').val();
+                if (PincodeID == 0) {
+                    //alert('in');
+                    $("[id*=spantxtFromPincode]").css('display', 'block');
+                    flag = true;
+                }
+                else {
+                    $('#spantxtFromPincode').css('display', 'none');
+                    flag = false;
+                }
+            }
+            // alert(flag);
+            if (flag == true) {
+                $("#btnSave").css("display", "none");
+                $(this).prop('checked', false);
+                return;
+            }
+            else {
+                $("#btnSave").css("display", "block");
+                if (this.value == 1) {
+                    AddRowToTable(this.value);
+                }
+                else if (this.value == 2) {
+                    AddRowToTable(this.value);
+
+                }
+            }
+        });
+    });
+
+
+
+    function GetArea(id) {
+        var lPincode = 0;
+        var ID = "";
+        if (id == "txtFromPincode") {
+            lPincode = $('#txtFromPincode').val();
+
+        }
+        else {
+            lPincode = $('#' + id).val();
+            ID = id.split('_');
+        }
+        if (lPincode.length > 6) {
+            if (id == "txtFromPincode") {
+                var msg1 = $('#msg');
+                $(msg1).text('Can not insert more than 6 characteres');
+                $(msg1).show();
+                setTimeout(function () { $(msg1).hide(); }, 3000);
+            }
+            else {
+                var msg = "msg_" + ID[1] + "";
+                var msg1 = $('#' + msg);
+                $(msg1).text('Can not insert more than 6 characteres');
+                $(msg1).show();
+                setTimeout(function () { $(msg1).hide(); }, 3000);
+            }
+        }
+        if (lPincode.length == 6) {
+            $.ajax({
+                url: '@Url.Action("GetArea", "Product")?Pincode=' + lPincode,
+                type: "POST",
+                success: function (result) {
+                    //alert(result);
+                    if (result == 1) {
+                        if (id == "txtFromPincode") {
+
+                            var msg1 = $('#msg');
+                            $(msg1).text('Pincode does not exist');
+                            $(msg1).show();
+                            setTimeout(function () { $(msg1).hide(); }, 5000);
+                        }
+                        else {
+                            var msg = "msg_" + ID[1] + "";
+                            var msg1 = $('#' + msg);
+                            $(msg1).text('Pincode does not exist');
+                            $(msg1).show();
+                            setTimeout(function () { $(msg1).hide(); }, 5000);
+
+                        }
+
+                    }
+                    else {
+                        if (id == "txtFromPincode") {
+
+                            $('#ddlFromAreaID').empty();
+                            var pincodid = 0;
+                            $.each(result, function (index, item) {
+                                pincodid = item.PincodeID;
+                                $('#ddlFromAreaID').append('<option value=' + item.ID + '>' + item.Name + '</option>');
+
+                            });
+                            $('.hdnFromPincodeID').val(pincodid);
+                        }
+                        else {
+                            var areaID = "ddlArea_" + ID[1] + "";
+                            $('#' + areaID).empty();
+                            var pincodid = 0;
+                            $.each(result, function (index, item) {
+                                pincodid = item.PincodeID;
+                                //alert(pincodid);
+                                $('#' + areaID).append('<option value=' + item.ID + '>' + item.Name + '</option>');
+                            });
+                            //alert($('#' + id).closest("cell1").find("#hdnPincodeID_" + ID[1]).id);
+                            $("#hdnPincodeID_" + ID[1]).val(pincodid);
+                        }
+                    }
+                },
+                error: function (data) {
+
+                }
+            });
+        }
+        else {
+            if (id == "txtFromPincode") {
+                $('.hdnFromPincodeID').val(0);
+            }
+            else {
+                //
+                $("#hdnPincodeID_" + ID[1]).val(0);
+            }
+        }
+
+    }
+
+
+
+    function validatePincode(evt) {
+        var charCode = (evt.which) ? evt.which : event.keyCode
+        if (charCode > 35 && charCode < 40 || charCode > 45 && charCode < 58 || charCode == 127 || charCode == 8 || charCode == 190 || charCode == 110) {
+
+            return true;
+        }
+        else {
+            return false;
+
+        }
+    }
+
+    function ValidateBeforeSave() {
+        var qty = 0;
+        flag = false;
+        var lTotalQty = $(".TotalQuantity").text();
+
+        //alert(lTotalQty);
+        $("#tblAddress div.cell1").each(function () {
+
+            var Quantity = $(this).find('.cmpQuantity').val();
+            //alert(Quantity);
+            qty = parseInt(qty) + parseInt(Quantity);
+            //alert(qty);
+        });
+        if (lTotalQty != qty) {
+            $(".ErrorMsg").text('Total Quantity and quantity entered should be same.');
+            flag = false;
+        }
+        else if (lTotalQty == qty) {
+            $(".ErrorMsg").text('');
+            flag = true;
+        }
+        return flag;
+    }
+
+
+    function SaveAddress() {
+        flagNamevalidate = false;
+        flagAddressevalidate = false;
+        flagQuantityvalidate = false;
+        flagPincodevalidate = false;
+        flagPrimaryMobvalidate = false;
+        flagSecondaryMoobvalidate = false;
+        var i = 0;
+
+        CorporateDetails = [];
+
+        $("#tblAddress div.cell1").each(function () {
+            //alert(i);
+            //i++;
+            var Name = $(this).find('.cmpName').val();
+            if (Name == '') {
+                $("[id*=spanToName_" + i + "]").css('display', 'block');
+                flagNamevalidate = true;
+            }
+            else {
+                $("[id*=spanToName_" + i + "]").css('display', 'none');
+                flagNamevalidate = false;
+            }
+
+            var Address = $(this).find('.cmpAddress').val();
+            if (Address == '') {
+                $("[id*=spanToAddress_" + i + "]").css('display', 'block');
+                flagAddressevalidate = true;
+            }
+            else {
+                $("[id*=spanToAddress_" + i + "]").css('display', 'none');
+                flagAddressevalidate = false;
+            }
+            var Quantity = $(this).find('.cmpQuantity').val();
+            if (Quantity == '') {
+                $("[id*=spanToQuantity_" + i + "]").css('display', 'block');
+                flagQuantityvalidate = true;
+            }
+            else {
+                $("[id*=spanToQuantity_" + i + "]").css('display', 'none');
+                flagQuantityvalidate = false;
+            }
+            var PincodeID = $(this).find('.hdnPincodeID').val();
+            // alert(PincodeID);
+            if (PincodeID == 0) {
+                $("[id*=spanToPincodeID_" + i + "]").css('display', 'block');
+                flagPincodevalidate = true;
+            }
+            else {
+                $("[id*=spanToPincodeID_" + i + "]").css('display', 'none');
+                flagPincodevalidate = false;
+            }
+            var PrimaryMob = $(this).find('.cmpPrimaryMob').val();
+            var PrimaryMoblength = $(this).find('.cmpPrimaryMob').val().length;
+
+            if (PrimaryMob == '') {
+                $("[id*=spanToPrimaryMob_" + i + "]").css('display', 'block');
+                flagPrimaryMobvalidate = true;
+            }
+            else {
+                $("[id*=spanToPrimaryMob_" + i + "]").css('display', 'none');
+                flagPrimaryMobvalidate = false;
+                if (PrimaryMoblength == 10) {
+                    flagPrimaryMobvalidate = false;
+                    $("[id*=spanToPrimaryMob_" + i + "]").css('display', 'none');
+                    $('.spnMsgMobileno').css('display', 'none');
+                }
+                else {
+                    flagPrimaryMobvalidate = true;
+                    $("[id*=spanToPrimaryMob_" + i + "]").css('display', 'block');
+                    $('.spnMsgMobileno').css('display', 'block');
+                }
+
+            }
+
+            var SecondaryMob = $(this).find('.cmpSecondaryMob').val();
+            var SecondaryMoblength = $(this).find('.cmpSecondaryMob').val().length;
+            if (SecondaryMob != '') {
+                if (SecondaryMoblength == 10 || SecondaryMoblength == 0) {
+                    flagSecondaryMoobvalidate = false;
+                    $("[id*=spanToSecondaryMob_" + i + "]").css('display', 'none');
+                    $('.spnMsgMobileno').css('display', 'none');
+                }
+                else {
+                    flagSecondaryMoobvalidate = true;
+                    $("[id*=spanToSecondaryMob_" + i + "]").css('display', 'block');
+                    $('.spnMsgMobileno').css('display', 'block');
+                }
+            }
+
+
+            var AreaID = $(this).find('select.cmpArea option:selected').val();
+
+            var DeliveryCharges = 0.5;
+
+            var FromAddress = $('.txtFromAddress').val();
+
+            var FromPincodeID = $('.hdnFromPincodeID').val();
+
+            var FromAreaID = $('select.ddlFromAreaID option:selected').val();
+
+            var TotalQuantity = $(".TotalQuantity").text();
+
+            var obj = { "Name": Name, "Address": Address, "Quantity": Quantity, "PrimaryMob": PrimaryMob, "SecondaryMob": SecondaryMob, "PincodeID": PincodeID, "AreaID": AreaID, "DeliveryCharges": DeliveryCharges, 'FromAddress': FromAddress, 'FromPincodeID': FromPincodeID, 'FromAreaID': FromAreaID, 'TotalQuantity': TotalQuantity };
+            CorporateDetails.push(obj);
+            i++;
+        });
+
+        if (flagNamevalidate == true || flagAddressevalidate == true || flagQuantityvalidate == true || flagPincodevalidate == true || flagPrimaryMobvalidate == true || flagSecondaryMoobvalidate == true) {
+            alert('in');
+            return;
+        }
+
+        //alert(flagvalidate);
+        flag = ValidateBeforeSave();
+
+        if (flag == false) {
+            return;
+        }
+        $("#spnLoader").css('display', 'block');
+        //alert(JSON.stringify(CorporateDetails));
+        $.ajax({
+            contentType: 'application/json; charset=utf-8',
+            dataType: 'json',
+            url: '@Url.Action("PlaceCorporateOrder", "Product")',
+            data: "{'CorporateDetails':" + JSON.stringify(CorporateDetails) + " }",
+            type: "POST",
+            success: function (result) {
+                if (result.ok) {
+                    window.location = result.newurl;
+                    return;
+                }
+                else {
+                    window.location = result.newurl;
+                    return;
+                }
+            },
+
+
+            error: function (data) {
+
+            }
+        });
+
+    }
+
+
+    function AddRowToTable(value) {
+
+        $('.save').css("display", "block");
+        $("#tblAddress").empty();
+
+
+        $("#tblAddress").append("<div class='cell1'>" + "<div class='row cells3'>" +
+                          "<div  class='cell cellnew'><div class='input-control text full-size'><input type ='text' id='txtToName_0' autocomplete='off' class ='cmpName'  placeholder='Name' /></div><span id=spanToName_0' class='starico' style='display:none'>*</span></div>" +
+                           "<div  class='cell cellnew'><div class='input-control text full-size'><input type ='text' id='txtToAddress_0' autocomplete='off' class ='cmpAddress' placeholder='Address' /></div><span id='spanToAddress_0' class='starico' style='display:none'>*</span></div>" +
+                            "<div  class='cell cellnew'><div class='input-control text full-size'><input type ='text' id='txtQuantity_0' autocomplete='off' class ='cmpQuantity'  placeholder='Quantity'  onkeypress='return validatePincode(event);' /></div><span id='spanToQuantity_0' class='starico' style='display:none'>*</span></div>" +
+                            "</div>" +
+"<div class='row cells3'>" +
+                            "<div  class='cell cellnew'><div class='input-control text full-size'><input type ='text' id='txtPincode_0'  placeholder='Pincode' autocomplete='off' onkeypress='return validatePincode(event);' onkeyup='GetArea(this.id);' class ='cmpPincode'/><input type='hidden' class='hdnPincodeID' id='hdnPincodeID_0' value='0'/><span id='msg_0' style='color:Red'/></div><span id='spanToPincodeID_0' class='starico' style='display:none'>*</span></div>" +
+                              "<div  class='cell cellnew'><div class='input-control text full-size'><select id='ddlArea_0' class='cmpArea newselect' /></div></div>" +
+                             //"<td><input type ='text' id='txtArea_0' autocomplete='off' class ='cmpArea'/></td>" +
+                            "<div  class='cell cellnew'><div class='input-control text full-size'><input type ='text' id='txtPrimaryMob_0' autocomplete='off' class ='cmpPrimaryMob'  placeholder='Primary Mobile No' onkeypress='return validatePincode(event);' /></div><span id='spanToPrimaryMob_0' class='starico' style='display:none'>*</span></div>" +
+                            "</div>" +
+"<div class='row cells3'>" +
+                           "<div  class='cell cellnew'><div class='input-control text full-size'><input type ='text' id='txtSecondaryMob_0' autocomplete='off' class ='cmpSecondaryMob'  placeholder='Secondry Mobile No' onkeypress='return validatePincode(event);' /> </div><span id='spanToSecondaryMob_0' class='starico' style='display:none'>*</span></div>" +
+
+                             "</div>" +
+                           "</div>"
+                         );
+
+        if (value == 1) { //Same Address
+            $("#btnAdd").css("display", "none")
+            $("#txtToAddress_0").val($("#txtFromAddress").val());
+            $("#txtPincode_0").val($("#txtFromPincode").val());
+            var lPincode = $("#txtFromPincode").val();
+            $.ajax({
+                url: '@Url.Action("GetArea", "Product")?Pincode=' + lPincode,
+                type: "POST",
+                success: function (result) {
+                    //alert(result);
+                    if (result == 1) {
+
+
+                    }
+                    else {
+                        $('#ddlArea_0').empty();
+                        var pincodid = 0;
+                        $.each(result, function (index, item) {
+                            pincodid = item.PincodeID;
+                            $('#ddlArea_0').append('<option value=' + item.ID + '>' + item.Name + '</option>');
+
+                        });
+                        $('.hdnPincodeID').val(pincodid);
+
+
+                    }
+                },
+                error: function (data) {
+
+                }
+            });
+
+
+        }
+        else if (value == 2) {
+            $('#btnAdd').css('display', 'block')
+        }
+
+    }
+
+    function AddNewRow() {
+        var RowCount = 0;
+        RowCount = $('#tblAddress div.cell1').length;
+        //alert(RowCount);
+        $("#tblAddress").append("<div class='cell1'>" + "<div class='row cells3'>" +
+             "<div  class='cell cellnew'><div class='input-control text full-size'><input type ='text' id='txtToName_" + RowCount + "' autocomplete='off' class ='cmpName'  placeholder='Name'/></div><span id=spanToName_0' class='starico' style='display:none'>*</span></div>" +
+                           "<div  class='cell cellnew'><div class='input-control text full-size'><input type ='text' id='txtToAddress_" + RowCount + "' autocomplete='off' class ='cmpAddress'  placeholder='Address'/></div><span id='spanToAddress_0' class='starico' style='display:none'>*</span></div>" +
+                                "<div  class='cell cellnew'><div class='input-control text full-size'><input type ='text' id='txtQuantity_" + RowCount + "' autocomplete='off' class ='cmpQuantity'  placeholder='Quantity'  onkeypress='return validatePincode(event);'/></div><span id='spanToQuantity_0' class='starico' style='display:none'>*</span></div>" +
+ "</div>" +
+"<div class='row cells3'>" +
+                                "<div  class='cell cellnew'><div class='input-control text full-size'><input type ='text'  placeholder='Pincode' id='txtPincode_" + RowCount + "' autocomplete='off' onkeypress='return validatePincode(event);' onkeyup='GetArea(this.id);' class ='cmpPincode'/><input type='hidden' id='hdnPincodeID_" + RowCount + "' class='hdnPincodeID'  value='0'/><span id='msg_" + RowCount + "' style='color:Red'/></div><span id='spanToPincodeID_0' class='starico' style='display:none'>*</span></div>" +
+                                 "<div  class='cell cellnew'><div class='input-control text full-size'><select id='ddlArea_" + RowCount + "' class='cmpArea newselect'  /></div></div>" +
+                                //"<td><input type ='text' id='txtArea_" + RowCount + "' autocomplete='off' class ='cmpArea'/></td>" +
+                               "<div  class='cell cellnew'><div class='input-control text full-size'><input type ='text' id='txtPrimaryMob_" + RowCount + "' autocomplete='off' class ='cmpPrimaryMob'  placeholder='Primary Mobile No' onkeypress='return validatePincode(event);'/></div><span id='spanToPrimaryMob_0' class='starico' style='display:none'>*</span></div>" +
+                               "</div>" +
+"<div class='row cells3'>" +
+                              "<div  class='cell cellnew'><div class='input-control text full-size'><input type ='text' id='txtSecondaryMob_" + RowCount + "' autocomplete='off' class ='cmpSecondaryMob'  placeholder='Secondry Mobile No' onkeypress='return validatePincode(event);'/></div><span id='spanToSecondaryMob_0' class='starico' style='display:none'>*</span></div>" +
+                              "<div  class='cell cellnew'><div class=' '><input type ='button' id='btnRemove_" + RowCount + "' class ='cmpRemove Remove_Icon' onclick='RemoveRow(this.id);'/></div></div>" +
+                                  "</div>" +
+
+                              "</div>" +
+
+                              "</div>"
+                          );
+        RowCount = $('#tblAddress div.cell1').length;
+        $('.classAddress').text('You have added ' + RowCount + ' Addresses.')
+    }
+
+
+    function RemoveRow(id) {
+        $("[id='" + id + "']").closest('div.cell1').remove();
+        RowCount = $('#tblAddress div.cell1').length;
+        $('.classAddress').text('You have added ' + RowCount + ' Addresses.')
+    }
+</script>

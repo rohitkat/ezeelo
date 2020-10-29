@@ -1,0 +1,384 @@
+﻿@using PagedList;
+@using PagedList.Mvc;
+@model IPagedList<ModelLayer.Models.Sent_Mail>
+@*@model IEnumerable<ModelLayer.Models.Sent_Mail>*@
+
+
+@*@{
+        ViewBag.Title = "Index";
+        Layout = "~/Views/Shared/_Layout.cshtml";
+    }
+
+    <h2>Sent Mail Report</h2>
+
+    <table class="table">
+        <tr>
+            <th>
+              User Name
+            </th>
+            <th>
+                Email ID
+            </th>
+            <th>
+               Mobile NO
+            </th>
+            <th>
+               Remaining Days
+            </th>
+            <th>
+                Sent Date
+            </th>
+            <th>
+                Remarks
+            </th>
+
+        </tr>
+
+    @foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.UserName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Email_ID)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Mobile)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.RemainingDays)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Sent_Date)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Remarks)
+            </td>
+        </tr>
+    }
+
+    </table>*@
+
+<link href="~/Content/css/Site.css" rel="stylesheet" />
+<script src="~/Content/js/jquery.dataTables.min.js"></script>
+<script src="~/Content/js/bootstrap.min.js"></script>
+<style>
+    .matchdivheight {
+        overflow: scroll;
+        height: 450px;
+    }
+
+    select {
+        width: 134px;
+        background-color: #fff;
+        border: 1px solid #ccc;
+        text-transform: lowercase;
+    }
+
+    .widget {
+        margin-left: 37px;
+    }
+
+    .widget-content {
+        margin-top: -8px;
+        margin-left: -23px;
+    }
+
+    .btn_print {
+        float: right;
+        margin-top: -56px;
+        margin-right: 395px;
+    }
+
+    .widget-content h4 span {
+        float: right;
+        margin-top: -42px;
+        margin-right: 160px;
+    }
+
+    .dataTables_info {
+        display: none;
+    }
+
+    .box-content {
+        z-index: 1 !important;
+    }
+
+    .export a {
+        border: 1px solid #ccc;
+        padding: 4px 12px;
+        background: #486086;
+        color: #fff;
+    }
+
+        .export a:hover {
+            background: #486056;
+            color: #fff;
+            text-decoration: none !important;
+        }
+
+    .bg-box {
+        background: #F5F5F5 !important;
+    }
+
+    .dataTables_filter {
+        float: right;
+    }
+
+    .btn-brown {
+        color: #ffffff;
+        background-color: #267196;
+        border-color: #8AA0B9;
+        background-image: none;
+        filter: none;
+        text-shadow: none;
+        width: 47px;
+        margin-left: 7px;
+        padding: 1px 2px !important;
+    }
+
+    .my_table {
+        height: auto;
+        min-height: 300px;
+        max-height: 540px;
+        overflow: auto;
+    }
+
+    .btn-search {
+        width: 76px;
+        margin-left: 18px;
+    }
+
+    .box-header {
+        background: rgba(137, 142, 149, 0.37);
+    }
+
+    .uneditable-input, input[type=text] {
+        width: 120px;
+    }
+
+    .margingnew {
+        margin-top: 10px;
+    }
+
+    #content {
+        width: 100%;
+        padding: 28px 5px 28px 5px;
+        margin: 0px 0px;
+        margin-left: 0 !important;
+    }
+
+    .open > .dropdown-menu {
+        display: block;
+    }
+</style>
+<script language="javascript" type="text/javascript">
+    function PrintDivContent(divId) {
+        var printContent = document.getElementById(divId);
+        var WinPrint = window.open('', '', 'left=0,top=0,toolbar=0,sta­tus=0');
+        WinPrint.document.write(printContent.innerHTML);
+        WinPrint.document.close();
+        WinPrint.focus();
+        WinPrint.print();
+    }
+</script>
+<script src="~/Content/js/js/jquery.dataTables.min1.js"></script>
+@{
+    <div class="span10" id="content">
+        <div class="row-fluid">
+            <div class=" box span12 ">
+                <div class="box-header"><h2 style="font-weight:bold;">Sent Mail Report</h2></div>
+                <div class="box bg-box">
+                    <div class="row-fluid" @*style="padding-left:44px;"*@>
+                        <div class="span9">
+                            @using (Html.BeginForm())
+                            {
+                                <div class="span12">
+                                    <div class="span9" style="margin-left: 10px;">
+                                        <div class="span3">
+                                            @Html.TextBox("StartDate", null, new { id = "StartDate", @class = "datepicker glyphicons-iconcalendar", @placeholder = "From Sent Date", @style = "margin-top:10px;" })
+                                            @Html.TextBox("SearchEmail", null, new { @class = "search_input", placeholder = "Email ID" })
+                                        </div>
+                                        <div class="span3">
+                                            @Html.TextBox("EndDate", null, new { id = "EndDate", @class = "datepicker glyphicons-iconcalendar", @placeholder = "To Sent Date", @style = "margin-top:10px;" })
+                                            @Html.TextBox("SearchMobile", null, new { @class = "search_input", placeholder = "Mobile No" })
+                                        </div>
+                                        <div class="span3">
+                                            @Html.TextBox("SearchUserName", null, new { @class = "search_input margingnew", placeholder = "User Name" })
+                                            @Html.DropDownList("SearchDomain", new List<SelectListItem>
+                                      {
+                                        new SelectListItem{ Text="SHOP", Value = "SHOP" },
+                                        new SelectListItem{ Text="FRANCHISE", Value = "FRANCHISE" }
+                                      }, "Select Domain")
+                                        </div>
+                                        <div class="span3">
+                                            @Html.TextBox("SearchRemainingDays", null, new { @class = "search_input margingnew", placeholder = "Remaining Days" })
+                                            <input type="submit" value="Search" class="btn btn-primary btn-search" style="margin-left: 0px;" onclick="return DateValidation()" />
+
+                                        </div>
+                                        
+                                          
+                                        </div>
+                                    <div class="span2">
+                                        
+                                       
+                                         </div>
+                                   
+                                </div>
+                            }
+                        </div>
+                        <div class="span3" style="margin-top:10px; text-align:right;">
+                            @using (Html.BeginForm("Index", "SentMailReport", FormMethod.Post, new { enctype = "multipart/form-data" }))
+                            {
+
+                                @Html.ActionLink("EXCEL", "Index", new
+                           {
+                               StartDate = ViewBag.StartDate,
+                               EndDate = ViewBag.EndDate,
+                               option = 1,
+                               SearchUserName = ViewBag.SearchUserName,
+                               SearchMobile = ViewBag.SearchMobile,
+                               SearchEmail = ViewBag.SearchEmail,
+                               SearchRemainingDays = ViewBag.SearchRemainingDays,
+                               SearchDomain = ViewBag.SearchDomain
+                           }, new { @class = "btn btn-brown" })
+                                @Html.ActionLink("CSV", "Index", new
+                           {
+                               StartDate = ViewBag.StartDate,
+                               EndDate = ViewBag.EndDate,
+                               option = 2,
+                               SearchUserName = ViewBag.SearchUserName,
+                               SearchMobile = ViewBag.SearchMobile,
+                               SearchEmail = ViewBag.SearchEmail,
+                               SearchRemainingDays = ViewBag.SearchRemainingDays,
+                               SearchDomain = ViewBag.SearchDomain
+                           }, new { @class = "btn btn-brown" })
+                                @Html.ActionLink("PDF", "Index", new
+                           {
+                               StartDate = ViewBag.StartDate,
+                               EndDate = ViewBag.EndDate,
+                               option = 3,
+                               SearchUserName = ViewBag.SearchUserName,
+                               SearchMobile = ViewBag.SearchMobile,
+                               SearchEmail = ViewBag.SearchEmail,
+                               SearchRemainingDays = ViewBag.SearchRemainingDays,
+                               SearchDomain = ViewBag.SearchDomain
+                           }, new { @class = "btn btn-brown" })
+                                @* @Html.ActionLink("PRINT", "PDF", new { StartDate = ViewBag.StartDate, EndDate = ViewBag.EndDate },new {target="_blank"})*@
+                                <input value="PRINT" class="btn btn-brown" onclick="javascript:PrintDivContent('divToPrint');" />
+
+                            }
+                        </div>
+                        <label id="lblMsg" style="color:red"></label>
+                    </div>
+                </div>
+
+                <div class="box-content" id="divToPrint">
+                    <div class="my_table">
+                        <table class="table">
+                            <tr>
+                                <th>
+                                    User Name
+                                </th>
+                                <th>
+                                    Email ID
+                                </th>
+                                <th>
+                                    Mobile NO
+                                </th>
+                                <th>
+                                    Remaining Days
+                                </th>
+                                <th>
+                                    Sent Date
+                                </th>
+                                <th>
+                                    Remarks
+                                </th>
+
+                            </tr>
+
+                            @foreach (var item in Model)
+                            {
+                                <tr>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.UserName)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.Email_ID)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.Mobile)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.RemainingDays)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.Sent_Date)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.Remarks)
+                                    </td>
+                                </tr>
+                            }
+
+                        </table>
+                    </div>
+                </div>
+                <div class="pager">
+                    @Html.PagedListPager(Model, Page => Url.Action("Index", new
+                       {
+                           page = Page,
+                           StartDate = ViewBag.StartDate,
+                           EndDate = ViewBag.EndDate,
+                           SearchUserName = ViewBag.SearchUserName,
+                           SearchMobile = ViewBag.SearchMobile,
+                           SearchEmail = ViewBag.SearchEmail,
+                           SearchRemainingDays = ViewBag.SearchRemainingDays,
+                           SearchDomain = ViewBag.SearchDomain
+                       }),
+                                                                    new PagedListRenderOptions()
+                                                                    {
+                                                                        Display = PagedListDisplayMode.IfNeeded
+                                                                    })
+                    <h4><span>Total Count:&nbsp;@ViewBag.TotalCount</span></h4>
+                </div>
+            </div>
+        </div>
+    </div>
+
+}
+<script>
+    function DateValidation() {
+        var FromDate = $('#StartDate').val();
+        var ToDate = $('#EndDate').val();
+        if (FromDate != null && ToDate != null) {
+            if (FromDate != '' && ToDate != '') {
+                FirstDate = FromDate.split('/');
+                SecondDate = ToDate.split('/');
+                var from = new Date(FirstDate[2], FirstDate[1], FirstDate[0]); //Year, Month, Date
+                var to = new Date(SecondDate[2], SecondDate[1], SecondDate[0]);
+                if (from > to) {
+                    $('[id*=lblMsg]').text('To Date must be greater than From Date.');
+                    return false;
+                }
+                else {
+                    $('[id*=lblMsg]').text('');
+                    return true;
+                }
+            }
+            else {
+                if (FromDate == '' && ToDate == '') {
+                    $('[id*=lblMsg]').text('');
+                    return true;
+                }
+                else {
+                    $('[id*=lblMsg]').text('Fill both dates-Filters');
+                    return false;
+                }
+            }
+        }
+       
+    }
+</script>
+

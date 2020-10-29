@@ -1,0 +1,139 @@
+﻿@model ModelLayer.Models.PromotionalERPPayout
+
+@{
+    ViewBag.Title = "PromotionalERPPayout";
+    Layout = "~/Views/Shared/_LeadersLayout.cshtml";
+}
+<script>
+    $(document).ready(function () {
+        $("#btnSub").attr("disabled", "disabled");
+        $("#txtPass").blur(function () {
+            if ($(this).val() != "") {
+                if ($(this).val() != $("#VerficationCode").val()) {
+                    alert("Please Enter Correct Password");
+                    $(this).val("");
+                    $("#btnSub").attr("disabled", "disabled");
+                }
+                else {
+                    $("#btnSub").removeAttr("disabled");
+                }
+            }
+        });
+        if ('@TempData["Result"]' != '' && '@TempData["Result"]' != null) {
+            alert('@TempData["Result"]')
+        }
+    });
+</script>
+
+<div class="container">
+    <div id="progress" class="modal">
+        <div class="center">
+            <img src="~/img/ajax-loading-gif-transparent-background-8.gif" />
+        </div>
+    </div>
+    <div class="card" id="maindiv">
+        <div class="card-header"><strong>Promotional ERP Payout Process </strong></div>
+        <div class="card-body card-block">
+
+            @using (Html.BeginForm())
+            {
+                @Html.AntiForgeryToken()
+                @Html.HiddenFor(model => model.EzeeMoneyPayoutId)
+                @Html.HiddenFor(model => model.Id)
+                <div class="form-horizontal">
+                    @Html.ValidationSummary(true)
+                    <table>
+                        <tr>
+                            <td>
+                                Payout Date
+                            </td>
+                            <td>
+                                <span>  @Model.NetworkIp</span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                Only Active User
+                            </td>
+                            <td>
+                                @if (Model.ActiveUser == true)
+                                {
+                                    <span>
+                                        Yes
+                                    </span>
+                                }
+                                else
+                                {
+                                    <span>
+                                        No
+                                    </span>
+                                }
+
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                Level
+                            </td>
+                            <td>
+                                <span> Level : @Model.Level</span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                ERP
+                            </td>
+                            <td>
+                                <span>@Model.ERP</span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                Reference Text
+                            </td>
+                            <td>
+                                <span>@Model.ReferenceText</span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                Total ERP
+                            </td>
+                            <td>
+                                <span>@Model.TotalERP</span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                Total Ezee Money
+                            </td>
+                            <td>
+                                <span>@Model.TotalAmount</span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                Password
+                            </td>
+                            <td>
+                                <input type="text" id="txtPass" />
+                                @Html.HiddenFor(model => model.VerficationCode)
+                            </td>
+                        </tr>
+                    </table>
+
+                    <div class="form-group">
+                        <div class="col-md-offset-2 col-md-10">
+                            <input id="btnSub" type="submit" value="Complete " class="btn btn-success" />
+                            @Html.ActionLink("User List", "GetFreezReport", new { PromotionalERPPayoutId = @Model.Id }, new { @class = "btn btn-warning" })
+                        </div>
+                    </div>
+
+                </div>
+            }
+
+
+        </div>
+    </div>
+</div>
+

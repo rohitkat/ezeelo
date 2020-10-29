@@ -1,0 +1,121 @@
+﻿@model ModelLayer.Models.ViewModel.CancelOrderViewModel
+
+@{
+    ViewBag.Title = "eZeelo:Buy Online Electronics, Jewellaries, cloths, collectibles";
+    string cityName = "";
+    int franchiseID = 0;////added
+    if (Request.Cookies["CityCookie"] != null && Request.Cookies["CityCookie"].Value != "")
+    {
+        cityName = Request.Cookies["CityCookie"].Value.Split('$')[1].ToLower();
+        franchiseID = Convert.ToInt32(Request.Cookies["CityCookie"].Value.Split('$')[2]);////added
+    }
+}
+<style>
+    .continueShopping {
+        text-decoration: underline;
+        padding-left: 12px;
+    }
+
+    select {
+        border-radius: 0px 0px 0px 0px !important;
+        background: transparent;
+        padding: 0px 15px 0px 5px !important;
+        font-size: 14px;
+        border: 1px solid #eaeaea;
+        height: 30px;
+        /*-webkit-appearance: none;*/
+        /*-moz-appearance: none;*/
+        appearance: none;
+        float: left;
+        /*background: url(/Content/Images/drop.gif) 96% / 10px no-repeat !important;*/
+    }
+</style>
+<div id="navbar">
+    <ol class="breadcrumb page-breadcrumb">
+        <li>
+            <a href="@Url.RouteUrl("Home", new { city = cityName, franchiseId = franchiseID })">Home</a>
+        </li>
+        <li>
+            <a href="@Url.RouteUrl("CustomerOrder/myorders", new { city = cityName, franchiseId = franchiseID })">My Account</a>
+        </li>
+        <li>
+            <a id="thirdLevelBedCrubmbs" href="@Url.RouteUrl("CustomerOrder/myorders", new { city = cityName, franchiseId = franchiseID })">My Orders</a>
+        </li>
+        <li class="active"><a id="fourthLevelBedCrubmbs" href="#">Cancel Order</a></li>
+    </ol>
+    <label id="lblBedcrumbs"></label>
+</div>
+@Html.Partial("_CustomerDashboardMenu")
+<div class="gap" style="display:none;"></div>
+<section class="cancel_order_addByP">
+    <div class="row box" data-gutter="15">
+        <div class="col-md-12">
+            @using (Html.BeginForm())
+            {
+
+                <h3>Order No : @Model.OrderNo</h3>
+                <hr />
+                if (ViewBag.Message != null)
+                {
+                    <div class="col-md-12">
+                        <div class="col-md-12">
+                            <h5 class="breadcrumbs dark">
+                                @ViewBag.Message
+                                @Html.ActionLink("  Continue Shopping", "Index", "Home", null, new { @class = "btn btn-warning" })
+                            </h5>
+                        </div>
+                    </div>
+                }
+                <div class="col-md-12">
+                    <div class="col-md-6">
+                        @Html.Hidden("hdnOrderID", Model.OrderID)
+                        @Html.Hidden("hdnOrderNo", Model.OrderNo)
+                        @Html.Hidden("hdnShopStockID", Model.ShopStockID)
+
+                        <div class="form-group">
+                            <label>Select Reason</label>
+                            <div class="">
+                                @Html.DropDownList("ddlDescription", new List<SelectListItem>
+                                { new SelectListItem { Text = "Wrong Product Ordered", Value = "Wrong Product Ordered" },
+                                  new SelectListItem { Text = "No Longer Need It", Value = "No Longer Need It" },
+                                  new SelectListItem { Text = "Found Lower Price Else where", Value = "Found Lower Price Else where" },
+                                  new SelectListItem { Text = "Delivery Address Issue", Value = "Delivery Address Issue" },
+                                  new SelectListItem { Text = "Other", Value = "Other" }}, "--Select Reason--", new { @class = "ddlDescription form-control" })
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="col-md-12">
+                    <div class="col-md-6">
+                        <label>Comment</label>
+                        <div>
+                            @Html.TextArea("txtArea", new { cols = "10", rows = "2", style = "resize:none;", @class = "form-control" })
+                        </div>
+                    </div>
+                </div>
+                <div class="gap"></div>
+                <div class="col-md-12">
+                    <div class="col-md-6">
+                        <input class="btn btn-success" type="submit" value="Submit" id="btnSubmit" />
+                    </div>
+                </div>
+
+            }
+        </div>
+
+    </div>
+</section>
+
+
+<div class="gap"></div>
+<script type="text/javascript">
+    $(function () {
+        $("#btnSubmit").click(function () {
+            if ($("#ddlDescription").val() == "") {
+
+                return false;
+            }
+        });
+    });
+</script>

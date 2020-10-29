@@ -1,0 +1,318 @@
+﻿@model ModelLayer.Models.ViewModel.MerchantTransactionReport
+
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_LeadersLayout.cshtml";
+}
+
+<link href="//cdn.datatables.net/1.10.19/css/jquery.dataTables.min.css" rel="stylesheet" />
+<script src="//cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
+<script src="~/Scripts/MerchantMenuOpenup.js"></script>
+<style>
+    table {
+        border-collapse: separate;
+        border-spacing: 15px;
+    }
+
+    .nav-link {
+        color: #007bff !important;
+    }
+
+    a.nav-link.active.show {
+        color: black !important;
+    }
+
+    popup {
+        margin-left: -220px;
+        position: fixed;
+        width: 200px;
+        word-break: break-all;
+        box-shadow: 4px -5px 6px black;
+        border-radius: 10px;
+        padding: 5px;
+    }
+
+    active {
+        background-color: #90fa90
+    }
+
+    inactive {
+        background-color: #f86c6c
+    }
+</style>
+@if (TempData["BBPResult"] != null)
+{
+    <script>
+    alert("@TempData["BBPResult"]");
+    </script>
+}   `
+<script>
+    $(document).ready(function () {
+        $("#FromDate").datepicker();
+        $("#ToDate").datepicker({});
+        $("#btnExport").click(function () {
+            window.location = "/admin/MerchantReport/ExportToExcel_TransactionReport";
+        })
+    });
+</script>
+<div class="container">
+    <div id="progress" class="modal">
+        <div class="center">
+            <img src="~/img/ajax-loading-gif-transparent-background-8.gif" />
+        </div>
+    </div>
+
+    <div class="card" id="maindiv">
+        <div class="card-header"><strong>Merchant Transaction Report </strong></div>
+        <div class="card-body card-block">
+            @using (Html.BeginForm("TransactionReport", "MerchantReport"))
+            {
+                @Html.AntiForgeryToken()
+                <table>
+                    <tr>
+                        <td>
+                            @Html.TextBoxFor(model => model.FromDate, Model.FromDate.ToString("MM/dd/yyyy"), new { @class = "form-control", style = "width:120px" })
+                            @Html.HiddenFor(model => model.FromDate)
+                        </td>
+                        <td>
+                            @Html.TextBoxFor(model => model.ToDate, Model.ToDate.ToString("MM/dd/yyyy"), new { @class = "form-control", style = "width:120px" })
+                            @Html.HiddenFor(model => model.ToDate)
+                        </td>
+                        <td>
+                            @Html.DropDownListFor(m => m.merchantId, Model.MerchantList, "Select Merchant/Shop", new { @class = "form-control" })
+
+                        </td>
+
+                        <td>
+                            <input id="btnGo" type="submit" value="Go" class="btn btn-info" />
+                        </td>
+                        <td>
+                            <input id="btnExport" type="button" value="Export To Excel" class="btn btn-warning" />
+                        </td>
+                    </tr>
+                </table>
+            }
+            @if (Model != null)
+            {
+                <div style="max-width:1000px;overflow:auto">
+                    <table id="tblData" class="table table-bordered table-striped table-condensed display" width="100%">
+                        <thead>
+                            <tr>
+                                <th>Sr.No.</th>
+                                <th>ShopName</th>
+                                <th>Transaction Code</th>
+                                <th>Transaction Date</th>
+                                <th>Bill Amount</th>
+                                <th>Commission</th>
+                                <th>GST</th>
+                                <th>Is Apply</th>
+                                <th>Calculated Commission</th>
+                                <th>Commission To ERP</th>
+                                <th>Company%</th>
+                                <th>Company ERP</th>
+                                <th>Part5th %</th>
+                                <th>Part5th ERP</th>
+                                <th>RM%</th>
+                                <th>RM UserLoginId</th>
+                                <th>RM Name</th>
+                                <th>RM ERP</th>
+                                <th>Buyer%</th>
+                                <th>Buyer UserloginId</th>
+                                <th>Buyer Name</th>
+                                <th>Buyer ERP</th>
+                                <th>Network%</th>
+                                <th>Network ERP</th>
+                                <th>L1 UserloginId</th>
+                                <th>L1 Name</th>
+                                <th>L1 ERP</th>
+                                <th>L2 UserloginId</th>
+                                <th>L2 Name</th>
+                                <th>L2 ERP</th>
+                                <th>L3 UserloginId</th>
+                                <th>L3 Name</th>
+                                <th>L3 ERP</th>
+                                <th>L4 UserloginId</th>
+                                <th>L4 Name</th>
+                                <th>L4 ERP</th>
+                                <th>L5 UserloginId</th>
+                                <th>L5 Name</th>
+                                <th>L5 ERP</th>
+                                <th>L6 UserloginId</th>
+                                <th>L6 Name</th>
+                                <th>L6 ERP</th>
+                                <th>Is Paid</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @{ var i = 0; }
+                            @if (Model.list.Count != 0)
+                            {
+                                foreach (var item in @Model.list)
+                                {
+                                    <tr style=@(item.IsPayable == true ? "" : "color:red;")>
+                                        <td>
+                                            @{
+                                                i = i + 1;
+                                            }
+                                            @i
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.ShopName)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.TransactionCode)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.TransactionDate)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.BillAmount)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.Commission)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.GST)
+                                        </td>
+                                        <td>
+                                            @if (item.IsApplied)
+                                            {
+                                                <span>
+                                                    Yes
+                                                </span>
+                                            }
+                                            else
+                                            {
+                                                <span>No</span>
+                                            }
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.CalculatedCommission)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.CommissionToERP)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.CompanyPercentage)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.CompanyERP)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.Part5thPercentage)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.Part5thERP)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.RelationshipManagerPercentage)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.RelationshipManager_UserloginId)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.RelationshipManagerName)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.RelationshipManagerERP)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.BuyerPercentage)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.BuyerUserLoginID)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.BuyerName)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.BuyerERP)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.NetworkPercentage)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.NetworkERP)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.Level1_UserLoginID)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.Level1_Name)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.Level1ERP)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.Level2_UserLoginID)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.Level2_Name)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.Level2ERP)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.Level3_UserLoginID)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.Level3_Name)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.Level3ERP)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.Level4_UserLoginID)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.Level4_Name)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.Level4ERP)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.Level5_UserLoginID)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.Level5_Name)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.Level5ERP)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.Level6_UserLoginID)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.Level6_Name)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.Level6ERP)
+                                        </td>
+                                        <td>
+                                            @if (item.IsPaid)
+                                            {
+                                                <span>
+                                                    Yes
+                                                </span>
+                                            }
+                                            else
+                                            {
+                                                <span>No</span>
+                                            }
+                                        </td>
+                                    </tr>
+                                }
+                            }
+                          
+                        </tbody>
+                    </table>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('#tblData').DataTable();
+    });
+</script>

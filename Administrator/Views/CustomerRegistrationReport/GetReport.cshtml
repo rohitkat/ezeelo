@@ -1,0 +1,282 @@
+﻿@model IEnumerable<ModelLayer.Models.ViewModel.CustomerRegistrationReportViewModel>
+
+@*<copyright file="GetReport.cshtml" company="Ezeelo Consumer Services Pvt. Ltd.">
+     Copyright (c) Ezeelo Consumer Services Pvt. Ltd. All rights reserved.
+    </copyright>
+    <author>Harshada Raghorte</author>*@
+@{
+    ViewBag.Title = "GetReport";
+    Layout = null;
+}
+<script src="~/Content/js/bootstrap.js"></script>
+<script src="~/Content/js/jquery-1.9.1.min.js"></script>
+<script src="~/Content/js/jquery.dataTables.min.js"></script>
+<script src="~/Content/js/bootstrap.min.js"></script>
+<script type="text/javascript">
+    $(document).ready(function () {
+        $("#myTable").DataTable({
+            "bDestroy": true,
+            //"sPaginationType": "full_numbers",
+            "bJQueryUI": true,
+            "bInfo": false,
+            "scrollY": 700,
+            "scrollCollapse": true,
+            "bPaginate": false,
+            "iDisplayLength": 20,
+            "bAutoWidth": false,
+
+        });
+
+    });
+</script>
+
+
+<style>
+    .btn_Print {
+        margin-bottom: 7px;
+        margin-top: 7px;
+        margin-left: 5px;
+    }
+
+    .section {
+        position: relative;
+        border: 1px solid #000;
+        padding-top: 33px;
+        margin-left: 5px;
+        /* background: #500; */
+        background: #A4A5A7;
+        margin-top: 39px;
+    }
+    #myTable_wrapper {
+        min-height: 61px;
+        margin-top: 2px;
+        max-height: 516px;
+    }
+    .fg-toolbar {
+        margin-top: -89px;
+    }
+    #myTable_filter {
+        position: absolute;
+        margin-top: 13px !important;
+    }
+
+     .section.positioned {
+        position: absolute;
+        top: 100px;
+        left: 100px;
+        width: 800px;
+        box-shadow: 0 0 15px #333;
+    }
+
+    .container_tbl {
+        overflow-y:scroll;
+        /*height: 200px;*/ height: 420px;
+    }
+
+    table {
+        border-spacing: 0;
+        width: 100%;
+    }
+
+    td + td {
+        border-left: 1px solid #eee;
+    }
+
+    td, th {
+        border-bottom: 1px solid #eee;
+        /*background: #ddd;*/
+        color: #000;
+        padding: 10px 25px;
+    }
+
+    #myTable thead tr th {
+        height: 0;
+        line-height: 0 !important;
+        padding-top: 0 !important;
+        padding-bottom: 0 !important;
+        color: transparent;
+        border: none;
+        white-space: nowrap;
+    }
+
+    th div {
+        position: absolute;
+        background: transparent;
+        color: #fff;
+        padding: 9px 10px;
+        top: 0;
+        margin-left: -8px;
+        line-height: normal;
+        /*border-left: 1px solid #800;*/ border-left: 1px solid #DDD;
+    }
+
+    th:first-child div {
+        border: none;
+    }
+    </style>
+
+
+<div class="section">
+    <div class="widget-content">
+        <div class="table container_tbl">
+            <table class="table table-bordered table-hover table-responsive table-striped">
+                <thead>
+                    <tr class="header">
+                        <th style=" width: 78px; word-break: break-all;">
+                            @*Cust ID*@
+                            <div style=" width: 75px; word-break: break-all;">Customer ID</div>
+                        </th>
+                        <th style=" width: 75px; word-break: break-all;">
+                            @*Full Name*@
+                            <div style=" width: 75px; word-break: break-all;">Full Name</div>
+                        </th>
+                        <th style=" width: 75px; word-break: break-all;">
+                            @*Email*@
+                            <div style=" width: 75px; word-break: break-all;">Email</div>
+                        </th>
+                        <th style=" width: 75px; word-break: break-all;">
+                            @*Mobile No*@
+                            <div style=" width: 75px; word-break: break-all;">Mobile No</div>
+                        </th>
+                        <th style=" width: 75px; word-break: break-all;">
+                            @*Address*@
+                            <div style=" width: 75px; word-break: break-all;">Address</div>
+                        </th>
+                        <th style=" width: 75px; word-break: break-all;">
+                            @*City Name*@
+                            <div style=" width: 75px; word-break: break-all;">City Name</div>
+                        </th>
+                        <th style=" width: 75px; word-break: break-all;">
+                            @*City Name*@
+                            <div style=" width: 75px; word-break: break-all;">Franchise</div> @*////added*@
+                        </th>
+                        <th style=" width: 75px; word-break: break-all;">
+                            @*Registration Date*@
+                            <div style=" width: 105px; word-break: break-all;">Registration Date</div>
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.CustomerID)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.FullName)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Email)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.MobileNo)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Address)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.CityName)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Franchises) @*////added*@
+                            </td>
+                            <td>
+                                @{ string lDate = "";}
+                                @if (item.RegistrationDate != null)
+                                {
+                                    lDate = item.RegistrationDate.ToString("dd/MM/yyyy");
+                                }
+                                @lDate
+                            </td>
+
+
+                        </tr>
+
+                    }
+                </tbody>
+
+            </table>
+
+
+        </div>
+
+
+
+        <div id="Pager">
+            <div class="wrap">
+                <div id="slider1" class="slider">
+                    <ul>
+                        @for (int c = 1; c <= @ViewBag.TotalPages; c++)
+                        {
+                            <li><a class="page-number" href="javascript:void();">@c</a></li>
+
+                        }
+
+                    </ul>
+
+                </div>
+
+                <div class="controls" style="margin-top:-27px; background:#F9F9F9">
+                    <a href="#noname" class="prev-slide"><<</a>
+                    <a href="#noname" class="next-slide" style="float: right; margin-right: 299px;">>></a>
+                </div>
+            </div>
+            <span class="totalcount"><b>Showing @ViewBag.PageSize of @ViewBag.TotalCount enteries</b></span>
+        </div>
+        </div>
+    </div>
+
+        <div class="loader">
+            <img id="loader_img" src="~/Content/img/loader.gif" style="display: none" />
+        </div>
+
+
+        @*<script src="~/Content/js/jquery.1.8.3.min.js"></script>*@
+        <script>
+            $(document).ready(function () {
+                $("#Pager .page-number").click(function (e) {
+                    $('#loader_img').show();
+                    var pagecount = 0;
+                    var page = parseInt($(this).html());
+                    if (page > 1) {
+                        pagecount = 1;
+                    }
+                    var fromDate = "@ViewBag.fromDate";
+                    var toDate = "@ViewBag.toDate";
+                    var cityID = "@ViewBag.cityID";
+                    var FranchiseID = "@ViewBag.FranchiseID";////added
+                    $.ajax({
+                        url: '@Url.Action("GetReport", "CustomerRegistrationReport")',
+                        data: { 'page': page, 'pagecount': pagecount, 'fromDate': fromDate, 'toDate': toDate, 'cityID': cityID, 'FranchiseID': FranchiseID },////added  'FranchiseID': FranchiseID
+                        type: "POST",
+                        cache: false,
+                        success: function (data) {
+                            //alert(data);
+                            $('#loader_img').hide();
+                            $('#divReport').empty();
+                            $('#divReport').append(data);
+
+                        },
+                        error: function (data) {
+
+                        }
+                    });
+                });
+
+            });
+
+        </script>
+
+        <script src="~/Content/js/lemmon-slider.js"></script>
+        <script type="text/javascript">
+            $(document).ready(function () {
+                //alert('OK');
+                // slider 1
+                $('#slider1').lemmonSlider({
+                    infinite: false
+                });
+
+            });
+
+        </script>

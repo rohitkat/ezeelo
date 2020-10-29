@@ -1,0 +1,130 @@
+﻿@model IEnumerable<ModelLayer.Models.ViewModel.WarehouseReturnListViewModel>
+
+@{
+    ViewBag.Title = "Warehouse Return Stock List From Customer";
+}
+
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<style>
+    .pro_th thead tr th {
+        font-size: 12px;
+        border-bottom: 1px solid #EEE;
+        padding: 6px 0;
+        background-color: #26A69A;
+    }
+
+    .pro_th tbody td {
+        font-size: 12px;
+        text-align: center;
+        border: 1px solid #EEE;
+    }
+
+        .pro_th tbody td.btn-set {
+            white-space: nowrap;
+        }
+
+    .dataTables_length {
+        margin-left: 0px !important;
+        margin-top: 7px;
+    }
+
+    .pagination {
+        margin: 0 26px;
+    }
+
+    form {
+        margin: 0 0 -15px;
+    }
+    section.right_side_main_part div#content .content .row-fluid .box.span12.right_side_up_part .box-content div#tblData_wrapper table#tblData tbody tr td a.btn.btn-small.btn-info {
+        border-radius: 5px !important;
+    }
+</style>
+
+
+<script src="~/Content/js/jquery-2.1.3.min.js"></script>
+<link href="~/Content/css/jquery.dataTables.css" rel="stylesheet" />
+<script src="~/Content/js/jquery.dataTables.js" language="jascript"></script>
+
+<script type="text/javascript" class="init">
+    $(document).ready(function () {
+        $('#tblData').DataTable({
+            dom: 'T<"clear">lfrtip',
+            "processing": true,
+            "serverSide": true,
+            "iDisplayLength": 20,    /// Added by Priti   to show 20 entires by default on date 14-11-2018
+        });
+        // alert("1");
+    });
+</script>
+<section class="right_side_main_part">
+    <div id="content" class="span10">
+        <div class="content">
+            <div class="row-fluid">
+                <div class="box span12 right_side_up_part">
+                    <center><p style="font-size:large"><b><u>Warehouse Return Stock List From Customer</u></b></p></center>
+                    <div class="box-header">
+                        <h2>
+                            <i class="icon-list-alt"></i>
+                            <span class="break"></span>
+                            Warehouse Return Stock List From Customers
+                        </h2>
+                    </div>
+                    <div class="box-content">
+                        <table class="table table-bordered table-striped table-condensed display" id="tblData">
+                            <thead>
+                                <tr>
+                                    <th>
+                                        Warehouse
+                                    </th>
+                                    <th>
+                                        Supplier
+                                    </th>
+                                    <th>
+                                        Invoice Code
+                                    </th>
+                                    <th>
+                                        Total Return Item(s)
+                                    </th>
+                                    <th>
+                                        Amount
+                                    </th>
+                                    <th>
+                                        Return Date
+                                    </th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            @foreach (var item in Model)
+                            {
+                                <tr style=@(@item.IsApproved == true  ? "background-color:#d0fbc8" : "")>
+                                    <td>
+                                        @(item.WarehouseName == null ? "None" : item.WarehouseName)
+                                    </td>
+                                    <td>
+                                        @(item.SupplierName == null ? "None" : item.SupplierName)
+                                    </td>
+
+                                    <td>
+                                        @(item.InvoiceCode == null ? "" : item.InvoiceCode)
+                                    </td>
+                                    <td> @item.TotalItems</td>
+                                    <td><i class="fa fa-inr"></i> @item.Amount</td>
+                                    <td>
+                                        @item.ReturnDate.ToString("dd/MM/yyyy")
+                                    </td>
+                                    <td>
+                                        @Html.ActionLink("Get Details", "Details", new { WarehouseReturnStockId = item.WarehouseReturnStockId }, new { @class = "btn btn-small btn-info" })
+                                    </td>
+                                </tr>
+                            }
+                        </table>
+
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+    </section>
+

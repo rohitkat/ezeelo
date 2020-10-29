@@ -1,0 +1,178 @@
+﻿@model ModelLayer.Models.ViewModel.LoginViewModel
+@{
+    Layout = null;
+}
+<link href="~/Content/css/bootstrap.css" rel="stylesheet" />
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
+<link rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
+<link rel='shortcut icon' type='image/x-icon' href='~/Content/Images/flogo.png' />
+<link href="~/Content/css/AdminLTE.css" rel="stylesheet" />
+<link href="~/Content/css/skin-green.css" rel="stylesheet" />
+<script src="~/Scripts/jquery-1.10.2.js"></script>
+<script src="~/Scripts/jquery.validate.js"></script>
+<script src="~/Scripts/jquery.validate.unobtrusive.js"></script>
+<style>
+    html, body {
+        min-height: auto;
+    }
+    .field-validation-error {
+    color:red;
+    }
+</style>
+<script type="text/javascript">
+    $(document).ready(function () {
+        $(".forgotLink a").click(function () {
+            if ($(".forgotCover").css('display') == 'none') {
+                $(".forgotCover").css('display', 'block');
+                $("#ForgetPasswordDiv").css('display', 'block');
+            } else {
+                $(".forgotCover").css('display', 'none');
+                $("#ForgetPasswordDiv").css('display', 'none');
+            }
+        });
+        $(".closeA").click(function () {
+            $(".forgotCover").css('display', 'none');
+            $("#ForgetPasswordDiv").css('display', 'none');
+        });
+    });
+</script>
+<body class="hold-transition login-page">
+    <div class="login-box">
+        <div class="login-logo">
+            <a><img src="~/Content/Images/logo.png" id="logo" style="    height: 70px;"><b>Dashboard</b></a>
+        </div>
+        <div class="login-box-body">
+            <p class="login-box-msg">Sign in to start your session</p>
+            @using (Html.BeginForm("Login", "Login"))
+            {
+                @Html.AntiForgeryToken()
+    <div class="form-group has-feedback">
+        @Html.TextBoxFor(model => model.UserName, new { @Class = "form-control", @placeholder = "Please enter user name" })
+        @Html.ValidationMessageFor(model => model.UserName)
+    </div>
+    <div class="form-group has-feedback">
+        @Html.PasswordFor(model => model.Password, new { @Class = "form-control", @placeholder = "Please enter password" })
+        @Html.ValidationMessageFor(model => model.Password)
+    </div>
+                <div class="row">
+                    <div class="col-xs-8">
+
+                    </div>
+                    <!-- /.col -->
+                    <div class="col-xs-4">
+                       <button type="submit" value="Sign In" class="button btn btn-success">Sign In</button>
+                       
+                    </div>
+                    <!-- /.col -->
+                </div>
+                
+                
+                @*<div class="navbar">
+                    <div class="navbar-inner">
+                        <div class="container-fluid">
+
+                            <div class="row">
+
+                                <div class="col-lg-4 col-xs-12 col-md-4 col-sm-3">
+                                    <a class="gandhibaghLogo-login" href="Login">
+
+                                        <img src="~/Content/Images/logo.png" alt="Admin eZeelo" class="img-responsive" />
+                                    </a>
+                                </div>
+                                <div class="col-lg-8 col-xs-12 col-md-8 col-sm-12 paddingnew">
+                                    <div class="login-box-admin">
+                                        <form class="form-horizontal" action="index.html" method="post">
+                                            <ul>
+
+                                                <li><div class="icon-login"> <span class="glyphicons-icon lock white glyfIcon"></span></div></li>
+                                                <li>
+                                                    <div class="input-prepend" title="User Name">
+
+                                                        <span class="add-on"><i class="halflings-icon user"></i></span>
+
+                                                        @Html.TextBoxFor(model => model.UserName, new { @Class = "input-large", @placeholder = "Please enter Mobile No / Email" })
+                                                        @Html.ValidationMessageFor(model => model.UserName)
+
+                                                    </div>
+                                                </li>
+                                                <li>
+                                                    <div class="input-prepend" title="Password">
+
+                                                        <span class="add-on"><i class="halflings-icon lock"></i></span>
+                                                        @Html.PasswordFor(model => model.Password, new { @Class = "input-large", @placeholder = "Please enter Password" })
+                                                        @Html.ValidationMessageFor(model => model.Password)
+
+                                                    </div>
+                                                </li>
+                                                <li>
+                                                    <div class="button-login">
+                                                        <div class="btn-both"><button type="submit" value="Login" class="button btn btn-success">Login</button></div>
+                                                    </div>
+
+                                                </li>
+
+                                            </ul>
+                                            <div class="clr"></div>
+
+
+
+                                            <div class="validation-error">
+                                                @if (TempData["Message"] != null)
+                                                {
+                                                    <div class="errorMsgLogin">
+                                                        @TempData["Message"]
+                                                    </div>
+                                                }
+                                                @Html.ValidationSummary(true)
+                                            </div>
+
+                                        </form>
+
+                                        <div class="forgotLink" style="float: right; margin-right: 72px; margin-top: -19px; color: #fff;">
+                                            @Ajax.ActionLink("Forget Password", "ForgetPassword", null, new AjaxOptions
+                                       {
+                                           HttpMethod = "GET",
+                                           UpdateTargetId = "ForgetPasswordDiv",
+                                           InsertionMode = InsertionMode.Replace
+
+                                       }, new { @class = "ForgetAnchor" })
+
+                                        </div>
+                                        <div class="clr"></div>
+
+                                        <div class="forgotCover"></div>
+                                        <div id="ForgetPasswordDiv">
+
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>*@
+                @*<div class="container-fluid-full">
+                    <div class="row-fluid">
+                        <div class="row-fluid">
+                            <div class="span12 adminBanner" id="DetailDiv">
+                                <img src="~/Content/Images/admin.png" alt="Admin" class="img-responsive" />
+                            </div>
+                        </div>
+                    </div>
+                </div>*@
+            }
+        </div>
+    </div>
+</body>
+
+
+
+
+
+
+
+
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}

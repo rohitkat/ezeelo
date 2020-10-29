@@ -1,0 +1,385 @@
+﻿
+@model ModelLayer.Models.Merchant
+@{
+    Layout = "~/Views/Shared/_Layout_Internal.cshtml";
+    ViewBag.Title = "eZeelo: Electronics, Fashion, Coupons, Home Appliances | Lowest Price";
+}
+@{
+    string cityName = System.Configuration.ConfigurationManager.AppSettings["DFLT_CITY_NAME"]; @*//Yashaswi 01/12/2018 Default City Change *@
+
+    if (Request.Cookies["CityCookie"] != null && Request.Cookies["CityCookie"].Value != "")
+    {
+        cityName = Request.Cookies["CityCookie"].Value.Split('$')[1].ToLower();
+
+    }
+
+    List<ModelLayer.Models.ViewModel.BlockViewModel> blocks = new List<ModelLayer.Models.ViewModel.BlockViewModel>();
+}
+
+<link rel="stylesheet" href="~/Content/css/font-awesome.min.css">
+<style type="text/css">
+    .row {
+        margin: 10px 0px;
+    }
+
+    .product.animated.fadeInUp {
+        overflow: hidden;
+        height: 250px !important;
+        min-height: 250px !important;
+    }
+
+    .product-img-alt, .product-img {
+        width: 200px;
+        margin: auto;
+        height: auto;
+        display: block;
+        /* -webkit-transition: 0.3s; */
+        -moz-transition: 0.3s;
+        -o-transition: 0.3s;
+        -ms-transition: 0.3s;
+        transition: 0.5s;
+        z-index: 1;
+        -webkit-box-shadow: 0 3px 2px rgba(0,0,0,0.25), 0 0 1px rgba(0,0,0,0.25);
+        box-shadow: 0 3px 2px rgba(0,0,0,0.25), 0 0 1px rgba(0,0,0,0.25);
+        -webkit-border-radius: 4px;
+        border-radius: 4px;
+    }
+
+    span {
+        /*font-size: 14px;*/
+        text-wrap: normal;
+        text-align: justify;
+        vertical-align: text-top;
+    }
+
+    .sidenav {
+        height: 100%;
+        width: auto;
+        min-width: 250px;
+        text-wrap: normal;
+        position: relative;
+        z-index: 1;
+        top: 0;
+        left: 0;
+        overflow-x: hidden;
+        padding-top: 15px;
+        padding-bottom: 20px;
+        -webkit-box-shadow: 0 3px 2px rgba(0,0,0,0.25), 0 0 1px rgba(0,0,0,0.25);
+        box-shadow: 0 3px 2px rgba(0,0,0,0.25), 0 0 1px rgba(0,0,0,0.25);
+        -webkit-border-radius: 4px;
+        border-radius: 4px;
+        background-color: aliceblue;
+        margin-right: 15px;
+        margin-top: 10px;
+    }
+
+        .sidenav h4 {
+            border-bottom: 1px solid gray;
+            color: #818181;
+            padding-left: 10px;
+        }
+
+        .sidenav a {
+            padding: 6px 8px 6px 16px;
+            text-decoration: none;
+            font-size: 16px;
+            color: #818181;
+            display: block;
+        }
+
+            .sidenav a:hover {
+                background-color: gold;
+                color: white;
+            }
+</style>
+<script>
+    //$(document).ready(function () {
+    //    $("#myBtn").css("cursor", "auto");
+    //    $('#myBtn').on("click", function (e) {
+    //        $("#myModal").hide();
+    //    });
+    //})
+</script>
+<div class="p-partner-wrapper box-content" style="margin-top: 30px;background-color:rgba(247, 245, 245, 0.25);padding:10px;font-size:18px">
+   @if (Model != null)
+   {
+    <div class="p-dealer-cover" style="margin-top: 30px;">
+        <section class="main_Hero_banner_sldier_main">
+            <div class="main_Hero_banner_sldier_main_inner">
+                <div id="myCarousel" class="carousel slide leftSide-SliderInner col-md-12" data-ride="carousel">
+                    <ol class="carousel-indicators">
+                        @if (Model.BannerImageURL.Count > 1)
+                        {
+                            int i = 0;
+                            foreach (var item in Model.BannerImageURL)
+                            {
+                                if (i == 0)
+                                {
+                                    <li data-target="#myCarousel" data-slide-to="0" class="active"></li>
+                                }
+                                else
+                                {
+                                    <li data-target="#myCarousel" data-slide-to="@i" class=""></li>
+                                }
+                                i = i + 1;
+                            }
+                        }
+                    </ol>
+                    <!-- Wrapper for slides -->
+                    <div class="carousel-inner" style="max-height:400px;">
+                        @{
+                            if (Model.BannerImageURL.Count == 0)
+                            {
+                                <div class="item active">
+                                    <img class="img-responsive" src="~/Image/MerchantBanner.jpg" alt="Ezeelo.com" title="Ezeelo.com" style="width:100%;">
+                                </div>
+                            }
+                            else
+                            {
+                                int ii = 0;
+                                foreach (var item in Model.BannerImageURL)
+                                {
+                                    if (ii == 0)
+                                    {
+                                        <div class="item active">
+                                            <img onerror="this.onerror=null;this.src='http://img.ezeelo.com/Images/Marchant/MerchantBanner.jpg'; this.style='width:100%;'" class="img-responsive" src="@System.Configuration.ConfigurationManager.AppSettings["IMAGE_HTTP"]@System.Configuration.ConfigurationManager.AppSettings["DIRECTORY"]/@System.Configuration.ConfigurationManager.AppSettings["FOLDER_BANNER"]/@item.BannerPath" alt="Ezeelo.com" title="Ezeelo.com" style="width:100%;">
+                                        </div>
+                                    }
+                                    else
+                                    {
+                                        <div class="item">
+                                            <img onerror="this.onerror=null;this.src='http://img.ezeelo.com/Images/Marchant/MerchantBanner.jpg'; this.style='width:100%;'" class="img-responsive" src="@System.Configuration.ConfigurationManager.AppSettings["IMAGE_HTTP"]@System.Configuration.ConfigurationManager.AppSettings["DIRECTORY"]/@System.Configuration.ConfigurationManager.AppSettings["FOLDER_BANNER"]/@item.BannerPath" alt="Ezeelo.com" title="Ezeelo.com" style="width:100%;">
+                                        </div>
+                                    }
+                                    ii = ii + 1;
+                                }
+                            }
+                        }
+                    </div>
+                    <!-- Left and right controls -->
+                    @if (Model.BannerImageURL.Count > 1)
+                    {
+                        <a class="left carousel-control" href="#myCarousel" data-slide="prev">
+                            <span class="glyphicon glyphicon-chevron-left fa fa-chevron-left"></span>
+                            <span class="sr-only">Previous</span>
+                        </a>
+                        <a class="right carousel-control" href="#myCarousel" data-slide="next">
+                            <span class="glyphicon glyphicon-chevron-right fa fa-chevron-right"></span>
+                            <span class="sr-only">Next</span>
+                        </a>
+                    }
+                </div>
+
+            </div>
+        </section>
+
+    </div>
+
+    <div class="p-dealer-content">
+        <div class="container no-padding-top">
+            <div id="rowBoxContainer" class="row">
+                <div class="col-xs-12 col-md-6 box-item cashback">
+                    <div class="row">
+                        <div class="box-content">
+                            <table>
+                                <tr>
+                                    <td>
+                                        <img src="@Model.PhotoImageURL" onerror="this.onerror=null;this.src='http://img.ezeelo.com/Images/Marchant/logo.png'; this.style='width:300px;height:200px;'" alt=" @Model.FranchiseName" style="width:300px;height:200px;">
+                                    </td>
+                                    <td style="padding-left:20px">
+                                        <h3>@Model.FranchiseName</h3>
+                                        <span style="color:white;background-color:forestgreen;padding: 2px 6px 2px 6px;border-radius: 3px;vertical-align: middle;text-align: center;">@Model.Rating.ToString("#.#") <i class="fa fa-star"></i></span>
+                                        &nbsp;
+                                        <a id="lnkRatingModal" href="#" style="font-size:18px;font-weight:bold">@Model.NoOfReviews reviews</a>
+                                        @if (Session["UID"] != null)
+                                        {
+                                            <button type="button" id="btnUpdateMerchantReviewModal" style="font-size:18px;" class="btn btn-link" title="Add review">Add review</button>
+                                        }
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="box-content">
+                            <h3>Details</h3>
+                            <div class="panel-wrapper">
+                                <ul>
+                                    <li>
+                                        <div>
+                                            <div class="header">
+                                                <strong>Category</strong>
+                                            </div>
+                                            <div>
+                                                @Model.ServiceMasterDetail.Name
+                                            </div>
+                                        </div>
+                                    </li>
+                                    <li>
+                                        <div>
+                                            <div class="header">
+                                                <strong>Referral fee</strong>
+                                            </div>
+                                            <div>
+                                                @Model.CommissionMasterDetail.Commission %
+                                            </div>
+                                        </div>
+                                    </li>
+                                    <li>
+                                        <div>
+                                            <div class="header">
+                                                <strong>Cashback to buyer</strong>
+                                            </div>
+                                            <div>
+                                                @Model.CasbackToBuyer %
+                                            </div>
+                                        </div>
+                                    </li>
+                                    @if (string.IsNullOrWhiteSpace(Model.SpecialRemark) == false)
+                                    {
+                                        <li>
+                                            <div>
+                                                <div class="header">
+                                                    <strong><i class="fa fa-desktop"></i>&nbsp; Introduction</strong>
+                                                </div>
+                                                <div>
+                                                    @Model.SpecialRemark
+                                                </div>
+                                            </div>
+                                        </li>
+                                    }
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="box-content">
+                            <h3>Contact</h3>
+                            <div class="panel-wrapper">
+                                <ul>
+                                    <li>
+                                        <div class="header">
+                                            <strong><i class="fa fa-map-marker"></i>&nbsp; Address</strong>
+                                        </div>
+                                        <div>
+                                            @Model.Address,
+                                            @Model.CityDetail.Name - @Model.Pincode,
+                                            @Model.StateDetail.Name,
+                                            @Model.Country
+                                        </div>
+                                        <div class="header"><strong><i class="fa fa-hourglass"></i>&nbsp; Hours</strong></div>
+                                        <div>
+                                            @Model.ShopTimingMasterDetail.FromTime - @Model.ShopTimingMasterDetail.ToTime
+                                        </div>
+                                        <div class="header"><strong><i class="fa fa-calendar"></i>&nbsp; Holidays</strong></div>
+                                        <div>
+                                            @ViewBag.HolidayList
+                                        </div>
+                                    </li>
+                                    <li>
+                                        <div class="header"><strong><i class="fa fa-phone-square"></i> &nbsp; Contact </strong></div>
+                                        <div>
+                                            <div>Contact Person: @Model.ContactPerson</div>
+                                            <div>Phone: @Model.ContactNumber</div>
+                                            <div>E-Mail: <a href="mailto:@Model.Email">@Model.Email</a></div>
+                                        </div>
+                                    </li>
+                                </ul>
+
+                                <div class="col-sm-4"></div>
+                                @*</div>*@
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                @if (string.IsNullOrWhiteSpace(Model.GoogleMapLink) == false)
+                {
+                    <div class="col-xs-12 col-md-6 box-item cashback">
+                        <div class="row">
+                            <div class="box-content">
+                                <h3>Location</h3>
+                                <div class="panel-wrapper">
+                                    <iframe src="@Model.GoogleMapLink" width="600" height="550" frameborder="0" style="border:0;" allowfullscreen=""></iframe>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                }
+
+            </div>
+        </div>
+
+        <div class="container" id="a-back">
+            <div class="p-back-bar-bottom"><a class="btn-link" href="javascript:history.back()">&lt; Back</a></div>
+        </div>
+    </div>
+
+
+    <div class="modal fade " id="mdGoogleMap" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+
+                    <div class="img"></div>
+                    <button type="button" class="btn-link btn-close" data-dismiss="modal">Close</button>
+                </div>
+                <div class="modal-body">
+
+                    <div class="row"><div class="col-md-8"><div id="map_canvas"></div></div><div class="col-md-4"><div id="partner_list" class="list-group"></div></div></div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+                            }
+</div>
+@if (Session["UID"] != null)
+{
+    Html.RenderPartial("_AddUpdateRatings", new ModelLayer.Models.MerchantRating() { MerchantID = Model.Id, CustomerID = Convert.ToInt64(Session["UID"]) });
+}
+@{Html.RenderPartial("_ShowAllRatings", Model); }
+
+@section pagescripts{
+    <script type="text/javascript" src="~/Content/bootstrap-star-rating/js/star-rating.js"></script>
+    <script src="~/Content/bootstrap-star-rating/themes/krajee-fa/theme.min.js"></script>
+
+    <script type="text/javascript">
+        $(document).on('click', '#btnUpdateMerchantReviewModal', function (e) {
+            e.preventDefault();
+            $('#modalMerchantReview').modal({ backdrop: "static" }).modal('show');
+            $('#txtMerchantRating').val('').change();
+            $('#txtMerchantRating').rating({
+                showCaption: false,
+                step: 0.5,
+                theme: 'krajee-fa',
+                filledStar: '<i class="fa fa-star"></i>',
+                emptyStar: '<i class="fa fa-star-o"></i>'
+            });
+        });
+        $(document).on('click', '#lnkRatingModal', function () {
+            $.ajax({
+                url: '@Url.Action("GetMerchantRatingList", new { MerchantID = Model.Id })',
+                type: 'get',
+                success: function (result) {
+                    $('#divRatingsList').html(result);
+                    $('#modalShowMerchantRatings').modal({ backdrop: "static" }).modal('show');
+                }
+            });
+        });
+    </script>
+}
+
+<script>
+    $(document).ready(function () {
+        if (window.history.length == 1) {
+            $("#a-back").hide();
+        }
+        if (window.history.length == undefined) {
+            $("#a-back").hide();
+        }
+        if (window.history.length == null) {
+            $("#a-back").hide();
+        }
+    })
+</script>

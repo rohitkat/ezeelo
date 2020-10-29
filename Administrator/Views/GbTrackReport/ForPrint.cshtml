@@ -1,0 +1,125 @@
+﻿@using PagedList;
+@using PagedList.Mvc;
+
+@model IPagedList<ModelLayer.Models.ViewModel.GBTrackReportViewModel>
+
+@{
+    ViewBag.Title = "ForPrint";
+}
+<div class="btn_Print">
+    <input type="submit" id="btnPrint" value="Print" onclick="Print()" class="btn-primary" style="padding: 1px 10px;" />
+</div>
+@if (Model != null)
+{<div class="widget-content">
+        <div class="widget big-stats-container section">
+            <div class="widget-content matchdivheight table scrollable container_tbl">
+                <div id="divPrint">
+                    <table class="table" style="margin-left:10px;">
+
+                        @if (Model.Count() == 0)
+                        {
+                            <tr>
+                                <td colspan="6" class="text-center"><h3>No Record Found...</h3></td>
+                            </tr>
+                        }
+                        else
+                        {
+                            int i = 0;
+                            <tr class="hed-tble header">
+                                <th>
+                                    @*Sr No*@
+                                    Sr No
+                                </th>
+                                <th>
+                                    @Html.DisplayNameFor(model => model.First().PageURL)
+                                </th>
+                                @*<th>
+                                        @Html.DisplayNameFor(model => model.UserLoginId)
+                                    </th>*@
+                                <th>
+                                    User Name
+                                </th>
+                                <th>
+                                    In Date/Time
+                                </th>
+                                <th>
+                                    In Out/Time
+                                </th>
+                                <th>
+                                    @Html.DisplayNameFor(model => model.First().NetworkIP)
+                                </th>
+                                <th>
+                                    @Html.DisplayNameFor(model => model.First().DeviceType)
+                                </th>
+                                @*<th>
+                                        @Html.DisplayNameFor(model => model.DeviceID)
+                                    </th>*@
+                                <th></th>
+                            </tr>
+
+                            foreach (var item in Model)
+                            {
+                                <tr>
+                                    <td>@{int SrNo = i = i + 1; } @SrNo</td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.PageURL)
+                                    </td>
+                                    @*<td>
+                                            @Html.DisplayFor(modelItem => item.UserLoginId)
+                                        </td>*@
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.Name)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.InTime)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.OutTime)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.NetworkIP)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.DeviceType)
+                                    </td>
+                                    @*<td>
+                                            @Html.DisplayFor(modelItem => item.DeviceID)
+                                        </td>*@
+
+                                </tr>
+                            }
+                        }
+
+                    </table>
+
+                </div>
+            </div>
+        </div>
+        <div class="pager">
+            @Html.PagedListPager(Model, Page => Url.Action("Index", new
+                       {
+                           page = Page
+                       }),
+                                                                    new PagedListRenderOptions()
+                                                                    {
+                                                                        Display = PagedListDisplayMode.IfNeeded
+                                                                    })
+            <h4><span>Total Count:&nbsp;@ViewBag.TotalCount</span></h4>
+        </div>
+
+    </div>
+}
+
+<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
+<script type="text/javascript">
+    function Print() {
+        var divContents = $("#divPrint").html();
+        var printWindow = window.open('', '', 'height=400,width=800');
+        printWindow.document.write('<html><head><title>Customer Registration Report</title>');
+        printWindow.document.write('</head><body >');
+        printWindow.document.write(divContents);
+        printWindow.document.write('</body></html>');
+        printWindow.document.close();
+        printWindow.print();
+    }
+</script>

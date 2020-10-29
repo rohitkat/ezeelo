@@ -1,0 +1,104 @@
+﻿@model ModelLayer.Models.DeliveryWeightSlab
+
+@{
+    ViewBag.Title = "Edit Weight Slab [ " + @Model.MaxWeight + " ]";
+}
+<div class="row-fluid" style="margin-left:15px;margin-top:28px;">
+    <div class="box span12">
+        <div class="box-header">
+            <h2>
+                <i class="icon-list-alt"></i><span class="break"></span>
+                Edit Weight Slab [ @Model.MaxWeight ]
+            </h2>
+        </div>
+        <!-- /widget-header -->
+        <div class="box-content">
+            @using (Html.BeginForm())
+            {
+                @Html.AntiForgeryToken()
+
+                <div class="form-horizontal">
+                    @Html.ValidationSummary(true)
+                    @Html.HiddenFor(model => model.ID)
+
+                    <div class="control-group">
+                        <span class="control-label">Max weight</span>
+                        <div class="controls">
+                            @Html.EditorFor(model => model.MaxWeight)
+                            @Html.ValidationMessageFor(model => model.MaxWeight)
+                        </div>
+                    </div>
+
+                    <div class="control-group">
+                        <span class="control-label">Normal Charge</span>
+                        <div class="controls">
+                            <div class="input-append">
+                                @Html.EditorFor(model => model.NormalRateWithinPincodeList)
+                            </div>
+                            @Html.ValidationMessageFor(model => model.NormalRateWithinPincodeList)
+                        </div>
+                    </div>
+
+                    <div class="control-group">
+                        <span class="control-label">Express Charge</span>
+                        <div class="controls">
+                            <div class="input-append">
+                                @Html.EditorFor(model => model.ExpressRateWithinPincodeList)
+                            </div>
+                            @Html.ValidationMessageFor(model => model.ExpressRateWithinPincodeList)
+                        </div>
+                    </div>
+
+                    <div class="control-group">
+                        <span class="control-label">Normal Charge</span>
+                        <div class="controls">
+                            <div class="input-append">
+                                @Html.EditorFor(model => model.NormalRateOutOfPincodeList)
+                            </div>
+                            @Html.ValidationMessageFor(model => model.NormalRateOutOfPincodeList)
+                        </div>
+                    </div>
+
+                    <div class="control-group">
+                        <span class="control-label">Express Charge</span>
+                        <div class="controls">
+                            <div class="input-append">
+                                @Html.EditorFor(model => model.ExpressRateOutOfPincodeList)
+                            </div>
+                            @Html.ValidationMessageFor(model => model.ExpressRateOutOfPincodeList)
+                        </div>
+                    </div>
+                    @*<div class="control-group">
+                            <span class="control-label">Is Approved</span>
+                            <div class="controls">
+                                @Html.EditorFor(model => model.IsApproved)
+                                @Html.ValidationMessageFor(model => model.IsApproved)
+                            </div>
+                        </div>*@
+
+                    <div class="control-group">
+                        <span class="control-label">Is Active</span>
+                        <div class="controls">
+                            @Html.EditorFor(model => model.IsActive)
+                            @Html.ValidationMessageFor(model => model.IsActive)
+                        </div>
+                    </div>
+
+
+                    <div class="form-actions" style="    padding-left: 180px;">
+                        <input type="submit" value="Save" class="btn btn-danger " />
+                        @Html.ActionLink("Back to List", "Index", new { UID = ViewBag.UID }, new { @class = "btn" })
+                    </div>
+
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+
+
+
+@*@section Scripts {
+        @Scripts.Render("~/bundles/jqueryval")
+    }*@

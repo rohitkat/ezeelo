@@ -1,0 +1,224 @@
+﻿@model IEnumerable<ModelLayer.Models.ViewModel.BankPayoutRequestViewModel>
+@{
+    ViewBag.Title = "Index";
+
+    if (Session["RoleName"] != null && Session["RoleName"].ToString() == "accounts")
+    {
+        Layout = "~/Views/Shared/_AccountsLayout.cshtml";
+    }
+    else
+    {
+        Layout = "~/Views/Shared/_LeadersLayout.cshtml";
+    }
+}
+
+
+<style type="text/css">
+    #loading {
+        display: none;
+        position: fixed;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(255,255,255,0.8);
+        z-index: 1000;
+    }
+
+    #loadingcontent {
+        display: table;
+        position: fixed;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+    }
+
+    #loadingspinner {
+        display: table-cell;
+        vertical-align: middle;
+        width: 100%;
+        text-align: center;
+        font-size: larger;
+        padding-top: 80px;
+    }
+</style>
+
+<style>
+    .pro_th thead tr th {
+        font-size: 12px;
+        border-bottom: 1px solid #EEE;
+        padding: 6px 0;
+        background-color: #26A69A;
+    }
+
+    .pro_th tbody td {
+        font-size: 12px;
+        text-align: center;
+        border: 1px solid #EEE;
+    }
+
+        .pro_th tbody td.btn-set {
+            white-space: nowrap;
+        }
+
+    .dataTables_length {
+        margin-left: 0px !important;
+        margin-top: 7px;
+    }
+
+    .pagination {
+        margin: 0 26px;
+    }
+
+    form {
+        margin: 0 0 -15px;
+    }
+</style>
+
+<script src="~/Scripts/jquery-1.12.4.js"></script>
+
+<link href="//cdn.datatables.net/1.10.19/css/jquery.dataTables.min.css" rel="stylesheet" />
+
+<link href="https://cdn.datatables.net/fixedcolumns/3.2.6/css/fixedColumns.dataTables.min.css" rel="stylesheet" />
+<script src="//cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/fixedcolumns/3.2.6/js/dataTables.fixedColumns.min.js"></script>
+
+<script src="~/Content/assets/js/Spinner.js"></script>
+<link href="~/Content/PagedList.css" rel="stylesheet" />
+
+<div id="wrap">
+
+
+    @if (TempData["Message"] != null && TempData["Message"].ToString() == "1")
+    {
+        <div class="alert alert-success alert-dismissible">
+            <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+            <strong>Success!</strong> Payment Details Updated Successfully
+        </div>
+    }
+
+    <div class="container">
+        <legend><h3>Confirm Bank Payment Details</h3></legend>
+        <div id="content" class="span10" style="min-height: 403px;">
+            <table id="custTableNew" class="table table-striped table-bordered dt-responsive nowrap" width="70%" cellspacing="0">
+                <thead>
+                    <tr>
+                        <th>
+                            Full Name
+                        </th>
+                        <th>
+                           Mobile
+                        </th>
+                        <th>
+                            Requested ID
+                        </th>
+                        <th style="color:red;">
+                            Beneficiary A/c no
+                        </th>
+                        <th style="color:red;">
+                            Beneficiary Name
+                        </th>
+                        <th style="color:red;">
+                            Instrument Amount
+                        </th>
+                        <th style="color:red;">
+                            IFSC Code
+                        </th>
+                        <th>
+                            Beneficiary email id
+                        </th>
+
+                        <th>
+                            Transaction Date
+                        </th>
+
+
+                        <th>
+                            Bene Bank Name
+                        </th>
+                        <th>
+                            Payment Status
+                        </th>
+                        <th>
+                            Payment Remark
+                        </th>
+                        <th>Update</th>
+
+
+                    </tr>
+                </thead>
+
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            
+                                @Html.HiddenFor(modelItem => item.UserLoginID)
+
+                            <td style="text-align: center">
+                                @Html.DisplayFor(modelItem => item.FullName)
+                            </td>
+                            <td style="text-align: center">
+                                @Html.DisplayFor(modelItem => item.Mobile)
+                            </td>
+                            <td style="text-align: center">
+                                @Html.DisplayFor(modelItem => item.RequestID)
+                            </td>
+                            <td style="text-align: center">
+                                @Html.DisplayFor(modelItem => item.BenificiaryAccountNumber)
+                            </td>
+                            <td style="text-align: center">
+                                @Html.DisplayFor(modelItem => item.BenificiaryAccountName)
+                            </td>
+                            <td style="text-align: center">
+                                @Html.DisplayFor(modelItem => item.InstrumentAmount)
+                            </td>
+
+                            <td style="text-align: center">
+                                @Html.DisplayFor(modelItem => item.IFSC)
+                            </td>
+                            <td style="text-align: center">
+                                @Html.DisplayFor(modelItem => item.BenificiaryEmail)
+                            </td>
+
+                            <td style="text-align: center">
+                                @Html.DisplayFor(modelItem => item.TransactionDate)
+                            </td>
+
+                            <td>@Html.DisplayFor(modelItem => item.BenificiaryBankName)</td>
+                            <td>@Html.DisplayFor(modelItem => item.StatusPayment)</td>
+                            <td>@Html.DisplayFor(modelItem => item.PaymentRemark)</td>
+                            <td>@Html.ActionLink("Payment Status", "EditAfterPayment", new { id = item.UserLoginID })</td>
+
+                        </tr>
+                    }
+                </tbody>
+            </table>
+            @*<input type="button" onclick="tableToExcelNew('custTableNew', 'www.leaders.com')" value="&nbsp; Export To Excel &nbsp;" class="btn-success btn btn-warning btn-small" style="margin-top:15px;">*@
+        </div>
+
+    </div>
+</div>
+
+<script type="text/javascript">
+
+    $(document).ready(function () {
+        $('#custTableNew').DataTable({
+            "order": [[5, "desc"]],
+            scrollY: 300,
+            scrollX: true,
+            scrollCollapse: false,
+            paging: true,
+            fixedColumns: true
+        });
+
+    });
+</script>
+
+
+
+
+
+
+

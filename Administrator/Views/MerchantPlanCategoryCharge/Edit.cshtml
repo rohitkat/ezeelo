@@ -1,0 +1,97 @@
+﻿@*//-----------------------------------------------------------------------
+        // <copyright file="Edit.cshtml" company="Ezeelo Consumer Services Pvt. Ltd.">
+        //     Copyright (c) Ezeelo Consumer Services Pvt. Ltd. All rights reserved.
+        //
+    </copyright>
+        // <author>Snehal Shende</author>
+        //-----------------------------------------------------------------------*@
+@model ModelLayer.Models.OwnerPlanCategoryCharge
+
+@{
+    ViewBag.Title = "Edit";
+}
+
+@*<h2>Edit</h2>*@
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+    
+     <div class="span10" id="content">
+         <ul class="breadcrumb">
+             <li>
+                 <i class="icon-group"></i>
+                 <a href="#">Merchant Plan Category Charge</a>
+                 @*<i class="icon-angle-right"></i>*@
+             </li>
+             @*<li><a href="#">Tables</a></li>*@
+         </ul>
+         <div class="row-fluid">
+             <div class="box span12">
+                 <div class="box-header">
+                     <h2><i class="icon-edit"></i><span class="break">Edit</span></h2>
+
+                 </div>
+                 <div class="box-content">
+                     <form class="form-horizontal">
+                         @*<h4>OwnerPlanCategoryCharge</h4>*@
+                         @Html.ValidationMessage("CustomError")
+                         @Html.ValidationSummary(true)
+                         @Html.HiddenFor(model => model.ID)
+
+                         <div class="control-group">
+                             @Html.LabelFor(model => model.OwnerPlanID, "Merchant Plan", new { @class = "control-label span2" })
+                             <div class="controls">
+                                 @Html.DropDownList("OwnerPlanID", "Select Plan")
+                                 @Html.ValidationMessageFor(model => model.OwnerPlanID)
+                             </div>
+                         </div>
+
+                         <div class="control-group">
+                             @Html.LabelFor(model => model.CategoryID, "Category", new { @class = "control-label span2" })
+                             <div class="controls">
+                                 @Html.DropDownList("CategoryID", "Select Category")
+                                 @Html.ValidationMessageFor(model => model.CategoryID)
+                             </div>
+                         </div>
+
+                         <div class="control-group">
+                             @Html.LabelFor(model => model.ChargeInPercent, "Charge (In %)", new { @class = "control-label span2" })
+                             <div class="controls">
+                                 @Html.EditorFor(model => model.ChargeInPercent)
+                                 @Html.ValidationMessageFor(model => model.ChargeInPercent)
+                             </div>
+                         </div>
+
+                         <div class="control-group">
+                             @Html.LabelFor(model => model.ChargeInRupee, "Charge (In Rs)", new { @class = "control-label span2" })
+                             <div class="controls">
+                                 @Html.EditorFor(model => model.ChargeInRupee)
+                                 @Html.ValidationMessageFor(model => model.ChargeInRupee)
+                             </div>
+                         </div>
+
+                         <div class="control-group">
+                             @Html.LabelFor(model => model.IsActive, "Is Active", new { @class = "control-label span2" })
+                             <div class="controls">
+                                 @Html.EditorFor(model => model.IsActive)
+                                 @Html.ValidationMessageFor(model => model.IsActive)
+                             </div>
+                         </div>
+
+                         <div class="form-actions">
+                             <div class="col-md-offset-2 span10">
+                                 <input type="submit" value="Save" class="btn btn-primary" />
+                                 @Html.ActionLink("Back to List", "Index", "MerchantPlanCategoryCharge", new { ownerId = ViewBag.ownerId }, new { @class = "btn" })
+                             </div>
+                         </div>
+                     </form>
+                 </div>
+                 </div>
+             </div>
+         </div>
+}
+
+@*<div>
+    @Html.ActionLink("Back to List", "Index", new { ownerId = @ViewBag.ownerId })
+</div>*@

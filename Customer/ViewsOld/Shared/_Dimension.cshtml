@@ -1,0 +1,91 @@
+﻿@model ModelLayer.Models.ViewModel.ProductViewModel
+
+<style>
+    .newpanel {
+        width: 190px !important;
+        margin-bottom: 0px !important;
+    }
+
+    .paddingnew {
+        padding-top: 0px !important;
+        width: 192px !important;
+    }
+
+    .titleDimension {
+        margin-left: .625rem;
+    }
+
+    .contentDimension {
+        padding: .15rem;
+        height: auto;
+        min-height: 40px;
+        max-height: 150px;
+        overflow: auto;
+    }
+
+    .headingnew {
+        height: 33px !important;
+        font: 500 0.88em/1.1 "Segoe UI", "Open Sans", serif !important;
+    }
+
+    .clearright {
+        float: right;
+        padding-right: 5px;
+        margin-top: -6px;
+    }
+
+    #tblDimension {
+        line-height: 17px;
+    }
+
+    .dimensionCheckBox {
+        vertical-align: -2px !important;
+    }
+</style>
+<script type="text/javascript">
+    $(document).ready(function () {
+        $(".contentDimension").show(200);
+        $(".titleDimension").click(function () {
+            $(".contentDimension").toggle();
+        });
+    });
+</script>
+
+@if (Model != null)
+{
+    if (Model.dimensionList != null)
+    {
+        if (Model.dimensionList.Count() > 0)
+        {
+            if (!(Model.dimensionList.Count() == 1 && Model.dimensionList[0].ID == 1))
+            {
+                <div class="">
+                    <div class="tile-group11 double paddingnew">
+                        <div class="cell">
+                            <div class="panel" data-role="panel">
+
+                                <div class="contentDimension">
+                                    <table id="tblDimension">
+                                        @for (var i = 0; i < Model.dimensionList.Distinct().Count(); i++)
+                                        {
+                                            <tr>
+                                                <td>
+                                                    @Html.CheckBoxFor(it => it.dimensionList[i].IsSelected, new { onchange = "this.form.submit();", Style = "vertical-align:3px}", @class = "dimensionCheckBox" })
+                                                </td>
+                                                <td>
+                                                    @Html.HiddenFor(it => it.dimensionList[i].ID)
+                                                    @Html.HiddenFor(it => it.dimensionList[i].Name)
+                                                    @Html.DisplayFor(it => it.dimensionList[i].Name)
+                                                </td>
+                                            </tr>
+                                        }
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        }
+    }
+}

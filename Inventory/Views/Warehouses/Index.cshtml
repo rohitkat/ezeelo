@@ -1,0 +1,154 @@
+@model IEnumerable<ModelLayer.Models.ViewModel.WarehouseViewModel>
+
+@{
+    ViewBag.Title = "Index";
+}
+
+
+<style>
+    .pro_th thead tr th {
+        font-size: 12px;
+        border-bottom: 1px solid #EEE;
+        padding: 6px 0;
+        background-color: #26A69A;
+    }
+
+    .pro_th tbody td {
+        font-size: 12px;
+        text-align: center;
+        border: 1px solid #EEE;
+    }
+
+        .pro_th tbody td.btn-set {
+            white-space: nowrap;
+        }
+
+    .dataTables_length {
+        margin-left: 0px !important;
+        margin-top: 7px;
+    }
+
+    .pagination {
+        margin: 0 26px;
+    }
+
+    form {
+        margin: 0 0 -15px;
+    }
+    .box.span12.right_side_up_part .box-content div#tblData_wrapper table#tblData tbody tr td a.btn {
+        border-radius: 5px !important;
+        padding: 2px 10px;
+    }
+</style>
+
+
+<script src="~/Content/js/jquery-2.1.3.min.js"></script>
+<link href="~/Content/css/jquery.dataTables.css" rel="stylesheet" />
+<script src="~/Content/js/jquery.dataTables.js" language="jascript"></script>
+
+<script type="text/javascript" class="init">
+    $(document).ready(function () {
+        $('#tblData').DataTable({
+            dom: 'T<"clear">lfrtip',
+            "processing": true,
+            "serverSide": true,
+            "aaSorting": []
+        });
+        // alert("1");
+    });
+</script>
+<section class="right_side_main_part">
+    <div id="content" class="span10" style="min-height: 403px;">
+        <div class="content">
+            <p>
+                @if ((Session["WarehouseID"] == null || Session["IsEzeeloLogin"].ToString() == "1") && ViewBag.Entity != "HO")
+                {
+                    @Html.ActionLink("Create New", "Create", new { flag = @ViewBag.flag, Entity = @ViewBag.Entity }, new { @class = "btn btn-primary" })
+                }
+            </p>
+            <div class="row-fluid">
+                <div class="box span12 right_side_up_part">
+                    <div class="box-header">
+                        <h2>
+                            <i class="icon-list-alt"></i>
+                            <span class="break"></span>
+                            @ViewBag.Heading
+                        </h2>
+                    </div>
+                    <div class="box-content">
+                        <table class="table border-table display table-bordered table-condensed" id="tblData">
+                            <thead>
+                                <tr>
+                                    <th>SR No.</th>
+                                    <th>
+                                        Name
+                                    </th>
+                                    <th>
+                                        Warehouse Code
+                                    </th>
+                                    <th>
+                                        GST Number
+                                    </th>
+                                   
+                                    @*<th>
+                                            Service Number
+                                        </th>*@
+                                    <th>
+                                        City
+                                    </th>
+                                    <th>
+                                        IsActive
+                                    </th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            @{
+                                var i = 1;
+                            }
+                            @foreach (var item in Model)
+                            {
+                                <tr style=@((@item.FC_Count == 0 && @item.IsFulfillmentCenter != true && @item.IsActive == true) ? "background-color:#d0fbc8" : (@item.IsActive == false ? "background-color:#fed9d9" : ""))>
+                                    <td>
+                                        @i
+                                        @{
+                                            i = i + 1;
+                                        }
+                                    </td>
+                                    <td>
+                                        @item.Name
+                                    </td>
+                                    <td>
+                                        @item.WarehouseCode
+                                    </td>
+                                    <td>
+                                        @item.GSTNumber
+                                    </td>
+                                    @*<td>
+                                            @item.ServiceNumber
+                                        </td>*@
+                                    <td>
+                                        @item.CityName
+                                    </td>
+                                    <td>
+                                        @Html.CheckBoxFor(modelItem => @item.IsActive, new { @class = "checkbox", @disabled = "disabled" })
+                                        @Html.HiddenFor(modelItem => @item.ID)
+                                    </td>
+                                    <td>
+                                        @if (Session["IsEzeeloLogin"].ToString() == "1" || (Session["BusinessTypeID"] != null && Convert.ToInt32(Session["BusinessTypeID"]) == 5))
+                                        {
+                                            @Html.ActionLink("Edit", "Edit", new { id = item.ID }, new { @class = "btn btn-small btn-info" })
+                                        }
+                                        @Html.ActionLink("Details", "Details", new { id = item.ID }, new { @class = "btn btn-small btn-info" })
+                                    </td>
+                                </tr>
+                            }
+
+                        </table>
+
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    </section>

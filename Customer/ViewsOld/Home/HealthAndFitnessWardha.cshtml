@@ -1,0 +1,160 @@
+﻿@{
+    ViewBag.Title = "Health And Fitness Equipments|Gandhibagh.com";
+}
+<style>
+    .margin-setTop {
+        margin-top: -33px;
+    }
+
+    .heart {
+        display: none !important;
+    }
+</style>
+<script src="~/Content/update(5-10)/js/jquery-1.11.2.min.js"></script>
+<script type="text/javascript">
+    function AddProduct(shopStockId, itemId) {
+        var _url = '@Url.Action("AddProductInShoppingCart", "Product")';
+        AddProductToShppingCartWithoutQuantity(shopStockId, itemId, _url);
+    }
+</script>
+<script type="text/javascript">
+    $(document).ready(function () {
+        var newClone1 = $("#cpy1").html();
+        var newClone2 = $("#cpy2").html();
+        var newClone3 = $("#cpy3").html();
+        var newClone4 = $("#cpy4").html();
+
+        if ($(window).width() < 750) {
+            // alert("1");
+            $(newClone1).clone().appendTo("#pst1");
+            $(newClone2).clone().appendTo("#pst2");
+            $(newClone3).clone().appendTo("#pst3");
+            $(newClone4).clone().appendTo("#pst4");
+
+        } else {
+            $("#pst1").empty();
+            $("#pst2").empty();
+            $("#pst3").empty();
+            $("#pst4").empty();
+        }
+    });
+</script>
+@{
+    string cityName = "";
+    if (Request.Cookies["CityCookie"] != null && Request.Cookies["CityCookie"].Value != "")
+    {
+        cityName = Request.Cookies["CityCookie"].Value.Split('$')[1].ToLower();
+    }
+}
+<script src="~/Scripts/Products.js"></script>
+<link href="~/Content/Home-content/bootstrap/css/bootstrap-responsive.css" rel="stylesheet" />
+<div class="container margin-setTop">
+    <div class="category-featured jewelry">
+        <nav class="navbar nav-menu show-brand">
+            <div class="container">
+                <!-- Brand and toggle get grouped for better mobile display -->
+                <div class="navbar-brand"><a href="#">@*<img alt="fashion" src="~/Content/update(5-10)/images/icon-jewelry.png">*@Sports</a></div>
+                <span class="toggle-menu"></span>
+                <!-- Collect the nav links, forms, and other content for toggling -->
+                <div class="collapse navbar-collapse">
+                    <ul class="nav navbar-nav" id="pst1"></ul>
+                </div><!-- /.navbar-collapse -->
+            </div><!-- /.container-fluid -->
+            <div id="elevator-6" class="floor-elevator">
+                <a href="#" class="btn-elevator up fa fa-angle-up"></a>
+                <a href="#" class="btn-elevator disabled down fa fa-angle-down"></a>
+            </div>
+        </nav>
+        <div class="product-featured clearfix">
+            <div class="row">
+                <div class="col-sm-2 sub-category-wapper">
+                    <ul class="sub-category-list" id="cpy1">
+                        <li>
+                            @*<a href="~/Product/Products?parentCategoryId=412&item=Gents Cycle">Gents Cycle</a>*@
+                        <a href="@Url.RouteUrl("ProductsByCategory", new { item = "gents-cycle", parentCategoryId = 412, city = cityName })">Gents Cycle</a>
+                    </li>
+                    <li>
+                        @*<a href="~/Product/Products?parentCategoryId=1460&item=Ladies Cycle">Ladies Cycle</a>*@
+                    <a href="@Url.RouteUrl("ProductsByCategory", new { item = "ladies-cycle", parentCategoryId = 1460, city = cityName })">Ladies Cycle</a>
+                </li>
+            </ul>
+        </div>
+        <div class="col-sm-10 col-right-tab">
+            <div class="product-featured-tab-content">
+                <div class="tab-container">
+                    <div class="tab-panel active" id="tab-14">
+                        <div class="box-full clearfix">
+                            <ul class="product-list row">
+                                <li class="col-sm-4">
+                                    <div class="right-block">
+                                        @*<h5 class="product-name"><a href="~/PreviewItem?itemId=44714" title="Vector X VXB-610 Badminton Racquet">Tata Stryder MTB Drifter Junior</a></h5>*@
+                                        <h5 class="product-name">
+                                            <a href="@Url.RouteUrl("pre-prod-name", new { itemId = 44714, itemName = "Tata Stryder MTB Drifter Junior".ToLower().Replace(' ', '-'), city = cityName })"
+ title="Tata Stryder MTB Drifter Junior">Tata Stryder MTB Drifter Junior</a>
+                                        </h5>
+                                    </div>
+                                    <div class="left-block">
+                                        @*<a href="~/PreviewItem?itemId=44714">
+                                                <img class="img-responsive" alt="product" src="~/Content/update(5-10)/images/wardha_img/gents_cycle.jpg">
+                                            </a>*@
+                                        <a href="@Url.RouteUrl("pre-prod-name", new { itemId = 44714, itemName = "Tata Stryder MTB Drifter Junior".ToLower().Replace(' ', '-'), city = cityName })">
+                                            <img class="img-responsive" alt="product" src="~/Content/update(5-10)/images/wardha_img/gents_cycle.jpg">
+                                        </a>
+                                        <div class="quick-view">
+                                            <a title="Add to my wishlist" class="heart" href="#"></a>
+                                            @*<a title="Add to compare" class="compare" href="#"></a>*@
+                                            <a title="Quick view" class="search" href="@Url.RouteUrl("pre-prod-name", new { itemId = 44714, itemName = "Tata Stryder MTB Drifter Junior".ToLower().Replace(' ', '-'), city = cityName })"></a>
+                                        </div>
+                                        <div class="add-to-cart">
+                                            @*<a title="Add to Cart" onclick="AddProductToShppingCartWithoutQuantity(60664, 44714)">Add to Cart</a>*@
+                                            <a title="Add to Cart" onclick="AddProduct(60664, 44714)">Add to Cart</a>
+                                        </div>
+                                    </div>
+                                </li>
+                                <li class="col-sm-4">
+                                    <div class="right-block">
+                                        @*<h5 class="product-name"><a href="~/PreviewItem?itemId=44694" title="Cosco Acclaim Volley Ball 4">Tata Stryder Juvenile Glory</a></h5>*@
+                                        <h5 class="product-name">
+                                            <a href="@Url.RouteUrl("pre-prod-name", new { itemId = 44694, itemName = "Tata Stryder Juvenile Glory".ToLower().Replace(' ', '-'), city = cityName })"
+                                               title="Tata Stryder Juvenile Glory">Tata Stryder Juvenile Glory</a>
+                                        </h5>
+                                    </div>
+                                    <div class="left-block">
+                                        @*<a href="~/PreviewItem?itemId=44694">
+                                                <img class="img-responsive" alt="product" src="~/Content/update(5-10)/images/wardha_img/ladies_cycle.jpg">
+                                            </a>*@
+                                        <a href="@Url.RouteUrl("pre-prod-name", new { itemId = 44694, itemName = "Tata Stryder Juvenile Glory".ToLower().Replace(' ', '-'), city = cityName })">
+                                            <img class="img-responsive" alt="product" src="~/Content/update(5-10)/images/wardha_img/ladies_cycle.jpg">
+                                        </a>
+                                        <div class="quick-view">
+                                            <a title="Add to my wishlist" class="heart" href="#"></a>
+                                            @*<a title="Add to compare" class="compare" href="#"></a>*@
+                                            <a title="Quick view" class="search" href="@Url.RouteUrl("pre-prod-name", new { itemId = 44694, itemName = "Tata Stryder Juvenile Glory".ToLower().Replace(' ', '-'), city = cityName })"></a>
+                                        </div>
+                                        <div class="add-to-cart">
+                                            @*<a title="Add to Cart" onclick="AddProductToShppingCartWithoutQuantity(60630, 44694)">Add to Cart</a>*@
+                                            <a title="Add to Cart" onclick="AddProduct(60630, 44694)">Add to Cart</a>
+                                        </div>
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+
+</div>
+<div class="container containernew1 span12">
+    <div class="FootTextDiv">
+        <p class="indent-paragraph " style="text-align:justify;">
+            <span class="footerdetail">Health And Fitness</span><br />
+            Making your body fit is not a destination but a lifestyle. Exercises can help you in boosting up our blood circulation, which in turn help the oxygen and nutrients to be easily delivered to your muscles. All these things together will eventually improve your health. There are several fitness accessories and workout tools, which can be used inside the comfort of your home and work perfectly in your busy schedule. These workout accessories will not only support to improve workout effectiveness but often prove a trustworthy tool to get your own successful fitness story. However, in the current busy age, no one has the time to flock out in any physical store or mall to shop these health and fitness accessories. Thanks to the increasing trend of online shopping, you not only get good deals but can shop anything sitting amidst your home comfort.
+            At Gandhibagh.com, you get the best quality fitness products, which can help you to remain happy, fit and healthy all your life. Here you can explore and shop a wide range of fitness products suitable for different age groups – from teens to working men or women and even the people above fifties and sixties. Here, you can crack some of the best deals pertaining to fitness products like Roller side, Wing Walker, Steam Bath, Power fitness gym, 2 way cycles, Mini stepper, Foot Massager, Swinger, Body Massager and Foot spa, to name a few. Needless to say that you get high quality here, since Gandhibagh.com is synonymous to superior quality and competitive cost.
+            Here, all the health and fitness products or accessories are known to have their own unique ergonomic designs that allow the users to achieve the right shape and a healthy body. The health and fitness products at Gandhibagh.com comes from the best quality brands of both local and other manufacturers, delivered right at your doorstep with no delay or hassle. Buy from our wide collection of health and fitness products and accessories for you and your loved ones. You can eve easily gift yourself of your friends and family with the online store to get a happy, perfect and healthy lifestyle.<br /><br />
+        </p>
+    </div>
+</div>

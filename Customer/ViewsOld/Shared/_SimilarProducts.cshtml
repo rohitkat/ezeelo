@@ -1,0 +1,87 @@
+﻿@{
+    string cityName = "";
+    int franchiseID = 0;////added
+    if (Request.Cookies["CityCookie"] != null && Request.Cookies["CityCookie"].Value != string.Empty)
+    {
+        cityName = Request.Cookies["CityCookie"].Value.Split('$')[1].ToLower();
+        franchiseID = Convert.ToInt32(Request.Cookies["CityCookie"].Value.Split('$')[2]);////added
+    }
+}
+@model ModelLayer.Models.ViewModel.RelatedProductsViewModel
+@using System.Text.RegularExpressions;
+
+
+<style>
+    .spnCross {
+        margin-right: 0px;
+    }
+
+    #btnPrevious {
+        font-size: 23px;
+        height: 32px;
+    }
+
+    #btnNext {
+        font-size: 23px;
+        height: 32px;
+    }
+</style>
+<div id="divSimilarProducts">
+    <h2 class="pro-heading">You Might Also Like</h2>
+    <div class="pro-shop">
+        <div id="slider1" class="Shop-slider">
+            <ul id="tableSimilarProduct">
+                <!--Similar Product-->
+                @{
+                    for (int i = 0; i < Model.ProductList.Count(); i++)
+                    {
+                        <li class="col-lg-4 col-md-4 col-sm-6 col-xs-12">
+                            <div class="divGallery" style="text-align: center;">
+                                <a href=@Url.RouteUrl("pre-prod-name", new { itemId = Model.ProductList[i].ProductID, itemName = Regex.Replace(Model.ProductList[i].Name.Substring(0, Math.Min(Model.ProductList[i].Name.Length, 30)), @"[\/\\#,+()$~%.':*?<>{} ]", "-").Replace("&", "and").ToLower(), city = cityName, franchiseId = franchiseID })> @*////added new franchise*@
+
+                                    <div class="image-pro-div"><img src="@Url.Content(string.IsNullOrEmpty(Model.ProductList[i].ProductThumbPath) ? "/Content/Images/no_image.png" : Model.ProductList[i].ProductThumbPath)" alt="@Model.ProductList[i].Name" class="img-responsive" /></div>
+                                    <div class="pro-rice-div price-pro">
+                                        @if (Model.ProductList[i].Name.Length > 55)
+                                        {
+                                            <h2 style="height: 25px;">@Model.ProductList[i].Name.Substring(0, 52).Replace("+", " ")...</h2>
+                                            @*<h2 style="height: 25px;">@Model.ProductList[i].Name.Substring(0, 52)...</h2>*@
+                                        }
+                                        else
+                                        {
+                                            <h2 style="height: 25px;">@Model.ProductList[i].Name.Replace("+", " ")</h2>
+                                            @*<h2 style="height: 25px;">@Model.ProductList[i].Name</h2>*@
+                                        }
+                                        @if (Model.ProductList[i].MRP > Model.ProductList[i].SaleRate)
+                                        {
+                                            <p>
+                                                <label style="display:inline-block;"><span>MRP </span><span class="spnCross fa fa-inr" style="color:brown;"> @Model.ProductList[i].MRP</span></label>
+                                                <label style="display: inline-block;"><span>SaleRate </span><span style="color: brown; font-size: 13px;" class="fa fa-inr"> @Model.ProductList[i].SaleRate</span></label>
+                                            </p>
+                                        }
+                                        else
+                                        {
+                                            <p>
+                                                <label style="display: inline-block;"><span>SaleRate </span><span class="fa fa-inr" style="color:brown;font-size:13px;"> @Model.ProductList[i].SaleRate</span></label>
+
+                                            </p>
+                                        }
+
+                                    </div>
+                                </a>
+                                <div class="btn-group" style="margin-top:45px;">
+                                    @*@Html.RouteLink("View", "pre-prod-name", new { itemId = Model.ProductList[i].ProductID, itemName = Regex.Replace(Model.ProductList[i].Name.Substring(0, Math.Min(Model.ProductList[i].Name.Length, 30)), @"[\/\\#,+()$~%.':*?<>{} ]", "-").Replace("&", "and").ToLower(), city = cityName }, new { @class = "btn btn-success" })*@
+                                    @Html.RouteLink("View", "pre-prod-name", new { itemId = Model.ProductList[i].ProductID, itemName = Model.ProductList[i].URLStructureName.ToLower(), city = cityName, franchiseId = franchiseID }, new { @class = "btn btn-primary" }) @*////added franchiseId=franchiseID*@
+                                </div>
+                            </div>
+                        </li>
+                    }
+                }
+            </ul>
+        </div>
+    </div>
+</div>
+<div class="controls">
+    <input id="btnPrevious" class="previousBtn" type="button" style="cursor:pointer!important" onclick="setPrevious();" disabled="disabled" />
+    <input id="btnNext" type="button" class="nextBtn" onclick="setNext();" />
+</div>
+

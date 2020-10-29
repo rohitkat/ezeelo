@@ -1,0 +1,106 @@
+﻿@model ModelLayer.Models.DeliveryDetailLog
+
+@{
+    Layout = "~/Views/Shared/_LayoutPartial.cshtml";
+}
+<style>
+    textarea {
+        width: 100% !important;
+    }
+</style>
+<div class="row">
+    <div class="span4">
+        <div class="widget">
+            <div class="widget-header">
+                <i class="icon-list-alt"></i>
+                <h3> Logs</h3>
+            </div>
+            <!-- /widget-header -->
+            <div class="widget-content">
+                <div class="widget big-stats-container">
+                    <div class="widget-content matchdivheight">
+                        @Html.Hidden("DeliveryOrderDetailID", Request.QueryString["DeliveryOrderDetailID"])
+                        @*<button class="btn btn-small btn-success" onclick="Back()">Back</button>*@
+                        <a href="@Url.Action("Index", new { DeliveryOrderDetailID = Request.QueryString["DeliveryOrderDetailID"] })" class="btn btn-small btn-primary">Back</a>
+                        @using (Html.BeginForm())
+                        {
+                            @Html.AntiForgeryToken()
+
+                            <div class="form-horizontal">
+                                @Html.ValidationSummary(true)
+                                @Html.Hidden("DeliveryOrderDetailID", Request.QueryString["DeliveryOrderDetailID"])
+                                <div>
+                                    @Html.LabelFor(model => model.Description)
+                                    <div>
+                                        @Html.TextAreaFor(model => model.Description, new { id = "Description"})
+                                        @Html.ValidationMessageFor(model => model.Description)
+                                    </div>
+                                </div>
+                                <br />
+                                <div class="control-group">
+                                    <div style="float:right">
+                                        @*<input type="button" id="btnSave" class="btn btn-danger btn-small" value="create" />*@
+                                        <button id="btnSave" class="btn btn-danger btn-small" onclick="saveLogs('1')">create</button>
+                                    </div>
+                                </div>
+                            </div>
+                        }
+
+                        @*<div id="divIndex">
+                            @Html.Action("Index", new { DeliveryOrderDetailID = Request.QueryString["DeliveryOrderDetailID"] })
+                        </div>*@
+                    </div>
+                </div>
+                <!-- /widget-content -->
+            </div>
+        </div>
+    </div>
+</div>
+
+@section MyScripts{
+@*<script>
+    function Back() {
+        $('#divtable').removeClass('span8');
+        $('#divtable').addClass('span12');
+        $('#loader_img').hide();
+    }
+
+    function Index(id) {
+        $.ajax({
+            url: '@Url.Action("Index", "DeliveryDetailLog")?DeliveryOrderDetailID=' + id,
+            type: "GET",
+            success: function (result) {
+                $('#divIndex').html(result);
+            },
+            error: function (data) {
+                $('#divIndex').empty();
+            }
+        });
+    }
+
+    function saveLogs(DeliveryOrderDetailID)
+    {
+        var Description = $("#Description").val();
+        $.ajax({
+          type: "POST",
+          url: '@Url.Action("Create", "DeliveryDetailLog")',
+            data: '{ Description: "' + Description + '", DeliveryOrderDetailID: "' + DeliveryOrderDetailID + '" }',
+            success: function (data) {
+                alert(data);
+                //$('#divReport').empty();
+                //$('#divReport').append(data);
+            },
+            error: function (data) {
+                alert('error');
+            }
+        });
+
+    }
+
+
+
+</script>*@
+}
+
+
+

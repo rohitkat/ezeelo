@@ -1,0 +1,923 @@
+﻿@model ModelLayer.Models.ViewModel.ProductViewModel
+@using System.Text.RegularExpressions;
+@{
+    string cityName = "";
+    int franchiseID = 0;////added
+    if (Request.Cookies["CityCookie"] != null)
+    {
+        cityName = Request.Cookies["CityCookie"].Value.Split('$')[1].ToLower();
+        franchiseID = Convert.ToInt32(Request.Cookies["CityCookie"].Value.Split('$')[2]);////added
+    }
+    Layout = "~/Views/Shared/_Layout_Internal.cshtml";
+}
+<style>
+    input[type="checkbox"] {
+        margin: 7px;
+        margin-top: 1px \9;
+        line-height: normal;
+    }
+
+    .panel-group {
+        margin-bottom: 0px !important;
+    }
+
+    .widget-title-sm {
+        font-size: 17px;
+        margin-bottom: 0px !important;
+    }
+</style>
+<link href="~/Content/css/styles.css" rel="stylesheet" />
+@if (@ViewBag.NoshopFoundMessage != null)
+{
+    <center>
+        <div id="NotFound" style="padding-top:60px;">
+            <div id="NotFound" style="padding-top:60px;">
+                <span style="font-size:20px;"> Sorry we are unable to find shop </span> <span style="color: #004B91; font-size:23px;">  @ViewBag.NoshopFoundMessage </span>  <br />
+                <span style="font-size:20px;"> You may also want to look at our top selling categories @Html.ActionLink("Click here", "Index", "Allshops", null, new { @class = "Link" }) </span>
+            </div>
+        </div>
+        <div>
+            @Html.Partial("_WhatYouAreLookinFor")
+        </div>
+    </center>
+}
+else
+{
+
+    if (Model.shopDetails != null)
+    {
+        @Html.Hidden("DescriptionFilePath", @Model.shopDetails.ShopDescriptionFilePath)
+    }
+    else
+    {
+        @Html.Hidden("DescriptionFilePath")
+    }
+    <script src="~/Scripts/jquery-2.1.3.min.js"></script>
+
+    <!--Safari Browser Jquery-->
+    <script type="text/javascript">
+        jQuery.noConflict();
+        $(document).ready(function () {
+            $("#box-vertical-megamenus .vertical-menu-content").addClass('gbMarket');
+            $("#box-vertical-megamenus h4.title").click(function () {
+                $("#box-vertical-megamenus .vertical-menu-content").toggleClass('gbMarket');
+                if ($(this).hasClass('active')) {
+                    $("#box-vertical-megamenus .vertical-menu-content").css('opacity', '1');
+                    $("#box-vertical-megamenus .vertical-menu-content").css('display', 'block');
+                } else {
+                    $("#box-vertical-megamenus .vertical-menu-content").css('display', 'none');
+                }
+            });
+
+        });
+    </script>
+    <script src="~/Content/js/jquery.glide.min.js" defer="defer"></script>
+    
+    @*<script type="text/javascript">
+
+        $(window).load(function () {
+
+            var lat = $("[id*=hfLattitude]").val();
+            var lon = $("[id*=hfLongitude]").val()
+
+            var myLatlng = new google.maps.LatLng(lat, lon) // This is used to center the map to show our markers
+            var mapOptions = {
+                center: myLatlng,
+                zoom: 6,
+                mapTypeId: google.maps.MapTypeId.ROADMAP,
+                marker: true
+            };
+            var map = new google.maps.Map(document.getElementById("map_canvas"), mapOptions);
+            var marker = new google.maps.Marker({
+                position: myLatlng
+            });
+            marker.setMap(map);
+
+            $('#map_canvas').css('height', '150px');
+            $('#map_canvas').css('width', '153px');
+
+        });
+
+
+        function ShowMap() {
+            var lat = $("[id*=hfLattitude]").val();
+            var lon = $("[id*=hfLongitude]").val()
+
+            var myLatlng = new google.maps.LatLng(lat, lon) // This is used to center the map to show our markers
+            var mapOptions = {
+                center: myLatlng,
+                zoom: 6,
+                mapTypeId: google.maps.MapTypeId.ROADMAP,
+                marker: true
+            };
+            var map = new google.maps.Map(document.getElementById("map_canvas"), mapOptions);
+            var marker = new google.maps.Marker({
+                position: myLatlng
+            });
+            marker.setMap(map);
+
+            $('#map_canvas').css('height', '150px');
+            $('#map_canvas').css('width', '153px');
+        }
+
+    </script>*@
+    <script>
+        (function ($) {
+            $.StartScreen = function () {
+                var plugin = this;
+                var width = (window.innerWidth > 0) ? window.innerWidth : screen.width;
+
+                plugin.init = function () {
+                    setTilesAreaSize();
+                    if (width > 640) addMouseWheel();
+                };
+
+                var setTilesAreaSize = function () {
+                    var groups = $(".tile-group");
+                    var tileAreaWidth = 80;
+                    $.each(groups, function (i, t) {
+                        if (width <= 640) {
+                            tileAreaWidth = width;
+                        } else {
+                            tileAreaWidth += $(t).outerWidth() + 80;
+                        }
+                    });
+                    $(".tile-area").css({
+                        width: tileAreaWidth
+                    });
+                };
+
+                var addMouseWheel = function () {
+                    $("body").mousewheel(function (event, delta, deltaX, deltaY) {
+                        var page = $(document);
+                        var scroll_value = delta * 50;
+                        page.scrollLeft(page.scrollLeft() - scroll_value);
+                        return false;
+                    });
+                };
+
+                plugin.init();
+            }
+        })(jQuery);
+
+        $(function () {
+            $.StartScreen();
+
+            var tiles = $(".tile, .tile-small, .tile-sqaure, .tile-wide, .tile-large, .tile-big, .tile-super");
+
+            $.each(tiles, function () {
+                var tile = $(this);
+                setTimeout(function () {
+                    tile.css({
+                        opacity: 1,
+                        "-webkit-transform": "scale(1)",
+                        "transform": "scale(1)",
+                        "-webkit-transition": ".3s",
+                        "transition": ".3s"
+                    });
+                }, Math.floor(Math.random() * 500));
+            });
+
+            $(".tile-group").animate({
+                left: 0
+            });
+        });
+
+        function setSearchPlace(el) {
+            var a = $(el);
+            var text = a.text();
+            var toggle = a.parents('label').children('.dropdown-toggle');
+
+            toggle.text(text);
+        }
+
+        $(function () {
+            var current_tile_area_scheme = localStorage.getItem('tile-area-scheme') || "tile-area-scheme-dark";
+            $(".tile-area").removeClass(function (index, css) {
+                return (css.match(/(^|\s)tile-area-scheme-\S+/g) || []).join(' ');
+            }).addClass(current_tile_area_scheme);
+
+            $(".schemeButtons .button").hover(
+                    function () {
+                        var b = $(this);
+                        var scheme = "tile-area-scheme-" + b.data('scheme');
+                        $(".tile-area").removeClass(function (index, css) {
+                            return (css.match(/(^|\s)tile-area-scheme-\S+/g) || []).join(' ');
+                        }).addClass(scheme);
+                    },
+                    function () {
+                        $(".tile-area").removeClass(function (index, css) {
+                            return (css.match(/(^|\s)tile-area-scheme-\S+/g) || []).join(' ');
+                        }).addClass(current_tile_area_scheme);
+                    }
+            );
+
+            $(".schemeButtons .button").on("click", function () {
+                var b = $(this);
+                var scheme = "tile-area-scheme-" + b.data('scheme');
+
+                $(".tile-area").removeClass(function (index, css) {
+                    return (css.match(/(^|\s)tile-area-scheme-\S+/g) || []).join(' ');
+                }).addClass(scheme);
+
+                current_tile_area_scheme = scheme;
+                localStorage.setItem('tile-area-scheme', scheme);
+
+                showSettings();
+            });
+        });
+    </script>
+    @*<script src="https://maps.googleapis.com/maps/api/js"></script>
+    <script>
+        function initialize() {
+            var mapCanvas = document.getElementById('map-canvas');
+            var mapOptions = {
+                center: new google.maps.LatLng(44.5403, -78.5463),
+                zoom: 8,
+                mapTypeId: google.maps.MapTypeId.ROADMAP
+            }
+            var map = new google.maps.Map(mapCanvas, mapOptions)
+        }
+        google.maps.event.addDomListener(window, 'load', initialize);
+    </script>*@
+
+    <div class="gap"></div>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="row" data-gutter="15">
+                @{
+    if (Model.shopDetails != null)
+    {
+        <div class="col-md-8">
+            <div class="product product-sm-left animated fadeInUp">
+                <div class="product-img-wrap">
+                    <img src="@Model.shopDetails.ShopBasicDetails.ShopLogoPath" alt="@Model.shopDetails.ShopBasicDetails.Name" class="product-img" onerror="this.src = '/Content/Images/no_image.png'" />
+                </div>
+                <div class="product-caption" style=" height: 222px; overflow: auto; margin-top: 10px;">
+                    @if (Model.shopDetails.ShopBasicDetails != null)
+                    {
+                        <div class="shop-details">
+                            <div class="shop-details">
+                                <h1>@Model.shopDetails.ShopBasicDetails.Name</h1>
+                            </div>
+                            @if (Model.shopDetails.ShopBasicDetails.OpeningTime != null && Model.shopDetails.ShopBasicDetails.ClosingTime != null)
+                            {
+                                <div class="product-caption-price">
+                                    <span class="product-caption-price-new"><span>Shopping Hours :</span> @Model.shopDetails.ShopBasicDetails.OpeningTime <span> to </span> @Model.shopDetails.ShopBasicDetails.ClosingTime </span>
+                                </div>
+                            }
+                            <p><span>@Model.shopDetails.ShopBasicDetails.WeeklyOff</span></p>
+                            <ul style="list-style-type: none; padding-left: 0px;">
+                                @if (Request.Cookies["CityCookie"] != null)
+                                {
+                                    string cityId = Request.Cookies["CityCookie"].Value.Split('$')[0];
+                                    // if (cityId == "4968" || cityId == "10909")////hide
+                                    if (franchiseID == 2 || franchiseID == 3)////added
+                                    {
+                                        <li>Get free home delivery.</li>
+                                    }
+                                }
+
+                                <li>Save lot of time.</li>
+                                <li>Save money and avoid hassles.</li>
+                            </ul>
+
+                        </div>
+                    }
+                    @*<div class="shop-location-map">
+                    @if (@Model.shopDetails.ShopBasicDetails != null)
+                    {
+                        if (@Model.shopDetails.ShopBasicDetails.Lattitude != null && @Model.shopDetails.ShopBasicDetails.Longitude != null)
+                        {
+                            if (@Model.shopDetails.ShopBasicDetails.Lattitude != "" && @Model.shopDetails.ShopBasicDetails.Longitude != "")
+                            {
+                                <a href="~/Product/ShowMap?lat='@Model.shopDetails.ShopBasicDetails.Lattitude'&lon='@Model.shopDetails.ShopBasicDetails.Longitude'"
+                                   target="_blank">
+                                    <img src="~/Content/Images/locationfeature.png" class="img-responsive divimg newlocation" style="display:none" />
+                                </a>
+                            }
+                        }
+
+                    }
+                </div>*@
+                    <ul class="main-footer-social-list">
+                        <li>
+                           @* <a class="fa fa-facebook" href="https://www.facebook.com/ezeelo" title="facebook" target="_blank"></a>*@
+                            <a class="fa fa-facebook" href="#" title="facebook" target="_blank"></a>
+                        </li>
+                        <li>
+                           @* <a class="fa fa-twitter" href="https://twitter.com/ezeelo" title="twitter" target="_blank"></a>*@
+                            <a class="fa fa-twitter" href="#" title="twitter" target="_blank"></a>
+                        </li>
+                        <li>
+                           @* <a class="fa fa-pinterest" href="https://in.pinterest.com/ezeelo/" title="pinterest" target="_blank"></a>*@
+                            <a class="fa fa-pinterest" href="#" title="pinterest" target="_blank"></a>
+                        </li>
+                        <li>
+                           @* <a class="fa fa-youtube" href="https://www.youtube.com/c/ezeelo" title="youtube" target="_blank"></a>*@
+                            <a class="fa fa-youtube" href="#" title="youtube" target="_blank"></a>
+                        </li>
+                        <li>
+                           @* <a class="fa fa-instagram" href="https://www.instagram.com/ezeelo/" title="instagram" target="_blank"></a>*@
+                            <a class="fa fa-instagram" href="#" title="instagram" target="_blank"></a>
+                        </li>
+                        <li>
+                           @* <a class="fa fa-linkedin" href="https://www.linkedin.com/company/ezeelo" title="linkedin" target="_blank"></a>*@
+                            <a class="fa fa-linkedin" href="#" title="linkedin" target="_blank"></a>
+                        </li>
+                        <li>
+                            <a class="fa fa-google-plus" href="https://plus.google.com/+ezeelo" title="google-plus" target="_blank"></a>
+                        </li>
+                        <li>
+                            <a class="fa fa-bold" href="http://ezeelo.blogspot.in/" title="blog" target="_blank"></a>
+                        </li>
+                    </ul>
+                    <p>@Model.shopDetails.ShopBasicDetails.ShopDescription</p>
+                </div>
+
+            </div>
+        </div>
+                    <div class="col-md-4">
+                        <div class="product product-sm-left animated fadeInUp">
+                            @if (Model.shopDetails.ShopImageList != null)
+                            {
+                                <div class="slideshow-container">
+                                    @for (int i = 0; i < Model.shopDetails.ShopImageList.Count(); i++)
+                                    {
+                                        if (Model.shopDetails.ShopImageList[i].ImgPath != string.Empty)
+                                        {
+                                            <div class="mySlides">
+                                                <img src="@Url.Content(Model.shopDetails.ShopImageList[i].ImgPath)" style="height: 209px; " />
+                                            </div>
+                                        }
+                                        else
+                                        {
+                                            <div class="mySlides"><img src="@Url.Content("/Content/no-image.png")" style="height: 209px; " /></div>
+                                        }
+                                    }
+                                </div>
+                                <div class="dot_div">
+                                    @for (int i = 0; i < Model.shopDetails.ShopImageList.Count(); i++)
+                                    {
+                                        if (Model.shopDetails.ShopImageList[i].ImgPath != string.Empty)
+                                        {
+                                            <span class="dot" style=""></span>
+                                        }
+                                    }
+
+                                </div>
+
+                            }
+
+
+                        </div>
+                    </div>
+
+
+    }
+                }
+            </div>
+        </div>
+    </div>
+    <div class="grid eShop-offer-mainDiv">
+        <div class="row cells12">
+
+            @*<div class="cell colspan10 newProduct">
+                <h2 class="pro-heading" style="margin-bottom:5px;">Best Deals</h2>
+                <div class="pro-shop">
+
+                <div id="slider1" class="Shop-slider">
+                <ul>
+                @if (Model.shopBestDeals != null && Model.shopBestDeals.searchCount != null && Model.shopBestDeals.ProductInfo != null && Model.shopBestDeals != null)
+                {
+                for (var i = 0; i < Model.shopBestDeals.ProductInfo.Count(); i++)
+                {
+                <li class="cell colspan3 newcolspan3">
+                <div class="product-mainnew">
+
+                @if (Model.shopBestDeals.ProductInfo[i].MRP != Model.shopBestDeals.ProductInfo[i].SaleRate)
+                {
+                decimal offerValue = ((Model.shopBestDeals.ProductInfo[i].MRP - Model.shopBestDeals.ProductInfo[i].SaleRate) / (Model.shopBestDeals.ProductInfo[i].MRP)) * 100;
+                decimal offerPercentage = Math.Floor(offerValue);
+                if (offerPercentage > 0)
+                {
+                <div class="offer-div">
+                <span class="offerPercentage" style="display:block;">@offerPercentage % OFF</span>
+                </div>
+                }
+                else
+                {
+                <div class="offer-div">
+                <span class="offerPercentage"></span>
+                </div>
+                }
+                }
+                else
+                {
+                <div class="offer-div" style="display:none;">
+                <span class="offerPercentage"></span>
+                </div>
+                }
+                <div class="image-pro-div">
+
+                <a class="anchorRedirect" href="@Url.RouteUrl("pre-prod-name", new { itemId = Model.shopBestDeals.ProductInfo[i].ProductID, itemName = Regex.Replace(Model.shopBestDeals.ProductInfo[i].ProductName.Substring(0, Math.Min(Model.shopBestDeals.ProductInfo[i].ProductName.Length, 30)), @"[\/\\#,+()$~%.':*?<>{} ]", "-").Replace("&", "and").ToLower(), city = cityName })">
+                <img src="@Model.shopBestDeals.ProductInfo[i].StockThumbPath" class="img-responsive" onerror="this.src='/Content/no_image.png'" />
+                </a>
+                </div>
+
+
+                <div class="pro-rice-div price-pro">
+
+                @if (Model.shopBestDeals.ProductInfo[i].ProductName.Length > 25)
+                {
+                string name = Model.shopBestDeals.ProductInfo[i].ProductName.Substring(0, 22).ToString() + "...";
+                <h1 class="lablehead">@name</h1>
+                }
+                else
+                {
+                <h1 class="lablehead">@Model.shopBestDeals.ProductInfo[i].ProductName</h1>
+                }
+                <div class="price-proNew ">
+                @if (Model.shopBestDeals.ProductInfo[i].MRP != Model.shopBestDeals.ProductInfo[i].SaleRate)
+                {
+
+                <label class="lblMRP">
+                <span>Rs.</span>
+                <del>
+                <b style="color:brown">@((Convert.ToDecimal(Model.shopBestDeals.ProductInfo[i].MRP)).ToString("0.00"))</b>
+                </del>
+                </label>
+                }
+                <label class="lblSaleRate"><span>Rs.</span> <b style="color:brown">@((Convert.ToDecimal(Model.shopBestDeals.ProductInfo[i].SaleRate)).ToString("0.00"))</b></label>
+                </div>
+
+                @Html.RouteLink("View", "pre-prod-name", new { itemId = Model.shopBestDeals.ProductInfo[i].ProductID, itemName = Regex.Replace(Model.shopBestDeals.ProductInfo[i].ProductName.Substring(0, Math.Min(Model.shopBestDeals.ProductInfo[i].ProductName.Length, 30)), @"[\/\\#,+()$~%.':*?<>{} ]", "-").Replace("&", "and").ToLower(), city = cityName }, new { @class = "btn-view btnView mini-button" })
+                <button id="anchorBuy" class="btn-buy btnBuy mini-button" type="button"
+                onclick="AddBestDealProduct(@Model.shopBestDeals.ProductInfo[i].ShopStockID,@Model.shopBestDeals.ProductInfo[i].ProductID)">
+                Add To Cart
+                </button>
+                </div>
+                <div class="pro-rice-div price-pro">
+                </div>
+                </div>
+
+                </li>
+                }
+                }
+                else
+                {
+                if (Model.productList != null)
+                {
+                for (var i = 0; i < Model.productList.Count(); i++)
+                {
+                <li class="cell colspan3 newcolspan3">
+                <div class="product-mainnew">
+                //Added by Tejaswee (05-12-2015)
+                //To show stock status
+                <div id="soldOutDiv" class="">
+                @if (Model.productList[i].StockStatus == 1 && Model.productList[i].StockQty > 0)
+                {
+                <span class="soldOut"> </span>
+                }
+                else
+                {
+                <span class="soldOut soldout-div"> Sold<br /> Out </span>
+                }
+
+
+
+                </div>
+                @if (Model.productList[i].MRP != Model.productList[i].SaleRate)
+                {
+                decimal offerValue = ((Model.productList[i].MRP - Model.productList[i].SaleRate) / (Model.productList[i].MRP)) * 100;
+                decimal offerPercentage = Math.Floor(offerValue);
+                if (offerPercentage > 0)
+                {
+                <div class="offer-div">
+                <span class="offerPercentage" style="display:block;">@offerPercentage % OFF</span>
+                </div>
+                }
+                else
+                {
+                <div class="offer-div">
+                <span class="offerPercentage"></span>
+                </div>
+                }
+                }
+                else
+                {
+                <div class="offer-div" style="display:none;">
+                <span class="offerPercentage"></span>
+                </div>
+                }
+                <div class="image-pro-div">
+                <a class="anchorRedirect" href="@Url.RouteUrl("pre-prod-name", new { itemId = Model.productList[i].ProductID, itemName = Regex.Replace(Model.productList[i].Name.ToLower().Substring(0, Math.Min(Model.productList[i].Name.Length, 30)), @"[\/\\#,+()$~%.':*?<>{} ]", "-").Replace("&", "and").ToLower(), city = cityName })">
+                <img src="@Model.productList[i].ProductThumbPath" class="img-responsive divimg" onerror="this.src='/Content/no_image.png'" />
+                </a>
+                </div>
+                <div class="pro-rice-div price-pro">
+
+                @if (Model.productList[i].Name.Length > 25)
+                {
+                string name = Model.productList[i].Name.Substring(0, 22).ToString() + "...";
+                <h1 class="lablehead">@name</h1>
+                }
+                else
+                {
+                <h1 class="lablehead">@Model.productList[i].Name</h1>
+                }
+                <div class="price-proNew ">
+                @if (Model.productList[i].MRP != Model.productList[i].SaleRate)
+                {
+
+                <label class="lblMRP">
+                <span>Rs.</span>
+                <del>
+                <b style="color:brown">@((Convert.ToDecimal(Model.productList[i].MRP)).ToString("0.00"))</b>
+                </del>
+                </label>
+                }
+                <label class="lblSaleRate"><span>Rs.</span> <b style="color:brown">@((Convert.ToDecimal(Model.productList[i].SaleRate)).ToString("0.00"))</b></label>
+                </div>
+                @if (Model.productList[i].StockStatus == 1 && Model.productList[i].StockQty > 0)
+                {
+                @Html.RouteLink("View", "pre-prod-name", new { itemId = Model.productList[i].ProductID, itemName = Regex.Replace(Model.productList[i].Name.Substring(0, Math.Min(Model.productList[i].Name.Length, 30)), @"[\/\\#,+()$~%.':*?<>{} ]", "-").Replace("&", "and").ToLower(), city = cityName }, new { @class = "btn-view btnView mini-button" })
+                <button id="anchorBuy" class="btn-buy btnBuy mini-button" type="button"
+                onclick="AddBestDealProduct(@Model.productList[i].ShopStockID,@Model.productList[i].ProductID)">
+                Add To Cart
+                </button>
+                }
+                else
+                {
+
+                @Html.RouteLink("View", "pre-prod-name", new { itemId = Model.productList[i].ProductID, itemName = Regex.Replace(Model.productList[i].Name.Substring(0, Math.Min(Model.productList[i].Name.Length, 30)), @"[\/\\#,+()$~%.':*?<>{} ]", "-").Replace("&", "and").ToLower(), city = cityName }, new { @class = "btn-view btnView mini-button" })
+                }
+
+                <div class="clearfix"></div>
+                </div>
+
+                </div>
+                </li>
+                }
+                }
+                }
+
+                </ul>
+
+                </div>
+                <div class="controls">
+                <a href="#" class="prev-slide"></a>
+                <a href="#" class="next-slide"></a>
+                </div>
+                </div>
+                </div>*@
+            @if (ViewBag.CompareCategoryID != null && ViewBag.CompareCategoryID == 7)
+            {
+                <div id="compare" class="compareBox">
+                    <div class="heading">
+                        <div class="pav-cart-title pull-left">
+                            <a href="@Url.RouteUrl("cart", new { city = cityName, franchiseId = franchiseID })" title="Show Cart" class="compareImg">
+                                <h3>
+                                    @*<img id="cart" src="~/Images/compare2.gif" class="shopping-cart" width="60" height="50" />*@
+
+                                </h3>
+                            </a>
+
+                            <div id="CompareProductListing">
+                                <ul></ul>
+                                <a href="#none" id="CompareProductButton" class="CompareProductAnchore btn-view btnView button" title="Compare Product"> Compare</a>
+                                <div class="clr"></div>
+                            </div>
+                            <div class="clr"></div>
+                        </div>
+                    </div>
+
+                </div>
+            }
+            else if (Request.Cookies["ProductID"] != null)
+            {
+                <div id="compare" class="compareBox">
+                    <div class="heading">
+                        <div class="pav-cart-title pull-left">
+                            <a href="~/ShoppingCart/Index" title="Show Cart" class="compareImg">
+                                <h3>
+                                    @*<img id="cart" src="~/Images/compare2.gif" class="shopping-cart" width="60" height="50" />*@
+
+                                </h3>
+                            </a>
+
+                            <div id="CompareProductListing">
+                                <ul></ul>
+                                <a href="#none" id="CompareProductButton" class="CompareProductAnchore btn-view btnView button" title="Compare Product"> Compare</a>
+                                <div class="clr"></div>
+                            </div>
+                            <div class="clr"></div>
+                        </div>
+                    </div>
+
+                </div>
+            }
+        </div>
+    </div>
+    <div class="gap"></div>
+    <div class="product-wrapper grid">
+        <div class="row cells12">
+            <div>
+                @using (Html.BeginForm())
+                {
+                    @Html.Hidden("CityID")
+                    @Html.Hidden("FranchiseID")////added
+                                            @Html.Hidden("ShopID")
+                                            @Html.Hidden("FilterOrder")
+                    if (TempData["selectedCategoryId"] != null)
+                    {
+                        @Html.Hidden("ParentCategory", TempData["selectedCategoryId"].ToString())
+                        TempData.Keep("selectedCategoryId");
+                    }
+                    else
+                    {
+                        @Html.Hidden("ParentCategory")
+                    }
+                    @Html.Hidden("Keyword")
+                    @Html.Hidden("Brands")
+                    @Html.Hidden("Colors")
+                    @Html.Hidden("Sizes")
+                    @Html.Hidden("Dimensions")
+                    @Html.Hidden("SpecificationIDs")
+                    @Html.Hidden("SpecificationValues")
+                    @Html.Hidden("MinPrices")
+                    @Html.Hidden("MaxPrices")
+                    @Html.Hidden("PageCount")
+                    @Html.Hidden("ProductCount")
+                    <div class="col-md-3">
+                        <div class="category-filters-section animated fadeInUp" style="background: white; margin-right: 10px;">
+                            <h3 class="widget-title-sm" id="deal_in" style="color: #663399"> Deal In <i class="fa fa-chevron-circle-down" style="float:right"></i></h3>
+                            <div id="deal_in_content" class="content shop-category-menu">
+                                @Html.Partial("_CategoryPartial", Model)
+                                <div class="clearfix"></div>
+                            </div>
+                        </div>
+                        <aside class="category-filters animated fadeInUp">
+                            <div class="">
+                                @*<h4 class="pro-heading">Show results for</h4>*@
+                                <div class="accordion" data-role="accordion" data-close-any="true">
+                                    <div class="frame active panel-group">
+                                        @if (Model.brandList != null && Model.brandList.Count() > 0)
+                                        {
+                                            if (!(Model.brandList.Count() == 1 && Model.brandList[0].ID == 1))
+                                            {
+                                                <div class="category-filters-section">
+                                                    <a data-toggle="collapse" href="#brand_content" style="color: #663399">
+                                                        <h3 class="widget-title-sm" id="brand"> Brand <i class="fa fa-chevron-circle-down" style="float:right"></i></h3>
+                                                    </a>
+                                                    <div id="brand_content" class="content panel-collapse collapse in" style="min-height: 30px; overflow: auto; max-height: 210px;">
+                                                        @Html.Partial("_Brand", Model)
+                                                    </div>
+                                                </div>
+                                            }
+                                        }
+                                    </div>
+
+                                    <div class="frame active panel-group">
+                                        @if (Model.colorList != null && Model.colorList.Count() > 0)
+                                        {
+                                            if (!(Model.colorList.Count() == 1 && Model.colorList[0].ID == 1))
+                                            {
+                                                <div class="category-filters-section">
+                                                    <a data-toggle="collapse" href="#color_content" style="color: #663399">
+                                                        <h3 class="widget-title-sm" id="color"> Color <i class="fa fa-chevron-circle-down" style="float:right"></i></h3>
+                                                    </a>
+                                                    <div id="color_content" class="content panel-collapse collapse in" style="min-height: 30px; overflow: auto; max-height: 210px;">
+                                                        @Html.Partial("_Color", Model)
+                                                    </div>
+                                                </div>
+                                            }
+                                        }
+                                    </div>
+                                    <div class="frame active panel-group">
+                                        @if (Model.sizeList != null && Model.sizeList.Count() > 0)
+                                        {
+                                            if (!(Model.sizeList.Count() == 1 && Model.sizeList[0].ID == 1))
+                                            {
+                                                <div class="category-filters-section">
+                                                    <a data-toggle="collapse" href="#size_content" style="color: #663399">
+                                                        <h3 class="widget-title-sm" id="size"> Size <i class="fa fa-chevron-circle-down" style="float:right"></i></h3>
+                                                    </a>
+                                                    <div id="size_content" class="content panel-collapse collapse in" style="min-height: 30px; overflow: auto; max-height: 210px;">
+                                                        @Html.Partial("_Size", Model)
+                                                    </div>
+                                                </div>
+                                            }
+                                        }
+                                    </div>
+                                    <div class="frame active panel-group">
+                                        @if (Model.dimensionList != null && Model.dimensionList.Count() > 0)
+                                        {
+                                            if (!(Model.dimensionList.Count() == 1 && Model.dimensionList[0].ID == 1))
+                                            {
+                                                <div class="category-filters-section">
+                                                    <a data-toggle="collapse" href="#dimensions_content" style="color: #663399">
+                                                        <h3 class="widget-title-sm" id="dimensions"> Dimensions <i class="fa fa-chevron-circle-down" style="float:right"></i></h3>
+                                                    </a>
+                                                    <div id="dimensions_content" class="content panel-collapse collapse in" style="min-height: 30px; overflow: auto; max-height: 210px;">
+                                                        @Html.Partial("_Dimension", Model)
+                                                    </div>
+                                                </div>
+                                            }
+                                        }
+                                    </div>
+                                    <div class="frame active panel-group">
+                                        @if (Model.detailHeadList != null && Model.detailHeadList.Count() > 0)
+                                        {
+                                            if (!(Model.detailHeadList.Count == 1 && Model.detailHeadList[0].SpecificationID == 0 && Model.detailHeadList[0].SpecificationName == ""))
+                                            {
+                                                <div class="category-filters-section">
+                                                    <a data-toggle="collapse" href="#detail_head_content" style="color: #663399">
+                                                        <h3 class="widget-title-sm" id="detail_head"> Detail Head <i class="fa fa-chevron-circle-down" style="float:right"></i></h3>
+                                                    </a>
+                                                    <div id="detail_head_content" class="content panel-collapse collapse in" style="min-height: 30px; overflow: auto; max-height: 210px;">
+                                                        @Html.Partial("_DetailHead", Model)
+                                                    </div>
+                                                </div>
+                                            }
+                                        }
+                                    </div>
+                                    <div class="frame active panel-group">
+                                        @if (Model.priceList != null && Model.priceList.Count() > 0)
+                                        {
+
+                                            <div class="category-filters-section">
+                                                <a data-toggle="collapse" href="#price_content" style="color: #663399">
+                                                    <h3 class="widget-title-sm" id="price"> Price <i class="fa fa-chevron-circle-down" style="float:right"></i></h3>
+                                                </a>
+                                                <div id="price_content" class="content panel-collapse collapse in" style="min-height: 30px; overflow: auto; max-height: 210px;">
+                                                    @Html.Partial("_Price", Model)
+                                                </div>
+                                            </div>
+
+                                        }
+                                    </div>
+                                </div>
+
+                            </div>
+                        </aside>
+                    </div>
+                }
+
+            </div>
+
+            @if (TempData["CatID"] != null && Convert.ToInt32(TempData["CatID"]) > 0)
+            {
+
+                <div id="divSort" style=" float: right; background: white; margin: 5px;">
+
+                    @Html.DropDownList("SortList", new List<SelectListItem>
+            {
+            new SelectListItem{ Text="Relevance", Value = "0" },
+            new SelectListItem{ Text="Price - Low to High", Value = "1" },
+            new SelectListItem{ Text="Price - High to Low", Value = "2" },
+            new SelectListItem{ Text="Products - A to Z", Value = "3" },
+            new SelectListItem{ Text="Products - Z to A", Value = "4" },
+            //new SelectListItem{ Text="Datewise - Ascending", Value = "5" },
+            new SelectListItem{ Text="Newest First", Value = "6" },
+            })
+
+                </div>
+                <span style="float: right; margin: 5px; padding-top: 6px;">Sort by :</span>
+            }
+
+            <div id="ProductListing" class="col-md-9">
+            </div>
+
+        </div>
+    </div>
+    <script>
+        var slideIndex = 0;
+        showSlides();
+        function showSlides() {
+            var i;
+            var slides = document.getElementsByClassName("mySlides");
+            var dots = document.getElementsByClassName("dot");
+            for (i = 0; i < slides.length; i++) {
+                slides[i].style.display = "none";
+            }
+            slideIndex++;
+            if (slideIndex > slides.length) { slideIndex = 1 }
+            for (i = 0; i < dots.length; i++) {
+                dots[i].className = dots[i].className.replace(" active1", "");
+            }
+            slides[slideIndex - 1].style.display = "block";
+            dots[slideIndex - 1].className += " active1";
+            setTimeout(showSlides, 2000); // Change image every 2 seconds
+        }
+    </script>
+    <script src="~/Scripts/jquery-1.10.2.min.js"></script>
+    <script src="~/Scripts/Products.js"></script>
+    @*<script src="~/Scripts/Flying.js"></script>*@
+    <script src="~/Scripts/jqCompareProduct.js"></script>
+    <script>
+        $(document).ready(function () {
+            $("#brand").click(function () {
+                $("#brand_content").toggle(1000);
+            });
+            $("#color").click(function () {
+                $("#color_content").toggle(1000);
+            });
+            $("#size").click(function () {
+                $("#size_content").toggle(1000);
+            });
+            $("#dimensions").click(function () {
+                $("#dimensions_content").toggle(1000);
+            });
+            $("#detail_head").click(function () {
+                $("#detail_head_content").toggle(1000);
+            });
+            $("#price").click(function () {
+                $("#price_content").toggle(1000);
+            });
+            $("#deal_in").click(function () {
+                $("#deal_in_content").toggle(1000);
+            });
+        });
+    </script>
+    <script>
+        $(document).ready(function () {
+            if ($(window).width() <= 960) {
+                //alert('Less than 960');
+                $(".content").removeClass("in");
+            }
+            else {
+                //alert('More than 960');
+                $(".content").addClass("in");
+            }
+        });
+    </script>
+    <script type="text/javascript">
+        $(function () {
+            var descriptionPath = $("#DescriptionFilePath").val();
+            if (descriptionPath != "") {
+                $("#divContent").load($("#DescriptionFilePath").val());
+            }
+            else {
+                $(".viewMore ").css("display", "none");
+            }
+        });
+
+        $(function () {
+            $(".viewMore").click(function () {
+                var accessKey = $(this).attr("accesskey");
+                if (accessKey == "1") {
+                    $("#divContent").css("display", "block");
+                    $(this).text("View Less");
+                    $(this).attr("accesskey", "2");
+                }
+                else {
+                    $("#divContent").css("display", "none");
+                    $(this).text("View More");
+                    $(this).attr("accesskey", "1");
+                }
+            });
+
+        });
+        $(window).load(function () {
+            var a = getCookie("ProductID");
+
+            if (a != null) {
+                var _url = '@Url.RouteUrl("pre-prod-name", new { itemId = "_ProductID_", itemName = "_Name_", city = "_cucity_", franchiseId = "_cufranchiseId_" })';@*////added  franchiseId=_cufranchiseId_*@
+                var _cmpurl = '@Url.RouteUrl("CompareProduct", new { categoryID = "_categoryID_", categoryName = "_categoryName_", city = "_cucity_", franchiseId = "_cufranchiseId_" })';@*////added  franchiseId=_cufranchiseId_*@
+                SetCookiesToDiv(a, _url, _cmpurl);
+            }
+
+
+        });
+        $(window).scroll(function () {
+            if ($(this).scrollTop() > 10) {
+                $("#compare").addClass('compareTop');
+            } else {
+                $("#compare").removeClass('compareTop');
+            }
+        })
+    </script>
+    <script type="text/javascript">
+        $(function () {
+            //- Changes made by Avi Verma. Date : 29-June-216.
+            //- Reason : Due to slider, all javascript of this page is disable, not even alert();
+            //- When solve this issue, please open it.
+            //$('.shop-slider').glide({
+            //    autoplay: 3500,
+            //    hoverpause: true, // set to false for nonstop rotate
+            //    arrowRightText: '&rarr;',
+            //    arrowLeftText: '&larr;'
+            //});
+
+            var _url = '@(Html.Raw(Url.Action("GetProductOnScroll", "Product")))';
+            GetProducts(_url);
+        });
+
+        function AddBestDealProduct(shopStockId, itemId) {
+            var _url = '@Url.Action("AddProductInShoppingCart", "Product")';
+            AddProductToShppingCartWithoutQuantity(shopStockId, itemId, _url)
+        }
+    </script>
+
+}

@@ -1,0 +1,178 @@
+﻿@model ModelLayer.Models.ViewModel.WarehouseViewModel
+
+@{
+    ViewBag.Title = "Warehouse Registration";
+}
+
+<script type="text/javascript" class="init">
+
+    $(document).ready(function () {
+        $("*[id^='Margin']").keyup(function (e) {
+            var name = e.target.id;
+
+            var pattern = /^-?[0-9]+(.[0-9]{1,2})?$/;
+            var text = $(this).val();
+
+            if (text.match(pattern) == null) {
+                if (name.indexOf('-') != -1) {
+                    $("#Errormsg-").addClass('animated infinite flash');
+                } else {
+                    $("#Errormsg").addClass('animated infinite flash');
+                }
+            }
+            else {
+                if (name.indexOf('-') != -1) {
+                    $("#Errormsg-").removeClass('infinite');
+                } else {
+                    $("#Errormsg").removeClass('infinite');
+                }
+            }
+        });
+    });
+</script>
+<section class="right_side_main_part">
+    <div id="content" class="span10">
+        @using (Html.BeginForm("SetMarginForDVFV", "Warehouses", new { id = Model.ID }, FormMethod.Post, new { id = "Form_" }))
+        {
+            @Html.ValidationSummary(true)
+            <div class="row-fluid">
+                <div class="box span12 right_side_up_part">
+                    <div class="box-header creatProduct clearfix" data-original-title="">
+                        <h2>
+                            <i class="icon-exclamation-sign"></i>
+                            <span class="break"></span>
+                            Set Margin For Distribution Center & it's Fulfillment Center
+                        </h2>
+                    </div>
+                    <div class="box-content">
+                        <div class="form-horizontal">
+                            <div class="box-content nameDscrp">
+                                <div class="form-horizontal">
+                                    <div class="control-group mrg-btm">
+                                        <div class="NameDescription">
+                                            <br />
+                                            @Html.HiddenFor(model => model.ID)
+                                            <div class="control-group mrg-left">
+                                                @Html.LabelFor(model => model.WarehouseCode, "Center Code", new { @class = "col-md-2" })
+
+                                                <div>
+                                                    @Html.DisplayFor(model => model.WarehouseCode)
+                                                </div>
+                                            </div>
+                                            <div class="control-group mrg-left">
+                                                @Html.LabelFor(model => model.Name, "Center Name", new { @class = "col-md-2" })
+
+                                                <div>
+                                                    @Html.DisplayFor(model => model.Name)
+                                                </div>
+                                            </div>
+                                            <div class="control-group mrg-left">
+                                                @Html.LabelFor(model => model.Margin, "Margin in %", new { @class = "col-md-2", id = "" })
+
+                                                <div>
+                                                    <span>
+                                                        @Html.TextBoxFor(model => model.Margin)
+                                                        <span style="color:red" class="animated infinite bounce"><label id="Errormsg"> <i class="icon-info-sign"></i> Only positive whole and decimal no. Ex: 1 or 1.5 </label></span>
+                                                    </span>
+                                                </div>
+                                            </div>
+
+
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="box-header creatProduct clearfix" data-original-title="">
+                        <h2>
+                            <i class="icon-exclamation-sign"></i>
+                            <span class="break"></span>
+                            Fulfillment Center List
+                        </h2>
+                    </div>
+                    <div class="box-content">
+                        <div class="form-horizontal">
+                            <div class="box-content nameDscrp">
+                                <div class="form-horizontal">
+                                    <div class="control-group mrg-btm">
+                                        <div class="NameDescription">
+                                            <div class="control-group mrg-left">
+                                                <div>
+                                                    <br />
+                                                    <table class="table border-table display">
+                                                        <tr>
+                                                            <th>
+                                                                Sr.No
+                                                            </th>
+                                                            <th>
+                                                                Center Code
+                                                            </th>
+                                                            <th>
+                                                                Center Name
+                                                            </th>
+                                                            <th>
+                                                                Franchise Name
+                                                            </th>
+                                                            <th>
+                                                                <span> Margin in %<span style="color:red" class="animated infinite bounce"><label id="Errormsg-"> <i class="icon-info-sign"></i> Ex: 1 or 1.5 </label></span></span>
+                                                            </th>
+                                                        </tr>
+                                                        @*@Html.HiddenFor(m => m.FCList)*@
+                                                        @for (var i = 0; i < Model.FCList.Count(); i++)
+                                                        {
+                                                            <tr>
+                                                                <td>
+                                                                    @{
+                                                                        var j = i;
+                                                                    }
+
+                                                                    @Html.HiddenFor(m => m.FCList[i].ID)
+                                                                    @{
+                                                                        j = @i + 1;
+                                                                    }
+                                                                    @j
+
+                                                                </td>
+                                                                <td>
+                                                                    @Model.FCList[i].WarehouseCode
+                                                                </td>
+                                                                <td>
+                                                                    @Model.FCList[i].Name
+                                                                </td>
+                                                                <td>
+                                                                    @Model.FCList[i].NetworkIP @*Show FranchiseName*@
+                                                                </td>
+                                                                <td>
+                                                                    @Html.TextBoxFor(model => Model.FCList[i].Margin, new
+{
+   onkeyup = "CheckNo();",
+   id = "Margin-" + i
+})
+                                                                    @Html.HiddenFor(m => m.FCList[i].Margin)
+                                                                </td>
+                                                            </tr>
+                                                        }
+                                                    </table>
+
+                                                </div>
+                                            </div>
+                                            <p>
+                                                <input type="submit" value="Save" class="btn btn-success mrg-left mrg-top" />
+                                                @Html.ActionLink("Back to List", "WarehouseList", null, new { @class = "btn btn-default mrg-left mrg-top" })
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+        }
+    </div>
+</section>

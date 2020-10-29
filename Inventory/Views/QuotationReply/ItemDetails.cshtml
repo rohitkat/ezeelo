@@ -1,0 +1,262 @@
+﻿@model ModelLayer.Models.ViewModel.QuotationViewModel
+@using ModelLayer.Models.ViewModel
+<style type="text/css">
+    #msform1 fieldset:not(:first-of-type) {
+        display: none;
+    }
+
+    .field-validation-error {
+        color: #000000 !important;
+    }
+
+    .succes-msg {
+        color: #31A012;
+        font-size: 20px;
+    }
+
+    .beatpicker-clearButton button {
+        display: none;
+    }
+
+    .input-parent button {
+        display: none;
+    }
+
+    .textarea-adjust {
+        width: 85%;
+    }
+    /*Beatpicker Css*/
+    .beatpicker-clearButton button {
+        display: none;
+    }
+
+    .input-parent button {
+        display: none;
+    }
+
+    .header-navbar-button {
+        position: absolute !important;
+    }
+
+    .beatpicker .main-nav .current-indicator {
+        text-align: center !important;
+    }
+
+    .beatpicker .main-nav .prev1 {
+        left: 0 !important;
+        width: 14%;
+        padding: 0px 10px;
+        color: #fff;
+        font-size: 16px;
+    }
+
+    .beatpicker .main-nav .next1 {
+        right: 0 !important;
+        width: 9%;
+        color: #fff;
+        font-size: 16px;
+    }
+
+    .beatpicker .main-nav .prev1:hover {
+        left: 0 !important;
+        width: 14%;
+        padding: 0px 10px;
+        color: #fff;
+        font-size: 20px;
+        cursor: pointer !important;
+    }
+
+    .beatpicker .main-nav .next1:hover {
+        right: 0 !important;
+        width: 9%;
+        color: #fff;
+        font-size: 20px;
+        cursor: pointer !important;
+    }
+
+    #divImages .remove {
+        background: url(/Content/img/remove-icon.png) no-repeat 0px 0px #fff;
+        float: left;
+        font-size: 0 !important;
+        width: 23px !important;
+        padding: 2px 4px;
+    }
+    /*Beatpicker Css End*/
+</style>
+
+<link href="~/Content/css/BeatPicker.min.css" rel="stylesheet" />
+<script src="~/Content/js/jquery-1.11.0.min.js"></script>
+<script src="~/Content/js/BeatPicker.js"></script>
+<link href="~/Content/assets/css/style.css" rel="stylesheet" />
+<script src="~/Content/js/jquery-1.9.1.min.js"></script>
+<link href="http://www.jqueryscript.net/css/jquerysctipttop.css" rel="stylesheet" type="text/css">
+<link href="~/Content/assets/css/form-design.css" rel="stylesheet" />
+<link href="~/Content/assets/css/font-awesome.min.css" rel="stylesheet" />
+
+<div class="row-fluid">
+    <div class="box span12">
+       
+        <div class="box-content">
+            <table id="tbl" class="table table-striped table-bordered bootstrap-datatable datatable dataTable" width="100%">
+                <tr>
+                    <th>Product</th>
+                    <th>Item</th>
+                    <th>HSN Code</th>
+                    <th>Quantity</th>
+                    <th>UnitPrice</th>
+                    <th>MRP</th>
+                    <th>SaleRate</th>
+                    <th>CGSTAmount</th>
+                    <th>SGSTAmount</th>
+                    <th>IGSTAmount</th>
+                    <th>Amount</th>
+                    <th>Remark</th>
+                </tr>
+                @for (int i = 0; i < Model.lQuotationItemDetailViewModels.Count; i++)
+                {
+                    <tr>
+                        <td class="table-shopping-cart-img" style="text-align: left;">
+                            <img id=" imgproductimage" src="@Model.lQuotationItemDetailViewModels[i].StockThumbPath" onerror="this.src = '/Content/Images/no_image.png'" style="width: 70px; height:70px;" alt=" eZeelo " />
+                                                            @Html.HiddenFor(model => @Model.lQuotationItemDetailViewModels[i].StockThumbPath)
+                        </td>
+                        <td>
+                            @Model.lQuotationItemDetailViewModels[i].ItemName
+                            @Html.HiddenFor(model=>@Model.lQuotationItemDetailViewModels[i].ItemID)
+                            @Html.HiddenFor(model => @Model.lQuotationItemDetailViewModels[i].QuotationItemDetailID)
+                            @Html.HiddenFor(model => @Model.lQuotationItemDetailViewModels[i].ProductID)
+                            @Html.HiddenFor(model => @Model.lQuotationItemDetailViewModels[i].ProductVarientID)
+                        </td>
+                        <td>@Model.lQuotationItemDetailViewModels[i].HSNCode</td>
+                        <td>
+                            @Html.LabelFor(model => @Model.lQuotationItemDetailViewModels[i].Quantity, @Model.lQuotationItemDetailViewModels[i].Quantity.ToString(), new { id = "Quantity_" + i, text = @Model.lQuotationItemDetailViewModels[i].Quantity, value = @Model.lQuotationItemDetailViewModels[i].Quantity, placeholder = "0", Style = "width:30px" })
+                            @Html.HiddenFor(model => @Model.lQuotationItemDetailViewModels[i].Quantity)
+                        </td>
+                        <td>
+                            @Html.TextBoxFor(model => @Model.lQuotationItemDetailViewModels[i].UnitPrice, null, new { id = "UnitPrice_" + i, placeholder = "0", Style = "width:30px" })
+                            @Html.ValidationMessageFor(model => @Model.lQuotationItemDetailViewModels[i].UnitPrice)
+                         </td>
+                        <td>
+                            @Html.TextBoxFor(model => @Model.lQuotationItemDetailViewModels[i].MRP, null, new { id = "MRP_" + i, placeholder = "0", Style = "width:30px" })
+                            @Html.ValidationMessageFor(model => @Model.lQuotationItemDetailViewModels[i].MRP)
+                        </td>
+                        <td>
+                            @Html.TextBoxFor(model => @Model.lQuotationItemDetailViewModels[i].SaleRate, null, new { id = "SaleRate_" + i, placeholder = "0", Style = "width:30px" })
+                        </td>
+                        <td>@Html.TextBoxFor(model => @Model.lQuotationItemDetailViewModels[i].CGSTAmount, null, new {  Style = "width:40px", onkeyup = "CheckDecimal(this.value)" })</td>
+                        <td>@Html.TextBoxFor(model => @Model.lQuotationItemDetailViewModels[i].SGSTAmount, null, new {  Style = "width:40px", onkeyup = "CheckDecimal(this.value)" })</td>
+                        <td>@Html.TextBoxFor(model => @Model.lQuotationItemDetailViewModels[i].IGSTAmount, null, new {  Style = "width:40px", onkeyup = "CheckDecimal(this.value)" })</td>
+                        <td>@Html.TextBoxFor(model => @Model.lQuotationItemDetailViewModels[i].ProductAmount, @Model.lQuotationItemDetailViewModels[i].ProductAmount.ToString(), new { @class = "txt", id = "ProductAmount_" + i, placeholder = "0", Style = "width:40px",disabled="disabled" })
+                            @Html.HiddenFor(model => @Model.lQuotationItemDetailViewModels[i].ProductAmount, new { id = "hdnProductAmount_" + i })
+                        </td>
+                        <td>
+                            @Html.TextBoxFor(model => @Model.lQuotationItemDetailViewModels[i].ProductRemark, null, new { placeholder = "Remark", Style = "width:180px" })
+                        </td>
+                    </tr>
+                }
+            </table>
+        </div>
+        <div style="text-align:right;padding-right:15px">
+            Total Amount = @Html.TextBoxFor(model => model.Amount, "", new { id = "lblAmount",disabled="disabled" })
+            @Html.HiddenFor(model => model.Amount, new { id = "hdnAmount" })
+        </div>
+    </div>
+</div>
+
+
+
+<script language="javascript">
+
+    $(document).ready(function () {
+        
+        var table = document.getElementById('tbl');
+        var rowLength = table.rows.length;
+    
+
+        for (var i = 0; i < rowLength; i++) {
+            var OrderAmount = 0;
+            var decimal = /[\+]?([\-]?([0-9]{1,})?[\.]?[0-9]{1,})/;
+
+            $('.table #UnitPrice_' + i).keyup(function () {
+               
+                var sum = 0;
+                var rowindex = $(this).closest("tr")[0].rowIndex;
+                var Quantity = parseInt($('.table tr:eq(' + rowindex + ') td:eq(3)').text());
+                var UnitPrice = $(this).val();
+               
+              
+                if ($(this).val().match(decimal)) {
+                    
+                }
+                else {                 
+                    //alert('Please enter only numeric value!')
+                    $(this).val('');
+                    $('.table #ProductAmount_' + (rowindex - 1)).val('0');
+                    $('.table #hdnProductAmount_' + (rowindex - 1)).val('0');
+
+                    // iterate through each td based on class and add the values
+                    $(".txt").each(function () {
+
+                        var value = $(this).val();
+                        //alert(value)
+                        // add only if the value is number
+                        if (!isNaN(value) && value.length != 0) {
+                            sum += parseFloat(value);
+                        }
+                    });
+                    if (sum > 0) {
+                        $('#lblAmount').val(sum);
+                        $('#hdnAmount').val(sum);
+                    }
+                    else {
+                        $('#lblAmount').val(0);
+                        $('#hdnAmount').val(0);
+                    }
+
+                    return false;
+                }
+            
+
+                //Calculate Product Amount as per quantity
+                var Amount = (parseFloat(Quantity) * parseFloat(UnitPrice));
+                //$('.table tr:eq(' + rowindex + ') td:eq(8)').text(Amount);
+                $('.table #ProductAmount_' + (rowindex - 1)).val(Amount);
+                $('.table #hdnProductAmount_' + (rowindex - 1)).val(Amount);
+
+                // iterate through each td based on class and add the values
+                $(".txt").each(function () {
+
+                    var value = $(this).val();
+                    //alert(value)
+                    // add only if the value is number
+                    if (!isNaN(value) && value.length != 0) {
+                        sum += parseFloat(value);
+                    }
+                });
+                //OrderAmount = (parseFloat(OrderAmount) + parseFloat($('.table tr:eq(' + rowindex + ') td:eq(8)').text()) - parseFloat(oldAmount));
+                if (sum > 0) {
+                    $('#lblAmount').val(sum);
+                    $('#hdnAmount').val(sum);
+                }
+                else {
+                    $('#lblAmount').val(0);
+                    $('#hdnAmount').val(0);
+                }
+            });
+        }
+    });
+
+
+    function CheckDecimal(inputtxt) {
+
+        var decimal = /[\+]?([\-]?([0-9]{1,})?[\.]?[0-9]{1,})/;
+        if (inputtxt.match(decimal)) {
+            return true;
+        }
+        else {           
+            //alert('Please enter only numeric value!')
+            return false;
+        }
+    }
+
+
+</script>

@@ -1,0 +1,116 @@
+﻿@model ModelLayer.Models.DeliveryWeightSlab
+
+@{
+    ViewBag.Title = "Edit Weight Slab [ " + @Model.MaxWeight + " ]";
+}
+
+<div class="row">
+    <div class="span12">
+        <div class="widget">
+            <div class="widget-header">
+                <i class="icon-list-alt"></i>
+                <h3> Edit Weight Slab [ @Model.MaxWeight ]</h3>
+            </div>
+            <!-- /widget-header -->
+            <div class="widget-content">
+                <div class="widget big-stats-container">
+                    <div class="widget-content">
+
+
+                        @using (Html.BeginForm())
+                        {
+                            @Html.AntiForgeryToken()
+
+                            <div class="form-horizontal">
+                                @Html.ValidationSummary(true)
+                                @Html.HiddenFor(model => model.ID)
+
+                                <div class="control-group">
+                                    <span class="control-label">Max weight</span>
+                                    <div class="controls">
+                                        @Html.EditorFor(model => model.MaxWeight)
+                                        @Html.ValidationMessageFor(model => model.MaxWeight)
+                                    </div>
+                                </div>
+
+                                <div class="control-group">
+                                    <span class="control-label">Normal Charge</span>
+                                    <div class="controls">
+                                        <div class="input-append">
+                                            @Html.EditorFor(model => model.NormalRateWithinPincodeList)
+                                            <span class="add-on"><i class="indian_currency"></i></span> [ In Region ]
+                                        </div>
+                                        @Html.ValidationMessageFor(model => model.NormalRateWithinPincodeList)
+                                    </div>
+                                </div>
+
+                                <div class="control-group">
+                                    <span class="control-label">Express Charge</span>
+                                    <div class="controls">
+                                        <div class="input-append">
+                                            @Html.EditorFor(model => model.ExpressRateWithinPincodeList)
+                                            <span class="add-on"><i class="indian_currency"></i></span> [ In Region ]
+                                        </div>
+                                        @Html.ValidationMessageFor(model => model.ExpressRateWithinPincodeList)
+                                    </div>
+                                </div>
+
+                                <div class="control-group">
+                                    <span class="control-label">Normal Charge</span>
+                                    <div class="controls">
+                                        <div class="input-append">
+                                            @Html.EditorFor(model => model.NormalRateOutOfPincodeList) 
+                                            <span class="add-on"><i class="indian_currency"></i></span> [ Out Region ]
+                                        </div>
+                                        @Html.ValidationMessageFor(model => model.NormalRateOutOfPincodeList)
+                                    </div>
+                                </div>
+
+                                <div class="control-group">
+                                    <span class="control-label">Express Charge</span>
+                                    <div class="controls">
+                                        <div class="input-append">
+                                            @Html.EditorFor(model => model.ExpressRateOutOfPincodeList) 
+                                            <span class="add-on"><i class="indian_currency"></i></span> [ Out Region ]
+                                        </div>
+                                        @Html.ValidationMessageFor(model => model.ExpressRateOutOfPincodeList)
+                                    </div>
+                                </div>
+                                @*<div class="control-group">
+                                    <span class="control-label">Is Approved</span>
+                                    <div class="controls">
+                                        @Html.EditorFor(model => model.IsApproved)
+                                        @Html.ValidationMessageFor(model => model.IsApproved)
+                                    </div>
+                                </div>*@
+
+                                <div class="control-group">
+                                    <span class="control-label">Is Active</span>
+                                    <div class="controls">
+                                        @Html.EditorFor(model => model.IsActive)
+                                        @Html.ValidationMessageFor(model => model.IsActive)
+                                    </div>
+                                </div>
+
+
+                                <div class="control-group">
+                                    <div style="float:right">
+                                        <input type="submit" value="Save" class="btn btn-danger" />
+                                    </div>
+                                </div>
+                            </div>
+                        }
+
+                        <div>
+                            @Html.ActionLink("Back to List", "Index")
+                        </div>
+                    </div>
+                </div>
+                <!-- /widget-content -->
+            </div>
+        </div>
+    </div>
+</div>
+@*@section Scripts {
+        @Scripts.Render("~/bundles/jqueryval")
+    }*@

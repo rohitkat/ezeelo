@@ -1,0 +1,267 @@
+﻿@model ModelLayer.Models.Plan
+
+@{
+    ViewBag.Title = "Edit";
+}
+<br />
+<div class="row-fluid" style="margin-left: 15px;">
+    <div class="box span12">
+        <div class="box-header">
+            <h2><i class="icon-edit"></i><span class="break"></span>Edit Master Plan</h2>
+        </div>
+        <div class="box-content">
+            <div class="form-horizontal">
+                @if (ViewBag.Messaage != null)
+                {
+                    @Html.Label("Messaage", (string)ViewBag.Messaage, new { @class = "deleteMsg" })
+                }
+                else
+                {
+                    @Html.Label("Messaage", "", new { @class = "deleteMsg" })
+                }
+                @using (Html.BeginForm())
+                {
+                    @Html.AntiForgeryToken()
+                    @Html.ValidationSummary(true)
+                    @Html.HiddenFor(model => model.ID)
+                    <fieldset>
+                        <div class="control-group">
+                            <label class="control-label" for="focusedInput">Plan Code</label>
+                            <div class="controls">
+                                @*<input class="input-xlarge focused" id="focusedInput" type="text" value="This is focused…">*@
+                                @Html.HiddenFor(model => model.PlanCode)
+                                @Html.DisplayFor(model => model.PlanCode)
+                                @Html.ValidationMessageFor(model => model.PlanCode)
+                            </div>
+                        </div>
+                        <div class="control-group">
+                            <label class="control-label" for="focusedInput">Short Name</label>
+                            <div class="controls">
+                                @*<input class="input-xlarge focused" id="focusedInput" type="text" value="This is focused…">*@
+                                @Html.EditorFor(model => model.ShortName)
+                                @Html.ValidationMessageFor(model => model.ShortName)
+                            </div>
+                        </div>
+                        <div class="control-group">
+                            <label class="control-label" for="focusedInput">No Of Entities Allowed</label>
+                            <div class="controls">
+                                @Html.EditorFor(model => model.NoOfEntitiesAllowed)
+                                @Html.ValidationMessageFor(model => model.NoOfEntitiesAllowed)
+                            </div>
+                        </div>
+                        <div class="control-group">
+                            <label class="control-label" for="focusedInput">Year</label>
+                            <div class="controls">
+                                @Html.EditorFor(model => model.Year)
+                                @Html.ValidationMessageFor(model => model.Year)
+                            </div>
+                        </div>
+
+                        <div class="control-group">
+                            <label class="control-label" for="focusedInput">Month</label>
+                            <div class="controls">
+                                @Html.EditorFor(model => model.Month)
+                                @Html.ValidationMessageFor(model => model.Month)
+                            </div>
+                        </div>
+                        <div class="control-group">
+                            <label class="control-label" for="focusedInput">Day</label>
+                            <div class="controls">
+                                @Html.EditorFor(model => model.Day)
+                                @Html.ValidationMessageFor(model => model.Day)
+                            </div>
+                        </div>
+                        <div class="control-group">
+                            <label class="control-label" for="focusedInput">Description</label>
+                            <div class="controls">
+                                @Html.TextAreaFor(model => model.Description)
+                                @Html.ValidationMessageFor(model => model.Description)
+                            </div>
+                        </div>
+                        <div class="control-group">
+                            <label class="control-label" for="focusedInput">Fees</label>
+                            <div class="controls">
+                                @Html.EditorFor(model => model.Fees)
+                                @Html.ValidationMessageFor(model => model.Fees)
+                            </div>
+                        </div>
+                        <div class="control-group">
+                            <label class="control-label" for="optionsCheckbox2">Is Active</label>
+                            <div class="controls">
+                                <label class="checkbox">
+                                    @Html.EditorFor(model => model.IsActive)
+                                    @Html.ValidationMessageFor(model => model.IsActive)
+                                </label>
+                            </div>
+                        </div>
+                        <div class="form-actions">
+                            <input type="submit" value="Save" class="btn btn-success" />
+                            @Html.ActionLink("Back to List", "Index", null, new { @class = "btn" })
+                        </div>
+                    </fieldset>
+
+                }
+            </div>
+        </div>
+    </div><!--/span-->
+
+</div>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}
+
+
+
+
+
+
+@*@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+    
+    <div class="form-horizontal">
+        <h4>Plan</h4>
+        <hr />
+        @Html.ValidationSummary(true)
+        @Html.HiddenFor(model => model.ID)
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.PlanCode, new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.PlanCode)
+                @Html.ValidationMessageFor(model => model.PlanCode)
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.ShortName, new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.ShortName)
+                @Html.ValidationMessageFor(model => model.ShortName)
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.NoOfEntitiesAllowed, new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.NoOfEntitiesAllowed)
+                @Html.ValidationMessageFor(model => model.NoOfEntitiesAllowed)
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Year, new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.Year)
+                @Html.ValidationMessageFor(model => model.Year)
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Month, new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.Month)
+                @Html.ValidationMessageFor(model => model.Month)
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Day, new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.Day)
+                @Html.ValidationMessageFor(model => model.Day)
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Description, new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.Description)
+                @Html.ValidationMessageFor(model => model.Description)
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Fees, new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.Fees)
+                @Html.ValidationMessageFor(model => model.Fees)
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.IsActive, new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.IsActive)
+                @Html.ValidationMessageFor(model => model.IsActive)
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.CreateDate, new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.CreateDate)
+                @Html.ValidationMessageFor(model => model.CreateDate)
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.CreateBy, new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.CreateBy)
+                @Html.ValidationMessageFor(model => model.CreateBy)
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.ModifyDate, new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.ModifyDate)
+                @Html.ValidationMessageFor(model => model.ModifyDate)
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.ModifyBy, new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.ModifyBy)
+                @Html.ValidationMessageFor(model => model.ModifyBy)
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.NetworkIP, new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.NetworkIP)
+                @Html.ValidationMessageFor(model => model.NetworkIP)
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.DeviceType, new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.DeviceType)
+                @Html.ValidationMessageFor(model => model.DeviceType)
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.DeviceID, new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.DeviceID)
+                @Html.ValidationMessageFor(model => model.DeviceID)
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="submit" value="Save" class="btn btn-default" />
+            </div>
+        </div>
+    </div>
+}
+
+<div>
+    @Html.ActionLink("Back to List", "Index")
+</div>*@

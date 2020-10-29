@@ -1,0 +1,200 @@
+﻿
+<div class="gap"></div>
+<div class="row box" data-gutter="15">
+    <div class="validation">
+        <span id="validationMessages" class="WarnigMessages"> </span>
+    </div>
+    <h3>Tell us what you are looking for?</h3>
+        <div class="col-md-12">
+            
+            <div class="col-md-6">
+                <div class="form-group">
+                    <input type="text" id="lookingFor" maxlength="50" class="form-control" placeholder="I am looking for" />
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group">
+                    <input type="text" id="lookingDetails" maxlength="100" class="form-control" placeholder="Details" />
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group">
+                    <input type="text" id="lookingName" maxlength="50" class="form-control" placeholder="Your Name" />
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group">
+                    <input type="text" id="lookingEmail" maxlength="100" class="form-control" placeholder="Your Email" />
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group">
+                    <input type="text" id="lookingMobile" maxlength="10" class="form-control" placeholder="Your Mobile" />
+                </div>
+            </div>
+            <div class="col-md-12">
+                <input class="btn btn-success" type="button" id="btnSaveLookingDetails" value="Submit" onclick="saveSearchDetails();" style="float:right"/>
+            </div>
+        </div>
+</div>
+<div class="gap"></div>
+@*<h3>Tell us what you are looking for?</h3>
+<div>
+    <div>
+        <div class="gridnewone">
+         <div class="validation">
+                <span id="validationMessages" class="WarnigMessages"> </span>
+            </div>
+
+            <div class="cell">
+                <input type="text" id="lookingFor" maxlength="50" class="text half-size" placeholder="I am looking for" />
+            </div>
+            <div class="cell">
+                <input type="text" id="lookingDetails" maxlength="100" class="text half-size" placeholder="Details" />
+            </div>
+            <div class="cell">
+                <input type="text" id="lookingName" maxlength="50" class="text half-size" placeholder="Your Name" />
+            </div>
+            <div class="cell">
+                <input type="text" id="lookingEmail" maxlength="100" class="text half-size" placeholder="Your Email" />
+            </div>
+
+
+            <div class="cell">
+                <input type="text" id="lookingMobile" maxlength="10" class="text half-size" placeholder="Your Mobile" />
+            </div>
+
+            <input class="button success" type="button" id="btnSaveLookingDetails" value="Submit" onclick="saveSearchDetails();" />
+        </div>
+    </div>
+</div>*@
+
+<style type="text/css">
+    .validation {
+        height: 30px;
+        vertical-align: middle;
+    }
+
+    .gridnewone {
+        border: 1px dashed rgba(128, 128, 128, 0.41) !important;
+        width: 350px !important;
+        margin-bottom: 10px !important;
+    }
+
+    .half-size {
+        display: block;
+        width: 300px;
+        height: 34px;
+        margin-bottom: 10px;
+        padding: 6px 12px;
+        font-size: 14px;
+        line-height: 1.42857143;
+        color: #555;
+        background-color: #fff;
+        background-image: none;
+        border: 1px solid #eaeaea;
+        border-radius: 4px;
+        -webkit-box-shadow: inset 0 1px 1px rgba(0,0,0,.075);
+        box-shadow: inset 0 1px 1px rgba(0,0,0,.075);
+        -webkit-transition: border-color ease-in-out .15s,box-shadow ease-in-out .15s;
+        transition: border-color ease-in-out .15s,box-shadow ease-in-out .15s;
+    }
+
+    .WarnigMessages {
+        color: red;
+    }
+
+    .SuccessMessages {
+        color: green;
+    }
+
+    .success {
+        background: #60a917 !important;
+        color: #ffffff !important;
+        border-color: #60a917 !important;
+    }
+
+        .success:hover {
+            background: #60a917 !important;
+            color: #ffffff !important;
+            border-color: #60a917 !important;
+            opacity: 0.7 !important;
+        }
+</style>
+<script type="text/javascript">
+    function saveSearchDetails() {
+        $("#validationMessages").attr("class", "WarnigMessages");
+        if ($("#lookingFor").val() == "") {
+            $("#validationMessages").html("Please enter the search keywords you are looking for.");
+        }
+        else if ($("#lookingEmail").val() == "" && $("#lookingMobile").val() == "") {
+            $("#validationMessages").html("Please enter your  email address or mobile no.");
+
+        }
+        else if (($("#lookingEmail").val() != "" && !isValidEmailAddress($("#lookingEmail").val()))) {
+            $("#validationMessages").html("Please enter valid email address.");
+
+        }
+            //else if ($("#lookingMobile").val() == "") {
+            //    $("#validationMessages").html("Please enter your mobile no.");
+
+            //}
+        else if ($("#lookingMobile").val() != "" && !isValidMobileNo($("#lookingMobile").val())) {
+            $("#validationMessages").html("Please enter valid mobile no.");
+
+        }
+        else {
+            //alert($("#lookingFor").val());
+            $("#btnSaveLookingDetails").attr("value", "Please Wait..");
+            var mydata = {
+                "lookingFor": $("#lookingFor").val(),
+                "lookingDetails": $("#lookingDetails").val(),
+                "nameOfPerson": $("#lookingName").val(),
+                "emailAddress": $("#lookingEmail").val(),
+                "mobile": $("#lookingMobile").val()
+            };
+            alert(JSON.stringify({ 'myParam': mydata }));
+            //$("#btnSaveLookingDetails").attr("value", "Please Wait..");
+            $.ajax({
+                //url: "/Feedback/LookingFor?lookingFor=" + $("#lookingFor").val() + "&lookingDetails=" + $("#lookingDetails").val() + "&nameOfPerson=" + $("#lookingName").val() + "&emailAddress=" + $("#lookingEmail").val() + "&mobile=" + $("#lookingMobile").val(),
+                url: "@Url.Action("LookingFor", "Feedback")",
+                type: 'POST',
+                dataType: "json",
+                //data: JSON.stringify({ 'myParam': mydata }),
+                data: JSON.stringify({
+                    'lookingFor': $("#lookingFor").val(), 'lookingDetails': $("#lookingDetails").val(), 'nameOfPerson': $("#lookingName").val(),'emailAddress': $("#lookingEmail").val(),'mobile': $("#lookingMobile").val()}),
+                contentType: "application/json; charset=utf-8",
+                //cache: false,
+                //dataType: 'json',
+                success: function (json) {
+                    $("#btnSaveLookingDetails").attr("value", "Submit");
+                    $("#validationMessages").attr("class", "SuccessMessages");
+                    $("#validationMessages").html("Thanks! our customer care will contact you very soon.");
+                    setTimeout(function () {
+                        window.location.href = "/";
+                    }, 3000);
+                },
+                error: function (xmlHttpRequest, textStatus, errorThrown) {
+                    console.log('some error occured', textStatus, errorThrown);
+                    $("#btnSaveLookingDetails").attr("value", "Save");
+                    setTimeout(function () {
+                        window.location.href = "/";
+                    }, 3000);
+                }
+            });
+
+
+        }
+    }
+    function isValidEmailAddress(emailAddress) {
+        var emailRegex = /^([\w-\.]+)@@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.)|(([\w-]+\.)+))([a-zA-Z]{2,4}|[0-9]{1,3})(\]?)$/;
+        var pattern = new RegExp(emailRegex);
+        return pattern.test(emailAddress);
+    };
+    function isValidMobileNo(mobileno) {
+
+        var MobileRegex = "[7-9]{1}[0-9]{9}$";
+        var pattern = new RegExp(MobileRegex);
+        return pattern.test(mobileno);
+    };
+</script>
